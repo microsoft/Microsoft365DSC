@@ -1,0 +1,16 @@
+[ClassVersion("1.0.0.0"), FriendlyName("SPOSite")]
+class MSFT_SPOSite : OMI_BaseResource
+{
+    [Key, Description("The URL of the site collection")] string Url;
+    [Required, Description("The username of the site collection administrator")] string Owner;
+    [Required, Description("The resource quota to apply to the site collection")] uint32 StorageQuota;
+    [Write, Description("The title of the site")] string Title;
+    [Write, Description("The compatibility level of the site")] uint32 CompatibilityLevel;
+    [Write, Description("The locale code of the site")] uint32 LocaleId;
+    [Write, Description("The resource quota to apply to the site collection")] uint32 ResourceQuota;
+    [Write, Description("The template to apply to the site collection")] string Template;
+    [Write, Description("Id ot the Timezone to assign to this site collection")] uint32 TimeZoneId;
+    [Write, Description("The Url of the SharePoint Online Central Administration")] string CentralAdminUrl;
+    [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+};
+
