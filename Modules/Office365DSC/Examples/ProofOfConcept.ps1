@@ -6,9 +6,9 @@ Configuration ProofOfConcept
 	{
 		SPOSite TestNik
 		{
-			Url = "https://O365DSC1.sharepoint.com/sites/PoC4"
+			Url = "https://O365DSC1.sharepoint.com/sites/PoC6"
 			Owner = "TenantAdmin@O365DSC1.onmicrosoft.com"
-			StorageQuota = 7777
+			StorageQuota = 100
 			Title = "ProofOfConcept"
 			CentralAdminUrl = "https://o365dsc1-admin.sharepoint.com"
 			GlobalAdminAccount = $credsGlobalAdmin
