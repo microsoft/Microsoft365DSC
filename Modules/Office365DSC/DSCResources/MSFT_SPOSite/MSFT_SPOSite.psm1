@@ -12,7 +12,7 @@ function Get-TargetResource
         [System.String]
         $Owner,
 
-	[Parameter(Mandatory = $true)]
+	    [Parameter(Mandatory = $true)]
         [System.UInt32]
         $StorageQuota,
 
@@ -40,7 +40,7 @@ function Get-TargetResource
         [System.UInt32]
         $TimeZoneId,
 
-	[Parameter(Mandatory = $true)]
+	    [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
 
@@ -51,22 +51,29 @@ function Get-TargetResource
 
     Write-Verbose -Message "Connecting to SharePoint Online $CentralAdminUrl"
     Connect-SPOService -Url $CentralAdminUrl -Credential $GlobalAdminAccount
-
-    Write-Verbose -Message "Getting site collection $Url"
-	
-    $site = Get-SPOSite
-
+    
     $nullReturn = @{
-	Url = $null
-	Owner = $null
+	    Url = $null
+	    Owner = $null
     }
 
-    return @{
-        Url = $site.Url
-        Owner = $site.Owner
-        CompatibilityLevel = $site.CompatibilityLevel
-        Language = $site.RootWeb.Language
-        Title = $site.Title
+    try {        
+        Write-Verbose -Message "Getting site collection $Url"
+        $site = Get-SPOSite $Url
+        return @{
+            Url = $site.Url
+            Owner = $site.Owner
+            TimeZoneId = $site.TimeZoneId
+            LocaleId = $site.LocaleId
+            Template = $site.Template
+            ResourceQuota = $site.ResourceQuota
+            StorageQuota = $site.StorageQuota
+            CompatibilityLevel = $site.CompatibilityLevel
+            Title = $site.Title
+        }
+    }
+    catch {
+        return $nullReturn        
     }
 }
 
@@ -84,7 +91,7 @@ function Set-TargetResource
         [System.String]
         $Owner,
 
-	[Parameter(Mandatory = $true)]
+	    [Parameter(Mandatory = $true)]
         [System.UInt32]
         $StorageQuota,
 
@@ -112,7 +119,7 @@ function Set-TargetResource
         [System.UInt32]
         $TimeZoneId,
 
-	[Parameter(Mandatory = $true)]
+	    [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
 
@@ -125,8 +132,11 @@ function Set-TargetResource
     Connect-SPOService -Url $CentralAdminUrl -Credential $GlobalAdminAccount
 
     Write-Verbose -Message "Setting site collection $Url"
+    $CurrentParameters = $PSBoundParameters
+    $CurrentParameters.Remove("CentralAdminUrl")
+    $CurrentParameters.Remove("GlobalAdminAccount")
 
-    New-SPOSite -Url $Url -Owner $Owner -StorageQuota $StorageQuota -Title $Title
+    New-SPOSite @CurrentParameters
 }
 
 function Test-TargetResource
@@ -181,10 +191,8 @@ function Test-TargetResource
     )
 
     Write-Verbose -Message "Testing site collection $Url"
-
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    return ($Title -eq $CurrentValues.Title)
+    return ($Url -eq $CurrentValues.Url)
 }
 
 Export-ModuleMember -Function *-TargetResource
