@@ -63,13 +63,13 @@ PowerShellVersion = '5.1'
 # FormatsToProcess = @()
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-NestedModules = @()
+NestedModules = @("modules\O365-SPO-Util.psm1")
 
 # Functions to export from this module
 #FunctionsToExport = '*'
 
 # Cmdlets to export from this module
-CmdletsToExport = @("")
+CmdletsToExport = @("Test-SPOServiceConnection")
 
 # Variables to export from this module
 #VariablesToExport = '*'
@@ -104,7 +104,7 @@ PrivateData = @{
         ProjectUri = 'https://github.com/Microsoft/Office365'
 
         # A URL to an icon representing this module.
-        # IconUri = ''
+        IconUri = 'https://github.com/Microsoft/Office365DSC/blob/master/Images/Logo.png?raw=true'
 
         # ReleaseNotes of this module
         ReleaseNotes = "

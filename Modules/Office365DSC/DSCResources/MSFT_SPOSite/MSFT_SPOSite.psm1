@@ -49,8 +49,7 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Connecting to SharePoint Online $CentralAdminUrl"
-    Connect-SPOService -Url $CentralAdminUrl -Credential $GlobalAdminAccount
+    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     
     $nullReturn = @{
 	    Url = $null
@@ -128,8 +127,7 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Connecting to SharePoint Online $CentralAdminUrl"
-    Connect-SPOService -Url $CentralAdminUrl -Credential $GlobalAdminAccount
+    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     Write-Verbose -Message "Setting site collection $Url"
     $CurrentParameters = $PSBoundParameters
