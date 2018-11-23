@@ -27,3 +27,4 @@ NOTE3:
 AdministrationSiteType is used in combination with the resource
 SPWebAppClientCallableSettings. The required proxy library must be configured
 before the administration site type has any effect.
+ 
