@@ -1,19 +1,19 @@
 Configuration ProofOfConcept
 {
-	Import-DSCResource -ModuleName Office365DSC -ModuleVersion 1.0.0.0
-	$credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
-	Node localhost
-	{
-		SPOSite TestNik
-		{
-			Url = "https://O365DSC1.sharepoint.com/sites/PoC7"
-			Owner = "TenantAdmin@O365DSC1.onmicrosoft.com"
-			StorageQuota = 100
+    Import-DSCResource -ModuleName Office365DSC -ModuleVersion 1.0.0.0
+    $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
+    Node localhost
+    {
+        SPOSite TestNik
+        {
+            Url = "https://O365DSC1.sharepoint.com/sites/PoC7"
+            Owner = "TenantAdmin@O365DSC1.onmicrosoft.com"
+            StorageQuota = 100
             ResourceQuota = 777
-			Title = "ProofOfConcept"
-			CentralAdminUrl = "https://o365dsc1-admin.sharepoint.com"
-			GlobalAdminAccount = $credsGlobalAdmin
-		}
+            Title = "ProofOfConcept"
+            CentralAdminUrl = "https://o365dsc1-admin.sharepoint.com"
+            GlobalAdminAccount = $credsGlobalAdmin
+        }
 
         O365User Bob
         {
@@ -36,7 +36,7 @@ Configuration ProofOfConcept
             LicenseAssignment = "O365dsc1:ENTERPRISEPREMIUM"
             GlobalAdminAccount = $credsGlobalAdmin
         }
-	}
+    }
 }
 
 $configData = @{
@@ -45,7 +45,7 @@ $configData = @{
             NodeName = "localhost"
             PSDscAllowPlainTextPassword = $true;
             PSDscAllowDomainUser = $true;
-	}
+    }
     )
 }
 ProofOfConcept -ConfigurationData $configData
