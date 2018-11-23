@@ -31,7 +31,7 @@ Configuration ProofOfConcept
             UserPrincipalName = "John.Smith@O365DSC1.onmicrosoft.com"
             FirstName = "John"
             LastName = "Smith"
-            DisplayName = "John Smith"
+            DisplayName = "John J. Smith"
             UsageLocation = "US"
             LicenseAssignment = "O365dsc1:ENTERPRISEPREMIUM"
             GlobalAdminAccount = $credsGlobalAdmin
