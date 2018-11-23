@@ -25,6 +25,17 @@ Configuration ProofOfConcept
             LicenseAssignment = "O365dsc1:ENTERPRISEPREMIUM"
             GlobalAdminAccount = $credsGlobalAdmin
         }
+
+        O365User John
+        {
+            UserPrincipalName = "John.Smith@O365DSC1.onmicrosoft.com"
+            FirstName = "John"
+            LastName = "Smith"
+            DisplayName = "John Smith"
+            UsageLocation = "US"
+            LicenseAssignment = "O365dsc1:ENTERPRISEPREMIUM"
+            GlobalAdminAccount = $credsGlobalAdmin
+        }
 	}
 }
 
