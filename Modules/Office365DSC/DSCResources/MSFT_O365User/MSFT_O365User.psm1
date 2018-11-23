@@ -49,7 +49,8 @@ function Get-TargetResource
         Password = $null
     }
 
-    try {        
+    try
+    {        
         Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
         $user = Get-MSOLUser -UserPrincipalName $UserPrincipalName -ErrorAction SilentlyContinue
         if(!$user)
@@ -69,7 +70,8 @@ function Get-TargetResource
             Passsword = $Password
         }
     }
-    catch {
+    catch
+    {
         Write-Verbose "The specified User doesn't already exist."
         return $nullReturn        
     }
