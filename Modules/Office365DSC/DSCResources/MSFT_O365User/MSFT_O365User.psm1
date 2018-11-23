@@ -12,7 +12,7 @@ function Get-TargetResource
         [System.String]
         $DisplayName,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $FirstName,
 
@@ -28,7 +28,7 @@ function Get-TargetResource
         [System.String]
         $LicenseAssignment,
 
-	    [Parameter()] 
+        [Parameter()] 
         [System.Management.Automation.PSCredential] 
         $Password,
 
@@ -40,7 +40,7 @@ function Get-TargetResource
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     
     $nullReturn = @{
-	    UserPrincipalName = $null
+        UserPrincipalName = $null
         DisplayName = $null
         FirstName = $null
         LastName = $null
@@ -49,7 +49,8 @@ function Get-TargetResource
         Password = $null
     }
 
-    try {        
+    try
+    {        
         Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
         $user = Get-MSOLUser -UserPrincipalName $UserPrincipalName -ErrorAction SilentlyContinue
         if(!$user)
@@ -69,7 +70,8 @@ function Get-TargetResource
             Passsword = $Password
         }
     }
-    catch {
+    catch
+    {
         Write-Verbose "The specified User doesn't already exist."
         return $nullReturn        
     }
@@ -78,7 +80,6 @@ function Get-TargetResource
 function Set-TargetResource
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -89,7 +90,7 @@ function Set-TargetResource
         [System.String]
         $DisplayName,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $FirstName,
 
@@ -105,7 +106,7 @@ function Set-TargetResource
         [System.String]
         $LicenseAssignment,
 
-	    [Parameter()] 
+        [Parameter()] 
         [System.Management.Automation.PSCredential] 
         $Password,
 
@@ -120,13 +121,13 @@ function Set-TargetResource
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
 
-    New-MsolUser @CurrentParameters
+    $user = New-MsolUser @CurrentParameters
 }
 
 function Test-TargetResource
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
+    [OutputType([System.Boolean])]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -137,7 +138,7 @@ function Test-TargetResource
         [System.String]
         $DisplayName,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $FirstName,
 
@@ -153,7 +154,7 @@ function Test-TargetResource
         [System.String]
         $LicenseAssignment,
 
-	    [Parameter()] 
+        [Parameter()] 
         [System.Management.Automation.PSCredential] 
         $Password,
 
