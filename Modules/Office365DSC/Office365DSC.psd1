@@ -48,7 +48,7 @@ PowerShellVersion = '5.1'
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-# RequiredModules = @()
+RequiredModules = @("Microsoft.Online.SharePoint.PowerShell")
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
@@ -63,13 +63,13 @@ PowerShellVersion = '5.1'
 # FormatsToProcess = @()
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-NestedModules = @("modules\O365-SPO-Util.psm1")
+NestedModules = @("modules\Office365DSCUtil.psm1")
 
 # Functions to export from this module
 #FunctionsToExport = '*'
 
 # Cmdlets to export from this module
-CmdletsToExport = @("Test-SPOServiceConnection")
+CmdletsToExport = @("Test-SPOServiceConnection", "Test-Office365DSCParameterState")
 
 # Variables to export from this module
 #VariablesToExport = '*'
