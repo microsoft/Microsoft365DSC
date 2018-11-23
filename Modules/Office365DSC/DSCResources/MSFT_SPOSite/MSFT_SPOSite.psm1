@@ -29,7 +29,7 @@ function Get-TargetResource
         $LocaleId,
 
         [Parameter()]
-        [System.Double]
+        [System.UInt32]
         $ResourceQuota,
 
         [Parameter()]
@@ -114,7 +114,7 @@ function Set-TargetResource
         $LocaleId,
 
         [Parameter()]
-        [System.Double]
+        [System.UInt32]
         $ResourceQuota,
 
         [Parameter()]
@@ -175,7 +175,7 @@ function Test-TargetResource
         $LocaleId,
 
         [Parameter()]
-        [System.Double]
+        [System.UInt32]
         $ResourceQuota,
 
         [Parameter()]
