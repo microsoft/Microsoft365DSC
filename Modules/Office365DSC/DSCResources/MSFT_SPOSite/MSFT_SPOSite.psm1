@@ -12,7 +12,7 @@ function Get-TargetResource
         [System.String]
         $Owner,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.UInt32]
         $StorageQuota,
 
@@ -40,7 +40,7 @@ function Get-TargetResource
         [System.UInt32]
         $TimeZoneId,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
 
@@ -52,7 +52,7 @@ function Get-TargetResource
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     
     $nullReturn = @{
-	    Url = $null
+        Url = $null
         Owner = $null
         #TimeZoneId = $null
         LocaleId = $null
@@ -98,7 +98,7 @@ function Set-TargetResource
         [System.String]
         $Owner,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.UInt32]
         $StorageQuota,
 
@@ -126,7 +126,7 @@ function Set-TargetResource
         [System.UInt32]
         $TimeZoneId,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
 
@@ -159,7 +159,7 @@ function Test-TargetResource
         [System.String]
         $Owner,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.UInt32]
         $StorageQuota,
 
@@ -187,7 +187,7 @@ function Test-TargetResource
         [System.UInt32]
         $TimeZoneId,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
 

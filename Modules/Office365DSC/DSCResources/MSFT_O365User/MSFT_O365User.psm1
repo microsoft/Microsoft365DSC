@@ -12,7 +12,7 @@ function Get-TargetResource
         [System.String]
         $DisplayName,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $FirstName,
 
@@ -28,7 +28,7 @@ function Get-TargetResource
         [System.String]
         $LicenseAssignment,
 
-	    [Parameter()] 
+        [Parameter()] 
         [System.Management.Automation.PSCredential] 
         $Password,
 
@@ -40,7 +40,7 @@ function Get-TargetResource
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     
     $nullReturn = @{
-	    UserPrincipalName = $null
+        UserPrincipalName = $null
         DisplayName = $null
         FirstName = $null
         LastName = $null
@@ -91,7 +91,7 @@ function Set-TargetResource
         [System.String]
         $DisplayName,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $FirstName,
 
@@ -107,7 +107,7 @@ function Set-TargetResource
         [System.String]
         $LicenseAssignment,
 
-	    [Parameter()] 
+        [Parameter()] 
         [System.Management.Automation.PSCredential] 
         $Password,
 
@@ -139,7 +139,7 @@ function Test-TargetResource
         [System.String]
         $DisplayName,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $FirstName,
 
@@ -155,7 +155,7 @@ function Test-TargetResource
         [System.String]
         $LicenseAssignment,
 
-	    [Parameter()] 
+        [Parameter()] 
         [System.Management.Automation.PSCredential] 
         $Password,
 
