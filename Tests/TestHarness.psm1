@@ -42,7 +42,7 @@ function Invoke-TestHarness
     $testsToRun = @()
 
     # Run Unit Tests
-    $versionsPath = Join-Path -Path $repoDir -ChildPath "\Tests\Unit\Stubs\Office365\"
+    $versionsPath = Join-Path -Path $repoDir -ChildPath "\Tests\Unit\Stubs\"
     $versionsToTest = (Get-ChildItem -Path $versionsPath).Name
     # Import the first stub found so that there is a base module loaded before the tests start
     $firstVersion = $versionsToTest | Select-Object -First 1
@@ -56,7 +56,7 @@ function Invoke-TestHarness
         $testsToRun += @(@{
             'Path' = (Join-Path -Path $repoDir -ChildPath "\Tests\Unit")
             'Parameters' = @{
-                'SharePointCmdletModule' = $stubPath
+                'CmdletModule' = $stubPath
             }
         })
     }
