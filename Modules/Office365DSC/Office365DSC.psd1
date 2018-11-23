@@ -48,7 +48,7 @@ PowerShellVersion = '5.1'
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-RequiredModules = @("Microsoft.Online.SharePoint.PowerShell")
+RequiredModules = @("Microsoft.Online.SharePoint.PowerShell", "AzureAD")
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
@@ -69,7 +69,7 @@ NestedModules = @("modules\Office365DSCUtil.psm1")
 #FunctionsToExport = '*'
 
 # Cmdlets to export from this module
-CmdletsToExport = @("Test-SPOServiceConnection", "Test-Office365DSCParameterState")
+CmdletsToExport = @("Test-SPOServiceConnection", "Test-Office365DSCParameterState", "Test-O365ServiceConnection")
 
 # Variables to export from this module
 #VariablesToExport = '*'

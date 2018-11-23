@@ -1,0 +1,13 @@
+[ClassVersion("1.0.0.0"), FriendlyName("O365User")]
+class MSFT_O365User : OMI_BaseResource
+{
+    [Key, Description("The login name of the user")] string UserPrincipalName;
+    [Required, Description("The display name for the user")] string DisplayName;
+    [Required, Description("The first name of the user")] string FirstName;
+    [Required, Description("The last name of the user")] string LastName;
+    [Required, Description("The country code the user will be assigned to")] string UsageLocation;
+    [Required, Description("The account SKU Id for the license to be assigned to the user")] string LicenseAssignment;
+    [Write, Description("The password for the account"), EmbeddedInstance("MSFT_Credential")] string Password;
+    [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+};
+
