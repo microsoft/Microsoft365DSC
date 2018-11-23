@@ -12,7 +12,7 @@ function Get-TargetResource
         [System.String]
         $Owner,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.UInt32]
         $StorageQuota,
 
@@ -29,7 +29,7 @@ function Get-TargetResource
         $LocaleId,
 
         [Parameter()]
-        [System.Double]
+        [System.UInt32]
         $ResourceQuota,
 
         [Parameter()]
@@ -40,7 +40,7 @@ function Get-TargetResource
         [System.UInt32]
         $TimeZoneId,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
 
@@ -52,7 +52,7 @@ function Get-TargetResource
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     
     $nullReturn = @{
-	    Url = $null
+        Url = $null
         Owner = $null
         #TimeZoneId = $null
         LocaleId = $null
@@ -87,7 +87,6 @@ function Get-TargetResource
 function Set-TargetResource
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -98,7 +97,7 @@ function Set-TargetResource
         [System.String]
         $Owner,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.UInt32]
         $StorageQuota,
 
@@ -115,7 +114,7 @@ function Set-TargetResource
         $LocaleId,
 
         [Parameter()]
-        [System.Double]
+        [System.UInt32]
         $ResourceQuota,
 
         [Parameter()]
@@ -126,7 +125,7 @@ function Set-TargetResource
         [System.UInt32]
         $TimeZoneId,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
 
@@ -142,13 +141,13 @@ function Set-TargetResource
     $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
 
-    New-SPOSite @CurrentParameters
+    $site = New-SPOSite @CurrentParameters
 }
 
 function Test-TargetResource
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
+    [OutputType([System.Boolean])]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -159,7 +158,7 @@ function Test-TargetResource
         [System.String]
         $Owner,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.UInt32]
         $StorageQuota,
 
@@ -176,7 +175,7 @@ function Test-TargetResource
         $LocaleId,
 
         [Parameter()]
-        [System.Double]
+        [System.UInt32]
         $ResourceQuota,
 
         [Parameter()]
@@ -187,7 +186,7 @@ function Test-TargetResource
         [System.UInt32]
         $TimeZoneId,
 
-	    [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
 
