@@ -142,7 +142,7 @@ function Set-TargetResource
     $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
 
-    New-SPOSite @CurrentParameters
+    $site = New-SPOSite @CurrentParameters
 }
 
 function Test-TargetResource

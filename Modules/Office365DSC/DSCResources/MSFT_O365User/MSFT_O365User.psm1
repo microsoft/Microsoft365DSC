@@ -120,7 +120,7 @@ function Set-TargetResource
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
 
-    New-MsolUser @CurrentParameters
+    $user = New-MsolUser @CurrentParameters
 }
 
 function Test-TargetResource
