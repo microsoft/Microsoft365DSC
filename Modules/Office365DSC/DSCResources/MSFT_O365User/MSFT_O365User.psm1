@@ -166,7 +166,12 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                            -DesiredValues $PSBoundParameters `
-                                           -ValuesToCheck @("UserPrincipalName")
+                                           -ValuesToCheck @("UserPrincipalName", `
+                                                            "LicenseAssignment", `
+                                                            "UsageLocation",
+                                                            "FirstName",
+                                                            "LastName",
+                                                            "DisplayName")
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -1,0 +1,26 @@
+codecov:
+  notify:
+    require_ci_to_pass: no
+  # dev should be the baseline for reporting
+  branch: dev
+
+comment:
+  layout: "reach, diff"
+  behavior: default
+
+coverage:
+  range: 50..80
+  round: down
+  precision: 0
+
+  status:
+    project:
+      default:
+        # Set the overall project code coverage requirement to 80%
+        target: 80
+    patch:
+      default:
+        # Set the pull request requirement to not regress overall coverage by more than 5%
+        # and let codecov.io set the goal for the code changed in the patch.
+        target: auto
+        threshold: 5
