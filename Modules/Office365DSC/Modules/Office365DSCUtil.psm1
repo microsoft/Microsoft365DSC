@@ -17,6 +17,20 @@ function Test-SPOServiceConnection
     Connect-SPOService -Url $SPOCentralAdminUrl -Credential $GlobalAdminAccount
 }
 
+function Test-O365ServiceConnection
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)] 
+        [System.Management.Automation.PSCredential] 
+        $GlobalAdminAccount
+    )    
+    Write-Verbose "Verifying the LCM connection state to Microsoft Online Services"
+    Connect-MSOLService -Credential $GlobalAdminAccount
+}
+
 function Test-Office365DSCParameterState
 {
     [CmdletBinding()]

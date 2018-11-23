@@ -6,13 +6,25 @@ Configuration ProofOfConcept
 	{
 		SPOSite TestNik
 		{
-			Url = "https://O365DSC1.sharepoint.com/sites/PoC6"
+			Url = "https://O365DSC1.sharepoint.com/sites/PoC7"
 			Owner = "TenantAdmin@O365DSC1.onmicrosoft.com"
 			StorageQuota = 100
+            ResourceQuota = 777
 			Title = "ProofOfConcept"
 			CentralAdminUrl = "https://o365dsc1-admin.sharepoint.com"
 			GlobalAdminAccount = $credsGlobalAdmin
 		}
+
+        O365User Bob
+        {
+            UserPrincipalName = "Bob.Houle@O365DSC1.onmicrosoft.com"
+            FirstName = "Bob"
+            LastName = "Houle"
+            DisplayName = "Bob Houle"
+            UsageLocation = "US"
+            LicenseAssignment = "O365dsc1:ENTERPRISEPREMIUM"
+            GlobalAdminAccount = $credsGlobalAdmin
+        }
 	}
 }
 
