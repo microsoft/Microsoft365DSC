@@ -4,9 +4,9 @@ Configuration ProofOfConcept
     $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
-        SPOSite TestNik
+        SPOSite DemoOfO365DSC
         {
-            Url = "https://O365DSC1.sharepoint.com/sites/PoC7"
+            Url = "https://O365DSC1.sharepoint.com/sites/MyDemo"
             Owner = "TenantAdmin@O365DSC1.onmicrosoft.com"
             StorageQuota = 100
             ResourceQuota = 777
