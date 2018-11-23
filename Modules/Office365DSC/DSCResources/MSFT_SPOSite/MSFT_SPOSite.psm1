@@ -53,7 +53,14 @@ function Get-TargetResource
     
     $nullReturn = @{
 	    Url = $null
-	    Owner = $null
+        Owner = $null
+        #TimeZoneId = $null
+        LocaleId = $null
+        Template = $null
+        ResourceQuota = $null
+        StorageQuota = $null
+        CompatibilityLevel = $null
+        Title = $null
     }
 
     try {        
@@ -62,7 +69,7 @@ function Get-TargetResource
         return @{
             Url = $site.Url
             Owner = $site.Owner
-            TimeZoneId = $site.TimeZoneId
+            #TimeZoneId = $site.TimeZoneId
             LocaleId = $site.LocaleId
             Template = $site.Template
             ResourceQuota = $site.ResourceQuota
@@ -72,6 +79,7 @@ function Get-TargetResource
         }
     }
     catch {
+        Write-Verbose "The specified Site Collection doesn't already exist."
         return $nullReturn        
     }
 }
@@ -151,7 +159,7 @@ function Test-TargetResource
         [System.String]
         $Owner,
 
-	[Parameter(Mandatory = $true)]
+	    [Parameter(Mandatory = $true)]
         [System.UInt32]
         $StorageQuota,
 
@@ -179,7 +187,7 @@ function Test-TargetResource
         [System.UInt32]
         $TimeZoneId,
 
-	[Parameter(Mandatory = $true)]
+	    [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
 
@@ -190,7 +198,9 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing site collection $Url"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    return ($Url -eq $CurrentValues.Url)
+    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                           -DesiredValues $PSBoundParameters `
+                                           -ValuesToCheck @("Url")
 }
 
 Export-ModuleMember -Function *-TargetResource
