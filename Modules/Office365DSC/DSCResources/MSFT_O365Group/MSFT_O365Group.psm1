@@ -28,7 +28,7 @@ function Get-TargetResource
         Description = $null
         ManagedBy = $null
         TenantId = $null
-	GlobalAdminAccount = $null
+        GlobalAdminAccount = $null
     }
 
     try
@@ -42,7 +42,7 @@ function Get-TargetResource
             return $nullReturn
         }
 
-	$groupMembers = Get-MsolGroupMember -GroupObjectId $group.ObjectId
+        $groupMembers = Get-MsolGroupMember -GroupObjectId $group.ObjectId
         return @{
             DisplayName = $group.DisplayName
             Description = $group.Description
@@ -85,13 +85,19 @@ function Set-TargetResource
     Write-Verbose -Message "Setting Office 365 Group $DisplayName"
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
-    $owner = Get-MsolUser -ObjectId $ManagedBy -ErrorAction SilentlyContinue
-    if(!$owner)
+    try
     {
-	$owner = Get-MsolUser -UserPrincipalName $ManagedBy
-	$currentParameters("ManagedBy") = $owner.ObjectId
+        $owner = Get-MsolUser -ObjectId $ManagedBy -ErrorAction SilentlyContinue
     }
-    $group = New-MsolGroup @CurrentParameters
+    catch
+    {
+        if(!$owner)
+        {
+            $owner = Get-MsolUser -UserPrincipalName $ManagedBy
+            $CurrentParameters.ManagedBy = $owner.ObjectId
+        }        
+    }
+    New-MsolGroup @CurrentParameters
 }
 
 function Test-TargetResource

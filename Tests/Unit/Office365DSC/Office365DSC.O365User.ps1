@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
                                 -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                                -DscResource "SPOSite"
+                                              -DscResource "O365User"
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:SPDscHelper.ModuleName -ScriptBlock {
@@ -24,14 +24,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts 
         Context -Name "When the site doesn't already exist" -Fixture {
             $testParams = @{
-                Url = "https://contoso.com/sites/TestSite"
-                Owner = "testuser@contoso.com"
-                StorageQuota = 1000
-                CentralAdminUrl = "https://contoso-admin.sharepoint.com"
+                UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                DisplayName = "John Smith"
+                FirstName = "John"
+                LastName = "Smith"
+                UsageLocation = "US"
+                LicenseAssignment = "CONTOSO:ENTERPRISE_PREMIUM"
+                Password = $GlobalAdminAccount
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName New-SPOSite -MockWith { 
+            Mock -CommandName New-MSOLUser -MockWith { 
                 return @{Url = $null}
             }
             
