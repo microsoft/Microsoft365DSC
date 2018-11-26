@@ -54,7 +54,7 @@ function New-O365DscUnitTestHelper
             Import-Module -Name "$moduleToLoad"
 
 "@
-Write-Host " ******************** $moduleName"
+
     return @{
         DescribeHeader = $describeHeader
         ModuleName = $moduleName

@@ -13,7 +13,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
                                               -DscResource "O365User"
-
+Write-Host "$$$$$$$$$$$$$$ "$Global:SPDscHelper.ModuleName
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:SPDscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
