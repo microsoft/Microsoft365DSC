@@ -26,7 +26,7 @@ function New-O365DscUnitTestHelper
     $repoRoot = Join-Path -Path $PSScriptRoot -ChildPath "..\..\" -Resolve
     $moduleRoot = Join-Path -Path $repoRoot -ChildPath "Modules\Office365Dsc"
 
-    $mainModule = Join-Path -Path $moduleRoot -ChildPath "SharePointDsc.psd1"
+    $mainModule = Join-Path -Path $moduleRoot -ChildPath "Office365DSC.psd1"
     Import-Module -Name $mainModule -Global
 
     if ($PSBoundParameters.ContainsKey("SubModulePath") -eq $true)
