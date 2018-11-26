@@ -15,7 +15,7 @@ $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
                                                 -DscResource "SPOSite"
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
-    InModuleScope -ModuleName $Global:SPDscHelper.ModuleName -ScriptBlock {
+    InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
@@ -42,4 +42,4 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     }
 }
 
-Invoke-Command -ScriptBlock $Global:SPDscHelper.CleanupScript -NoNewScope
+Invoke-Command -ScriptBlock $Global:DscHelper.CleanupScript -NoNewScope

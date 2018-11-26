@@ -34,7 +34,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-MSOLUser -MockWith { 
-                return @{Url = $null}
+                
             }
             
             It "Should return absent from the Get method" {
