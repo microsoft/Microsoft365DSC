@@ -34,7 +34,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-MSOLUser -MockWith { 
-                
+                return @{
+                    UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                }
             }
             
             It "Should return absent from the Get method" {
