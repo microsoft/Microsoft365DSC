@@ -21,8 +21,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
         
         Mock -CommandName Test-O365ServiceConnection -MockWith {
-            
+
         }
+
         # Test contexts 
         Context -Name "When the site doesn't already exist" -Fixture {
             $testParams = @{
@@ -40,10 +41,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
                 }
-            }
-
-            Mock -CommandName Connect-MSOLService -MockWith {
-                
             }
             
             It "Should return absent from the Get method" {

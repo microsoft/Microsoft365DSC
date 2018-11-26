@@ -16,6 +16,11 @@ function Get-TargetResource
         [System.String]
         $ManagedBy,
 
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)] 
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
@@ -29,6 +34,7 @@ function Get-TargetResource
         ManagedBy = $null
         TenantId = $null
         GlobalAdminAccount = $null
+        Ensure = "Absent"
     }
 
     try
@@ -48,6 +54,7 @@ function Get-TargetResource
             Description = $group.Description
             ManagedBy = $groupMembers[0].ObjectId
             GlobalAdminAccount = $GlobalAdminAccount
+            Ensure = "Present"
         }
     }
     catch
@@ -73,6 +80,11 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $ManagedBy,
+
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
 
         [Parameter(Mandatory = $true)] 
         [System.Management.Automation.PSCredential] 
@@ -117,6 +129,11 @@ function Test-TargetResource
         [System.String]
         $ManagedBy,
 
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)] 
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
@@ -126,7 +143,8 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                            -DesiredValues $PSBoundParameters `
-                                           -ValuesToCheck @("DisplayName", `
+                                           -ValuesToCheck @("Ensure", `
+                                                            "DisplayName", `
                                                             "Description", `
                                                             "ManagedBy")
 }

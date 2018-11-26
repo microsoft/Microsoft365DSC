@@ -40,6 +40,11 @@ function Get-TargetResource
         [System.UInt32]
         $TimeZoneId,
 
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
@@ -61,6 +66,7 @@ function Get-TargetResource
         StorageQuota = $null
         CompatibilityLevel = $null
         Title = $null
+        Ensure = "Absent"
     }
 
     try {        
@@ -76,6 +82,7 @@ function Get-TargetResource
             StorageQuota = $site.StorageQuota
             CompatibilityLevel = $site.CompatibilityLevel
             Title = $site.Title
+            Ensure = "Present"
         }
     }
     catch {
@@ -124,6 +131,11 @@ function Set-TargetResource
         [Parameter()]
         [System.UInt32]
         $TimeZoneId,
+
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -186,6 +198,11 @@ function Test-TargetResource
         [System.UInt32]
         $TimeZoneId,
 
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
@@ -199,7 +216,8 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                            -DesiredValues $PSBoundParameters `
-                                           -ValuesToCheck @("Url")
+                                           -ValuesToCheck @("Ensure", `
+                                                            "Url")
 }
 
 Export-ModuleMember -Function *-TargetResource
