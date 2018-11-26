@@ -60,7 +60,6 @@ function New-O365DscUnitTestHelper
         DescribeHeader = $describeHeader
         ModuleName = $moduleName
         CurrentStubModulePath = $StubModule
-        CurrentStubBuildNumber = [Version]::Parse($spBuild)
         InitializeScript = [ScriptBlock]::Create($initScript)
         RepoRoot = $repoRoot
         CleanupScript = [ScriptBlock]::Create(@"
