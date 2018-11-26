@@ -19,7 +19,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
-
+        
+        Mock -CommandName Test-O365ServiceConnection -MockWith {
+            
+        }
         # Test contexts 
         Context -Name "When the site doesn't already exist" -Fixture {
             $testParams = @{
