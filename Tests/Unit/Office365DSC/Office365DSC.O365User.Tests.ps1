@@ -3,7 +3,7 @@ param(
     [Parameter()]
     [string] 
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\Stubs\Office365DSC.psm1" `
+                                         -ChildPath "..\Stubs\Office365.psm1" `
                                          -Resolve)
 )
 
