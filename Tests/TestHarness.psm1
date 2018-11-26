@@ -47,7 +47,7 @@ function Invoke-TestHarness
     # Import the first stub found so that there is a base module loaded before the tests start
     $firstVersion = $versionsToTest | Select-Object -First 1
     $firstStub = Join-Path -Path $repoDir `
-                           -ChildPath "\Tests\Unit\Stubs\Office365.psm1"
+                           -ChildPath "\Tests\Unit\Office365DSC\Office365.psm1"
     Import-Module $firstStub -WarningAction SilentlyContinue
 
     $versionsToTest | ForEach-Object -Process {
