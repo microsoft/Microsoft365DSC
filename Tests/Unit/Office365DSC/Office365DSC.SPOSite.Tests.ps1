@@ -55,6 +55,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
             }
         }
+
+        Context -Name "The site already exists" -Fixture {
+            $testParams = @{
+                Url = "https://contoso.com/sites/TestSite"
+                Owner = "testuser@contoso.com"
+                StorageQuota = 1000
+                CentralAdminUrl = "https://contoso-admin.sharepoint.com"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-SPOSite -MockWith { 
+                return @{
+                    Url = "https://contoso.com/sites/TestSite"
+                    Ensure = "Present"
+                }
+            }
+            
+            It "Should return absent from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $true
+            }
+        }
     }
 }
 
