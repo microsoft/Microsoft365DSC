@@ -38,6 +38,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-SPOSite -MockWith { 
                 return @{Url = $null}
             }
+
+            Mock -CommandName Get-SPOSite -MockWith { 
+                return $null
+            }
             
             It "Should return absent from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Absent" 

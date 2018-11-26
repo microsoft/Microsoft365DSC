@@ -72,6 +72,11 @@ function Get-TargetResource
     try {        
         Write-Verbose -Message "Getting site collection $Url"
         $site = Get-SPOSite $Url
+        if(!$site)
+        {
+            Write-Verbose "The specified Site Collection doesn't already exist."
+            return $nullReturn
+        }
         return @{
             Url = $site.Url
             Owner = $site.Owner
@@ -87,7 +92,7 @@ function Get-TargetResource
     }
     catch {
         Write-Verbose "The specified Site Collection doesn't already exist."
-        return $nullReturn        
+        return $nullReturn
     }
 }
 
