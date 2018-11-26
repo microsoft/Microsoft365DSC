@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Connect-MSOLService -MockWith {
                 
         }
-        
+
         # Test contexts 
         Context -Name "When the site doesn't already exist" -Fixture {
             $testParams = @{
