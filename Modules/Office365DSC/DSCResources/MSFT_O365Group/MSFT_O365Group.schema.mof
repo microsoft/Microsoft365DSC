@@ -1,0 +1,9 @@
+[ClassVersion("1.0.0.0"), FriendlyName("O365Group")]
+class MSFT_O365Group : OMI_BaseResource
+{
+    [Key, Description("The display name for the group")] string DisplayName;
+    [Write, Description("The group's description")] string Description;
+    [Required, Description("The group's owner user principal")] string ManagedBy;
+    [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+};
+
