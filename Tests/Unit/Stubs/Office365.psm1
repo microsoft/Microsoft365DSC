@@ -4446,7 +4446,6 @@ param(
 function New-MsolUser { 
  [CmdletBinding(DefaultParameterSetName='AddUser__0')]
 param(
-
     [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
     [string]
     ${UserPrincipalName},
@@ -4474,6 +4473,7 @@ param(
     [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
     [string[]]
     ${LicenseAssignment}
+)
  
  } 
 
