@@ -54,6 +54,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the group already exists" -Fixture {
             $testParams = @{
                 DisplayName = "Test Group"
+                GroupType = "Office365"
                 Description = "This is a test"
                 ManagedBy = "JohnSmith@contoso.onmicrosoft.com"
                 Ensure = "Present"
