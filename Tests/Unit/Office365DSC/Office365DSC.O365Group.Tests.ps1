@@ -131,8 +131,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 )
             }
 
-            Mock -CommandName New-DistributionGroup -MockWith
-            {
+            Mock -CommandName New-DistributionGroup -MockWith {
 
             }
 
@@ -178,8 +177,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 )
             }
 
-            Mock -CommandName New-DistributionGroup -MockWith
-            {
+            Mock -CommandName New-DistributionGroup -MockWith {
 
             }
 
