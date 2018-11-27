@@ -25,7 +25,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts 
-        Context -Name "When the site doesn't already exist" -Fixture {
+        Context -Name "When the user doesn't already exist" -Fixture {
             $testParams = @{
                 UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
                 DisplayName = "John Smith"
@@ -45,6 +45,42 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             
             It "Should return absent from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Absent" 
+            }
+
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should be $false
+            }
+
+            It "Should create the new User in the Set method" {
+                Set-TargetResource @testParams
+            }
+        }
+
+        Context -Name "When the user already exists" -Fixture {
+            $testParams = @{
+                UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                DisplayName = "John Smith"
+                FirstName = "John"
+                LastName = "Smith"
+                UsageLocation = "US"
+                LicenseAssignment = "CONTOSO:ENTERPRISE_PREMIUM"
+                Password = $GlobalAdminAccount
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-MSOLUser -MockWith {
+                return @{
+                    UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                    Ensure = "Present"
+                }
+            }
+            
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should be $true
             }
         }
     }
