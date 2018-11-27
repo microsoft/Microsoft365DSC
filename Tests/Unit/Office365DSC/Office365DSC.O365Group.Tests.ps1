@@ -24,10 +24,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
+        Mock -CommandName New-ExoPSSession -MockWith {
+
+        }
+
         # Test contexts 
         Context -Name "When the group doesn't already exist" -Fixture {
             $testParams = @{
                 DisplayName = "Test Group"
+                GroupType = "Security"
                 Description = "This is a test"
                 ManagedBy = "JohnSmith@contoso.onmicrosoft.com"
                 Ensure = "Present"
