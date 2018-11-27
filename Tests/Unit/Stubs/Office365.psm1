@@ -4082,99 +4082,10 @@ param(
 function Get-MsolUser { 
  [CmdletBinding(DefaultParameterSetName='ListUsers__0')]
 param(
-    [Parameter(ParameterSetName='GetUser__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
-    [guid]
-    ${ObjectId},
-
-    [Parameter(ParameterSetName='GetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [Parameter(ParameterSetName='GetUserByUpn__0', ValueFromPipelineByPropertyName=$true)]
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [switch]
-    ${ReturnDeletedUsers},
-
     [Parameter(ParameterSetName='GetUserByUpn__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
-    ${UserPrincipalName},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${City},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${Country},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${Department},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${DomainName},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [System.Nullable[object]]
-    ${EnabledFilter},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${State},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [switch]
-    ${Synchronized},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${Title},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [switch]
-    ${HasErrorsOnly},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [switch]
-    ${LicenseReconciliationNeededOnly},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [switch]
-    ${UnlicensedUsersOnly},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${UsageLocation},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${SearchString},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [int]
-    ${MaxResults},
-
-    [Parameter(ParameterSetName='All__0', Mandatory=$true)]
-    [switch]
-    ${All},
-
-    [Parameter(ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[guid]]
-    ${TenantId})
-
- 
+    ${UserPrincipalName}
+)
  } 
 
 
