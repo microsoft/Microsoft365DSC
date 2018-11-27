@@ -79,7 +79,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     LicenseAssignmentDetails = @{
                         AccountSku = @{
                             AccountName = "CONTOSO"
-                            SkuPartNumber = ENTERPRISE_PREMIUM
+                            SkuPartNumber = "ENTERPRISE_PREMIUM"
                         }
                     }
                     Ensure = "Present"
