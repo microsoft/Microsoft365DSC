@@ -107,7 +107,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DisplayName = "Test Group"
                 GroupType = "DistributionList"
                 Description = "This is a test"
-                ManagedBy = "JohnSmith@contoso.onmicrosoft.com"
                 Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -115,20 +114,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-Group -MockWith {
                 return @{
                     DisplayName = "Test Group"
-                    RecipientTypeDetails = "DistributionList"
+                    RecipientTypeDetails = "MailUniversalDistributionGroup"
                     Notes = "This is a test"
                 }
-            }
-
-            Mock -CommandName Get-MsolGroupMember -MockWith {
-                return @(
-                    @{
-                        EmailAddress = "JohnSmith@contoso.onmicrosoft.com"
-                    },
-                    @{
-                        EmailAddress = "SecondUser@contoso.onmicrosoft.com"
-                    }
-                )
             }
 
             Mock -CommandName New-DistributionGroup -MockWith {
@@ -161,7 +149,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-Group -MockWith {
                 return @{
                     DisplayName = "Test Group"
-                    RecipientTypeDetails = "MailEnabledSecurity"
+                    RecipientTypeDetails = "MailUniversalSecurityGroup"
                     Notes = "This is a test"
                 }
             }
