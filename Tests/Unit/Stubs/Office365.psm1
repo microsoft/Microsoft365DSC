@@ -2,6 +2,7 @@
 
 function Get-Group{
     [CmdletBinding()]
+    param()
 }
 function New-ExoPSSession {
     [CmdletBinding()]
