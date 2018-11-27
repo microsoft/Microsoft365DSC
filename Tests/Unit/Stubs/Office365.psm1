@@ -4,6 +4,62 @@ function Get-Group{
     [CmdletBinding()]
     param()
 }
+
+function New-DistributionGroup {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        ${Name},
+    
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        ${Alias},
+    
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        ${Type},
+    
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        ${PrimarySMTPAddress}
+    )
+}
+
+function New-DistributionGroup {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        ${Name},
+    
+        [Parameter()]
+        [string]
+        ${Alias},
+    
+        [Parameter()]
+        [string]
+        ${Type},
+    
+        [Parameter()]
+        [string]
+        ${PrimarySMTPAddress},
+
+        [Parameter()]
+        [string]
+        $Notes,
+
+        [Parameter()]
+        [string]
+        $DisplayName
+    )
+}
+
 function New-ExoPSSession {
     [CmdletBinding()]
 param(

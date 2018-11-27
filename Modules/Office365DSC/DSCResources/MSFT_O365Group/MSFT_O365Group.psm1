@@ -211,7 +211,7 @@ function Set-TargetResource
                     Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
                         -Arguments $CurrentParameters `
                         -ScriptBlock {
-                            new-distributiongroup -Name $args[0].DisplayName `
+                            New-DistributionGroup -Name $args[0].DisplayName `
                                                   -Alias $args[0].Alias `
                                                   -Type "Security" `
                                                   -PrimarySMTPAddress $args[0].PrimarySMTPAddress
