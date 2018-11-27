@@ -64,8 +64,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     DisplayName = "Test Group"
                     Description = "This is a test"
-                    ObjectId = "12345-12345-12345-12345-12345"
-                    Ensure = "Present"
+                    ObjectId = [GUID]"00000000-0000-0000-0000-000000000000"
                 }
             }
 
