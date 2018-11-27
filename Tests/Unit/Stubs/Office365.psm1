@@ -1,4 +1,8 @@
 ﻿<# EXO - Custom Office365DSC #>
+
+function Get-Group{
+    [CmdletBinding()]
+}
 function New-ExoPSSession {
     [CmdletBinding()]
 param(
