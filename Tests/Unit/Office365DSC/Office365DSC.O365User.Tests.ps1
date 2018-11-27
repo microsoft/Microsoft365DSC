@@ -65,6 +65,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 UsageLocation = "US"
                 LicenseAssignment = "CONTOSO:ENTERPRISE_PREMIUM"
                 Password = $GlobalAdminAccount
+                Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
