@@ -95,6 +95,7 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting Office 365 Group $DisplayName"
     $CurrentParameters = $PSBoundParameters
+    $CurrentParameters.Remove("Ensure")
     $CurrentParameters.Remove("GlobalAdminAccount")
     try
     {
