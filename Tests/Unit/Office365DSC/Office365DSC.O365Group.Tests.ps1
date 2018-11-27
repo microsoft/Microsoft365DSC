@@ -71,7 +71,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MsolGroupMember -MockWith {
                 return @(
                     @{
-                        ObjectId = "12345-12345-12345-1245"
+                        EmailAddress = "JohnSmith@contoso.onmicrosoft.com"
                     }
                 )
             }

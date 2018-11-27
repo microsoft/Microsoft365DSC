@@ -52,7 +52,7 @@ function Get-TargetResource
         return @{
             DisplayName = $group.DisplayName
             Description = $group.Description
-            ManagedBy = $groupMembers[0].ObjectId
+            ManagedBy = $groupMembers[0].EmailAddress
             GlobalAdminAccount = $GlobalAdminAccount
             Ensure = "Present"
         }
