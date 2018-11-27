@@ -72,7 +72,7 @@ function Get-TargetResource
             FirstName = $user.FirstName
             LastName = $user.LastName
             UsageLocation = $user.UsageLocation
-            LicenseAssignment = $accountNAme + ":" + $sku
+            LicenseAssignment = $accountName + ":" + $sku
             Passsword = $Password
             Ensure = "Present"
         }
@@ -80,7 +80,7 @@ function Get-TargetResource
     catch
     {
         Write-Verbose "The specified User doesn't already exist."
-        return $nullReturn        
+        return $nullReturn
     }
 }
 

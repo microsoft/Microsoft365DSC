@@ -3763,53 +3763,11 @@ param(
     [Parameter(ParameterSetName='GetGroup__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
     [guid]
     ${ObjectId},
-
-    [Parameter(ParameterSetName='ListGroups__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [System.Nullable[guid]]
-    ${UserObjectId},
-
-    [Parameter(ParameterSetName='ListGroups__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [switch]
-    ${IsAgentRole},
-
+    
     [Parameter(ParameterSetName='ListGroups__0')]
     [Parameter(ParameterSetName='All__0')]
     [string]
-    ${UserPrincipalName},
-
-    [Parameter(ParameterSetName='ListGroups__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [System.Nullable[object]]
-    ${GroupType},
-
-    [Parameter(ParameterSetName='ListGroups__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [switch]
-    ${HasErrorsOnly},
-
-    [Parameter(ParameterSetName='ListGroups__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [System.Nullable[bool]]
-    ${HasLicenseErrorsOnly},
-
-    [Parameter(ParameterSetName='ListGroups__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${SearchString},
-
-    [Parameter(ParameterSetName='ListGroups__0')]
-    [int]
-    ${MaxResults},
-
-    [Parameter(ParameterSetName='All__0', Mandatory=$true)]
-    [switch]
-    ${All},
-
-    [Parameter(ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[guid]]
-    ${TenantId})
+    ${UserPrincipalName})
 
  
  } 
@@ -3821,30 +3779,7 @@ param(
     [Parameter(ParameterSetName='ListGroupMembers__0')]
     [Parameter(ParameterSetName='All__0')]
     [guid]
-    ${GroupObjectId},
-
-    [Parameter(ParameterSetName='ListGroupMembers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [AllowEmptyCollection()]
-    [string[]]
-    ${MemberObjectTypes},
-
-    [Parameter(ParameterSetName='ListGroupMembers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${SearchString},
-
-    [Parameter(ParameterSetName='ListGroupMembers__0')]
-    [int]
-    ${MaxResults},
-
-    [Parameter(ParameterSetName='All__0', Mandatory=$true)]
-    [switch]
-    ${All},
-
-    [Parameter(ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[guid]]
-    ${TenantId})
+    ${GroupObjectId})
 
  
  } 
