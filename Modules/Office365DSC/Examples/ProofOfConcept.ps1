@@ -4,44 +4,15 @@ Configuration ProofOfConcept
     $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
-        SPOSite DemoOfO365DSC
-        {
-            Url = "https://O365DSC1.sharepoint.com/sites/MyDemo"
-            Owner = "TenantAdmin@O365DSC1.onmicrosoft.com"
-            StorageQuota = 100
-            ResourceQuota = 777
-            Title = "ProofOfConcept"
-            CentralAdminUrl = "https://o365dsc1-admin.sharepoint.com"
-            GlobalAdminAccount = $credsGlobalAdmin
-        }
 
-        O365User Bob
+        O365Group TestGroup
         {
-            UserPrincipalName = "Bob.Houle@O365DSC1.onmicrosoft.com"
-            FirstName = "Bob"
-            LastName = "Houle"
-            DisplayName = "Bob Houle"
-            UsageLocation = "US"
-            LicenseAssignment = "O365dsc1:ENTERPRISEPREMIUM"
-            GlobalAdminAccount = $credsGlobalAdmin
-        }
-
-        O365User John
-        {
-            UserPrincipalName = "John.Smith@O365DSC1.onmicrosoft.com"
-            FirstName = "John"
-            LastName = "Smith"
-            DisplayName = "John J. Smith"
-            UsageLocation = "US"
-            LicenseAssignment = "O365dsc1:ENTERPRISEPREMIUM"
-            GlobalAdminAccount = $credsGlobalAdmin
-        }
-
-        O365Group MarkTeam
-        {
-            DisplayName = "Mark's Team"
-            Description = "Team for Mark"
-            ManagedBy = "TenantAdmin@O365DSC1.onmicrosoft.com"
+            DisplayName = "Nik MEDL Group"
+            Description = "Hello World"
+            PrimarySMTPAddress = "HI@o365dsc1.onmicrosoft.com"
+            Alias = "HI"
+            GroupType = "MailEnabledSecurity"
+            Ensure = "Present"
             GlobalAdminAccount = $credsGlobalAdmin
         }
     }

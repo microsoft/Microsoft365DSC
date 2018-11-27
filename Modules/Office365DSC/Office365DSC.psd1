@@ -69,7 +69,7 @@ NestedModules = @("modules\Office365DSCUtil.psm1")
 #FunctionsToExport = '*'
 
 # Cmdlets to export from this module
-CmdletsToExport = @("Test-SPOServiceConnection", "Test-Office365DSCParameterState", "Test-O365ServiceConnection")
+CmdletsToExport = @("Test-SPOServiceConnection", "Test-Office365DSCParameterState", "Test-O365ServiceConnection", "Invoke-ExoCommand")
 
 # Variables to export from this module
 #VariablesToExport = '*'

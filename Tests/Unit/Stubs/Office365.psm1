@@ -1,4 +1,92 @@
-﻿<# Microsoft.Online.SharePoint.PowerShell #>
+﻿<# EXO - Custom Office365DSC #>
+
+function Get-Group{
+    [CmdletBinding()]
+    param()
+}
+
+function New-DistributionGroup {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        ${Name},
+    
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        ${Alias},
+    
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        ${Type},
+    
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        ${PrimarySMTPAddress}
+    )
+}
+
+function New-DistributionGroup {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        ${Name},
+    
+        [Parameter()]
+        [string]
+        ${Alias},
+    
+        [Parameter()]
+        [string]
+        ${Type},
+    
+        [Parameter()]
+        [string]
+        ${PrimarySMTPAddress},
+
+        [Parameter()]
+        [string]
+        $Notes,
+
+        [Parameter()]
+        [string]
+        $DisplayName
+    )
+}
+
+function New-ExoPSSession {
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true)]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    ${ConnectionUri},
+
+    [Parameter(Mandatory=$true)]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    ${AzureADAuthorizationEndpointUri},
+
+    [Parameter(Mandatory=$true)]
+    [ValidateNotNullOrEmpty()]
+    [object]
+    ${PSSessionOption},
+
+    [Parameter(Mandatory=$true)]
+    [ValidateNotNullOrEmpty()]
+    [object]
+    ${Credential}
+    )
+
+}
+
+<# Microsoft.Online.SharePoint.PowerShell #>
  
 function Add-SPOGeoAdministrator { 
  [CmdletBinding(DefaultParameterSetName='User')]

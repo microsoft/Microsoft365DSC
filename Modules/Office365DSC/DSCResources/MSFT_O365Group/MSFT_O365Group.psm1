@@ -9,12 +9,25 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter(Mandatory = $true)]
+        [ValidateSet("Office365", "Security", "DistributionList", "MailEnabledSecurity")]
+        [System.String]
+        $GroupType,
+
+        [Parameter()]
         [System.String]
         $Description,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $ManagedBy,
+
+        [Parameter()]
+        [System.String]
+        $Alias,
+
+        [Parameter()]
+        [System.String]
+        $PrimarySMTPAddress,
 
         [Parameter()] 
         [ValidateSet("Present","Absent")] 
@@ -25,21 +38,21 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )
-
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     
     $nullReturn = @{
-        DisplayName = $null
+        DisplayName = $DisplayName
+        GroupType = $GroupType
         Description = $null
-        ManagedBy = $null
-        TenantId = $null
         GlobalAdminAccount = $null
         Ensure = "Absent"
     }
 
-    try
-    {        
-        Write-Verbose -Message "Getting Office 365 Group $DisplayName"
+    if ($GroupType -eq "Security")
+    {
+        Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+        Write-Verbose -Message "Getting Security Group $($DisplayName)"
+        $group = Get-MSOLGroup | Where-Object {$_.DisplayName -eq $DisplayName}
+
         $group = Get-MSOLGroup | Where-Object {$_.DisplayName -eq $DisplayName}
 
         if(!$group)
@@ -47,21 +60,74 @@ function Get-TargetResource
             Write-Verbose "The specified Group doesn't already exist."
             return $nullReturn
         }
-
-        $groupMembers = Get-MsolGroupMember -GroupObjectId $group.ObjectId
         return @{
             DisplayName = $group.DisplayName
+            GroupType = $GroupType
             Description = $group.Description
-            ManagedBy = $groupMembers[0].EmailAddress
             GlobalAdminAccount = $GlobalAdminAccount
             Ensure = "Present"
         }
     }
-    catch
+    else 
     {
-        Write-Verbose "The specified Group doesn't already exist."
-        return $nullReturn        
+        $RecipientTypeDetails = "GroupMailbox"
+        switch($GroupType)
+        {
+            "Office365" { $RecipientTypeDetails = "GroupMailbox" }
+            "DistributionList" { $RecipientTypeDetails = "MailUniversalDistributionGroup" }
+            "MailEnabledSecurity" { $RecipientTypeDetails = "MailUniversalSecurityGroup" }
+        }
+
+        $allGroups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount -ScriptBlock{
+            Get-Group
+        }
+
+        $group = $allGroups | Where-Object {$_.DisplayName -eq $DisplayName -and $_.RecipientTypeDetails -eq $RecipientTypeDetails}
+        if(!$group)
+        {
+            Write-Verbose "The specified Group doesn't already exist."
+            return $nullReturn
+        }
+
+        switch($GroupType)
+        {
+            "Office365"
+            {
+                Write-Verbose "Found Office365 Group $($group.DisplayName)"
+                return @{
+                    DisplayName = $group.DisplayName
+                    GroupType = $GroupType
+                    Description = $group.Notes
+                    GlobalAdminAccount = $GlobalAdminAccount
+                    Ensure = "Present"
+                }
+            }
+            "DistributionList"
+            {
+                Write-Verbose "Found Distribution List $($group.DisplayName)"
+                return @{
+                    DisplayName = $group.DisplayName
+                    GroupType = $GroupType
+                    Description = $group.Notes
+                    GlobalAdminAccount = $GlobalAdminAccount
+                    Ensure = "Present"
+                }
+            }
+            "MailEnabledSecurity"
+            {
+                Write-Verbose "Found Mail-Enabled Security Group $($group.DisplayName)"
+                return @{
+                    DisplayName = $group.DisplayName
+                    GroupType = $GroupType
+                    Description = $group.Notes
+                    GlobalAdminAccount = $GlobalAdminAccount
+                    Ensure = "Present"
+                }
+            }
+        }
     }
+    Write-Verbose "The specified Group doesn't already exist."
+    return $nullReturn
 }
 
 function Set-TargetResource
@@ -74,12 +140,25 @@ function Set-TargetResource
         $DisplayName,
 
         [Parameter(Mandatory = $true)]
+        [ValidateSet("Office365", "Security", "DistributionList", "MailEnabledSecurity")]
+        [System.String]
+        $GroupType,
+
+        [Parameter()]
         [System.String]
         $Description,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $ManagedBy,
+
+        [Parameter()]
+        [System.String]
+        $Alias,
+
+        [Parameter()]
+        [System.String]
+        $PrimarySMTPAddress,
 
         [Parameter()] 
         [ValidateSet("Present","Absent")] 
@@ -90,26 +169,57 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )
-
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-
-    Write-Verbose -Message "Setting Office 365 Group $DisplayName"
-    $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("Ensure")
-    $CurrentParameters.Remove("GlobalAdminAccount")
-    try
+    Write-Verbose "Entering Set-TargetResource"
+    if( $Ensure -eq "Present")
     {
-        $owner = Get-MsolUser -ObjectId $ManagedBy -ErrorAction SilentlyContinue
-    }
-    catch
-    {
-        if(!$owner)
+        $CurrentParameters = $PSBoundParameters
+        $CurrentParameters.Remove("Ensure")
+        $CurrentParameters.Remove("GlobalAdminAccount")
+        $CurrentParameters.Remove("GroupType")
+
+        if ($GroupType -eq "Security")
         {
-            $owner = Get-MsolUser -UserPrincipalName $ManagedBy
-            $CurrentParameters.ManagedBy = $owner.ObjectId
-        }        
+            Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+            Write-Verbose -Message "Creating Security Group $DisplayName"
+            New-MsolGroup @CurrentParameters
+        }
+        else {
+            switch($GroupType)
+            {
+                "Office365"
+                {
+                    Write-Verbose -Message "Creating Office 365 Group $DisplayName"
+                    Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                        -Arguments $CurrentParameters `
+                        -ScriptBlock {
+                        New-UnifiedGroup -DisplayName $args[0].DisplayName -Notes $args[0].Description -Owner $args[0].ManagedBy
+                    }
+                }
+                "DistributionList"
+                {
+                    Write-Verbose -Message "Creating Distribution List $DisplayName"
+                    Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                        -Arguments $CurrentParameters `
+                        -ScriptBlock {
+                        New-DistributionGroup -DisplayName $args[0].DisplayName -Notes $args[0].Description `
+                                              -Name $args[0].DisplayName
+                    }
+                }
+                "MailEnabledSecurity"
+                {
+                    Write-Verbose -Message "Creating Mail-Enabled Security Group $DisplayName"
+                    Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                        -Arguments $CurrentParameters `
+                        -ScriptBlock {
+                            New-DistributionGroup -Name $args[0].DisplayName `
+                                                  -Alias $args[0].Alias `
+                                                  -Type "Security" `
+                                                  -PrimarySMTPAddress $args[0].PrimarySMTPAddress
+                    }
+                }
+            }
+        }
     }
-    New-MsolGroup @CurrentParameters
 }
 
 function Test-TargetResource
@@ -123,12 +233,25 @@ function Test-TargetResource
         $DisplayName,
 
         [Parameter(Mandatory = $true)]
+        [ValidateSet("Office365", "Security", "DistributionList", "MailEnabledSecurity")]
+        [System.String]
+        $GroupType,
+
+        [Parameter()]
         [System.String]
         $Description,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $ManagedBy,
+
+        [Parameter()]
+        [System.String]
+        $Alias,
+
+        [Parameter()]
+        [System.String]
+        $PrimarySMTPAddress,
 
         [Parameter()] 
         [ValidateSet("Present","Absent")] 
@@ -146,8 +269,7 @@ function Test-TargetResource
                                            -DesiredValues $PSBoundParameters `
                                            -ValuesToCheck @("Ensure", `
                                                             "DisplayName", `
-                                                            "Description", `
-                                                            "ManagedBy")
+                                                            "Description")
 }
 
 Export-ModuleMember -Function *-TargetResource
