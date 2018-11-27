@@ -1,23 +1,23 @@
 ﻿<# EXO - Custom Office365DSC #>
 function New-ExoPSSession {
-    [CmdletBinding(DefaultParameterSetName='User')]
+    [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true, Position=0)]
+    [Parameter(Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
     [string]
     ${ConnectionUri},
 
-    [Parameter(Mandatory=$true, Position=0)]
+    [Parameter(Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
     [string]
     ${AzureADAuthorizationEndpointUri},
 
-    [Parameter(Mandatory=$true, Position=0)]
+    [Parameter(Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
     [object]
     ${PSSessionOption},
 
-    [Parameter(Mandatory=$true, Position=0)]
+    [Parameter(Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
     [object]
     ${Credential}
