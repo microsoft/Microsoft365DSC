@@ -78,6 +78,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     DisplayName = "Test Group"
                     RecipientTypeDetails = "GroupMailbox"
+                    Notes = "This is a test"
                 }
             }
 
