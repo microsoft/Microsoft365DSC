@@ -60,10 +60,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-MSOLUser -MockWith {
+            Mock -CommandName Get-MSOLGroup -MockWith {
                 return @{
                     DisplayName = "Test Group"
                     Description = "This is a test"
+                    ObjectId = "12345-12345-12345-12345-12345"
                     Ensure = "Present"
                 }
             }
