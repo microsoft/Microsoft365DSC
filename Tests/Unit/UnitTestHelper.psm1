@@ -26,7 +26,7 @@ function New-O365DscUnitTestHelper
     $repoRoot = Join-Path -Path $PSScriptRoot -ChildPath "..\..\" -Resolve
     $moduleRoot = Join-Path -Path $repoRoot -ChildPath "Modules\Office365Dsc"
 
-    $mainModule = Join-Path -Path $moduleRoot -ChildPath "SharePointDsc.psd1"
+    $mainModule = Join-Path -Path $moduleRoot -ChildPath "Office365DSC.psd1"
     Import-Module -Name $mainModule -Global
 
     if ($PSBoundParameters.ContainsKey("SubModulePath") -eq $true)
@@ -48,19 +48,17 @@ function New-O365DscUnitTestHelper
 
     $initScript = @"
             Remove-Module -Name "Microsoft.Online.SharePoint.PowerShell" -Force -ErrorAction SilentlyContinue
-	    Remove-Module -Name "MSOnline" -Force -ErrorAction SilentlyContinue
-	    Remove-Module -Name "AzureAD" -Force -ErrorAction SilentlyContinue
+            Remove-Module -Name "MSOnline" -Force -ErrorAction SilentlyContinue
+            Remove-Module -Name "AzureAD" -Force -ErrorAction SilentlyContinue
             Import-Module -Name "$StubModule" -WarningAction SilentlyContinue
             Import-Module -Name "$moduleToLoad"
 
 "@
 
-
     return @{
         DescribeHeader = $describeHeader
         ModuleName = $moduleName
         CurrentStubModulePath = $StubModule
-        CurrentStubBuildNumber = [Version]::Parse($spBuild)
         InitializeScript = [ScriptBlock]::Create($initScript)
         RepoRoot = $repoRoot
         CleanupScript = [ScriptBlock]::Create(@"

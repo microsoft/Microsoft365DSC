@@ -1,4 +1,3 @@
-
 function Test-SPOServiceConnection
 {
     [CmdletBinding()]

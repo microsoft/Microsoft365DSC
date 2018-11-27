@@ -36,6 +36,14 @@ Configuration ProofOfConcept
             LicenseAssignment = "O365dsc1:ENTERPRISEPREMIUM"
             GlobalAdminAccount = $credsGlobalAdmin
         }
+
+        O365Group MarkTeam
+        {
+            DisplayName = "Mark's Team"
+            Description = "Team for Mark"
+            ManagedBy = "TenantAdmin@O365DSC1.onmicrosoft.com"
+            GlobalAdminAccount = $credsGlobalAdmin
+        }
     }
 }
 

@@ -40,6 +40,11 @@ function Get-TargetResource
         [System.UInt32]
         $TimeZoneId,
 
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
@@ -61,11 +66,17 @@ function Get-TargetResource
         StorageQuota = $null
         CompatibilityLevel = $null
         Title = $null
+        Ensure = "Absent"
     }
 
     try {        
         Write-Verbose -Message "Getting site collection $Url"
         $site = Get-SPOSite $Url
+        if(!$site)
+        {
+            Write-Verbose "The specified Site Collection doesn't already exist."
+            return $nullReturn
+        }
         return @{
             Url = $site.Url
             Owner = $site.Owner
@@ -76,11 +87,12 @@ function Get-TargetResource
             StorageQuota = $site.StorageQuota
             CompatibilityLevel = $site.CompatibilityLevel
             Title = $site.Title
+            Ensure = "Present"
         }
     }
     catch {
         Write-Verbose "The specified Site Collection doesn't already exist."
-        return $nullReturn        
+        return $nullReturn
     }
 }
 
@@ -124,6 +136,11 @@ function Set-TargetResource
         [Parameter()]
         [System.UInt32]
         $TimeZoneId,
+
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -186,6 +203,11 @@ function Test-TargetResource
         [System.UInt32]
         $TimeZoneId,
 
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
@@ -199,7 +221,8 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                            -DesiredValues $PSBoundParameters `
-                                           -ValuesToCheck @("Url")
+                                           -ValuesToCheck @("Ensure", `
+                                                            "Url")
 }
 
 Export-ModuleMember -Function *-TargetResource

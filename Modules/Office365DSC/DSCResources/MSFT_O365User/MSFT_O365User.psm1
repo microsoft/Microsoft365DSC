@@ -32,6 +32,11 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential] 
         $Password,
 
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)] 
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
@@ -47,6 +52,7 @@ function Get-TargetResource
         UsageLocation = $null
         LicenseAssignment = $null
         Password = $null
+        Ensure = "Absent"
     }
 
     try
@@ -66,14 +72,15 @@ function Get-TargetResource
             FirstName = $user.FirstName
             LastName = $user.LastName
             UsageLocation = $user.UsageLocation
-            LicenseAssignment = $accountNAme + ":" + $sku
+            LicenseAssignment = $accountName + ":" + $sku
             Passsword = $Password
+            Ensure = "Present"
         }
     }
     catch
     {
         Write-Verbose "The specified User doesn't already exist."
-        return $nullReturn        
+        return $nullReturn
     }
 }
 
@@ -109,6 +116,11 @@ function Set-TargetResource
         [Parameter()] 
         [System.Management.Automation.PSCredential] 
         $Password,
+
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
 
         [Parameter(Mandatory = $true)] 
         [System.Management.Automation.PSCredential] 
@@ -158,6 +170,11 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential] 
         $Password,
 
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)] 
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
@@ -167,7 +184,8 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                            -DesiredValues $PSBoundParameters `
-                                           -ValuesToCheck @("UserPrincipalName", `
+                                           -ValuesToCheck @("Ensure", `
+                                                            "UserPrincipalName", `
                                                             "LicenseAssignment", `
                                                             "UsageLocation",
                                                             "FirstName",
