@@ -130,6 +130,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 )
             }
+
+            Mock -CommandName New-DistributionGroup -MockWith
+            {
+
+            }
+
+            It "Should create the group from the Set method" {
+                Set-TargetResource @testParams
+            }
             
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present" 
