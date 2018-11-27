@@ -74,6 +74,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Get-Group -MockWith {
+                return @{
+                    DisplayName = "Test Group"
+                    RecipientTypeDetails = "GroupMailbox"
+                }
+            }
+
             Mock -CommandName Get-MsolGroupMember -MockWith {
                 return @(
                     @{
