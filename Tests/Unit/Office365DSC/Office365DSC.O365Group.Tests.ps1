@@ -72,6 +72,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @(
                     @{
                         EmailAddress = "JohnSmith@contoso.onmicrosoft.com"
+                    },
+                    @{
+                        EmailAddress = "SecondUser@contoso.onmicrosoft.com"
                     }
                 )
             }
