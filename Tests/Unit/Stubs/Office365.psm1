@@ -1,7 +1,8 @@
 ﻿<# EXO - Custom Office365DSC #>
 function New-ExoPSSession {
     [CmdletBinding(DefaultParameterSetName='User')]
-    param([Mandatory=$true, Position=0)]
+param(
+    [Parameter(Mandatory=$true, Position=0)]
     [ValidateNotNullOrEmpty()]
     [string]
     ${ConnectionUri},
