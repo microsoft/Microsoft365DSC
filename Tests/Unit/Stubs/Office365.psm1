@@ -1,4 +1,30 @@
-﻿<# Microsoft.Online.SharePoint.PowerShell #>
+﻿<# EXO - Custom Office365DSC #>
+function New-ExoPSSession {
+    [CmdletBinding(DefaultParameterSetName='User')]
+    param([Mandatory=$true, Position=0)]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    ${ConnectionUri},
+
+    [Parameter(Mandatory=$true, Position=0)]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    ${AzureADAuthorizationEndpointUri},
+
+    [Parameter(Mandatory=$true, Position=0)]
+    [ValidateNotNullOrEmpty()]
+    [object]
+    ${PSSessionOption},
+
+    [Parameter(Mandatory=$true, Position=0)]
+    [ValidateNotNullOrEmpty()]
+    [object]
+    ${Credential}
+    )
+
+}
+
+<# Microsoft.Online.SharePoint.PowerShell #>
  
 function Add-SPOGeoAdministrator { 
  [CmdletBinding(DefaultParameterSetName='User')]
