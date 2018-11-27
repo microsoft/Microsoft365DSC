@@ -71,6 +71,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MSOLUser -MockWith {
                 return @{
                     UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                    DisplayName = "John Smith"
+                    FirstName = "John"
+                    LastName = "Smith"
+                    UsageLocation = "US"
+                    LicenseAssignment = "CONTOSO:ENTERPRISE_PREMIUM"
                     Ensure = "Present"
                 }
             }
