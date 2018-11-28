@@ -6,7 +6,7 @@ class MSFT_O365User : OMI_BaseResource
     [Required, Description("The first name of the user")] string FirstName;
     [Required, Description("The last name of the user")] string LastName;
     [Required, Description("The country code the user will be assigned to")] string UsageLocation;
-    [Required, Description("The account SKU Id for the license to be assigned to the user")] string LicenseAssignment;
+    [Write, Description("The account SKU Id for the license to be assigned to the user")] string LicenseAssignment[];
     [Write, Description("The password for the account. The parameter is a PSCredential object, but only the Password component will be used"), EmbeddedInstance("MSFT_Credential")] string Password;
     [Write, Description("The City name of the user")] string City;
     [Write, Description("The Country name of the user")] string Country;
