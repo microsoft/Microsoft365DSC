@@ -5511,7 +5511,6 @@ param(
     [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
     [object]
     ${UserType}
-
  
  } 
 
