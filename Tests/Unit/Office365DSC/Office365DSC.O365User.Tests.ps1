@@ -91,6 +91,42 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should be $true
             }
         }
+
+        Context -Name "When the user already exists but has a different license assigned" -Fixture {
+            $testParams = @{
+                UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                DisplayName = "John Smith"
+                FirstName = "John"
+                LastName = "Smith"
+                UsageLocation = "US"
+                LicenseAssignment = @()
+                Password = $GlobalAdminAccount
+                Ensure = "Present"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-MSOLUser -MockWith {
+                return @{
+                    UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                    DisplayName = "John Smith"
+                    FirstName = "John"
+                    LastName = "Smith"
+                    UsageLocation = "US"
+                    Licenses = @(@{
+                        AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
+                    })
+                    Ensure = "Present"
+                }
+            }
+            
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should be $false
+            }
+        }
     }
 }
 
