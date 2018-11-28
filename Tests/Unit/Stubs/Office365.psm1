@@ -5430,19 +5430,7 @@ function Set-MsolUser {
 param(
     [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
     [string]
-    ${ImmutableId},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[guid]]
-    ${ObjectId},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${UserPrincipalName},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
-    ${BlockCredential},
+    ${UserPrincipalName},    
 
     [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
     [string]
@@ -5485,7 +5473,7 @@ param(
     ${Office},
 
     [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
+    [bool]
     ${PasswordNeverExpires},
 
     [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
@@ -5505,20 +5493,12 @@ param(
     ${PreferredLanguage},
 
     [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[datetime]]
-    ${SoftDeletionTimestamp},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
     [string]
     ${State},
 
     [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
     [string]
     ${StreetAddress},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
-    ${StrongPasswordRequired},
 
     [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
     [string]
@@ -5529,36 +5509,8 @@ param(
     ${UsageLocation},
 
     [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [AllowEmptyCollection()]
-    [string[]]
-    ${AlternateEmailAddresses},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [AllowEmptyCollection()]
     [object]
-    ${StrongAuthenticationMethods},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [AllowEmptyCollection()]
-    [string[]]
-    ${AlternateMobilePhones},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [AllowEmptyCollection()]
-    [object]
-    ${StrongAuthenticationRequirements},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[datetime]]
-    ${StsRefreshTokensValidFrom},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
-    ${UserType},
-
-    [Parameter(ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[guid]]
-    ${TenantId})
+    ${UserType}
 
  
  } 
