@@ -69,7 +69,8 @@ function Get-TargetResource
         Ensure = "Absent"
     }
 
-    try {        
+    try
+    {
         Write-Verbose -Message "Getting site collection $Url"
         $site = Get-SPOSite $Url
         if(!$site)
@@ -90,7 +91,8 @@ function Get-TargetResource
             Ensure = "Present"
         }
     }
-    catch {
+    catch
+    {
         Write-Verbose "The specified Site Collection doesn't already exist."
         return $nullReturn
     }
