@@ -276,13 +276,12 @@ function Set-TargetResource
     $CurrentParameters.Remove("Ensure")
     $CurrentParameters.Remove("GlobalAdminAccount")
     $newLicenseAssignment = $LicenseAssignment
-    $CurrentParameters.Remove("LicenseAssignment")
 
     if ($user.UserPrincipalName)
     {
         Write-Verbose "Comparing License Assignment for user $UserPrincipalName"
         $diff = Compare-Object -ReferenceObject $user.LicenseAssignment -DifferenceObject $newLicenseAssignment
-
+        $CurrentParameters.Remove("LicenseAssignment")
         if ($diff.InputObject)
         {
             Write-Verbose "Detected a change in license assignment for user $UserPrincipalName"

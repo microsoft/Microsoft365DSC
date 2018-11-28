@@ -157,7 +157,7 @@ function Set-TargetResource
 
     if($Ensure -eq "Present")
     {
-        $deletedSite = Get-SPODeletedSite -Identity $Url -ErrorAction SilentlyContinue
+        $deletedSite = Get-SPODeletedSite | Where-Object { $_.Url -eq $Url }
 
         if($deletedSite)
         {
