@@ -5461,10 +5461,6 @@ param(
     ${LastName},
 
     [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[datetime]]
-    ${LastPasswordChangeTimestamp},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
     [string]
     ${MobilePhone},
 
@@ -5473,7 +5469,7 @@ param(
     ${Office},
 
     [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [bool]
+    [System.Boolean]
     ${PasswordNeverExpires},
 
     [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
