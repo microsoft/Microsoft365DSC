@@ -32,7 +32,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 FirstName = "John"
                 LastName = "Smith"
                 UsageLocation = "US"
-                LicenseAssignment = "CONTOSO:ENTERPRISE_PREMIUM"
+                LicenseAssignment = @("CONTOSO:ENTERPRISE_PREMIUM")
                 Password = $GlobalAdminAccount
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -63,7 +63,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 FirstName = "John"
                 LastName = "Smith"
                 UsageLocation = "US"
-                LicenseAssignment = "CONTOSO:ENTERPRISE_PREMIUM"
+                LicenseAssignment = @("CONTOSO:ENTERPRISE_PREMIUM")
                 Password = $GlobalAdminAccount
                 Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
