@@ -155,12 +155,25 @@ function Set-TargetResource
 
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
-    Write-Verbose -Message "Setting site collection $Url"
-    $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("CentralAdminUrl")
-    $CurrentParameters.Remove("GlobalAdminAccount")
+    if($Ensure -eq "Present")
+    {
+        $deletedSite = Get-SPODeletedSite -Identity $Url -ErrorAction SilentlyContinue
 
-    $site = New-SPOSite @CurrentParameters
+        if($deletedSite)
+        {
+            Write-Verbose "A site with URL $($URL) was found in the Recycle Bin."
+            Write-Verbose "Restoring Delete SPOSite $($Url)"
+            Restore-SPODeletedSite $deletedSite
+        }
+        else {
+            Write-Verbose -Message "Setting site collection $Url"
+            $CurrentParameters = $PSBoundParameters
+            $CurrentParameters.Remove("CentralAdminUrl")
+            $CurrentParameters.Remove("GlobalAdminAccount")
+
+            New-SPOSite @CurrentParameters
+        }
+    }
 }
 
 function Test-TargetResource
@@ -224,7 +237,8 @@ function Test-TargetResource
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                            -DesiredValues $PSBoundParameters `
                                            -ValuesToCheck @("Ensure", `
-                                                            "Url")
+                                                            "Url", `
+                                                            "Title")
 }
 
 Export-ModuleMember -Function *-TargetResource

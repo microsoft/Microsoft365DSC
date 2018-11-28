@@ -32,6 +32,67 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential] 
         $Password,
 
+        [Parameter()]
+        [System.String]
+        $City,
+
+        [Parameter()]
+        [System.String]
+        $Country,
+
+        [Parameter()]
+        [System.String]
+        $Department,
+
+        [Parameter()]
+        [System.String]
+        $Fax,
+
+        [Parameter()]
+        [System.String]
+        $MobilePhone,
+
+        [Parameter()]
+        [System.String]
+        $Office,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordNeverExpires,
+
+        [Parameter()]
+        [System.String]
+        $PhoneNumber,
+
+        [Parameter()]
+        [System.String]
+        $PostalCode,
+
+        [Parameter()]
+        [System.String]
+        $PreferredDataLocation,
+
+        [Parameter()]
+        [System.String]
+        $PreferredLanguage,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [System.String]
+        $StreetAddress,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [ValidateSet("Guest", "Member", "Other", "Viral")]
+        [System.String]
+        $UserType,
+
         [Parameter()] 
         [ValidateSet("Present","Absent")] 
         [System.String] 
@@ -117,6 +178,67 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential] 
         $Password,
 
+        [Parameter()]
+        [System.String]
+        $City,
+
+        [Parameter()]
+        [System.String]
+        $Country,
+
+        [Parameter()]
+        [System.String]
+        $Department,
+
+        [Parameter()]
+        [System.String]
+        $Fax,
+
+        [Parameter()]
+        [System.String]
+        $MobilePhone,
+
+        [Parameter()]
+        [System.String]
+        $Office,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordNeverExpires,
+
+        [Parameter()]
+        [System.String]
+        $PhoneNumber,
+
+        [Parameter()]
+        [System.String]
+        $PostalCode,
+
+        [Parameter()]
+        [System.String]
+        $PreferredDataLocation,
+
+        [Parameter()]
+        [System.String]
+        $PreferredLanguage,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [System.String]
+        $StreetAddress,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [ValidateSet("Guest", "Member", "Other", "Viral")]
+        [System.String]
+        $UserType,
+
         [Parameter()] 
         [ValidateSet("Present","Absent")] 
         [System.String] 
@@ -169,6 +291,67 @@ function Test-TargetResource
         [Parameter()] 
         [System.Management.Automation.PSCredential] 
         $Password,
+
+        [Parameter()]
+        [System.String]
+        $City,
+
+        [Parameter()]
+        [System.String]
+        $Country,
+
+        [Parameter()]
+        [System.String]
+        $Department,
+
+        [Parameter()]
+        [System.String]
+        $Fax,
+
+        [Parameter()]
+        [System.String]
+        $MobilePhone,
+
+        [Parameter()]
+        [System.String]
+        $Office,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordNeverExpires,
+
+        [Parameter()]
+        [System.String]
+        $PhoneNumber,
+
+        [Parameter()]
+        [System.String]
+        $PostalCode,
+
+        [Parameter()]
+        [System.String]
+        $PreferredDataLocation,
+
+        [Parameter()]
+        [System.String]
+        $PreferredLanguage,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [System.String]
+        $StreetAddress,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [ValidateSet("Guest", "Member", "Other", "Viral")]
+        [System.String]
+        $UserType,
 
         [Parameter()] 
         [ValidateSet("Present","Absent")] 
