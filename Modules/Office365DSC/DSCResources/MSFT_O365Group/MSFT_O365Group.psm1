@@ -215,12 +215,58 @@ function Set-TargetResource
                         New-UnifiedGroup -DisplayName $args[0].DisplayName -Notes $args[0].Description -Owner $args[0].ManagedBy
                     }
 
-                    Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                        -Arguments $CurrentParameters `
+                    $groupLinks = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                        -Arguments $PSBoundParameters `
                         -ScriptBlock {
-                            Add-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType Members -Links $args[0].Members
+                        Get-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType "Members"
                     }
-                    
+                    $members = @()
+                    foreach($link in $groupLinks)
+                    {
+                        $member += $link.Name
+                    }
+
+                    $difference = Compare-Object -ReferenceObject $Members -DifferenceObject $CurrentParameters.Members
+                    if ($difference.InputObject)
+                    {
+                        Write-Verbose "Detected a difference in the current list of members and the desired one"
+                        Write-Verbose "Current Membership is $($groupLinks)"
+                        Write-Verbose "New License Assignment is $($members)"
+                        $membersToRemove = @()
+                        $membersToAdd = @()
+                        foreach($difference in $diff)
+                        {
+                            if ($difference.SideIndicator -eq "<=")
+                            {
+                                $membersToRemove += $difference.InputObject
+                            }
+                            elseif ($difference.SideIndicator -eq "=>")
+                            {
+                                $membersToAdd += $difference.InputObject
+                            }
+                        }
+
+                        if ($membersToAdd.Count -gt 0)
+                        {
+                            $CurrentParameters.Members = $membersToAdd
+                            Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                -Arguments $CurrentParameters `
+                                -ScriptBlock {
+                                    Add-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType Members -Links $args[0].Members
+                            }
+                        }
+
+                        if ($membersToRemove.Count -gt 0)
+                        {
+                            $CurrentParameters.Members = $membersToRemove
+                            Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                -Arguments $CurrentParameters `
+                                -ScriptBlock {
+                                    Remove-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType Members -Links $args[0].Members
+                            }
+                        }
+                        $CurrentParameters.Members = $members
+                    }
                 }
                 "DistributionList"
                 {
