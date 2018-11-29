@@ -13,7 +13,15 @@ function Test-SPOServiceConnection
         $GlobalAdminAccount
     )    
     Write-Verbose "Verifying the LCM connection state to SharePoint Online"
-    Connect-SPOService -Url $SPOCentralAdminUrl -Credential $GlobalAdminAccount
+    try
+    {
+        # Try a random method that is sure to return result. If it fails, we need to connect.
+        $sites = Get-SPOSite -ErrorAction SilentlyContinue
+    }
+    catch
+    {
+        Connect-SPOService -Url $SPOCentralAdminUrl -Credential $GlobalAdminAccount
+    }
 }
 
 function Test-O365ServiceConnection
@@ -27,7 +35,15 @@ function Test-O365ServiceConnection
         $GlobalAdminAccount
     )    
     Write-Verbose "Verifying the LCM connection state to Microsoft Online Services"
-    Connect-MSOLService -Credential $GlobalAdminAccount
+    try
+    {
+        # Try a random method that is sure to return result. If it fails, we need to connect.
+        $users = Get-MSOLUser -ErrorAction SilentlyContinue
+    }
+    catch
+    {
+        Connect-MSOLService -Credential $GlobalAdminAccount
+    }
 }
 
 
