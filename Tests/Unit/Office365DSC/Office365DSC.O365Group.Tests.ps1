@@ -111,6 +111,63 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name "When the group already exists but with different members" -Fixture {
+            $testParams = @{
+                DisplayName = "Test Group"
+                GroupType = "Office365"
+                Description = "This is a test"
+                Members = @("GoodUser1", "GoodUser2")
+                ManagedBy = "JohnSmith@contoso.onmicrosoft.com"
+                Ensure = "Present"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-UnifiedGroupLinks
+            {
+                return (@{
+                    LinkType = "Members"
+                    Identity = "Test Group"
+                    Name = "GoodUser1"
+                },
+                @{
+                    LinkType = "Members"
+                    Identity = "Test Group"
+                    Name = "BadUser1"
+                },
+                @{
+                    LinkType = "Members"
+                    Identity = "Test Group"
+                    Name = "GoodUser2"
+                })
+            }
+
+            Mock -CommandName Get-Group -MockWith {
+                return @{
+                    DisplayName = "Test Group"
+                    RecipientTypeDetails = "GroupMailbox"
+                    Notes = "This is a test"
+                }
+            }
+
+            Mock -CommandName Get-MsolGroupMember -MockWith {
+                return @(
+                    @{
+                        EmailAddress = "JohnSmith@contoso.onmicrosoft.com"
+                    },
+                    @{
+                        EmailAddress = "SecondUser@contoso.onmicrosoft.com"
+                    }
+                )
+            }
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should be $false
+            }
+
+            If "Should update the membership list in the Set method" {
+                Set-TargetResource @testParams
+            }
+        }
+
         Context -Name "Creating a new Distribution List" -Fixture {
             $testParams = @{
                 DisplayName = "Test Group"

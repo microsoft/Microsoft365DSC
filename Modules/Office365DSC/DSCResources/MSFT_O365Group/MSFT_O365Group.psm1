@@ -346,7 +346,8 @@ function Test-TargetResource
                                            -DesiredValues $PSBoundParameters `
                                            -ValuesToCheck @("Ensure", `
                                                             "DisplayName", `
-                                                            "Description")
+                                                            "Description", `
+                                                            "Members")
 }
 
 function Export-TargetResource
