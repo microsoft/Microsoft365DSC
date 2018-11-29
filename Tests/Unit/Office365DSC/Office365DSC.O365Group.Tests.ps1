@@ -186,9 +186,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 DisplayName = "Test Group"
                 GroupType = "MailEnabledSecurity"
-                Description = "This is a test"
-                ManagedBy = "JohnSmith@contoso.onmicrosoft.com"
-                Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

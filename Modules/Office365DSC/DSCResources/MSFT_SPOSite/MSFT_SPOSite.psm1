@@ -267,7 +267,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-SPOServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     $content = "SPOSite " + (New-GUID).ToString() + "`r`n"
     $content += "{`r`n"

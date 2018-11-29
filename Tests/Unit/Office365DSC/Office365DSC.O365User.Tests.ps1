@@ -141,10 +141,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 FirstName = "John"
                 LastName = "Smith"
                 UsageLocation = "US"
-                LicenseAssignment = @()
-                Password = $GlobalAdminAccount
-                PasswordNeverExpires = $false
-                Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -162,7 +158,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure = "Present"
                 }
             }
-            
+
             It "Should Reverse Engineer resource from the Export method" {
                 Export-TargetResource @testParams
             }
