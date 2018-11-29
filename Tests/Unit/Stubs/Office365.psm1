@@ -5426,140 +5426,87 @@ param(
 
 
 function Set-MsolUser { 
- [CmdletBinding(DefaultParameterSetName='SetUser__0')]
+ [CmdletBinding()]
 param(
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${ImmutableId},
+    $UserPrincipalName,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[guid]]
-    ${ObjectId},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${UserPrincipalName},
+    $City,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
-    ${BlockCredential},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${City},
+    $Country,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${Country},
+    $Department,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${Department},
+    $DisplayName,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${DisplayName},
+    $Fax,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${Fax},
+    $FirstName,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${FirstName},
+    $LastName,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${LastName},
+    $MobilePhone,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[datetime]]
-    ${LastPasswordChangeTimestamp},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${MobilePhone},
+    $Office,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
+    [System.Boolean]
+    $PasswordNeverExpires,
+
+    [Parameter()]
     [string]
-    ${Office},
+    $PhoneNumber,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
-    ${PasswordNeverExpires},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${PhoneNumber},
+    $PostalCode,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${PostalCode},
+    $PreferredDataLocation,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${PreferredDataLocation},
+    $PreferredLanguage,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${PreferredLanguage},
+    $State,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[datetime]]
-    ${SoftDeletionTimestamp},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${State},
+    $StreetAddress,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${StreetAddress},
+    $Title,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
-    ${StrongPasswordRequired},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${Title},
+    $UsageLocation,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${UsageLocation},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [AllowEmptyCollection()]
-    [string[]]
-    ${AlternateEmailAddresses},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [AllowEmptyCollection()]
+    [Parameter()]
     [object]
-    ${StrongAuthenticationMethods},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [AllowEmptyCollection()]
-    [string[]]
-    ${AlternateMobilePhones},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [AllowEmptyCollection()]
-    [object]
-    ${StrongAuthenticationRequirements},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[datetime]]
-    ${StsRefreshTokensValidFrom},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
-    ${UserType},
-
-    [Parameter(ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[guid]]
-    ${TenantId})
-
+    $UserType)
  
  } 
 

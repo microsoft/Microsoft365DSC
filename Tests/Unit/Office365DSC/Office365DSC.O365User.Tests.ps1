@@ -32,7 +32,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 FirstName = "John"
                 LastName = "Smith"
                 UsageLocation = "US"
-                LicenseAssignment = "CONTOSO:ENTERPRISE_PREMIUM"
+                LicenseAssignment = @("CONTOSO:ENTERPRISE_PREMIUM")
                 Password = $GlobalAdminAccount
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -63,7 +63,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 FirstName = "John"
                 LastName = "Smith"
                 UsageLocation = "US"
-                LicenseAssignment = "CONTOSO:ENTERPRISE_PREMIUM"
+                LicenseAssignment = @("CONTOSO:ENTERPRISE_PREMIUM")
                 Password = $GlobalAdminAccount
                 Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
@@ -76,12 +76,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FirstName = "John"
                     LastName = "Smith"
                     UsageLocation = "US"
-                    LicenseAssignmentDetails = @{
-                        AccountSku = @{
-                            AccountName = "CONTOSO"
-                            SkuPartNumber = "ENTERPRISE_PREMIUM"
-                        }
-                    }
+                    Licenses= @(@{
+                        AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
+                    })
                     Ensure = "Present"
                 }
             }
@@ -92,6 +89,48 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return true from the Test method" {
                 Test-TargetResource @testParams | Should be $true
+            }
+        }
+
+        Context -Name "When the user already exists but has a different license assigned" -Fixture {
+            $testParams = @{
+                UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                DisplayName = "John Smith"
+                FirstName = "John"
+                LastName = "Smith"
+                UsageLocation = "US"
+                LicenseAssignment = @()
+                Password = $GlobalAdminAccount
+                PasswordNeverExpires = $false
+                Ensure = "Present"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-MSOLUser -MockWith {
+                return @{
+                    UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                    DisplayName = "John Smith"
+                    FirstName = "John"
+                    LastName = "Smith"
+                    UsageLocation = "US"
+                    Licenses = @(@{
+                        AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
+                    })
+                    PasswordNeverExpires = $false
+                    Ensure = "Present"
+                }
+            }
+            
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+            }
+
+            It "Should remove the License Assignment in the Set Method" {
+                Set-TargetResource @testParams
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should be $false
             }
         }
     }

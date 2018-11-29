@@ -69,7 +69,8 @@ function Get-TargetResource
         Ensure = "Absent"
     }
 
-    try {        
+    try
+    {
         Write-Verbose -Message "Getting site collection $Url"
         $site = Get-SPOSite $Url
         if(!$site)
@@ -90,7 +91,8 @@ function Get-TargetResource
             Ensure = "Present"
         }
     }
-    catch {
+    catch
+    {
         Write-Verbose "The specified Site Collection doesn't already exist."
         return $nullReturn
     }
@@ -153,12 +155,25 @@ function Set-TargetResource
 
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
-    Write-Verbose -Message "Setting site collection $Url"
-    $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("CentralAdminUrl")
-    $CurrentParameters.Remove("GlobalAdminAccount")
+    if($Ensure -eq "Present")
+    {
+        $deletedSite = Get-SPODeletedSite | Where-Object { $_.Url -eq $Url }
 
-    $site = New-SPOSite @CurrentParameters
+        if($deletedSite)
+        {
+            Write-Verbose "A site with URL $($URL) was found in the Recycle Bin."
+            Write-Verbose "Restoring Delete SPOSite $($Url)"
+            Restore-SPODeletedSite $deletedSite
+        }
+        else {
+            Write-Verbose -Message "Setting site collection $Url"
+            $CurrentParameters = $PSBoundParameters
+            $CurrentParameters.Remove("CentralAdminUrl")
+            $CurrentParameters.Remove("GlobalAdminAccount")
+
+            New-SPOSite @CurrentParameters
+        }
+    }
 }
 
 function Test-TargetResource
@@ -222,7 +237,8 @@ function Test-TargetResource
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                            -DesiredValues $PSBoundParameters `
                                            -ValuesToCheck @("Ensure", `
-                                                            "Url")
+                                                            "Url", `
+                                                            "Title")
 }
 
 Export-ModuleMember -Function *-TargetResource
