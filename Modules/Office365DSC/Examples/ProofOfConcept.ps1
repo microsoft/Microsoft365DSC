@@ -4,36 +4,38 @@ Configuration ProofOfConcept
     $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
-        SPOSite DemoOfO365DSC
-        {
-            Url = "https://O365DSC1.sharepoint.com/sites/MyDemo"
-            Owner = "TenantAdmin@O365DSC1.onmicrosoft.com"
-            StorageQuota = 100
-            ResourceQuota = 777
-            Title = "ProofOfConcept"
-            CentralAdminUrl = "https://o365dsc1-admin.sharepoint.com"
-            GlobalAdminAccount = $credsGlobalAdmin
-        }
-
-        O365User Bob
-        {
-            UserPrincipalName = "Bob.Houle@O365DSC1.onmicrosoft.com"
-            FirstName = "Bob"
-            LastName = "Houle"
-            DisplayName = "Bob Houle"
-            UsageLocation = "US"
-            LicenseAssignment = "O365dsc1:ENTERPRISEPREMIUM"
-            GlobalAdminAccount = $credsGlobalAdmin
-        }
-
-        O365User John
+        O365User JohnSMith
         {
             UserPrincipalName = "John.Smith@O365DSC1.onmicrosoft.com"
             FirstName = "John"
             LastName = "Smith"
             DisplayName = "John J. Smith"
+            City = "Gatineau"
+            Country = "Canada"
+            Office = "Ottawa - Queen"
+            LicenseAssignment = @("O365dsc1:ENTERPRISEPREMIUM")
             UsageLocation = "US"
-            LicenseAssignment = "O365dsc1:ENTERPRISEPREMIUM"
+            Ensure = "Present"
+            GlobalAdminAccount = $credsGlobalAdmin
+        }
+
+        O365Group OttawaTeam
+        {
+            DisplayName = "Ottawa Employees"
+            Description = "This is only for employees of the Ottawa Office"
+            GroupType = "Office365"
+            ManagedBy = "TenantAdmin@O365DSC1.onmicrosoft.com"
+            Ensure = "Present"
+            GlobalAdminAccount = $credsGlobalAdmin
+        }
+
+        SPOSite HumanResources
+        {
+            Url = "https://o365dsc1.sharepoint.com/sites/HumanRes"
+            Owner = "TenantAdmin@O365DSC1.onmicrosoft.com"
+            StorageQuota = 300
+            ResourceQuota = 500
+            CentralAdminUrl = "https://o365dsc1-admin.sharepoint.com"
             GlobalAdminAccount = $credsGlobalAdmin
         }
     }
@@ -48,4 +50,5 @@ $configData = @{
     }
     )
 }
+
 ProofOfConcept -ConfigurationData $configData

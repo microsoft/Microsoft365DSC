@@ -48,7 +48,7 @@ PowerShellVersion = '5.1'
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-# RequiredModules = @("Microsoft.Online.SharePoint.PowerShell", "MSOnline")
+RequiredModules = @(@{ModuleName="ReverseDSC";ModuleVersion="1.9.2.11"})
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
@@ -69,7 +69,7 @@ NestedModules = @("modules\Office365DSCUtil.psm1")
 #FunctionsToExport = '*'
 
 # Cmdlets to export from this module
-CmdletsToExport = @("Test-SPOServiceConnection", "Test-Office365DSCParameterState", "Test-O365ServiceConnection")
+CmdletsToExport = @("Test-SPOServiceConnection", "Test-Office365DSCParameterState", "Test-O365ServiceConnection", "Invoke-ExoCommand")
 
 # Variables to export from this module
 #VariablesToExport = '*'

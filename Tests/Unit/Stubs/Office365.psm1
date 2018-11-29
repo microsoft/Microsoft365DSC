@@ -1,4 +1,92 @@
-﻿<# Microsoft.Online.SharePoint.PowerShell #>
+﻿<# EXO - Custom Office365DSC #>
+
+function Get-Group{
+    [CmdletBinding()]
+    param()
+}
+
+function New-DistributionGroup {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        ${Name},
+    
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        ${Alias},
+    
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        ${Type},
+    
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        ${PrimarySMTPAddress}
+    )
+}
+
+function New-DistributionGroup {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        ${Name},
+    
+        [Parameter()]
+        [string]
+        ${Alias},
+    
+        [Parameter()]
+        [string]
+        ${Type},
+    
+        [Parameter()]
+        [string]
+        ${PrimarySMTPAddress},
+
+        [Parameter()]
+        [string]
+        $Notes,
+
+        [Parameter()]
+        [string]
+        $DisplayName
+    )
+}
+
+function New-ExoPSSession {
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true)]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    ${ConnectionUri},
+
+    [Parameter(Mandatory=$true)]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    ${AzureADAuthorizationEndpointUri},
+
+    [Parameter(Mandatory=$true)]
+    [ValidateNotNullOrEmpty()]
+    [object]
+    ${PSSessionOption},
+
+    [Parameter(Mandatory=$true)]
+    [ValidateNotNullOrEmpty()]
+    [object]
+    ${Credential}
+    )
+
+}
+
+<# Microsoft.Online.SharePoint.PowerShell #>
  
 function Add-SPOGeoAdministrator { 
  [CmdletBinding(DefaultParameterSetName='User')]
@@ -3763,53 +3851,11 @@ param(
     [Parameter(ParameterSetName='GetGroup__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
     [guid]
     ${ObjectId},
-
-    [Parameter(ParameterSetName='ListGroups__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [System.Nullable[guid]]
-    ${UserObjectId},
-
-    [Parameter(ParameterSetName='ListGroups__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [switch]
-    ${IsAgentRole},
-
+    
     [Parameter(ParameterSetName='ListGroups__0')]
     [Parameter(ParameterSetName='All__0')]
     [string]
-    ${UserPrincipalName},
-
-    [Parameter(ParameterSetName='ListGroups__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [System.Nullable[object]]
-    ${GroupType},
-
-    [Parameter(ParameterSetName='ListGroups__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [switch]
-    ${HasErrorsOnly},
-
-    [Parameter(ParameterSetName='ListGroups__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [System.Nullable[bool]]
-    ${HasLicenseErrorsOnly},
-
-    [Parameter(ParameterSetName='ListGroups__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${SearchString},
-
-    [Parameter(ParameterSetName='ListGroups__0')]
-    [int]
-    ${MaxResults},
-
-    [Parameter(ParameterSetName='All__0', Mandatory=$true)]
-    [switch]
-    ${All},
-
-    [Parameter(ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[guid]]
-    ${TenantId})
+    ${UserPrincipalName})
 
  
  } 
@@ -3821,30 +3867,7 @@ param(
     [Parameter(ParameterSetName='ListGroupMembers__0')]
     [Parameter(ParameterSetName='All__0')]
     [guid]
-    ${GroupObjectId},
-
-    [Parameter(ParameterSetName='ListGroupMembers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [AllowEmptyCollection()]
-    [string[]]
-    ${MemberObjectTypes},
-
-    [Parameter(ParameterSetName='ListGroupMembers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${SearchString},
-
-    [Parameter(ParameterSetName='ListGroupMembers__0')]
-    [int]
-    ${MaxResults},
-
-    [Parameter(ParameterSetName='All__0', Mandatory=$true)]
-    [switch]
-    ${All},
-
-    [Parameter(ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[guid]]
-    ${TenantId})
+    ${GroupObjectId})
 
  
  } 
@@ -4082,99 +4105,10 @@ param(
 function Get-MsolUser { 
  [CmdletBinding(DefaultParameterSetName='ListUsers__0')]
 param(
-    [Parameter(ParameterSetName='GetUser__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
-    [guid]
-    ${ObjectId},
-
-    [Parameter(ParameterSetName='GetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [Parameter(ParameterSetName='GetUserByUpn__0', ValueFromPipelineByPropertyName=$true)]
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [switch]
-    ${ReturnDeletedUsers},
-
     [Parameter(ParameterSetName='GetUserByUpn__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
-    ${UserPrincipalName},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${City},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${Country},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${Department},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${DomainName},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [System.Nullable[object]]
-    ${EnabledFilter},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${State},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [switch]
-    ${Synchronized},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${Title},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [switch]
-    ${HasErrorsOnly},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [switch]
-    ${LicenseReconciliationNeededOnly},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [switch]
-    ${UnlicensedUsersOnly},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${UsageLocation},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [Parameter(ParameterSetName='All__0')]
-    [string]
-    ${SearchString},
-
-    [Parameter(ParameterSetName='ListUsers__0')]
-    [int]
-    ${MaxResults},
-
-    [Parameter(ParameterSetName='All__0', Mandatory=$true)]
-    [switch]
-    ${All},
-
-    [Parameter(ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[guid]]
-    ${TenantId})
-
- 
+    ${UserPrincipalName}
+)
  } 
 
 
@@ -4448,35 +4382,11 @@ function New-MsolUser {
 param(
     [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
     [string]
-    ${ImmutableId},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [string]
     ${UserPrincipalName},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
-    ${BlockCredential},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${City},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${Country},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${Department},
 
     [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
     [string]
     ${DisplayName},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${Fax},
 
     [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
     [string]
@@ -4487,110 +4397,17 @@ param(
     ${LastName},
 
     [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[datetime]]
-    ${LastPasswordChangeTimestamp},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${MobilePhone},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${Office},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
-    ${PasswordNeverExpires},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${PhoneNumber},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${PostalCode},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${PreferredDataLocation},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${PreferredLanguage},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[datetime]]
-    ${SoftDeletionTimestamp},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${State},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${StreetAddress},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
-    ${StrongPasswordRequired},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${Title},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
     [string]
     ${UsageLocation},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [AllowEmptyCollection()]
-    [string[]]
-    ${AlternateEmailAddresses},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [AllowEmptyCollection()]
-    [object]
-    ${StrongAuthenticationMethods},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [AllowEmptyCollection()]
-    [string[]]
-    ${AlternateMobilePhones},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [AllowEmptyCollection()]
-    [object]
-    ${StrongAuthenticationRequirements},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[datetime]]
-    ${StsRefreshTokensValidFrom},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
-    ${UserType},
 
     [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Password},
 
     [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [AllowEmptyCollection()]
-    [object]
-    ${LicenseOptions},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
-    ${ForceChangePassword},
-
-    [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
     [string[]]
-    ${LicenseAssignment},
-
-    [Parameter(ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[guid]]
-    ${TenantId})
-
+    ${LicenseAssignment}
+)
  
  } 
 
@@ -5609,140 +5426,87 @@ param(
 
 
 function Set-MsolUser { 
- [CmdletBinding(DefaultParameterSetName='SetUser__0')]
+ [CmdletBinding()]
 param(
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${ImmutableId},
+    $UserPrincipalName,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[guid]]
-    ${ObjectId},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${UserPrincipalName},
+    $City,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
-    ${BlockCredential},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${City},
+    $Country,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${Country},
+    $Department,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${Department},
+    $DisplayName,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${DisplayName},
+    $Fax,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${Fax},
+    $FirstName,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${FirstName},
+    $LastName,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${LastName},
+    $MobilePhone,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[datetime]]
-    ${LastPasswordChangeTimestamp},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${MobilePhone},
+    $Office,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
+    [System.Boolean]
+    $PasswordNeverExpires,
+
+    [Parameter()]
     [string]
-    ${Office},
+    $PhoneNumber,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
-    ${PasswordNeverExpires},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${PhoneNumber},
+    $PostalCode,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${PostalCode},
+    $PreferredDataLocation,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${PreferredDataLocation},
+    $PreferredLanguage,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${PreferredLanguage},
+    $State,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[datetime]]
-    ${SoftDeletionTimestamp},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${State},
+    $StreetAddress,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${StreetAddress},
+    $Title,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
-    ${StrongPasswordRequired},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${Title},
+    $UsageLocation,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${UsageLocation},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [AllowEmptyCollection()]
-    [string[]]
-    ${AlternateEmailAddresses},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [AllowEmptyCollection()]
+    [Parameter()]
     [object]
-    ${StrongAuthenticationMethods},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [AllowEmptyCollection()]
-    [string[]]
-    ${AlternateMobilePhones},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [AllowEmptyCollection()]
-    [object]
-    ${StrongAuthenticationRequirements},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[datetime]]
-    ${StsRefreshTokensValidFrom},
-
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
-    ${UserType},
-
-    [Parameter(ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[guid]]
-    ${TenantId})
-
+    $UserType)
  
  } 
 

@@ -1,4 +1,3 @@
-
 function Test-SPOServiceConnection
 {
     [CmdletBinding()]
@@ -29,6 +28,54 @@ function Test-O365ServiceConnection
     )    
     Write-Verbose "Verifying the LCM connection state to Microsoft Online Services"
     Connect-MSOLService -Credential $GlobalAdminAccount
+}
+
+
+function Invoke-ExoCommand
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+    
+        [Parameter()]
+        [Object[]]
+        $Arguments,
+    
+        [Parameter(Mandatory = $true)]
+        [ScriptBlock]
+        $ScriptBlock
+    )
+
+    $invokeArgs = @{
+        ScriptBlock = [ScriptBlock]::Create($ScriptBlock.ToString())
+    }
+    if ($null -ne $Arguments)
+    {
+        $invokeArgs.Add("ArgumentList", $Arguments)
+    }
+
+    Write-Verbose "Verifying the LCM connection state to Exchange Online"
+    $ConnectionUri = "https://outlook.office365.com/PowerShell-LiveId"
+    $AzureADAuthorizationEndpointUri = "https://login.windows.net/common"
+    $AssemblyPath = Join-Path -Path $PSScriptRoot -ChildPath '..\Dependencies\Microsoft.Exchange.Management.ExoPowershellModule.dll' `
+                              -Resolve
+
+    [Reflection.Assembly]::LoadFile($AssemblyPath)
+    $ExoSession = New-ExoPSSession -ConnectionUri $ConnectionUri -AzureADAuthorizationEndpointUri $AzureADAuthorizationEndpointUri -PSSessionOption (New-PSSessionOption -OperationTimeout 0 -IdleTimeout 60000) -Credential $GlobalAdminAccount
+    if ($ExoSession -ne $null)
+    {
+        $invokeArgs.Add("Session", $ExoSession)
+        $result = Invoke-Command @invokeArgs -Verbose
+    }
+
+    if ($ExoSession)
+    {
+        Remove-PSSession -Session $ExoSession
+    }
+    return $result
 }
 
 function Test-Office365DSCParameterState

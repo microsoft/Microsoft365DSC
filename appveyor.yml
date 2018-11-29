@@ -9,6 +9,7 @@ install:
     - ps: |
         $moduleName = 'Office365DSC'
         $mainModuleFolder = "Modules\$moduleName"
+        Install-Module ReverseDSC -Force
         Import-Module -Name "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
         Invoke-AppveyorInstallTask
 
