@@ -241,4 +241,39 @@ function Test-TargetResource
                                                             "Title")
 }
 
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Url,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Owner,
+
+        [Parameter(Mandatory = $true)]
+        [System.UInt32]
+        $StorageQuota,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CentralAdminUrl,
+
+        [Parameter(Mandatory = $true)] 
+        [System.Management.Automation.PSCredential] 
+        $GlobalAdminAccount
+    )
+    Test-SPOServiceConnection -GlobalAdminAccount $GlobalAdminAccount -SPOCentralAdminUrl $CentralAdminUrl
+    $result = Get-TargetResource @PSBoundParameters
+    $content = "SPOSite " + (New-GUID).ToString() + "`r`n"
+    $content += "{`r`n"
+    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += "}`r`n"
+    return $content
+}
+
 Export-ModuleMember -Function *-TargetResource

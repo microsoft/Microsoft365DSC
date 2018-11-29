@@ -453,4 +453,43 @@ function Test-TargetResource
     return $result
 }
 
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $UserPrincipalName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $FirstName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $LastName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $UsageLocation,
+
+        [Parameter(Mandatory = $true)] 
+        [System.Management.Automation.PSCredential] 
+        $GlobalAdminAccount
+    )
+    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    $result = Get-TargetResource @PSBoundParameters
+    $content = "O365User " + (New-GUID).ToString() + "`r`n"
+    $content += "{`r`n"
+    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += "}`r`n"
+    return $content
+}
+
 Export-ModuleMember -Function *-TargetResource

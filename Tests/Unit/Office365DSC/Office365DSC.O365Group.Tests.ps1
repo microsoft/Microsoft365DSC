@@ -181,6 +181,37 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should be $true
             }
         }
+
+        Context -Name "ReverseDSC Tests" -Fixture {
+            $testParams = @{
+                DisplayName = "Test Group"
+                GroupType = "MailEnabledSecurity"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-Group -MockWith {
+                return @{
+                    DisplayName = "Test Group"
+                    RecipientTypeDetails = "MailUniversalSecurityGroup"
+                    Notes = "This is a test"
+                }
+            }
+
+            Mock -CommandName Get-MsolGroupMember -MockWith {
+                return @(
+                    @{
+                        EmailAddress = "JohnSmith@contoso.onmicrosoft.com"
+                    },
+                    @{
+                        EmailAddress = "SecondUser@contoso.onmicrosoft.com"
+                    }
+                )
+            }
+
+            It "Should Reverse Engineer resource from the Export method" {
+                Export-TargetResource @testParams
+            }
+        }
     }
 }
 
