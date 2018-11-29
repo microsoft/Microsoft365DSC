@@ -19,12 +19,28 @@ Configuration ProofOfConcept
             GlobalAdminAccount = $credsGlobalAdmin
         }
 
+        O365User BobHoule
+        {
+            UserPrincipalName = "Bob.Houle@O365DSC1.onmicrosoft.com"
+            FirstName = "Bob"
+            LastName = "Houle"
+            DisplayName = "Bob Houle"
+            City = "Gatineau"
+            Country = "Canada"
+            Office = "Ottawa - Queen"
+            LicenseAssignment = @("O365dsc1:ENTERPRISEPREMIUM")
+            UsageLocation = "US"
+            Ensure = "Present"
+            GlobalAdminAccount = $credsGlobalAdmin
+        }
+
         O365Group OttawaTeam
         {
             DisplayName = "Ottawa Employees"
             Description = "This is only for employees of the Ottawa Office"
             GroupType = "Office365"
             ManagedBy = "TenantAdmin@O365DSC1.onmicrosoft.com"
+            Members = @("Bob.Houle", "John.Smith")
             Ensure = "Present"
             GlobalAdminAccount = $credsGlobalAdmin
         }

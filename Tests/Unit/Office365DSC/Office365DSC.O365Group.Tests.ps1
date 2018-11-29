@@ -66,6 +66,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
+            Mock -CommandName Get-UnifiedGroupLinks
+            {
+                return (@{
+                    LinkType = "Members"
+                    Identity = "Test Group"
+                    Name = "JohnSmith"
+                })
+            }
+
             Mock -CommandName Get-MSOLGroup -MockWith {
                 return @{
                     DisplayName = "Test Group"

@@ -1,5 +1,18 @@
 ﻿<# EXO - Custom Office365DSC #>
 
+function Get-UnifiedGroupLinks{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity,
+
+        [Parameter(Mandatory=$true)]
+        [string]
+        $LinkType
+    )
+}
+
 function Get-Group{
     [CmdletBinding()]
     param()

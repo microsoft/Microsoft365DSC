@@ -22,6 +22,10 @@ function Get-TargetResource
         $ManagedBy,
 
         [Parameter()]
+        [System.String[]]
+        $Members,
+
+        [Parameter()]
         [System.String]
         $Alias,
 
@@ -94,9 +98,21 @@ function Get-TargetResource
             "Office365"
             {
                 Write-Verbose "Found Office365 Group $($group.DisplayName)"
+                $groupLinks = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                    -Arguments $PSBoundParameters `
+                    -ScriptBlock {
+                    Get-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType "Members"
+                }
+
+                $members = @()
+                foreach($link in $groupLinks)
+                {
+                    $member += $link.Name
+                }
                 return @{
                     DisplayName = $group.DisplayName
                     GroupType = $GroupType
+                    Members = $Members
                     Description = $group.Notes
                     GlobalAdminAccount = $GlobalAdminAccount
                     Ensure = "Present"
@@ -153,6 +169,10 @@ function Set-TargetResource
         $ManagedBy,
 
         [Parameter()]
+        [System.String[]]
+        $Members,
+
+        [Parameter()]
         [System.String]
         $Alias,
 
@@ -194,6 +214,13 @@ function Set-TargetResource
                         -ScriptBlock {
                         New-UnifiedGroup -DisplayName $args[0].DisplayName -Notes $args[0].Description -Owner $args[0].ManagedBy
                     }
+
+                    Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                        -Arguments $CurrentParameters `
+                        -ScriptBlock {
+                            Add-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType Members -Links $args[0].Members
+                    }
+                    
                 }
                 "DistributionList"
                 {
@@ -244,6 +271,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $ManagedBy,
+
+        [Parameter()]
+        [System.String[]]
+        $Members,
 
         [Parameter()]
         [System.String]
