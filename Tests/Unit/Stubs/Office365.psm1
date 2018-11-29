@@ -5426,87 +5426,87 @@ param(
 
 
 function Set-MsolUser { 
- [CmdletBinding(DefaultParameterSetName='SetUser__0')]
+ [CmdletBinding()]
 param(
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${UserPrincipalName},    
+    $UserPrincipalName,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${City},
+    $City,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${Country},
+    $Country,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${Department},
+    $Department,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${DisplayName},
+    $DisplayName,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${Fax},
+    $Fax,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${FirstName},
+    $FirstName,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${LastName},
+    $LastName,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${MobilePhone},
+    $MobilePhone,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${Office},
+    $Office,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [System.Boolean]
-    ${PasswordNeverExpires},
+    $PasswordNeverExpires,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${PhoneNumber},
+    $PhoneNumber,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${PostalCode},
+    $PostalCode,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${PreferredDataLocation},
+    $PreferredDataLocation,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${PreferredLanguage},
+    $PreferredLanguage,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${State},
+    $State,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${StreetAddress},
+    $StreetAddress,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${Title},
+    $Title,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${UsageLocation},
+    $UsageLocation,
 
-    [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [object]
-    ${UserType})
+    $UserType)
  
  } 
 
