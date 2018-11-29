@@ -98,14 +98,16 @@ function Get-TargetResource
             "Office365"
             {
                 Write-Verbose "Found Office365 Group $($group.DisplayName)"
-                $groupLinks = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount -ScriptBlock{
-                    Get-UnifiedGroupLinks
+                $groupLinks = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                    -Arguments $PSBoundParameters `
+                    -ScriptBlock {
+                    Get-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType "Members"
                 }
-                $groupLinks = $groupLinks | Where-Object{$_.LinkType -eq "Members" -and $_.Identity -eq $DisplayName}
+
                 $members = @()
                 foreach($link in $groupLinks)
                 {
-                    $member += $link.Identity
+                    $member += $link.Name
                 }
                 return @{
                     DisplayName = $group.DisplayName

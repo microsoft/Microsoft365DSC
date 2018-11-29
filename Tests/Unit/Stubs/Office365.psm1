@@ -1,5 +1,10 @@
 ﻿<# EXO - Custom Office365DSC #>
 
+function Get-UnifiedGroupLinks{
+    [CmdletBinding()]
+    param()
+}
+
 function Get-Group{
     [CmdletBinding()]
     param()
