@@ -213,14 +213,12 @@ function Set-TargetResource
                         New-UnifiedGroup -DisplayName $args[0].DisplayName -Notes $args[0].Description -Owner $args[0].ManagedBy
                     }
 
-                    foreach($member in $Members)
-                    {
-                        Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                    Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
                         -Arguments $CurrentParameters `
                         -ScriptBlock {
                             Add-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType Members -Links $args[0].Members
-                        }
                     }
+                    
                 }
                 "DistributionList"
                 {
