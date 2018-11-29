@@ -163,7 +163,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should be $false
             }
 
-            If "Should update the membership list in the Set method" {
+            It "Should update the membership list in the Set method" {
                 Set-TargetResource @testParams
             }
         }
