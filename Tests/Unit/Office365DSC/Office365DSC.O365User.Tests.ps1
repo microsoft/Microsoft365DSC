@@ -101,6 +101,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 UsageLocation = "US"
                 LicenseAssignment = @()
                 Password = $GlobalAdminAccount
+                PasswordNeverExpires = $false
                 Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -115,6 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Licenses = @(@{
                         AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
                     })
+                    PasswordNeverExpires = $false
                     Ensure = "Present"
                 }
             }

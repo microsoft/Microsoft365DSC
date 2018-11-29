@@ -58,7 +58,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $PasswordNeverExpires,
+        $PasswordNeverExpires = $false,
 
         [Parameter()]
         [System.String]
@@ -224,7 +224,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $PasswordNeverExpires,
+        $PasswordNeverExpires = $false,
 
         [Parameter()]
         [System.String]
@@ -373,7 +373,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $PasswordNeverExpires,
+        $PasswordNeverExpires = $false,
 
         [Parameter()]
         [System.String]
