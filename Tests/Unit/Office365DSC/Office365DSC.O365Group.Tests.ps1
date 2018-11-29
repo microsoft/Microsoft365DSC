@@ -157,7 +157,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            Mock -CommandName New-UnifiedGroupLinks -MockWith {
+            Mock -CommandName Remove-UnifiedGroupLinks -MockWith {
 
             }
 
