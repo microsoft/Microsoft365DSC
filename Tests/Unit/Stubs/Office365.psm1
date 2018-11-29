@@ -2,7 +2,15 @@
 
 function Get-UnifiedGroupLinks{
     [CmdletBinding()]
-    param()
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity,
+
+        [Parameter(Mandatory=$true)]
+        [string]
+        $LinkType
+    )
 }
 
 function Get-Group{
