@@ -22,6 +22,10 @@ function Get-TargetResource
         $ManagedBy,
 
         [Parameter()]
+        [System.String[]]
+        $Members,
+
+        [Parameter()]
         [System.String]
         $Alias,
 
@@ -94,9 +98,19 @@ function Get-TargetResource
             "Office365"
             {
                 Write-Verbose "Found Office365 Group $($group.DisplayName)"
+                $groupLinks = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount -ScriptBlock{
+                    Get-UnifiedGroupLinks
+                }
+                $groupLinks = $groupLinks | Where-Object{$_.LinkType -eq "Members" -and $_.Identity -eq $DisplayName}
+                $members = @()
+                foreach($link in $groupLinks)
+                {
+                    $member += $link.Identity
+                }
                 return @{
                     DisplayName = $group.DisplayName
                     GroupType = $GroupType
+                    Members = $Members
                     Description = $group.Notes
                     GlobalAdminAccount = $GlobalAdminAccount
                     Ensure = "Present"
@@ -153,6 +167,10 @@ function Set-TargetResource
         $ManagedBy,
 
         [Parameter()]
+        [System.String[]]
+        $Members,
+
+        [Parameter()]
         [System.String]
         $Alias,
 
@@ -193,6 +211,15 @@ function Set-TargetResource
                         -Arguments $CurrentParameters `
                         -ScriptBlock {
                         New-UnifiedGroup -DisplayName $args[0].DisplayName -Notes $args[0].Description -Owner $args[0].ManagedBy
+                    }
+
+                    foreach($member in $Members)
+                    {
+                        Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                        -Arguments $CurrentParameters `
+                        -ScriptBlock {
+                            Add-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType Members -Links $args[0].Members
+                        }
                     }
                 }
                 "DistributionList"
@@ -244,6 +271,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $ManagedBy,
+
+        [Parameter()]
+        [System.String[]]
+        $Members,
 
         [Parameter()]
         [System.String]

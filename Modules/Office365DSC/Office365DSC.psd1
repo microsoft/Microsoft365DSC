@@ -15,7 +15,7 @@
 ModuleVersion = '1.0.0.0'
 
 # ID used to uniquely identify this module
-GUID = '6c1176a0-4fac-4134-8ca2-3fa8a21a7b90'
+GUID = '39f599a6-d212-4480-83b3-a8ea2124d8cf'
 
 # Author of this module
 Author = 'Microsoft Corporation'
