@@ -80,6 +80,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $true
             }
         }
+
+        Context -Name "ReverseDSC Tests" -Fixture {
+            $testParams = @{
+                Url = "https://contoso.com/sites/TestSite"
+                Owner = "testuser@contoso.com"
+                StorageQuota = 1000
+                CentralAdminUrl = "https://contoso-admin.sharepoint.com"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-SPOSite -MockWith { 
+                return @{
+                    Url = "https://contoso.com/sites/TestSite"
+                    Ensure = "Present"
+                }
+            }
+
+            It "Should Reverse Engineer resource from the Export method" {
+                Export-TargetResource @testParams
+            }
+        }
     }
 }
 

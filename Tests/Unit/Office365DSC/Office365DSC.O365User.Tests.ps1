@@ -133,6 +133,40 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should be $false
             }
         }
+
+        Context -Name "ReverseDSC Tests" -Fixture {
+            $testParams = @{
+                UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                DisplayName = "John Smith"
+                FirstName = "John"
+                LastName = "Smith"
+                UsageLocation = "US"
+                LicenseAssignment = @()
+                Password = $GlobalAdminAccount
+                PasswordNeverExpires = $false
+                Ensure = "Present"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-MSOLUser -MockWith {
+                return @{
+                    UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                    DisplayName = "John Smith"
+                    FirstName = "John"
+                    LastName = "Smith"
+                    UsageLocation = "US"
+                    Licenses = @(@{
+                        AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
+                    })
+                    PasswordNeverExpires = $false
+                    Ensure = "Present"
+                }
+            }
+            
+            It "Should Reverse Engineer resource from the Export method" {
+                Export-TargetResource @testParams
+            }
+        }
     }
 }
 
