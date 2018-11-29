@@ -272,4 +272,32 @@ function Test-TargetResource
                                                             "Description")
 }
 
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("Office365", "Security", "DistributionList", "MailEnabledSecurity")]
+        [System.String]
+        $GroupType,
+
+        [Parameter(Mandatory = $true)] 
+        [System.Management.Automation.PSCredential] 
+        $GlobalAdminAccount
+    )
+    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    $result = Get-TargetResource @PSBoundParameters
+    $content = "O365Group " + (New-GUID).ToString() + "`r`n"
+    $content += "{`r`n"
+    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += "}`r`n"
+    return $content
+}
+
 Export-ModuleMember -Function *-TargetResource
