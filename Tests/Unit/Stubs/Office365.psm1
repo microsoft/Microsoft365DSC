@@ -13,6 +13,57 @@ function Get-UnifiedGroupLinks{
     )
 }
 
+function New-UnifiedGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $DisplayName,
+
+        [Parameter()]
+        [string]
+        $Notes,
+
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Owner)
+}
+
+function Add-UnifiedGroupLinks
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [string]
+        $LinkType,
+
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Links)
+}
+
+function Remove-UnifiedGroupLinks
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [string]
+        $LinkType,
+
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Links)
+}
+
 function Get-Group{
     [CmdletBinding()]
     param()

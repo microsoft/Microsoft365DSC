@@ -149,6 +149,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName New-UnifiedGroup -MockWith {
+
+            }
+
+            Mock -CommandName Add-UnifiedGroupLinks -MockWith {
+
+            }
+
+            Mock -CommandName New-UnifiedGroupLinks -MockWith {
+
+            }
+
             Mock -CommandName Get-MsolGroupMember -MockWith {
                 return @(
                     @{
