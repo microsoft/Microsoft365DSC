@@ -220,29 +220,33 @@ function Set-TargetResource
                         -ScriptBlock {
                         Get-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType "Members"
                     }
-                    $members = @()
+                    $curMembers = @()
                     foreach($link in $groupLinks)
                     {
-                        $member += $link.Name
+                        if ($link.Name)
+                        {
+                            $curMembers += $link.Name
+                        }
                     }
 
-                    $difference = Compare-Object -ReferenceObject $Members -DifferenceObject $CurrentParameters.Members
+                    $difference = Compare-Object -ReferenceObject $curMembers -DifferenceObject $CurrentParameters.Members
+
                     if ($difference.InputObject)
                     {
                         Write-Verbose "Detected a difference in the current list of members and the desired one"
-                        Write-Verbose "Current Membership is $($groupLinks)"
-                        Write-Verbose "New License Assignment is $($members)"
+                        Write-Verbose "Current Membership is $($curMembers)"
+                        Write-Verbose "New License Assignment is $($CurrentParameters.Members)"
                         $membersToRemove = @()
                         $membersToAdd = @()
-                        foreach($difference in $diff)
+                        foreach($diff in $difference)
                         {
-                            if ($difference.SideIndicator -eq "<=")
+                            if ($diff.SideIndicator -eq "<=")
                             {
-                                $membersToRemove += $difference.InputObject
+                                $membersToRemove += $diff.InputObject
                             }
-                            elseif ($difference.SideIndicator -eq "=>")
+                            elseif ($diff.SideIndicator -eq "=>")
                             {
-                                $membersToAdd += $difference.InputObject
+                                $membersToAdd += $diff.InputObject
                             }
                         }
 
