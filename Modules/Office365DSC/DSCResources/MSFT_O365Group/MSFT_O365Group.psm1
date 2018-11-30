@@ -42,11 +42,12 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )
-    
+    Write-Verbose "Get-TargetResource will attempt to retrieve information for group $($DisplayName)"
     $nullReturn = @{
         DisplayName = $DisplayName
         GroupType = $GroupType
         Description = $null
+        ManagedBy = $null
         GlobalAdminAccount = $null
         Ensure = "Absent"
     }
@@ -55,8 +56,6 @@ function Get-TargetResource
     {
         Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
         Write-Verbose -Message "Getting Security Group $($DisplayName)"
-        $group = Get-MSOLGroup | Where-Object {$_.DisplayName -eq $DisplayName}
-
         $group = Get-MSOLGroup | Where-Object {$_.DisplayName -eq $DisplayName}
 
         if(!$group)
@@ -113,6 +112,7 @@ function Get-TargetResource
                     DisplayName = $group.DisplayName
                     GroupType = $GroupType
                     Members = $Members
+                    ManagedBy = $group.ManagedBy
                     Description = $group.Notes
                     GlobalAdminAccount = $GlobalAdminAccount
                     Ensure = "Present"
@@ -190,6 +190,8 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose "Entering Set-TargetResource"
+    Write-Verbose "Retrieving information about group $($DisplayName) to see if it already exists"
+    $currentGroup = Get-TargetResource @PSBoundParameters
     if( $Ensure -eq "Present")
     {
         $CurrentParameters = $PSBoundParameters
@@ -208,19 +210,70 @@ function Set-TargetResource
             {
                 "Office365"
                 {
-                    Write-Verbose -Message "Creating Office 365 Group $DisplayName"
-                    Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                        -Arguments $CurrentParameters `
-                        -ScriptBlock {
-                        New-UnifiedGroup -DisplayName $args[0].DisplayName -Notes $args[0].Description -Owner $args[0].ManagedBy
+                    if ($currentGroup.Ensure -eq "Absent")
+                    {
+                        Write-Verbose -Message "Creating Office 365 Group $DisplayName"
+                        Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                            -Arguments $CurrentParameters `
+                            -ScriptBlock {
+                            New-UnifiedGroup -DisplayName $args[0].DisplayName -Notes $args[0].Description -Owner $args[0].ManagedBy
+                        }
                     }
 
-                    Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                        -Arguments $CurrentParameters `
+                    $groupLinks = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                        -Arguments $PSBoundParameters `
                         -ScriptBlock {
-                            Add-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType Members -Links $args[0].Members
+                        Get-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType "Members"
                     }
-                    
+                    $curMembers = @()
+                    foreach($link in $groupLinks)
+                    {
+                        if ($link.Name -and $link.Name -ne $currentGroup.ManagedBy)
+                        {
+                            $curMembers += $link.Name
+                        }
+                    }
+
+                    $difference = Compare-Object -ReferenceObject $curMembers -DifferenceObject $CurrentParameters.Members
+
+                    if ($difference.InputObject)
+                    {
+                        Write-Verbose "Detected a difference in the current list of members and the desired one"
+                        $membersToRemove = @()
+                        $membersToAdd = @()
+                        foreach($diff in $difference)
+                        {
+                            if ($diff.SideIndicator -eq "<=" -and $diff.InputObject -ne $ManagedBy)
+                            {
+                                $membersToRemove += $diff.InputObject
+                            }
+                            elseif ($diff.SideIndicator -eq "=>")
+                            {
+                                $membersToAdd += $diff.InputObject
+                            }
+                        }
+
+                        if ($membersToAdd.Count -gt 0)
+                        {
+                            $CurrentParameters.Members = $membersToAdd
+                            Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                -Arguments $CurrentParameters `
+                                -ScriptBlock {
+                                    Add-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType Members -Links $args[0].Members
+                            }
+                        }
+
+                        if ($membersToRemove.Count -gt 0)
+                        {
+                            $CurrentParameters.Members = $membersToRemove
+                            Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                -Arguments $CurrentParameters `
+                                -ScriptBlock {
+                                    Remove-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType Members -Links $args[0].Members
+                            }
+                        }
+                        $CurrentParameters.Members = $members
+                    }
                 }
                 "DistributionList"
                 {
@@ -300,7 +353,8 @@ function Test-TargetResource
                                            -DesiredValues $PSBoundParameters `
                                            -ValuesToCheck @("Ensure", `
                                                             "DisplayName", `
-                                                            "Description")
+                                                            "Description", `
+                                                            "Members")
 }
 
 function Export-TargetResource
