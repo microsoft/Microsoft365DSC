@@ -275,7 +275,7 @@ function Get-UsersLicences
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose "Store all users licences information in Global Variable for futur usage."
     #Store information to be able to check later if the users is correctly licences for features.
-    if($Global:UsersLicences -eq $NULL)
+    if ($Global:UsersLicences -eq $NULL)
     {
         $Global:UsersLicences = Get-MsolUser -All  | Select-Object UserPrincipalName, isLicensed, Licenses
     }
