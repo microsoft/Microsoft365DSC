@@ -43,7 +43,7 @@ function Add-UnifiedGroupLinks
         $LinkType,
 
         [Parameter(Mandatory=$true)]
-        [string]
+        [string[]]
         $Links)
 }
 
@@ -60,7 +60,7 @@ function Remove-UnifiedGroupLinks
         $LinkType,
 
         [Parameter(Mandatory=$true)]
-        [string]
+        [string[]]
         $Links)
 }
 

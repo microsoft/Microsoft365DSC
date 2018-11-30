@@ -29,7 +29,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts 
-        Context -Name "When the group doesn't already exist" -Fixture {
+        Context -Name "Security Group - When the group doesn't already exist" -Fixture {
             $testParams = @{
                 DisplayName = "Test Group"
                 GroupType = "Security"
@@ -39,12 +39,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName New-MSOLGroup -MockWith { 
-                
+            Mock -CommandName Get-MSOLGroup -MockWith { 
+                return $null
             }
-            
+
             It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
+            }
+        }
+
+        Context -Name "Security Group - When the group already exists" -Fixture {
+            $testParams = @{
+                DisplayName = "Test Group"
+                GroupType = "Security"
+                Description = "This is a test"
+                ManagedBy = "JohnSmith@contoso.onmicrosoft.com"
+                Ensure = "Present"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-MSOLGroup -MockWith { 
+                return @{
+                    DisplayName = "Test Group"
+                }
+            }
+
+            It "Should return absent from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
             }
 
             It "Should return false from the Test method" {
@@ -56,7 +77,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "When the group already exists" -Fixture {
+        Context -Name "Office365 Group - When the group already exists" -Fixture {
             $testParams = @{
                 DisplayName = "Test Group"
                 GroupType = "Office365"
@@ -111,7 +132,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "When the group already exists but with different members" -Fixture {
+        Context -Name "Office 365 Group - When the group already exists but with different members" -Fixture {
             $testParams = @{
                 DisplayName = "Test Group"
                 GroupType = "Office365"
@@ -171,6 +192,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 )
             }
+
+            It "Should return Present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+            }
             It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should be $false
             }
@@ -180,7 +205,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Creating a new Distribution List" -Fixture {
+        Context -Name "Distribution List - Group doesn't already exist" -Fixture {
             $testParams = @{
                 DisplayName = "Test Group"
                 GroupType = "DistributionList"
@@ -214,7 +239,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Creating a new Mail-Enabled Security Group" -Fixture {
+        Context -Name "Mail-Enabled Security Group - Group doesn't already exist" -Fixture {
             $testParams = @{
                 DisplayName = "Test Group"
                 GroupType = "MailEnabledSecurity"
@@ -225,11 +250,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-Group -MockWith {
-                return @{
-                    DisplayName = "Test Group"
-                    RecipientTypeDetails = "MailUniversalSecurityGroup"
-                    Notes = "This is a test"
-                }
+                return $null
             }
 
             Mock -CommandName Get-MsolGroupMember -MockWith {
@@ -252,11 +273,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
             }
 
             It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should be $true
+                Test-TargetResource @testParams | Should be $false
             }
         }
 

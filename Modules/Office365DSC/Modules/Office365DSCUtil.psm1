@@ -1,3 +1,5 @@
+$Global:ExoSession = $null
+
 function Test-SPOServiceConnection
 {
     [CmdletBinding()]
@@ -64,17 +66,23 @@ function Invoke-ExoCommand
                               -Resolve
 
     [Reflection.Assembly]::LoadFile($AssemblyPath)
-    $ExoSession = New-ExoPSSession -ConnectionUri $ConnectionUri -AzureADAuthorizationEndpointUri $AzureADAuthorizationEndpointUri -PSSessionOption (New-PSSessionOption -OperationTimeout 0 -IdleTimeout 60000) -Credential $GlobalAdminAccount
-    if ($ExoSession -ne $null)
+    if (!$Global:ExoSession)
     {
-        $invokeArgs.Add("Session", $ExoSession)
+        $Global:ExoSession = New-ExoPSSession -ConnectionUri $ConnectionUri `
+                                              -AzureADAuthorizationEndpointUri $AzureADAuthorizationEndpointUri `
+                                              -PSSessionOption (New-PSSessionOption -OperationTimeout 0 -IdleTimeout 60000) `
+                                              -Credential $GlobalAdminAccount
+    }
+    if ($Global:ExoSession -ne $null)
+    {
+        $invokeArgs.Add("Session", $Global:ExoSession)
         $result = Invoke-Command @invokeArgs -Verbose
     }
 
-    if ($ExoSession)
+    <#if ($ExoSession)
     {
         Remove-PSSession -Session $ExoSession
-    }
+    }#>
     return $result
 }
 
