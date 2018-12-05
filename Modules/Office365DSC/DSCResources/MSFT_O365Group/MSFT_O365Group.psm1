@@ -80,15 +80,14 @@ function Get-TargetResource
             "DistributionList" { $RecipientTypeDetails = "MailUniversalDistributionGroup" }
             "MailEnabledSecurity" { $RecipientTypeDetails = "MailUniversalSecurityGroup" }
         }
-        $CurrentParameters = $PSBoundParameters
-        $CurrentParameters.Add("RecipientTypeDetails", $RecipientTypeDetails)
 
-        $group = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+        $allGroups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
                                    -Arguments $CurrentParameters `
                                    -ScriptBlock{
-            Get-Group | Where-Object {$_.DisplayName -eq $args[0].DisplayName -and $_.RecipientTypeDetails -eq $args[0].RecipientTypeDetails}
+            Get-Group
         }
-        
+        $group = $allGroups | Where-Object {$_.DisplayName -eq $DisplayName -and $_.RecipientTypeDetails -eq $RecipientTypeDetails}
+
         if (!$group)
         {
             Write-Verbose "The specified Group doesn't already exist."
