@@ -58,24 +58,23 @@ function Invoke-ExoCommand
     }
 
     Write-Verbose "Verifying the LCM connection state to Exchange Online"
-    $ConnectionUri = "https://outlook.office365.com/PowerShell-LiveId"
-    $AzureADAuthorizationEndpointUri = "https://login.windows.net/common"
     $AssemblyPath = Join-Path -Path $PSScriptRoot `
                               -ChildPath '..\Dependencies\Microsoft.Exchange.Management.ExoPowershellModule.dll' `
                               -Resolve
     $AADAssemblyPath = Join-Path -Path $PSScriptRoot `
                                  -ChildPath "..\Dependencies\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" `
                                  -Resolve
+
+    $ScriptPath = Join-Path -Path $PSScriptRoot `
+                            -ChildPath "..\Dependencies\CreateExoPSSession.ps1" `
+                            -Resolve
+
     Import-Module $AssemblyPath
     [Reflection.Assembly]::LoadFile($AADAssemblyPath)
-    $ExoSession = New-ExoPSSession -ConnectionUri $ConnectionUri `
-                                   -AzureADAuthorizationEndpointUri $AzureADAuthorizationEndpointUri `
-                                   -PSSessionOption (New-PSSessionOption -OperationTimeout 0 -IdleTimeout 60000) `
-                                   -Credential $GlobalAdminAccount
-    Import-PSSession $ExoSession -AllowClobber
-    $invokeArgs.Add("Session", $ExoSession)
+    .$ScriptPath
+
+    Connect-ExoPSSession -Credential $GlobalAdminAccount
     $result = Invoke-Command @invokeArgs -Verbose
-    Remove-PSSession -Session $ExoSession
     return $result
 }
 

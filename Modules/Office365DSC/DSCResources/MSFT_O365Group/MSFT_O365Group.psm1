@@ -81,12 +81,13 @@ function Get-TargetResource
             "MailEnabledSecurity" { $RecipientTypeDetails = "MailUniversalSecurityGroup" }
         }
 
-        $allGroups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount -ScriptBlock{
-            Get-Group
+        $group = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                       -Arguments $PSBoundParameters `
+                                       -ScriptBlock{
+            Get-Group | Where-Object {$_.DisplayName -eq $args[0].DisplayName -and $_.RecipientTypeDetails -eq $args[0].RecipientTypeDetails}
         }
-
-        $group = $allGroups | Where-Object {$_.DisplayName -eq $DisplayName -and $_.RecipientTypeDetails -eq $RecipientTypeDetails}
-        if(!$group)
+        
+        if (!$group)
         {
             Write-Verbose "The specified Group doesn't already exist."
             return $nullReturn
