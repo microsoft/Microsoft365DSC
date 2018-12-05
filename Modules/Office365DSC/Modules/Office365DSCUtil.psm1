@@ -1,5 +1,3 @@
-$Global:ExoSession = $null
-
 function Test-SPOServiceConnection
 {
     [CmdletBinding()]
@@ -62,27 +60,22 @@ function Invoke-ExoCommand
     Write-Verbose "Verifying the LCM connection state to Exchange Online"
     $ConnectionUri = "https://outlook.office365.com/PowerShell-LiveId"
     $AzureADAuthorizationEndpointUri = "https://login.windows.net/common"
-    $AssemblyPath = Join-Path -Path $PSScriptRoot -ChildPath '..\Dependencies\Microsoft.Exchange.Management.ExoPowershellModule.dll' `
+    $AssemblyPath = Join-Path -Path $PSScriptRoot `
+                              -ChildPath '..\Dependencies\Microsoft.Exchange.Management.ExoPowershellModule.dll' `
                               -Resolve
-
-    [Reflection.Assembly]::LoadFile($AssemblyPath)
-    if (!$Global:ExoSession)
-    {
-        $Global:ExoSession = New-ExoPSSession -ConnectionUri $ConnectionUri `
-                                              -AzureADAuthorizationEndpointUri $AzureADAuthorizationEndpointUri `
-                                              -PSSessionOption (New-PSSessionOption -OperationTimeout 0 -IdleTimeout 60000) `
-                                              -Credential $GlobalAdminAccount
-    }
-    if ($Global:ExoSession -ne $null)
-    {
-        $invokeArgs.Add("Session", $Global:ExoSession)
-        $result = Invoke-Command @invokeArgs -Verbose
-    }
-
-    <#if ($ExoSession)
-    {
-        Remove-PSSession -Session $ExoSession
-    }#>
+    $AADAssemblyPath = Join-Path -Path $PSScriptRoot `
+                                 -ChildPath "..\Dependencies\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" `
+                                 -Resolve
+    Import-Module $AssemblyPath
+    [Reflection.Assembly]::LoadFile($AADAssemblyPath)
+    $ExoSession = New-ExoPSSession -ConnectionUri $ConnectionUri `
+                                   -AzureADAuthorizationEndpointUri $AzureADAuthorizationEndpointUri `
+                                   -PSSessionOption (New-PSSessionOption -OperationTimeout 0 -IdleTimeout 60000) `
+                                   -Credential $GlobalAdminAccount
+    Import-PSSession $ExoSession -AllowClobber
+    $invokeArgs.Add("Session", $ExoSession)
+    $result = Invoke-Command @invokeArgs -Verbose
+    Remove-PSSession -Session $ExoSession
     return $result
 }
 
