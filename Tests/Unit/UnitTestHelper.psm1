@@ -47,8 +47,8 @@ function New-O365DscUnitTestHelper
     Import-Module -Name $moduleToLoad -Global
 
     $initScript = @"
-            Remove-Module -Name "Microsoft.Online.SharePoint.PowerShell" -Force -ErrorAction SilentlyContinue
-            Remove-Module -Name "MSOnline" -Force -ErrorAction SilentlyContinue
+            Import-Module -Name "Microsoft.Online.SharePoint.PowerShell" -Force -ErrorAction SilentlyContinue
+            Import-Module -Name "MSOnline" -Force -ErrorAction SilentlyContinue
             Remove-Module -Name "AzureAD" -Force -ErrorAction SilentlyContinue
             Import-Module -Name "$StubModule" -WarningAction SilentlyContinue
             Import-Module -Name "$moduleToLoad"
