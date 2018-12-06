@@ -10,6 +10,8 @@ install:
         $moduleName = 'Office365DSC'
         $mainModuleFolder = "Modules\$moduleName"
         Install-Module ReverseDSC -Force
+        Install-Module MSOnline -Force
+        Install-Module Microsoft.Online.SharePoint.PowerShell -Force
         Import-Module -Name "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
         Invoke-AppveyorInstallTask
 
