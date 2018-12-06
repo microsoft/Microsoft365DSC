@@ -37,8 +37,6 @@ function Invoke-TestHarness
         $testResultSettings.Add('OutputFormat', 'NUnitXml' )
         $testResultSettings.Add('OutputFile', $TestResultsFile)
     }
-    Import-Module Microsoft.Online.SharePoint.PowerShell -Force
-    Import-Module MSOnline
     Import-Module -Name "$repoDir\modules\Office365DSC\Office365DSC.psd1"
     $testsToRun = @()
 
