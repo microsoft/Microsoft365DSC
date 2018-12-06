@@ -12,6 +12,7 @@ install:
         Install-Module ReverseDSC -MinimumVersion 1.9.2.11 -Force
         Install-Module MSOnline -MinimumVersion 1.1.183.17 -Force
         Install-Module Microsoft.Online.SharePoint.PowerShell -MinimumVersion 16.0.8316.0 -Force
+        Import-Module Microsoft.Online.SharePoint.PowerShell -Force
         Import-Module -Name "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
         Invoke-AppveyorInstallTask
 
