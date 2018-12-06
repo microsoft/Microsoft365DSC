@@ -245,7 +245,7 @@ function Set-TargetResource
                         $membersToAdd = @()
                         foreach($diff in $difference)
                         {
-                            if ($diff.SideIndicator -eq "<=" -and $diff.InputObject -ne $ManagedBy)
+                            if ($diff.SideIndicator -eq "<=" -and $diff.InputObject -ne $ManagedBy.Split('@')[0])
                             {
                                 $membersToRemove += $diff.InputObject
                             }

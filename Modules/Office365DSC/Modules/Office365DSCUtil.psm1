@@ -75,6 +75,7 @@ function Invoke-ExoCommand
 
     Connect-ExoPSSession -Credential $GlobalAdminAccount
     $result = Invoke-Command @invokeArgs -Verbose
+    RemoveBrokenOrClosedPSSession
     return $result
 }
 
