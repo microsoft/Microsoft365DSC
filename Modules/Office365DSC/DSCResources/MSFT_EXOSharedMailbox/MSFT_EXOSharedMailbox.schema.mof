@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("O365SharedMailbox")]
-class MSFT_O365SharedMailbox : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("EXOSharedMailbox")]
+class MSFT_EXOSharedMailbox : OMI_BaseResource
 {
     [Key, Description("The display name of the Shared Mailbox")] string DisplayName;
     [Write, Description("The primary email address of the Shared Mailbox")] string PrimarySMTPAddress;
