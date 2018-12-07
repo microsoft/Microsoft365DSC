@@ -1,0 +1,44 @@
+# Configuration for probot-stale - https://github.com/probot/stale
+
+limitPerRun: 30
+
+pulls:
+  daysUntilStale: 14
+  daysUntilClose: false
+  exemptProjects: true
+  exemptMilestones: true
+  staleLabel: abandoned
+  exemptLabels:
+    - needs review
+    - on hold
+    - waiting for CLA pass
+
+  markComment: >
+    Labeling this pull request (PR) as abandoned since it has gone 14 days or more
+    since the last update. An abandoned PR can be continued by another contributor.
+    The abandoned label will be removed if work on this PR is taken up again.
+
+issues:
+  daysUntilStale: 30
+  daysUntilClose: 40
+  exemptProjects: true
+  exemptMilestones: true
+  staleLabel: stale
+  exemptLabels:
+    - bug
+    - enhancement
+    - tests
+    - documentation
+    - resource proposal
+    - on hold
+
+  markComment: >
+    This issue has been automatically marked as stale because
+    it has not had activity from the community in the last 30 days. It will be
+    closed if no further activity occurs within 10 days. If the issue is labelled
+    with any of the work labels (e.g bug, enhancement, documentation, or tests)
+    then the issue will not auto-close.
+
+  closeComment: >
+    This issue has been automatically closed because it is has not had activity
+    from the community in the last 40 days.
