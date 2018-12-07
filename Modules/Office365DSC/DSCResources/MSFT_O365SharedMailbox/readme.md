@@ -1,3 +1,3 @@
 # Description
 
-This resource allows users to create Office 365 Users and assign them licenses.
+This resource allows users to create Office 365 Shared Mailboxes.
