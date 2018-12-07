@@ -39,6 +39,41 @@ function Remove-Mailbox{
     )
 }
 
+function Get-OrganizationConfig
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+
+function Set-OrganizationConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Boolean]
+        $MailTipsAllTipsEnabled,
+
+        [Parameter()]
+        [Boolean]
+        $MailTipsGroupMetricsEnabled,
+
+        [Parameter()]
+        [Boolean]
+        $MailTipsLargeAudienceThreshold,
+
+        [Parameter()]
+        [Boolean]
+        $MailTipsMailboxSourcedTipsEnabled,
+
+        [Parameter()]
+        [Boolean]
+        $MailTipsExternalRecipientsTipsEnabled
+    )
+
+}
+
 function Get-UnifiedGroupLinks{
     [CmdletBinding()]
     param(
