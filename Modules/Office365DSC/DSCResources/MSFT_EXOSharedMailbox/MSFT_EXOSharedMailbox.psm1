@@ -150,7 +150,7 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    $content = "O365SharedMailbox " + (New-GUID).ToString() + "`r`n"
+    $content = "EXOSharedMailbox " + (New-GUID).ToString() + "`r`n"
     $content += "{`r`n"
     $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += "}`r`n"

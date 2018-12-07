@@ -12,7 +12,7 @@
 # RootModule = ''
 
 # Version number of this module.
-ModuleVersion = '1.0.0'
+ModuleVersion = '1.0.0.1'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -86,7 +86,7 @@ CmdletsToExport = 'Test-SPOServiceConnection', 'Test-Office365DSCParameterState'
 AliasesToExport = @()
 
 # DSC resources to export from this module
-DscResourcesToExport = 'MSFT_O365User', 'MSFT_O365Group', 'MSFT_SPOSite'
+DscResourcesToExport = 'MSFT_O365User', 'MSFT_O365Group', 'MSFT_SPOSite', 'MSFT_EXOSharedMailbox'
 
 # List of all modules packaged with this module
 # ModuleList = @()
@@ -102,7 +102,7 @@ PrivateData = @{
         # Tags applied to this module. These help with module discovery in online galleries.
         Tags = 'DesiredStateConfiguration','DSC','DSCResourceKit','DSCResource','Office365'
 
-        Prerelease = '-alpha2'
+        #Prerelease = '-alpha2'
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/Microsoft/Office365/blob/master/LICENSE'
@@ -116,9 +116,6 @@ PrivateData = @{
         # ReleaseNotes of this module
         ReleaseNotes = '
       * Initial Release'
-
-        # Prerelease string of this module
-        # Prerelease = ''
 
         # Flag to indicate whether the module requires explicit user acceptance for install/update
         # RequireLicenseAcceptance = $false

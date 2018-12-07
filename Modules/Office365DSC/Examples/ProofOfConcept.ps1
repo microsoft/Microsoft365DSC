@@ -45,7 +45,7 @@ Configuration ProofOfConcept
             GlobalAdminAccount = $credsGlobalAdmin
         }#>
 
-        O365SharedMailbox AdminAssistants
+        EXOSharedMailbox AdminAssistants
         {
             DisplayName = "Administrative Assistants"
             PrimarySMTPAddress = "Admins@O365DSC1.onmicrosoft.com"
