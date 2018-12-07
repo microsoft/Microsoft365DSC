@@ -1,5 +1,44 @@
 ﻿<# EXO - Custom Office365DSC #>
 
+function Get-Mailbox{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [string]
+        $RecipientTypeDetails
+    )
+}
+
+function New-Mailbox{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Name,
+
+        [Parameter(Mandatory=$true)]
+        [string]
+        $PrimarySMTPAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $Shared
+    )
+}
+
+function Remove-Mailbox{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity
+    )
+}
+
 function Get-UnifiedGroupLinks{
     [CmdletBinding()]
     param(
@@ -11,6 +50,57 @@ function Get-UnifiedGroupLinks{
         [string]
         $LinkType
     )
+}
+
+function New-UnifiedGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $DisplayName,
+
+        [Parameter()]
+        [string]
+        $Notes,
+
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Owner)
+}
+
+function Add-UnifiedGroupLinks
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [string]
+        $LinkType,
+
+        [Parameter(Mandatory=$true)]
+        [string[]]
+        $Links)
+}
+
+function Remove-UnifiedGroupLinks
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [string]
+        $LinkType,
+
+        [Parameter(Mandatory=$true)]
+        [string[]]
+        $Links)
 }
 
 function Get-Group{
