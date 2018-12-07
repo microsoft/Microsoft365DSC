@@ -81,12 +81,14 @@ function Get-TargetResource
             "MailEnabledSecurity" { $RecipientTypeDetails = "MailUniversalSecurityGroup" }
         }
 
-        $allGroups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount -ScriptBlock{
+        $allGroups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                   -Arguments $CurrentParameters `
+                                   -ScriptBlock{
             Get-Group
         }
-
         $group = $allGroups | Where-Object {$_.DisplayName -eq $DisplayName -and $_.RecipientTypeDetails -eq $RecipientTypeDetails}
-        if(!$group)
+
+        if (!$group)
         {
             Write-Verbose "The specified Group doesn't already exist."
             return $nullReturn
@@ -243,7 +245,7 @@ function Set-TargetResource
                         $membersToAdd = @()
                         foreach($diff in $difference)
                         {
-                            if ($diff.SideIndicator -eq "<=" -and $diff.InputObject -ne $ManagedBy)
+                            if ($diff.SideIndicator -eq "<=" -and $diff.InputObject -ne $ManagedBy.Split('@')[0])
                             {
                                 $membersToRemove += $diff.InputObject
                             }
