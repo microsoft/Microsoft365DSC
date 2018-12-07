@@ -9,7 +9,7 @@ This module allows organizations to automate the deployment, configuration, and 
 
 # How to Install
 
-At this current point int time, the Office365DSC module is only available in Alpha Release. In order to acquire the latest Alpha bits of the module, you need to make sure you have PowerShellGet 1.6.0 or greater installed on your machine. In order to acquire that version of the PowerShellGet module simply run the following line of PowerShell code from a machine that has internet connectivity:
+At this current point in time, the Office365DSC module is only available in Alpha Release. In order to acquire the latest Alpha bits of the module, you need to make sure you have PowerShellGet 1.6.0 or greater installed on your machine. In order to acquire that version of the PowerShellGet module simply run the following line of PowerShell code from a machine that has internet connectivity:
 
 Install-Module PowerShellGet -Force
 
@@ -18,6 +18,8 @@ You will need to close the PowerShell session and re-open a new one after instal
 Install-Module -Name Office365DSC -AllowPrerelease -Force
 
 # Components
+
+The following screen capture show what resource must be used to configure the various elements that are available via the Graphical User Interface of the Office 365 Administration Center.
 
 <p align="center">
   <img src="https://github.com/Microsoft/Office365DSC/raw/Dev/Images/Navigation.png">
