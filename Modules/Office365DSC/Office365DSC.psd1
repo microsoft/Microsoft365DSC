@@ -102,7 +102,7 @@ PrivateData = @{
         # Tags applied to this module. These help with module discovery in online galleries.
         Tags = 'DesiredStateConfiguration','DSC','DSCResourceKit','DSCResource','Office365'
 
-        Prerelease = '-alpha'
+        Prerelease = '-alpha2'
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/Microsoft/Office365/blob/master/LICENSE'
