@@ -1,7 +1,9 @@
 
 # Office365DSC
 
-![DSC Resources Flow](https://github.com/Microsoft/Office365DSC/blob/master/Images/Logo.png?raw=true)
+<p align="center">
+  <img src="https://github.com/Microsoft/Office365DSC/blob/master/Images/Logo.png?raw=true">
+</p>
 
 This module allows organizations to automate the deployment, configuration, and monitoring of Office 365 Tenants via PowerShell Desired State Configuration. The compiled configuration needs to be executed from an agent's Local Configuration Manager (LCM) (machine or container) which can communicate back remotely to Office 365 via remote API calls (therefore requires internet connectivity).
 
@@ -14,3 +16,9 @@ Install-Module PowerShellGet -Force
 You will need to close the PowerShell session and re-open a new one after installing the latest PowerShellGet version in order to be allowed to acquire Alpha releases of the Office365DSC module. Once done, run the following line of PowerShell to acquire the latest Office365DSC module's alpha release from the PowerShell Gallery:
 
 Install-Module -Name Office365DSC -AllowPrerelease -Force
+
+# Components
+
+<p align="center">
+  <img src="https://github.com/Microsoft/Office365DSC/raw/Dev/Images/Navigation.png">
+</p>
