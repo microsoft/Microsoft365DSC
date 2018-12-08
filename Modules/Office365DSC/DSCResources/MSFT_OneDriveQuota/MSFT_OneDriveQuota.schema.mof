@@ -1,0 +1,9 @@
+[ClassVersion("1.0.0.0"), FriendlyName("OneDriveQuota")]
+class MSFT_OneDriveQuota : OMI_BaseResource
+{
+    [Key, Description("OneDrive quota size"), ValueMap{"OneDriveStorageQuota"}, Values{"OneDriveStorageQuota"}] string Key;
+    [Required, Description("The resource quota to apply to the OneDrive sites")] uint32 OneDriveStorageQuota;
+    [Required, Description("The Url of the SharePoint Online Central Administration")] string CentralAdminUrl;
+    [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};
+
