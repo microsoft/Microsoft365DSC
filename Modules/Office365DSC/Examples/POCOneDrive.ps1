@@ -14,12 +14,11 @@ Configuration POCOneDrive
 
         OneDriveSyncSettings OneDriveSyncSettings
         {
-            BlockMacSync = $true
+            BlockMacSync = $True
             CentralAdminUrl = "https://smaystate-admin.sharepoint.com"
-            GlobalAdminAccount = $credsGlobalAdmindir
-
+            GlobalAdminAccount = $credsGlobalAdmin
         }
-
+     
     }
 }
 

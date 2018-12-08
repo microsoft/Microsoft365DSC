@@ -55,14 +55,14 @@ function Get-TargetResource {
             Write-Verbose "Failed to get Tenant client synce settings"
             return $nullReturn
         }
-        Write-Verbose "Client sync settings for tenant"
+        Write-Verbose "Client sync settings for tenant $CentralAdminUrl"
         return @{
             BlockMacSync               = $tenantRestrictions.BlockMacSync
             DisableReportProblemDialog = $tenantRestrictions.DisableReportProblemDialog
-            DomainGuids                = $tenantRestrictions.DomainGuids
-            Enabled                    = $tenantRestrictions.Enabled
+            DomainGuids                = $tenantRestrictions.AllowedDomainList
+            Enabled                    = $tenantRestrictions.TenantRestrictionEnabled
             ExcludedFileExtensions     = $tenantRestrictions.ExcludedFileExtensions
-            GrooveBlockOption          = $tenantRestrictions.GrooveBlockOption
+            GrooveBlockOption          = $tenantRestrictions.OptOutOfGrooveBlock
         }
     }
     catch {
@@ -114,29 +114,31 @@ function Set-TargetResource {
     $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
 
+    Write-Verbose "Current parameteres $CurrenParameters"
+
     $property = $null
 
-    if ($CurrentParameters.ContainsKey("BlockMacSync")) {
+    if ($CurrentParameters.ContainsKey("BlockMacSync") -and $BlockMacSync -ne $null) {
         $property = "-BlockMacSync $BlockMacSync"
     }
 
-    if ($CurrentParameters.ContainsKey("DisableReportProblemDialog")) {
+    if ($CurrentParameters.ContainsKey("DisableReportProblemDialog") -and $DisableReportProblemDialog -ne $null) {
         $property = "$property -DisableReportProblemDialog $DisableReportProblemDialog"
     }
 
-    if ($CurrentParameters.ContainsKey("DomainGuids")) {
+    if ($CurrentParameters.ContainsKey("DomainGuids") -and $DomainGuids -ne $null) {
         $property = "$property -DomainGuids $DomainGuids"
     }
 
-    if ($CurrentParameters.ContainsKey("Enabled")) {
+    if ($CurrentParameters.ContainsKey("Enabled") -and $Enabled -ne $null) {
         $property = "$property -Enabled $Enabled"
     }
 
-    if ($CurrentParameters.ContainsKey("ExcludedFileExtensions")) {
+    if ($CurrentParameters.ContainsKey("ExcludedFileExtensions") -and $ExcludedFileExtensions -ne $null) {
         $property = "$property -ExcludedFileExtensions $ExcludedFileExtensions"
     }
 
-    if ($CurrentParameters.ContainsKey("GrooveBlockOption")) {
+    if ($CurrentParameters.ContainsKey("GrooveBlockOption") -and $BlockMacSync -ne $null) {
         $property = "$property -GrooveBlockOption $GrooveBlockOption"
     }
 
