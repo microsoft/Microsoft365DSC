@@ -58,22 +58,12 @@ function Get-TargetResource {
             Write-Verbose "Failed to get Tenant information"
             return $nullReturn
         }
-        Write-Verbose "OneDrive storage setting for tenant currently $($tenant.OneDriveStorageQuota)"
-
-
         Write-Verbose -Message "Getting tenant client sync setting"
         $tenantRestrictions = Get-SPOTenantSyncClientRestriction
         if (!$tenantRestrictions) {
             Write-Verbose "Failed to get Tenant client synce settings"
             return $nullReturn
         }
-        Write-Verbose "Client sync settings for tenant $CentralAdminUrl"
-        Write-Verbose "BlockMacSync $($tenantRestrictions.BlockMacSync)"
-        Write-Verbose "Disable report problem dialog $($tenantRestrictions.DisableReportProblemDialog)"
-        Write-Verbose "Allowed Domains $($tenantRestrictions.AllowedDomainList)"
-        Write-Verbose "Tenant Restrictions enabled $($tenantRestrictions.TenantRestrictionEnabled)"
-        Write-Verbose "Excluded file types $($tenantRestrictions.ExcludedFileExtensions)"
-        Write-Verbose "Groove client blocked $($tenantRestrictions.OptOutOfGrooveBlock)"
 
         return @{
             BlockMacSync               = $tenantRestrictions.BlockMacSync
@@ -142,24 +132,17 @@ function Set-TargetResource {
 
 
     if ($CurrentParameters.ContainsKey("BlockMacSync") -and $CurrentParameters.ContainsKey("DomainGuids")) {
-
         $allowedDomains = ""
         foreach ($domain in $DomainGuids) {
             $allowedDomains += $domain + ";"
         }
 
-        Write-Verbose "Domains------ $allowedDomains"
-
         if ($CurrentParameters.ContainsKey("BlockMacSync") -eq $true) {
-            Set-SPOTenantSyncClientRestriction -BlockMacSync:$true -DomainGuids "$allowedDomains" -Enable
+            Set-SPOTenantSyncClientRestriction -BlockMacSync:$true -DomainGuids $allowedDomains -Enable
         }
-        else {
-            Set-SPOTenantSyncClientRestriction -BlockMacSync:$false -DomainGuids "$allowedDomains" -Enable   
+        elseif ($CurrentParameters.ContainsKey("BlockMacSync") -eq $false) {
+            Set-SPOTenantSyncClientRestriction -BlockMacSync:$false -DomainGuids $allowedDomains -Enable   
         }
-    }
-
-    if ($CurrentParameters.ContainsKey("DisableReportProblemDialog")) {
-        Set-SPOTenantSyncClientRestriction -DisableReportProblemDialog $DisableReportProblemDialog
     }
 
     if ($CurrentParameters.ContainsKey("DomainGuids")) {
@@ -171,7 +154,6 @@ function Set-TargetResource {
     }
 
     if ($CurrentParameters.ContainsKey("ExcludedFileExtensions")) {
-
         $BlockedFileTypes = ""
         foreach ($fileTypes in $ExcludedFileExtensions) {
             $BlockedFileTypes += $fileTypes + ';'
@@ -180,11 +162,13 @@ function Set-TargetResource {
         Write-Verbose "Excluded file types $ExcludedFileExtensions"
         Set-SPOTenantSyncClientRestriction -ExcludedFileExtensions $BlockedFileTypes
     }
+    if ($CurrentParameters.ContainsKey("DisableReportProblemDialog")) {
+        Set-SPOTenantSyncClientRestriction -DisableReportProblemDialog $DisableReportProblemDialog
+    }
 
     if ($CurrentParameters.ContainsKey("GrooveBlockOption")) {
         Set-SPOTenantSyncClientRestriction -GrooveBlockOption $GrooveBlockOption
     }
-
 }
 
 function Test-TargetResource {
@@ -232,6 +216,7 @@ function Test-TargetResource {
         -ValuesToCheck @("BlockMacSync", `
             "ExcludedFileExtensions", `
             "GrooveBlockOption", `
+            "DisableReportProblemDialog", `
             "DomainGuids"
     )
 }           
