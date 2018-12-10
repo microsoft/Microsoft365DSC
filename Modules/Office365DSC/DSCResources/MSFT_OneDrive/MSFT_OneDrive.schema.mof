@@ -6,9 +6,8 @@ class MSFT_OneDrive : OMI_BaseResource
     [Write, Description("Block sync client on Mac")] Boolean BlockMacSync;
     [Write, Description("Disable dialog box")] Boolean DisableReportProblemDialog;
     [Write, Description("Safe domain list")] String DomainGuids[];
-    [Write, Description("Block / unblock non domain join workstations ")] Boolean Enabled;
     [Write, Description("Exclude files from being synced to OneDrive")] String ExcludedFileExtensions[];
-    [Write, Description("Block old groove client")] String GrooveBlockOption;
+    [Write, Description("Groove block options"),ValueMap{"OptOut","HardOptIn"},Values{"OptOut","HardOptIn"}] String GrooveBlockOption;
     [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };
 

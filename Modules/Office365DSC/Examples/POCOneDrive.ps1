@@ -9,8 +9,11 @@ Configuration POCOneDrive
             CentralAdminUrl = 'https://smaystate-admin.sharepoint.com'
             GlobalAdminAccount = $credsGlobalAdmin
             OneDriveStorageQuota = '1024'
-            ExcludedFileExtensions = @('pst';'xls')
-            
+            ExcludedFileExtensions = @('xls';'pst')
+            DomainGuids = @('786548DD-877B-4760-A749-6B1EFBC1190A';' 877564FF-877B-4760-A749-6B1EFBC1190A')
+            BlockMacSync = $true
+            GrooveBlockOption = "OptOut"
+            DisableReportProblemDialog = $true
         }
      
     }
