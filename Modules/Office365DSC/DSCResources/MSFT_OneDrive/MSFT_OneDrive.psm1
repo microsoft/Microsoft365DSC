@@ -21,7 +21,7 @@ function Get-TargetResource {
         $DisableReportProblemDialog,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $DomainGuids,
         
         [Parameter()]
@@ -29,7 +29,7 @@ function Get-TargetResource {
         $Enabled,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExcludedFileExtensions,
 
         [Parameter()]
@@ -116,7 +116,7 @@ function Set-TargetResource {
         $DisableReportProblemDialog,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $DomainGuids,
         
         [Parameter()]
@@ -124,7 +124,7 @@ function Set-TargetResource {
         $Enabled,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExcludedFileExtensions,
 
         [Parameter()]
@@ -148,15 +148,12 @@ function Set-TargetResource {
     }
 
 
-    Write-Verbose "Current parameteres $CurrenParameters"
-    $property = $null
-
     if ($CurrentParameters.ContainsKey("BlockMacSync")) {
-        $property = "-BlockMacSync $BlockMacSync"
+        Set-SPOTenantSyncClientRestriction -BlockMacSync $BlockMacSync
     }
 
     if ($CurrentParameters.ContainsKey("DisableReportProblemDialog")) {
-        $property = "$property -DisableReportProblemDialog $DisableReportProblemDialog"
+        $property = "$property -DisableReportProblemDialog `$DisableReportProblemDialog"
     }
 
     if ($CurrentParameters.ContainsKey("DomainGuids")) {
@@ -164,20 +161,25 @@ function Set-TargetResource {
     }
 
     if ($CurrentParameters.ContainsKey("Enabled")) {
-        $property = "$property -Enabled $Enabled"
+        $property = "$property -Enabled `$Enabled"
     }
 
     if ($CurrentParameters.ContainsKey("ExcludedFileExtensions")) {
-        $property = "$property -ExcludedFileExtensions $ExcludedFileExtensions"
+
+        $BlockedFileTypes = ""
+        foreach($fileTypes in $ExcludedFileExtensions){
+            $BlockedFileTypes += $fileTypes + ';'
+        }
+
+        Write-Verbose "Excluded file types $ExcludedFileExtensions"
+        Set-SPOTenantSyncClientRestriction -ExcludedFileExtensions $BlockedFileTypes
     }
 
     if ($CurrentParameters.ContainsKey("GrooveBlockOption")) {
-        $property = "$property -GrooveBlockOption $GrooveBlockOption"
+        Set-SPOTenantSyncClientRestriction -GrooveBlockOption $GrooveBlockOption
     }
 
-    Write-Verbose "Properties $property"
-    Set-SPOTenantSyncClientRestriction $property
-    Write-Verbose -Message "Setting tenant client sync settings $property"
+
 
 }
 
@@ -203,7 +205,7 @@ function Test-TargetResource {
         $DisableReportProblemDialog,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $DomainGuids,
         
         [Parameter()]
@@ -211,7 +213,7 @@ function Test-TargetResource {
         $Enabled,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExcludedFileExtensions,
 
         [Parameter()]
@@ -227,7 +229,9 @@ function Test-TargetResource {
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("BlockMacSync")
+        -ValuesToCheck @("BlockMacSync", `
+            "ExcludedFileExtensions"
+    )
 }           
 
 function Export-TargetResource {
@@ -252,7 +256,7 @@ function Export-TargetResource {
         $DisableReportProblemDialog,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $DomainGuids,
         
         [Parameter()]
@@ -260,7 +264,7 @@ function Export-TargetResource {
         $Enabled,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExcludedFileExtensions,
 
         [Parameter()]

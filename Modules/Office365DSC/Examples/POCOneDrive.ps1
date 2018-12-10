@@ -6,10 +6,11 @@ Configuration POCOneDrive
     {
         OneDrive OneDriveSettings
         {
-            BlockMacSync = $True
             CentralAdminUrl = 'https://smaystate-admin.sharepoint.com'
             GlobalAdminAccount = $credsGlobalAdmin
             OneDriveStorageQuota = '1024'
+            ExcludedFileExtensions = @('pst';'xls')
+            
         }
      
     }
