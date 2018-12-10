@@ -1,7 +1,8 @@
-[ClassVersion("1.0.0.0"), FriendlyName("OneDriveSyncSettings")]
-class MSFT_OneDriveSyncSettings : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("OneDrive")]
+class MSFT_OneDrive : OMI_BaseResource
 {
-    [Key, Description("The Url of the SharePoint Online Central Administration")] string CentralAdminUrl;
+    [Key, Description("The Url of the SharePoint Online tenant administration")] string CentralAdminUrl;
+    [Write, Description("The resource quota to apply to the OneDrive sites")] uint32 OneDriveStorageQuota;
     [Write, Description("Block sync client on Mac")] Boolean BlockMacSync;
     [Write, Description("Disable dialog box")] Boolean DisableReportProblemDialog;
     [Write, Description("Safe domain list")] String DomainGuids[];

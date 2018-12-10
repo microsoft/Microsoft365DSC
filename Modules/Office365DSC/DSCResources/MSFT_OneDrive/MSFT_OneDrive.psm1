@@ -3,10 +3,14 @@ function Get-TargetResource {
     [OutputType([System.Collections.Hashtable])]
     param
     (
-      
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
+
+        [Parameter(Mandatory = $true)]
+        [System.UInt32]
+        $OneDriveStorageQuota,
 
         [Parameter()]
         [System.Boolean]
@@ -46,9 +50,21 @@ function Get-TargetResource {
         Enabled                    = $null
         ExcludedFileExtensions     = $null
         GrooveBlockOption          = $null
+        OneDriveStorageQuota       = $null
     }   
 
     try {
+
+        Write-Verbose -Message "Getting OneDrive quoata size for tenant"
+        $tenant = Get-SPOTenant
+
+        if (!$tenant) {
+            Write-Verbose "Failed to get Tenant information"
+            return $nullReturn
+        }
+        Write-Verbose "OneDrive storage setting for tenant currently $($tenant.OneDriveStorageQuota)"
+
+
         Write-Verbose -Message "Getting tenant client sync setting"
         $tenantRestrictions = Get-SPOTenantSyncClientRestriction
         if (!$tenantRestrictions) {
@@ -56,6 +72,13 @@ function Get-TargetResource {
             return $nullReturn
         }
         Write-Verbose "Client sync settings for tenant $CentralAdminUrl"
+        Write-Verbose "BlockMacSync $($tenantRestrictions.BlockMacSync)"
+        Write-Verbose "Disable report problem dialog $($tenantRestrictions.DisableReportProblemDialog)"
+        Write-Verbose "Allowed Domains $($tenantRestrictions.AllowedDomainList)"
+        Write-Verbose "Tenant Restrictions enabled $($tenantRestrictions.TenantRestrictionEnabled)"
+        Write-Verbose "Excluded file types $($tenantRestrictions.ExcludedFileExtensions)"
+        Write-Verbose "Groove client blocked $($tenantRestrictions.OptOutOfGrooveBlock)"
+
         return @{
             BlockMacSync               = $tenantRestrictions.BlockMacSync
             DisableReportProblemDialog = $tenantRestrictions.DisableReportProblemDialog
@@ -63,6 +86,7 @@ function Get-TargetResource {
             Enabled                    = $tenantRestrictions.TenantRestrictionEnabled
             ExcludedFileExtensions     = $tenantRestrictions.ExcludedFileExtensions
             GrooveBlockOption          = $tenantRestrictions.OptOutOfGrooveBlock
+            OneDriveStorageQuota       = $tenant.OneDriveStorageQuota
         }
     }
     catch {
@@ -78,6 +102,10 @@ function Set-TargetResource {
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
+
+        [Parameter(Mandatory = $true)]
+        [System.UInt32]
+        $OneDriveStorageQuota,
 
         [Parameter()]
         [System.Boolean]
@@ -114,38 +142,42 @@ function Set-TargetResource {
     $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
 
-    Write-Verbose "Current parameteres $CurrenParameters"
+    if ($CurrentParameters.ContainsKey("OneDriveStorageQuota")) {
+        Set-SPOTenant -OneDriveStorageQuota $OneDriveStorageQuota
+        Write-Verbose -Message "Setting OneDrive storage quoata to $OneDriveStorageQuota"
+    }
 
+
+    Write-Verbose "Current parameteres $CurrenParameters"
     $property = $null
 
-    if ($CurrentParameters.ContainsKey("BlockMacSync") -and $BlockMacSync -ne $null) {
+    if ($CurrentParameters.ContainsKey("BlockMacSync")) {
         $property = "-BlockMacSync $BlockMacSync"
     }
 
-    if ($CurrentParameters.ContainsKey("DisableReportProblemDialog") -and $DisableReportProblemDialog -ne $null) {
+    if ($CurrentParameters.ContainsKey("DisableReportProblemDialog")) {
         $property = "$property -DisableReportProblemDialog $DisableReportProblemDialog"
     }
 
-    if ($CurrentParameters.ContainsKey("DomainGuids") -and $DomainGuids -ne $null) {
+    if ($CurrentParameters.ContainsKey("DomainGuids")) {
         $property = "$property -DomainGuids $DomainGuids"
     }
 
-    if ($CurrentParameters.ContainsKey("Enabled") -and $Enabled -ne $null) {
+    if ($CurrentParameters.ContainsKey("Enabled")) {
         $property = "$property -Enabled $Enabled"
     }
 
-    if ($CurrentParameters.ContainsKey("ExcludedFileExtensions") -and $ExcludedFileExtensions -ne $null) {
+    if ($CurrentParameters.ContainsKey("ExcludedFileExtensions")) {
         $property = "$property -ExcludedFileExtensions $ExcludedFileExtensions"
     }
 
-    if ($CurrentParameters.ContainsKey("GrooveBlockOption") -and $BlockMacSync -ne $null) {
+    if ($CurrentParameters.ContainsKey("GrooveBlockOption")) {
         $property = "$property -GrooveBlockOption $GrooveBlockOption"
     }
 
     Write-Verbose "Properties $property"
     Set-SPOTenantSyncClientRestriction $property
     Write-Verbose -Message "Setting tenant client sync settings $property"
-     
 
 }
 
@@ -157,6 +189,10 @@ function Test-TargetResource {
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
+
+        [Parameter(Mandatory = $true)]
+        [System.UInt32]
+        $OneDriveStorageQuota,
 
         [Parameter()]
         [System.Boolean]
@@ -191,12 +227,7 @@ function Test-TargetResource {
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("BlockMacSync". `
-            "DisableReportProblemDialog", `
-            "DomainGuids", `
-            "Enabled", `
-            "ExcludedFileExtensions", `
-            "GrooveBlockOption")
+        -ValuesToCheck @("BlockMacSync")
 }           
 
 function Export-TargetResource {
@@ -207,6 +238,10 @@ function Export-TargetResource {
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
+
+        [Parameter(Mandatory = $true)]
+        [System.UInt32]
+        $OneDriveStorageQuota,
 
         [Parameter()]
         [System.Boolean]

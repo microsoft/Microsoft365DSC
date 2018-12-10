@@ -4,19 +4,12 @@ Configuration POCOneDrive
     $credsGlobalAdmin = Get-Credential -UserName "derek@smaystate.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
-        OneDriveQuota OneDriveStorageQuota
-        {   
-            Key = 'OneDriveStorageQuota'
-            OneDriveStorageQuota = '1024'
-            CentralAdminUrl = "https://smaystate-admin.sharepoint.com"
-            GlobalAdminAccount = $credsGlobalAdmin
-        }
-
-        OneDriveSyncSettings OneDriveSyncSettings
+        OneDrive OneDriveSettings
         {
             BlockMacSync = $True
-            CentralAdminUrl = "https://smaystate-admin.sharepoint.com"
+            CentralAdminUrl = 'https://smaystate-admin.sharepoint.com'
             GlobalAdminAccount = $credsGlobalAdmin
+            OneDriveStorageQuota = '1024'
         }
      
     }
