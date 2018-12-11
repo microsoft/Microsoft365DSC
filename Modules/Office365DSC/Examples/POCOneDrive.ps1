@@ -10,9 +10,10 @@ Configuration POCOneDrive
             GlobalAdminAccount = $credsGlobalAdmin
             OneDriveStorageQuota = '1024'
             ExcludedFileExtensions = @('pst','xls')
-            DomainGuids = @('877564FF-877B-4760-A749-6B1EFBC1190A')
+            DomainGuids = '877564FF-877B-4760-A749-6B1EFBC1190A;786548DD-877B-4760-A749-6B1EFBC1190A'
             GrooveBlockOption = "OptOut"
             DisableReportProblemDialog = $true
+            BlockMacSync = $true
         }
      
     }

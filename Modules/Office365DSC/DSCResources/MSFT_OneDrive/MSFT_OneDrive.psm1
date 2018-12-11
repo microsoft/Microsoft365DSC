@@ -21,7 +21,7 @@ function Get-TargetResource {
         $DisableReportProblemDialog,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $DomainGuids,
         
         [Parameter()]
@@ -102,7 +102,7 @@ function Set-TargetResource {
         $DisableReportProblemDialog,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $DomainGuids,
         
 
@@ -132,25 +132,31 @@ function Set-TargetResource {
 
 
     if ($CurrentParameters.ContainsKey("BlockMacSync") -and $CurrentParameters.ContainsKey("DomainGuids")) {
-        $allowedDomains = ""
-        foreach ($domain in $DomainGuids) {
-            $allowedDomains += $domain + ";"
-        }
+        #$allowedDomains = ""
+        #foreach ($domain in $DomainGuids) {
+        #    $allowedDomains += $domain + ";"
+        #}
 
-        if ($CurrentParameters.ContainsKey("BlockMacSync") -eq $true) {
-            Set-SPOTenantSyncClientRestriction -BlockMacSync:$true -DomainGuids $allowedDomains -Enable
+        if ($BlockMacSync -eq $true) {
+            Set-SPOTenantSyncClientRestriction -BlockMacSync:$true -DomainGuids $DomainGuids -Enable
         }
-        elseif ($CurrentParameters.ContainsKey("BlockMacSync") -eq $false) {
-            Set-SPOTenantSyncClientRestriction -BlockMacSync:$false -DomainGuids $allowedDomains -Enable   
+        elseif ($BlockMacSync -eq $false) {
+            Set-SPOTenantSyncClientRestriction -BlockMacSync:$false -DomainGuids $DomainGuids -Enable   
         }
     }
 
     if ($CurrentParameters.ContainsKey("DomainGuids")) {
-        $allowedDomains = ""
-        foreach ($domain in $DomainGuids) {
-            $allowedDomains += $domain + ";"
+        #$allowedDomains = ""
+        #foreach ($domain in $DomainGuids) {
+        #    $allowedDomains += $domain + ";"
+        #}
+        try {
+        Set-SPOTenantSyncClientRestriction -DomainGuids $DomainGuids -Enable
         }
-        Set-SPOTenantSyncClientRestriction -DomainGuids $allowedDomains -Enable
+        catch
+        {
+            Write-Verbose "Failed to set domains " $error
+        }
     }
 
     if ($CurrentParameters.ContainsKey("ExcludedFileExtensions")) {
@@ -193,7 +199,7 @@ function Test-TargetResource {
         $DisableReportProblemDialog,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $DomainGuids,
         
         [Parameter()]
@@ -243,7 +249,7 @@ function Export-TargetResource {
         $DisableReportProblemDialog,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $DomainGuids,
        
 
