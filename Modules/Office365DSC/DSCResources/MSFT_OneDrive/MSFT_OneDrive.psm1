@@ -58,25 +58,43 @@ function Get-TargetResource {
             Write-Verbose "Failed to get Tenant information"
             return $nullReturn
         }
+
         Write-Verbose -Message "Getting tenant client sync setting"
-        $tenantRestrictions = Get-SPOTenantSyncClientRestriction
+        $tenantRestrictions = Get-SPOTenantSyncClientRestriction 
+         
         if (!$tenantRestrictions) {
-            Write-Verbose "Failed to get Tenant client synce settings"
+            Write-Verbose "Failed to get Tenant client synce settings_1"
             return $nullReturn
         }
 
+        Write-Verbose "Determinging Groove block values $($GrooveOption)"
+        $GrooveOption = $null 
+
+        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $false) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $false)) {
+            $GrooveOption = "SoftOptIn"
+        }
+
+        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $false) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $true)) {
+            $GrooveOption = "HardOptIn"
+        }
+
+        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $true) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $true)) {
+            $GrooveOption = "OptOut"
+        }
+        
+        Write-Verbose "Groove block values $($GrooveOption)"
         return @{
             BlockMacSync               = $tenantRestrictions.BlockMacSync
             DisableReportProblemDialog = $tenantRestrictions.DisableReportProblemDialog
             DomainGuids                = $tenantRestrictions.AllowedDomainList
             Enabled                    = $tenantRestrictions.TenantRestrictionEnabled
             ExcludedFileExtensions     = $tenantRestrictions.ExcludedFileExtensions
-            GrooveBlockOption          = $tenantRestrictions.OptOutOfGrooveBlock
+            GrooveBlockOption          = $GrooveOption
             OneDriveStorageQuota       = $tenant.OneDriveStorageQuota
         }
-    }
+   }
     catch {
-        Write-Verbose "Failed to get Tenant client sync settings."
+        Write-Verbose "Failed to get Tenant client sync settings !" 
         return $nullReturn
     }
 }
@@ -209,6 +227,7 @@ function Test-TargetResource {
         -ValuesToCheck @("BlockMacSync", `
             "ExcludedFileExtensions", `
             "DisableReportProblemDialog", `
+            "GrooveBlockOption", `
             "DomainGuids"
     )
 }           
