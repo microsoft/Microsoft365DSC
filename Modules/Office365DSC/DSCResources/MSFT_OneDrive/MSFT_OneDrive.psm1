@@ -132,31 +132,19 @@ function Set-TargetResource {
 
 
     if ($CurrentParameters.ContainsKey("BlockMacSync") -and $CurrentParameters.ContainsKey("DomainGuids")) {
-        #$allowedDomains = ""
-        #foreach ($domain in $DomainGuids) {
-        #    $allowedDomains += $domain + ";"
-        #}
-
+            
         if ($BlockMacSync -eq $true) {
-            Set-SPOTenantSyncClientRestriction -BlockMacSync:$true -DomainGuids $DomainGuids -Enable
+            Set-SPOTenantSyncClientRestriction -BlockMacSync:$BlockMacSync -DomainGuids $DomainGuids -Enable
         }
         elseif ($BlockMacSync -eq $false) {
-            Set-SPOTenantSyncClientRestriction -BlockMacSync:$false -DomainGuids $DomainGuids -Enable   
+            Set-SPOTenantSyncClientRestriction -BlockMacSync:$BlockMacSync -DomainGuids $DomainGuids -Enable   
         }
     }
 
-    if ($CurrentParameters.ContainsKey("DomainGuids")) {
-        #$allowedDomains = ""
-        #foreach ($domain in $DomainGuids) {
-        #    $allowedDomains += $domain + ";"
-        #}
-        try {
+    if ($CurrentParameters.ContainsKey("DomainGuids") -and ($BlockMacSync -eq $null)) {
+
         Set-SPOTenantSyncClientRestriction -DomainGuids $DomainGuids -Enable
-        }
-        catch
-        {
-            Write-Verbose "Failed to set domains " $error
-        }
+
     }
 
     if ($CurrentParameters.ContainsKey("ExcludedFileExtensions")) {
@@ -165,7 +153,6 @@ function Set-TargetResource {
             $BlockedFileTypes += $fileTypes + ';'
         }
 
-        Write-Verbose "Excluded file types $ExcludedFileExtensions"
         Set-SPOTenantSyncClientRestriction -ExcludedFileExtensions $BlockedFileTypes
     }
     if ($CurrentParameters.ContainsKey("DisableReportProblemDialog")) {
@@ -221,7 +208,6 @@ function Test-TargetResource {
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("BlockMacSync", `
             "ExcludedFileExtensions", `
-            "GrooveBlockOption", `
             "DisableReportProblemDialog", `
             "DomainGuids"
     )
