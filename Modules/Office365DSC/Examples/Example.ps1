@@ -1,10 +1,10 @@
-configuration ProofOfConcept
+Configuration Example
 {
     param (
         [Parameter(Mandatory=$true)] [ValidateNotNullorEmpty()] [PSCredential] $GlobalAdminAccount
     )
     Import-DSCResource -ModuleName Office365DSC
-    Node localhost
+    node "localhost"
     {
         EXOSharedMailbox AdminAssistants
         {
@@ -23,6 +23,17 @@ configuration ProofOfConcept
             ResourceQuota = 500
             CentralAdminUrl = "https://o365dsc1-admin.sharepoint.com"
             GlobalAdminAccount = $GlobalAdminAccount
+        }
+
+        #**********************************************************
+        # Local configuration manager settings
+        #
+        # This section contains settings for the LCM of the host
+        # that this configuraiton is applied to
+        #**********************************************************
+        LocalConfigurationManager
+        {
+            RebootNodeIfNeeded = $true
         }
     }
 }
