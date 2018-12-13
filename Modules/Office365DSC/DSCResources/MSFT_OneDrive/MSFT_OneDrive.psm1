@@ -21,6 +21,14 @@ function Get-TargetResource {
         $OneDriveForGuestsEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $NotifyOwnersWhenInvitationsAccepted,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotificationsInOneDriveForBusinessEnabled,
+
+        [Parameter()]
         [System.String]
         $ODBMembersCanShare,
 
@@ -56,17 +64,19 @@ function Get-TargetResource {
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     
     $nullReturn = @{
-        BlockMacSync                         = $null
-        DisableReportProblemDialog           = $null
-        DomainGuids                          = $null
-        Enabled                              = $null
-        ExcludedFileExtensions               = $null
-        GrooveBlockOption                    = $null
-        OneDriveStorageQuota                 = $null
-        OrphanedPersonalSitesRetentionPeriod = $null
-        OneDriveForGuestsEnabled             = $null 
-        ODBAccessRequests                    = $null
-        ODBMembersCanShare                   = $null
+        BlockMacSync                              = $null
+        DisableReportProblemDialog                = $null
+        DomainGuids                               = $null
+        Enabled                                   = $null
+        ExcludedFileExtensions                    = $null
+        GrooveBlockOption                         = $null
+        OneDriveStorageQuota                      = $null
+        OrphanedPersonalSitesRetentionPeriod      = $null
+        OneDriveForGuestsEnabled                  = $null 
+        ODBAccessRequests                         = $null
+        ODBMembersCanShare                        = $null
+        NotifyOwnersWhenInvitationsAccepted       = $null
+        NotificationsInOneDriveForBusinessEnabled = $null
     }   
 
     try {
@@ -105,17 +115,19 @@ function Get-TargetResource {
         
         Write-Verbose "Groove block values $($GrooveOption)"
         return @{
-            BlockMacSync                         = $tenantRestrictions.BlockMacSync
-            DisableReportProblemDialog           = $tenantRestrictions.DisableReportProblemDialog
-            DomainGuids                          = $tenantRestrictions.AllowedDomainList
-            Enabled                              = $tenantRestrictions.TenantRestrictionEnabled
-            ExcludedFileExtensions               = $tenantRestrictions.ExcludedFileExtensions
-            GrooveBlockOption                    = $GrooveOption
-            OneDriveStorageQuota                 = $tenant.OneDriveStorageQuota
-            OrphanedPersonalSitesRetentionPeriod = $tenant.OrphanedPersonalSitesRetentionPeriod 
-            OneDriveForGuestsEnabled             = $tenant.OneDriveForGuestsEnabled
-            ODBAccessRequests                    = $tenant.ODBAccessRequests
-            ODBMembersCanShare                   = $tenant.ODBMembersCanShare
+            BlockMacSync                              = $tenantRestrictions.BlockMacSync
+            DisableReportProblemDialog                = $tenantRestrictions.DisableReportProblemDialog
+            DomainGuids                               = $tenantRestrictions.AllowedDomainList
+            Enabled                                   = $tenantRestrictions.TenantRestrictionEnabled
+            ExcludedFileExtensions                    = $tenantRestrictions.ExcludedFileExtensions
+            GrooveBlockOption                         = $GrooveOption
+            OneDriveStorageQuota                      = $tenant.OneDriveStorageQuota
+            OrphanedPersonalSitesRetentionPeriod      = $tenant.OrphanedPersonalSitesRetentionPeriod 
+            OneDriveForGuestsEnabled                  = $tenant.OneDriveForGuestsEnabled
+            ODBAccessRequests                         = $tenant.ODBAccessRequests
+            ODBMembersCanShare                        = $tenant.ODBMembersCanShare
+            NotifyOwnersWhenInvitationsAccepted       = $tenant.NotifyOwnersWhenInvitationsAccepted
+            NotificationsInOneDriveForBusinessEnabled = $tenant.NotificationsInOneDriveForBusinessEnabled
         }
     }
     catch {
@@ -143,6 +155,14 @@ function Set-TargetResource {
         [Parameter()]
         [System.Boolean]
         $OneDriveForGuestsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotifyOwnersWhenInvitationsAccepted,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotificationsInOneDriveForBusinessEnabled,
 
         [Parameter()]
         [System.String]
@@ -183,6 +203,7 @@ function Set-TargetResource {
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
+## Tenant settings updated ###
 
     if ($CurrentParameters.ContainsKey("OneDriveStorageQuota")) {
         Set-SPOTenant -OneDriveStorageQuota $OneDriveStorageQuota
@@ -199,6 +220,16 @@ function Set-TargetResource {
         Write-Verbose -Message "Setting OneDrive for guest access $OneDriveForGuestsEnabled"
     }
 
+    if ($CurrentParameters.ContainsKey("NotifyOwnersWhenInvitationsAccepted")) {
+        Set-SPOTenant -NotifyOwnersWhenInvitationsAccepted $NotifyOwnersWhenInvitationsAccepted
+        Write-Verbose -Message "Setting OneDrive notify owner when guest access accepted $NotifyOwnersWhenInvitationsAccepted"
+    }
+    
+    if ($CurrentParameters.ContainsKey("NotificationsInOneDriveForBusinessEnabled")) {
+        Set-SPOTenant -NotificationsInOneDriveForBusinessEnabled $NotificationsInOneDriveForBusinessEnabled
+        Write-Verbose -Message "Setting OneDrive notify enabled to  $NotificationsInOneDriveForBusinessEnabled"
+    }
+
     if ($CurrentParameters.ContainsKey("ODBAccessRequests")) {
         Set-SPOTenant -ODBAccessRequests $ODBAccessRequests
         Write-Verbose -Message "Setting OneDrive access requests $ODBAccessRequests"
@@ -208,7 +239,8 @@ function Set-TargetResource {
         Set-SPOTenant -ODBMembersCanShare $ODBMembersCanShare
         Write-Verbose -Message "Setting OneDrive member share requets $ODBMembersCanShare"
     }
-        
+## Sync client settings 
+    
     if ($CurrentParameters.ContainsKey("BlockMacSync") -and $CurrentParameters.ContainsKey("DomainGuids")) {
             
         if ($BlockMacSync -eq $true) {
@@ -266,6 +298,14 @@ function Test-TargetResource {
         $OneDriveForGuestsEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $NotifyOwnersWhenInvitationsAccepted,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotificationsInOneDriveForBusinessEnabled,
+
+        [Parameter()]
         [System.String]
         $ODBMembersCanShare,
 
@@ -311,7 +351,9 @@ function Test-TargetResource {
             "OrphanedPersonalSitesRetentionPeriod", `
             "OneDriveForGuestsEnabled", `
             "ODBAccessRequests", `
-            "ODBMembersCanShare"
+            "ODBMembersCanShare", `
+            "NotifyOwnersWhenInvitationsAccepted", `
+            "NotificationsInOneDriveForBusinessEnabled"
     )
 }           
 
@@ -335,6 +377,14 @@ function Export-TargetResource {
         [Parameter()]
         [System.Boolean]
         $OneDriveForGuestsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotifyOwnersWhenInvitationsAccepted,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotificationsInOneDriveForBusinessEnabled,
 
         [Parameter()]
         [System.String]

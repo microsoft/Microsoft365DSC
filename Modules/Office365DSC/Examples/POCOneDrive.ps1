@@ -31,6 +31,8 @@ Configuration POCOneDrive
             OneDriveForGuestsEnabled = $false
             ODBAccessRequests = 'Unspecified'
             ODBMembersCanShare = 'Unspecified'
+            NotifyOwnersWhenInvitationsAccepted = $false
+            NotificationsInOneDriveForBusinessEnabled = $false
         }
         
     }
