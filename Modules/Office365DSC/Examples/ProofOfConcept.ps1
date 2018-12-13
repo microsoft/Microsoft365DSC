@@ -50,24 +50,6 @@ Configuration ProofOfConcept
             GlobalAdminAccount = $credsGlobalAdmin
         }#>
 
-        ODSettings OneDriveSettings
-        {
-            CentralAdminUrl = 'https://o365dsc1-admin.sharepoint.com'
-            GlobalAdminAccount = $credsGlobalAdmin
-            OneDriveStorageQuota = '1024'
-            ExcludedFileExtensions = @('pst')
-            DomainGuids = '786548dd-877b-4760-a749-6b1efbc1190a'
-            GrooveBlockOption = "OptOut"
-            DisableReportProblemDialog = $true
-            BlockMacSync = $true
-            OrphanedPersonalSitesRetentionPeriod = "45"
-            OneDriveForGuestsEnabled = $false
-            ODBAccessRequests = 'On'
-            ODBMembersCanShare = 'On'
-            NotifyOwnersWhenInvitationsAccepted = $false
-            NotificationsInOneDriveForBusinessEnabled = $false
-        }
-
         EXOSharedMailbox AdminAssistants
         {
             DisplayName = "Test"
