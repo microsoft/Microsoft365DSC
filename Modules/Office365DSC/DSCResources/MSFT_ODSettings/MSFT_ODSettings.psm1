@@ -90,7 +90,6 @@ function Get-TargetResource {
         }
 
         Write-Verbose -Message "Getting OneDrive quoata size for tenant $($tenant.OneDriveStorageQuota)"
-
         Write-Verbose -Message "Getting tenant client sync setting"
         $tenantRestrictions = Get-SPOTenantSyncClientRestriction 
          
