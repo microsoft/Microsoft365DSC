@@ -30,10 +30,12 @@ function Get-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateSet("On","Off","Unspecified")] 
         $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
+        [ValidateSet("On","Off","Unspecified")] 
         $ODBAccessRequests,
 
         [Parameter()]
@@ -54,7 +56,13 @@ function Get-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateSet("OptOut","HardOptIn","SoftOptIn")] 
         $GrooveBlockOption,
+
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
 
         [Parameter(Mandatory = $true)] 
         [System.Management.Automation.PSCredential] 
@@ -138,7 +146,8 @@ function Get-TargetResource {
 function Set-TargetResource {
     [CmdletBinding()]
     param
-    (   
+    (
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
@@ -165,10 +174,12 @@ function Set-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateSet("On","Off","Unspecified")] 
         $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
+        [ValidateSet("On","Off","Unspecified")] 
         $ODBAccessRequests,
 
         [Parameter()]
@@ -183,14 +194,19 @@ function Set-TargetResource {
         [System.String]
         $DomainGuids,
         
-
         [Parameter()]
         [System.String[]]
         $ExcludedFileExtensions,
 
         [Parameter()]
         [System.String]
+        [ValidateSet("OptOut","HardOptIn","SoftOptIn")] 
         $GrooveBlockOption,
+
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
 
         [Parameter(Mandatory = $true)] 
         [System.Management.Automation.PSCredential] 
@@ -202,7 +218,7 @@ function Set-TargetResource {
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
-## Tenant settings updated ###
+    ## Tenant settings updated ###
 
     if ($CurrentParameters.ContainsKey("OneDriveStorageQuota")) {
         Set-SPOTenant -OneDriveStorageQuota $OneDriveStorageQuota
@@ -238,7 +254,7 @@ function Set-TargetResource {
         Set-SPOTenant -ODBMembersCanShare $ODBMembersCanShare
         Write-Verbose -Message "Setting OneDrive member share requets $ODBMembersCanShare"
     }
-## Sync client settings 
+    ## Sync client settings 
     
     if ($CurrentParameters.ContainsKey("BlockMacSync") -and $CurrentParameters.ContainsKey("DomainGuids")) {
             
@@ -280,6 +296,7 @@ function Test-TargetResource {
     [OutputType([System.Boolean])]
     param
     (
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
@@ -306,10 +323,12 @@ function Test-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateSet("On","Off","Unspecified")] 
         $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
+        [ValidateSet("On","Off","Unspecified")] 
         $ODBAccessRequests,
 
         [Parameter()]
@@ -330,7 +349,13 @@ function Test-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateSet("OptOut","HardOptIn","SoftOptIn")] 
         $GrooveBlockOption,
+
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
 
         [Parameter(Mandatory = $true)] 
         [System.Management.Automation.PSCredential] 
@@ -352,7 +377,8 @@ function Test-TargetResource {
             "ODBAccessRequests", `
             "ODBMembersCanShare", `
             "NotifyOwnersWhenInvitationsAccepted", `
-            "NotificationsInOneDriveForBusinessEnabled"
+            "NotificationsInOneDriveForBusinessEnabled",
+            "Ensure"
     )
 }           
 
