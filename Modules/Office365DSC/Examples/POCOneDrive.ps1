@@ -18,7 +18,7 @@ Configuration POCOneDrive
             BlockMacSync = $true
         }
         #>
-        OneDrive OneDriveSettings
+        ODSettings OneDriveSettings
         {
             CentralAdminUrl = 'https://smaystate-admin.sharepoint.com'
             GlobalAdminAccount = $credsGlobalAdmin

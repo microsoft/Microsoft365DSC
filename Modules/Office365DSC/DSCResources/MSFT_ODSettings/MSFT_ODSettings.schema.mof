@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("OneDrive")]
-class MSFT_OneDrive : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("ODSettings")]
+class MSFT_ODSettings : OMI_BaseResource
 {
     [Key, Description("The Url of the SharePoint Online tenant administration")] string CentralAdminUrl;
     [Write, Description("The resource quota to apply to the OneDrive sites")] uint32 OneDriveStorageQuota;

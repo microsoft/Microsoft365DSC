@@ -45,7 +45,7 @@ Configuration ProofOfConcept
             GlobalAdminAccount = $credsGlobalAdmin
         }#>
 
-        OneDrive OneDriveSettings
+        ODSettings OneDriveSettings
         {
             CentralAdminUrl = 'https://o365dsc1-admin.sharepoint.com'
             GlobalAdminAccount = $credsGlobalAdmin
