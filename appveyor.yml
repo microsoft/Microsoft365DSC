@@ -22,6 +22,7 @@ install:
         Import-Module Microsoft.Online.SharePoint.PowerShell -Force
         Import-Module -Name "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
         Invoke-AppveyorInstallTask
+        Remove-Item -Path variable:ConfigurationData -ErrorAction SilentlyContinue
 
 build: off
 
