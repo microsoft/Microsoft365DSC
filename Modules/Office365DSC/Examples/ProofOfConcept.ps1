@@ -59,6 +59,8 @@ Configuration ProofOfConcept
             OneDriveForGuestsEnabled = $false
             ODBAccessRequests = 'On'
             ODBMembersCanShare = 'On'
+            NotifyOwnersWhenInvitationsAccepted = $false
+            NotificationsInOneDriveForBusinessEnabled = $false
         }
 
         EXOSharedMailbox AdminAssistants
