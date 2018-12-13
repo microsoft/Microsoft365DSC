@@ -11,7 +11,7 @@ Configuration Example
 
     Import-DSCResource -ModuleName Office365DSC
 
-    node "localhost"
+    node localhost
     {
         EXOSharedMailbox AdminAssistants
         {
