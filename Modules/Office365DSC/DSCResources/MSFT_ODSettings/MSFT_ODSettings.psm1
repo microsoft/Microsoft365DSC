@@ -30,10 +30,12 @@ function Get-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateSet("On","Off","Unspecified")] 
         $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
+        [ValidateSet("On","Off","Unspecified")] 
         $ODBAccessRequests,
 
         [Parameter()]
@@ -54,6 +56,7 @@ function Get-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateSet("OptOut","HardOptIn","SoftOptIn")] 
         $GrooveBlockOption,
 
         [Parameter()] 
@@ -143,7 +146,8 @@ function Get-TargetResource {
 function Set-TargetResource {
     [CmdletBinding()]
     param
-    (   
+    (
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
@@ -170,10 +174,12 @@ function Set-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateSet("On","Off","Unspecified")] 
         $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
+        [ValidateSet("On","Off","Unspecified")] 
         $ODBAccessRequests,
 
         [Parameter()]
@@ -187,13 +193,14 @@ function Set-TargetResource {
         [Parameter()]
         [System.String]
         $DomainGuids,
-
+        
         [Parameter()]
         [System.String[]]
         $ExcludedFileExtensions,
 
         [Parameter()]
         [System.String]
+        [ValidateSet("OptOut","HardOptIn","SoftOptIn")] 
         $GrooveBlockOption,
 
         [Parameter()] 
@@ -289,6 +296,7 @@ function Test-TargetResource {
     [OutputType([System.Boolean])]
     param
     (
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
@@ -315,10 +323,12 @@ function Test-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateSet("On","Off","Unspecified")] 
         $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
+        [ValidateSet("On","Off","Unspecified")] 
         $ODBAccessRequests,
 
         [Parameter()]
@@ -339,6 +349,7 @@ function Test-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateSet("OptOut","HardOptIn","SoftOptIn")] 
         $GrooveBlockOption,
 
         [Parameter()] 
