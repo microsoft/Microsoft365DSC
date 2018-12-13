@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
                                 -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                                -DscResource "OneDrive"
+                                                -DscResource "ODSettings"
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -29,7 +29,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Check OneDrive Quota" -Fixture {
             $testParams = @{
                 OneDriveStorageQuota = 1024
-                CentralAdminUrl = "https://smaystate-admin.sharepoint.com"
+                CentralAdminUrl = "https://contoso.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -54,7 +54,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Set OneDrive Quota" -Fixture {
             $testParams = @{
                 OneDriveStorageQuota = 1024
-                CentralAdminUrl = "https://smaystate-admin.sharepoint.com"
+                CentralAdminUrl = "https://contoso.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -65,8 +65,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
            
 
-            It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should Be $true
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
             }
         }
 

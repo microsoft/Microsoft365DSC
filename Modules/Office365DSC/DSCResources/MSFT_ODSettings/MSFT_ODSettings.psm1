@@ -56,6 +56,11 @@ function Get-TargetResource {
         [System.String]
         $GrooveBlockOption,
 
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)] 
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
@@ -182,7 +187,6 @@ function Set-TargetResource {
         [Parameter()]
         [System.String]
         $DomainGuids,
-        
 
         [Parameter()]
         [System.String[]]
@@ -191,6 +195,11 @@ function Set-TargetResource {
         [Parameter()]
         [System.String]
         $GrooveBlockOption,
+
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
 
         [Parameter(Mandatory = $true)] 
         [System.Management.Automation.PSCredential] 
@@ -202,7 +211,7 @@ function Set-TargetResource {
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
-## Tenant settings updated ###
+    ## Tenant settings updated ###
 
     if ($CurrentParameters.ContainsKey("OneDriveStorageQuota")) {
         Set-SPOTenant -OneDriveStorageQuota $OneDriveStorageQuota
@@ -238,7 +247,7 @@ function Set-TargetResource {
         Set-SPOTenant -ODBMembersCanShare $ODBMembersCanShare
         Write-Verbose -Message "Setting OneDrive member share requets $ODBMembersCanShare"
     }
-## Sync client settings 
+    ## Sync client settings 
     
     if ($CurrentParameters.ContainsKey("BlockMacSync") -and $CurrentParameters.ContainsKey("DomainGuids")) {
             
@@ -332,6 +341,11 @@ function Test-TargetResource {
         [System.String]
         $GrooveBlockOption,
 
+        [Parameter()] 
+        [ValidateSet("Present","Absent")] 
+        [System.String] 
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)] 
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
@@ -352,7 +366,8 @@ function Test-TargetResource {
             "ODBAccessRequests", `
             "ODBMembersCanShare", `
             "NotifyOwnersWhenInvitationsAccepted", `
-            "NotificationsInOneDriveForBusinessEnabled"
+            "NotificationsInOneDriveForBusinessEnabled",
+            "Ensure"
     )
 }           
 
