@@ -48,7 +48,7 @@ function Invoke-ExoCommand
         [ScriptBlock]
         $ScriptBlock
     )
-    #$VerbosePreference = 'Continue'
+    $VerbosePreference = 'Continue'
     $invokeArgs = @{
         ScriptBlock = [ScriptBlock]::Create($ScriptBlock.ToString())
     }
@@ -99,8 +99,7 @@ function Invoke-ExoCommand
                 Start-Sleep -Seconds $timeToWaitInSeconds
             }
         }
-        Write-Verbose "Recursively calling Invoke-ExoCommand back"
-        return Invoke-ExoCommand @PSBoundParameters
+        Connect-ExoPSSession -Credential $GlobalAdminAccount
     }
     $result = Invoke-Command @invokeArgs -Verbose
     return $result
