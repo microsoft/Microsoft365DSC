@@ -28,3 +28,11 @@ done, run the following line of PowerShell to acquire the latest
 Office365DSC module's alpha release from the PowerShell Gallery:
 
 Install-Module -Name Office365DSC -AllowPrerelease -Force
+
+# Components
+
+The following screen capture show what resource must be used to 
+configure the various elements that are available via the Graphical 
+User Interface of the Office 365 Administration Center.
+
+![Components](https://github.com/Microsoft/Office365DSC/raw/Dev/Images/Navigation.png)
