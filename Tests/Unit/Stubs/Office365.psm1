@@ -30,6 +30,19 @@ function New-Mailbox{
     )
 }
 
+function Set-Mailbox{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [string]
+        $EmailAddresses
+    )
+}
+
 function Remove-Mailbox{
     [CmdletBinding()]
     param(
