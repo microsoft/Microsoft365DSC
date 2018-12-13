@@ -4,8 +4,9 @@ Configuration POCOneDrive
     $credsGlobalAdmin = Get-Credential -UserName "derek@smaystate.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
-      
+      <#
         OneDrive OneDriveSettings
+    
         {
             CentralAdminUrl = 'https://smaystate-admin.sharepoint.com'
             GlobalAdminAccount = $credsGlobalAdmin
@@ -15,6 +16,15 @@ Configuration POCOneDrive
             GrooveBlockOption = "OptOut"
             DisableReportProblemDialog = $true
             BlockMacSync = $true
+        }
+        #>
+        OneDrive OneDriveSettings
+        {
+            CentralAdminUrl = 'https://smaystate-admin.sharepoint.com'
+            GlobalAdminAccount = $credsGlobalAdmin
+            OneDriveStorageQuota = '1024'
+            ExcludedFileExtensions = @('pst')
+           
         }
         
     }
