@@ -85,11 +85,10 @@ function Get-TargetResource {
         $tenantRestrictions = Get-SPOTenantSyncClientRestriction 
          
         if (!$tenantRestrictions) {
-            Write-Verbose "Failed to get Tenant client synce settings_1"
+            Write-Verbose "Failed to get Tenant client synce settings!"
             return $nullReturn
         }
 
-        Write-Verbose "Determinging Groove block values $($GrooveOption)"
         $GrooveOption = $null 
 
         if (($tenantRestrictions.OptOutOfGrooveBlock -eq $false) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $false)) {
