@@ -36,5 +36,3 @@ $configData = @{
     }
     )
 }
-
-ProofOfConcept -ConfigurationData $configData
