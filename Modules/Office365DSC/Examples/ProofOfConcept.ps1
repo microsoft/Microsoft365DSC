@@ -55,6 +55,10 @@ Configuration ProofOfConcept
             GrooveBlockOption = "OptOut"
             DisableReportProblemDialog = $true
             BlockMacSync = $true
+            OrphanedPersonalSitesRetentionPeriod = "45"
+            OneDriveForGuestsEnabled = $false
+            ODBAccessRequests = 'On'
+            ODBMembersCanShare = 'On'
         }
 
         EXOSharedMailbox AdminAssistants

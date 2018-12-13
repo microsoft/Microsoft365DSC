@@ -8,9 +8,25 @@ function Get-TargetResource {
         [System.String]
         $CentralAdminUrl,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.UInt32]
         $OneDriveStorageQuota,
+
+        [Parameter()]
+        [System.UInt32]
+        $OrphanedPersonalSitesRetentionPeriod,
+
+        [Parameter()]
+        [System.Boolean]
+        $OneDriveForGuestsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ODBMembersCanShare,
+
+        [Parameter()]
+        [System.String]
+        $ODBAccessRequests,
 
         [Parameter()]
         [System.Boolean]
@@ -40,13 +56,17 @@ function Get-TargetResource {
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     
     $nullReturn = @{
-        BlockMacSync               = $null
-        DisableReportProblemDialog = $null
-        DomainGuids                = $null
-        Enabled                    = $null
-        ExcludedFileExtensions     = $null
-        GrooveBlockOption          = $null
-        OneDriveStorageQuota       = $null
+        BlockMacSync                         = $null
+        DisableReportProblemDialog           = $null
+        DomainGuids                          = $null
+        Enabled                              = $null
+        ExcludedFileExtensions               = $null
+        GrooveBlockOption                    = $null
+        OneDriveStorageQuota                 = $null
+        OrphanedPersonalSitesRetentionPeriod = $null
+        OneDriveForGuestsEnabled             = $null 
+        ODBAccessRequests                    = $null
+        ODBMembersCanShare                   = $null
     }   
 
     try {
@@ -86,15 +106,19 @@ function Get-TargetResource {
         
         Write-Verbose "Groove block values $($GrooveOption)"
         return @{
-            BlockMacSync               = $tenantRestrictions.BlockMacSync
-            DisableReportProblemDialog = $tenantRestrictions.DisableReportProblemDialog
-            DomainGuids                = $tenantRestrictions.AllowedDomainList
-            Enabled                    = $tenantRestrictions.TenantRestrictionEnabled
-            ExcludedFileExtensions     = $tenantRestrictions.ExcludedFileExtensions
-            GrooveBlockOption          = $GrooveOption
-            OneDriveStorageQuota       = $tenant.OneDriveStorageQuota
+            BlockMacSync                         = $tenantRestrictions.BlockMacSync
+            DisableReportProblemDialog           = $tenantRestrictions.DisableReportProblemDialog
+            DomainGuids                          = $tenantRestrictions.AllowedDomainList
+            Enabled                              = $tenantRestrictions.TenantRestrictionEnabled
+            ExcludedFileExtensions               = $tenantRestrictions.ExcludedFileExtensions
+            GrooveBlockOption                    = $GrooveOption
+            OneDriveStorageQuota                 = $tenant.OneDriveStorageQuota
+            OrphanedPersonalSitesRetentionPeriod = $tenant.OrphanedPersonalSitesRetentionPeriod 
+            OneDriveForGuestsEnabled             = $tenant.OneDriveForGuestsEnabled
+            ODBAccessRequests                    = $tenant.ODBAccessRequests
+            ODBMembersCanShare                   = $tenant.ODBMembersCanShare
         }
-   }
+    }
     catch {
         Write-Verbose "Failed to get Tenant client sync settings !" 
         return $nullReturn
@@ -109,9 +133,25 @@ function Set-TargetResource {
         [System.String]
         $CentralAdminUrl,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.UInt32]
         $OneDriveStorageQuota,
+
+        [Parameter()]
+        [System.UInt32]
+        $OrphanedPersonalSitesRetentionPeriod,
+
+        [Parameter()]
+        [System.Boolean]
+        $OneDriveForGuestsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ODBMembersCanShare,
+
+        [Parameter()]
+        [System.String]
+        $ODBAccessRequests,
 
         [Parameter()]
         [System.Boolean]
@@ -150,7 +190,26 @@ function Set-TargetResource {
         Write-Verbose -Message "Setting OneDrive storage quoata to $OneDriveStorageQuota"
     }
 
+    if ($CurrentParameters.ContainsKey("OrphanedPersonalSitesRetentionPeriod")) {
+        Set-SPOTenant -OrphanedPersonalSitesRetentionPeriod $OrphanedPersonalSitesRetentionPeriod
+        Write-Verbose -Message "Setting OneDrive retention period $OrphanedPersonalSitesRetentionPeriod"
+    }
 
+    if ($CurrentParameters.ContainsKey("OneDriveForGuestsEnabled")) {
+        Set-SPOTenant -OneDriveForGuestsEnabled $OneDriveForGuestsEnabled
+        Write-Verbose -Message "Setting OneDrive for guest access $OneDriveForGuestsEnabled"
+    }
+
+    if ($CurrentParameters.ContainsKey("ODBAccessRequests")) {
+        Set-SPOTenant -ODBAccessRequests $ODBAccessRequests
+        Write-Verbose -Message "Setting OneDrive access requests $ODBAccessRequests"
+    }
+   
+    if ($CurrentParameters.ContainsKey("ODBMembersCanShare")) {
+        Set-SPOTenant -ODBMembersCanShare $ODBMembersCanShare
+        Write-Verbose -Message "Setting OneDrive member share requets $ODBMembersCanShare"
+    }
+        
     if ($CurrentParameters.ContainsKey("BlockMacSync") -and $CurrentParameters.ContainsKey("DomainGuids")) {
             
         if ($BlockMacSync -eq $true) {
@@ -165,7 +224,7 @@ function Set-TargetResource {
         Set-SPOTenantSyncClientRestriction -DomainGuids $DomainGuids -Enable
     }
 
-    if (!$CurrentParameters.ContainsKey("DomainGuids")-and ($BlockMacSync -ne $null)){
+    if (!$CurrentParameters.ContainsKey("DomainGuids") -and ($BlockMacSync -ne $null)) {
         Write-Verbose "Cannot block Mac Clients without specifiing an allowed domain !"
     }
 
@@ -195,9 +254,25 @@ function Test-TargetResource {
         [System.String]
         $CentralAdminUrl,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.UInt32]
         $OneDriveStorageQuota,
+
+        [Parameter()]
+        [System.UInt32]
+        $OrphanedPersonalSitesRetentionPeriod,
+
+        [Parameter()]
+        [System.Boolean]
+        $OneDriveForGuestsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ODBMembersCanShare,
+
+        [Parameter()]
+        [System.String]
+        $ODBAccessRequests,
 
         [Parameter()]
         [System.Boolean]
@@ -233,7 +308,11 @@ function Test-TargetResource {
             "DisableReportProblemDialog", `
             "GrooveBlockOption", `
             "DomainGuids", `
-            "OneDriveStorageQuota"
+            "OneDriveStorageQuota", `
+            "OrphanedPersonalSitesRetentionPeriod", `
+            "OneDriveForGuestsEnabled", `
+            "ODBAccessRequests", `
+            "ODBMembersCanShare"
     )
 }           
 
@@ -246,9 +325,25 @@ function Export-TargetResource {
         [System.String]
         $CentralAdminUrl,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.UInt32]
         $OneDriveStorageQuota,
+
+        [Parameter()]
+        [System.UInt32]
+        $OrphanedPersonalSitesRetentionPeriod,
+
+        [Parameter()]
+        [System.Boolean]
+        $OneDriveForGuestsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ODBMembersCanShare,
+
+        [Parameter()]
+        [System.String]
+        $ODBAccessRequests,
 
         [Parameter()]
         [System.Boolean]

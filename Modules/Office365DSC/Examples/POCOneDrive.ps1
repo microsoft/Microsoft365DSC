@@ -27,7 +27,10 @@ Configuration POCOneDrive
             DisableReportProblemDialog = $false
             BlockMacSync = $true
             DomainGuids = '786548dd-877b-4760-a749-6b1efbc1190a'
-           
+            OrphanedPersonalSitesRetentionPeriod = "45"
+            OneDriveForGuestsEnabled = $false
+            ODBAccessRequests = 'Unspecified'
+            ODBMembersCanShare = 'Unspecified'
         }
         
     }
