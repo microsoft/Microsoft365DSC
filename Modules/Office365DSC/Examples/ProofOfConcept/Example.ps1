@@ -3,7 +3,9 @@ Configuration Example
     param (
         [Parameter(Mandatory=$true)] [ValidateNotNullorEmpty()] [PSCredential] $GlobalAdminAccount
     )
+
     Import-DSCResource -ModuleName Office365DSC
+
     node "localhost"
     {
         EXOSharedMailbox AdminAssistants
