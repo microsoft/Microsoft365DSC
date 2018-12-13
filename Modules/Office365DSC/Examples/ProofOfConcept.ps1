@@ -1,6 +1,6 @@
 Configuration ProofOfConcept
 {
-    Import-DSCResource -ModuleName Office365DSC -ModuleVersion 1.0.0
+    Import-DSCResource -ModuleName Office365DSC -ModuleVersion 1.0.0.1
     $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
@@ -47,8 +47,9 @@ Configuration ProofOfConcept
 
         EXOSharedMailbox AdminAssistants
         {
-            DisplayName = "Administrative Assistants"
-            PrimarySMTPAddress = "Admins@O365DSC1.onmicrosoft.com"
+            DisplayName = "Test"
+            PrimarySMTPAddress = "Test@O365DSC1.onmicrosoft.com"
+            Aliases = @("Joufflu@o365dsc1.onmicrosoft.com", "Gilles@O365dsc1.onmicrosoft.com")
             Ensure = "Present"
             GlobalAdminAccount = $credsGlobalAdmin
         }

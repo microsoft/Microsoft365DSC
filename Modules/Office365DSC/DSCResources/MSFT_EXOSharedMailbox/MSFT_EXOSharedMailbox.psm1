@@ -12,6 +12,10 @@ function Get-TargetResource
         [System.String]
         $PrimarySMTPAddress,
 
+        [Parameter()]
+        [System.String[]]
+        $Aliases,
+
         [Parameter()] 
         [ValidateSet("Present","Absent")] 
         [System.String] 
@@ -35,18 +39,33 @@ function Get-TargetResource
     }
     $mailbox = $mailboxes | Where-Object {$_.RecipientTypeDetails -eq "SharedMailbox" -and $_.Identity -eq $DisplayName}
 
-    if(!$mailbox)
+    if (!$mailbox)
     {
         Write-Verbose "The specified Shared Mailbox doesn't already exist."
         return $nullReturn
     }
+
+    #region Email Aliases
+    $CurrentAliases = @()
+
+    foreach($email in $mailbox.EmailAddresses)
+    {
+        $emailValue = $email.Split(":")[1]
+        if ($emailValue -ne $mailbox.PrimarySMTPAddress)
+        {
+            $CurrentAliases += $emailValue
+        }
+    }
+    #endregion
+
     $result = @{
         DisplayName = $DisplayName
         PrimarySMTPAddress = $mailbox.PrimarySMTPAddress
+        Aliases = $CurrentAliases
         Ensure = "Present"
         GlobalAdminAccount = $GlobalAdminAccount
     }
-    Write-Verbose "Found an existing instance of Shared Mailbox $($DisplayName)"
+    Write-Verbose "Found an existing instance of Shared Mailbox '$($DisplayName)'"
     return $result
 }
 
@@ -63,6 +82,10 @@ function Set-TargetResource
         [System.String]
         $PrimarySMTPAddress,
 
+        [Parameter()]
+        [System.String[]]
+        $Aliases,
+
         [Parameter()] 
         [ValidateSet("Present","Absent")] 
         [System.String] 
@@ -73,27 +96,75 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose "Entering Set-TargetResource"
-    Write-Verbose "Retrieving information about Shared Mailbox $($DisplayName) to see if it already exists"
+    Write-Verbose "Retrieving information about Shared Mailbox '$($DisplayName)' to see if it already exists"
     $currentMailbox = Get-TargetResource @PSBoundParameters
+
+    #region Validation
+    if ($Aliases -and $Aliases.Contains($PrimarySMTPAddress))
+    {
+        throw "You cannot have the Aliases list contain the PrimarySMTPAddress"
+    }
+    #endregion
+
+    $CurrentParameters = $PSBoundParameters
 
     # CASE: Mailbox doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentMailbox.Ensure -eq "Absent")
     {
-        Write-Verbose "Shared Mailbox $($DisplayName) does not exist but it should. Creating it."
+        Write-Verbose "Shared Mailbox '$($DisplayName)' does not exist but it should. Creating it."
+        $emails = ""
+        foreach($alias in $Aliases)
+        {
+            $emails += "smtp:" + $alias + ","
+        }
+        $emails += "SMTP:" + $PrimarySMTPAddress
+        $CurrentParameters.Aliases = $emails
+
         Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                          -Arguments $PSBoundParameters `
+                          -Arguments $CurrentParameters `
                           -ScriptBlock {
             New-MailBox -Name $args[0].DisplayName -PrimarySMTPAddress $args[0].PrimarySMTPAddress -Shared:$true
+            $mailbox = Get-Mailbox -Identity $args[0].DisplayName
+            $mailbox.EmailAddresses = $args[0].Aliases
+            $mailbox | Set-Mailbox
         }
     }
     # CASE: Mailbox exists but it shouldn't;
     elseif ($Ensure -eq "Absent" -and $currentMailbox.Ensure -eq "Present")
     {
-        Write-Verbose "Shared Mailbox $($DisplayName) exists but it shouldn't. Deleting it."
+        Write-Verbose "Shared Mailbox '$($DisplayName)' exists but it shouldn't. Deleting it."
         Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
                           -Arguments $PSBoundParameters `
                           -ScriptBlock {
-            Remove-Mailbox -Identity $args[0]..DisplayName -Confirm:$false
+            Remove-Mailbox -Identity $args[0].DisplayName -Confirm:$false
+        }
+    }
+    # CASE: Mailbox exists and it should, but has different values than the desired ones
+    elseif ($Ensure -eq "Present" -and $currentMailbox.Ensure -eq "Present")
+    {
+        # CASE: Email Aliases need to be updated
+        Write-Verbose "Shared Mailbox '$($DisplayName)' already exists, but needs updating."
+        $current = $currentMailbox.Aliases
+        $desired = $Aliases
+        $diff = Compare-Object -ReferenceObject $current -DifferenceObject $desired
+        if ($diff)
+        {
+            Write-Verbose "Updating the list of Aliases for the Shared Mailbox '$($DisplayName)'"
+            $emails = ""
+            foreach($alias in $Aliases)
+            {
+                $emails += $alias + ","
+            }
+            $emails += $PrimarySMTPAddress
+            $proxyAddresses = $emails -Split ','
+            $CurrentParameters.Aliases = $proxyAddresses
+
+            Write-Verbose "Adding the following email aliases: $($emails)"
+            Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                          -Arguments $CurrentParameters `
+                          -ScriptBlock {
+                Set-Mailbox -Identity $args[0].DisplayName -EmailAddresses @{add=$args[0].Aliases}
+            }
         }
     }
 }
@@ -112,6 +183,10 @@ function Test-TargetResource
         [System.String]
         $PrimarySMTPAddress,
 
+        [Parameter()]
+        [System.String[]]
+        $Aliases,
+
         [Parameter()] 
         [ValidateSet("Present","Absent")] 
         [System.String] 
@@ -128,7 +203,8 @@ function Test-TargetResource
                                            -DesiredValues $PSBoundParameters `
                                            -ValuesToCheck @("Ensure", `
                                                             "DisplayName", `
-                                                            "PrimarySMTPAddress")
+                                                            "PrimarySMTPAddress",
+                                                            "Aliases")
 }
 
 function Export-TargetResource
@@ -140,10 +216,6 @@ function Export-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $PrimarySMTPAddress,
 
         [Parameter(Mandatory = $true)] 
         [System.Management.Automation.PSCredential] 
