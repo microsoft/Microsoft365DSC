@@ -1,5 +1,3 @@
-$Global:ExoSession = $null
-
 function Test-SPOServiceConnection
 {
     [CmdletBinding()]
@@ -60,29 +58,49 @@ function Invoke-ExoCommand
     }
 
     Write-Verbose "Verifying the LCM connection state to Exchange Online"
-    $ConnectionUri = "https://outlook.office365.com/PowerShell-LiveId"
-    $AzureADAuthorizationEndpointUri = "https://login.windows.net/common"
-    $AssemblyPath = Join-Path -Path $PSScriptRoot -ChildPath '..\Dependencies\Microsoft.Exchange.Management.ExoPowershellModule.dll' `
+    $AssemblyPath = Join-Path -Path $PSScriptRoot `
+                              -ChildPath "..\Dependencies\Microsoft.Exchange.Management.ExoPowershellModule.dll" `
                               -Resolve
+    $AADAssemblyPath = Join-Path -Path $PSScriptRoot `
+                                 -ChildPath "..\Dependencies\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" `
+                                 -Resolve
 
-    [Reflection.Assembly]::LoadFile($AssemblyPath)
-    if (!$Global:ExoSession)
-    {
-        $Global:ExoSession = New-ExoPSSession -ConnectionUri $ConnectionUri `
-                                              -AzureADAuthorizationEndpointUri $AzureADAuthorizationEndpointUri `
-                                              -PSSessionOption (New-PSSessionOption -OperationTimeout 0 -IdleTimeout 60000) `
-                                              -Credential $GlobalAdminAccount
-    }
-    if ($Global:ExoSession -ne $null)
-    {
-        $invokeArgs.Add("Session", $Global:ExoSession)
-        $result = Invoke-Command @invokeArgs -Verbose
-    }
+    $ScriptPath = Join-Path -Path $PSScriptRoot `
+                            -ChildPath "..\Dependencies\CreateExoPSSession.ps1" `
+                            -Resolve
 
-    <#if ($ExoSession)
+    Import-Module $AssemblyPath
+    [Reflection.Assembly]::LoadFile($AADAssemblyPath)
+    .$ScriptPath
+
+    # Somehow, every now and then, the first connection attempt will get an invalid Shell Id. Calling the function a second
+    # time fixes the issue.
+    Get-PSSession
+    try
     {
-        Remove-PSSession -Session $ExoSession
-    }#>
+        Connect-ExoPSSession -Credential $GlobalAdminAccount
+    }
+    catch
+    {
+        # Check to see if we received a payload error, and if so, wait for the requested period of time before proceeding
+        # with the next call.
+        $stringToFind = "you have exceeded your budget to create runspace. Please wait for "
+        $position = $Error[0].ErrorDetails.Message.IndexOf($stringToFind)
+
+        if($position -ge 0)
+        {
+            $beginning = $position + $stringToFind.Length
+            $nextSpace = $Error[0].ErrorDetails.Message.IndexOf(" ", $beginning)
+
+            [int]$timeToWaitInSeconds = $Error[0].ErrorDetails.Message.Substring($beginning, $nextSpace - $beginning)
+
+            Write-Verbose "Detected an exceed payload against the remote server. Waiting for $($timeToWaitInSeconds) seconds."
+            Start-Sleep -Seconds $timeToWaitInSeconds
+        }
+        Connect-ExoPSSession -Credential $GlobalAdminAccount
+    }
+    $result = Invoke-Command @invokeArgs -Verbose
+    RemoveBrokenOrClosedPSSession
     return $result
 }
 

@@ -1,5 +1,44 @@
 ﻿<# EXO - Custom Office365DSC #>
 
+function Get-Mailbox{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [string]
+        $RecipientTypeDetails
+    )
+}
+
+function New-Mailbox{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Name,
+
+        [Parameter(Mandatory=$true)]
+        [string]
+        $PrimarySMTPAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $Shared
+    )
+}
+
+function Remove-Mailbox{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity
+    )
+}
+
 function Get-UnifiedGroupLinks{
     [CmdletBinding()]
     param(

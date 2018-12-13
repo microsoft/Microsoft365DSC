@@ -105,11 +105,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-Group -MockWith {
-                return @{
+                return @(@{
                     DisplayName = "Test Group"
                     RecipientTypeDetails = "GroupMailbox"
                     Notes = "This is a test"
-                }
+                    ManagedBy = "JohnSmith@contoso.onmicrosoft.com"
+                })
             }
 
             Mock -CommandName Get-MsolGroupMember -MockWith {
