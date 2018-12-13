@@ -50,15 +50,6 @@ Configuration ProofOfConcept
             GlobalAdminAccount = $credsGlobalAdmin
         }#>
 
-        EXOSharedMailbox AdminAssistants
-        {
-            DisplayName = "Test"
-            PrimarySMTPAddress = "Test@O365DSC1.onmicrosoft.com"
-            Aliases = @("Joufflu@o365dsc1.onmicrosoft.com", "Gilles@O365dsc1.onmicrosoft.com")
-            Ensure = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
-        }
-        
         ODSettings OneDriveSettings
         {
             CentralAdminUrl = 'https://o365dsc1-admin.sharepoint.com'
@@ -75,6 +66,15 @@ Configuration ProofOfConcept
             ODBMembersCanShare = 'On'
             NotifyOwnersWhenInvitationsAccepted = $false
             NotificationsInOneDriveForBusinessEnabled = $false
+        }
+
+        EXOSharedMailbox AdminAssistants
+        {
+            DisplayName = "Test"
+            PrimarySMTPAddress = "Test@O365DSC1.onmicrosoft.com"
+            Aliases = @("Joufflu@o365dsc1.onmicrosoft.com", "Gilles@O365dsc1.onmicrosoft.com")
+            Ensure = "Present"
+            GlobalAdminAccount = $credsGlobalAdmin
         }
 
         SPOSite HumanResources
