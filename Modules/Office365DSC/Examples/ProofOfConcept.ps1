@@ -1,4 +1,4 @@
-Configuration ProofOfConcept
+configuration ProofOfConcept
 {
     Import-DSCResource -ModuleName Office365DSC -ModuleVersion 1.0.0.2
     $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
