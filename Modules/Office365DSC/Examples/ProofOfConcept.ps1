@@ -26,13 +26,3 @@ configuration ProofOfConcept
         }
     }
 }
-
-$configData = @{
-    AllNodes = @(
-        @{
-            NodeName = "localhost"
-            PSDscAllowPlainTextPassword = $true;
-            PSDscAllowDomainUser = $true;
-    }
-    )
-}
