@@ -26,7 +26,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts 
-        Context -Name "When the site doesn't already exist" -Fixture {
+        Context -Name "Check OneDrive Quota" -Fixture {
             $testParams = @{
                 OneDriveStorageQuota = 1024
                 CentralAdminUrl = "https://smaystate-admin.sharepoint.com"

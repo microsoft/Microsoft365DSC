@@ -162,9 +162,11 @@ function Set-TargetResource {
     }
 
     if ($CurrentParameters.ContainsKey("DomainGuids") -and ($BlockMacSync -eq $null)) {
-
         Set-SPOTenantSyncClientRestriction -DomainGuids $DomainGuids -Enable
+    }
 
+    if (!$CurrentParameters.ContainsKey("DomainGuids")-and ($BlockMacSync -ne $null)){
+        Write-Verbose "Cannot block Mac Clients without specifiing an allowed domain !"
     }
 
     if ($CurrentParameters.ContainsKey("ExcludedFileExtensions")) {
