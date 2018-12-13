@@ -115,18 +115,17 @@ function Set-TargetResource
         $emails = ""
         foreach($alias in $Aliases)
         {
-            $emails += "smtp:" + $alias + ","
+            $emails += $alias + ","
         }
-        $emails += "SMTP:" + $PrimarySMTPAddress
-        $CurrentParameters.Aliases = $emails
+        $emails += $PrimarySMTPAddress
+        $proxyAddresses = $emails -Split ','
+        $CurrentParameters.Aliases = $proxyAddresses
 
         Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
                           -Arguments $CurrentParameters `
                           -ScriptBlock {
             New-MailBox -Name $args[0].DisplayName -PrimarySMTPAddress $args[0].PrimarySMTPAddress -Shared:$true
-            $mailbox = Get-Mailbox -Identity $args[0].DisplayName
-            $mailbox.EmailAddresses = $args[0].Aliases
-            $mailbox | Set-Mailbox
+            Set-Mailbox -Identity $args[0].DisplayName -EmailAddresses @{add=$args[0].Aliases}
         }
     }
     # CASE: Mailbox exists but it shouldn't;
