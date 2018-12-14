@@ -55,6 +55,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 OneDriveStorageQuota = 1024
                 CentralAdminUrl = "https://contoso.sharepoint.com"
+                OrphanedPersonalSitesRetentionPeriod = 60
+                OneDriveForGuestsEnabled = $true
+                NotifyOwnersWhenInvitationsAccepted = $true
+                NotificationsInOneDriveForBusinessEnabled = $true
+                ODBMembersCanShare = "On"
+                ODBAccessRequests = "On"
+                BlockMacSync = $true
+                DisableReportProblemDialog = $true
+                DomainGuids = "12345-12345-12345-12345-12345"
+                ExcludedFileExtensions = @(".asmx")
+                GrooveBlockOption = "HardOptIn"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -63,7 +74,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     OneDriveStorageQuota = "1024"
                 }
             }
-           
+
+            Mock -CommandName Get-SPOTenantSyncClientRestriction -MockWith {
+                return @{
+                    OptOutOfGrooveBlock = $false
+                    OptOutOfGrooveSoftBlock = $false
+                    DisableReportProblemDialog = $false
+                    BlockMacSync = $true
+                    AllowedDomainList = @("")
+                    TenantRestrictionEnabled = $true
+                    ExcludedFileExtensions = @(".asmx")
+                }
+            }
+
+            It "Should return Ensure equals to Present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+            }
+
+            It "Should configure OneDrive settings in the Set method" {
+                Set-TargetResource @testParams
+            }
 
             It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should Be $false
