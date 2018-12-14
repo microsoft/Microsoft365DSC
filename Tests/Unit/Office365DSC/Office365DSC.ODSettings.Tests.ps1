@@ -103,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 OneDriveStorageQuota = 1024
-                CentralAdminUrl = "https://smaystate-admin.sharepoint.com"
+                CentralAdminUrl = "https://contoso.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
