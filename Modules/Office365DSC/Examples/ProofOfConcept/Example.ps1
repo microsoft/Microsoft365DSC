@@ -93,7 +93,7 @@ Configuration ProofOfConcept
             Organization = $Organization
             MailTipsAllTipsEnabled = $True
             MailTipsGroupMetricsEnabled = $True
-            MailTipsLargeAudienceThreshold = $True
+            MailTipsLargeAudienceThreshold = 100
             MailTipsMailboxSourcedTipsEnabled = $True
             MailTipsExternalRecipientsTipsEnabled = $True
             GlobalAdminAccount = $credsGlobalAdmin

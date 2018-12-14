@@ -79,17 +79,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
         
-        Context -Name "MailTipsLargeAudienceThreshold are Disabled and should be Enabled" -Fixture {
+        Context -Name "MailTipsLargeAudienceThreshold are 25 and should be 50" -Fixture {
             $testParams = @{
                 Organization = "contoso.onmicrosoft.com"
-                MailTipsLargeAudienceThreshold = $True
+                MailTipsLargeAudienceThreshold = 50
                 Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-OrganizationConfig -MockWith { 
                 return @{
-                    MailTipsLargeAudienceThreshold = $False
+                    MailTipsLargeAudienceThreshold = 25
                 }
             }
 
@@ -97,11 +97,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            It "Should return False from the Get method" {
-                (Get-TargetResource @testParams).MailTipsLargeAudienceThreshold | Should Be $False
+            It "Should return 25 from the Get method" {
+                (Get-TargetResource @testParams).MailTipsLargeAudienceThreshold | Should Be 25
             }
 
-            It "Should set MailTipsLargeAudienceThreshold to True with the Set method" {
+            It "Should set MailTipsLargeAudienceThreshold to 50 with the Set method" {
                 Set-TargetResource @testParams
             }
         }
