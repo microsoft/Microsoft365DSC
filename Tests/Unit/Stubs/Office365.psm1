@@ -124,7 +124,7 @@ function Set-OrganizationConfig
         $MailTipsGroupMetricsEnabled,
 
         [Parameter()]
-        [Boolean]
+        [UInt32]
         $MailTipsLargeAudienceThreshold,
 
         [Parameter()]
