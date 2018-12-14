@@ -1,4 +1,5 @@
-function Get-TargetResource {
+function Get-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -85,38 +86,44 @@ function Get-TargetResource {
         ODBMembersCanShare                        = $null
         NotifyOwnersWhenInvitationsAccepted       = $null
         NotificationsInOneDriveForBusinessEnabled = $null
-    }   
+        Ensure                                    = "Absent"
+    }
 
-    try {
-
+    try
+    {
         Write-Verbose -Message "Getting OneDrive quoata size for tenant"
         $tenant = Get-SPOTenant
 
-        if (!$tenant) {
+        if (!$tenant)
+        {
             Write-Verbose "Failed to get Tenant information"
             return $nullReturn
         }
 
         Write-Verbose -Message "Getting OneDrive quoata size for tenant $($tenant.OneDriveStorageQuota)"
         Write-Verbose -Message "Getting tenant client sync setting"
-        $tenantRestrictions = Get-SPOTenantSyncClientRestriction 
+        $tenantRestrictions = Get-SPOTenantSyncClientRestriction
          
-        if (!$tenantRestrictions) {
+        if (!$tenantRestrictions)
+        {
             Write-Verbose "Failed to get Tenant client synce settings!"
             return $nullReturn
         }
 
         $GrooveOption = $null 
 
-        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $false) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $false)) {
+        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $false) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $false))
+        {
             $GrooveOption = "SoftOptIn"
         }
 
-        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $false) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $true)) {
+        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $false) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $true))
+        {
             $GrooveOption = "HardOptIn"
         }
 
-        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $true) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $true)) {
+        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $true) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $true))
+        {
             $GrooveOption = "OptOut"
         }
         
@@ -135,19 +142,21 @@ function Get-TargetResource {
             ODBMembersCanShare                        = $tenant.ODBMembersCanShare
             NotifyOwnersWhenInvitationsAccepted       = $tenant.NotifyOwnersWhenInvitationsAccepted
             NotificationsInOneDriveForBusinessEnabled = $tenant.NotificationsInOneDriveForBusinessEnabled
+            Ensure                                    = "Present"
         }
     }
-    catch {
-        Write-Verbose "Failed to get Tenant client sync settings !" 
+    catch
+    {
+        Write-Verbose "Failed to get Tenant client sync settings !"
         return $nullReturn
     }
 }
 
-function Set-TargetResource {
+function Set-TargetResource
+{
     [CmdletBinding()]
     param
     (
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
@@ -220,78 +229,94 @@ function Set-TargetResource {
     $CurrentParameters.Remove("GlobalAdminAccount")
     ## Tenant settings updated ###
 
-    if ($CurrentParameters.ContainsKey("OneDriveStorageQuota")) {
+    if ($CurrentParameters.ContainsKey("OneDriveStorageQuota"))
+    {
         Set-SPOTenant -OneDriveStorageQuota $OneDriveStorageQuota
         Write-Verbose -Message "Setting OneDrive storage quoata to $OneDriveStorageQuota"
     }
 
-    if ($CurrentParameters.ContainsKey("OrphanedPersonalSitesRetentionPeriod")) {
+    if ($CurrentParameters.ContainsKey("OrphanedPersonalSitesRetentionPeriod"))
+    {
         Set-SPOTenant -OrphanedPersonalSitesRetentionPeriod $OrphanedPersonalSitesRetentionPeriod
         Write-Verbose -Message "Setting OneDrive retention period $OrphanedPersonalSitesRetentionPeriod"
     }
 
-    if ($CurrentParameters.ContainsKey("OneDriveForGuestsEnabled")) {
+    if ($CurrentParameters.ContainsKey("OneDriveForGuestsEnabled"))
+    {
         Set-SPOTenant -OneDriveForGuestsEnabled $OneDriveForGuestsEnabled
         Write-Verbose -Message "Setting OneDrive for guest access $OneDriveForGuestsEnabled"
     }
 
-    if ($CurrentParameters.ContainsKey("NotifyOwnersWhenInvitationsAccepted")) {
+    if ($CurrentParameters.ContainsKey("NotifyOwnersWhenInvitationsAccepted"))
+    {
         Set-SPOTenant -NotifyOwnersWhenInvitationsAccepted $NotifyOwnersWhenInvitationsAccepted
         Write-Verbose -Message "Setting OneDrive notify owner when guest access accepted $NotifyOwnersWhenInvitationsAccepted"
     }
     
-    if ($CurrentParameters.ContainsKey("NotificationsInOneDriveForBusinessEnabled")) {
+    if ($CurrentParameters.ContainsKey("NotificationsInOneDriveForBusinessEnabled"))
+    {
         Set-SPOTenant -NotificationsInOneDriveForBusinessEnabled $NotificationsInOneDriveForBusinessEnabled
         Write-Verbose -Message "Setting OneDrive notify enabled to  $NotificationsInOneDriveForBusinessEnabled"
     }
 
-    if ($CurrentParameters.ContainsKey("ODBAccessRequests")) {
+    if ($CurrentParameters.ContainsKey("ODBAccessRequests"))
+    {
         Set-SPOTenant -ODBAccessRequests $ODBAccessRequests
         Write-Verbose -Message "Setting OneDrive access requests $ODBAccessRequests"
     }
    
-    if ($CurrentParameters.ContainsKey("ODBMembersCanShare")) {
+    if ($CurrentParameters.ContainsKey("ODBMembersCanShare"))
+    {
         Set-SPOTenant -ODBMembersCanShare $ODBMembersCanShare
         Write-Verbose -Message "Setting OneDrive member share requets $ODBMembersCanShare"
     }
     ## Sync client settings 
     
-    if ($CurrentParameters.ContainsKey("BlockMacSync") -and $CurrentParameters.ContainsKey("DomainGuids")) {
-            
-        if ($BlockMacSync -eq $true) {
+    if ($CurrentParameters.ContainsKey("BlockMacSync") -and $CurrentParameters.ContainsKey("DomainGuids"))
+    {
+        if ($BlockMacSync -eq $true)
+        {
             Set-SPOTenantSyncClientRestriction -BlockMacSync:$BlockMacSync -DomainGuids $DomainGuids -Enable
         }
-        elseif ($BlockMacSync -eq $false) {
+        elseif ($BlockMacSync -eq $false)
+        {
             Set-SPOTenantSyncClientRestriction -BlockMacSync:$BlockMacSync -DomainGuids $DomainGuids -Enable   
         }
     }
 
-    if ($CurrentParameters.ContainsKey("DomainGuids") -and ($BlockMacSync -eq $null)) {
+    if ($CurrentParameters.ContainsKey("DomainGuids") -and ($BlockMacSync -eq $null))
+    {
         Set-SPOTenantSyncClientRestriction -DomainGuids $DomainGuids -Enable
     }
 
-    if (!$CurrentParameters.ContainsKey("DomainGuids") -and ($BlockMacSync -ne $null)) {
+    if (!$CurrentParameters.ContainsKey("DomainGuids") -and ($BlockMacSync -ne $null))
+    {
         Write-Verbose "Cannot block Mac Clients without specifiing an allowed domain !"
     }
 
-    if ($CurrentParameters.ContainsKey("ExcludedFileExtensions")) {
+    if ($CurrentParameters.ContainsKey("ExcludedFileExtensions"))
+    {
         $BlockedFileTypes = ""
-        foreach ($fileTypes in $ExcludedFileExtensions) {
+        foreach ($fileTypes in $ExcludedFileExtensions)
+        {
             $BlockedFileTypes += $fileTypes + ';'
         }
 
         Set-SPOTenantSyncClientRestriction -ExcludedFileExtensions $BlockedFileTypes
     }
-    if ($CurrentParameters.ContainsKey("DisableReportProblemDialog")) {
+    if ($CurrentParameters.ContainsKey("DisableReportProblemDialog"))
+    {
         Set-SPOTenantSyncClientRestriction -DisableReportProblemDialog $DisableReportProblemDialog
     }
 
-    if ($CurrentParameters.ContainsKey("GrooveBlockOption")) {
+    if ($CurrentParameters.ContainsKey("GrooveBlockOption"))
+    {
         Set-SPOTenantSyncClientRestriction -GrooveBlockOption $GrooveBlockOption
     }
 }
 
-function Test-TargetResource {
+function Test-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
@@ -382,7 +407,8 @@ function Test-TargetResource {
     )
 }           
 
-function Export-TargetResource {
+function Export-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.String])]
     param
@@ -430,7 +456,6 @@ function Export-TargetResource {
         [Parameter()]
         [System.String]
         $DomainGuids,
-       
 
         [Parameter()]
         [System.String[]]
@@ -446,7 +471,7 @@ function Export-TargetResource {
     )
     Test-SPOServiceConnection -GlobalAdminAccount $GlobalAdminAccount -SPOCentralAdminUrl $CentralAdminUrl
     $result = Get-TargetResource @PSBoundParameters
-    $content = "Tenant client sync settings " + (New-GUID).ToString() + "`r`n"
+    $content = "ODSettings " + (New-GUID).ToString() + "`r`n"
     $content += "{`r`n"
     $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += "}`r`n"
