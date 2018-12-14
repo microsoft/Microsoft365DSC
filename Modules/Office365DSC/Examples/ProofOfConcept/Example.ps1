@@ -87,6 +87,17 @@ Configuration ProofOfConcept
             CentralAdminUrl = "https://o365dsc1-admin.sharepoint.com"
             GlobalAdminAccount = $credsGlobalAdmin
         }
+
+        EXOMailTips OrgWide
+        {
+            Organization = $Organization
+            MailTipsAllTipsEnabled = $True
+            MailTipsGroupMetricsEnabled = $True
+            MailTipsLargeAudienceThreshold = $True
+            MailTipsMailboxSourcedTipsEnabled = $True
+            MailTipsExternalRecipientsTipsEnabled = $True
+            GlobalAdminAccount = $credsGlobalAdmin
+        }
     }
 }
 
