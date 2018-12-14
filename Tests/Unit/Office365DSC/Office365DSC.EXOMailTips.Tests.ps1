@@ -52,42 +52,129 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Mailbox already exists and it should" -Fixture {
+        Context -Name "MailTipsGroupMetricsEnabled are Disabled and should be Enabled" -Fixture {
             $testParams = @{
-                DisplayName = "Test Shared Mailbox"
-                PrimarySMTPAddress = "Testh@contoso.onmicrosoft.com"
+                Organization = "contoso.onmicrosoft.com"
+                MailTipsGroupMetricsEnabled = $True
                 Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-Mailbox -MockWith { 
+            Mock -CommandName Get-OrganizationConfig -MockWith { 
                 return @{
-                    Identity = "Test Shared Mailbox"
-                    RecipientTypeDetails = "SharedMailbox"
+                    MailTipsGroupMetricsEnabled = $False
                 }
             }
 
-            It "Should return Present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            Mock -CommandName Set-OrganizationConfig -MockWith {
+
             }
 
-            It "Should return True from the Test method" {
-                { Test-TargetResource @testParams } | Should Be $True
+            It "Should return False from the Get method" {
+                (Get-TargetResource @testParams).MailTipsGroupMetricsEnabled | Should Be $False
+            }
+
+            It "Should set MailTipsGroupMetricsEnabled to True with the Set method" {
+                Set-TargetResource @testParams
             }
         }
-
-        Context -Name "ReverseDSC Tests" -Fixture {
+        
+        Context -Name "MailTipsLargeAudienceThreshold are Disabled and should be Enabled" -Fixture {
             $testParams = @{
-                DisplayName = "Test Shared Mailbox"
-                PrimarySMTPAddress = "Testh@contoso.onmicrosoft.com"
+                Organization = "contoso.onmicrosoft.com"
+                MailTipsLargeAudienceThreshold = $True
+                Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-Mailbox -MockWith {
+            Mock -CommandName Get-OrganizationConfig -MockWith { 
                 return @{
-                    Name = "Test Shared Mailbox"
-                    DisplayName = "Test Shared Mailbox"
-                    PrimarySMTPAddress = "Testh@contoso.onmicrosoft.com"
+                    MailTipsLargeAudienceThreshold = $False
+                }
+            }
+
+            Mock -CommandName Set-OrganizationConfig -MockWith {
+
+            }
+
+            It "Should return False from the Get method" {
+                (Get-TargetResource @testParams).MailTipsLargeAudienceThreshold | Should Be $False
+            }
+
+            It "Should set MailTipsLargeAudienceThreshold to True with the Set method" {
+                Set-TargetResource @testParams
+            }
+        }
+        
+        Context -Name "MailTipsMailboxSourcedTipsEnabled are Disabled and should be Enabled" -Fixture {
+            $testParams = @{
+                Organization = "contoso.onmicrosoft.com"
+                MailTipsMailboxSourcedTipsEnabled = $True
+                Ensure = "Present"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-OrganizationConfig -MockWith { 
+                return @{
+                    MailTipsMailboxSourcedTipsEnabled = $False
+                }
+            }
+
+            Mock -CommandName Set-OrganizationConfig -MockWith {
+
+            }
+
+            It "Should return False from the Get method" {
+                (Get-TargetResource @testParams).MailTipsMailboxSourcedTipsEnabled | Should Be $False
+            }
+
+            It "Should set MailTipsMailboxSourcedTipsEnabled to True with the Set method" {
+                Set-TargetResource @testParams
+            }
+        }
+        
+        Context -Name "MailTipsExternalRecipientsTipsEnabled are Disabled and should be Enabled" -Fixture {
+            $testParams = @{
+                Organization = "contoso.onmicrosoft.com"
+                MailTipsExternalRecipientsTipsEnabled = $True
+                Ensure = "Present"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-OrganizationConfig -MockWith { 
+                return @{
+                    MailTipsExternalRecipientsTipsEnabled = $False
+                }
+            }
+
+            Mock -CommandName Set-OrganizationConfig -MockWith {
+
+            }
+
+            It "Should return False from the Get method" {
+                (Get-TargetResource @testParams).MailTipsExternalRecipientsTipsEnabled | Should Be $False
+            }
+
+            It "Should set MailTipsExternalRecipientsTipsEnabled to True with the Set method" {
+                Set-TargetResource @testParams
+            }
+        }
+        
+
+        Context -Name "ReverseDSC Tests" -Fixture {
+            $testParams = @{
+                Organization = "contoso.onmicrosoft.com"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-OrganizationConfig -MockWith {
+                return @{
+                    Organization = $Organization
+                    MailTipsAllTipsEnabled = $True
+                    MailTipsGroupMetricsEnabled = $True
+                    MailTipsLargeAudienceThreshold = $True
+                    MailTipsMailboxSourcedTipsEnabled = $True
+                    MailTipsExternalRecipientsTipsEnabled = $True
                 }
             }
 
