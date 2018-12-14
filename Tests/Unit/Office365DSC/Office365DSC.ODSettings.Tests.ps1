@@ -22,7 +22,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
         Mock -CommandName Test-SPOServiceConnection -MockWith {
-
         }
 
         # Test contexts 
