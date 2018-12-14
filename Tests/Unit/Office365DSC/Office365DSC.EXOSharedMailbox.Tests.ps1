@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
                                 -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                              -DscResource "O365SharedMailbox"
+                                              -DscResource "EXOSharedMailbox"
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -38,6 +38,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-Mailbox -MockWith {
+
+            }
+
+            Mock -CommandName Set-Mailbox -MockWith {
 
             }
 
@@ -77,7 +81,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 DisplayName = "Test Shared Mailbox"
-                PrimarySMTPAddress = "Testh@contoso.onmicrosoft.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

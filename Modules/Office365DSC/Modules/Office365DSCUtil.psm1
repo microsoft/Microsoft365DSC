@@ -48,7 +48,7 @@ function Invoke-ExoCommand
         [ScriptBlock]
         $ScriptBlock
     )
-
+    $VerbosePreference = 'Continue'
     $invokeArgs = @{
         ScriptBlock = [ScriptBlock]::Create($ScriptBlock.ToString())
     }
@@ -75,7 +75,6 @@ function Invoke-ExoCommand
 
     # Somehow, every now and then, the first connection attempt will get an invalid Shell Id. Calling the function a second
     # time fixes the issue.
-    Get-PSSession
     try
     {
         Connect-ExoPSSession -Credential $GlobalAdminAccount
@@ -85,22 +84,24 @@ function Invoke-ExoCommand
         # Check to see if we received a payload error, and if so, wait for the requested period of time before proceeding
         # with the next call.
         $stringToFind = "you have exceeded your budget to create runspace. Please wait for "
-        $position = $Error[0].ErrorDetails.Message.IndexOf($stringToFind)
-
-        if($position -ge 0)
+        if ($Error)
         {
-            $beginning = $position + $stringToFind.Length
-            $nextSpace = $Error[0].ErrorDetails.Message.IndexOf(" ", $beginning)
+            $position = $Error[0].ErrorDetails.Message.IndexOf($stringToFind)
 
-            [int]$timeToWaitInSeconds = $Error[0].ErrorDetails.Message.Substring($beginning, $nextSpace - $beginning)
+            if($position -ge 0)
+            {
+                $beginning = $position + $stringToFind.Length
+                $nextSpace = $Error[0].ErrorDetails.Message.IndexOf(" ", $beginning)
 
-            Write-Verbose "Detected an exceed payload against the remote server. Waiting for $($timeToWaitInSeconds) seconds."
-            Start-Sleep -Seconds $timeToWaitInSeconds
+                [int]$timeToWaitInSeconds = $Error[0].ErrorDetails.Message.Substring($beginning, $nextSpace - $beginning)
+
+                Write-Verbose "Detected an exceeded payload against the remote server. Waiting for $($timeToWaitInSeconds) seconds."
+                Start-Sleep -Seconds $timeToWaitInSeconds
+            }
         }
         Connect-ExoPSSession -Credential $GlobalAdminAccount
     }
     $result = Invoke-Command @invokeArgs -Verbose
-    RemoveBrokenOrClosedPSSession
     return $result
 }
 
