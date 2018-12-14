@@ -22,7 +22,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
         Mock -CommandName Test-SPOServiceConnection -MockWith {
-
         }
 
         # Test contexts 
@@ -103,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 OneDriveStorageQuota = 1024
-                CentralAdminUrl = "https://smaystate-admin.sharepoint.com"
+                CentralAdminUrl = "https://contoso.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
