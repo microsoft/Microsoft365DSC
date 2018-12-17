@@ -116,7 +116,7 @@ function Set-TargetResource
     $OrgConfig = Get-TargetResource @PSBoundParameters
 
     # CASE : MailTipsAllTipsEnabled aren't in the right state
-    if ($PSBoundParameters.ContainsKey('MailTipsAllTipsEnabled') -and $OrgConfig.MailTipsAllTipsEnabled -ne $MailTipsAllTipsEnabled)
+    if ($PSBoundParameters.ContainsKey('MailTipsAllTipsEnabled'))
     {
         Write-Verbose "Mailtips for $($Organization) aren't in the right state. Fixing it."
         Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
@@ -126,9 +126,9 @@ function Set-TargetResource
         }
     }
     # CASE : MailTipsGroupMetricsEnabled aren't in the right state
-    if ($PSBoundParameters.ContainsKey('MailTipsGroupMetricsEnabled') -and $OrgConfig.MailTipsGroupMetricsEnabled -ne $MailTipsGroupMetricsEnabled)
+    if ($PSBoundParameters.ContainsKey('MailTipsGroupMetricsEnabled'))
     {
-        Write-Verbose "Mailtips for Group Metrics of $($Organization) aren't in the right state. Fixing it."
+        Write-Verbose "Setting Mailtips for Group Metrics of $($Organization) to $($args[0].MailTipsGroupMetricsEnabled)"
         Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
                           -Arguments $PSBoundParameters `
                           -ScriptBlock {
@@ -136,9 +136,9 @@ function Set-TargetResource
         }
     }
     # CASE : MailTipsLargeAudienceThreshold aren't in the right state
-    if ($PSBoundParameters.ContainsKey('MailTipsLargeAudienceThreshold') -and $OrgConfig.MailTipsLargeAudienceThreshold -ne $MailTipsLargeAudienceThreshold)
+    if ($PSBoundParameters.ContainsKey('MailTipsLargeAudienceThreshold'))
     {
-        Write-Verbose "Mailtips for Large Audience of $($Organization) aren't in the right state. Fixing it."
+        Write-Verbose "Setting Mailtips for Large Audience of $($Organization) to $($args[0].MailTipsLargeAudienceThreshold)"
         Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
                           -Arguments $PSBoundParameters `
                           -ScriptBlock {
@@ -146,9 +146,9 @@ function Set-TargetResource
         }
     }
     # CASE : MailTipsMailboxSourcedTipsEnabled aren't in the right state
-    if ($PSBoundParameters.ContainsKey('MailTipsMailboxSourcedTipsEnabled') -and $OrgConfig.MailTipsMailboxSourcedTipsEnabled -ne $MailTipsMailboxSourcedTipsEnabled)
+    if ($PSBoundParameters.ContainsKey('MailTipsMailboxSourcedTipsEnabled'))
     {
-        Write-Verbose "Mailtips for Mailbox Data (OOF/Mailbox Full) of $($Organization) aren't in the right state. Fixing it."
+        Write-Verbose "Setting Mailtips for Mailbox Data (OOF/Mailbox Full) of $($Organization) to $($args[0].MailTipsMailboxSourcedTipsEnabled)"
         Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
                           -Arguments $PSBoundParameters `
                           -ScriptBlock {
@@ -156,9 +156,9 @@ function Set-TargetResource
         }
     }
     # CASE : MailTipsExternalRecipientsTipsEnabled aren't in the right state
-    if ($PSBoundParameters.ContainsKey('MailTipsExternalRecipientsTipsEnabled') -and $OrgConfig.MailTipsExternalRecipientsTipsEnabled -ne $MailTipsExternalRecipientsTipsEnabled)
+    if ($PSBoundParameters.ContainsKey('MailTipsExternalRecipientsTipsEnabled'))
     {
-        Write-Verbose "Mailtips for External Users of $($Organization) aren't in the right state. Fixing it."
+        Write-Verbose "Setting Mailtips for External Users of $($Organization) to $($args[0].MailTipsExternalRecipientsTipsEnabled)"
         Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
                           -Arguments $PSBoundParameters `
                           -ScriptBlock {

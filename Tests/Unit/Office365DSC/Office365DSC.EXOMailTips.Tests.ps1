@@ -159,7 +159,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
             }
         }
-        
+
+        Context -Name "MailTips are Enabled and should be Enabled" -Fixture {
+            $testParams = @{
+                Organization = "contoso.onmicrosoft.com"
+                MailTipsAllTipsEnabled = $True
+                Ensure = "Present"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-OrganizationConfig -MockWith { 
+                return @{
+                    MailTipsAllTipsEnabled = $True
+                }
+            }
+
+            It "Should return Present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            }
+
+            It "Should return True from the Test method" {
+                { Test-TargetResource @testParams } | Should Be $True
+            }
+        }
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
