@@ -115,17 +115,17 @@ function Set-TargetResource
     Write-Verbose "Retrieving information about Mailtips Configuration"
     $OrgConfig = Get-TargetResource @PSBoundParameters
 
-    # CASE : MailTipsAllTipsEnabled aren't in the right state
+    # CASE : MailTipsAllTipsEnabled is used
     if ($PSBoundParameters.ContainsKey('MailTipsAllTipsEnabled'))
     {
-        Write-Verbose "Mailtips for $($Organization) aren't in the right state. Fixing it."
+        Write-Verbose "Setting Mailtips for $($Organization) to $($args[0].MailTipsAllTipsEnabled)"
         Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
                           -Arguments $PSBoundParameters `
                           -ScriptBlock {
             Set-OrganizationConfig -MailTipsAllTipsEnabled $args[0].MailTipsAllTipsEnabled
         }
     }
-    # CASE : MailTipsGroupMetricsEnabled aren't in the right state
+    # CASE : MailTipsGroupMetricsEnabled is used
     if ($PSBoundParameters.ContainsKey('MailTipsGroupMetricsEnabled'))
     {
         Write-Verbose "Setting Mailtips for Group Metrics of $($Organization) to $($args[0].MailTipsGroupMetricsEnabled)"
@@ -135,7 +135,7 @@ function Set-TargetResource
             Set-OrganizationConfig -MailTipsGroupMetricsEnabled $args[0].MailTipsGroupMetricsEnabled
         }
     }
-    # CASE : MailTipsLargeAudienceThreshold aren't in the right state
+    # CASE : MailTipsLargeAudienceThreshold is used
     if ($PSBoundParameters.ContainsKey('MailTipsLargeAudienceThreshold'))
     {
         Write-Verbose "Setting Mailtips for Large Audience of $($Organization) to $($args[0].MailTipsLargeAudienceThreshold)"
@@ -145,7 +145,7 @@ function Set-TargetResource
             Set-OrganizationConfig -MailTipsLargeAudienceThreshold $args[0].MailTipsLargeAudienceThreshold
         }
     }
-    # CASE : MailTipsMailboxSourcedTipsEnabled aren't in the right state
+    # CASE : MailTipsMailboxSourcedTipsEnabled is used
     if ($PSBoundParameters.ContainsKey('MailTipsMailboxSourcedTipsEnabled'))
     {
         Write-Verbose "Setting Mailtips for Mailbox Data (OOF/Mailbox Full) of $($Organization) to $($args[0].MailTipsMailboxSourcedTipsEnabled)"
@@ -155,7 +155,7 @@ function Set-TargetResource
             Set-OrganizationConfig -MailTipsMailboxSourcedTipsEnabled $args[0].MailTipsMailboxSourcedTipsEnabled
         }
     }
-    # CASE : MailTipsExternalRecipientsTipsEnabled aren't in the right state
+    # CASE : MailTipsExternalRecipientsTipsEnabled is used
     if ($PSBoundParameters.ContainsKey('MailTipsExternalRecipientsTipsEnabled'))
     {
         Write-Verbose "Setting Mailtips for External Users of $($Organization) to $($args[0].MailTipsExternalRecipientsTipsEnabled)"
