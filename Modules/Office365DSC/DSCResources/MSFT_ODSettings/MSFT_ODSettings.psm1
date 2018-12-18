@@ -469,12 +469,13 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )
-    Test-SPOServiceConnection -GlobalAdminAccount $GlobalAdminAccount -SPOCentralAdminUrl $CentralAdminUrl
     $result = Get-TargetResource @PSBoundParameters
-    $content = "ODSettings " + (New-GUID).ToString() + "`r`n"
-    $content += "{`r`n"
-    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += "}`r`n"
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $content = "        ODSettings " + (New-GUID).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += "        }`r`n"
     return $content
 }
 

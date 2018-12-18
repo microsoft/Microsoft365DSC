@@ -30,7 +30,6 @@ function Test-O365ServiceConnection
     Connect-MSOLService -Credential $GlobalAdminAccount
 }
 
-
 function Invoke-ExoCommand
 {
     [CmdletBinding()]
@@ -77,7 +76,11 @@ function Invoke-ExoCommand
     # time fixes the issue.
     try
     {
-        Connect-ExoPSSession -Credential $GlobalAdminAccount
+        if (!$Global:ExoPSSessionConnected)
+        {
+            Connect-ExoPSSession -Credential $GlobalAdminAccount -ErrorAction SilentlyContinue
+            $Global:ExoPSSessionConnected = $true
+        }
     }
     catch
     {
@@ -99,9 +102,21 @@ function Invoke-ExoCommand
                 Start-Sleep -Seconds $timeToWaitInSeconds
             }
         }
-        Connect-ExoPSSession -Credential $GlobalAdminAccount
+        Connect-ExoPSSession -Credential $GlobalAdminAccount -ErrorAction SilentlyContinue
+        $Global:ExoPSSessionConnected = $true
     }
-    $result = Invoke-Command @invokeArgs -Verbose
+
+    try
+    {
+        $result = Invoke-Command @invokeArgs -Verbose
+    }
+    catch
+    {
+        Connect-ExoPSSession -Credential $GlobalAdminAccount -ErrorAction SilentlyContinue
+        $Global:ExoPSSessionConnected = $true
+        $result = Invoke-Command @invokeArgs -Verbose
+    }
+    
     return $result
 }
 
@@ -307,4 +322,128 @@ function Get-UsersLicences
         $Global:UsersLicences = Get-MsolUser -All  | Select-Object UserPrincipalName, isLicensed, Licenses
     }
     Return $Global:UsersLicences
+}
+
+<# This is the main Office365DSC.Reverse function that extracts the DSC configuration from an existing
+   Office 365 Tenant. #>
+function Export-O365Configuration
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)] 
+        [System.Management.Automation.PSCredential] 
+        $GlobalAdminAccount
+    )
+    $VerbosePreference = 'Continue'
+    $AzureAutomation = $false
+    $DSCContent = "Configuration O365TenantConfig `r`n{`r`n"
+    $DSCContent += "    Import-DSCResource -ModuleName Office365DSC`r`n`r`n"
+    $DSCContent += "    <# Credentials #>`r`n"
+    $DSCContent += "    Node localhost`r`n"
+    $DSCContent += "    {`r`n"
+    # Add the GlobalAdminAccount to the Credentials List
+    Save-Credentials -UserName $GlobalAdminAccount.UserName
+
+    #region "EXOMailTips"
+    $OrgConfig = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                    -ScriptBlock {
+        Get-OrganizationConfig
+    }
+
+    $organizationName = $OrgConfig.Name
+    Add-ConfigurationDataEntry -Node "localhost" `
+                               -Key "OrganizationName" `
+                               -Value $organizationName `
+                               -Description "Name of the Organization"
+
+    $EXOMailTipsModulePath = Join-Path -Path $PSScriptRoot `
+                                       -ChildPath "..\DSCResources\MSFT_EXOMailTips\MSFT_EXOMailTips.psm1" `
+                                       -Resolve
+
+    Import-Module $EXOMailTipsModulePath
+    $DSCContent += Export-TargetResource -Organization $organizationName -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXOSharedMailbox"
+    $EXOSharedMailboxModulePath = Join-Path -Path $PSScriptRoot `
+                                            -ChildPath "..\DSCResources\MSFT_EXOSharedMailbox\MSFT_EXOSharedMailbox.psm1" `
+                                            -Resolve
+
+    Import-Module $EXOSharedMailboxModulePath
+    $mailboxes = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                   -ScriptBlock {
+        Get-Mailbox
+    }
+    $mailboxes = $mailboxes | Where-Object {$_.RecipientTypeDetails -eq "SharedMailbox"}
+
+    foreach ($mailbox in $mailboxes)
+    {
+        $mailboxName = $mailbox.Name
+        if ($mailboxName)
+        {
+            $DSCContent += Export-TargetResource -DisplayName $mailbox.Name -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
+    # Close the Node and Configuration declarations
+    $DSCContent += "    }`r`n"
+    $DSCContent += "}`r`n"
+
+    #region Add the Prompt for Required Credentials at the top of the Configuration
+    $credsContent = ""
+    foreach($credential in $Global:CredsRepo)
+    {
+        if(!$credential.ToLower().StartsWith("builtin"))
+        {
+            if(!$AzureAutomation)
+            {
+                $credsContent += "    " + (Resolve-Credentials $credential) + " = Get-Credential -UserName `"" + $credential + "`" -Message `"Please provide credentials`"`r`n"
+            }
+            else
+            {
+                $resolvedName = (Resolve-Credentials $credential)
+                $credsContent += "    " + $resolvedName + " = Get-AutomationPSCredential -Name " + ($resolvedName.Replace("$", "")) + "`r`n"
+            }
+        }
+    }
+    $credsContent += "`r`n"
+    $startPosition = $DSCContent.IndexOf("<# Credentials #>") + 19
+    $DSCContent = $DSCContent.Insert($startPosition, $credsContent)
+    $DSCContent += "O365TenantConfig -ConfigurationData .\ConfigurationData.psd1"
+    #endregion
+
+    #region Prompt the user for a location to save the extract and generate the files
+    $OutputDSCPath = Read-Host "Destination Path"
+    while (!(Test-Path -Path $OutputDSCPath -PathType Container -ErrorAction SilentlyContinue))
+    {
+        try
+        {
+            Write-Output "Directory `"$OutputDSCPath`" doesn't exist; creating..."
+            New-Item -Path $OutputDSCPath -ItemType Directory | Out-Null
+            if ($?) {break}
+        }
+        catch
+        {
+            Write-Warning "$($_.Exception.Message)"
+            Write-Warning "Could not create folder $OutputDSCPath!"
+        }
+        $OutputDSCPath = Read-Host "Please Enter Output Folder for DSC Configuration (Will be Created as Necessary)"
+    }
+    <## Ensures the path we specify ends with a Slash, in order to make sure the resulting file path is properly structured. #>
+    if(!$OutputDSCPath.EndsWith("\") -and !$OutputDSCPath.EndsWith("/"))
+    {
+        $OutputDSCPath += "\"
+    }
+
+    $outputDSCFile = $OutputDSCPath + "Office365TenantConfig.ps1"
+    $DSCContent | Out-File $outputDSCFile
+
+    if(!$AzureAutomation)
+    {
+        $outputConfigurationData = $OutputDSCPath + "ConfigurationData.psd1"
+        New-ConfigurationDataDocument -Path $outputConfigurationData
+    }
+    #endregion
 }
