@@ -72,4 +72,3 @@ class MSFT_SPOTenant : OMI_BaseResource
     [Required, Description("The Url of the SharePoint Online Central Administration")] string CentralAdminUrl;
     [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };
-

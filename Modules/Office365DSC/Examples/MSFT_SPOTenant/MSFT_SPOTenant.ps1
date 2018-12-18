@@ -1,6 +1,6 @@
 Configuration MSFT_SPOTenant
 {
-    Import-DSCResource -ModuleName Office365DSC -ModuleVersion 1.0.0.0 
+    Import-DSCResource -ModuleName Office365DSC -ModuleVersion 1.0.0.2 
     $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
