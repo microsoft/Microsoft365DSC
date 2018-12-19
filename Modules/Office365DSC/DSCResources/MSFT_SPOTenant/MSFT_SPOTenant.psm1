@@ -217,7 +217,7 @@ function Get-TargetResource
         [Parameter()]
         [System.boolean]
         $CommentsOnSitePagesDisabled,
-        
+
         [Parameter()]
         [System.boolean]
         $SocialBarOnSitePagesDisabled,
@@ -678,7 +678,7 @@ function Set-TargetResource
         [Parameter()]
         [System.boolean]
         $CommentsOnSitePagesDisabled,
-        
+
         [Parameter()]
         [System.boolean]
         $SocialBarOnSitePagesDisabled,
@@ -1106,7 +1106,7 @@ function Test-TargetResource
         [Parameter()]
         [System.boolean]
         $CommentsOnSitePagesDisabled,
-        
+
         [Parameter()]
         [System.boolean]
         $SocialBarOnSitePagesDisabled,
