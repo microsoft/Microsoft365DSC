@@ -161,10 +161,10 @@ function Get-TargetResource
         [ValidateSet("None", "Direct", "Internal", "AnonymousAccess")]
         $DefaultSharingLinkType,
 
-        [Parameter()]
-        [System.String]
-        [ValidateSet("On", "Off", "Unspecified")]
-        $ODBMembersCanShare,
+        #[Parameter()]
+        #[System.String]
+        #[ValidateSet("On", "Off", "Unspecified")]
+        #$ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
@@ -337,7 +337,7 @@ function Get-TargetResource
         IPAddressWACTokenLifetime                     = $null
         UseFindPeopleInPeoplePicker                   = $null
         DefaultSharingLinkType                        = $null
-        ODBMembersCanShare                            = $null
+        #ODBMembersCanShare                            = $null
         ODBAccessRequests                             = $null
         PreventExternalUsersFromResharing             = $null
         ShowPeoplePickerSuggestionsForGuestUsers      = $null
@@ -415,7 +415,7 @@ function Get-TargetResource
             IPAddressWACTokenLifetime                     = $spoTenant.IPAddressWACTokenLifetime
             UseFindPeopleInPeoplePicker                   = $spoTenant.UseFindPeopleInPeoplePicker
             DefaultSharingLinkType                        = $spoTenant.DefaultSharingLinkType
-            ODBMembersCanShare                            = $spoTenant.ODBMembersCanShare
+            #ODBMembersCanShare                            = $spoTenant.ODBMembersCanShare
             ODBAccessRequests                             = $spoTenant.ODBAccessRequests
             PreventExternalUsersFromResharing             = $spoTenant.PreventExternalUsersFromResharing
             ShowPeoplePickerSuggestionsForGuestUsers      = $spoTenant.ShowPeoplePickerSuggestionsForGuestUsers
@@ -622,10 +622,10 @@ function Set-TargetResource
         [ValidateSet("None", "Direct", "Internal", "AnonymousAccess")]
         $DefaultSharingLinkType,
 
-        [Parameter()]
-        [System.String]
-        [ValidateSet("On", "Off", "Unspecified")]
-        $ODBMembersCanShare,
+        #[Parameter()]
+        #[System.String]
+        #[ValidateSet("On", "Off", "Unspecified")]
+        #$ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
@@ -1050,10 +1050,10 @@ function Test-TargetResource
         [ValidateSet("None", "Direct", "Internal", "AnonymousAccess")]
         $DefaultSharingLinkType,
 
-        [Parameter()]
-        [System.String]
-        [ValidateSet("On", "Off", "Unspecified")]
-        $ODBMembersCanShare,
+        #[Parameter()]
+        #[System.String]
+        #[ValidateSet("On", "Off", "Unspecified")]
+        #$ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
@@ -1228,7 +1228,7 @@ function Test-TargetResource
             "IPAddressWACTokenLifetime", `
             "UseFindPeopleInPeoplePicker", `
             "DefaultSharingLinkType", `
-            "ODBMembersCanShare", `
+            #"ODBMembersCanShare", `
             "ODBAccessRequests", `
             "PreventExternalUsersFromResharing", `
             "ShowPeoplePickerSuggestionsForGuestUsers", `

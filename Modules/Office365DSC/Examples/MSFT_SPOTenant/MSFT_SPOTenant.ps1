@@ -45,7 +45,7 @@ Configuration MSFT_SPOTenant
             IPAddressWACTokenLifetime                     = 15
             UseFindPeopleInPeoplePicker                   = $false
             DefaultSharingLinkType                        = "AnonymousAccess" #According to the documentation the options should be None Direct Internal AnonymousAccess / during my tests I was not able to set it to None (all other options worked fine)
-            ODBMembersCanShare                            = "Unspecified"
+            #ODBMembersCanShare                            = "Unspecified"
             ODBAccessRequests                             = "Unspecified"
             PreventExternalUsersFromResharing             = $false
             ShowPeoplePickerSuggestionsForGuestUsers      = $false
