@@ -566,6 +566,7 @@ function Set-TargetResource
         [System.boolean]
         ${UserVoiceForFeedbackEnabled},
 
+        [Parameter()]
         [System.boolean]
         ${PublicCdnEnabled},
 
@@ -993,6 +994,7 @@ function Test-TargetResource
         [System.boolean]
         ${UserVoiceForFeedbackEnabled},
 
+        [Parameter()]
         [System.boolean]
         ${PublicCdnEnabled},
 
