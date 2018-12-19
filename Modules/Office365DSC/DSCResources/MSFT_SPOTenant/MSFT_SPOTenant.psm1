@@ -11,263 +11,263 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        ${Tenant},
+        $Tenant,
 
         [Parameter()]
         [System.Uint32]
-        ${MinCompatibilityLevel},
+        $MinCompatibilityLevel,
         
         [Parameter()]
         [System.Uint32]
-        ${MaxCompatibilityLevel},
+        $MaxCompatibilityLevel,
 
         [Parameter()]
         [System.boolean]
-        ${ExternalServicesEnabled},
+        $ExternalServicesEnabled,
 
         [Parameter()]
         [System.String]
-        ${NoAccessRedirectUrl},
+        $NoAccessRedirectUrl,
         
         [Parameter()]
         [System.String]
         [ValidateSet("MySites")]
-        ${ContentTypeSyncSiteTemplatesList},
+        $ContentTypeSyncSiteTemplatesList,
 
         [Parameter()]
         [System.Boolean]
-        ${disableContentTypeSyncSiteTemplatesList},
+        $disableContentTypeSyncSiteTemplatesList,
         
         [Parameter()]
         [System.String]
         [ValidateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
-        ${SharingCapability},
+        $SharingCapability,
 
         [Parameter()]
         [System.boolean]
-        ${DisplayStartASiteOption},
+        $DisplayStartASiteOption,
 
         [Parameter()]
         [System.String]
-        ${StartASiteFormUrl},
+        $StartASiteFormUrl,
 
         [Parameter()]
         [System.boolean]
-        ${ShowEveryoneClaim},
+        $ShowEveryoneClaim,
 
         [Parameter()]
         [System.boolean]
-        ${ShowAllUsersClaim},
+        $ShowAllUsersClaim,
 
         [Parameter()]
         [System.boolean]
-        ${ShowEveryoneExceptExternalUsersClaim},
+        $ShowEveryoneExceptExternalUsersClaim,
 
         [Parameter()]
         [System.boolean]
-        ${SearchResolveExactEmailOrUPN},
+        $SearchResolveExactEmailOrUPN,
 
         [Parameter()]
         [System.boolean]
-        ${OfficeClientADALDisabled},
+        $OfficeClientADALDisabled,
 
         [Parameter()]
         [System.boolean]
-        ${LegacyAuthProtocolsEnabled},
+        $LegacyAuthProtocolsEnabled,
         
         [Parameter()]
         [System.boolean]
-        ${RequireAcceptingAccountMatchInvitedAccount},
+        $RequireAcceptingAccountMatchInvitedAccount,
 
         [Parameter()]
         [System.boolean]
-        ${ProvisionSharedWithEveryoneFolder},
+        $ProvisionSharedWithEveryoneFolder,
 
         [Parameter()]
         [System.String]
-        ${SignInAccelerationDomain},
+        $SignInAccelerationDomain,
 
         [Parameter()]
         [System.boolean]
-        ${EnableGuestSignInAcceleration},
+        $EnableGuestSignInAcceleration,
 
         [Parameter()]
         [System.boolean]
-        ${UsePersistentCookiesForExplorerView},
+        $UsePersistentCookiesForExplorerView,
 
         [Parameter()]
         [System.boolean]
-        ${BccExternalSharingInvitations},
+        $BccExternalSharingInvitations,
 
         [Parameter()]
         [System.String]
-        ${BccExternalSharingInvitationsList},
+        $BccExternalSharingInvitationsList,
 
         [Parameter()]
         [System.boolean]
-        ${UserVoiceForFeedbackEnabled},
+        $UserVoiceForFeedbackEnabled,
 
         [Parameter()]
         [System.boolean]
-        ${PublicCdnEnabled},
+        $PublicCdnEnabled,
 
         [Parameter()]
         [System.String]
-        ${PublicCdnAllowedFileTypes},
+        $PublicCdnAllowedFileTypes,
 
         [Parameter()]
         [System.Uint32]
-        ${RequireAnonymousLinksExpireInDays},
+        $RequireAnonymousLinksExpireInDays,
 
         [Parameter()]
         [System.String]
-        ${SharingAllowedDomainList},
+        $SharingAllowedDomainList,
 
         [Parameter()]
         [System.String]
-        ${SharingBlockedDomainList},
+        $SharingBlockedDomainList,
 
         [Parameter()]
         [System.String]
         [ValidateSet("None", "AllowList", "BlockList")]
-        ${SharingDomainRestrictionMode},
+        $SharingDomainRestrictionMode,
 
         [Parameter()]
         [System.Uint64]
-        ${OneDriveStorageQuota},
+        $OneDriveStorageQuota,
 
         [Parameter()]
         [System.boolean]
-        ${OneDriveForGuestsEnabled},
+        $OneDriveForGuestsEnabled,
 
         [Parameter()]
         [System.boolean]
-        ${IPAddressEnforcement},
+        $IPAddressEnforcement,
 
         [Parameter()]
         [System.String]
-        ${IPAddressAllowList},
+        $IPAddressAllowList,
 
         [Parameter()]
         [System.Uint32]
-        ${IPAddressWACTokenLifetime},
+        $IPAddressWACTokenLifetime,
 
         [Parameter()]
         [System.boolean]
-        ${UseFindPeopleInPeoplePicker},
+        $UseFindPeopleInPeoplePicker,
 
         [Parameter()]
         [System.String]
         [ValidateSet("None", "Direct", "Internal", "AnonymousAccess")]
-        ${DefaultSharingLinkType},
+        $DefaultSharingLinkType,
 
         [Parameter()]
         [System.String]
         [ValidateSet("On", "Off", "Unspecified")]
-        ${ODBMembersCanShare},
+        $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
         [ValidateSet("On", "Off", "Unspecified")]
-        ${ODBAccessRequests},
+        $ODBAccessRequests,
 
         [Parameter()]
         [System.boolean]
-        ${PreventExternalUsersFromResharing},
+        $PreventExternalUsersFromResharing,
 
         [Parameter()]
         [System.boolean]
-        ${ShowPeoplePickerSuggestionsForGuestUsers},
+        $ShowPeoplePickerSuggestionsForGuestUsers,
 
         [Parameter()]
         [System.String]
         [ValidateSet("View", "Edit")]
-        ${FileAnonymousLinkType},
+        $FileAnonymousLinkType,
 
         [Parameter()]
         [System.String]
         [ValidateSet("View", "Edit")]
-        ${FolderAnonymousLinkType},
+        $FolderAnonymousLinkType,
 
         [Parameter()]
         [System.boolean]
-        ${NotifyOwnersWhenItemsReshared},
+        $NotifyOwnersWhenItemsReshared,
 
         [Parameter()]
         [System.boolean]
-        ${NotifyOwnersWhenInvitationsAccepted},
+        $NotifyOwnersWhenInvitationsAccepted,
         
         [Parameter()]
         [System.boolean]
-        ${NotificationsInOneDriveForBusinessEnabled},
+        $NotificationsInOneDriveForBusinessEnabled,
 
         [Parameter()]
         [System.boolean]
-        ${NotificationsInSharePointEnabled},
+        $NotificationsInSharePointEnabled,
 
         [Parameter()]
         [System.String]
         [ValidateSet("Allowed","Disallowed")]
-        ${SpecialCharactersStateInFileFolderNames},
+        $SpecialCharactersStateInFileFolderNames,
         
         [Parameter()]
         [System.boolean]
-        ${OwnerAnonymousNotification},
+        $OwnerAnonymousNotification,
 
         [Parameter()]
         [System.boolean]
-        ${CommentsOnSitePagesDisabled},
+        $CommentsOnSitePagesDisabled,
         
         [Parameter()]
         [System.boolean]
-        ${SocialBarOnSitePagesDisabled},
+        $SocialBarOnSitePagesDisabled,
 
         [Parameter()]
         [System.Uint32]
-        ${OrphanedPersonalSitesRetentionPeriod},
+        $OrphanedPersonalSitesRetentionPeriod,
 
         [Parameter()]
         [System.boolean]
-        ${PermissiveBrowserFileHandlingOverride},
+        $PermissiveBrowserFileHandlingOverride,
 
         [Parameter()]
         [System.boolean]
-        ${DisallowInfectedFileDownload},
+        $DisallowInfectedFileDownload,
 
         [Parameter()]
         [System.String]
         [ValidateSet("View", "Edit")]
-        ${DefaultLinkPermission},
+        $DefaultLinkPermission,
 
         [Parameter()]
         [System.String]
         [ValidateSet("AllowFullAccess", "AllowLimitedAccess", "BlockAccess")]
-        ${ConditionalAccessPolicy},
+        $ConditionalAccessPolicy,
 
         [Parameter()]
         [System.boolean]
-        ${AllowDownloadingNonWebViewableFiles},
+        $AllowDownloadingNonWebViewableFiles,
 
         [Parameter()]
         [System.String]
         [ValidateSet("OfficeOnlineFilesOnly", "WebPreviewableFiles", "OtherFiles")]
-        ${LimitedAccessFileType},
+        $LimitedAccessFileType,
 
         [Parameter()]
         [System.boolean]
-        ${AllowEditing},
+        $AllowEditing,
 
         [Parameter()]
         [System.boolean]
-        ${ApplyAppEnforcedRestrictionsToAdHocRecipients},
+        $ApplyAppEnforcedRestrictionsToAdHocRecipients,
 
         [Parameter()]
         [System.boolean]
-        ${FilePickerExternalImageSearchEnabled},
+        $FilePickerExternalImageSearchEnabled,
 
         [Parameter()]
         [System.boolean]
-        ${EmailAttestationRequired},
+        $EmailAttestationRequired,
 
         [Parameter()]
         [System.Uint32]
@@ -275,19 +275,19 @@ function Get-TargetResource
 
         [Parameter()]
         [System.boolean]
-        ${SyncPrivacyProfileProperties},
+        $SyncPrivacyProfileProperties,
 
         [Parameter()]
         [System.String]
-        ${DisabledWebPartIds},
+        $DisabledWebPartIds,
 
         [Parameter()]
         [System.String]
-        ${OrgNewsSiteUrl},
+        $OrgNewsSiteUrl,
         
         [Parameter()]
         [System.boolean]
-        ${EnableMinimumVersionRequirement},
+        $EnableMinimumVersionRequirement,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -454,8 +454,8 @@ function Get-TargetResource
         if($error[0].Exception.Message -like "No connection available")
         {
             write-Verbose "Make sure that you are connected to your SPOService"
-            return $nullReturn
         }
+        return $nullReturn
     }
 }
 function Set-TargetResource
@@ -470,220 +470,220 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        ${Tenant},
+        $Tenant,
 
         [Parameter()]
         [System.Uint32]
-        ${MinCompatibilityLevel},
+        $MinCompatibilityLevel,
         
         [Parameter()]
         [System.Uint32]
-        ${MaxCompatibilityLevel},
+        $MaxCompatibilityLevel,
 
         [Parameter()]
         [System.boolean]
-        ${ExternalServicesEnabled},
+        $ExternalServicesEnabled,
 
         [Parameter()]
         [System.String]
-        ${NoAccessRedirectUrl},
+        $NoAccessRedirectUrl,
         
         [Parameter()]
         [System.String]
         [ValidateSet("MySites")]
-        ${ContentTypeSyncSiteTemplatesList},
+        $ContentTypeSyncSiteTemplatesList,
        
         [Parameter()]
         [System.Boolean]
-        ${disableContentTypeSyncSiteTemplatesList},
+        $disableContentTypeSyncSiteTemplatesList,
         
         [Parameter()]
         [System.String]
         [ValidateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
-        ${SharingCapability},
+        $SharingCapability,
 
         [Parameter()]
         [System.boolean]
-        ${DisplayStartASiteOption},
+        $DisplayStartASiteOption,
 
         [Parameter()]
         [System.String]
-        ${StartASiteFormUrl},
+        $StartASiteFormUrl,
 
         [Parameter()]
         [System.boolean]
-        ${ShowEveryoneClaim},
+        $ShowEveryoneClaim,
 
         [Parameter()]
         [System.boolean]
-        ${ShowAllUsersClaim},
+        $ShowAllUsersClaim,
 
         [Parameter()]
         [System.boolean]
-        ${ShowEveryoneExceptExternalUsersClaim},
+        $ShowEveryoneExceptExternalUsersClaim,
 
         [Parameter()]
         [System.boolean]
-        ${SearchResolveExactEmailOrUPN},
+        $SearchResolveExactEmailOrUPN,
 
         [Parameter()]
         [System.boolean]
-        ${OfficeClientADALDisabled},
+        $OfficeClientADALDisabled,
 
         [Parameter()]
         [System.boolean]
-        ${LegacyAuthProtocolsEnabled},
+        $LegacyAuthProtocolsEnabled,
         
         [Parameter()]
         [System.boolean]
-        ${RequireAcceptingAccountMatchInvitedAccount},
+        $RequireAcceptingAccountMatchInvitedAccount,
 
         [Parameter()]
         [System.boolean]
-        ${ProvisionSharedWithEveryoneFolder},
+        $ProvisionSharedWithEveryoneFolder,
 
         [Parameter()]
         [System.String]
-        ${SignInAccelerationDomain},
+        $SignInAccelerationDomain,
 
         [Parameter()]
         [System.boolean]
-        ${EnableGuestSignInAcceleration},
+        $EnableGuestSignInAcceleration,
 
         [Parameter()]
         [System.boolean]
-        ${UsePersistentCookiesForExplorerView},
+        $UsePersistentCookiesForExplorerView,
 
         [Parameter()]
         [System.boolean]
-        ${BccExternalSharingInvitations},
+        $BccExternalSharingInvitations,
 
         [Parameter()]
         [System.String]
-        ${BccExternalSharingInvitationsList},
+        $BccExternalSharingInvitationsList,
 
         [Parameter()]
         [System.boolean]
-        ${UserVoiceForFeedbackEnabled},
+        $UserVoiceForFeedbackEnabled,
 
         [Parameter()]
         [System.boolean]
-        ${PublicCdnEnabled},
+        $PublicCdnEnabled,
 
         [Parameter()]
         [System.String]
-        ${PublicCdnAllowedFileTypes},
+        $PublicCdnAllowedFileTypes,
 
         [Parameter()]
         [System.Uint32]
-        ${RequireAnonymousLinksExpireInDays},
+        $RequireAnonymousLinksExpireInDays,
 
         [Parameter()]
         [System.String]
-        ${SharingAllowedDomainList},
+        $SharingAllowedDomainList,
 
         [Parameter()]
         [System.String]
-        ${SharingBlockedDomainList},
+        $SharingBlockedDomainList,
 
         [Parameter()]
         [System.String]
         [ValidateSet("None", "AllowList", "BlockList")]
-        ${SharingDomainRestrictionMode},
+        $SharingDomainRestrictionMode,
 
         [Parameter()]
         [System.Uint64]
-        ${OneDriveStorageQuota},
+        $OneDriveStorageQuota,
 
         [Parameter()]
         [System.boolean]
-        ${OneDriveForGuestsEnabled},
+        $OneDriveForGuestsEnabled,
 
         [Parameter()]
         [System.boolean]
-        ${IPAddressEnforcement},
+        $IPAddressEnforcement,
 
         [Parameter()]
         [System.String]
-        ${IPAddressAllowList},
+        $IPAddressAllowList,
 
         [Parameter()]
         [System.Uint32]
-        ${IPAddressWACTokenLifetime},
+        $IPAddressWACTokenLifetime,
 
         [Parameter()]
         [System.boolean]
-        ${UseFindPeopleInPeoplePicker},
+        $UseFindPeopleInPeoplePicker,
 
         [Parameter()]
         [System.String]
         [ValidateSet("None", "Direct", "Internal", "AnonymousAccess")]
-        ${DefaultSharingLinkType},
+        $DefaultSharingLinkType,
 
         [Parameter()]
         [System.String]
         [ValidateSet("On", "Off", "Unspecified")]
-        ${ODBMembersCanShare},
+        $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
         [ValidateSet("On", "Off", "Unspecified")]
-        ${ODBAccessRequests},
+        $ODBAccessRequests,
 
         [Parameter()]
         [System.boolean]
-        ${PreventExternalUsersFromResharing},
+        $PreventExternalUsersFromResharing,
 
         [Parameter()]
         [System.boolean]
-        ${ShowPeoplePickerSuggestionsForGuestUsers},
+        $ShowPeoplePickerSuggestionsForGuestUsers,
 
         [Parameter()]
         [System.String]
         [ValidateSet("View", "Edit")]
-        ${FileAnonymousLinkType},
+        $FileAnonymousLinkType,
 
         [Parameter()]
         [System.String]
         [ValidateSet("View", "Edit")]
-        ${FolderAnonymousLinkType},
+        $FolderAnonymousLinkType,
 
         [Parameter()]
         [System.boolean]
-        ${NotifyOwnersWhenItemsReshared},
+        $NotifyOwnersWhenItemsReshared,
 
         [Parameter()]
         [System.boolean]
-        ${NotifyOwnersWhenInvitationsAccepted},
+        $NotifyOwnersWhenInvitationsAccepted,
         
         [Parameter()]
         [System.boolean]
-        ${NotificationsInOneDriveForBusinessEnabled},
+        $NotificationsInOneDriveForBusinessEnabled,
 
         [Parameter()]
         [System.boolean]
-        ${NotificationsInSharePointEnabled},
+        $NotificationsInSharePointEnabled,
 
         [Parameter()]
         [System.String]
         [ValidateSet("Allowed","Disallowed")]  
-        ${SpecialCharactersStateInFileFolderNames},
+        $SpecialCharactersStateInFileFolderNames,
         
         [Parameter()]
         [System.boolean]
-        ${OwnerAnonymousNotification},
+        $OwnerAnonymousNotification,
 
         [Parameter()]
         [System.boolean]
-        ${CommentsOnSitePagesDisabled},
+        $CommentsOnSitePagesDisabled,
         
         [Parameter()]
         [System.boolean]
-        ${SocialBarOnSitePagesDisabled},
+        $SocialBarOnSitePagesDisabled,
 
         [Parameter()]
         [System.Uint32]
-        ${OrphanedPersonalSitesRetentionPeriod},
+        $OrphanedPersonalSitesRetentionPeriod,
 
         [Parameter()]
         [System.boolean]
@@ -691,62 +691,62 @@ function Set-TargetResource
 
         [Parameter()]
         [System.boolean]
-        ${DisallowInfectedFileDownload},
+        $DisallowInfectedFileDownload,
 
         [Parameter()]
         [System.String]
         [ValidateSet("View", "Edit")]
-        ${DefaultLinkPermission},
+        $DefaultLinkPermission,
 
         [Parameter()]
         [System.String]
         [ValidateSet("AllowFullAccess", "AllowLimitedAccess", "BlockAccess")]
-        ${ConditionalAccessPolicy},
+        $ConditionalAccessPolicy,
 
         [Parameter()]
         [System.boolean]
-        ${AllowDownloadingNonWebViewableFiles},
+        $AllowDownloadingNonWebViewableFiles,
 
         [Parameter()]
         [System.String]
         [ValidateSet("OfficeOnlineFilesOnly", "WebPreviewableFiles", "OtherFiles")]
-        ${LimitedAccessFileType},
+        $LimitedAccessFileType,
 
         [Parameter()]
         [System.boolean]
-        ${AllowEditing},
+        $AllowEditing,
 
         [Parameter()]
         [System.boolean]
-        ${ApplyAppEnforcedRestrictionsToAdHocRecipients},
+        $ApplyAppEnforcedRestrictionsToAdHocRecipients,
 
         [Parameter()]
         [System.boolean]
-        ${FilePickerExternalImageSearchEnabled},
+        $FilePickerExternalImageSearchEnabled,
 
         [Parameter()]
         [System.boolean]
-        ${EmailAttestationRequired},
+        $EmailAttestationRequired,
 
         [Parameter()]
         [System.Uint32]
-        ${EmailAttestationReAuthDays},
+        $EmailAttestationReAuthDays,
 
         [Parameter()]
         [System.boolean]
-        ${SyncPrivacyProfileProperties},
+        $SyncPrivacyProfileProperties,
 
         [Parameter()]
         [System.String]
-        ${DisabledWebPartIds},
+        $DisabledWebPartIds,
 
         [Parameter()]
         [System.String]
-        ${OrgNewsSiteUrl},
+        $OrgNewsSiteUrl,
         
         [Parameter()]
         [System.boolean]
-        ${EnableMinimumVersionRequirement},
+        $EnableMinimumVersionRequirement,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -894,287 +894,287 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [ValidateSet("Present", "Absent")]
         [System.String]
-        ${Ensure},
+        $Ensure,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        ${Tenant},
+        $Tenant,
 
         [Parameter()]
         [System.Uint32]
-        ${MinCompatibilityLevel},
+        $MinCompatibilityLevel,
         
         [Parameter()]
         [System.Uint32]
-        ${MaxCompatibilityLevel},
+        $MaxCompatibilityLevel,
 
         [Parameter()]
         [System.boolean]
-        ${ExternalServicesEnabled},
+        $ExternalServicesEnabled,
 
         [Parameter()]
         [System.String]
-        ${NoAccessRedirectUrl},
+        $NoAccessRedirectUrl,
         
         [Parameter()]
         [System.String]
         [ValidateSet("MySites")]
-        ${ContentTypeSyncSiteTemplatesList},
+        $ContentTypeSyncSiteTemplatesList,
 
         [Parameter()]
         [System.Boolean]
-        ${disableContentTypeSyncSiteTemplatesList},
+        $disableContentTypeSyncSiteTemplatesList,
         
         [Parameter()]
         [System.String]
         [ValidateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
-        ${SharingCapability},
+        $SharingCapability,
 
         [Parameter()]
         [System.boolean]
-        ${DisplayStartASiteOption},
+        $DisplayStartASiteOption,
 
         [Parameter()]
         [System.String]
-        ${StartASiteFormUrl},
+        $StartASiteFormUrl,
 
         [Parameter()]
         [System.boolean]
-        ${ShowEveryoneClaim},
+        $ShowEveryoneClaim,
 
         [Parameter()]
         [System.boolean]
-        ${ShowAllUsersClaim},
+        $ShowAllUsersClaim,
 
         [Parameter()]
         [System.boolean]
-        ${ShowEveryoneExceptExternalUsersClaim},
+        $ShowEveryoneExceptExternalUsersClaim,
 
         [Parameter()]
         [System.boolean]
-        ${SearchResolveExactEmailOrUPN},
+        $SearchResolveExactEmailOrUPN,
 
         [Parameter()]
         [System.boolean]
-        ${OfficeClientADALDisabled},
+        $OfficeClientADALDisabled,
 
         [Parameter()]
         [System.boolean]
-        ${LegacyAuthProtocolsEnabled},
+        $LegacyAuthProtocolsEnabled,
         
         [Parameter()]
         [System.boolean]
-        ${RequireAcceptingAccountMatchInvitedAccount},
+        $RequireAcceptingAccountMatchInvitedAccount,
 
         [Parameter()]
         [System.boolean]
-        ${ProvisionSharedWithEveryoneFolder},
+        $ProvisionSharedWithEveryoneFolder,
 
         [Parameter()]
         [System.String]
-        ${SignInAccelerationDomain},
+        $SignInAccelerationDomain,
 
         [Parameter()]
         [System.boolean]
-        ${EnableGuestSignInAcceleration},
+        $EnableGuestSignInAcceleration,
 
         [Parameter()]
         [System.boolean]
-        ${UsePersistentCookiesForExplorerView},
+        $UsePersistentCookiesForExplorerView,
 
         [Parameter()]
         [System.boolean]
-        ${BccExternalSharingInvitations},
+        $BccExternalSharingInvitations,
 
         [Parameter()]
         [System.String]
-        ${BccExternalSharingInvitationsList},
+        $BccExternalSharingInvitationsList,
 
         [Parameter()]
         [System.boolean]
-        ${UserVoiceForFeedbackEnabled},
+        $UserVoiceForFeedbackEnabled,
 
         [Parameter()]
         [System.boolean]
-        ${PublicCdnEnabled},
+        $PublicCdnEnabled,
 
         [Parameter()]
         [System.String]
-        ${PublicCdnAllowedFileTypes},
+        $PublicCdnAllowedFileTypes,
 
         [Parameter()]
         [System.Uint32]
-        ${RequireAnonymousLinksExpireInDays},
+        $RequireAnonymousLinksExpireInDays,
 
         [Parameter()]
         [System.String]
-        ${SharingAllowedDomainList},
+        $SharingAllowedDomainList,
 
         [Parameter()]
         [System.String]
-        ${SharingBlockedDomainList},
+        $SharingBlockedDomainList,
 
         [Parameter()]
         [System.String]
         [ValidateSet("None", "AllowList", "BlockList")]
-        ${SharingDomainRestrictionMode},
+        $SharingDomainRestrictionMode,
 
         [Parameter()]
         [System.Uint64]
-        ${OneDriveStorageQuota},
+        $OneDriveStorageQuota,
 
         [Parameter()]
         [System.boolean]
-        ${OneDriveForGuestsEnabled},
+        $OneDriveForGuestsEnabled,
 
         [Parameter()]
         [System.boolean]
-        ${IPAddressEnforcement},
+        $IPAddressEnforcement,
 
         [Parameter()]
         [System.String]
-        ${IPAddressAllowList},
+        $IPAddressAllowList,
 
         [Parameter()]
         [System.Uint32]
-        ${IPAddressWACTokenLifetime},
+        $IPAddressWACTokenLifetime,
 
         [Parameter()]
         [System.boolean]
-        ${UseFindPeopleInPeoplePicker},
+        $UseFindPeopleInPeoplePicker,
 
         [Parameter()]
         [System.String]
         [ValidateSet("None", "Direct", "Internal", "AnonymousAccess")]
-        ${DefaultSharingLinkType},
+        $DefaultSharingLinkType,
 
         [Parameter()]
         [System.String]
         [ValidateSet("On", "Off", "Unspecified")]
-        ${ODBMembersCanShare},
+        $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
         [ValidateSet("On", "Off", "Unspecified")]
-        ${ODBAccessRequests},
+        $ODBAccessRequests,
 
         [Parameter()]
         [System.boolean]
-        ${PreventExternalUsersFromResharing},
+        $PreventExternalUsersFromResharing,
 
         [Parameter()]
         [System.boolean]
-        ${ShowPeoplePickerSuggestionsForGuestUsers},
+        $ShowPeoplePickerSuggestionsForGuestUsers,
 
         [Parameter()]
         [System.String]
         [ValidateSet("View", "Edit")]
-        ${FileAnonymousLinkType},
+        $FileAnonymousLinkType,
 
         [Parameter()]
         [System.String]
         [ValidateSet("View", "Edit")]
-        ${FolderAnonymousLinkType},
+        $FolderAnonymousLinkType,
 
         [Parameter()]
         [System.boolean]
-        ${NotifyOwnersWhenItemsReshared},
+        $NotifyOwnersWhenItemsReshared,
 
         [Parameter()]
         [System.boolean]
-        ${NotifyOwnersWhenInvitationsAccepted},
+        $NotifyOwnersWhenInvitationsAccepted,
         
         [Parameter()]
         [System.boolean]
-        ${NotificationsInOneDriveForBusinessEnabled},
+        $NotificationsInOneDriveForBusinessEnabled,
 
         [Parameter()]
         [System.boolean]
-        ${NotificationsInSharePointEnabled},
+        $NotificationsInSharePointEnabled,
 
         [Parameter()]
         [System.String]
         [ValidateSet("Allowed","Disallowed")]
-        ${SpecialCharactersStateInFileFolderNames},
+        $SpecialCharactersStateInFileFolderNames,
         
         [Parameter()]
         [System.boolean]
-        ${OwnerAnonymousNotification},
+        $OwnerAnonymousNotification,
 
         [Parameter()]
         [System.boolean]
-        ${CommentsOnSitePagesDisabled},
+        $CommentsOnSitePagesDisabled,
         
         [Parameter()]
         [System.boolean]
-        ${SocialBarOnSitePagesDisabled},
+        $SocialBarOnSitePagesDisabled,
 
         [Parameter()]
         [System.Uint32]
-        ${OrphanedPersonalSitesRetentionPeriod},
+        $OrphanedPersonalSitesRetentionPeriod,
 
         [Parameter()]
         [System.boolean]
-        ${PermissiveBrowserFileHandlingOverride},
+        $PermissiveBrowserFileHandlingOverride,
 
         [Parameter()]
         [System.boolean]
-        ${DisallowInfectedFileDownload},
+        $DisallowInfectedFileDownload,
 
         [Parameter()]
         [System.String]
         [ValidateSet("View", "Edit")]
-        ${DefaultLinkPermission},
+        $DefaultLinkPermission,
 
         [Parameter()]
         [System.String]
         [ValidateSet("AllowFullAccess", "AllowLimitedAccess", "BlockAccess")]
-        ${ConditionalAccessPolicy},
+        $ConditionalAccessPolicy,
 
         [Parameter()]
         [System.boolean]
-        ${AllowDownloadingNonWebViewableFiles},
+        $AllowDownloadingNonWebViewableFiles,
 
         [Parameter()]
         [System.String]
         [ValidateSet("OfficeOnlineFilesOnly", "WebPreviewableFiles", "OtherFiles")]
-        ${LimitedAccessFileType},
+        $LimitedAccessFileType,
 
         [Parameter()]
         [System.boolean]
-        ${AllowEditing},
+        $AllowEditing,
 
         [Parameter()]
         [System.boolean]
-        ${ApplyAppEnforcedRestrictionsToAdHocRecipients},
+        $ApplyAppEnforcedRestrictionsToAdHocRecipients,
 
         [Parameter()]
         [System.boolean]
-        ${FilePickerExternalImageSearchEnabled},
+        $FilePickerExternalImageSearchEnabled,
 
         [Parameter()]
         [System.boolean]
-        ${EmailAttestationRequired},
+        $EmailAttestationRequired,
 
         [Parameter()]
         [System.Uint32]
-        ${EmailAttestationReAuthDays},
+        $EmailAttestationReAuthDays,
 
         [Parameter()]
         [System.boolean]
-        ${SyncPrivacyProfileProperties},
+        $SyncPrivacyProfileProperties,
 
         [Parameter()]
         [System.String]
-        ${DisabledWebPartIds},
+        $DisabledWebPartIds,
 
         [Parameter()]
         [System.String]
-        ${OrgNewsSiteUrl},
+        $OrgNewsSiteUrl,
         
         [Parameter()]
         [System.boolean]
-        ${EnableMinimumVersionRequirement},
+        $EnableMinimumVersionRequirement,
 
         [Parameter(Mandatory = $true)]
         [System.String]
