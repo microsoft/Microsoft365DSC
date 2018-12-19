@@ -52,7 +52,7 @@ Configuration MSFT_SPOTenant
             FileAnonymousLinkType                         = "Edit" #According to the documentation None should be an option but when running the set-spotenant cmdlet it will tell you that it is just View or Edit
             FolderAnonymousLinkType                       = "Edit" #According to the documentation None should be an option but when running the set-spotenant cmdlet it will tell you that it is just View or Edit
             NotifyOwnersWhenItemsReshared                 = $true
-            NotifyOwnersWhenInvitationsAccepted           = $true
+            #NotifyOwnersWhenInvitationsAccepted           = $true
             NotificationsInOneDriveForBusinessEnabled     = $true
             NotificationsInSharePointEnabled              = $true
             SpecialCharactersStateInFileFolderNames       = "Allowed" #According to the documentation NoPreference should be an option but when running the set-spotenant cmdlet it will tell you that it is just Allowed or Disallowed.

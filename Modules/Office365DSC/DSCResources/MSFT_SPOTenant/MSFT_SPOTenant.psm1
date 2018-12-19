@@ -193,9 +193,9 @@ function Get-TargetResource
         [System.boolean]
         $NotifyOwnersWhenItemsReshared,
 
-        [Parameter()]
-        [System.boolean]
-        $NotifyOwnersWhenInvitationsAccepted,
+        #[Parameter()]
+        #[System.boolean]
+        #$NotifyOwnersWhenInvitationsAccepted,
         
         [Parameter()]
         [System.boolean]
@@ -344,7 +344,7 @@ function Get-TargetResource
         FileAnonymousLinkType                         = $null
         FolderAnonymousLinkType                       = $null
         NotifyOwnersWhenItemsReshared                 = $null
-        NotifyOwnersWhenInvitationsAccepted           = $null
+        #NotifyOwnersWhenInvitationsAccepted           = $null
         NotificationsInOneDriveForBusinessEnabled     = $null
         NotificationsInSharePointEnabled              = $null
         SpecialCharactersStateInFileFolderNames       = $null
@@ -422,7 +422,7 @@ function Get-TargetResource
             FileAnonymousLinkType                         = $spoTenant.FileAnonymousLinkType
             FolderAnonymousLinkType                       = $spoTenant.FolderAnonymousLinkType
             NotifyOwnersWhenItemsReshared                 = $spoTenant.NotifyOwnersWhenItemsReshared
-            NotifyOwnersWhenInvitationsAccepted           = $spoTenant.NotifyOwnersWhenInvitationsAccepted
+            #NotifyOwnersWhenInvitationsAccepted           = $spoTenant.NotifyOwnersWhenInvitationsAccepted
             NotificationsInOneDriveForBusinessEnabled     = $spoTenant.NotificationsInOneDriveForBusinessEnabled
             NotificationsInSharePointEnabled              = $spoTenant.NotificationsInSharePointEnabled
             SpecialCharactersStateInFileFolderNames       = $spoTenant.SpecialCharactersStateInFileFolderNames
@@ -654,9 +654,9 @@ function Set-TargetResource
         [System.boolean]
         $NotifyOwnersWhenItemsReshared,
 
-        [Parameter()]
-        [System.boolean]
-        $NotifyOwnersWhenInvitationsAccepted,
+        #[Parameter()]
+        #[System.boolean]
+        #$NotifyOwnersWhenInvitationsAccepted,
         
         [Parameter()]
         [System.boolean]
@@ -1082,9 +1082,9 @@ function Test-TargetResource
         [System.boolean]
         $NotifyOwnersWhenItemsReshared,
 
-        [Parameter()]
-        [System.boolean]
-        $NotifyOwnersWhenInvitationsAccepted,
+        #[Parameter()]
+        #[System.boolean]
+        #$NotifyOwnersWhenInvitationsAccepted,
         
         [Parameter()]
         [System.boolean]
@@ -1235,7 +1235,7 @@ function Test-TargetResource
             "FileAnonymousLinkType", `
             "FolderAnonymousLinkType", `
             "NotifyOwnersWhenItemsReshared", `
-            "NotifyOwnersWhenInvitationsAccepted", `
+            #"NotifyOwnersWhenInvitationsAccepted", `
             "NotificationsInOneDriveForBusinessEnabled", `
             "NotificationsInSharePointEnabled", `
             "SpecialCharactersStateInFileFolderNames", `
