@@ -299,7 +299,7 @@ function Get-TargetResource
     )
     
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-   
+
     $nullReturn = @{
         MinCompatibilityLevel                         = $null
         MaxCompatibilityLevel                         = $null
@@ -760,7 +760,7 @@ function Set-TargetResource
     )
     
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-    
+
     if($Ensure -eq "Present")
     {
         $CurrentParameters = $PSBoundParameters
