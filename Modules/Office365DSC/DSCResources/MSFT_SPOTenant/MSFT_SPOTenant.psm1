@@ -377,7 +377,7 @@ function Get-TargetResource
     try
     {
         $spoTenant = Get-SPOTenant
-            
+
         return @{
             MinCompatibilityLevel                         = $spoTenant.MinCompatibilityLevel
             MaxCompatibilityLevel                         = $spoTenant.MaxCompatibilityLevel
