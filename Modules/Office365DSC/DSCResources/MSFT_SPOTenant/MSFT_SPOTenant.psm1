@@ -28,7 +28,7 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $NoAccessRedirectUrl,
-        
+
         [Parameter()]
         [System.String]
         [ValidateSet("MySites")]
@@ -489,7 +489,7 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $NoAccessRedirectUrl,
-        
+
         [Parameter()]
         [System.String]
         [ValidateSet("MySites")]
@@ -917,7 +917,7 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $NoAccessRedirectUrl,
-        
+
         [Parameter()]
         [System.String]
         [ValidateSet("MySites")]
