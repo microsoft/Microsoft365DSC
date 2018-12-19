@@ -5,7 +5,7 @@ function Get-TargetResource
     param (
 
         [Parameter(Mandatory = $true)]
-        [validateSet("Present", "Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure,
 
@@ -31,7 +31,7 @@ function Get-TargetResource
         
         [Parameter()]
         [System.String]
-        [validateSet("MySites")]
+        [ValidateSet("MySites")]
         ${ContentTypeSyncSiteTemplatesList},
 
         [Parameter()]
@@ -40,7 +40,7 @@ function Get-TargetResource
         
         [Parameter()]
         [System.String]
-        [validateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
+        [ValidateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
         ${SharingCapability},
 
         [Parameter()]
@@ -129,7 +129,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateSet("None", "AllowList", "BlockList")]
+        [ValidateSet("None", "AllowList", "BlockList")]
         ${SharingDomainRestrictionMode},
 
         [Parameter()]
@@ -158,17 +158,17 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateSet("None", "Direct", "Internal", "AnonymousAccess")]
+        [ValidateSet("None", "Direct", "Internal", "AnonymousAccess")]
         ${DefaultSharingLinkType},
 
         [Parameter()]
         [System.String]
-        [validateSet("On", "Off", "Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         ${ODBMembersCanShare},
 
         [Parameter()]
         [System.String]
-        [validateSet("On", "Off", "Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         ${ODBAccessRequests},
 
         [Parameter()]
@@ -181,12 +181,12 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateSet("View", "Edit")]
+        [ValidateSet("View", "Edit")]
         ${FileAnonymousLinkType},
 
         [Parameter()]
         [System.String]
-        [validateSet("View", "Edit")]
+        [ValidateSet("View", "Edit")]
         ${FolderAnonymousLinkType},
 
         [Parameter()]
@@ -207,7 +207,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateSet("Allowed","Disallowed")]
+        [ValidateSet("Allowed","Disallowed")]
         ${SpecialCharactersStateInFileFolderNames},
         
         [Parameter()]
@@ -236,7 +236,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateSet("View", "Edit")]
+        [ValidateSet("View", "Edit")]
         ${DefaultLinkPermission},
 
         [Parameter()]
@@ -464,7 +464,7 @@ function Set-TargetResource
     param (
 
         [Parameter(Mandatory = $true)]
-        [validateSet("Present", "Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure,
 
@@ -490,7 +490,7 @@ function Set-TargetResource
         
         [Parameter()]
         [System.String]
-        [validateSet("MySites")]
+        [ValidateSet("MySites")]
         ${ContentTypeSyncSiteTemplatesList},
        
         [Parameter()]
@@ -499,7 +499,7 @@ function Set-TargetResource
         
         [Parameter()]
         [System.String]
-        [validateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
+        [ValidateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
         ${SharingCapability},
 
         [Parameter()]
@@ -588,7 +588,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateSet("None", "AllowList", "BlockList")]
+        [ValidateSet("None", "AllowList", "BlockList")]
         ${SharingDomainRestrictionMode},
 
         [Parameter()]
@@ -617,17 +617,17 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateSet("None", "Direct", "Internal", "AnonymousAccess")]
+        [ValidateSet("None", "Direct", "Internal", "AnonymousAccess")]
         ${DefaultSharingLinkType},
 
         [Parameter()]
         [System.String]
-        [validateSet("On", "Off", "Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         ${ODBMembersCanShare},
 
         [Parameter()]
         [System.String]
-        [validateSet("On", "Off", "Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         ${ODBAccessRequests},
 
         [Parameter()]
@@ -640,12 +640,12 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateSet("View", "Edit")]
+        [ValidateSet("View", "Edit")]
         ${FileAnonymousLinkType},
 
         [Parameter()]
         [System.String]
-        [validateSet("View", "Edit")]
+        [ValidateSet("View", "Edit")]
         ${FolderAnonymousLinkType},
 
         [Parameter()]
@@ -666,7 +666,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateSet("Allowed","Disallowed")]  
+        [ValidateSet("Allowed","Disallowed")]  
         ${SpecialCharactersStateInFileFolderNames},
         
         [Parameter()]
@@ -695,7 +695,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateSet("View", "Edit")]
+        [ValidateSet("View", "Edit")]
         ${DefaultLinkPermission},
 
         [Parameter()]
@@ -892,7 +892,7 @@ function Test-TargetResource
     param (
 
         [Parameter(Mandatory = $true)]
-        [validateSet("Present", "Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         ${Ensure},
 
@@ -918,7 +918,7 @@ function Test-TargetResource
         
         [Parameter()]
         [System.String]
-        [validateSet("MySites")]
+        [ValidateSet("MySites")]
         ${ContentTypeSyncSiteTemplatesList},
 
         [Parameter()]
@@ -927,7 +927,7 @@ function Test-TargetResource
         
         [Parameter()]
         [System.String]
-        [validateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
+        [ValidateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
         ${SharingCapability},
 
         [Parameter()]
@@ -1016,7 +1016,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateSet("None", "AllowList", "BlockList")]
+        [ValidateSet("None", "AllowList", "BlockList")]
         ${SharingDomainRestrictionMode},
 
         [Parameter()]
@@ -1045,17 +1045,17 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateSet("None", "Direct", "Internal", "AnonymousAccess")]
+        [ValidateSet("None", "Direct", "Internal", "AnonymousAccess")]
         ${DefaultSharingLinkType},
 
         [Parameter()]
         [System.String]
-        [validateSet("On", "Off", "Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         ${ODBMembersCanShare},
 
         [Parameter()]
         [System.String]
-        [validateSet("On", "Off", "Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         ${ODBAccessRequests},
 
         [Parameter()]
@@ -1068,12 +1068,12 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateSet("View", "Edit")]
+        [ValidateSet("View", "Edit")]
         ${FileAnonymousLinkType},
 
         [Parameter()]
         [System.String]
-        [validateSet("View", "Edit")]
+        [ValidateSet("View", "Edit")]
         ${FolderAnonymousLinkType},
 
         [Parameter()]
@@ -1094,7 +1094,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateSet("Allowed","Disallowed")]
+        [ValidateSet("Allowed","Disallowed")]
         ${SpecialCharactersStateInFileFolderNames},
         
         [Parameter()]
@@ -1123,7 +1123,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [validateSet("View", "Edit")]
+        [ValidateSet("View", "Edit")]
         ${DefaultLinkPermission},
 
         [Parameter()]
