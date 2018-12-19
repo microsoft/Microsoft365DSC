@@ -284,7 +284,7 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $OrgNewsSiteUrl,
-        
+
         [Parameter()]
         [System.boolean]
         $EnableMinimumVersionRequirement,
@@ -745,7 +745,7 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $OrgNewsSiteUrl,
-        
+
         [Parameter()]
         [System.boolean]
         $EnableMinimumVersionRequirement,
@@ -1173,7 +1173,7 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $OrgNewsSiteUrl,
-        
+
         [Parameter()]
         [System.boolean]
         $EnableMinimumVersionRequirement,
