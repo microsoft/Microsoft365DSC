@@ -222,9 +222,9 @@ function Get-TargetResource
         [System.boolean]
         $SocialBarOnSitePagesDisabled,
 
-        [Parameter()]
-        [System.Uint32]
-        $OrphanedPersonalSitesRetentionPeriod,
+        #[Parameter()]
+        #[System.Uint32]
+        #$OrphanedPersonalSitesRetentionPeriod,
 
         [Parameter()]
         [System.boolean]
@@ -352,7 +352,7 @@ function Get-TargetResource
         CommentsOnSitePagesDisabled                   = $null
         CommentsOnFilesDisabled                       = $null
         SocialBarOnSitePagesDisabled                  = $null
-        OrphanedPersonalSitesRetentionPeriod          = $null
+        #OrphanedPersonalSitesRetentionPeriod          = $null
         PermissiveBrowserFileHandlingOverride         = $null
         DisallowInfectedFileDownload                  = $null
         DefaultLinkPermission                         = $null
@@ -430,7 +430,7 @@ function Get-TargetResource
             CommentsOnSitePagesDisabled                   = $spoTenant.CommentsOnSitePagesDisabled
             CommentsOnFilesDisabled                       = $spoTenant.CommentsOnFilesDisabled
             SocialBarOnSitePagesDisabled                  = $spoTenant.SocialBarOnSitePagesDisabled
-            OrphanedPersonalSitesRetentionPeriod          = $spoTenant.OrphanedPersonalSitesRetentionPeriod
+            #OrphanedPersonalSitesRetentionPeriod          = $spoTenant.OrphanedPersonalSitesRetentionPeriod
             PermissiveBrowserFileHandlingOverride         = $spoTenant.PermissiveBrowserFileHandlingOverride
             DisallowInfectedFileDownload                  = $spoTenant.DisallowInfectedFileDownload
             DefaultLinkPermission                         = $spoTenant.DefaultLinkPermission
@@ -683,9 +683,9 @@ function Set-TargetResource
         [System.boolean]
         $SocialBarOnSitePagesDisabled,
 
-        [Parameter()]
-        [System.Uint32]
-        $OrphanedPersonalSitesRetentionPeriod,
+        #[Parameter()]
+        #[System.Uint32]
+        #$OrphanedPersonalSitesRetentionPeriod,
 
         [Parameter()]
         [System.boolean]
@@ -1111,9 +1111,9 @@ function Test-TargetResource
         [System.boolean]
         $SocialBarOnSitePagesDisabled,
 
-        [Parameter()]
-        [System.Uint32]
-        $OrphanedPersonalSitesRetentionPeriod,
+        #[Parameter()]
+        #[System.Uint32]
+        #$OrphanedPersonalSitesRetentionPeriod,
 
         [Parameter()]
         [System.boolean]
@@ -1243,7 +1243,7 @@ function Test-TargetResource
             "CommentsOnSitePagesDisabled", `
             "CommentsOnFilesDisabled", `
             "SocialBarOnSitePagesDisabled", `
-            "OrphanedPersonalSitesRetentionPeriod", `
+            #"OrphanedPersonalSitesRetentionPeriod", `
             "PermissiveBrowserFileHandlingOverride", `
             "DisallowInfectedFileDownload", `
             "DefaultLinkPermission", `

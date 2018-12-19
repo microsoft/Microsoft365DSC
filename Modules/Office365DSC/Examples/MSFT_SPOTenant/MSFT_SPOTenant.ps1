@@ -58,7 +58,7 @@ Configuration MSFT_SPOTenant
             SpecialCharactersStateInFileFolderNames       = "Allowed" #According to the documentation NoPreference should be an option but when running the set-spotenant cmdlet it will tell you that it is just Allowed or Disallowed.
             CommentsOnSitePagesDisabled                   = $false
             SocialBarOnSitePagesDisabled                  = $false
-            OrphanedPersonalSitesRetentionPeriod          = 30
+            #OrphanedPersonalSitesRetentionPeriod          = 30
             PermissiveBrowserFileHandlingOverride         = $false # This flag is deprecated and cannot be configured for that it will be removed if configured.
             DisallowInfectedFileDownload                  = $false
             #DefaultLinkPermission ="View" #Not documented under https://docs.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenant?view=sharepoint-ps initial value is None, once changed it cannot be re-set to None again
