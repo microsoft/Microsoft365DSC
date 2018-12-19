@@ -3,7 +3,6 @@ function Get-TargetResource
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param (
-
         [Parameter(Mandatory = $true)]
         [ValidateSet("Present", "Absent")]
         [System.String]
@@ -459,12 +458,12 @@ function Get-TargetResource
         }
         return $nullReturn
     }
+
 }
 function Set-TargetResource
 {
     [CmdletBinding()]
     param (
-
         [Parameter(Mandatory = $true)]
         [ValidateSet("Present", "Absent")]
         [System.String]
@@ -668,7 +667,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Allowed","Disallowed")]  
+        [ValidateSet("Allowed", "Disallowed")]  
         $SpecialCharactersStateInFileFolderNames,
 
         [Parameter()]
@@ -892,7 +891,6 @@ function Test-TargetResource
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param (
-
         [Parameter(Mandatory = $true)]
         [ValidateSet("Present", "Absent")]
         [System.String]
