@@ -22,7 +22,7 @@ class MSFT_SPOTenant : OMI_BaseResource
     [Write, Description("Specifies the upper bound on the compatibility level for new sites")] uint32 MaxCompatibilityLevel;
     [Write, Description("Specifies the lower bound on the compatibility level for new sites")] uint32 MinCompatibilityLevel;
     [Write, Description("Specifies the URL of the redirected site for those site collections which have the locked state NoAccess")] string NoAccessRedirectUrl;
-    [Write, Description("Setting to enable/disable notifications in OneDrive for business")] boolean NotificationsInOneDriveForBusinessEnabled;
+    //[Write, Description("Setting to enable/disable notifications in OneDrive for business")] boolean NotificationsInOneDriveForBusinessEnabled;
     [Write, Description("Setting to enable/disable notifications in SharePoint")] boolean NotificationsInSharePointEnabled;
     //[Write, Description("When this parameter is set to $true and when an external user accepts an invitation to a resource in a user’s OneDrive for Business, the OneDrive for Business owner is notified by e-mail.")] boolean NotifyOwnersWhenInvitationsAccepted;
     [Write, Description("When this parameter is set to $true and another user re-shares a document from a user’s OneDrive for Business, the OneDrive for Business owner is notified by e-mail.")] boolean NotifyOwnersWhenItemsReshared;
