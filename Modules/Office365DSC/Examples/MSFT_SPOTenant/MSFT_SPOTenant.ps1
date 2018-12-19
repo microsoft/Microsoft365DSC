@@ -38,7 +38,7 @@ Configuration MSFT_SPOTenant
             SharingAllowedDomainList                      = "contoso.com"
             SharingDomainRestrictionMode                  = "None" #depending on RequireAcceptinAccountMatchInvitedAccount
             SharingBlockedDomainList                      = "contoso.com"
-            OneDriveStorageQuota                          = 1048576
+            #OneDriveStorageQuota                          = 1048576
             OneDriveForGuestsEnabled                      = $false
             #IPAddressAllowList = "" #make sure to add your own IP address as well as a valid range in CIDR notation #setting the IPAddressAllowList was not possible while writing this resoruce
             #IPAddressEnforcement = $false

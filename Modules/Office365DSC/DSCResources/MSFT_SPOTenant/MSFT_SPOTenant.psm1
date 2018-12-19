@@ -132,9 +132,9 @@ function Get-TargetResource
         [ValidateSet("None", "AllowList", "BlockList")]
         $SharingDomainRestrictionMode,
 
-        [Parameter()]
-        [System.Uint64]
-        $OneDriveStorageQuota,
+        #[Parameter()]
+        #[System.Uint64]
+        #$OneDriveStorageQuota,
 
         [Parameter()]
         [System.boolean]
@@ -330,7 +330,7 @@ function Get-TargetResource
         SharingAllowedDomainList                      = $null
         SharingBlockedDomainList                      = $null
         SharingDomainRestrictionMode                  = $null
-        OneDriveStorageQuota                          = $null
+        #OneDriveStorageQuota                          = $null
         OneDriveForGuestsEnabled                      = $null
         IPAddressEnforcement                          = $null
         IPAddressAllowList                            = $null
@@ -408,7 +408,7 @@ function Get-TargetResource
             SharingAllowedDomainList                      = $spoTenant.SharingAllowedDomainList
             SharingBlockedDomainList                      = $spoTenant.SharingBlockedDomainList
             SharingDomainRestrictionMode                  = $spoTenant.SharingDomainRestrictionMode
-            OneDriveStorageQuota                          = $spoTenant.OneDriveStorageQuota
+            #OneDriveStorageQuota                          = $spoTenant.OneDriveStorageQuota
             OneDriveForGuestsEnabled                      = $spoTenant.OneDriveForGuestsEnabled
             IPAddressEnforcement                          = $spoTenant.IPAddressEnforcement
             IPAddressAllowList                            = $spoTenant.IPAddressAllowList
@@ -593,9 +593,9 @@ function Set-TargetResource
         [ValidateSet("None", "AllowList", "BlockList")]
         $SharingDomainRestrictionMode,
 
-        [Parameter()]
-        [System.Uint64]
-        $OneDriveStorageQuota,
+        #[Parameter()]
+        #[System.Uint64]
+        #$OneDriveStorageQuota,
 
         [Parameter()]
         [System.boolean]
@@ -834,11 +834,11 @@ function Set-TargetResource
             Write-Verbose -Message "[INFO] SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured"
             $CurrentParameters.Remove("SharingAllowedDomainList")
         }
-        if($OneDriveStorageQuota -lt 1024)
-        {
-            Write-Verbose -Message "[INFO] OneDriveStorageQuota minimum value should be set to 1024MB, setting it to that value"
-            $OneDriveStorageQuota = 1024
-        }
+        #if($OneDriveStorageQuota -lt 1024)
+        #{
+        #    Write-Verbose -Message "[INFO] OneDriveStorageQuota minimum value should be set to 1024MB, setting it to that value"
+        #    $OneDriveStorageQuota = 1024
+        #}
         if($IPAddressEnforcement -eq $true)
         {
             if($null -like $IPAddressAllowList)
@@ -1221,7 +1221,7 @@ function Test-TargetResource
             "SharingAllowedDomainList", `
             "SharingBlockedDomainList", `
             "SharingDomainRestrictionMode", `
-            "OneDriveStorageQuota", `
+            #"OneDriveStorageQuota", `
             "OneDriveForGuestsEnabled", `
             "IPAddressEnforcement", `
             "IPAddressAllowList", `
