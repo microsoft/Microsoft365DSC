@@ -16,7 +16,7 @@ function Get-TargetResource
         [Parameter()]
         [System.Uint32]
         $MinCompatibilityLevel,
-        
+
         [Parameter()]
         [System.Uint32]
         $MaxCompatibilityLevel,
@@ -477,7 +477,7 @@ function Set-TargetResource
         [Parameter()]
         [System.Uint32]
         $MinCompatibilityLevel,
-        
+
         [Parameter()]
         [System.Uint32]
         $MaxCompatibilityLevel,
@@ -905,7 +905,7 @@ function Test-TargetResource
         [Parameter()]
         [System.Uint32]
         $MinCompatibilityLevel,
-        
+
         [Parameter()]
         [System.Uint32]
         $MaxCompatibilityLevel,
