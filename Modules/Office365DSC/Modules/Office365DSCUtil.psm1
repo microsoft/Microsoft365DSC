@@ -461,6 +461,49 @@ function Export-O365Configuration
     }
     #endregion
 
+    #region "ODSettings"
+    $ODSettingsModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_ODSettings\MSFT_ODSettings.psm1" `
+                                    -Resolve
+
+    Import-Module $ODSettingsModulePath
+
+    # Obtain central administration url from a User Principal Name
+    $centralAdminUrl = $null
+    if ($users.Count -gt 0)
+    {
+        $tenantParts = $users[0].UserPrincipalName.Split('@')
+        if ($tenantParts.Length -gt 0)
+        {
+            $tenantName = $tenantParts[1].Split(".")[0]
+            $centralAdminUrl = "https://" + $tenantName + "-admin.sharepoint.com"
+        }
+    }
+
+    if ($centralAdminUrl)
+    {
+        $DSCContent += Export-TargetResource -CentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "SPOSite"
+    $SPOSiteModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_SPOSite\MSFT_SPOSite.psm1" `
+                                    -Resolve
+
+    Import-Module $SPOSiteModulePath
+
+    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    $sites = Get-SPOSite
+
+    foreach ($site in $sites)
+    {
+        $DSCContent += Export-TargetResource -Url $site.Url `
+                                             -CentralAdminUrl $centralAdminUrl `
+                                             -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     # Close the Node and Configuration declarations
     $DSCContent += "    }`r`n"
     $DSCContent += "}`r`n"

@@ -8,11 +8,11 @@ function Get-TargetResource
         [System.String]
         $Url,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Owner,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.UInt32]
         $StorageQuota,
 
@@ -55,7 +55,7 @@ function Get-TargetResource
     )
 
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-    
+
     $nullReturn = @{
         Url = $null
         Owner = $null
@@ -107,11 +107,11 @@ function Set-TargetResource
         [System.String]
         $Url,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Owner,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.UInt32]
         $StorageQuota,
 
@@ -186,11 +186,11 @@ function Test-TargetResource
         [System.String]
         $Url,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Owner,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.UInt32]
         $StorageQuota,
 
@@ -250,14 +250,6 @@ function Export-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Url,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Owner,
-
-        [Parameter(Mandatory = $true)]
-        [System.UInt32]
-        $StorageQuota,
 
         [Parameter(Mandatory = $true)]
         [System.String]

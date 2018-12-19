@@ -4,7 +4,6 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
@@ -73,10 +72,10 @@ function Get-TargetResource
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     
     $nullReturn = @{
+        CentralAdminUrl                           = $CentralAdminUrl
         BlockMacSync                              = $null
         DisableReportProblemDialog                = $null
         DomainGuids                               = $null
-        Enabled                                   = $null
         ExcludedFileExtensions                    = $null
         GrooveBlockOption                         = $null
         OneDriveStorageQuota                      = $null
@@ -129,10 +128,10 @@ function Get-TargetResource
         
         Write-Verbose "Groove block values $($GrooveOption)"
         return @{
+            CentralAdminUrl                           = $CentralAdminUrl
             BlockMacSync                              = $tenantRestrictions.BlockMacSync
             DisableReportProblemDialog                = $tenantRestrictions.DisableReportProblemDialog
             DomainGuids                               = $tenantRestrictions.AllowedDomainList
-            Enabled                                   = $tenantRestrictions.TenantRestrictionEnabled
             ExcludedFileExtensions                    = $tenantRestrictions.ExcludedFileExtensions
             GrooveBlockOption                         = $GrooveOption
             OneDriveStorageQuota                      = $tenant.OneDriveStorageQuota
