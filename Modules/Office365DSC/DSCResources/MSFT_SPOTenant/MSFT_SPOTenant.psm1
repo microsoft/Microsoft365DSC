@@ -772,86 +772,86 @@ function Set-TargetResource
         $CurrentParameters.Remove("Tenant")
         if($DisableContentTypeSyncSiteTemplatesList -eq "True" -and $ContentTypeSyncSiteTemplatesList -eq "MySites")
         {
-            Write-Verbose -Message "[INFO] Disabling ContentTypeSyncSiteTemplatesList (which is currently set to:$ContentTypeSyncSiteTemplatesList) using the ExcludeSiteTemplate switch"
+            Write-Verbose -Message "Disabling ContentTypeSyncSiteTemplatesList (which is currently set to:$ContentTypeSyncSiteTemplatesList) using the ExcludeSiteTemplate switch"
             Set-SPOTenant -ContentTypeSyncSiteTemplatesList "MySites" -ExcludeSiteTemplate -Verbose
             $CurrentParameters.Remove("ContentTypeSyncSiteTemplatesList")
         }
         $CurrentParameters.Remove("DisableContentTypeSyncSiteTemplatesList")
         
-        Write-Verbose -Message "[INFO] Setting SignInAccelerationDomain and EnableGuestSignInAcceleration"
+        Write-Verbose -Message "Setting SignInAccelerationDomain and EnableGuestSignInAcceleration"
         if(($null -like $SignInAccelerationDomain) -and ($EnableGuestSignInAcceleration -eq $false))
         {
-            write-verbose -message "[INFO] It is not possible to set EnableGuestSignInAccerlation when the SignInAccerlationDomain is set to be empty"
+            write-verbose -message "It is not possible to set EnableGuestSignInAccerlation when the SignInAccerlationDomain is set to be empty"
             Set-SPOTenant -SignInAccelerationDomain "" 
             $CurrentParameters.remove("SignInAccelerationDomain")
             $CurrentParameters.remove("EnableGuestSignInAcceleration")
         }
         elseif(($null -like $SignInAccelerationDomain) -and ($EnableGuestSignInAcceleration -eq $true))
         {
-            write-verbose -message "[INFO] It is not possible to set EnableGuestSignInAccerlation when the SignInAccerlationDomain is set to be empty"
+            write-verbose -message "It is not possible to set EnableGuestSignInAccerlation when the SignInAccerlationDomain is set to be empty"
             Set-SPOTenant -SignInAccelerationDomain "" 
             $CurrentParameters.remove("SignInAccelerationDomain")
             $CurrentParameters.remove("EnableGuestSignInAcceleration")
         }
         elseif($null -notlike $SignInAccelerationDomain)
         {
-            Write-Verbose -Message "[INFO] Configuring SignInAccelerationDomain since EnableGuestSignInAcceleration is not null "
+            Write-Verbose -Message "Configuring SignInAccelerationDomain since EnableGuestSignInAcceleration is not null "
         }
 
         if(($null -notlike $PublicCdnAllowedFileTypes) -and ($PublicCdnEnabled -eq $false))
         {
-            Write-Verbose -Message "[INFO] To configure PublicCdnAllowedFileTypes you have to have the PublicCDNEnabled"
+            Write-Verbose -Message "To configure PublicCdnAllowedFileTypes you have to have the PublicCDNEnabled"
             $CurrentParameters.Remove("PublicCdnAllowedFileTypes")
         }
 
         if($SharingCapability -ne "ExternalUserAndGuestSharing")
         {
-            Write-Verbose -Message "[INFO] The sharing capabilities for the tenant are not configured to be ExternalUserAndGuestSharing for that the RequireAnonymousLinksExpireInDays property cannot be configured"
+            Write-Verbose -Message "The sharing capabilities for the tenant are not configured to be ExternalUserAndGuestSharing for that the RequireAnonymousLinksExpireInDays property cannot be configured"
             $CurrentParameters.Remove("RequireAnonymousLinksExpireInDays")
         }
         if($RequireAcceptingAccountMatchInvitedAccount -eq $false)
         {
-            Write-Verbose -Message "[INFO] RequireAcceptingAccountMatchInvitedAccount is set to be false. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
+            Write-Verbose -Message "RequireAcceptingAccountMatchInvitedAccount is set to be false. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
             $CurrentParameters.Remove("SharingAllowedDomainList")
             $CurrentParameters.Remove("SharingBlockedDomainList")
         }
         if($SharingDomainRestrictionMode -eq "None")
         {
-            Write-Verbose -Message "[INFO] SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
+            Write-Verbose -Message "SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
             $CurrentParameters.Remove("SharingAllowedDomainList")
             $CurrentParameters.Remove("SharingBlockedDomainList")
         }
         elseif ($SharingDomainRestrictionMode -eq "AllowList")
         {
-            Write-Verbose -Message "[INFO] SharingDomainRestrictionMode is set to AllowList. For that SharingBlockedDomainList cannot be configured"
+            Write-Verbose -Message "SharingDomainRestrictionMode is set to AllowList. For that SharingBlockedDomainList cannot be configured"
             $CurrentParameters.Remove("SharingBlockedDomainList")
         }
         elseif($SharingDomainRestrictionMode -eq "BlockList")
         {
-            Write-Verbose -Message "[INFO] SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured"
+            Write-Verbose -Message "SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured"
             $CurrentParameters.Remove("SharingAllowedDomainList")
         }
         #if($OneDriveStorageQuota -lt 1024)
         #{
-        #    Write-Verbose -Message "[INFO] OneDriveStorageQuota minimum value should be set to 1024MB, setting it to that value"
+        #    Write-Verbose -Message "OneDriveStorageQuota minimum value should be set to 1024MB, setting it to that value"
         #    $OneDriveStorageQuota = 1024
         #}
         if($IPAddressEnforcement -eq $true)
         {
             if($null -like $IPAddressAllowList)
             {
-                Write-Verbose -Message "[INFO] IPAddressAllowList is empty. Please configure it, when you would like to set the IPAddressEnforcement property"
+                Write-Verbose -Message "IPAddressAllowList is empty. Please configure it, when you would like to set the IPAddressEnforcement property"
                 $CurrentParameters.Remove("IPAddressEnforcement")
             }
             else
             {
-                Write-Verbose -Message "[INFO] Making sure IPADdressEnforcement is set to true before passing in the list of the allowed IP addresses"
+                Write-Verbose -Message "Making sure IPADdressEnforcement is set to true before passing in the list of the allowed IP addresses"
                 set-spotenant -IPAddressEnforcement $IPAddressEnforcement -IPAddressAllowList $IPAddressAllowList #setting the ipaddress enforcement parameter and the list of allowed IP addresses
             }
         }
         if($null -notlike $PermissiveBrowserFileHandlingOverride)
         {
-            Write-Verbose -Message "[INFO] The permissive browser handling is deprecated and cannot be configured. Removing this parameter from the configuration"
+            Write-Verbose -Message "The permissive browser handling is deprecated and cannot be configured. Removing this parameter from the configuration"
             $CurrentParameters.Remove("PermissiveBrowserFileHandlingOverride")
         }
         if($null -notlike $DisabledWebPartIds)
@@ -863,13 +863,13 @@ function Set-TargetResource
             {
                 if($DisabledWebPartId -eq "00000000-0000-0000-0000-000000000000")
                 {
-                    Write-Verbose -Message "[INFO] Re-setting the DisabledWebpartIDs"
+                    Write-Verbose -Message "Re-setting the DisabledWebpartIDs"
                     set-spotenant -DisabledWebPartIds @()
                     $CurrentParameters.Remove("DisabledWebPartIds")
                 }
                 else
                 {
-                    write-Verbose -Message "[INFO] Setting the DisabledWebpartIDs property for tenant for webpart: $DisabledWebPartId"
+                    write-Verbose -Message "Setting the DisabledWebpartIDs property for tenant for webpart: $DisabledWebPartId"
                     $DisabledWebPartIdsGUID += [GUID]$DisabledWebPartId
                 }
             }
@@ -879,7 +879,7 @@ function Set-TargetResource
         }
         foreach($value in $CurrentParameters.GetEnumerator())
         {
-            write-verbose -Message "[INFO] Configuring Tenant with: $value"
+            write-verbose -Message "Configuring Tenant with: $value"
         }
         $tenant = Set-SPOTenant @CurrentParameters
     }
