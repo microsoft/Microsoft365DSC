@@ -395,6 +395,7 @@ function Export-O365Configuration
     Import-Module $O365GroupModulePath
 
     # Security Groups
+    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $securityGroups = Get-MSOLGroup | Where-Object {$_.GroupType -eq "Security"}
 
     foreach ($securityGroup in $securityGroups)
@@ -436,6 +437,26 @@ function Export-O365Configuration
             $DSCContent += Export-TargetResource -DisplayName $groupName `
                                                  -GroupType $groupType `
                                                  -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
+    #region "O365User"
+    $O365UserModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_O365USer\MSFT_O365USer.psm1" `
+                                    -Resolve
+
+    Import-Module $O365UserModulePath
+    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+
+    $users = Get-MSOLUser
+
+    foreach ($user in $users)
+    {
+        $userUPN = $user.UserPrincipalName
+        if ($userUPN)
+        {
+            $DSCContent += Export-TargetResource -UserPrincipalName $userUPN -GlobalAdminAccount $GlobalAdminAccount
         }
     }
     #endregion

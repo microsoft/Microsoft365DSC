@@ -4,7 +4,7 @@ class MSFT_O365Group : OMI_BaseResource
     [Key, Description("The display name for the group")] string DisplayName;
     [Required, Description("The group's type"), ValueMap{"Office365", "Security", "DistributionList", "MailEnabledSecurity"}, Values{"Office365", "Security", "DistributionList", "MailEnabledSecurity"}] string GroupType;
     [Write, Description("The group's description")] string Description;
-    [Write, Description("The group's owner user principal")] string ManagedBy;
+    [Write, Description("The group's owner user principal")] string ManagedBy[];
     [Write, Description("Members of the group")] string Members[];
     [Write, Description("For MailEnabledSecurity Group Types ONLY. The group's alias")] string Alias;
     [Write, Description("For MailEnabledSecurity Group Types ONLY. The group's email address")] string PrimarySMTPAddress;

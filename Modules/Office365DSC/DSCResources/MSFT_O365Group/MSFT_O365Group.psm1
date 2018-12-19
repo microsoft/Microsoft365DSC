@@ -18,7 +18,7 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ManagedBy,
 
         [Parameter()]
@@ -167,7 +167,7 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ManagedBy,
 
         [Parameter()]
@@ -324,7 +324,7 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ManagedBy,
 
         [Parameter()]
