@@ -209,7 +209,7 @@ function Get-TargetResource
         [System.String]
         [ValidateSet("Allowed","Disallowed")]
         $SpecialCharactersStateInFileFolderNames,
-        
+
         [Parameter()]
         [System.boolean]
         $OwnerAnonymousNotification,
@@ -670,7 +670,7 @@ function Set-TargetResource
         [System.String]
         [ValidateSet("Allowed","Disallowed")]  
         $SpecialCharactersStateInFileFolderNames,
-        
+
         [Parameter()]
         [System.boolean]
         $OwnerAnonymousNotification,
@@ -1098,7 +1098,7 @@ function Test-TargetResource
         [System.String]
         [ValidateSet("Allowed","Disallowed")]
         $SpecialCharactersStateInFileFolderNames,
-        
+
         [Parameter()]
         [System.boolean]
         $OwnerAnonymousNotification,
