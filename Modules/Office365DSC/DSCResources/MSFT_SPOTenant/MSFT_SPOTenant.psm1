@@ -36,7 +36,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $disableContentTypeSyncSiteTemplatesList,
+        $DisableContentTypeSyncSiteTemplatesList,
         
         [Parameter()]
         [System.String]
@@ -497,7 +497,7 @@ function Set-TargetResource
        
         [Parameter()]
         [System.Boolean]
-        $disableContentTypeSyncSiteTemplatesList,
+        $DisableContentTypeSyncSiteTemplatesList,
         
         [Parameter()]
         [System.String]
@@ -773,13 +773,13 @@ function Set-TargetResource
         Write-Verbose -Message "%%% Setting Tenant: $Tenant %%%"
         Write-Verbose -Message "------------------------"
         $CurrentParameters.Remove("Tenant")
-        if($disableContentTypeSyncSiteTemplatesList -eq "True" -and $ContentTypeSyncSiteTemplatesList -eq "MySites")
+        if($DisableContentTypeSyncSiteTemplatesList -eq "True" -and $ContentTypeSyncSiteTemplatesList -eq "MySites")
         {
             Write-Verbose -Message "[INFO] Disabling ContentTypeSyncSiteTemplatesList (which is currently set to:$ContentTypeSyncSiteTemplatesList) using the ExcludeSiteTemplate switch"
             Set-SPOTenant -ContentTypeSyncSiteTemplatesList "MySites" -ExcludeSiteTemplate -Verbose
             $CurrentParameters.Remove("ContentTypeSyncSiteTemplatesList")
         }
-        $CurrentParameters.Remove("disableContentTypeSyncSiteTemplatesList")
+        $CurrentParameters.Remove("DisableContentTypeSyncSiteTemplatesList")
         
         Write-Verbose -Message "[INFO] Setting SignInAccelerationDomain and EnableGuestSignInAcceleration"
         if(($null -like $SignInAccelerationDomain) -and ($EnableGuestSignInAcceleration -eq $false))
@@ -925,7 +925,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $disableContentTypeSyncSiteTemplatesList,
+        $DisableContentTypeSyncSiteTemplatesList,
         
         [Parameter()]
         [System.String]
@@ -1262,7 +1262,7 @@ function Test-TargetResource
             "EnableMinimumVersionRequirement", `
             "MarkNewFilesSensitiveByDefault", `
             "Tenant", `
-            "disableContentTypeSyncSiteTemplatesList"
+            "DisableContentTypeSyncSiteTemplatesList"
     )
 }
 Export-ModuleMember -Function *-TargetResource
