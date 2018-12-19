@@ -37,7 +37,7 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $DisableContentTypeSyncSiteTemplatesList,
-        
+
         [Parameter()]
         [System.String]
         [ValidateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
@@ -498,7 +498,7 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $DisableContentTypeSyncSiteTemplatesList,
-        
+
         [Parameter()]
         [System.String]
         [ValidateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
@@ -926,7 +926,7 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $DisableContentTypeSyncSiteTemplatesList,
-        
+
         [Parameter()]
         [System.String]
         [ValidateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
