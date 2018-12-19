@@ -777,7 +777,7 @@ function Set-TargetResource
             $CurrentParameters.Remove("ContentTypeSyncSiteTemplatesList")
         }
         $CurrentParameters.Remove("DisableContentTypeSyncSiteTemplatesList")
-        
+
         Write-Verbose -Message "Setting SignInAccelerationDomain and EnableGuestSignInAcceleration"
         if(($null -like $SignInAccelerationDomain) -and ($EnableGuestSignInAcceleration -eq $false))
         {
