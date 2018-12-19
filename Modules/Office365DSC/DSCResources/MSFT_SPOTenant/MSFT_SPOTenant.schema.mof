@@ -29,7 +29,7 @@ class MSFT_SPOTenant : OMI_BaseResource
     [Write,ValueMap{"On","Off","Unspecified"},Values{"On","Off","Unspecified"}, Description("Lets administrators set policy on access requests and requests to share in OneDrive for Business.")] string ODBAccessRequests;
     [Write,ValueMap{"On","Off","Unspecified"},Values{"On","Off","Unspecified"}, Description("Lets administrators set policy on re-sharing behavior in OneDrive for Business.")] string ODBMembersCanShare;
     [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] boolean OfficeClientADALDisabled;
-    [Write, Description("Lets OneDrive for Business creation for administrator managed guest users. Administrator managed Guest users use credentials in the resource tenant to access the resources.")] boolean OneDriveForGuestsEnabled;
+    //[Write, Description("Lets OneDrive for Business creation for administrator managed guest users. Administrator managed Guest users use credentials in the resource tenant to access the resources.")] boolean OneDriveForGuestsEnabled;
     //[Write, Description("Sets a default OneDrive for Business storage quota for the tenant. It will be used for new OneDrive for Business sites created.")] uint64 OneDriveStorageQuota;
     [Write, Description("Specifies the number of days after a user's Active Directory account is deleted that their OneDrive for Business content will be deleted. ")] uint32 OrphanedPersonalSitesRetentionPeriod;
     [Write, Description("not documented")] boolean OwnerAnonymousNotification;

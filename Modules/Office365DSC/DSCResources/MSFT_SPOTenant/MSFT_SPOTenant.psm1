@@ -136,9 +136,9 @@ function Get-TargetResource
         #[System.Uint64]
         #$OneDriveStorageQuota,
 
-        [Parameter()]
-        [System.boolean]
-        $OneDriveForGuestsEnabled,
+        #[Parameter()]
+        #[System.boolean]
+        #$OneDriveForGuestsEnabled,
 
         [Parameter()]
         [System.boolean]
@@ -331,7 +331,7 @@ function Get-TargetResource
         SharingBlockedDomainList                      = $null
         SharingDomainRestrictionMode                  = $null
         #OneDriveStorageQuota                          = $null
-        OneDriveForGuestsEnabled                      = $null
+        #OneDriveForGuestsEnabled                      = $null
         IPAddressEnforcement                          = $null
         IPAddressAllowList                            = $null
         IPAddressWACTokenLifetime                     = $null
@@ -409,7 +409,7 @@ function Get-TargetResource
             SharingBlockedDomainList                      = $spoTenant.SharingBlockedDomainList
             SharingDomainRestrictionMode                  = $spoTenant.SharingDomainRestrictionMode
             #OneDriveStorageQuota                          = $spoTenant.OneDriveStorageQuota
-            OneDriveForGuestsEnabled                      = $spoTenant.OneDriveForGuestsEnabled
+            #OneDriveForGuestsEnabled                      = $spoTenant.OneDriveForGuestsEnabled
             IPAddressEnforcement                          = $spoTenant.IPAddressEnforcement
             IPAddressAllowList                            = $spoTenant.IPAddressAllowList
             IPAddressWACTokenLifetime                     = $spoTenant.IPAddressWACTokenLifetime
@@ -597,9 +597,9 @@ function Set-TargetResource
         #[System.Uint64]
         #$OneDriveStorageQuota,
 
-        [Parameter()]
-        [System.boolean]
-        $OneDriveForGuestsEnabled,
+        #[Parameter()]
+        #[System.boolean]
+        #$OneDriveForGuestsEnabled,
 
         [Parameter()]
         [System.boolean]
@@ -1025,9 +1025,9 @@ function Test-TargetResource
         [System.Uint64]
         $OneDriveStorageQuota,
 
-        [Parameter()]
-        [System.boolean]
-        $OneDriveForGuestsEnabled,
+        #[Parameter()]
+        #[System.boolean]
+        #$OneDriveForGuestsEnabled,
 
         [Parameter()]
         [System.boolean]
@@ -1222,7 +1222,7 @@ function Test-TargetResource
             "SharingBlockedDomainList", `
             "SharingDomainRestrictionMode", `
             #"OneDriveStorageQuota", `
-            "OneDriveForGuestsEnabled", `
+            #"OneDriveForGuestsEnabled", `
             "IPAddressEnforcement", `
             "IPAddressAllowList", `
             "IPAddressWACTokenLifetime", `
