@@ -493,7 +493,7 @@ function Set-TargetResource
         [System.String]
         [ValidateSet("MySites")]
         $ContentTypeSyncSiteTemplatesList,
-       
+
         [Parameter()]
         [System.Boolean]
         $DisableContentTypeSyncSiteTemplatesList,
