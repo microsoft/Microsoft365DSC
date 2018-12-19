@@ -88,5 +88,4 @@ $configData = @{
     }
     )
 }
-
 MSFT_SPOTenant -ConfigurationData $configData
