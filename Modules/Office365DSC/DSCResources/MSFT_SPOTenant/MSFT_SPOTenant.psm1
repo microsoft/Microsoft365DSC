@@ -858,7 +858,7 @@ function Set-TargetResource
         {
             $DisabledWebPartIdsGUID = @()
             $DisabledWebParts = $DisabledWebPartIds.split(",")
-            
+
             foreach($DisabledWebPartId in $DisabledWebParts)
             {
                 if($DisabledWebPartId -eq "00000000-0000-0000-0000-000000000000")
