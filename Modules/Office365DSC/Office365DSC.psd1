@@ -73,7 +73,7 @@ NestedModules = @('modules\Office365DSCUtil.psm1')
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = 'Test-Office365DSCParameterState', 'Invoke-ExoCommand', 
                'Get-UsersLicences', 'Test-O365ServiceConnection', 
-               'Test-SPOServiceConnection'
+               'Test-SPOServiceConnection','Test-TeamsServiceConnection'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = 'Test-SPOServiceConnection', 'Test-Office365DSCParameterState', 
@@ -86,7 +86,7 @@ CmdletsToExport = 'Test-SPOServiceConnection', 'Test-Office365DSCParameterState'
 AliasesToExport = @()
 
 # DSC resources to export from this module
-DscResourcesToExport = 'MSFT_O365User', 'MSFT_O365Group', 'MSFT_SPOSite', 'MSFT_EXOSharedMailbox'
+DscResourcesToExport = 'MSFT_O365User', 'MSFT_O365Group', 'MSFT_SPOSite', 'MSFT_EXOSharedMailbox', 'MSFT_ODSettings','MSFT_TeamFunSettings'
 
 # List of all modules packaged with this module
 # ModuleList = @()

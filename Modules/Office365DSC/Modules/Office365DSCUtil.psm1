@@ -1,5 +1,4 @@
-function Test-SPOServiceConnection
-{
+function Test-SPOServiceConnection {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -16,8 +15,7 @@ function Test-SPOServiceConnection
     Connect-SPOService -Url $SPOCentralAdminUrl -Credential $GlobalAdminAccount
 }
 
-function Test-O365ServiceConnection
-{
+function Test-O365ServiceConnection {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -30,9 +28,20 @@ function Test-O365ServiceConnection
     Connect-MSOLService -Credential $GlobalAdminAccount
 }
 
+function Test-TeamsServiceConnection {
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)] 
+        [System.Management.Automation.PSCredential] 
+        $GlobalAdminAccount
+    )    
+    Write-Verbose "Verifying the LCM connection state to Teams"
+    Connect-MicrosoftTeams -Credential $GlobalAdminAccount
+}
 
-function Invoke-ExoCommand
-{
+function Invoke-ExoCommand {
     [CmdletBinding()]
     param
     (
@@ -52,22 +61,21 @@ function Invoke-ExoCommand
     $invokeArgs = @{
         ScriptBlock = [ScriptBlock]::Create($ScriptBlock.ToString())
     }
-    if ($null -ne $Arguments)
-    {
+    if ($null -ne $Arguments) {
         $invokeArgs.Add("ArgumentList", $Arguments)
     }
 
     Write-Verbose "Verifying the LCM connection state to Exchange Online"
     $AssemblyPath = Join-Path -Path $PSScriptRoot `
-                              -ChildPath "..\Dependencies\Microsoft.Exchange.Management.ExoPowershellModule.dll" `
-                              -Resolve
+        -ChildPath "..\Dependencies\Microsoft.Exchange.Management.ExoPowershellModule.dll" `
+        -Resolve
     $AADAssemblyPath = Join-Path -Path $PSScriptRoot `
-                                 -ChildPath "..\Dependencies\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" `
-                                 -Resolve
+        -ChildPath "..\Dependencies\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" `
+        -Resolve
 
     $ScriptPath = Join-Path -Path $PSScriptRoot `
-                            -ChildPath "..\Dependencies\CreateExoPSSession.ps1" `
-                            -Resolve
+        -ChildPath "..\Dependencies\CreateExoPSSession.ps1" `
+        -Resolve
 
     Import-Module $AssemblyPath
     [Reflection.Assembly]::LoadFile($AADAssemblyPath)
@@ -75,21 +83,17 @@ function Invoke-ExoCommand
 
     # Somehow, every now and then, the first connection attempt will get an invalid Shell Id. Calling the function a second
     # time fixes the issue.
-    try
-    {
+    try {
         Connect-ExoPSSession -Credential $GlobalAdminAccount
     }
-    catch
-    {
+    catch {
         # Check to see if we received a payload error, and if so, wait for the requested period of time before proceeding
         # with the next call.
         $stringToFind = "you have exceeded your budget to create runspace. Please wait for "
-        if ($Error)
-        {
+        if ($Error) {
             $position = $Error[0].ErrorDetails.Message.IndexOf($stringToFind)
 
-            if($position -ge 0)
-            {
+            if ($position -ge 0) {
                 $beginning = $position + $stringToFind.Length
                 $nextSpace = $Error[0].ErrorDetails.Message.IndexOf(" ", $beginning)
 
@@ -105,20 +109,19 @@ function Invoke-ExoCommand
     return $result
 }
 
-function Test-Office365DSCParameterState
-{
+function Test-Office365DSCParameterState {
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true, Position=1)]
+        [Parameter(Mandatory = $true, Position = 1)]
         [HashTable]
         $CurrentValues,
 
-        [Parameter(Mandatory = $true, Position=2)]
+        [Parameter(Mandatory = $true, Position = 2)]
         [Object]
         $DesiredValues,
 
-        [Parameter(, Position=3)]
+        [Parameter(, Position = 3)]
         [Array]
         $ValuesToCheck
     )
@@ -126,71 +129,58 @@ function Test-Office365DSCParameterState
     $returnValue = $true
 
     if (($DesiredValues.GetType().Name -ne "HashTable") `
-        -and ($DesiredValues.GetType().Name -ne "CimInstance") `
-        -and ($DesiredValues.GetType().Name -ne "PSBoundParametersDictionary"))
-    {
+            -and ($DesiredValues.GetType().Name -ne "CimInstance") `
+            -and ($DesiredValues.GetType().Name -ne "PSBoundParametersDictionary")) {
         throw ("Property 'DesiredValues' in Test-SPDscParameterState must be either a " + `
-               "Hashtable or CimInstance. Type detected was $($DesiredValues.GetType().Name)")
+                "Hashtable or CimInstance. Type detected was $($DesiredValues.GetType().Name)")
     }
 
-    if (($DesiredValues.GetType().Name -eq "CimInstance") -and ($null -eq $ValuesToCheck))
-    {
+    if (($DesiredValues.GetType().Name -eq "CimInstance") -and ($null -eq $ValuesToCheck)) {
         throw ("If 'DesiredValues' is a CimInstance then property 'ValuesToCheck' must contain " + `
-               "a value")
+                "a value")
     }
 
-    if (($null -eq $ValuesToCheck) -or ($ValuesToCheck.Count -lt 1))
-    {
+    if (($null -eq $ValuesToCheck) -or ($ValuesToCheck.Count -lt 1)) {
         $KeyList = $DesiredValues.Keys
     }
-    else
-    {
+    else {
         $KeyList = $ValuesToCheck
     }
 
     $KeyList | ForEach-Object -Process {
-        if (($_ -ne "Verbose") -and ($_ -ne "InstallAccount"))
-        {
+        if (($_ -ne "Verbose") -and ($_ -ne "InstallAccount")) {
             if (($CurrentValues.ContainsKey($_) -eq $false) `
-            -or ($CurrentValues.$_ -ne $DesiredValues.$_) `
-            -or (($DesiredValues.ContainsKey($_) -eq $true) -and ($null -ne $DesiredValues.$_ -and $DesiredValues.$_.GetType().IsArray)))
-            {
+                    -or ($CurrentValues.$_ -ne $DesiredValues.$_) `
+                    -or (($DesiredValues.ContainsKey($_) -eq $true) -and ($null -ne $DesiredValues.$_ -and $DesiredValues.$_.GetType().IsArray))) {
                 if ($DesiredValues.GetType().Name -eq "HashTable" -or `
-                    $DesiredValues.GetType().Name -eq "PSBoundParametersDictionary")
-                {
+                        $DesiredValues.GetType().Name -eq "PSBoundParametersDictionary") {
                     $CheckDesiredValue = $DesiredValues.ContainsKey($_)
                 }
-                else
-                {
+                else {
                     $CheckDesiredValue = Test-SPDSCObjectHasProperty -Object $DesiredValues -PropertyName $_
                 }
 
-                if ($CheckDesiredValue)
-                {
+                if ($CheckDesiredValue) {
                     $desiredType = $DesiredValues.$_.GetType()
                     $fieldName = $_
-                    if ($desiredType.IsArray -eq $true)
-                    {
+                    if ($desiredType.IsArray -eq $true) {
                         if (($CurrentValues.ContainsKey($fieldName) -eq $false) `
-                        -or ($null -eq $CurrentValues.$fieldName))
-                        {
+                                -or ($null -eq $CurrentValues.$fieldName)) {
                             Write-Verbose -Message ("Expected to find an array value for " + `
-                                                    "property $fieldName in the current " + `
-                                                    "values, but it was either not present or " + `
-                                                    "was null. This has caused the test method " + `
-                                                    "to return false.")
+                                    "property $fieldName in the current " + `
+                                    "values, but it was either not present or " + `
+                                    "was null. This has caused the test method " + `
+                                    "to return false.")
                             $returnValue = $false
                         }
-                        else
-                        {
+                        else {
                             $arrayCompare = Compare-Object -ReferenceObject $CurrentValues.$fieldName `
-                                                           -DifferenceObject $DesiredValues.$fieldName
-                            if ($null -ne $arrayCompare)
-                            {
+                                -DifferenceObject $DesiredValues.$fieldName
+                            if ($null -ne $arrayCompare) {
                                 Write-Verbose -Message ("Found an array for property $fieldName " + `
-                                                        "in the current values, but this array " + `
-                                                        "does not match the desired state. " + `
-                                                        "Details of the changes are below.")
+                                        "in the current values, but this array " + `
+                                        "does not match the desired state. " + `
+                                        "Details of the changes are below.")
                                 $arrayCompare | ForEach-Object -Process {
                                     Write-Verbose -Message "$($_.InputObject) - $($_.SideIndicator)"
                                 }
@@ -198,87 +188,80 @@ function Test-Office365DSCParameterState
                             }
                         }
                     }
-                    else
-                    {
-                        switch ($desiredType.Name)
-                        {
+                    else {
+                        switch ($desiredType.Name) {
                             "String" {
                                 if ([string]::IsNullOrEmpty($CurrentValues.$fieldName) `
-                                -and [string]::IsNullOrEmpty($DesiredValues.$fieldName))
+                                        -and [string]::IsNullOrEmpty($DesiredValues.$fieldName))
                                 {}
-                                else
-                                {
+                                else {
                                     Write-Verbose -Message ("String value for property " + `
-                                                            "$fieldName does not match. " + `
-                                                            "Current state is " + `
-                                                            "'$($CurrentValues.$fieldName)' " + `
-                                                            "and desired state is " + `
-                                                            "'$($DesiredValues.$fieldName)'")
+                                            "$fieldName does not match. " + `
+                                            "Current state is " + `
+                                            "'$($CurrentValues.$fieldName)' " + `
+                                            "and desired state is " + `
+                                            "'$($DesiredValues.$fieldName)'")
                                     $returnValue = $false
                                 }
                             }
                             "Int32" {
                                 if (($DesiredValues.$fieldName -eq 0) `
-                                -and ($null -eq $CurrentValues.$fieldName))
+                                        -and ($null -eq $CurrentValues.$fieldName))
                                 {}
-                                else
-                                {
+                                else {
                                     Write-Verbose -Message ("Int32 value for property " + `
-                                                            "$fieldName does not match. " + `
-                                                            "Current state is " + `
-                                                            "'$($CurrentValues.$fieldName)' " + `
-                                                            "and desired state is " + `
-                                                            "'$($DesiredValues.$fieldName)'")
+                                            "$fieldName does not match. " + `
+                                            "Current state is " + `
+                                            "'$($CurrentValues.$fieldName)' " + `
+                                            "and desired state is " + `
+                                            "'$($DesiredValues.$fieldName)'")
                                     $returnValue = $false
                                 }
                             }
                             "Int16" {
                                 if (($DesiredValues.$fieldName -eq 0) `
-                                -and ($null -eq $CurrentValues.$fieldName))
+                                        -and ($null -eq $CurrentValues.$fieldName))
                                 {}
-                                else
-                                {
+                                else {
                                     Write-Verbose -Message ("Int16 value for property " + `
-                                                            "$fieldName does not match. " + `
-                                                            "Current state is " + `
-                                                            "'$($CurrentValues.$fieldName)' " + `
-                                                            "and desired state is " + `
-                                                            "'$($DesiredValues.$fieldName)'")
+                                            "$fieldName does not match. " + `
+                                            "Current state is " + `
+                                            "'$($CurrentValues.$fieldName)' " + `
+                                            "and desired state is " + `
+                                            "'$($DesiredValues.$fieldName)'")
                                     $returnValue = $false
                                 }
                             }
                             "Boolean" {
-                                if ($CurrentValues.$fieldName -ne $DesiredValues.$fieldName)
-                                {
+                                if ($CurrentValues.$fieldName -ne $DesiredValues.$fieldName) {
                                     Write-Verbose -Message ("Boolean value for property " + `
-                                                            "$fieldName does not match. " + `
-                                                            "Current state is " + `
-                                                            "'$($CurrentValues.$fieldName)' " + `
-                                                            "and desired state is " + `
-                                                            "'$($DesiredValues.$fieldName)'")
+                                            "$fieldName does not match. " + `
+                                            "Current state is " + `
+                                            "'$($CurrentValues.$fieldName)' " + `
+                                            "and desired state is " + `
+                                            "'$($DesiredValues.$fieldName)'")
                                     $returnValue = $false
                                 }
                             }
                             "Single" {
                                 if (($DesiredValues.$fieldName -eq 0) `
-                                -and ($null -eq $CurrentValues.$fieldName))
+                                        -and ($null -eq $CurrentValues.$fieldName))
                                 {}
-                                else
-                                {
+                                else {
                                     Write-Verbose -Message ("Single value for property " + `
-                                                            "$fieldName does not match. " + `
-                                                            "Current state is " + `
-                                                            "'$($CurrentValues.$fieldName)' " + `
-                                                            "and desired state is " + `
-                                                            "'$($DesiredValues.$fieldName)'")
+                                            "$fieldName does not match. " + `
+                                            "Current state is " + `
+                                            "'$($CurrentValues.$fieldName)' " + `
+                                            "and desired state is " + `
+                                            "'$($DesiredValues.$fieldName)'")
                                     $returnValue = $false
                                 }
                             }
                             default {
                                 Write-Verbose -Message ("Unable to compare property $fieldName " + `
-                                                        "as the type ($($desiredType.Name)) is " + `
-                                                        "not handled by the " + `
-                                                        "Test-SPDscParameterState cmdlet")
+                                        "as the type ($($desiredType.Name)) is " + `
+                                        "not handled by the " + `
+                                        "Test-SPDscParameterState cmdlet")
                                 $returnValue = $false
                             }
                         }
@@ -290,8 +273,7 @@ function Test-Office365DSCParameterState
     return $returnValue
 }
 
-function Get-UsersLicences
-{
+function Get-UsersLicences {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param(
@@ -302,8 +284,7 @@ function Get-UsersLicences
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose "Store all users licences information in Global Variable for futur usage."
     #Store information to be able to check later if the users is correctly licences for features.
-    if ($Global:UsersLicences -eq $NULL)
-    {
+    if ($Global:UsersLicences -eq $NULL) {
         $Global:UsersLicences = Get-MsolUser -All  | Select-Object UserPrincipalName, isLicensed, Licenses
     }
     Return $Global:UsersLicences
