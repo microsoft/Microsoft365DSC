@@ -4,9 +4,9 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param (
 
-        [Parameter(Mandatory = $true)] 
-        [validateSet("Present","Absent")]
-        [System.String] 
+        [Parameter(Mandatory = $true)]
+        [validateSet("Present", "Absent")]
+        [System.String]
         $Ensure,
 
         [Parameter(Mandatory = $true)]
@@ -105,6 +105,7 @@ function Get-TargetResource
         [System.boolean]
         ${UserVoiceForFeedbackEnabled},
 
+        [Parameter()]
         [System.boolean]
         ${PublicCdnEnabled},
 
@@ -265,6 +266,7 @@ function Get-TargetResource
         ${SyncPrivacyProfileProperties},
 
         [Parameter()]
+        [System.String]
         ${DisabledWebPartIds},
 
         [Parameter()]
@@ -279,86 +281,160 @@ function Get-TargetResource
         [System.String]
         $CentralAdminUrl,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+   
+    $nullReturn = @{
+        MinCompatibilityLevel                         = $null
+        MaxCompatibilityLevel                         = $null
+        ExternalServicesEnabled                       = $null
+        NoAccessRedirectUrl                           = $null
+        SharingCapability                             = $null
+        DisplayStartASiteOption                       = $null
+        StartASiteFormUrl                             = $null
+        ShowEveryoneClaim                             = $null
+        ShowAllUsersClaim                             = $null
+        ShowEveryoneExceptExternalUsersClaim          = $null
+        SearchResolveExactEmailOrUPN                  = $null
+        OfficeClientADALDisabled                      = $null
+        LegacyAuthProtocolsEnabled                    = $null
+        RequireAcceptingAccountMatchInvitedAccount    = $null
+        ProvisionSharedWithEveryoneFolder             = $null
+        SignInAccelerationDomain                      = $null
+        EnableGuestSignInAcceleration                 = $null
+        UsePersistentCookiesForExplorerView           = $null
+        ContentTypeSyncSiteTemplatesList              = $null
+        ExcludeSiteTemplate                           = $null
+        BccExternalSharingInvitations                 = $null
+        BccExternalSharingInvitationsList             = $null
+        UserVoiceForFeedbackEnabled                   = $null
+        PublicCdnEnabled                              = $null
+        PublicCdnAllowedFileTypes                     = $null
+        RequireAnonymousLinksExpireInDays             = $null
+        SharingAllowedDomainList                      = $null
+        SharingBlockedDomainList                      = $null
+        SharingDomainRestrictionMode                  = $null
+        OneDriveStorageQuota                          = $null
+        OneDriveForGuestsEnabled                      = $null
+        IPAddressEnforcement                          = $null
+        IPAddressAllowList                            = $null
+        IPAddressWACTokenLifetime                     = $null
+        UseFindPeopleInPeoplePicker                   = $null
+        DefaultSharingLinkType                        = $null
+        ODBMembersCanShare                            = $null
+        ODBAccessRequests                             = $null
+        PreventExternalUsersFromResharing             = $null
+        ShowPeoplePickerSuggestionsForGuestUsers      = $null
+        FileAnonymousLinkType                         = $null
+        FolderAnonymousLinkType                       = $null
+        NotifyOwnersWhenItemsReshared                 = $null
+        NotifyOwnersWhenInvitationsAccepted           = $null
+        NotificationsInOneDriveForBusinessEnabled     = $null
+        NotificationsInSharePointEnabled              = $null
+        SpecialCharactersStateInFileFolderNames       = $null
+        OwnerAnonymousNotification                    = $null
+        CommentsOnSitePagesDisabled                   = $null
+        CommentsOnFilesDisabled                       = $null
+        SocialBarOnSitePagesDisabled                  = $null
+        OrphanedPersonalSitesRetentionPeriod          = $null
+        PermissiveBrowserFileHandlingOverride         = $null
+        DisallowInfectedFileDownload                  = $null
+        DefaultLinkPermission                         = $null
+        CustomizedExternalSharingServiceUrl           = $null
+        ConditionalAccessPolicy                       = $null
+        AllowDownloadingNonWebViewableFiles           = $null
+        LimitedAccessFileType                         = $null
+        AllowEditing                                  = $null
+        ApplyAppEnforcedRestrictionsToAdHocRecipients = $null
+        FilePickerExternalImageSearchEnabled          = $null
+        EmailAttestationRequired                      = $null
+        EmailAttestationReAuthDays                    = $null
+        SyncPrivacyProfileProperties                  = $null
+        DisabledWebPartIds                            = $null
+        OrgNewsSiteUrl                                = $null
+        EnableMinimumVersionRequirement               = $null
+        MarkNewFilesSensitiveByDefault                = $null
+        Ensure                                        = "Absent"
+    }
+    
     try
     {
         $spoTenant = Get-SPOTenant
             
         return @{
-            MinCompatibilityLevel = $spoTenant.MinCompatibilityLevel
-            MaxCompatibilityLevel = $spoTenant.MaxCompatibilityLevel
-            ExternalServicesEnabled = $spoTenant.ExternalServicesEnabled
-            NoAccessRedirectUrl = $spoTenant.NoAccessRedirectUrl
-            SharingCapability = $spoTenant.SharingCapability
-            DisplayStartASiteOption = $spoTenant.DisplayStartASiteOption
-            StartASiteFormUrl = $spoTenant.StartASiteFormUrl
-            ShowEveryoneClaim = $spoTenant.ShowEveryoneClaim
-            ShowAllUsersClaim = $spoTenant.ShowAllUsersClaim
-            ShowEveryoneExceptExternalUsersClaim = $spoTenant.ShowEveryoneExceptExternalUsersClaim
-            SearchResolveExactEmailOrUPN = $spoTenant.SearchResolveExactEmailOrUPN
-            OfficeClientADALDisabled = $spoTenant.OfficeClientADALDisabled
-            LegacyAuthProtocolsEnabled = $spoTenant.LegacyAuthProtocolsEnabled
-            RequireAcceptingAccountMatchInvitedAccount = $spoTenant.RequireAcceptingAccountMatchInvitedAccount
-            ProvisionSharedWithEveryoneFolder = $spoTenant.ProvisionSharedWithEveryoneFolder
-            SignInAccelerationDomain = $spoTenant.SignInAccelerationDomain
-            EnableGuestSignInAcceleration = $spoTenant.EnableGuestSignInAcceleration
-            UsePersistentCookiesForExplorerView = $spoTenant.UsePersistentCookiesForExplorerView
-            ContentTypeSyncSiteTemplatesList = $spoTenant.ContentTypeSyncSiteTemplatesList
-            ExcludeSiteTemplate = $spoTenant.ExcludeSiteTemplate
-            BccExternalSharingInvitations = $spoTenant.BccExternalSharingInvitations
-            BccExternalSharingInvitationsList = $spoTenant.BccExternalSharingInvitationsList
-            UserVoiceForFeedbackEnabled = $spoTenant.UserVoiceForFeedbackEnabled
-            PublicCdnEnabled = $spoTenant.PublicCdnEnabled
-            PublicCdnAllowedFileTypes = $spoTenant.PublicCdnAllowedFileTypes
-            RequireAnonymousLinksExpireInDays = $spoTenant.RequireAnonymousLinksExpireInDays
-            SharingAllowedDomainList = $spoTenant.SharingAllowedDomainList
-            SharingBlockedDomainList = $spoTenant.SharingBlockedDomainList
-            SharingDomainRestrictionMode = $spoTenant.SharingDomainRestrictionMode
-            OneDriveStorageQuota = $spoTenant.OneDriveStorageQuota
-            OneDriveForGuestsEnabled = $spoTenant.OneDriveForGuestsEnabled
-            IPAddressEnforcement = $spoTenant.IPAddressEnforcement
-            IPAddressAllowList = $spoTenant.IPAddressAllowList
-            IPAddressWACTokenLifetime = $spoTenant.IPAddressWACTokenLifetime
-            UseFindPeopleInPeoplePicker = $spoTenant.UseFindPeopleInPeoplePicker
-            DefaultSharingLinkType = $spoTenant.DefaultSharingLinkType
-            ODBMembersCanShare = $spoTenant.ODBMembersCanShare
-            ODBAccessRequests = $spoTenant.ODBAccessRequests
-            PreventExternalUsersFromResharing = $spoTenant.PreventExternalUsersFromResharing
-            ShowPeoplePickerSuggestionsForGuestUsers = $spoTenant.ShowPeoplePickerSuggestionsForGuestUsers
-            FileAnonymousLinkType = $spoTenant.FileAnonymousLinkType
-            FolderAnonymousLinkType = $spoTenant.FolderAnonymousLinkType
-            NotifyOwnersWhenItemsReshared = $spoTenant.NotifyOwnersWhenItemsReshared
-            NotifyOwnersWhenInvitationsAccepted = $spoTenant.NotifyOwnersWhenInvitationsAccepted
-            NotificationsInOneDriveForBusinessEnabled = $spoTenant.NotificationsInOneDriveForBusinessEnabled
-            NotificationsInSharePointEnabled = $spoTenant.NotificationsInSharePointEnabled
-            SpecialCharactersStateInFileFolderNames = $spoTenant.SpecialCharactersStateInFileFolderNames
-            OwnerAnonymousNotification = $spoTenant.OwnerAnonymousNotification
-            CommentsOnSitePagesDisabled = $spoTenant.CommentsOnSitePagesDisabled
-            CommentsOnFilesDisabled = $spoTenant.CommentsOnFilesDisabled
-            SocialBarOnSitePagesDisabled = $spoTenant.SocialBarOnSitePagesDisabled
-            OrphanedPersonalSitesRetentionPeriod = $spoTenant.OrphanedPersonalSitesRetentionPeriod
-            PermissiveBrowserFileHandlingOverride = $spoTenant.PermissiveBrowserFileHandlingOverride
-            DisallowInfectedFileDownload = $spoTenant.DisallowInfectedFileDownload
-            DefaultLinkPermission = $spoTenant.DefaultLinkPermission
-            CustomizedExternalSharingServiceUrl = $spoTenant.CustomizedExternalSharingServiceUrl
-            ConditionalAccessPolicy = $spoTenant.ConditionalAccessPolicy
-            AllowDownloadingNonWebViewableFiles = $spoTenant.AllowDownloadingNonWebViewableFiles
-            LimitedAccessFileType = $spoTenant.LimitedAccessFileType
-            AllowEditing = $spoTenant.AllowEditing
+            MinCompatibilityLevel                         = $spoTenant.MinCompatibilityLevel
+            MaxCompatibilityLevel                         = $spoTenant.MaxCompatibilityLevel
+            ExternalServicesEnabled                       = $spoTenant.ExternalServicesEnabled
+            NoAccessRedirectUrl                           = $spoTenant.NoAccessRedirectUrl
+            SharingCapability                             = $spoTenant.SharingCapability
+            DisplayStartASiteOption                       = $spoTenant.DisplayStartASiteOption
+            StartASiteFormUrl                             = $spoTenant.StartASiteFormUrl
+            ShowEveryoneClaim                             = $spoTenant.ShowEveryoneClaim
+            ShowAllUsersClaim                             = $spoTenant.ShowAllUsersClaim
+            ShowEveryoneExceptExternalUsersClaim          = $spoTenant.ShowEveryoneExceptExternalUsersClaim
+            SearchResolveExactEmailOrUPN                  = $spoTenant.SearchResolveExactEmailOrUPN
+            OfficeClientADALDisabled                      = $spoTenant.OfficeClientADALDisabled
+            LegacyAuthProtocolsEnabled                    = $spoTenant.LegacyAuthProtocolsEnabled
+            RequireAcceptingAccountMatchInvitedAccount    = $spoTenant.RequireAcceptingAccountMatchInvitedAccount
+            ProvisionSharedWithEveryoneFolder             = $spoTenant.ProvisionSharedWithEveryoneFolder
+            SignInAccelerationDomain                      = $spoTenant.SignInAccelerationDomain
+            EnableGuestSignInAcceleration                 = $spoTenant.EnableGuestSignInAcceleration
+            UsePersistentCookiesForExplorerView           = $spoTenant.UsePersistentCookiesForExplorerView
+            ContentTypeSyncSiteTemplatesList              = $spoTenant.ContentTypeSyncSiteTemplatesList
+            ExcludeSiteTemplate                           = $spoTenant.ExcludeSiteTemplate
+            BccExternalSharingInvitations                 = $spoTenant.BccExternalSharingInvitations
+            BccExternalSharingInvitationsList             = $spoTenant.BccExternalSharingInvitationsList
+            UserVoiceForFeedbackEnabled                   = $spoTenant.UserVoiceForFeedbackEnabled
+            PublicCdnEnabled                              = $spoTenant.PublicCdnEnabled
+            PublicCdnAllowedFileTypes                     = $spoTenant.PublicCdnAllowedFileTypes
+            RequireAnonymousLinksExpireInDays             = $spoTenant.RequireAnonymousLinksExpireInDays
+            SharingAllowedDomainList                      = $spoTenant.SharingAllowedDomainList
+            SharingBlockedDomainList                      = $spoTenant.SharingBlockedDomainList
+            SharingDomainRestrictionMode                  = $spoTenant.SharingDomainRestrictionMode
+            OneDriveStorageQuota                          = $spoTenant.OneDriveStorageQuota
+            OneDriveForGuestsEnabled                      = $spoTenant.OneDriveForGuestsEnabled
+            IPAddressEnforcement                          = $spoTenant.IPAddressEnforcement
+            IPAddressAllowList                            = $spoTenant.IPAddressAllowList
+            IPAddressWACTokenLifetime                     = $spoTenant.IPAddressWACTokenLifetime
+            UseFindPeopleInPeoplePicker                   = $spoTenant.UseFindPeopleInPeoplePicker
+            DefaultSharingLinkType                        = $spoTenant.DefaultSharingLinkType
+            ODBMembersCanShare                            = $spoTenant.ODBMembersCanShare
+            ODBAccessRequests                             = $spoTenant.ODBAccessRequests
+            PreventExternalUsersFromResharing             = $spoTenant.PreventExternalUsersFromResharing
+            ShowPeoplePickerSuggestionsForGuestUsers      = $spoTenant.ShowPeoplePickerSuggestionsForGuestUsers
+            FileAnonymousLinkType                         = $spoTenant.FileAnonymousLinkType
+            FolderAnonymousLinkType                       = $spoTenant.FolderAnonymousLinkType
+            NotifyOwnersWhenItemsReshared                 = $spoTenant.NotifyOwnersWhenItemsReshared
+            NotifyOwnersWhenInvitationsAccepted           = $spoTenant.NotifyOwnersWhenInvitationsAccepted
+            NotificationsInOneDriveForBusinessEnabled     = $spoTenant.NotificationsInOneDriveForBusinessEnabled
+            NotificationsInSharePointEnabled              = $spoTenant.NotificationsInSharePointEnabled
+            SpecialCharactersStateInFileFolderNames       = $spoTenant.SpecialCharactersStateInFileFolderNames
+            OwnerAnonymousNotification                    = $spoTenant.OwnerAnonymousNotification
+            CommentsOnSitePagesDisabled                   = $spoTenant.CommentsOnSitePagesDisabled
+            CommentsOnFilesDisabled                       = $spoTenant.CommentsOnFilesDisabled
+            SocialBarOnSitePagesDisabled                  = $spoTenant.SocialBarOnSitePagesDisabled
+            OrphanedPersonalSitesRetentionPeriod          = $spoTenant.OrphanedPersonalSitesRetentionPeriod
+            PermissiveBrowserFileHandlingOverride         = $spoTenant.PermissiveBrowserFileHandlingOverride
+            DisallowInfectedFileDownload                  = $spoTenant.DisallowInfectedFileDownload
+            DefaultLinkPermission                         = $spoTenant.DefaultLinkPermission
+            CustomizedExternalSharingServiceUrl           = $spoTenant.CustomizedExternalSharingServiceUrl
+            ConditionalAccessPolicy                       = $spoTenant.ConditionalAccessPolicy
+            AllowDownloadingNonWebViewableFiles           = $spoTenant.AllowDownloadingNonWebViewableFiles
+            LimitedAccessFileType                         = $spoTenant.LimitedAccessFileType
+            AllowEditing                                  = $spoTenant.AllowEditing
             ApplyAppEnforcedRestrictionsToAdHocRecipients = $spoTenant.ApplyAppEnforcedRestrictionsToAdHocRecipients
-            FilePickerExternalImageSearchEnabled = $spoTenant.FilePickerExternalImageSearchEnabled
-            EmailAttestationRequired = $spoTenant.EmailAttestationRequired
-            EmailAttestationReAuthDays = $spoTenant.EmailAttestationReAuthDays
-            SyncPrivacyProfileProperties = $spoTenant.SyncPrivacyProfileProperties
-            DisabledWebPartIds = $spoTenant.DisabledWebPartIds
-            OrgNewsSiteUrl = $spoTenant.OrgNewsSiteUrl
-            EnableMinimumVersionRequirement = $spoTenant.EnableMinimumVersionRequirement
-            MarkNewFilesSensitiveByDefault = $spoTenant.MarkNewFilesSensitiveByDefault
+            FilePickerExternalImageSearchEnabled          = $spoTenant.FilePickerExternalImageSearchEnabled
+            EmailAttestationRequired                      = $spoTenant.EmailAttestationRequired
+            EmailAttestationReAuthDays                    = $spoTenant.EmailAttestationReAuthDays
+            SyncPrivacyProfileProperties                  = $spoTenant.SyncPrivacyProfileProperties
+            DisabledWebPartIds                            = $spoTenant.DisabledWebPartIds
+            OrgNewsSiteUrl                                = $spoTenant.OrgNewsSiteUrl
+            EnableMinimumVersionRequirement               = $spoTenant.EnableMinimumVersionRequirement
+            MarkNewFilesSensitiveByDefault                = $spoTenant.MarkNewFilesSensitiveByDefault
         }
     }
     catch
@@ -366,7 +442,7 @@ function Get-TargetResource
         if($error[0].Exception.Message -like "No connection available")
         {
             write-Verbose "Make sure that you are connected to your SPOService"
-            return $null
+            return $nullReturn
         }
     }
 }
@@ -375,9 +451,9 @@ function Set-TargetResource
     [CmdletBinding()]
     param (
 
-        [Parameter(Mandatory = $true)] 
+        [Parameter(Mandatory = $true)]
         [validateSet("Present", "Absent")]
-        [System.String] 
+        [System.String]
         $Ensure,
 
         [Parameter(Mandatory = $true)]
@@ -636,6 +712,7 @@ function Set-TargetResource
         ${SyncPrivacyProfileProperties},
 
         [Parameter()]
+        [System.String]
         ${DisabledWebPartIds},
 
         [Parameter()]
@@ -650,8 +727,8 @@ function Set-TargetResource
         [System.String]
         $CentralAdminUrl,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     
@@ -669,7 +746,6 @@ function Set-TargetResource
         Write-Verbose -Message "------------------------"
         Write-Verbose -Message "%%% Setting Tenant %%%"
         Write-Verbose -Message "------------------------"
-        write-verbose "*****disableContentTypeSyncSiteTemplatesList is set to $disableContentTypeSyncSiteTemplatesList"
         if($disableContentTypeSyncSiteTemplatesList -eq "True" -and $ContentTypeSyncSiteTemplatesList -eq "MySites")
         {
             Write-Verbose -Message "[INFO] Disabling ContentTypeSyncSiteTemplatesList (which is currently set to:$ContentTypeSyncSiteTemplatesList) using the ExcludeSiteTemplate switch"
@@ -704,7 +780,7 @@ function Set-TargetResource
             $CurrentParameters.Remove("PublicCdnAllowedFileTypes")
         }
 
-        if($SharingCapability -ne "ExternalUserAndGuestSharing ")
+        if($SharingCapability -ne "ExternalUserAndGuestSharing")
         {
             Write-Verbose -Message "[INFO] The sharing capabilities for the tenant are not configured to be ExternalUserAndGuestSharing for that the RequireAnonymousLinksExpireInDays property cannot be configured"
             $CurrentParameters.Remove("RequireAnonymousLinksExpireInDays")
@@ -790,9 +866,9 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param (
 
-        [Parameter(Mandatory = $true)] 
+        [Parameter(Mandatory = $true)]
         [validateSet("Present", "Absent")]
-        [System.String] 
+        [System.String]
         ${Ensure},
 
         [Parameter(Mandatory = $true)]
@@ -1051,6 +1127,7 @@ function Test-TargetResource
         ${SyncPrivacyProfileProperties},
 
         [Parameter()]
+        [System.String]
         ${DisabledWebPartIds},
 
         [Parameter()]
@@ -1065,8 +1142,8 @@ function Test-TargetResource
         [System.String]
         $CentralAdminUrl,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount

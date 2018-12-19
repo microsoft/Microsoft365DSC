@@ -25,7 +25,7 @@ Configuration MSFT_SPOTenant
             SearchResolveExactEmailOrUPN                  = $false
             OfficeClientADALDisabled                      = $false
             LegacyAuthProtocolsEnabled                    = $true
-            RequireAcceptingAccountMatchInvitedAccount    = $false 
+            RequireAcceptingAccountMatchInvitedAccount    = $false
             ProvisionSharedWithEveryoneFolder             = $false
             SignInAccelerationDomain                      = $null
             EnableGuestSignInAcceleration                 = $false
@@ -40,7 +40,7 @@ Configuration MSFT_SPOTenant
             SharingBlockedDomainList                      = "contoso.com"
             OneDriveStorageQuota                          = 1048576
             OneDriveForGuestsEnabled                      = $false
-            #IPAddressAllowList = "" #make sure to add your own IP address as well as a valid range in CIDR notation #setting the IPAddressAllowList was not possible while writing this resoruce 
+            #IPAddressAllowList = "" #make sure to add your own IP address as well as a valid range in CIDR notation #setting the IPAddressAllowList was not possible while writing this resoruce
             #IPAddressEnforcement = $false
             IPAddressWACTokenLifetime                     = 15
             UseFindPeopleInPeoplePicker                   = $false
@@ -65,7 +65,7 @@ Configuration MSFT_SPOTenant
             #ConditionalAccessPolicy = "AllowFullAccess" #This setting requires Intune and a Azure AD Premium subscription
             #AllowDownloadingNonWebViewableFiles = $true #This setting requires Intune and a Azure AD Premium subscription / this parameter has been discontinued use LimitedAccessFileType instead.
             #LimitedAccessFileType = "WebPreviewableFiles" #This setting requires Intune and a Azure AD Premium subscription 
-            #AllowEditing = $true #This setting requires Intune and a Azure AD Premium subscription 
+            #AllowEditing = $true #This setting requires Intune and a Azure AD Premium subscription
             ApplyAppEnforcedRestrictionsToAdHocRecipients = $true
             FilePickerExternalImageSearchEnabled          = $true
             EmailAttestationRequired                      = $false
