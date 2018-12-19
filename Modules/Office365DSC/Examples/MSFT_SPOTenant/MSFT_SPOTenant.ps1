@@ -46,7 +46,7 @@ Configuration MSFT_SPOTenant
             UseFindPeopleInPeoplePicker                   = $false
             DefaultSharingLinkType                        = "AnonymousAccess" #According to the documentation the options should be None Direct Internal AnonymousAccess / during my tests I was not able to set it to None (all other options worked fine)
             #ODBMembersCanShare                            = "Unspecified"
-            ODBAccessRequests                             = "Unspecified"
+            #ODBAccessRequests                             = "Unspecified"
             PreventExternalUsersFromResharing             = $false
             ShowPeoplePickerSuggestionsForGuestUsers      = $false
             FileAnonymousLinkType                         = "Edit" #According to the documentation None should be an option but when running the set-spotenant cmdlet it will tell you that it is just View or Edit

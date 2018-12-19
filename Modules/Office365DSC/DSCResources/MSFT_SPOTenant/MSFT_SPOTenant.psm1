@@ -166,10 +166,10 @@ function Get-TargetResource
         #[ValidateSet("On", "Off", "Unspecified")]
         #$ODBMembersCanShare,
 
-        [Parameter()]
-        [System.String]
-        [ValidateSet("On", "Off", "Unspecified")]
-        $ODBAccessRequests,
+        #[Parameter()]
+        #[System.String]
+        #[ValidateSet("On", "Off", "Unspecified")]
+        #$ODBAccessRequests,
 
         [Parameter()]
         [System.boolean]
@@ -338,7 +338,7 @@ function Get-TargetResource
         UseFindPeopleInPeoplePicker                   = $null
         DefaultSharingLinkType                        = $null
         #ODBMembersCanShare                            = $null
-        ODBAccessRequests                             = $null
+        #ODBAccessRequests                             = $null
         PreventExternalUsersFromResharing             = $null
         ShowPeoplePickerSuggestionsForGuestUsers      = $null
         FileAnonymousLinkType                         = $null
@@ -416,7 +416,7 @@ function Get-TargetResource
             UseFindPeopleInPeoplePicker                   = $spoTenant.UseFindPeopleInPeoplePicker
             DefaultSharingLinkType                        = $spoTenant.DefaultSharingLinkType
             #ODBMembersCanShare                            = $spoTenant.ODBMembersCanShare
-            ODBAccessRequests                             = $spoTenant.ODBAccessRequests
+            #ODBAccessRequests                             = $spoTenant.ODBAccessRequests
             PreventExternalUsersFromResharing             = $spoTenant.PreventExternalUsersFromResharing
             ShowPeoplePickerSuggestionsForGuestUsers      = $spoTenant.ShowPeoplePickerSuggestionsForGuestUsers
             FileAnonymousLinkType                         = $spoTenant.FileAnonymousLinkType
@@ -627,10 +627,10 @@ function Set-TargetResource
         #[ValidateSet("On", "Off", "Unspecified")]
         #$ODBMembersCanShare,
 
-        [Parameter()]
-        [System.String]
-        [ValidateSet("On", "Off", "Unspecified")]
-        $ODBAccessRequests,
+        #[Parameter()]
+        #[System.String]
+        #[ValidateSet("On", "Off", "Unspecified")]
+        #$ODBAccessRequests,
 
         [Parameter()]
         [System.boolean]
@@ -1055,10 +1055,10 @@ function Test-TargetResource
         #[ValidateSet("On", "Off", "Unspecified")]
         #$ODBMembersCanShare,
 
-        [Parameter()]
-        [System.String]
-        [ValidateSet("On", "Off", "Unspecified")]
-        $ODBAccessRequests,
+        #[Parameter()]
+        #[System.String]
+        #[ValidateSet("On", "Off", "Unspecified")]
+        #$ODBAccessRequests,
 
         [Parameter()]
         [System.boolean]
@@ -1229,7 +1229,7 @@ function Test-TargetResource
             "UseFindPeopleInPeoplePicker", `
             "DefaultSharingLinkType", `
             #"ODBMembersCanShare", `
-            "ODBAccessRequests", `
+            #"ODBAccessRequests", `
             "PreventExternalUsersFromResharing", `
             "ShowPeoplePickerSuggestionsForGuestUsers", `
             "FileAnonymousLinkType", `
