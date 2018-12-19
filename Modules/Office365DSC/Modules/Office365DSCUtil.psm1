@@ -382,7 +382,60 @@ function Export-O365Configuration
         $mailboxName = $mailbox.Name
         if ($mailboxName)
         {
-            $DSCContent += Export-TargetResource -DisplayName $mailbox.Name -GlobalAdminAccount $GlobalAdminAccount
+            $DSCContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
+    #region "O365Group"
+    $O365GroupModulePath = Join-Path -Path $PSScriptRoot `
+                                     -ChildPath "..\DSCResources\MSFT_O365Group\MSFT_O365Group.psm1" `
+                                     -Resolve
+
+    Import-Module $O365GroupModulePath
+
+    # Security Groups
+    $securityGroups = Get-MSOLGroup | Where-Object {$_.GroupType -eq "Security"}
+
+    foreach ($securityGroup in $securityGroups)
+    {
+        $securityGroupDisplayName = $securityGroup.DisplayName
+        if ($securityGroupDisplayName)
+        {
+            $DSCContent += Export-TargetResource -DisplayName $securityGroupDisplayName `
+                                                 -GroupType "Security" `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+
+    $securityGroups = Get-MSOLGroup | Where-Object {$_.GroupType -eq "Security"}
+
+    # Other Groups
+    $groups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                -ScriptBlock {
+        Get-Group
+    }
+    $groups = $groups | Where-Object { `
+        $_.RecipientType -eq "MailUniversalDistributionGroup" `
+        -or $_.RecipientType -eq "MailUniversalSecurityGroup" `
+    }
+    foreach ($group in $groups)
+    {
+        $groupName = $group.DisplayName
+        if ($groupName)
+        {
+            $groupType = "DistributionList"
+            if ($group.RecipientTypeDetails -eq "GroupMailbox")
+            {
+                $groupType = "Office365"
+            }
+            elseif ($group.RecipientTypeDetails -eq "MailUniversalSecurityGroup")
+            {
+                $groupType = "MailEnabledSecurity"
+            }
+            $DSCContent += Export-TargetResource -DisplayName $groupName `
+                                                 -GroupType $groupType `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
         }
     }
     #endregion
@@ -446,4 +499,5 @@ function Export-O365Configuration
         New-ConfigurationDataDocument -Path $outputConfigurationData
     }
     #endregion
+    Invoke-Item -Path $OutputDSCPath
 }

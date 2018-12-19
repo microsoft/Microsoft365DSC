@@ -60,7 +60,7 @@ function Get-TargetResource
 
     $result = @{
         DisplayName = $DisplayName
-        PrimarySMTPAddress = $mailbox.PrimarySMTPAddress
+        PrimarySMTPAddress = $mailbox.PrimarySMTPAddress.ToString()
         Aliases = $CurrentAliases
         Ensure = "Present"
         GlobalAdminAccount = $GlobalAdminAccount
@@ -221,7 +221,6 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    Write-Host $result.Aliases
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $modulePath = $PSScriptRoot + "\MSFT_EXOSharedMailbox.psm1"
     $content = "        EXOSharedMailbox " + (New-GUID).ToString() + "`r`n"
