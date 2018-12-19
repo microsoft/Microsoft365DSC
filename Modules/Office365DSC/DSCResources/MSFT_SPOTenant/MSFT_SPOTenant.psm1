@@ -370,6 +370,7 @@ function Get-TargetResource
         OrgNewsSiteUrl                                = $null
         EnableMinimumVersionRequirement               = $null
         MarkNewFilesSensitiveByDefault                = $null
+        Tenant                                        = $null
         Ensure                                        = "Absent"
     }
     
@@ -447,6 +448,7 @@ function Get-TargetResource
             OrgNewsSiteUrl                                = $spoTenant.OrgNewsSiteUrl
             EnableMinimumVersionRequirement               = $spoTenant.EnableMinimumVersionRequirement
             MarkNewFilesSensitiveByDefault                = $spoTenant.MarkNewFilesSensitiveByDefault
+            Tenant                                        = $Tenant
         }
     }
     catch
@@ -764,13 +766,13 @@ function Set-TargetResource
         $CurrentParameters = $PSBoundParameters
         $CurrentParameters.Remove("CentralAdminUrl")
         $CurrentParameters.Remove("GlobalAdminAccount")
-        $CurrentParameters.Remove("Tenant")
         $CurrentParameters.Remove("Ensure")
         $CurrentParameters.Remove("Verbose")
 
         Write-Verbose -Message "------------------------"
-        Write-Verbose -Message "%%% Setting Tenant %%%"
+        Write-Verbose -Message "%%% Setting Tenant: $Tenant %%%"
         Write-Verbose -Message "------------------------"
+        $CurrentParameters.Remove("Tenant")
         if($disableContentTypeSyncSiteTemplatesList -eq "True" -and $ContentTypeSyncSiteTemplatesList -eq "MySites")
         {
             Write-Verbose -Message "[INFO] Disabling ContentTypeSyncSiteTemplatesList (which is currently set to:$ContentTypeSyncSiteTemplatesList) using the ExcludeSiteTemplate switch"
@@ -1259,6 +1261,7 @@ function Test-TargetResource
             "OrgNewsSiteUrl", `
             "EnableMinimumVersionRequirement", `
             "MarkNewFilesSensitiveByDefault", `
+            "Tenant", `
             "disableContentTypeSyncSiteTemplatesList"
     )
 }
