@@ -196,7 +196,7 @@ function Get-TargetResource
         #[Parameter()]
         #[System.boolean]
         #$NotifyOwnersWhenInvitationsAccepted,
-        
+
         [Parameter()]
         [System.boolean]
         $NotificationsInOneDriveForBusinessEnabled,
@@ -657,7 +657,7 @@ function Set-TargetResource
         #[Parameter()]
         #[System.boolean]
         #$NotifyOwnersWhenInvitationsAccepted,
-        
+
         [Parameter()]
         [System.boolean]
         $NotificationsInOneDriveForBusinessEnabled,
@@ -1085,7 +1085,7 @@ function Test-TargetResource
         #[Parameter()]
         #[System.boolean]
         #$NotifyOwnersWhenInvitationsAccepted,
-        
+
         [Parameter()]
         [System.boolean]
         $NotificationsInOneDriveForBusinessEnabled,
