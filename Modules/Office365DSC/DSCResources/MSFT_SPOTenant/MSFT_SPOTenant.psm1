@@ -74,7 +74,7 @@ function Get-TargetResource
         [Parameter()]
         [System.boolean]
         $LegacyAuthProtocolsEnabled,
-        
+
         [Parameter()]
         [System.boolean]
         $RequireAcceptingAccountMatchInvitedAccount,
@@ -535,7 +535,7 @@ function Set-TargetResource
         [Parameter()]
         [System.boolean]
         $LegacyAuthProtocolsEnabled,
-        
+
         [Parameter()]
         [System.boolean]
         $RequireAcceptingAccountMatchInvitedAccount,
@@ -963,7 +963,7 @@ function Test-TargetResource
         [Parameter()]
         [System.boolean]
         $LegacyAuthProtocolsEnabled,
-        
+
         [Parameter()]
         [System.boolean]
         $RequireAcceptingAccountMatchInvitedAccount,
