@@ -768,9 +768,7 @@ function Set-TargetResource
         $CurrentParameters.Remove("Ensure")
         $CurrentParameters.Remove("Verbose")
 
-        Write-Verbose -Message "------------------------"
         Write-Verbose -Message "%%% Setting Tenant: $Tenant %%%"
-        Write-Verbose -Message "------------------------"
         $CurrentParameters.Remove("Tenant")
         if($DisableContentTypeSyncSiteTemplatesList -eq "True" -and $ContentTypeSyncSiteTemplatesList -eq "MySites")
         {
