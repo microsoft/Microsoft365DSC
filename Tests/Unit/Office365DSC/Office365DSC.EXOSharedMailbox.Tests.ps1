@@ -57,7 +57,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Mailbox already exists and it should" -Fixture {
             $testParams = @{
                 DisplayName = "Test Shared Mailbox"
-                PrimarySMTPAddress = "Testh@contoso.onmicrosoft.com"
+                PrimarySMTPAddress = "Test@contoso.onmicrosoft.com"
                 Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -66,6 +66,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     Identity = "Test Shared Mailbox"
                     RecipientTypeDetails = "SharedMailbox"
+                    EmailAddresses = @("smtp:user@contoso.onmicrosoft.com", "SMTP:test@contoso.onmicrosoft.com")
+                    PrimarySMTPAddress = "test@contoso.onmicrosoft.com"
                 }
             }
 

@@ -9,7 +9,7 @@ install:
     - ps: |
         $moduleName = 'Office365DSC'
         $mainModuleFolder = "Modules\$moduleName"
-        Install-Module ReverseDSC -MinimumVersion 1.9.2.11 -Force
+        Install-Module ReverseDSC -MinimumVersion 1.9.2.13 -Force
         Install-Module MSOnline -MinimumVersion 1.1.183.17 -Force
 
         $webClient = new-object System.Net.WebClient

@@ -79,6 +79,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Licenses= @(@{
                         AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
                     })
+                    PasswordNeverExpires = $False
                     Ensure = "Present"
                 }
             }
@@ -88,7 +89,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should be $true
+                Test-TargetResource @testParams | Should be $True
             }
         }
 
@@ -137,10 +138,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
-                DisplayName = "John Smith"
-                FirstName = "John"
-                LastName = "Smith"
-                UsageLocation = "US"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

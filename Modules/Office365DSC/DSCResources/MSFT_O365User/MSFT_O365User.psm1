@@ -8,19 +8,19 @@ function Get-TargetResource
         [System.String]
         $UserPrincipalName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $DisplayName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $FirstName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $LastName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $UsageLocation,
 
@@ -104,7 +104,7 @@ function Get-TargetResource
     )
 
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    
+
     $nullReturn = @{
         UserPrincipalName = $null
         DisplayName = $null
@@ -130,7 +130,13 @@ function Get-TargetResource
         $currentLicenseAssignment = @()
         foreach($license in $user.Licenses)
         {
-            $currentLicenseAssignment += $license.AccountSkuID
+            $currentLicenseAssignment += $license.AccountSkuID.ToString()
+        }
+
+        $passwordNeverExpires = $user.PasswordNeverExpires
+        if ($null -eq $passwordNeverExpires)
+        {
+            $passwordNeverExpires = $true
         }
         return @{
             UserPrincipalName = $user.UserPrincipalName
@@ -139,14 +145,14 @@ function Get-TargetResource
             LastName = $user.LastName
             UsageLocation = $user.UsageLocation
             LicenseAssignment = $currentLicenseAssignment
-            Passsword = $Password
+            Password = $Password
             City = $user.City
             Country = $user.Country
             Department = $user.Department
             Fax = $user.Fax
             MobilePhone = $user.MobilePhone
             Office = $user.Office
-            PasswordNeverExpires = $user.PasswordNeverExpires
+            PasswordNeverExpires = $passwordNeverExpires
             PhoneNumber = $user.PhoneNumber
             PostalCode = $user.PostalCode
             PreferredDataLocation = $user.PreferredDataLocation
@@ -174,19 +180,19 @@ function Set-TargetResource
         [System.String]
         $UserPrincipalName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $DisplayName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $FirstName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $LastName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $UsageLocation,
 
@@ -328,19 +334,19 @@ function Test-TargetResource
         [System.String]
         $UserPrincipalName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $DisplayName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $FirstName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $LastName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $UsageLocation,
 
@@ -463,32 +469,19 @@ function Export-TargetResource
         [System.String]
         $UserPrincipalName,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $FirstName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $LastName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $UsageLocation,
-
         [Parameter(Mandatory = $true)] 
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
-    $content = "O365User " + (New-GUID).ToString() + "`r`n"
-    $content += "{`r`n"
-    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += "}`r`n"
+    $result.Password = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $modulePath = $PSScriptRoot + "\MSFT_O365User.psm1"
+    $content = "        O365User " + (New-GUID).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath -UseGetTargetResource
+    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += "        }`r`n"
     return $content
 }
 
