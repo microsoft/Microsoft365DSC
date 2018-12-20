@@ -267,6 +267,7 @@ function Get-TargetResource
         $GlobalAdminAccount
 
         #[Parameter()]
+        #[ValidateRange(1024,1048576)]
         #[System.Uint64]
         #$OneDriveStorageQuota,
 
@@ -728,6 +729,7 @@ function Set-TargetResource
         $GlobalAdminAccount
 
         #[Parameter()]
+        #[ValidateRange(1024,1048576)]
         #[System.Uint64]
         #$OneDriveStorageQuota,
 
@@ -868,11 +870,6 @@ function Set-TargetResource
                     $DisabledWebPartIdsGUID += [GUID]$DisabledWebPartId
                 }
             }
-            #if($OneDriveStorageQuota -lt 1024)
-            #{
-            #    Write-Verbose -Message "OneDriveStorageQuota minimum value should be set to 1024MB, setting it to that value"
-            #    $OneDriveStorageQuota = 1024
-            #}
             Set-SPOTenant -DisabledWebPartIds $DisabledWebPartIdsGUID
             $DisabledWebPartIdsGUID = @()
             $CurrentParameters.Remove("DisabledWebPartIds")
@@ -1018,10 +1015,6 @@ function Test-TargetResource
         $SharingDomainRestrictionMode,
 
         [Parameter()]
-        [System.Uint64]
-        $OneDriveStorageQuota,
-
-        [Parameter()]
         [System.boolean]
         $IPAddressEnforcement,
 
@@ -1157,6 +1150,7 @@ function Test-TargetResource
         $GlobalAdminAccount
 
         #[Parameter()]
+        #[ValidateRange(1024,1048576)]
         #[System.Uint64]
         #$OneDriveStorageQuota,
 
@@ -1263,6 +1257,6 @@ function Test-TargetResource
             #"NotifyOwnersWhenInvitationsAccepted", `
             #"NotificationsInOneDriveForBusinessEnabled", `
             #"OrphanedPersonalSitesRetentionPeriod", `
-            )
+    )
 }
 Export-ModuleMember -Function *-TargetResource
