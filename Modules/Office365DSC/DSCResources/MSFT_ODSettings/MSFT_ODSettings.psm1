@@ -226,7 +226,6 @@ function Set-TargetResource
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
-    ## Tenant settings updated ###
 
     if ($CurrentParameters.ContainsKey("OneDriveStorageQuota"))
     {
