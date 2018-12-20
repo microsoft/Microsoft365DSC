@@ -105,15 +105,15 @@ function Get-TargetResource
                     Get-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType "Members"
                 }
 
-                $members = @()
+                $groupMembers = @()
                 foreach($link in $groupLinks)
                 {
-                    $member += $link.Name
+                    $groupMembers += $link.Name
                 }
                 return @{
                     DisplayName = $group.DisplayName
                     GroupType = $GroupType
-                    Members = $Members
+                    Members = $groupMembers
                     ManagedBy = $group.ManagedBy
                     Description = $group.Notes
                     GlobalAdminAccount = $GlobalAdminAccount
@@ -144,8 +144,6 @@ function Get-TargetResource
             }
         }
     }
-    Write-Verbose "The specified Group doesn't already exist."
-    return $nullReturn
 }
 
 function Set-TargetResource
@@ -298,6 +296,10 @@ function Set-TargetResource
                                                   -Type "Security" `
                                                   -PrimarySMTPAddress $args[0].PrimarySMTPAddress
                     }
+                }
+                Default
+                {
+                    throw "The specified GroupType is not valid"
                 }
             }
         }

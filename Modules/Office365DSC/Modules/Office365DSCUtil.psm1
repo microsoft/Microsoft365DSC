@@ -342,6 +342,7 @@ function Export-O365Configuration
     $DSCContent += "    <# Credentials #>`r`n"
     $DSCContent += "    Node localhost`r`n"
     $DSCContent += "    {`r`n"
+
     # Add the GlobalAdminAccount to the Credentials List
     Save-Credentials -UserName $GlobalAdminAccount.UserName
 

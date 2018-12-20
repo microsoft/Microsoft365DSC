@@ -53,7 +53,7 @@ function Get-TargetResource
         Get-OrganizationConfig
     }
 
-    if(!$OrgConfig)
+    if (!$OrgConfig)
     {
         Write-Verbose "Can't find the information about the Organization Configuration."
         return $nullReturn
