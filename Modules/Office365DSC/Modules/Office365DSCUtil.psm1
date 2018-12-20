@@ -463,8 +463,8 @@ function Export-O365Configuration
 
     #region "ODSettings"
     $ODSettingsModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_ODSettings\MSFT_ODSettings.psm1" `
-                                    -Resolve
+                                      -ChildPath "..\DSCResources\MSFT_ODSettings\MSFT_ODSettings.psm1" `
+                                      -Resolve
 
     Import-Module $ODSettingsModulePath
 
@@ -510,11 +510,11 @@ function Export-O365Configuration
 
     #region Add the Prompt for Required Credentials at the top of the Configuration
     $credsContent = ""
-    foreach($credential in $Global:CredsRepo)
+    foreach ($credential in $Global:CredsRepo)
     {
-        if(!$credential.ToLower().StartsWith("builtin"))
+        if (!$credential.ToLower().StartsWith("builtin"))
         {
-            if(!$AzureAutomation)
+            if (!$AzureAutomation)
             {
                 $credsContent += "    " + (Resolve-Credentials $credential) + " = Get-Credential -UserName `"" + $credential + "`" -Message `"Please provide credentials`"`r`n"
             }
@@ -549,7 +549,7 @@ function Export-O365Configuration
         $OutputDSCPath = Read-Host "Please Enter Output Folder for DSC Configuration (Will be Created as Necessary)"
     }
     <## Ensures the path we specify ends with a Slash, in order to make sure the resulting file path is properly structured. #>
-    if(!$OutputDSCPath.EndsWith("\") -and !$OutputDSCPath.EndsWith("/"))
+    if (!$OutputDSCPath.EndsWith("\") -and !$OutputDSCPath.EndsWith("/"))
     {
         $OutputDSCPath += "\"
     }
@@ -557,7 +557,7 @@ function Export-O365Configuration
     $outputDSCFile = $OutputDSCPath + "Office365TenantConfig.ps1"
     $DSCContent | Out-File $outputDSCFile
 
-    if(!$AzureAutomation)
+    if (!$AzureAutomation)
     {
         $outputConfigurationData = $OutputDSCPath + "ConfigurationData.psd1"
         New-ConfigurationDataDocument -Path $outputConfigurationData
