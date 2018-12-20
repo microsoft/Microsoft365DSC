@@ -843,21 +843,16 @@ function Set-TargetResource
             
             foreach($DisabledWebPartId in $DisabledWebParts)
             {
-                if($DisabledWebPartId -eq "00000000-0000-0000-0000-000000000000")
-                {
-                    Write-Verbose -Message "Re-setting the DisabledWebpartIDs"
-                    set-spotenant -DisabledWebPartIds @()
-                    $CurrentParameters.Remove("DisabledWebPartIds")
-                }
-                else
-                {
-                    write-Verbose -Message "Setting the DisabledWebpartIDs property for tenant for webpart: $DisabledWebPartId"
-                    $DisabledWebPartIdsGUID += [GUID]$DisabledWebPartId
-                }
+                write-Verbose -Message "Setting the DisabledWebpartIDs property for tenant for webpart: $DisabledWebPartId"
+                $DisabledWebPartIdsGUID += [GUID]$DisabledWebPartId
             }
             Set-SPOTenant -DisabledWebPartIds $DisabledWebPartIdsGUID
             $DisabledWebPartIdsGUID = @()
             $CurrentParameters.Remove("DisabledWebPartIds")
+        }
+        else
+        {
+            set-spotenant -DisabledWebPartIds @()
         }
         foreach($value in $CurrentParameters.GetEnumerator())
         {

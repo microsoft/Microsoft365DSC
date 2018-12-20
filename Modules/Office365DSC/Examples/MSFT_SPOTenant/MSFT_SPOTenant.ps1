@@ -56,7 +56,7 @@ Configuration MSFT_SPOTenant
             EmailAttestationRequired                      = $false
             EmailAttestationReAuthDays                    = 30
             SyncPrivacyProfileProperties                  = $true
-            DisabledWebPartIds = "00000000-0000-0000-0000-000000000000" #The guid "00000000-0000-0000-0000-000000000000" resets the DisabledWebPartIds
+            DisabledWebPartIds = $null #Amazon Kindle (46698648-fcd5-41fc-9526-c7f7b2ace919), YouTube (544dd15b-cf3c-441b-96da-004d5a8cea1d), Twitter (f6fdf4f8-4a24-437b-a127-32e66a5dd9b4).
             OrgNewsSiteUrl = ""
             EnableMinimumVersionRequirement = $true
             #ContentTypeSyncSiteTemplatesList = "MySites"
