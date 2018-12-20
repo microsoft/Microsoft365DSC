@@ -51,7 +51,7 @@ function Get-TargetResource
     foreach($email in $mailbox.EmailAddresses)
     {
         $emailValue = $email.Split(":")[1]
-        if ($emailValue -ne $mailbox.PrimarySMTPAddress)
+        if ($emailValue -and $emailValue -ne $mailbox.PrimarySMTPAddress)
         {
             $CurrentAliases += $emailValue
         }
@@ -60,7 +60,7 @@ function Get-TargetResource
 
     $result = @{
         DisplayName = $DisplayName
-        PrimarySMTPAddress = $mailbox.PrimarySMTPAddress
+        PrimarySMTPAddress = $mailbox.PrimarySMTPAddress.ToString()
         Aliases = $CurrentAliases
         Ensure = "Present"
         GlobalAdminAccount = $GlobalAdminAccount
@@ -221,10 +221,13 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    $content = "EXOSharedMailbox " + (New-GUID).ToString() + "`r`n"
-    $content += "{`r`n"
-    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += "}`r`n"
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $modulePath = $PSScriptRoot + "\MSFT_EXOSharedMailbox.psm1"
+    $content = "        EXOSharedMailbox " + (New-GUID).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath -UseGetTargetResource
+    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += "        }`r`n"
     return $content
 }
 
