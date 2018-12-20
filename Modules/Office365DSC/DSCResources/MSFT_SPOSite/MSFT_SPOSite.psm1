@@ -57,7 +57,7 @@ function Get-TargetResource
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
-        Url = $null
+        Url = $Url
         Owner = $null
         #TimeZoneId = $null
         LocaleId = $null
@@ -67,6 +67,7 @@ function Get-TargetResource
         CompatibilityLevel = $null
         Title = $null
         Ensure = "Absent"
+        CentralAdminUrl = $CentralAdminUrl
     }
 
     try
