@@ -780,26 +780,11 @@ function Set-TargetResource
         }
         $CurrentParameters.Remove("DisableContentTypeSyncSiteTemplatesList")
 
-        Write-Verbose -Message "Setting SignInAccelerationDomain and EnableGuestSignInAcceleration"
-        if(($null -like $SignInAccelerationDomain) -and ($EnableGuestSignInAcceleration -eq $false))
+        if($null -like $SignInAccelerationDomain)
         {
-            write-verbose -message "It is not possible to set EnableGuestSignInAccerlation when the SignInAccerlationDomain is set to be empty"
-            Set-SPOTenant -SignInAccelerationDomain "" 
             $CurrentParameters.remove("SignInAccelerationDomain")
-            $CurrentParameters.remove("EnableGuestSignInAcceleration")
+            $CurrentParameters.remove("EnableGuestSignInAcceleration")#removing EnableGuestSignInAcceleration since it can only be configured with a configured SignINAccerlation domain
         }
-        elseif(($null -like $SignInAccelerationDomain) -and ($EnableGuestSignInAcceleration -eq $true))
-        {
-            write-verbose -message "It is not possible to set EnableGuestSignInAccerlation when the SignInAccerlationDomain is set to be empty"
-            Set-SPOTenant -SignInAccelerationDomain "" 
-            $CurrentParameters.remove("SignInAccelerationDomain")
-            $CurrentParameters.remove("EnableGuestSignInAcceleration")
-        }
-        elseif($null -notlike $SignInAccelerationDomain)
-        {
-            Write-Verbose -Message "Configuring SignInAccelerationDomain since EnableGuestSignInAcceleration is not null "
-        }
-
         if(($null -notlike $PublicCdnAllowedFileTypes) -and ($PublicCdnEnabled -eq $false))
         {
             Write-Verbose -Message "To configure PublicCdnAllowedFileTypes you have to have the PublicCDNEnabled"
