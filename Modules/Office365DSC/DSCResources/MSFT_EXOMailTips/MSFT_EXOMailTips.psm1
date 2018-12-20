@@ -227,7 +227,7 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Organization,
 
