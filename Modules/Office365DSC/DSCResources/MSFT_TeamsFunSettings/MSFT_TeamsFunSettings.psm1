@@ -172,7 +172,7 @@ function Test-TargetResource {
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )
-    Write-Verbose "Compare values for Team fun settings.."
+
     Write-Verbose -Message "Testing Team fun settings for  $GroupID"
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
@@ -182,7 +182,7 @@ function Test-TargetResource {
             "GiphyContentRating", `
             "AllowStickersAndMemes", `
             "AllowCustomMemes"
-        )
+    )
 }
 
 function Export-TargetResource {

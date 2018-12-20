@@ -1,3 +1,3 @@
 # Description
 
-This resource allows users to create and monitor SharePoint Online Site Collections.
+This resource used to set Team fun setting on a specific Team
