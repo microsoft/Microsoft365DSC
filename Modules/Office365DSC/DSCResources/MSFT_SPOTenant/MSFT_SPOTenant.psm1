@@ -131,14 +131,6 @@ function Get-TargetResource
         [ValidateSet("None", "AllowList", "BlockList")]
         $SharingDomainRestrictionMode,
 
-        #[Parameter()]
-        #[System.Uint64]
-        #$OneDriveStorageQuota,
-
-        #[Parameter()]
-        #[System.boolean]
-        #$OneDriveForGuestsEnabled,
-
         [Parameter()]
         [System.boolean]
         $IPAddressEnforcement,
@@ -159,16 +151,6 @@ function Get-TargetResource
         [System.String]
         [ValidateSet("None", "Direct", "Internal", "AnonymousAccess")]
         $DefaultSharingLinkType,
-
-        #[Parameter()]
-        #[System.String]
-        #[ValidateSet("On", "Off", "Unspecified")]
-        #$ODBMembersCanShare,
-
-        #[Parameter()]
-        #[System.String]
-        #[ValidateSet("On", "Off", "Unspecified")]
-        #$ODBAccessRequests,
 
         [Parameter()]
         [System.boolean]
@@ -192,21 +174,13 @@ function Get-TargetResource
         [System.boolean]
         $NotifyOwnersWhenItemsReshared,
 
-        #[Parameter()]
-        #[System.boolean]
-        #$NotifyOwnersWhenInvitationsAccepted,
-
-        #[Parameter()]
-        #[System.boolean]
-        #$NotificationsInOneDriveForBusinessEnabled,
-
         [Parameter()]
         [System.boolean]
         $NotificationsInSharePointEnabled,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Allowed","Disallowed")]
+        [ValidateSet("Allowed", "Disallowed")]
         $SpecialCharactersStateInFileFolderNames,
 
         [Parameter()]
@@ -220,10 +194,6 @@ function Get-TargetResource
         [Parameter()]
         [System.boolean]
         $SocialBarOnSitePagesDisabled,
-
-        #[Parameter()]
-        #[System.Uint32]
-        #$OrphanedPersonalSitesRetentionPeriod,
 
         [Parameter()]
         [System.boolean]
@@ -295,6 +265,36 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
+
+        #[Parameter()]
+        #[System.Uint64]
+        #$OneDriveStorageQuota,
+
+        #[Parameter()]
+        #[System.boolean]
+        #$OneDriveForGuestsEnabled,
+
+        #[Parameter()]
+        #[System.Uint32]
+        #$OrphanedPersonalSitesRetentionPeriod,
+
+        #[Parameter()]
+        #[System.String]
+        #[ValidateSet("On", "Off", "Unspecified")]
+        #$ODBMembersCanShare,
+
+        #[Parameter()]
+        #[System.String]
+        #[ValidateSet("On", "Off", "Unspecified")]
+        #$ODBAccessRequests,
+
+        #[Parameter()]
+        #[System.boolean]
+        #$NotifyOwnersWhenInvitationsAccepted,
+
+        #[Parameter()]
+        #[System.boolean]
+        #$NotificationsInOneDriveForBusinessEnabled,
     )
     
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
@@ -329,29 +329,22 @@ function Get-TargetResource
         SharingAllowedDomainList                      = $null
         SharingBlockedDomainList                      = $null
         SharingDomainRestrictionMode                  = $null
-        #OneDriveStorageQuota                          = $null
-        #OneDriveForGuestsEnabled                      = $null
         IPAddressEnforcement                          = $null
         IPAddressAllowList                            = $null
         IPAddressWACTokenLifetime                     = $null
         UseFindPeopleInPeoplePicker                   = $null
         DefaultSharingLinkType                        = $null
-        #ODBMembersCanShare                            = $null
-        #ODBAccessRequests                             = $null
         PreventExternalUsersFromResharing             = $null
         ShowPeoplePickerSuggestionsForGuestUsers      = $null
         FileAnonymousLinkType                         = $null
         FolderAnonymousLinkType                       = $null
         NotifyOwnersWhenItemsReshared                 = $null
-        #NotifyOwnersWhenInvitationsAccepted           = $null
-        #NotificationsInOneDriveForBusinessEnabled     = $null
         NotificationsInSharePointEnabled              = $null
         SpecialCharactersStateInFileFolderNames       = $null
         OwnerAnonymousNotification                    = $null
         CommentsOnSitePagesDisabled                   = $null
         CommentsOnFilesDisabled                       = $null
         SocialBarOnSitePagesDisabled                  = $null
-        #OrphanedPersonalSitesRetentionPeriod          = $null
         PermissiveBrowserFileHandlingOverride         = $null
         DisallowInfectedFileDownload                  = $null
         DefaultLinkPermission                         = $null
@@ -371,6 +364,13 @@ function Get-TargetResource
         MarkNewFilesSensitiveByDefault                = $null
         Tenant                                        = $null
         Ensure                                        = "Absent"
+        #OneDriveStorageQuota                          = $null
+        #OneDriveForGuestsEnabled                      = $null
+        #ODBMembersCanShare                            = $null
+        #ODBAccessRequests                             = $null
+        #NotifyOwnersWhenInvitationsAccepted           = $null
+        #NotificationsInOneDriveForBusinessEnabled     = $null
+        #OrphanedPersonalSitesRetentionPeriod          = $null
     }
     
     try
@@ -407,29 +407,22 @@ function Get-TargetResource
             SharingAllowedDomainList                      = $spoTenant.SharingAllowedDomainList
             SharingBlockedDomainList                      = $spoTenant.SharingBlockedDomainList
             SharingDomainRestrictionMode                  = $spoTenant.SharingDomainRestrictionMode
-            #OneDriveStorageQuota                          = $spoTenant.OneDriveStorageQuota
-            #OneDriveForGuestsEnabled                      = $spoTenant.OneDriveForGuestsEnabled
             IPAddressEnforcement                          = $spoTenant.IPAddressEnforcement
             IPAddressAllowList                            = $spoTenant.IPAddressAllowList
             IPAddressWACTokenLifetime                     = $spoTenant.IPAddressWACTokenLifetime
             UseFindPeopleInPeoplePicker                   = $spoTenant.UseFindPeopleInPeoplePicker
             DefaultSharingLinkType                        = $spoTenant.DefaultSharingLinkType
-            #ODBMembersCanShare                            = $spoTenant.ODBMembersCanShare
-            #ODBAccessRequests                             = $spoTenant.ODBAccessRequests
             PreventExternalUsersFromResharing             = $spoTenant.PreventExternalUsersFromResharing
             ShowPeoplePickerSuggestionsForGuestUsers      = $spoTenant.ShowPeoplePickerSuggestionsForGuestUsers
             FileAnonymousLinkType                         = $spoTenant.FileAnonymousLinkType
             FolderAnonymousLinkType                       = $spoTenant.FolderAnonymousLinkType
             NotifyOwnersWhenItemsReshared                 = $spoTenant.NotifyOwnersWhenItemsReshared
-            #NotifyOwnersWhenInvitationsAccepted           = $spoTenant.NotifyOwnersWhenInvitationsAccepted
-            #NotificationsInOneDriveForBusinessEnabled     = $spoTenant.NotificationsInOneDriveForBusinessEnabled
             NotificationsInSharePointEnabled              = $spoTenant.NotificationsInSharePointEnabled
             SpecialCharactersStateInFileFolderNames       = $spoTenant.SpecialCharactersStateInFileFolderNames
             OwnerAnonymousNotification                    = $spoTenant.OwnerAnonymousNotification
             CommentsOnSitePagesDisabled                   = $spoTenant.CommentsOnSitePagesDisabled
             CommentsOnFilesDisabled                       = $spoTenant.CommentsOnFilesDisabled
             SocialBarOnSitePagesDisabled                  = $spoTenant.SocialBarOnSitePagesDisabled
-            #OrphanedPersonalSitesRetentionPeriod          = $spoTenant.OrphanedPersonalSitesRetentionPeriod
             PermissiveBrowserFileHandlingOverride         = $spoTenant.PermissiveBrowserFileHandlingOverride
             DisallowInfectedFileDownload                  = $spoTenant.DisallowInfectedFileDownload
             DefaultLinkPermission                         = $spoTenant.DefaultLinkPermission
@@ -448,6 +441,13 @@ function Get-TargetResource
             EnableMinimumVersionRequirement               = $spoTenant.EnableMinimumVersionRequirement
             MarkNewFilesSensitiveByDefault                = $spoTenant.MarkNewFilesSensitiveByDefault
             Tenant                                        = $Tenant
+            #OneDriveStorageQuota                          = $spoTenant.OneDriveStorageQuota
+            #OneDriveForGuestsEnabled                      = $spoTenant.OneDriveForGuestsEnabled
+            #ODBMembersCanShare                            = $spoTenant.ODBMembersCanShare
+            #ODBAccessRequests                             = $spoTenant.ODBAccessRequests
+            #NotifyOwnersWhenInvitationsAccepted           = $spoTenant.NotifyOwnersWhenInvitationsAccepted
+            #NotificationsInOneDriveForBusinessEnabled     = $spoTenant.NotificationsInOneDriveForBusinessEnabled
+            #OrphanedPersonalSitesRetentionPeriod          = $spoTenant.OrphanedPersonalSitesRetentionPeriod
         }
     }
     catch
@@ -592,14 +592,6 @@ function Set-TargetResource
         [ValidateSet("None", "AllowList", "BlockList")]
         $SharingDomainRestrictionMode,
 
-        #[Parameter()]
-        #[System.Uint64]
-        #$OneDriveStorageQuota,
-
-        #[Parameter()]
-        #[System.boolean]
-        #$OneDriveForGuestsEnabled,
-
         [Parameter()]
         [System.boolean]
         $IPAddressEnforcement,
@@ -620,16 +612,6 @@ function Set-TargetResource
         [System.String]
         [ValidateSet("None", "Direct", "Internal", "AnonymousAccess")]
         $DefaultSharingLinkType,
-
-        #[Parameter()]
-        #[System.String]
-        #[ValidateSet("On", "Off", "Unspecified")]
-        #$ODBMembersCanShare,
-
-        #[Parameter()]
-        #[System.String]
-        #[ValidateSet("On", "Off", "Unspecified")]
-        #$ODBAccessRequests,
 
         [Parameter()]
         [System.boolean]
@@ -653,14 +635,6 @@ function Set-TargetResource
         [System.boolean]
         $NotifyOwnersWhenItemsReshared,
 
-        #[Parameter()]
-        #[System.boolean]
-        #$NotifyOwnersWhenInvitationsAccepted,
-
-        #[Parameter()]
-        #[System.boolean]
-        #$NotificationsInOneDriveForBusinessEnabled,
-
         [Parameter()]
         [System.boolean]
         $NotificationsInSharePointEnabled,
@@ -681,10 +655,6 @@ function Set-TargetResource
         [Parameter()]
         [System.boolean]
         $SocialBarOnSitePagesDisabled,
-
-        #[Parameter()]
-        #[System.Uint32]
-        #$OrphanedPersonalSitesRetentionPeriod,
 
         [Parameter()]
         [System.boolean]
@@ -756,6 +726,36 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
+
+        #[Parameter()]
+        #[System.Uint64]
+        #$OneDriveStorageQuota,
+
+        #[Parameter()]
+        #[System.boolean]
+        #$OneDriveForGuestsEnabled,
+
+        #[Parameter()]
+        #[System.Uint32]
+        #$OrphanedPersonalSitesRetentionPeriod,
+
+        #[Parameter()]
+        #[System.String]
+        #[ValidateSet("On", "Off", "Unspecified")]
+        #$ODBMembersCanShare,
+
+        #[Parameter()]
+        #[System.String]
+        #[ValidateSet("On", "Off", "Unspecified")]
+        #$ODBAccessRequests,
+
+        #[Parameter()]
+        #[System.boolean]
+        #$NotifyOwnersWhenInvitationsAccepted,
+
+        #[Parameter()]
+        #[System.boolean]
+        #$NotificationsInOneDriveForBusinessEnabled,
     )
     
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
@@ -831,11 +831,6 @@ function Set-TargetResource
             Write-Verbose -Message "SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured"
             $CurrentParameters.Remove("SharingAllowedDomainList")
         }
-        #if($OneDriveStorageQuota -lt 1024)
-        #{
-        #    Write-Verbose -Message "OneDriveStorageQuota minimum value should be set to 1024MB, setting it to that value"
-        #    $OneDriveStorageQuota = 1024
-        #}
         if($IPAddressEnforcement -eq $true)
         {
             if($null -like $IPAddressAllowList)
@@ -858,7 +853,7 @@ function Set-TargetResource
         {
             $DisabledWebPartIdsGUID = @()
             $DisabledWebParts = $DisabledWebPartIds.split(",")
-
+            
             foreach($DisabledWebPartId in $DisabledWebParts)
             {
                 if($DisabledWebPartId -eq "00000000-0000-0000-0000-000000000000")
@@ -873,6 +868,11 @@ function Set-TargetResource
                     $DisabledWebPartIdsGUID += [GUID]$DisabledWebPartId
                 }
             }
+            #if($OneDriveStorageQuota -lt 1024)
+            #{
+            #    Write-Verbose -Message "OneDriveStorageQuota minimum value should be set to 1024MB, setting it to that value"
+            #    $OneDriveStorageQuota = 1024
+            #}
             Set-SPOTenant -DisabledWebPartIds $DisabledWebPartIdsGUID
             $DisabledWebPartIdsGUID = @()
             $CurrentParameters.Remove("DisabledWebPartIds")
@@ -1021,10 +1021,6 @@ function Test-TargetResource
         [System.Uint64]
         $OneDriveStorageQuota,
 
-        #[Parameter()]
-        #[System.boolean]
-        #$OneDriveForGuestsEnabled,
-
         [Parameter()]
         [System.boolean]
         $IPAddressEnforcement,
@@ -1045,16 +1041,6 @@ function Test-TargetResource
         [System.String]
         [ValidateSet("None", "Direct", "Internal", "AnonymousAccess")]
         $DefaultSharingLinkType,
-
-        #[Parameter()]
-        #[System.String]
-        #[ValidateSet("On", "Off", "Unspecified")]
-        #$ODBMembersCanShare,
-
-        #[Parameter()]
-        #[System.String]
-        #[ValidateSet("On", "Off", "Unspecified")]
-        #$ODBAccessRequests,
 
         [Parameter()]
         [System.boolean]
@@ -1078,21 +1064,13 @@ function Test-TargetResource
         [System.boolean]
         $NotifyOwnersWhenItemsReshared,
 
-        #[Parameter()]
-        #[System.boolean]
-        #$NotifyOwnersWhenInvitationsAccepted,
-
-        #[Parameter()]
-        #[System.boolean]
-        #$NotificationsInOneDriveForBusinessEnabled,
-
         [Parameter()]
         [System.boolean]
         $NotificationsInSharePointEnabled,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Allowed","Disallowed")]
+        [ValidateSet("Allowed", "Disallowed")]
         $SpecialCharactersStateInFileFolderNames,
 
         [Parameter()]
@@ -1106,10 +1084,6 @@ function Test-TargetResource
         [Parameter()]
         [System.boolean]
         $SocialBarOnSitePagesDisabled,
-
-        #[Parameter()]
-        #[System.Uint32]
-        #$OrphanedPersonalSitesRetentionPeriod,
 
         [Parameter()]
         [System.boolean]
@@ -1181,6 +1155,36 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
+
+        #[Parameter()]
+        #[System.Uint64]
+        #$OneDriveStorageQuota,
+
+        #[Parameter()]
+        #[System.boolean]
+        #$OneDriveForGuestsEnabled,
+
+        #[Parameter()]
+        #[System.Uint32]
+        #$OrphanedPersonalSitesRetentionPeriod,
+
+        #[Parameter()]
+        #[System.String]
+        #[ValidateSet("On", "Off", "Unspecified")]
+        #$ODBMembersCanShare,
+
+        #[Parameter()]
+        #[System.String]
+        #[ValidateSet("On", "Off", "Unspecified")]
+        #$ODBAccessRequests,
+
+        #[Parameter()]
+        #[System.boolean]
+        #$NotifyOwnersWhenInvitationsAccepted,
+
+        #[Parameter()]
+        #[System.boolean]
+        #$NotificationsInOneDriveForBusinessEnabled, 
     )
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose -Message "Testing SPO Tenant"
@@ -1217,29 +1221,22 @@ function Test-TargetResource
             "SharingAllowedDomainList", `
             "SharingBlockedDomainList", `
             "SharingDomainRestrictionMode", `
-            #"OneDriveStorageQuota", `
-            #"OneDriveForGuestsEnabled", `
             "IPAddressEnforcement", `
             "IPAddressAllowList", `
             "IPAddressWACTokenLifetime", `
             "UseFindPeopleInPeoplePicker", `
             "DefaultSharingLinkType", `
-            #"ODBMembersCanShare", `
-            #"ODBAccessRequests", `
             "PreventExternalUsersFromResharing", `
             "ShowPeoplePickerSuggestionsForGuestUsers", `
             "FileAnonymousLinkType", `
             "FolderAnonymousLinkType", `
             "NotifyOwnersWhenItemsReshared", `
-            #"NotifyOwnersWhenInvitationsAccepted", `
-            #"NotificationsInOneDriveForBusinessEnabled", `
             "NotificationsInSharePointEnabled", `
             "SpecialCharactersStateInFileFolderNames", `
             "OwnerAnonymousNotification", `
             "CommentsOnSitePagesDisabled", `
             "CommentsOnFilesDisabled", `
             "SocialBarOnSitePagesDisabled", `
-            #"OrphanedPersonalSitesRetentionPeriod", `
             "PermissiveBrowserFileHandlingOverride", `
             "DisallowInfectedFileDownload", `
             "DefaultLinkPermission", `
@@ -1259,6 +1256,13 @@ function Test-TargetResource
             "MarkNewFilesSensitiveByDefault", `
             "Tenant", `
             "DisableContentTypeSyncSiteTemplatesList"
-    )
+            #"OneDriveStorageQuota", `
+            #"OneDriveForGuestsEnabled", `
+            #"ODBMembersCanShare", `
+            #"ODBAccessRequests", `
+            #"NotifyOwnersWhenInvitationsAccepted", `
+            #"NotificationsInOneDriveForBusinessEnabled", `
+            #"OrphanedPersonalSitesRetentionPeriod", `
+            )
 }
 Export-ModuleMember -Function *-TargetResource
