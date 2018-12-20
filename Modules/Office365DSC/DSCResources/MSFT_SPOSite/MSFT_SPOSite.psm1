@@ -88,6 +88,7 @@ function Get-TargetResource
             StorageQuota = $site.StorageQuota
             CompatibilityLevel = $site.CompatibilityLevel
             Title = $site.Title
+            CentralAdminUrl = $CentralAdminUrl
             Ensure = "Present"
         }
     }
