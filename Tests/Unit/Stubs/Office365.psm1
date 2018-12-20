@@ -99,7 +99,11 @@ function Remove-Mailbox{
     param(
         [Parameter(Mandatory=$true)]
         [string]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
     )
 }
 

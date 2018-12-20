@@ -164,6 +164,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Organization = "contoso.onmicrosoft.com"
                 MailTipsAllTipsEnabled = $True
+                MailTipsLargeAudienceThreshold = 10
+                MailTipsMailboxSourcedTipsEnabled = $True
+                MailTipsGroupMetricsEnabled = $True
+                MailTipsExternalRecipientsTipsEnabled = $True
                 Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -171,6 +175,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-OrganizationConfig -MockWith { 
                 return @{
                     MailTipsAllTipsEnabled = $True
+                    MailTipsLargeAudienceThreshold = 10
+                    MailTipsMailboxSourcedTipsEnabled = $True
+                    MailTipsGroupMetricsEnabled = $True
+                    MailTipsExternalRecipientsTipsEnabled = $True
                 }
             }
 
@@ -180,6 +188,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return True from the Test method" {
                 { Test-TargetResource @testParams } | Should Be $True
+            }
+        }
+
+        Context -Name "Organization Configuration is null" -Fixture {
+            $testParams = @{
+                Organization = "contoso.onmicrosoft.com"
+                MailTipsAllTipsEnabled = $True
+                Ensure = "Present"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-OrganizationConfig -MockWith { 
+                return $null
+            }
+
+            It "Should return Ensure is Absent from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
             }
         }
 
