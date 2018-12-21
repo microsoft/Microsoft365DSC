@@ -74,7 +74,7 @@ function Get-TargetResource
     {
         Write-Verbose -Message "Getting site collection $Url"
         $site = Get-SPOSite $Url
-        if(!$site)
+        if ($null -eq $site)
         {
             Write-Verbose "The specified Site Collection doesn't already exist."
             return $nullReturn
@@ -172,7 +172,7 @@ function Set-TargetResource
             $CurrentParameters = $PSBoundParameters
             $CurrentParameters.Remove("CentralAdminUrl")
             $CurrentParameters.Remove("GlobalAdminAccount")
-
+            $CurrentParameters.Remove("Ensure")
             New-SPOSite @CurrentParameters
         }
     }

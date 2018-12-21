@@ -105,10 +105,19 @@ function Get-TargetResource
                     Get-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType "Members"
                 }
 
-                $groupMembers = @()
-                foreach($link in $groupLinks)
+                $groupMembers = ""
+                foreach($link in $groupLinks.Name)
                 {
-                    $groupMembers += $link.Name
+                    $groupMembers += $link.ToString() + ","
+                }
+                if ($groupMembers -ne "")
+                {
+                    # Remove the trailing comma
+                    $groupMembers = $groupMembers.Remove($groupMembers.Length -1, 1)
+                    $groupMembers = $groupMembers.Split(',')
+                }
+                else {
+                    $groupMembers = @()
                 }
                 return @{
                     DisplayName = $group.DisplayName
