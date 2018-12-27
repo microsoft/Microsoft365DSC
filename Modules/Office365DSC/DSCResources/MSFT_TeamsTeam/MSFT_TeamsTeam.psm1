@@ -87,7 +87,7 @@ function Get-TargetResource {
         }
     }
     catch {
-        Write-Verbose "Failed to get Tenant client sync settings !"
+        Write-Verbose "Failed to get Teams from the tenant."
         return $nullReturn
     }
     }
@@ -150,8 +150,6 @@ function Set-TargetResource {
     $CurrentParameters.Remove("GlobalAdminAccount")
    
     New-Team @CurrentParameters
-
-
   
 }
 
@@ -163,58 +161,41 @@ function Test-TargetResource {
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $CentralAdminUrl,
-
-        [Parameter()]
-        [System.UInt32]
-        $OneDriveStorageQuota,
-
-        [Parameter()]
-        [System.UInt32]
-        $OrphanedPersonalSitesRetentionPeriod,
-
-        [Parameter()]
-        [System.Boolean]
-        $OneDriveForGuestsEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $NotifyOwnersWhenInvitationsAccepted,
-
-        [Parameter()]
-        [System.Boolean]
-        $NotificationsInOneDriveForBusinessEnabled,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On", "Off", "Unspecified")] 
-        $ODBMembersCanShare,
+        $Group,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On", "Off", "Unspecified")] 
-        $ODBAccessRequests,
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Alias,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Public", "Private")] 
+        $AccessType,
 
         [Parameter()]
         [System.Boolean]
-        $BlockMacSync,
-
-        [Parameter()]
-        [System.Boolean]
-        $DisableReportProblemDialog,
+        $AddCreatorAsMember,
 
         [Parameter()]
         [System.String]
-        $DomainGuids,
-        
-        [Parameter()]
-        [System.String[]]
-        $ExcludedFileExtensions,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("OptOut", "HardOptIn", "SoftOptIn")] 
-        $GrooveBlockOption,
+        [ValidateSet("EDU_Class", "EDU_PLC")] 
+        $Template,
 
         [Parameter()] 
         [ValidateSet("Present", "Absent")] 
@@ -226,23 +207,13 @@ function Test-TargetResource {
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing client tenant sync settings"
+    Write-Verbose -Message "Testing creation of new Team"
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("BlockMacSync", `
-            "ExcludedFileExtensions", `
-            "DisableReportProblemDialog", `
-            "GrooveBlockOption", `
-            "DomainGuids", `
-            "OneDriveStorageQuota", `
-            "OrphanedPersonalSitesRetentionPeriod", `
-            "OneDriveForGuestsEnabled", `
-            "ODBAccessRequests", `
-            "ODBMembersCanShare", `
-            "NotifyOwnersWhenInvitationsAccepted", `
-            "NotificationsInOneDriveForBusinessEnabled",
-        "Ensure"
+        -ValuesToCheck @("DisplayName", `
+                   "Ensure"
     )
 }           
 
@@ -253,55 +224,46 @@ function Export-TargetResource {
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $CentralAdminUrl,
-
-        [Parameter()]
-        [System.UInt32]
-        $OneDriveStorageQuota,
-
-        [Parameter()]
-        [System.UInt32]
-        $OrphanedPersonalSitesRetentionPeriod,
-
-        [Parameter()]
-        [System.Boolean]
-        $OneDriveForGuestsEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $NotifyOwnersWhenInvitationsAccepted,
-
-        [Parameter()]
-        [System.Boolean]
-        $NotificationsInOneDriveForBusinessEnabled,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
-        $ODBMembersCanShare,
+        $Group,
 
         [Parameter()]
         [System.String]
-        $ODBAccessRequests,
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Alias,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Public", "Private")] 
+        $AccessType,
 
         [Parameter()]
         [System.Boolean]
-        $BlockMacSync,
-
-        [Parameter()]
-        [System.Boolean]
-        $DisableReportProblemDialog,
+        $AddCreatorAsMember,
 
         [Parameter()]
         [System.String]
-        $DomainGuids,
+        [ValidateSet("EDU_Class", "EDU_PLC")] 
+        $Template,
 
-        [Parameter()]
-        [System.String[]]
-        $ExcludedFileExtensions,
-
-        [Parameter()]
-        [System.String]
-        $GrooveBlockOption,
+        [Parameter()] 
+        [ValidateSet("Present", "Absent")] 
+        [System.String] 
+        $Ensure = "Present",
 
         [Parameter(Mandatory = $true)] 
         [System.Management.Automation.PSCredential] 

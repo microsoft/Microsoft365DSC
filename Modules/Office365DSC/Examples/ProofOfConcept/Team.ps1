@@ -9,13 +9,28 @@ Configuration Teams
     $credsGlobalAdmin = Get-Credential -UserName "derek@smaystate.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
-        TeamsFunSettings MyTeams
+        
+
+        ODSettings OneDriveSettings
         {
-            GroupID = "f2d2365d-5e77-49c0-99fa-7c468cce021a"
-            AllowGiphy = $true
-            AllowStickersAndMemes = $false
-            AllowCustomMemes = $false
-            GiphyContentRating = "Strict"
+            CentralAdminUrl = 'https://smaystate-admin.sharepoint.com'
+            GlobalAdminAccount = $credsGlobalAdmin
+            OneDriveStorageQuota = '1024'
+            ExcludedFileExtensions = @('pst')
+            DomainGuids = ''
+            GrooveBlockOption = "OptOut"
+            DisableReportProblemDialog = $true
+            OrphanedPersonalSitesRetentionPeriod = "45"
+            OneDriveForGuestsEnabled = $false
+            ODBAccessRequests = 'On'
+            ODBMembersCanShare = 'On'
+            NotifyOwnersWhenInvitationsAccepted = $false
+            NotificationsInOneDriveForBusinessEnabled = $false
+        }
+
+        TeamsTeam MyTeams
+        {
+            DisplayName = "TestTeam"
             GlobalAdminAccount = $credsGlobalAdmin
         }  
     }
