@@ -10,15 +10,17 @@ Configuration Teams
     Node localhost
     {
 
-        <#             
+                   
         TeamsTeam MyTeams
         {
+            Group = "256ea6c4-025a-4134-b865-9773c857792d"
             DisplayName = "Tech Reads"
             Description = "Technical writers description"
             AccessType = "Private"
             GlobalAdminAccount = $credsGlobalAdmin
         }  
-
+        #>
+        <# 
         TeamsFunSettings MyTeamFunSettings
         {
             GroupID = "8512d336-542f-436f-b0c3-b174a6ac7f32"
@@ -28,7 +30,7 @@ Configuration Teams
             AllowCustomMemes = $true
             GlobalAdminAccount = $credsGlobalAdmin
         }  
-        #>
+        #> 
         TeamsChannel MyChannel
         {
             GroupID = "f2d2365d-5e77-49c0-99fa-7c468cce021a"
@@ -37,6 +39,7 @@ Configuration Teams
             Description = "Description set from DSC"
             GlobalAdminAccount = $credsGlobalAdmin
         }
+        
     }
 }
 

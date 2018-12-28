@@ -41,7 +41,7 @@ function Get-TargetResource {
 
     try {
         Write-Verbose -Message "Checking for existance of Team"
-        $channel = Get-TeamChannel -GroupId $GroupID  Where-Object {($_.DisplayName -eq $CurrentDisplayName)}
+        $channel = Get-TeamChannel -GroupId $GroupID | Where-Object {($_.DisplayName -eq $CurrentDisplayName)}
         if (!$channel) {
             Write-Verbose "Failed to get Team with ID $GroupId"
             return $nullReturn
@@ -95,9 +95,10 @@ function Set-TargetResource {
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
-  
+
+    Write-Verbose -Message "Setting team channel to $NewDisplayName" 
     Set-TeamChannel @CurrentParameters
-  
+   
 }
 
 function Test-TargetResource {

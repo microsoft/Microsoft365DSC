@@ -125,6 +125,11 @@ function Set-TargetResource {
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
+
+    if ($CurrentParameters.ContainsKey("Group") -and $CurrentParameters.Count -gt 1)
+    {
+        Write-Verbose -Message "If group is set no other parameters can be passed"
+    }
   
     New-Team @CurrentParameters
   
