@@ -10,7 +10,7 @@ Configuration Teams
     Node localhost
     {
 
-                     
+        <#             
         TeamsTeam MyTeams
         {
             DisplayName = "Tech Reads"
@@ -28,6 +28,15 @@ Configuration Teams
             AllowCustomMemes = $true
             GlobalAdminAccount = $credsGlobalAdmin
         }  
+        #>
+        TeamsChannel MyChannel
+        {
+            GroupID = "f2d2365d-5e77-49c0-99fa-7c468cce021a"
+            CurrentDisplayName = "TestChannel"
+            NewDisplayName = "Channel set from DSC"
+            Description = "Description set from DSC"
+            GlobalAdminAccount = $credsGlobalAdmin
+        }
     }
 }
 
