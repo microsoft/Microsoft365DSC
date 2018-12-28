@@ -3,7 +3,6 @@ function Get-TargetResource {
     [OutputType([System.Collections.Hashtable])]
     param
     (
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
@@ -75,7 +74,7 @@ function Get-TargetResource {
         }
 
         return @{
-            DisplayName        = $team.displayname
+            DisplayName        = $team.DisplayName
             Group              = $team.GroupID 
             Description        = $team.Description
             Owner              = $null
@@ -90,7 +89,7 @@ function Get-TargetResource {
         Write-Verbose "Failed to get Teams from the tenant."
         return $nullReturn
     }
-    }
+}
 
 function Set-TargetResource {
     [CmdletBinding()]
@@ -209,12 +208,15 @@ function Test-TargetResource {
 
     Write-Verbose -Message "Testing creation of new Team"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    
+
+    foreach($curr in $CurrentValues){
+        Write-Verbose -Message "Curr value $($curr)"
+    }
+
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("DisplayName", `
-                   "Ensure"
-    )
+        -ValuesToCheck @("Ensure", `
+            "DisplayName")
 }           
 
 function Export-TargetResource {
