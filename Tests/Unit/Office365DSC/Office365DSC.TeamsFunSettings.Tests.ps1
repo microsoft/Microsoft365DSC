@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
                                 -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                                -DscResource "ODSettings"
+                                                -DscResource "TeamFunSettings"
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -21,22 +21,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "Pass@word1)" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Test-SPOServiceConnection -MockWith {
+        Mock -CommandName Test-TeamsServiceConnection -MockWith {
         }
 
         # Test contexts 
-        Context -Name "Check OneDrive Quota" -Fixture {
+        Context -Name "Check Team Fun settings" -Fixture {
             $testParams = @{
-                OneDriveStorageQuota = 1024
+                GroupID = "12345-12345-12345-12345-12345"
+                AllowGiphy = $true
+                GiphyContentRating = "Moderate"
+                AllowStickersAndMemes = $true 
+                AllowCustomMemes = $true
                 CentralAdminUrl = "https://contoso.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Set-SPOTenant -MockWith { 
+            Mock -CommandName Set-TeamFunSettings -MockWith { 
                 return @{OneDriveStorageQuota = $null}
             }
 
-            Mock -CommandName Get-SPOTenant -MockWith { 
+            Mock -CommandName Get-TeamFunSettings -MockWith { 
                 return $null
             }
             
@@ -45,70 +49,59 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-            It "Creates the site collection in the Set method" {
+            It "Updates the Team fun settings in the Set method" {
                 Set-TargetResource @testParams
             }
         }
 
-        Context -Name "Set OneDrive Quota" -Fixture {
+        Context -Name "Set Team Fun settings" -Fixture {
             $testParams = @{
-                OneDriveStorageQuota = 1024
+                GroupID = "12345-12345-12345-12345-12345"
+                AllowGiphy = $true
+                GiphyContentRating = "Moderate"
+                AllowStickersAndMemes = $true 
+                AllowCustomMemes = $true
                 CentralAdminUrl = "https://contoso.sharepoint.com"
-                OrphanedPersonalSitesRetentionPeriod = 60
-                OneDriveForGuestsEnabled = $true
-                NotifyOwnersWhenInvitationsAccepted = $true
-                NotificationsInOneDriveForBusinessEnabled = $true
-                ODBMembersCanShare = "On"
-                ODBAccessRequests = "On"
-                BlockMacSync = $true
-                DisableReportProblemDialog = $true
-                DomainGuids = "12345-12345-12345-12345-12345"
-                ExcludedFileExtensions = @(".asmx")
-                GrooveBlockOption = "HardOptIn"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-SPOTenant -MockWith { 
+            Mock -CommandName Get-TeamFunSettings -MockWith { 
                 return @{
-                    OneDriveStorageQuota = "1024"
+                    GroupID = "12345-12345-12345-12345-12345"
+                    AllowGiphy = $true
+                    GiphyContentRating = "Moderate"
+                    AllowStickersAndMemes = $true 
+                    AllowCustomMemes = $true
                 }
             }
-
-            Mock -CommandName Get-SPOTenantSyncClientRestriction -MockWith {
-                return @{
-                    OptOutOfGrooveBlock = $false
-                    OptOutOfGrooveSoftBlock = $false
-                    DisableReportProblemDialog = $false
-                    BlockMacSync = $true
-                    AllowedDomainList = @("")
-                    TenantRestrictionEnabled = $true
-                    ExcludedFileExtensions = @(".asmx")
-                }
-            }
-
-            It "Should return Ensure equals to Present from the Get method" {
+           
+            It "Should return absent from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present" 
             }
 
-            It "Should configure OneDrive settings in the Set method" {
-                Set-TargetResource @testParams
-            }
-
-            It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $false
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $true
             }
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                OneDriveStorageQuota = 1024
+                GroupID = "12345-12345-12345-12345-12345"
+                AllowGiphy = $true
+                GiphyContentRating = "Moderate"
+                AllowStickersAndMemes = $true 
+                AllowCustomMemes = $true
                 CentralAdminUrl = "https://contoso.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-SPOTenant -MockWith { 
+            Mock -CommandName Get-TeamFunSettings -MockWith { 
                 return @{
-                    OneDriveStorageQuota = "1024"
+                    GroupID = "12345-12345-12345-12345-12345"
+                    AllowGiphy = $true
+                    GiphyContentRating = "Moderate"
+                    AllowStickersAndMemes = $true 
+                    AllowCustomMemes = $true
                 }
             }
 

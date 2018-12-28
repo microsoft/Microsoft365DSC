@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
                                 -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                                -DscResource "ODSettings"
+                                                -DscResource "TeamsTeam"
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -21,94 +21,73 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "Pass@word1)" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Test-SPOServiceConnection -MockWith {
+        Mock -CommandName Test-TeamsServiceConnection -MockWith {
         }
 
         # Test contexts 
-        Context -Name "Check OneDrive Quota" -Fixture {
+        Context -Name "When the Team doesnt exist" -Fixture {
             $testParams = @{
-                OneDriveStorageQuota = 1024
+                DisplayName = "Test Team"
+                Description = "Test team description"
+                AccessType = "Private"
                 CentralAdminUrl = "https://contoso.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Set-SPOTenant -MockWith { 
-                return @{OneDriveStorageQuota = $null}
+            Mock -CommandName New-Team -MockWith { 
+                return @{DisplayName = $null}
             }
 
-            Mock -CommandName Get-SPOTenant -MockWith { 
+            Mock -CommandName Get-Team -MockWith { 
                 return $null
             }
-            
 
             It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-            It "Creates the site collection in the Set method" {
+            It "Creates the MS Team in the Set method" {
                 Set-TargetResource @testParams
             }
         }
 
-        Context -Name "Set OneDrive Quota" -Fixture {
+        Context -Name "The Team already exists" -Fixture {
             $testParams = @{
-                OneDriveStorageQuota = 1024
-                CentralAdminUrl = "https://contoso.sharepoint.com"
-                OrphanedPersonalSitesRetentionPeriod = 60
-                OneDriveForGuestsEnabled = $true
-                NotifyOwnersWhenInvitationsAccepted = $true
-                NotificationsInOneDriveForBusinessEnabled = $true
-                ODBMembersCanShare = "On"
-                ODBAccessRequests = "On"
-                BlockMacSync = $true
-                DisableReportProblemDialog = $true
-                DomainGuids = "12345-12345-12345-12345-12345"
-                ExcludedFileExtensions = @(".asmx")
-                GrooveBlockOption = "HardOptIn"
+                DisplayName = "Test Team"
+                Description = "Test team description"
+                AccessType = "Private"
+                CentralAdminUrl = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-SPOTenant -MockWith { 
+            Mock -CommandName Get-Team -MockWith { 
                 return @{
-                    OneDriveStorageQuota = "1024"
+                    DisplayName = "Test Team"
+                    Ensure = "Present"
                 }
             }
-
-            Mock -CommandName Get-SPOTenantSyncClientRestriction -MockWith {
-                return @{
-                    OptOutOfGrooveBlock = $false
-                    OptOutOfGrooveSoftBlock = $false
-                    DisableReportProblemDialog = $false
-                    BlockMacSync = $true
-                    AllowedDomainList = @("")
-                    TenantRestrictionEnabled = $true
-                    ExcludedFileExtensions = @(".asmx")
-                }
-            }
-
-            It "Should return Ensure equals to Present from the Get method" {
+            
+            It "Should return absent from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present" 
             }
 
-            It "Should configure OneDrive settings in the Set method" {
-                Set-TargetResource @testParams
-            }
-
-            It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $false
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $true
             }
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                OneDriveStorageQuota = 1024
+                DisplayName = "Test Team"
+                Description = "Test team description"
+                AccessType = "Private"
                 CentralAdminUrl = "https://contoso.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-SPOTenant -MockWith { 
+            Mock -CommandName Get-Team -MockWith { 
                 return @{
-                    OneDriveStorageQuota = "1024"
+                    DisplayName = "Test Team"
                 }
             }
 

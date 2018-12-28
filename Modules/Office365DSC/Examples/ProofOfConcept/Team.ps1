@@ -18,6 +18,16 @@ Configuration Teams
             AccessType = "Private"
             GlobalAdminAccount = $credsGlobalAdmin
         }  
+
+        TeamsFunSettings MyTeamFunSettings
+        {
+            GroupID = "8512d336-542f-436f-b0c3-b174a6ac7f32"
+            AllowGiphy = $true
+            GiphyContentRating = "Moderate"
+            AllowStickersAndMemes = $true 
+            AllowCustomMemes = $true
+            GlobalAdminAccount = $credsGlobalAdmin
+        }  
     }
 }
 
