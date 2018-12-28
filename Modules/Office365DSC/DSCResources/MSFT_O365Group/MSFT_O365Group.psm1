@@ -18,7 +18,7 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ManagedBy,
 
         [Parameter()]
@@ -167,7 +167,7 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ManagedBy,
 
         [Parameter()]
@@ -324,7 +324,7 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ManagedBy,
 
         [Parameter()]
@@ -378,12 +378,13 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
-    $content = "O365Group " + (New-GUID).ToString() + "`r`n"
-    $content += "{`r`n"
-    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += "}`r`n"
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $content = "        O365Group " + (New-GUID).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += "        }`r`n"
     return $content
 }
 

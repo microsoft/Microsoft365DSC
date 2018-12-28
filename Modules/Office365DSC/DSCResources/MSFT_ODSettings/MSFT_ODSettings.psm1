@@ -4,7 +4,6 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
@@ -73,10 +72,10 @@ function Get-TargetResource
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     
     $nullReturn = @{
+        CentralAdminUrl                           = $CentralAdminUrl
         BlockMacSync                              = $null
         DisableReportProblemDialog                = $null
         DomainGuids                               = $null
-        Enabled                                   = $null
         ExcludedFileExtensions                    = $null
         GrooveBlockOption                         = $null
         OneDriveStorageQuota                      = $null
@@ -129,10 +128,10 @@ function Get-TargetResource
         
         Write-Verbose "Groove block values $($GrooveOption)"
         return @{
+            CentralAdminUrl                           = $CentralAdminUrl
             BlockMacSync                              = $tenantRestrictions.BlockMacSync
             DisableReportProblemDialog                = $tenantRestrictions.DisableReportProblemDialog
             DomainGuids                               = $tenantRestrictions.AllowedDomainList
-            Enabled                                   = $tenantRestrictions.TenantRestrictionEnabled
             ExcludedFileExtensions                    = $tenantRestrictions.ExcludedFileExtensions
             GrooveBlockOption                         = $GrooveOption
             OneDriveStorageQuota                      = $tenant.OneDriveStorageQuota
@@ -227,7 +226,6 @@ function Set-TargetResource
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
-    ## Tenant settings updated ###
 
     if ($CurrentParameters.ContainsKey("OneDriveStorageQuota"))
     {
@@ -469,12 +467,13 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )
-    Test-SPOServiceConnection -GlobalAdminAccount $GlobalAdminAccount -SPOCentralAdminUrl $CentralAdminUrl
     $result = Get-TargetResource @PSBoundParameters
-    $content = "ODSettings " + (New-GUID).ToString() + "`r`n"
-    $content += "{`r`n"
-    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += "}`r`n"
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $content = "        ODSettings " + (New-GUID).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += "        }`r`n"
     return $content
 }
 

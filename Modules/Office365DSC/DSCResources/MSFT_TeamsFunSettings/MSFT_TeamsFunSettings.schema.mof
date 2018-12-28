@@ -1,0 +1,12 @@
+[ClassVersion("1.0.0.0"), FriendlyName("TeamsFunSettings")]
+class MSFT_TeamsFunSettings : OMI_BaseResource
+{
+    [Key, Description("The group id of the team")] string GroupID;
+    [Write, Description("Allow gilphy in team ")] string AllowGiphy;
+    [Write, Description("Gilphy content rating"),ValueMap{"Strict","Moderate"}, Values{"Strict","Moderate"}] string GiphyContentRating;
+    [Write, Description("Allow stickers and mimes")] string AllowStickersAndMemes;
+    [Write, Description("Allow custom memes")] string AllowCustomMemes;
+    [Write, Description("Present ensures the site collection exists, absent ensures it is removed"), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
+    [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+};
+
