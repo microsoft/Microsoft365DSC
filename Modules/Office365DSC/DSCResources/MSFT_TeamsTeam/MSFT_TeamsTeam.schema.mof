@@ -7,9 +7,7 @@ class MSFT_TeamsTeam : OMI_BaseResource
     [Write, Description("Alias of O365 Group associated with Team")] string Alias;
     [Write, Description("Owner of the Team")] string Owner;
     [Write, Description("Classification of the Team ")] string Classification;
-    [Write, Description("AccessType of the Team"),ValueMap{"Public","Private"},Values{"Pubilc","Private"}] String AccessType;
-    [Write, Description("Set creator of Team as owner")] Boolean AddCreatorAsMember;
-    [Write, Description("Template of Team. Only used in EDU licenses"),ValueMap{"EDU_Class","EDU_PLC"},Values{"EDU_Class","EDU_PLC"}] string Template;
+    [Write, Description("AccessType of the Team"),ValueMap{"Public","Private"},Values{"Public","Private"}] String AccessType;
     [Write, Description("Present ensures the Team exists, absent ensures it is removed"), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };

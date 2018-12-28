@@ -31,16 +31,7 @@ function Get-TargetResource {
         [System.String]
         [ValidateSet("Public", "Private")] 
         $AccessType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AddCreatorAsMember,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("EDU_Class", "EDU_PLC")] 
-        $Template,
-
+        
         [Parameter()] 
         [ValidateSet("Present", "Absent")] 
         [System.String] 
@@ -51,7 +42,7 @@ function Get-TargetResource {
         $GlobalAdminAccount
     )
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount | Out-Null 
     
     $nullReturn = @{
         DisplayName        = $null
@@ -60,8 +51,6 @@ function Get-TargetResource {
         Owner              = $null
         Classification     = $null
         AccessType         = "Private"
-        AddCreatorAsMember = $null
-        Template           = "EDU_Class"
         Ensure             = "Absent"
     }
 
@@ -80,8 +69,6 @@ function Get-TargetResource {
             Owner              = $null
             Classification     = $null
             AccessType         = "Private"
-            AddCreatorAsMember = $null
-            Template           = "EDU_Class"
             Ensure             = "Present"
         }
     }
@@ -123,16 +110,7 @@ function Set-TargetResource {
         [System.String]
         [ValidateSet("Public", "Private")] 
         $AccessType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AddCreatorAsMember,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("EDU_Class", "EDU_PLC")] 
-        $Template,
-
+       
         [Parameter()] 
         [ValidateSet("Present", "Absent")] 
         [System.String] 
@@ -147,7 +125,7 @@ function Set-TargetResource {
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
-   
+  
     New-Team @CurrentParameters
   
 }
@@ -186,16 +164,7 @@ function Test-TargetResource {
         [System.String]
         [ValidateSet("Public", "Private")] 
         $AccessType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AddCreatorAsMember,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("EDU_Class", "EDU_PLC")] 
-        $Template,
-
+       
         [Parameter()] 
         [ValidateSet("Present", "Absent")] 
         [System.String] 
@@ -208,15 +177,11 @@ function Test-TargetResource {
 
     Write-Verbose -Message "Testing creation of new Team"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    foreach($curr in $CurrentValues){
-        Write-Verbose -Message "Curr value $($curr)"
-    }
-
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("Ensure", `
-            "DisplayName")
+            "DisplayName"
+            )
 }           
 
 function Export-TargetResource {
@@ -253,14 +218,6 @@ function Export-TargetResource {
         [ValidateSet("Public", "Private")] 
         $AccessType,
 
-        [Parameter()]
-        [System.Boolean]
-        $AddCreatorAsMember,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("EDU_Class", "EDU_PLC")] 
-        $Template,
 
         [Parameter()] 
         [ValidateSet("Present", "Absent")] 

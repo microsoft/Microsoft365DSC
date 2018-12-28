@@ -34,7 +34,7 @@ function Get-TargetResource {
         $GlobalAdminAccount
     )
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount | Out-Null
     
     $nullReturn = @{
         GroupID               = $null

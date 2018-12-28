@@ -9,10 +9,13 @@ Configuration Teams
     $credsGlobalAdmin = Get-Credential -UserName "derek@smaystate.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
-                
+
+                     
         TeamsTeam MyTeams
         {
-            DisplayName = "TestTeam"
+            DisplayName = "Tech Reads"
+            Description = "Technical writers description"
+            AccessType = "Private"
             GlobalAdminAccount = $credsGlobalAdmin
         }  
     }
