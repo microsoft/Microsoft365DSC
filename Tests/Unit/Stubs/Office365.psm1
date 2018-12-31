@@ -1,4 +1,146 @@
 ﻿<# EXO - Custom Office365DSC #>
+function Set-SPOTenant{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.UInt32]
+        $OneDriveStorageQuota,
+
+        [Parameter()]
+        [System.UInt32]
+        $OrphanedPersonalSitesRetentionPeriod,
+
+        [Parameter()]
+        [System.Boolean]
+        $OneDriveForGuestsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotifyOwnersWhenInvitationsAccepted,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotificationsInOneDriveForBusinessEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ODBMembersCanShare,
+
+        [Parameter()]
+        [System.String]
+        $ODBAccessRequests,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockMacSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableReportProblemDialog,
+
+        [Parameter()]
+        [System.String]
+        $DomainGuids,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedFileExtensions,
+
+        [Parameter()]
+        [System.String]
+        $GrooveBlockOption
+    )
+}
+function Get-Mailbox{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [string]
+        $RecipientTypeDetails
+    )
+}
+
+function New-Mailbox{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Name,
+
+        [Parameter(Mandatory=$true)]
+        [string]
+        $PrimarySMTPAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $Shared
+    )
+}
+
+function Set-Mailbox{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [string]
+        $EmailAddresses
+    )
+}
+
+function Remove-Mailbox{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function Get-OrganizationConfig
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+
+function Set-OrganizationConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Boolean]
+        $MailTipsAllTipsEnabled,
+
+        [Parameter()]
+        [Boolean]
+        $MailTipsGroupMetricsEnabled,
+
+        [Parameter()]
+        [UInt32]
+        $MailTipsLargeAudienceThreshold,
+
+        [Parameter()]
+        [Boolean]
+        $MailTipsMailboxSourcedTipsEnabled,
+
+        [Parameter()]
+        [Boolean]
+        $MailTipsExternalRecipientsTipsEnabled
+    )
+
+}
 
 function Get-UnifiedGroupLinks{
     [CmdletBinding()]
@@ -11,6 +153,57 @@ function Get-UnifiedGroupLinks{
         [string]
         $LinkType
     )
+}
+
+function New-UnifiedGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $DisplayName,
+
+        [Parameter()]
+        [string]
+        $Notes,
+
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Owner)
+}
+
+function Add-UnifiedGroupLinks
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [string]
+        $LinkType,
+
+        [Parameter(Mandatory=$true)]
+        [string[]]
+        $Links)
+}
+
+function Remove-UnifiedGroupLinks
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [string]
+        $LinkType,
+
+        [Parameter(Mandatory=$true)]
+        [string[]]
+        $Links)
 }
 
 function Get-Group{
@@ -2540,203 +2733,7 @@ param(
  } 
 
 
-function Set-SPOTenant { 
- [CmdletBinding()]
-param(
-    [int]
-    ${MinCompatibilityLevel},
 
-    [int]
-    ${MaxCompatibilityLevel},
-
-    [System.Nullable[bool]]
-    ${ExternalServicesEnabled},
-
-    [string]
-    ${NoAccessRedirectUrl},
-
-    [System.Nullable[object]]
-    ${SharingCapability},
-
-    [System.Nullable[bool]]
-    ${DisplayStartASiteOption},
-
-    [string]
-    ${StartASiteFormUrl},
-
-    [System.Nullable[bool]]
-    ${ShowEveryoneClaim},
-
-    [System.Nullable[bool]]
-    ${ShowAllUsersClaim},
-
-    [System.Nullable[bool]]
-    ${ShowEveryoneExceptExternalUsersClaim},
-
-    [System.Nullable[bool]]
-    ${SearchResolveExactEmailOrUPN},
-
-    [System.Nullable[bool]]
-    ${OfficeClientADALDisabled},
-
-    [System.Nullable[bool]]
-    ${LegacyAuthProtocolsEnabled},
-
-    [System.Nullable[bool]]
-    ${RequireAcceptingAccountMatchInvitedAccount},
-
-    [System.Nullable[bool]]
-    ${ProvisionSharedWithEveryoneFolder},
-
-    [string]
-    ${SignInAccelerationDomain},
-
-    [System.Nullable[bool]]
-    ${EnableGuestSignInAcceleration},
-
-    [System.Nullable[bool]]
-    ${UsePersistentCookiesForExplorerView},
-
-    [System.Nullable[bool]]
-    ${BccExternalSharingInvitations},
-
-    [string]
-    ${BccExternalSharingInvitationsList},
-
-    [System.Nullable[bool]]
-    ${UserVoiceForFeedbackEnabled},
-
-    [System.Nullable[bool]]
-    ${PublicCdnEnabled},
-
-    [string]
-    ${PublicCdnAllowedFileTypes},
-
-    [System.Nullable[int]]
-    ${RequireAnonymousLinksExpireInDays},
-
-    [string]
-    ${SharingAllowedDomainList},
-
-    [string]
-    ${SharingBlockedDomainList},
-
-    [System.Nullable[object]]
-    ${SharingDomainRestrictionMode},
-
-    [System.Nullable[long]]
-    ${OneDriveStorageQuota},
-
-    [System.Nullable[bool]]
-    ${OneDriveForGuestsEnabled},
-
-    [System.Nullable[bool]]
-    ${IPAddressEnforcement},
-
-    [string]
-    ${IPAddressAllowList},
-
-    [System.Nullable[int]]
-    ${IPAddressWACTokenLifetime},
-
-    [System.Nullable[bool]]
-    ${UseFindPeopleInPeoplePicker},
-
-    [System.Nullable[object]]
-    ${DefaultSharingLinkType},
-
-    [System.Nullable[object]]
-    ${ODBMembersCanShare},
-
-    [System.Nullable[object]]
-    ${ODBAccessRequests},
-
-    [System.Nullable[bool]]
-    ${PreventExternalUsersFromResharing},
-
-    [System.Nullable[bool]]
-    ${ShowPeoplePickerSuggestionsForGuestUsers},
-
-    [System.Nullable[object]]
-    ${FileAnonymousLinkType},
-
-    [System.Nullable[object]]
-    ${FolderAnonymousLinkType},
-
-    [System.Nullable[bool]]
-    ${NotifyOwnersWhenItemsReshared},
-
-    [System.Nullable[bool]]
-    ${NotifyOwnersWhenInvitationsAccepted},
-
-    [System.Nullable[bool]]
-    ${NotificationsInOneDriveForBusinessEnabled},
-
-    [System.Nullable[bool]]
-    ${NotificationsInSharePointEnabled},
-
-    [System.Nullable[object]]
-    ${SpecialCharactersStateInFileFolderNames},
-
-    [System.Nullable[bool]]
-    ${OwnerAnonymousNotification},
-
-    [System.Nullable[bool]]
-    ${CommentsOnSitePagesDisabled},
-
-    [System.Nullable[bool]]
-    ${SocialBarOnSitePagesDisabled},
-
-    [System.Nullable[int]]
-    ${OrphanedPersonalSitesRetentionPeriod},
-
-    [System.Nullable[bool]]
-    ${PermissiveBrowserFileHandlingOverride},
-
-    [System.Nullable[bool]]
-    ${DisallowInfectedFileDownload},
-
-    [System.Nullable[object]]
-    ${DefaultLinkPermission},
-
-    [System.Nullable[object]]
-    ${ConditionalAccessPolicy},
-
-    [System.Nullable[bool]]
-    ${AllowDownloadingNonWebViewableFiles},
-
-    [System.Nullable[object]]
-    ${LimitedAccessFileType},
-
-    [System.Nullable[bool]]
-    ${AllowEditing},
-
-    [System.Nullable[bool]]
-    ${ApplyAppEnforcedRestrictionsToAdHocRecipients},
-
-    [System.Nullable[bool]]
-    ${FilePickerExternalImageSearchEnabled},
-
-    [System.Nullable[bool]]
-    ${EmailAttestationRequired},
-
-    [System.Nullable[int]]
-    ${EmailAttestationReAuthDays},
-
-    [System.Nullable[bool]]
-    ${SyncPrivacyProfileProperties},
-
-    [guid[]]
-    ${DisabledWebPartIds},
-
-    [string]
-    ${OrgNewsSiteUrl},
-
-    [System.Nullable[bool]]
-    ${EnableMinimumVersionRequirement})
-
- 
- } 
 
 
 function Set-SPOTenantCdnEnabled { 
