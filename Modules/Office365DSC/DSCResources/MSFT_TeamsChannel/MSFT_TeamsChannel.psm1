@@ -92,7 +92,6 @@ function Set-TargetResource {
     )
 
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
 
