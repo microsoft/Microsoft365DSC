@@ -13,7 +13,7 @@ Configuration Teams
                    
         TeamsTeam MyTeams
         {
-            Group = "256ea6c4-025a-4134-b865-9773c857792d"
+           # Group = "256ea6c4-025a-4134-b865-9773c857792d"
             DisplayName = "Tech Reads"
             Description = "Technical writers description"
             AccessType = "Private"

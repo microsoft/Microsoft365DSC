@@ -5,6 +5,7 @@ function Get-TargetResource {
     (
         [Parameter(Mandatory = $true)]
         [System.String]
+        [ValidateLength(1,256)]
         $DisplayName,
 
         [Parameter()]
@@ -13,6 +14,7 @@ function Get-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateLength(1,1024)]
         $Description,
 
         [Parameter()]
@@ -41,6 +43,12 @@ function Get-TargetResource {
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )
+
+    $CurrentParameters = $PSBoundParameters
+    if ($CurrentParameters.ContainsKey("Group") -and $CurrentParameters.Count -gt 1)
+    {
+        throw "If Group ID is set no other parameters can be passed"
+    }
 
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount | Out-Null 
     
@@ -84,6 +92,7 @@ function Set-TargetResource {
     (
         [Parameter(Mandatory = $true)]
         [System.String]
+        [ValidateLength(1,256)]
         $DisplayName,
 
         [Parameter()]
@@ -92,6 +101,7 @@ function Set-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateLength(1,1024)]
         $Description,
 
         [Parameter()]
@@ -128,7 +138,8 @@ function Set-TargetResource {
 
     if ($CurrentParameters.ContainsKey("Group") -and $CurrentParameters.Count -gt 1)
     {
-        Write-Verbose -Message "If group is set no other parameters can be passed"
+        throw "If group is set no other parameters can be passed"
+        
     }
   
     New-Team @CurrentParameters
@@ -143,6 +154,7 @@ function Test-TargetResource {
 
         [Parameter(Mandatory = $true)]
         [System.String]
+        [ValidateLength(1,256)]
         $DisplayName,
 
         [Parameter()]
@@ -151,6 +163,7 @@ function Test-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateLength(1,1024)]
         $Description,
 
         [Parameter()]
@@ -196,6 +209,7 @@ function Export-TargetResource {
     (
         [Parameter(Mandatory = $true)]
         [System.String]
+        [ValidateLength(1,256)]
         $DisplayName,
 
         [Parameter()]
@@ -204,6 +218,7 @@ function Export-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateLength(1,1024)]
         $Description,
 
         [Parameter()]

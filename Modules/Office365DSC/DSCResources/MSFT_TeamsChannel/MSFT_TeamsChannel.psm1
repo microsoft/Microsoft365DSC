@@ -13,10 +13,12 @@ function Get-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateLength(1,50)]
         $NewDisplayName,
 
         [Parameter()]
         [System.String]
+        [ValidateLength(1,1024)]
         $Description,
         
         [Parameter()] 
@@ -71,10 +73,12 @@ function Set-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateLength(1,1024)]
         $CurrentDisplayName,
 
         [Parameter()]
         [System.String]
+        [ValidateLength(1,50)]
         $NewDisplayName,
 
         [Parameter()]
@@ -105,7 +109,6 @@ function Test-TargetResource {
     [OutputType([System.Boolean])]
     param
     (
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $GroupID,
@@ -116,10 +119,12 @@ function Test-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateLength(1,50)]
         $NewDisplayName,
 
         [Parameter()]
         [System.String]
+        [ValidateLength(1,1024)]
         $Description,
        
         [Parameter()] 
@@ -156,10 +161,12 @@ function Export-TargetResource {
 
         [Parameter()]
         [System.String]
+        [ValidateLength(1,50)]
         $NewDisplayName,
 
         [Parameter()]
         [System.String]
+        [ValidateLength(1,1024)]
         $Description,
 
         [Parameter()] 
