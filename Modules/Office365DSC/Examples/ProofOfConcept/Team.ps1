@@ -11,13 +11,11 @@ Configuration Teams
     {
 
                    
-        TeamsTeam MyTeams
+        TeamsRemoveTeam MyTeams
         {
-           # Group = "256ea6c4-025a-4134-b865-9773c857792d"
-            DisplayName = "Tech Reads"
-            Description = "Technical writers description"
-            AccessType = "Private"
+            GroupID = "f690f19c-99eb-4cad-a728-61558569742b"
             GlobalAdminAccount = $credsGlobalAdmin
+            Ensure = "Absent"
         }  
         #>
         <# 
@@ -30,7 +28,7 @@ Configuration Teams
             AllowCustomMemes = $true
             GlobalAdminAccount = $credsGlobalAdmin
         }  
-        #> 
+        
         TeamsChannel MyChannel
         {
             GroupID = "f2d2365d-5e77-49c0-99fa-7c468cce021a"
@@ -39,7 +37,7 @@ Configuration Teams
             Description = "Description set from DSC"
             GlobalAdminAccount = $credsGlobalAdmin
         }
-        
+        #>
     }
 }
 
