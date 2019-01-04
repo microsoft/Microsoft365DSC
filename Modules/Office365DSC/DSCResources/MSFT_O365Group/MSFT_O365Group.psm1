@@ -214,7 +214,8 @@ function Set-TargetResource
             Write-Verbose -Message "Creating Security Group $DisplayName"
             New-MsolGroup @CurrentParameters
         }
-        else {
+        else
+        {
             switch($GroupType)
             {
                 "Office365"
@@ -235,7 +236,7 @@ function Set-TargetResource
                         Get-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType "Members"
                     }
                     $curMembers = @()
-                    foreach($link in $groupLinks)
+                    foreach ($link in $groupLinks)
                     {
                         if ($link.Name -and $link.Name -ne $currentGroup.ManagedBy)
                         {
@@ -250,7 +251,7 @@ function Set-TargetResource
                         Write-Verbose "Detected a difference in the current list of members and the desired one"
                         $membersToRemove = @()
                         $membersToAdd = @()
-                        foreach($diff in $difference)
+                        foreach ($diff in $difference)
                         {
                             if ($diff.SideIndicator -eq "<=" -and $diff.InputObject -ne $ManagedBy.Split('@')[0])
                             {
