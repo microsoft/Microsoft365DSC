@@ -94,7 +94,7 @@ function Get-TargetResource
             return $nullReturn
         }
 
-        switch($GroupType)
+        switch ($GroupType)
         {
             "Office365"
             {
@@ -106,7 +106,7 @@ function Get-TargetResource
                 }
 
                 $groupMembers = ""
-                foreach($link in $groupLinks.Name)
+                foreach ($link in $groupLinks.Name)
                 {
                     $groupMembers += $link.ToString() + ","
                 }
@@ -116,7 +116,8 @@ function Get-TargetResource
                     $groupMembers = $groupMembers.Remove($groupMembers.Length -1, 1)
                     $groupMembers = $groupMembers.Split(',')
                 }
-                else {
+                else
+                {
                     $groupMembers = @()
                 }
                 return @{
@@ -201,7 +202,7 @@ function Set-TargetResource
     Write-Verbose "Entering Set-TargetResource"
     Write-Verbose "Retrieving information about group $($DisplayName) to see if it already exists"
     $currentGroup = Get-TargetResource @PSBoundParameters
-    if( $Ensure -eq "Present")
+    if ($Ensure -eq "Present")
     {
         $CurrentParameters = $PSBoundParameters
         $CurrentParameters.Remove("Ensure")
@@ -216,7 +217,7 @@ function Set-TargetResource
         }
         else
         {
-            switch($GroupType)
+            switch ($GroupType)
             {
                 "Office365"
                 {
