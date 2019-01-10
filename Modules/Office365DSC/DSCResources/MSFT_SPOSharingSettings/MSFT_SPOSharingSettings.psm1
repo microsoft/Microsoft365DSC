@@ -13,42 +13,9 @@ function Get-TargetResource
         $Tenant,
 
         [Parameter()]
-        [System.Uint32]
-        $MinCompatibilityLevel,
-
-        [Parameter()]
-        [System.Uint32]
-        $MaxCompatibilityLevel,
-
-        [Parameter()]
-        [System.boolean]
-        $ExternalServicesEnabled,
-
-        [Parameter()]
-        [System.String]
-        $NoAccessRedirectUrl,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("MySites")]
-        $ContentTypeSyncSiteTemplatesList,
-
-        [Parameter()]
-        [System.Boolean]
-        $DisableContentTypeSyncSiteTemplatesList,
-
-        [Parameter()]
         [System.String]
         [ValidateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
         $SharingCapability,
-
-        [Parameter()]
-        [System.boolean]
-        $DisplayStartASiteOption,
-
-        [Parameter()]
-        [System.String]
-        $StartASiteFormUrl,
 
         [Parameter()]
         [System.boolean]
@@ -64,35 +31,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.boolean]
-        $SearchResolveExactEmailOrUPN,
-
-        [Parameter()]
-        [System.boolean]
-        $OfficeClientADALDisabled,
-
-        [Parameter()]
-        [System.boolean]
-        $LegacyAuthProtocolsEnabled,
-
-        [Parameter()]
-        [System.boolean]
-        $RequireAcceptingAccountMatchInvitedAccount,
-
-        [Parameter()]
-        [System.boolean]
         $ProvisionSharedWithEveryoneFolder,
-
-        [Parameter()]
-        [System.String]
-        $SignInAccelerationDomain,
 
         [Parameter()]
         [System.boolean]
         $EnableGuestSignInAcceleration,
-
-        [Parameter()]
-        [System.boolean]
-        $UsePersistentCookiesForExplorerView,
 
         [Parameter()]
         [System.boolean]
@@ -101,18 +44,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $BccExternalSharingInvitationsList,
-
-        [Parameter()]
-        [System.boolean]
-        $UserVoiceForFeedbackEnabled,
-
-        [Parameter()]
-        [System.boolean]
-        $PublicCdnEnabled,
-
-        [Parameter()]
-        [System.String]
-        $PublicCdnAllowedFileTypes,
 
         [Parameter()]
         [System.Uint32]
@@ -130,22 +61,6 @@ function Get-TargetResource
         [System.String]
         [ValidateSet("None", "AllowList", "BlockList")]
         $SharingDomainRestrictionMode,
-
-        [Parameter()]
-        [System.boolean]
-        $IPAddressEnforcement,
-
-        [Parameter()]
-        [System.String]
-        $IPAddressAllowList,
-
-        [Parameter()]
-        [System.Uint32]
-        $IPAddressWACTokenLifetime,
-
-        [Parameter()]
-        [System.boolean]
-        $UseFindPeopleInPeoplePicker,
 
         [Parameter()]
         [System.String]
@@ -175,127 +90,9 @@ function Get-TargetResource
         $NotifyOwnersWhenItemsReshared,
 
         [Parameter()]
-        [System.boolean]
-        $NotificationsInSharePointEnabled,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("Allowed", "Disallowed")]
-        $SpecialCharactersStateInFileFolderNames,
-
-        [Parameter()]
-        [System.boolean]
-        $OwnerAnonymousNotification,
-
-        [Parameter()]
-        [System.boolean]
-        $CommentsOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.boolean]
-        $SocialBarOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.boolean]
-        $PermissiveBrowserFileHandlingOverride,
-
-        [Parameter()]
-        [System.boolean]
-        $DisallowInfectedFileDownload,
-
-        [Parameter()]
         [System.String]
         [ValidateSet("View", "Edit")]
-        $DefaultLinkPermission,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("AllowFullAccess", "AllowLimitedAccess", "BlockAccess")]
-        $ConditionalAccessPolicy,
-
-        [Parameter()]
-        [System.boolean]
-        $AllowDownloadingNonWebViewableFiles,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("OfficeOnlineFilesOnly", "WebPreviewableFiles", "OtherFiles")]
-        $LimitedAccessFileType,
-
-        [Parameter()]
-        [System.boolean]
-        $AllowEditing,
-
-        [Parameter()]
-        [System.boolean]
-        $ApplyAppEnforcedRestrictionsToAdHocRecipients,
-
-        [Parameter()]
-        [System.boolean]
-        $FilePickerExternalImageSearchEnabled,
-
-        [Parameter()]
-        [System.boolean]
-        $EmailAttestationRequired,
-
-        [Parameter()]
-        [System.Uint32]
-        ${EmailAttestationReAuthDays},
-
-        [Parameter()]
-        [System.boolean]
-        $SyncPrivacyProfileProperties,
-
-        [Parameter()]
-        [System.String]
-        $DisabledWebPartIds,
-
-        [Parameter()]
-        [System.String]
-        $OrgNewsSiteUrl,
-
-        [Parameter()]
-        [System.boolean]
-        $EnableMinimumVersionRequirement,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-
-        #[Parameter()]
-        #[ValidateRange(1024,1048576)]
-        #[System.Uint64]
-        #$OneDriveStorageQuota,
-
-        #[Parameter()]
-        #[System.boolean]
-        #$OneDriveForGuestsEnabled,
-
-        #[Parameter()]
-        #[System.Uint32]
-        #$OrphanedPersonalSitesRetentionPeriod,
-
-        #[Parameter()]
-        #[System.String]
-        #[ValidateSet("On", "Off", "Unspecified")]
-        #$ODBMembersCanShare,
-
-        #[Parameter()]
-        #[System.String]
-        #[ValidateSet("On", "Off", "Unspecified")]
-        #$ODBAccessRequests,
-
-        #[Parameter()]
-        #[System.boolean]
-        #$NotifyOwnersWhenInvitationsAccepted,
-
-        #[Parameter()]
-        #[System.boolean]
-        #$NotificationsInOneDriveForBusinessEnabled,
+        $DefaultLinkPermission
     )
     
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
@@ -475,42 +272,9 @@ function Set-TargetResource
         $Tenant,
 
         [Parameter()]
-        [System.Uint32]
-        $MinCompatibilityLevel,
-
-        [Parameter()]
-        [System.Uint32]
-        $MaxCompatibilityLevel,
-
-        [Parameter()]
-        [System.boolean]
-        $ExternalServicesEnabled,
-
-        [Parameter()]
-        [System.String]
-        $NoAccessRedirectUrl,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("MySites")]
-        $ContentTypeSyncSiteTemplatesList,
-
-        [Parameter()]
-        [System.Boolean]
-        $DisableContentTypeSyncSiteTemplatesList,
-
-        [Parameter()]
         [System.String]
         [ValidateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
         $SharingCapability,
-
-        [Parameter()]
-        [System.boolean]
-        $DisplayStartASiteOption,
-
-        [Parameter()]
-        [System.String]
-        $StartASiteFormUrl,
 
         [Parameter()]
         [System.boolean]
@@ -526,35 +290,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.boolean]
-        $SearchResolveExactEmailOrUPN,
-
-        [Parameter()]
-        [System.boolean]
-        $OfficeClientADALDisabled,
-
-        [Parameter()]
-        [System.boolean]
-        $LegacyAuthProtocolsEnabled,
-
-        [Parameter()]
-        [System.boolean]
-        $RequireAcceptingAccountMatchInvitedAccount,
-
-        [Parameter()]
-        [System.boolean]
         $ProvisionSharedWithEveryoneFolder,
-
-        [Parameter()]
-        [System.String]
-        $SignInAccelerationDomain,
 
         [Parameter()]
         [System.boolean]
         $EnableGuestSignInAcceleration,
-
-        [Parameter()]
-        [System.boolean]
-        $UsePersistentCookiesForExplorerView,
 
         [Parameter()]
         [System.boolean]
@@ -563,18 +303,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $BccExternalSharingInvitationsList,
-
-        [Parameter()]
-        [System.boolean]
-        $UserVoiceForFeedbackEnabled,
-
-        [Parameter()]
-        [System.boolean]
-        $PublicCdnEnabled,
-
-        [Parameter()]
-        [System.String]
-        $PublicCdnAllowedFileTypes,
 
         [Parameter()]
         [System.Uint32]
@@ -592,22 +320,6 @@ function Set-TargetResource
         [System.String]
         [ValidateSet("None", "AllowList", "BlockList")]
         $SharingDomainRestrictionMode,
-
-        [Parameter()]
-        [System.boolean]
-        $IPAddressEnforcement,
-
-        [Parameter()]
-        [System.String]
-        $IPAddressAllowList,
-
-        [Parameter()]
-        [System.Uint32]
-        $IPAddressWACTokenLifetime,
-
-        [Parameter()]
-        [System.boolean]
-        $UseFindPeopleInPeoplePicker,
 
         [Parameter()]
         [System.String]
@@ -637,127 +349,9 @@ function Set-TargetResource
         $NotifyOwnersWhenItemsReshared,
 
         [Parameter()]
-        [System.boolean]
-        $NotificationsInSharePointEnabled,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("Allowed", "Disallowed")]  
-        $SpecialCharactersStateInFileFolderNames,
-
-        [Parameter()]
-        [System.boolean]
-        $OwnerAnonymousNotification,
-
-        [Parameter()]
-        [System.boolean]
-        $CommentsOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.boolean]
-        $SocialBarOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.boolean]
-        ${PermissiveBrowserFileHandlingOverride},
-
-        [Parameter()]
-        [System.boolean]
-        $DisallowInfectedFileDownload,
-
-        [Parameter()]
         [System.String]
         [ValidateSet("View", "Edit")]
-        $DefaultLinkPermission,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("AllowFullAccess", "AllowLimitedAccess", "BlockAccess")]
-        $ConditionalAccessPolicy,
-
-        [Parameter()]
-        [System.boolean]
-        $AllowDownloadingNonWebViewableFiles,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("OfficeOnlineFilesOnly", "WebPreviewableFiles", "OtherFiles")]
-        $LimitedAccessFileType,
-
-        [Parameter()]
-        [System.boolean]
-        $AllowEditing,
-
-        [Parameter()]
-        [System.boolean]
-        $ApplyAppEnforcedRestrictionsToAdHocRecipients,
-
-        [Parameter()]
-        [System.boolean]
-        $FilePickerExternalImageSearchEnabled,
-
-        [Parameter()]
-        [System.boolean]
-        $EmailAttestationRequired,
-
-        [Parameter()]
-        [System.Uint32]
-        $EmailAttestationReAuthDays,
-
-        [Parameter()]
-        [System.boolean]
-        $SyncPrivacyProfileProperties,
-
-        [Parameter()]
-        [System.String]
-        $DisabledWebPartIds,
-
-        [Parameter()]
-        [System.String]
-        $OrgNewsSiteUrl,
-
-        [Parameter()]
-        [System.boolean]
-        $EnableMinimumVersionRequirement,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-
-        #[Parameter()]
-        #[ValidateRange(1024,1048576)]
-        #[System.Uint64]
-        #$OneDriveStorageQuota,
-
-        #[Parameter()]
-        #[System.boolean]
-        #$OneDriveForGuestsEnabled,
-
-        #[Parameter()]
-        #[System.Uint32]
-        #$OrphanedPersonalSitesRetentionPeriod,
-
-        #[Parameter()]
-        #[System.String]
-        #[ValidateSet("On", "Off", "Unspecified")]
-        #$ODBMembersCanShare,
-
-        #[Parameter()]
-        #[System.String]
-        #[ValidateSet("On", "Off", "Unspecified")]
-        #$ODBAccessRequests,
-
-        #[Parameter()]
-        #[System.boolean]
-        #$NotifyOwnersWhenInvitationsAccepted,
-
-        #[Parameter()]
-        #[System.boolean]
-        #$NotificationsInOneDriveForBusinessEnabled,
+        $DefaultLinkPermission
     )
     
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
@@ -876,42 +470,9 @@ function Test-TargetResource
         $Tenant,
 
         [Parameter()]
-        [System.Uint32]
-        $MinCompatibilityLevel,
-
-        [Parameter()]
-        [System.Uint32]
-        $MaxCompatibilityLevel,
-
-        [Parameter()]
-        [System.boolean]
-        $ExternalServicesEnabled,
-
-        [Parameter()]
-        [System.String]
-        $NoAccessRedirectUrl,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("MySites")]
-        $ContentTypeSyncSiteTemplatesList,
-
-        [Parameter()]
-        [System.Boolean]
-        $DisableContentTypeSyncSiteTemplatesList,
-
-        [Parameter()]
         [System.String]
         [ValidateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
         $SharingCapability,
-
-        [Parameter()]
-        [System.boolean]
-        $DisplayStartASiteOption,
-
-        [Parameter()]
-        [System.String]
-        $StartASiteFormUrl,
 
         [Parameter()]
         [System.boolean]
@@ -927,35 +488,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.boolean]
-        $SearchResolveExactEmailOrUPN,
-
-        [Parameter()]
-        [System.boolean]
-        $OfficeClientADALDisabled,
-
-        [Parameter()]
-        [System.boolean]
-        $LegacyAuthProtocolsEnabled,
-
-        [Parameter()]
-        [System.boolean]
-        $RequireAcceptingAccountMatchInvitedAccount,
-
-        [Parameter()]
-        [System.boolean]
         $ProvisionSharedWithEveryoneFolder,
-
-        [Parameter()]
-        [System.String]
-        $SignInAccelerationDomain,
 
         [Parameter()]
         [System.boolean]
         $EnableGuestSignInAcceleration,
-
-        [Parameter()]
-        [System.boolean]
-        $UsePersistentCookiesForExplorerView,
 
         [Parameter()]
         [System.boolean]
@@ -964,18 +501,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $BccExternalSharingInvitationsList,
-
-        [Parameter()]
-        [System.boolean]
-        $UserVoiceForFeedbackEnabled,
-
-        [Parameter()]
-        [System.boolean]
-        $PublicCdnEnabled,
-
-        [Parameter()]
-        [System.String]
-        $PublicCdnAllowedFileTypes,
 
         [Parameter()]
         [System.Uint32]
@@ -993,22 +518,6 @@ function Test-TargetResource
         [System.String]
         [ValidateSet("None", "AllowList", "BlockList")]
         $SharingDomainRestrictionMode,
-
-        [Parameter()]
-        [System.boolean]
-        $IPAddressEnforcement,
-
-        [Parameter()]
-        [System.String]
-        $IPAddressAllowList,
-
-        [Parameter()]
-        [System.Uint32]
-        $IPAddressWACTokenLifetime,
-
-        [Parameter()]
-        [System.boolean]
-        $UseFindPeopleInPeoplePicker,
 
         [Parameter()]
         [System.String]
@@ -1038,127 +547,9 @@ function Test-TargetResource
         $NotifyOwnersWhenItemsReshared,
 
         [Parameter()]
-        [System.boolean]
-        $NotificationsInSharePointEnabled,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("Allowed", "Disallowed")]
-        $SpecialCharactersStateInFileFolderNames,
-
-        [Parameter()]
-        [System.boolean]
-        $OwnerAnonymousNotification,
-
-        [Parameter()]
-        [System.boolean]
-        $CommentsOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.boolean]
-        $SocialBarOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.boolean]
-        $PermissiveBrowserFileHandlingOverride,
-
-        [Parameter()]
-        [System.boolean]
-        $DisallowInfectedFileDownload,
-
-        [Parameter()]
         [System.String]
         [ValidateSet("View", "Edit")]
-        $DefaultLinkPermission,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("AllowFullAccess", "AllowLimitedAccess", "BlockAccess")]
-        $ConditionalAccessPolicy,
-
-        [Parameter()]
-        [System.boolean]
-        $AllowDownloadingNonWebViewableFiles,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("OfficeOnlineFilesOnly", "WebPreviewableFiles", "OtherFiles")]
-        $LimitedAccessFileType,
-
-        [Parameter()]
-        [System.boolean]
-        $AllowEditing,
-
-        [Parameter()]
-        [System.boolean]
-        $ApplyAppEnforcedRestrictionsToAdHocRecipients,
-
-        [Parameter()]
-        [System.boolean]
-        $FilePickerExternalImageSearchEnabled,
-
-        [Parameter()]
-        [System.boolean]
-        $EmailAttestationRequired,
-
-        [Parameter()]
-        [System.Uint32]
-        $EmailAttestationReAuthDays,
-
-        [Parameter()]
-        [System.boolean]
-        $SyncPrivacyProfileProperties,
-
-        [Parameter()]
-        [System.String]
-        $DisabledWebPartIds,
-
-        [Parameter()]
-        [System.String]
-        $OrgNewsSiteUrl,
-
-        [Parameter()]
-        [System.boolean]
-        $EnableMinimumVersionRequirement,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-
-        #[Parameter()]
-        #[ValidateRange(1024,1048576)]
-        #[System.Uint64]
-        #$OneDriveStorageQuota,
-
-        #[Parameter()]
-        #[System.boolean]
-        #$OneDriveForGuestsEnabled,
-
-        #[Parameter()]
-        #[System.Uint32]
-        #$OrphanedPersonalSitesRetentionPeriod,
-
-        #[Parameter()]
-        #[System.String]
-        #[ValidateSet("On", "Off", "Unspecified")]
-        #$ODBMembersCanShare,
-
-        #[Parameter()]
-        #[System.String]
-        #[ValidateSet("On", "Off", "Unspecified")]
-        #$ODBAccessRequests,
-
-        #[Parameter()]
-        #[System.boolean]
-        #$NotifyOwnersWhenInvitationsAccepted,
-
-        #[Parameter()]
-        #[System.boolean]
-        #$NotificationsInOneDriveForBusinessEnabled, 
+        $DefaultLinkPermission
     )
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose -Message "Testing SPO Tenant"
