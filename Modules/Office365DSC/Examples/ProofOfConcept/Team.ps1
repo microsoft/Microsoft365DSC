@@ -10,14 +10,18 @@ Configuration Teams
     Node localhost
     {
 
-                   
-        TeamsRemoveTeam MyTeams
+        TeamsTeam MyTeam
         {
-            GroupID = "f690f19c-99eb-4cad-a728-61558569742b"
+            GroupId = "9f881e8c-ab37-4534-859e-dcf267de1475"
+            DisplayName = "Tech Reads"
+            #Description = "Updated by dsc again"
+            AccessType = "Private"
+            #Alias = "CreatedByDSC3"
             GlobalAdminAccount = $credsGlobalAdmin
-            Ensure = "Absent"
-        }  
-        #>
+            Ensure = "Present"
+        }              
+        
+    
         <# 
         TeamsFunSettings MyTeamFunSettings
         {

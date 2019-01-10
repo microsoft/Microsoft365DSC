@@ -5,7 +5,7 @@ function Get-TargetResource {
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateLength(1,256)]
+        [ValidateLength(1, 256)]
         $DisplayName,
 
         [Parameter()]
@@ -14,7 +14,11 @@ function Get-TargetResource {
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1,1024)]
+        $GroupId,
+        
+        [Parameter()]
+        [System.String]
+        [ValidateLength(1, 1024)]
         $Description,
 
         [Parameter()]
@@ -45,39 +49,63 @@ function Get-TargetResource {
     )
 
     $CurrentParameters = $PSBoundParameters
-    if ($CurrentParameters.ContainsKey("Group") -and $CurrentParameters.Count -gt 1)
-    {
-        throw "If Group ID is set no other parameters can be passed"
+    if ($CurrentParameters.ContainsKey("Group") -and $CurrentParameters.Count -gt 1) {
+        throw "If connected O365Group is passed no other parameters can be passed into New-Team cmdlet"
     }
 
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount | Out-Null 
     
     $nullReturn = @{
-        DisplayName        = $null
-        Group              = $null
-        Description        = $null
-        Owner              = $null
-        Classification     = $null
-        AccessType         = "Private"
-        Ensure             = "Absent"
+        DisplayName    = $null
+        Group          = $null
+        GroupId        = $null
+        Description    = $null
+        Owner          = $null
+        Classification = $null
+        Alias          = $null   
+        AccessType     = "Private"
+        Ensure         = "Absent"
     }
 
     try {
         Write-Verbose -Message "Checking for existance of Team"
-        $team = Get-Team |  Where-Object {($_.DisplayName -eq $DisplayName)}
-        if (!$team) {
-            Write-Verbose "Failed to get Teams with displayname $DisplayName"
-            return $nullReturn
+
+        $unifiedGroup = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+            -ScriptBlock {
+            Get-UnifiedGroup | Where-Object {$_.DisplayName -eq $DisplayName}
+        }
+        Write-Verbose -Message "Team alias is $($unifiedGroup.Alias)"
+
+        if ($CurrentParameters.ContainsKey("GroupId")) {
+            $team = Get-Team |  Where-Object {($_.GroupId -eq $GroupId)}
+            if (!$team) {
+                Write-Verbose "Failed to get Teams with GroupId $($GroupId)"
+                return $nullReturn
+            }
+        }
+        else {
+            $team = Get-Team |  Where-Object {($_.DisplayName -eq $DisplayName)}
+            if (!$team) {
+                Write-Verbose "Failed to get Teams with displayname $DisplayName"
+                return $nullReturn
+            }
+            if ($team.Count -gt 1) {
+                throw "Duplicate Teams name $DisplayName exist in tenant"
+            }
         }
 
+        Write-Verbose -Message "Found Team $($team.DisplayName) and groupid of $($team.GroupId)"
+
         return @{
-            DisplayName        = $team.DisplayName
-            Group              = $team.GroupID 
-            Description        = $team.Description
-            Owner              = $null
-            Classification     = $null
-            AccessType         = "Private"
-            Ensure             = "Present"
+            DisplayName    = $team.DisplayName
+            Group          = $null
+            GroupId        = $team.GroupId
+            Description    = $team.Description
+            Owner          = $null
+            Classification = $null
+            Alias          = $unifiedGroup.Alias
+            AccessType     = $unifiedGroup.AccessType
+            Ensure         = "Present"
         }
     }
     catch {
@@ -92,7 +120,7 @@ function Set-TargetResource {
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateLength(1,256)]
+        [ValidateLength(1, 256)]
         $DisplayName,
 
         [Parameter()]
@@ -101,7 +129,11 @@ function Set-TargetResource {
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1,1024)]
+        $GroupId,
+
+        [Parameter()]
+        [System.String]
+        [ValidateLength(1, 1024)]
         $Description,
 
         [Parameter()]
@@ -131,19 +163,46 @@ function Set-TargetResource {
         $GlobalAdminAccount
     )
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount | Out-Null 
+   
+    $team = Get-TargetResource @PSBoundParameters
+    
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
 
-    if ($CurrentParameters.ContainsKey("Group") -and $CurrentParameters.Count -gt 1)
-    {
-        throw "If group is set no other parameters can be passed"
-        
+    if ($CurrentParameters.ContainsKey("Group") -and $CurrentParameters.Count -gt 1) {
+        throw "If group is set no other parameters can be passed"    
     }
-  
-    New-Team @CurrentParameters
-  
+
+    Write-Verbose -Message "Team group id $($team.GroupId)"
+    
+    if ($Ensure -eq "Present") {
+        if ($team) {
+            if ($CurrentParameters.ContainsKey("Owner")) {
+                $CurrentParameters.Remove("Owner")
+            }
+            if ($CurrentParameters.ContainsKey("AccessType")) {
+                $CurrentParameters.Remove("AccessType")
+                $CurrentParameters.Add("Visibility", $AccessType)
+            }
+            # GroupId not passed into parameters but found a group with same display name
+            if (!$CurrentParameters.ContainsKey("GroupId")) {
+                $CurrentParameters.Add("GroupId", $team.GroupId)
+            }
+            Set-Team @CurrentParameters 
+            Write-Verbose -Message "Updating team group id $($GroupId)"
+        }
+        else {
+            if ($CurrentParameters.ContainsKey("Ensure")) {
+                $CurrentParameters.Remove("Ensure")
+            }
+            New-Team @CurrentParameters
+            Write-Verbose -Message "Creating team $DisplayName"
+        }
+    }
+    if (($Ensure -eq "Absent") -and ($team.GroupId)) {
+        Write-Verbose -Message "Removing team $DisplayName"   
+    }   Remove-team -GroupId $team.GroupId
 }
 
 function Test-TargetResource {
@@ -154,7 +213,7 @@ function Test-TargetResource {
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateLength(1,256)]
+        [ValidateLength(1, 256)]
         $DisplayName,
 
         [Parameter()]
@@ -163,7 +222,11 @@ function Test-TargetResource {
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1,1024)]
+        $GroupId,
+
+        [Parameter()]
+        [System.String]
+        [ValidateLength(1, 1024)]
         $Description,
 
         [Parameter()]
@@ -197,9 +260,12 @@ function Test-TargetResource {
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "DisplayName"
-            )
+        -ValuesToCheck @("DisplayName", `
+            "Description", `
+            "Alias", `
+            "AccessType", `
+            "Ensure"
+    )
 }           
 
 function Export-TargetResource {
@@ -209,7 +275,7 @@ function Export-TargetResource {
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateLength(1,256)]
+        [ValidateLength(1, 256)]
         $DisplayName,
 
         [Parameter()]
@@ -218,7 +284,11 @@ function Export-TargetResource {
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1,1024)]
+        $GroupId,
+
+        [Parameter()]
+        [System.String]
+        [ValidateLength(1, 1024)]
         $Description,
 
         [Parameter()]

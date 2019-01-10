@@ -4,6 +4,7 @@ class MSFT_TeamsTeam : OMI_BaseResource
     [Key, Description("Display Name of the Team")] string DisplayName;
     [Write, Description("Converts current O365 group to a Team")] string Group;
     [Write, Description("Description of Team")] string Description;
+    [Write, Description("Team group ID, only used to update existing Team ")] string GroupId;
     [Write, Description("Alias of O365 Group associated with Team")] string Alias;
     [Write, Description("Owner of the Team")] string Owner;
     [Write, Description("Classification of the Team ")] string Classification;

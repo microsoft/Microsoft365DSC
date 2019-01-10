@@ -9,12 +9,8 @@ function Get-TargetResource {
 
         [Parameter()]
         [System.String]
-        $CurrentDisplayName,
-
-        [Parameter()]
-        [System.String]
         [ValidateLength(1,50)]
-        $NewDisplayName,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -35,15 +31,15 @@ function Get-TargetResource {
     
     $nullReturn = @{
         GroupID            = $null
-        CurrentDisplayName = $null
-        NewDisplayName     = $null
+        DisplayName = $null
+
         Description        = $null
         Ensure             = "Absent"
     }
 
     try {
         Write-Verbose -Message "Checking for existance of Team"
-        $channel = Get-TeamChannel -GroupId $GroupID | Where-Object {($_.DisplayName -eq $CurrentDisplayName)}
+        $channel = Get-TeamChannel -GroupId $GroupID | Where-Object {($_.DisplayName -eq $DisplayName)}
         if (!$channel) {
             Write-Verbose "Failed to get Team with ID $GroupId"
             return $nullReturn
@@ -73,16 +69,12 @@ function Set-TargetResource {
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1,1024)]
-        $CurrentDisplayName,
-
-        [Parameter()]
-        [System.String]
         [ValidateLength(1,50)]
-        $NewDisplayName,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
+        [ValidateLength(1,1024)]
         $Description,
        
         [Parameter()] 
@@ -99,8 +91,8 @@ function Set-TargetResource {
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
 
-    Write-Verbose -Message "Setting team channel to $NewDisplayName" 
-    Set-TeamChannel @CurrentParameters
+    Write-Verbose -Message "Creating team channel to $DislayName" 
+    New-TeamChannel @CurrentParameters
    
 }
 
@@ -115,12 +107,8 @@ function Test-TargetResource {
 
         [Parameter()]
         [System.String]
-        $CurrentDisplayName,
-
-        [Parameter()]
-        [System.String]
         [ValidateLength(1,50)]
-        $NewDisplayName,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -142,7 +130,7 @@ function Test-TargetResource {
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("Ensure", `
-            "CurrentDisplayName"
+            "DisplayName"
     )
 }           
 
@@ -157,12 +145,8 @@ function Export-TargetResource {
 
         [Parameter()]
         [System.String]
-        $CurrentDisplayName,
-
-        [Parameter()]
-        [System.String]
         [ValidateLength(1,50)]
-        $NewDisplayName,
+        $DisplayName,
 
         [Parameter()]
         [System.String]

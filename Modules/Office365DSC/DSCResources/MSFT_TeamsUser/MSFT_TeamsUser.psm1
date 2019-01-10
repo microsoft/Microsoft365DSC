@@ -6,7 +6,16 @@ function Get-TargetResource {
         [Parameter(Mandatory = $true)]
         [System.String]
         $GroupID,
-               
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $User,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Member", "Owner")] 
+        $Role,
+              
         [Parameter()] 
         [ValidateSet("Present", "Absent")] 
         [System.String] 
@@ -20,20 +29,28 @@ function Get-TargetResource {
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount | Out-Null 
     
     $nullReturn = @{
-        GroupID = $null
+        User    = $null
+        Role    = $null
         Ensure  = "Absent"
     }
 
     try {
-        Write-Verbose -Message "Checking for existance of Team"
-        $team = Get-Team |  Where-Object {($_.GroupID -eq $GroupID)}
-        if (!$team) {
-            Write-Verbose "Failed to get Teams with groupID $GroupID"
+        Write-Verbose -Message "Checking for existance of Team User"
+        $users = Get-TeamUser -GroupId $GroupID  
+        if (!$users) {
+            Write-Verbose "Failed to get Team's users groupId $GroupID"
             return $nullReturn
         }
 
+        foreach($user in $users){
+            if ($user.User -eq $User){
+                break 
+            }
+        }
+
         return @{
-            GroupID = $team.GroupID 
+            User    = $user.User
+            Role    = $user.role 
             Ensure  = "Present"
         }
     }
@@ -51,6 +68,15 @@ function Set-TargetResource {
         [System.String]
         $GroupID,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $User,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Member", "Owner")] 
+        $Role,
+              
         [Parameter()] 
         [ValidateSet("Present", "Absent")] 
         [System.String] 
@@ -62,10 +88,15 @@ function Set-TargetResource {
     )
 
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    Remove-Team -GroupId $GroupID
-    Write-Verbose  -Message "Removed team with ID of $GroupID"
 
-  
+    $CurrentParameters = $PSBoundParameters
+    $CurrentParameters.Remove("GlobalAdminAccount")
+
+    if ($CurrentParameters.ContainsKey("Group") -and $CurrentParameters.Count -gt 1) {
+        throw "If group is set no other parameters can be passed"
+        
+    }
+    New-Team @CurrentParameters
 }
 
 function Test-TargetResource {
@@ -76,7 +107,16 @@ function Test-TargetResource {
         [Parameter(Mandatory = $true)]
         [System.String]
         $GroupID,
-       
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $User,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Member", "Owner")] 
+        $Role,
+              
         [Parameter()] 
         [ValidateSet("Present", "Absent")] 
         [System.String] 
@@ -87,11 +127,13 @@ function Test-TargetResource {
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing removal of  Team"
+    Write-Verbose -Message "Testing creation of new Team"
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure")
+        -ValuesToCheck @("Ensure", `
+            "DisplayName"
+    )
 }           
 
 function Export-TargetResource {
@@ -103,6 +145,15 @@ function Export-TargetResource {
         [System.String]
         $GroupID,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $User,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Member", "Owner")] 
+        $Role,
+              
         [Parameter()] 
         [ValidateSet("Present", "Absent")] 
         [System.String] 
@@ -114,7 +165,7 @@ function Export-TargetResource {
     )
     Test-SPOServiceConnection -GlobalAdminAccount $GlobalAdminAccount -SPOCentralAdminUrl $CentralAdminUrl
     $result = Get-TargetResource @PSBoundParameters
-    $content = "TeamsRemoveTeam " + (New-GUID).ToString() + "`r`n"
+    $content = "TeamsUser " + (New-GUID).ToString() + "`r`n"
     $content += "{`r`n"
     $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += "}`r`n"
