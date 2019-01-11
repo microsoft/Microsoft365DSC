@@ -454,77 +454,25 @@ function Test-TargetResource
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("Ensure", `
-            "MinCompatibilityLevel", `
-            "MaxCompatibilityLevel", `
-            "ExternalServicesEnabled", `
-            "NoAccessRedirectUrl", `
             "SharingCapability", `
-            "DisplayStartASiteOption", `
-            "StartASiteFormUrl", `
             "ShowEveryoneClaim", `
             "ShowAllUsersClaim", `
             "ShowEveryoneExceptExternalUsersClaim", `
-            "SearchResolveExactEmailOrUPN", `
-            "OfficeClientADALDisabled", `
-            "LegacyAuthProtocolsEnabled", `
-            "RequireAcceptingAccountMatchInvitedAccount", `
             "ProvisionSharedWithEveryoneFolder", `
-            "SignInAccelerationDomain", `
             "EnableGuestSignInAcceleration", `
-            "UsePersistentCookiesForExplorerView", `
-            "ContentTypeSyncSiteTemplatesList", `
-            "ExcludeSiteTemplate", `
             "BccExternalSharingInvitations", `
             "BccExternalSharingInvitationsList", `
-            "UserVoiceForFeedbackEnabled", `
-            "PublicCdnEnabled", `
-            "PublicCdnAllowedFileTypes", `
             "RequireAnonymousLinksExpireInDays", `
             "SharingAllowedDomainList", `
             "SharingBlockedDomainList", `
             "SharingDomainRestrictionMode", `
-            "IPAddressEnforcement", `
-            "IPAddressAllowList", `
-            "IPAddressWACTokenLifetime", `
-            "UseFindPeopleInPeoplePicker", `
             "DefaultSharingLinkType", `
             "PreventExternalUsersFromResharing", `
             "ShowPeoplePickerSuggestionsForGuestUsers", `
             "FileAnonymousLinkType", `
             "FolderAnonymousLinkType", `
             "NotifyOwnersWhenItemsReshared", `
-            "NotificationsInSharePointEnabled", `
-            "SpecialCharactersStateInFileFolderNames", `
-            "OwnerAnonymousNotification", `
-            "CommentsOnSitePagesDisabled", `
-            "CommentsOnFilesDisabled", `
-            "SocialBarOnSitePagesDisabled", `
-            "PermissiveBrowserFileHandlingOverride", `
-            "DisallowInfectedFileDownload", `
-            "DefaultLinkPermission", `
-            "CustomizedExternalSharingServiceUrl", `
-            "ConditionalAccessPolicy", `
-            "AllowDownloadingNonWebViewableFiles", `
-            "LimitedAccessFileType", `
-            "AllowEditing", `
-            "ApplyAppEnforcedRestrictionsToAdHocRecipients", `
-            "FilePickerExternalImageSearchEnabled", `
-            "EmailAttestationRequired", `
-            "EmailAttestationReAuthDays", `
-            "SyncPrivacyProfileProperties", `
-            "DisabledWebPartIds", `
-            "OrgNewsSiteUrl", `
-            "EnableMinimumVersionRequirement", `
-            "MarkNewFilesSensitiveByDefault", `
-            "Tenant", `
-            "DisableContentTypeSyncSiteTemplatesList"
-            #"OneDriveStorageQuota", `
-            #"OneDriveForGuestsEnabled", `
-            #"ODBMembersCanShare", `
-            #"ODBAccessRequests", `
-            #"NotifyOwnersWhenInvitationsAccepted", `
-            #"NotificationsInOneDriveForBusinessEnabled", `
-            #"OrphanedPersonalSitesRetentionPeriod", `
+            "DefaultLinkPermission"
     )
 }
 Export-ModuleMember -Function *-TargetResource
