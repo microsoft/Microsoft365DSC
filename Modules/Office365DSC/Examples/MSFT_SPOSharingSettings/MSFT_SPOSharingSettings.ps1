@@ -29,6 +29,7 @@ Configuration MSFT_SPOSharingSettings
             FolderAnonymousLinkType                       = "Edit" #According to the documentation None should be an option but when running the set-spotenant cmdlet it will tell you that it is just View or Edit
             NotifyOwnersWhenItemsReshared                 = $true
             DefaultLinkPermission ="View" #Not documented under https://docs.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenant?view=sharepoint-ps initial value is None, once changed it cannot be re-set to None again
+            RequireAcceptingAccountMatchInvitedAccount = $false
         }
     }
 }
