@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("SPOTenant")]
-class MSFT_SPOTenant : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("SPOSharingSettings")]
+class MSFT_SPOSharingSettings : OMI_BaseResource
 {
     [Key, Description("Name of the tenant")] string Tenant;
     [Write,ValueMap{"ExternalUserAndGuestSharing","Disabled","ExternalUserSharingOnly"},Values{"ExternalUserAndGuestSharing","Disabled","ExternalUserSharingOnly"}, Description("Configures anonymous link types for folders")] string SharingCapability;
@@ -21,4 +21,7 @@ class MSFT_SPOTenant : OMI_BaseResource
     [Write,ValueMap{"View","Edit"},Values{"View","Edit"}, Description("Configures anonymous link types for folders")] string FolderAnonymousLinkType;
     [Write, Description("When this parameter is set to $true and another user re-shares a document from a user’s OneDrive for Business, the OneDrive for Business owner is notified by e-mail.")] boolean NotifyOwnersWhenItemsReshared;
     [Write,ValueMap{"View","Edit"},Values{"View","Edit"}, Description("Specifies the link permission on the tenant level.")] string DefaultLinkPermission;
+    [Required,ValueMap{"Present","Absent"},Values{"Present","Absent"}, Description("Specify if the resource should be present or absent.")] string Ensure;
+    [Required, Description("The Url of the SharePoint Online Central Administration")] string CentralAdminUrl;
+    [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };
