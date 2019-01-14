@@ -161,9 +161,9 @@ function Get-TargetResource
     }
     catch
     {
-        if($error[0].Exception.Message -like "No connection available")
+        if ($error[0].Exception.Message -like "No connection available")
         {
-            write-Verbose "Make sure that you are connected to your SPOService"
+            Write-Verbose "Make sure that you are connected to your SPOService"
         }
         return $nullReturn
     }
@@ -279,7 +279,7 @@ function Set-TargetResource
     
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
-    if($Ensure -eq "Present")
+    if ($Ensure -eq "Present")
     {
         $CurrentParameters = $PSBoundParameters
         $CurrentParameters.Remove("CentralAdminUrl")
@@ -290,23 +290,23 @@ function Set-TargetResource
         Write-Verbose -Message "%%% Setting Tenant: $Tenant %%%"
         $CurrentParameters.Remove("Tenant")
         
-        if($null -like $SignInAccelerationDomain)
+        if ($null -like $SignInAccelerationDomain)
         {
             $CurrentParameters.remove("SignInAccelerationDomain")
             $CurrentParameters.remove("EnableGuestSignInAcceleration")#removing EnableGuestSignInAcceleration since it can only be configured with a configured SignINAccerlation domain
         }
-        if($SharingCapability -ne "ExternalUserAndGuestSharing")
+        if ($SharingCapability -ne "ExternalUserAndGuestSharing")
         {
             Write-Verbose -Message "The sharing capabilities for the tenant are not configured to be ExternalUserAndGuestSharing for that the RequireAnonymousLinksExpireInDays property cannot be configured"
             $CurrentParameters.Remove("RequireAnonymousLinksExpireInDays")
         }
-        if($RequireAcceptingAccountMatchInvitedAccount -eq $false)
+        if ($RequireAcceptingAccountMatchInvitedAccount -eq $false)
         {
             Write-Verbose -Message "RequireAcceptingAccountMatchInvitedAccount is set to be false. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
             $CurrentParameters.Remove("SharingAllowedDomainList")
             $CurrentParameters.Remove("SharingBlockedDomainList")
         }
-        if($SharingDomainRestrictionMode -eq "None")
+        if ($SharingDomainRestrictionMode -eq "None")
         {
             Write-Verbose -Message "SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
             $CurrentParameters.Remove("SharingAllowedDomainList")
@@ -317,14 +317,14 @@ function Set-TargetResource
             Write-Verbose -Message "SharingDomainRestrictionMode is set to AllowList. For that SharingBlockedDomainList cannot be configured"
             $CurrentParameters.Remove("SharingBlockedDomainList")
         }
-        elseif($SharingDomainRestrictionMode -eq "BlockList")
+        elseif ($SharingDomainRestrictionMode -eq "BlockList")
         {
             Write-Verbose -Message "SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured"
             $CurrentParameters.Remove("SharingAllowedDomainList")
         }
-        foreach($value in $CurrentParameters.GetEnumerator())
+        foreach ($value in $CurrentParameters.GetEnumerator())
         {
-            write-verbose -Message "Configuring Tenant with: $value"
+            Write-verbose -Message "Configuring Tenant with: $value"
         }
         $tenant = Set-SPOTenant @CurrentParameters
     }
