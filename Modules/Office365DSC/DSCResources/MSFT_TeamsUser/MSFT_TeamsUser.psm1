@@ -26,7 +26,7 @@ function Get-TargetResource {
         $GlobalAdminAccount
     )
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount | Out-Null 
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount  
     
     $nullReturn = @{
         User    = $null
@@ -36,21 +36,17 @@ function Get-TargetResource {
 
     try {
         Write-Verbose -Message "Checking for existance of Team User"
-        $users = Get-TeamUser -GroupId $GroupID  
-        if (!$users) {
+        $allUsers = Get-TeamUser -GroupId $GroupID  
+        if (!$allUsers) {
             Write-Verbose "Failed to get Team's users groupId $GroupID"
             return $nullReturn
         }
 
-        foreach($user in $users){
-            if ($user.User -eq $User){
-                break 
-            }
-        }
-
+        $teamUser = $allUsers | Where-Object {$_.User -eq $User}
+        Write-Verbose -Message "Found team user $teamUser.User"
         return @{
-            User    = $user.User
-            Role    = $user.role 
+            User    = $teamUser.User
+            Role    = $teamUser.role 
             Ensure  = "Present"
         }
     }
@@ -91,12 +87,20 @@ function Set-TargetResource {
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
+    $CurrentParameters.Remove("Ensure")
 
-    if ($CurrentParameters.ContainsKey("Group") -and $CurrentParameters.Count -gt 1) {
-        throw "If group is set no other parameters can be passed"
-        
+    if ($Ensure -eq "Present"){
+        Write-Verbose -Message "Adding team user $User"
+        Add-TeamUser @CurrentParameters 
     }
-    New-Team @CurrentParameters
+    else {
+        if ($Role -eq "Member" -and $CurrentParameters.ContainsKey("Role")){
+            $CurrentParameters.Remove("Role")
+            Write-Verbose -Message "Removed role parameter"
+        }
+        Remove-TeamUser @CurrentParameters
+        Write-Verbose -Message "Removing team user $User"
+    }
 }
 
 function Test-TargetResource {
@@ -132,7 +136,8 @@ function Test-TargetResource {
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("Ensure", `
-            "DisplayName"
+            "User",`
+            "Role"
     )
 }           
 

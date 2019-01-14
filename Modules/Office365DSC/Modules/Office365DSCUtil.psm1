@@ -37,7 +37,7 @@ function Test-TeamsServiceConnection {
         $GlobalAdminAccount
     )    
     Write-Verbose "Verifying the LCM connection state to Teams"
-    Connect-MicrosoftTeams -Credential $GlobalAdminAccount
+    Connect-MicrosoftTeams -Credential $GlobalAdminAccount | Out-Null
 }
 
 function Invoke-ExoCommand
