@@ -29,9 +29,9 @@ function Get-TargetResource {
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount  
     
     $nullReturn = @{
-        User    = $null
-        Role    = $null
-        Ensure  = "Absent"
+        User   = $null
+        Role   = $null
+        Ensure = "Absent"
     }
 
     try {
@@ -42,12 +42,16 @@ function Get-TargetResource {
             return $nullReturn
         }
 
-        $teamUser = $allUsers | Where-Object {$_.User -eq $User}
-        Write-Verbose -Message "Found team user $teamUser.User"
-        return @{
-            User    = $teamUser.User
-            Role    = $teamUser.role 
-            Ensure  = "Present"
+        foreach ($teamUser in $allUsers) {
+            if ($teamUser.User -eq $User) {
+                Write-Verbose -Message "Found team user $teamUser.User"
+                return @{
+                    User   = $teamUser.User
+                    Role   = $teamUser.role 
+                    Ensure = "Present"
+                }
+            }
+
         }
     }
     catch {
@@ -89,12 +93,12 @@ function Set-TargetResource {
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
 
-    if ($Ensure -eq "Present"){
+    if ($Ensure -eq "Present") {
         Write-Verbose -Message "Adding team user $User"
         Add-TeamUser @CurrentParameters 
     }
     else {
-        if ($Role -eq "Member" -and $CurrentParameters.ContainsKey("Role")){
+        if ($Role -eq "Member" -and $CurrentParameters.ContainsKey("Role")) {
             $CurrentParameters.Remove("Role")
             Write-Verbose -Message "Removed role parameter"
         }
@@ -136,7 +140,7 @@ function Test-TargetResource {
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("Ensure", `
-            "User",`
+            "User", `
             "Role"
     )
 }           

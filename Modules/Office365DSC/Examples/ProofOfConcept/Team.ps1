@@ -28,7 +28,7 @@ Configuration Teams
             GroupID = "f2d2365d-5e77-49c0-99fa-7c468cce021a"
             User = "jdoe@dsazure.com"
             Role="Member"
-            Ensure = "Absent"
+            Ensure = "Present"
             GlobalAdminAccount = $credsGlobalAdmin
         }
 
