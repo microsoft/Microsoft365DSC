@@ -6,7 +6,6 @@ Configuration MSFT_SPOSharingSettings
     {
         SPOSharingSettings MyTenant
         {
-            Ensure                                        = 'Present'
             Tenant                                        = "MyTenant"
             CentralAdminUrl                               = "https://o365dsc1-admin.sharepoint.com"
             GlobalAdminAccount                            = $credsGlobalAdmin

@@ -3,10 +3,6 @@ function Get-TargetResource
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param (
-        [Parameter(Mandatory = $true)]
-        [ValidateSet("Present", "Absent")]
-        [System.String]
-        $Ensure,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -173,10 +169,6 @@ function Set-TargetResource
 {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true)]
-        [ValidateSet("Present", "Absent")]
-        [System.String]
-        $Ensure,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -279,65 +271,58 @@ function Set-TargetResource
     
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
-    if ($Ensure -eq "Present")
-    {
-        $CurrentParameters = $PSBoundParameters
-        $CurrentParameters.Remove("CentralAdminUrl")
-        $CurrentParameters.Remove("GlobalAdminAccount")
-        $CurrentParameters.Remove("Ensure")
-        $CurrentParameters.Remove("Verbose")
+    $CurrentParameters = $PSBoundParameters
+    $CurrentParameters.Remove("CentralAdminUrl")
+    $CurrentParameters.Remove("GlobalAdminAccount")
+    $CurrentParameters.Remove("Ensure")
+    $CurrentParameters.Remove("Verbose")
 
-        Write-Verbose -Message "%%% Setting Tenant: $Tenant %%%"
-        $CurrentParameters.Remove("Tenant")
-        
-        if ($null -like $SignInAccelerationDomain)
-        {
-            $CurrentParameters.remove("SignInAccelerationDomain")
-            $CurrentParameters.remove("EnableGuestSignInAcceleration")#removing EnableGuestSignInAcceleration since it can only be configured with a configured SignINAccerlation domain
-        }
-        if ($SharingCapability -ne "ExternalUserAndGuestSharing")
-        {
-            Write-Verbose -Message "The sharing capabilities for the tenant are not configured to be ExternalUserAndGuestSharing for that the RequireAnonymousLinksExpireInDays property cannot be configured"
-            $CurrentParameters.Remove("RequireAnonymousLinksExpireInDays")
-        }
-        if ($RequireAcceptingAccountMatchInvitedAccount -eq $false)
-        {
-            Write-Verbose -Message "RequireAcceptingAccountMatchInvitedAccount is set to be false. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
-            $CurrentParameters.Remove("SharingAllowedDomainList")
-            $CurrentParameters.Remove("SharingBlockedDomainList")
-        }
-        if ($SharingDomainRestrictionMode -eq "None")
-        {
-            Write-Verbose -Message "SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
-            $CurrentParameters.Remove("SharingAllowedDomainList")
-            $CurrentParameters.Remove("SharingBlockedDomainList")
-        }
-        elseif ($SharingDomainRestrictionMode -eq "AllowList")
-        {
-            Write-Verbose -Message "SharingDomainRestrictionMode is set to AllowList. For that SharingBlockedDomainList cannot be configured"
-            $CurrentParameters.Remove("SharingBlockedDomainList")
-        }
-        elseif ($SharingDomainRestrictionMode -eq "BlockList")
-        {
-            Write-Verbose -Message "SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured"
-            $CurrentParameters.Remove("SharingAllowedDomainList")
-        }
-        foreach ($value in $CurrentParameters.GetEnumerator())
-        {
-            Write-verbose -Message "Configuring Tenant with: $value"
-        }
-        $tenant = Set-SPOTenant @CurrentParameters
+    Write-Verbose -Message "%%% Setting Tenant: $Tenant %%%"
+    $CurrentParameters.Remove("Tenant")
+    
+    if ($null -like $SignInAccelerationDomain)
+    {
+        $CurrentParameters.remove("SignInAccelerationDomain")
+        $CurrentParameters.remove("EnableGuestSignInAcceleration")#removing EnableGuestSignInAcceleration since it can only be configured with a configured SignINAccerlation domain
     }
+    if ($SharingCapability -ne "ExternalUserAndGuestSharing")
+    {
+        Write-Verbose -Message "The sharing capabilities for the tenant are not configured to be ExternalUserAndGuestSharing for that the RequireAnonymousLinksExpireInDays property cannot be configured"
+        $CurrentParameters.Remove("RequireAnonymousLinksExpireInDays")
+    }
+    if ($RequireAcceptingAccountMatchInvitedAccount -eq $false)
+    {
+        Write-Verbose -Message "RequireAcceptingAccountMatchInvitedAccount is set to be false. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
+        $CurrentParameters.Remove("SharingAllowedDomainList")
+        $CurrentParameters.Remove("SharingBlockedDomainList")
+    }
+    if ($SharingDomainRestrictionMode -eq "None")
+    {
+        Write-Verbose -Message "SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
+        $CurrentParameters.Remove("SharingAllowedDomainList")
+        $CurrentParameters.Remove("SharingBlockedDomainList")
+    }
+    elseif ($SharingDomainRestrictionMode -eq "AllowList")
+    {
+        Write-Verbose -Message "SharingDomainRestrictionMode is set to AllowList. For that SharingBlockedDomainList cannot be configured"
+        $CurrentParameters.Remove("SharingBlockedDomainList")
+    }
+    elseif ($SharingDomainRestrictionMode -eq "BlockList")
+    {
+        Write-Verbose -Message "SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured"
+        $CurrentParameters.Remove("SharingAllowedDomainList")
+    }
+    foreach ($value in $CurrentParameters.GetEnumerator())
+    {
+        Write-verbose -Message "Configuring Tenant with: $value"
+    }
+    $tenant = Set-SPOTenant @CurrentParameters
 }
 function Test-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param (
-        [Parameter(Mandatory = $true)]
-        [ValidateSet("Present", "Absent")]
-        [System.String]
-        $Ensure,
 
         [Parameter(Mandatory = $true)]
         [System.String]
