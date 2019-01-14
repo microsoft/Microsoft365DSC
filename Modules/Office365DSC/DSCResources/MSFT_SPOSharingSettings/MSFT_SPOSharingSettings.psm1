@@ -280,7 +280,7 @@ function Set-TargetResource
     Write-Verbose -Message "%%% Setting Tenant: $Tenant %%%"
     $CurrentParameters.Remove("Tenant")
     
-    if ($null -like $SignInAccelerationDomain)
+    if ($null -eq $SignInAccelerationDomain)
     {
         $CurrentParameters.remove("SignInAccelerationDomain")
         $CurrentParameters.remove("EnableGuestSignInAcceleration")#removing EnableGuestSignInAcceleration since it can only be configured with a configured SignINAccerlation domain
