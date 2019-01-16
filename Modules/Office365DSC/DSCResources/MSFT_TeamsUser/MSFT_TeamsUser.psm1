@@ -35,24 +35,28 @@ function Get-TargetResource {
     }
 
     try {
-        Write-Verbose -Message "Checking for existance of Team User"
-        $allUsers = Get-TeamUser -GroupId $GroupID  
-        if (!$allUsers) {
+        Write-Verbose -Message "Checking for existance of Team User $User"
+
+        if ($Role) {
+            $allMembers = Get-TeamUser -GroupId $GroupID -Role $Role
+        }
+        else {
+            $allMembers = Get-TeamUser -GroupId $GroupID
+        }
+
+        if (!$allMembers) {
             Write-Verbose "Failed to get Team's users groupId $GroupID"
             return $nullReturn
         }
 
-        foreach ($teamUser in $allUsers) {
-            if ($teamUser.User -eq $User) {
-                Write-Verbose -Message "Found team user $teamUser.User"
-                return @{
-                    User   = $teamUser.User
-                    Role   = $teamUser.role 
-                    Ensure = "Present"
-                }
-            }
-
+        $myUser = $allMembers | Where-Object {$_.User -eq $User}
+        Write-Verbose -Message "Found team user $($myUser.User) with role:$($myUser.Role)"
+        return @{
+            User   = $myUser.User
+            Role   = $myUser.Role 
+            Ensure = "Present"
         }
+            
     }
     catch {
         Write-Verbose "Failed to get Teams from the tenant."
@@ -92,9 +96,9 @@ function Set-TargetResource {
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
-
+ 
     if ($Ensure -eq "Present") {
-        Write-Verbose -Message "Adding team user $User"
+        Write-Verbose -Message "Adding team user $User with role:$Role"
         Add-TeamUser @CurrentParameters 
     }
     else {
@@ -135,7 +139,7 @@ function Test-TargetResource {
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing creation of new Team"
+    Write-Verbose -Message "Testing addition of team member"
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
@@ -172,7 +176,7 @@ function Export-TargetResource {
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )
-    Test-SPOServiceConnection -GlobalAdminAccount $GlobalAdminAccount -SPOCentralAdminUrl $CentralAdminUrl
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount 
     $result = Get-TargetResource @PSBoundParameters
     $content = "TeamsUser " + (New-GUID).ToString() + "`r`n"
     $content += "{`r`n"

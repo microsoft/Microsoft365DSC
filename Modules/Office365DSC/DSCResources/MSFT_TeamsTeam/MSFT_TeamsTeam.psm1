@@ -204,8 +204,12 @@ function Set-TargetResource {
         }
     }
     if (($Ensure -eq "Absent") -and ($team.GroupId)) {
+        if ($CurrentParameters.ContainsKey("Ensure")) {
+            $CurrentParameters.Remove("Ensure")
+        }
         Write-Verbose -Message "Removing team $DisplayName"   
-    }   Remove-team -GroupId $team.GroupId
+        Remove-team -GroupId $team.GroupId
+    }   
 }
 
 function Test-TargetResource {

@@ -23,12 +23,11 @@ Configuration Teams
         
         #>
 
-        TeamsUser MyTeam
-        {
-            GroupID = "f2d2365d-5e77-49c0-99fa-7c468cce021a"
-            User = "jdoe@dsazure.com"
-            Role="Member"
-            Ensure = "Present"
+        TeamsUser MyTeam {
+            GroupID            = "f2d2365d-5e77-49c0-99fa-7c468cce021a"
+            User               = "jdoe@dsazure.com"
+            Role               = "Member"
+            Ensure             = "Present"
             GlobalAdminAccount = $credsGlobalAdmin
         }
 
@@ -58,10 +57,10 @@ Configuration Teams
 $configData = @{
     AllNodes = @(
         @{
-            NodeName = "localhost"
+            NodeName                    = "localhost"
             PSDscAllowPlainTextPassword = $true;
-            PSDscAllowDomainUser = $true;
-    }
+            PSDscAllowDomainUser        = $true;
+        }
     )
 }
 
