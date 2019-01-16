@@ -26,8 +26,8 @@ function Test-O365ServiceConnection
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )    
-    Write-Verbose "Verifying the LCM connection state to Microsoft Online Services"
-    Connect-MSOLService -Credential $GlobalAdminAccount
+    Write-Verbose "Verifying the LCM connection state to Microsoft Azure Active Directory Services"
+    Connect-AzureAD -Credential $GlobalAdminAccount
 }
 
 function Invoke-ExoCommand
@@ -317,7 +317,7 @@ function Get-UsersLicences
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose "Store all users licences information in Global Variable for futur usage."
     #Store information to be able to check later if the users is correctly licences for features.
-    if ($Global:UsersLicences -eq $NULL)
+    if ($null -eq $Global:UsersLicences)
     {
         $Global:UsersLicences = Get-MsolUser -All  | Select-Object UserPrincipalName, isLicensed, Licenses
     }
@@ -397,7 +397,7 @@ function Export-O365Configuration
 
     # Security Groups
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    $securityGroups = Get-MSOLGroup | Where-Object {$_.GroupType -eq "Security"}
+    $securityGroups = Get-AzureAdGroup | Where-Object {$_.SecurityEnabled -eq $true}
 
     foreach ($securityGroup in $securityGroups)
     {
@@ -410,7 +410,7 @@ function Export-O365Configuration
         }
     }
 
-    $securityGroups = Get-MSOLGroup | Where-Object {$_.GroupType -eq "Security"}
+    $securityGroups = Get-AzureAdGroup | Where-Object {$_.SecurityEnabled -eq $true}
 
     # Other Groups
     $groups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
@@ -450,7 +450,7 @@ function Export-O365Configuration
     Import-Module $O365UserModulePath
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
-    $users = Get-MSOLUser
+    $users = Get-AzureADUser
 
     foreach ($user in $users)
     {
