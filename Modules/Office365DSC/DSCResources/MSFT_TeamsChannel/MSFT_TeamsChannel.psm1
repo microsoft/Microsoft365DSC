@@ -9,12 +9,17 @@ function Get-TargetResource {
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1,50)]
+        [ValidateLength(1, 50)]
         $DisplayName,
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1,1024)]
+        [ValidateLength(1, 50)]
+        $NewDisplayName,
+
+        [Parameter()]
+        [System.String]
+        [ValidateLength(1, 1024)]
         $Description,
         
         [Parameter()] 
@@ -27,14 +32,14 @@ function Get-TargetResource {
         $GlobalAdminAccount
     )
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount | Out-Null 
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount  
     
     $nullReturn = @{
-        GroupID            = $null
-        DisplayName = $null
-
-        Description        = $null
-        Ensure             = "Absent"
+        GroupID        = $null
+        DisplayName    = $null
+        NewDisplayName = $null
+        Description    = $null
+        Ensure         = "Absent"
     }
 
     try {
@@ -69,12 +74,17 @@ function Set-TargetResource {
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1,50)]
+        [ValidateLength(1, 50)]
         $DisplayName,
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1,1024)]
+        [ValidateLength(1, 50)]
+        $NewDisplayName,
+
+        [Parameter()]
+        [System.String]
+        [ValidateLength(1, 1024)]
         $Description,
        
         [Parameter()] 
@@ -90,12 +100,34 @@ function Set-TargetResource {
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
+    $CurrentParameters.Remove("Ensure")
 
-    Write-Verbose -Message "Creating team channel to $DislayName" 
-    New-TeamChannel @CurrentParameters
-   
+    $channel = Get-TargetResource @PSBoundParameters
+    Write-Verbose -Message "Channel: $channel"
+
+    if ($Ensure -eq "Present") {
+        # Remap attribute from DisplayName to current display name for Set-TeamChannel cmdlet
+        if ($channel.DisplayName) {
+            if ($CurrentParameters.ContainsKey("NewDisplayName")) {
+                $CurrentParameters.Add("CurrentDisplayName", $DisplayName)
+                $CurrentParameters.Remove("DisplayName")    
+                Set-TeamChannel @CurrentParameters
+            }
+        }   
+        else {
+            Write-Verbose -Message "Creating team channel  $DislayName" 
+            New-TeamChannel @CurrentParameters   
+        }
+    }
+    else {
+        if ($CurrentParameters.ContainsKey("Description")) {
+            $CurrentParameters.Remove("Description")
+        }
+        Write-Verbose -Message "Removing team channel $DislayName" 
+        Remove-TeamChannel @CurrentParameters
+    }
 }
-
+   
 function Test-TargetResource {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
@@ -107,12 +139,17 @@ function Test-TargetResource {
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1,50)]
+        [ValidateLength(1, 50)]
         $DisplayName,
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1,1024)]
+        [ValidateLength(1, 50)]
+        $NewDisplayName,
+
+        [Parameter()]
+        [System.String]
+        [ValidateLength(1, 1024)]
         $Description,
        
         [Parameter()] 
@@ -145,12 +182,17 @@ function Export-TargetResource {
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1,50)]
+        [ValidateLength(1, 50)]
         $DisplayName,
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1,1024)]
+        [ValidateLength(1, 50)]
+        $NewDisplayName,
+
+        [Parameter()]
+        [System.String]
+        [ValidateLength(1, 1024)]
         $Description,
 
         [Parameter()] 
@@ -162,7 +204,7 @@ function Export-TargetResource {
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )
-    Test-SPOServiceConnection -GlobalAdminAccount $GlobalAdminAccount -SPOCentralAdminUrl $CentralAdminUrl
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     $content = "TeamsChannel " + (New-GUID).ToString() + "`r`n"
     $content += "{`r`n"

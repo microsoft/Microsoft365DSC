@@ -22,7 +22,7 @@ Configuration Teams
         }              
         
         #>
-
+        <#
         TeamsUser MyTeam {
             GroupID            = "f2d2365d-5e77-49c0-99fa-7c468cce021a"
             User               = "jdoe@dsazure.com"
@@ -30,7 +30,7 @@ Configuration Teams
             Ensure             = "Present"
             GlobalAdminAccount = $credsGlobalAdmin
         }
-
+        #>
         <# 
         TeamsFunSettings MyTeamFunSettings
         {
@@ -41,16 +41,17 @@ Configuration Teams
             AllowCustomMemes = $true
             GlobalAdminAccount = $credsGlobalAdmin
         }  
-        
+        #>
         TeamsChannel MyChannel
         {
             GroupID = "f2d2365d-5e77-49c0-99fa-7c468cce021a"
-            CurrentDisplayName = "TestChannel"
-            NewDisplayName = "Channel set from DSC"
-            Description = "Description set from DSC"
+            DisplayName = "PHP Code Review"
+            #NewDisplayName = "Channel set from DSC"
+            Description = "PHP Code reviews for SPFX"
+            Ensure = "Present"
             GlobalAdminAccount = $credsGlobalAdmin
         }
-        #>
+        
     }
 }
 
