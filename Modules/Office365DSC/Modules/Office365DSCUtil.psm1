@@ -1237,6 +1237,27 @@ function Export-O365Configuration
     # Add the GlobalAdminAccount to the Credentials List
     Save-Credentials -UserName $GlobalAdminAccount.UserName
 
+    #region "EXOMailboxSettings"
+    $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `
+                                              -ChildPath "..\DSCResources\MSFT_EXOMailboxSettings\MSFT_EXOMailboxSettings.psm1" `
+                                              -Resolve
+
+    Import-Module $EXOMailboxSettingsModulePath
+    $mailboxes = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                   -ScriptBlock {
+        Get-Mailbox
+    }
+
+    foreach ($mailbox in $mailboxes)
+    {
+        $mailboxName = $mailbox.Name
+        if ($mailboxName)
+        {
+            $DSCContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
     #region "EXOMailTips"
     $OrgConfig = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
                                     -ScriptBlock {
