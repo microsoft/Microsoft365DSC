@@ -102,7 +102,7 @@ function Remove-Mailbox{
         $Identity,
 
         [Parameter()]
-        [Boolean]
+        [System.Boolean]
         $Confirm
     )
 }
