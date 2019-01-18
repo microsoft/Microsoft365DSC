@@ -86,12 +86,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-UnifiedGroupLinks
-            {
+            Mock -CommandName Get-UnifiedGroupLinks -MockWith {
                 return (@{
                     LinkType = "Members"
                     Identity = "Test Group"
                     Name = "JohnSmith"
+                },
+                @{
+                    LinkType = "Members"
+                    Identity = "Test Group"
+                    Name = "BobHoule"
                 })
             }
 
@@ -277,6 +281,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should be $false
+            }
+        }
+
+        Context -Name "The specified group doesn't exist" -Fixture {
+            $testParams = @{
+                DisplayName = "Non-Existent Group"
+                GroupType = "Office365"
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure = "Present"
+            }
+
+            Mock -CommandName Get-Group -MockWith {
+                return $null
+            }
+
+            It "Should return Ensure is Absent from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
+            }
+
+            It "Should return False from the Test method" {
                 Test-TargetResource @testParams | Should be $false
             }
         }
