@@ -99,7 +99,11 @@ function Remove-Mailbox{
     param(
         [Parameter(Mandatory=$true)]
         [string]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [Boolean]
+        $Confirm
     )
 }
 
@@ -108,6 +112,34 @@ function Get-OrganizationConfig
     [CmdletBinding()]
     param(
 
+    )
+}
+
+function Get-MailboxRegionalConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Set-MailboxRegionalConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Language,
+
+        [Parameter()]
+        [System.String]
+        $TimeZone
     )
 }
 
