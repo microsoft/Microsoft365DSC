@@ -908,6 +908,24 @@ function Test-SPOServiceConnection
     Connect-SPOService -Url $SPOCentralAdminUrl -Credential $GlobalAdminAccount
 }
 
+function Test-PnPOnlineConnection
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SPOCentralAdminUrl,
+
+        [Parameter(Mandatory = $true)] 
+        [System.Management.Automation.PSCredential] 
+        $GlobalAdminAccount
+    )
+    Write-Verbose "Verifying the LCM connection state to SharePoint Online with PnP"
+    Connect-PnPOnline -Url $SPOCentralAdminUrl -Credentials $GlobalAdminAccount
+}
+
 function Test-O365ServiceConnection
 {
     [CmdletBinding()]
