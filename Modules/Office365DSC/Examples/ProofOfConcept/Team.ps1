@@ -45,10 +45,10 @@ Configuration Teams
         TeamsChannel MyChannel
         {
             GroupID = "f2d2365d-5e77-49c0-99fa-7c468cce021a"
-            DisplayName = "PHP Code Review"
-            #NewDisplayName = "Channel set from DSC"
-            Description = "PHP Code reviews for SPFX"
-            Ensure = "Present"
+            DisplayName = "SQl2 Review teams group"
+            #NewDisplayName = "SQl2 Review teams group"
+            Description = "SQL Code reviews for SPFX"
+            Ensure = "Absent"
             GlobalAdminAccount = $credsGlobalAdmin
         }
         
@@ -61,8 +61,10 @@ $configData = @{
             NodeName                    = "localhost"
             PSDscAllowPlainTextPassword = $true;
             PSDscAllowDomainUser        = $true;
+            DebugMode = $true;
         }
     )
 }
+
 
 Teams -ConfigurationData $configData

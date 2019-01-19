@@ -35,7 +35,7 @@ function Get-TargetResource {
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount  
     
     $nullReturn = @{
-        GroupID        = $null
+        GroupID        = $GroupID
         DisplayName    = $null
         NewDisplayName = $null
         Description    = $null
@@ -43,10 +43,10 @@ function Get-TargetResource {
     }
 
     try {
-        Write-Verbose -Message "Checking for existance of Team"
+        Write-Verbose -Message "Checking for existance of team channels "
         $channel = Get-TeamChannel -GroupId $GroupID | Where-Object {($_.DisplayName -eq $DisplayName)}
         if (!$channel) {
-            Write-Verbose "Failed to get Team with ID $GroupId"
+            Write-Verbose "Failed to get team channels with ID $GroupId and display name of $DisplayName"
             return $nullReturn
         }
 
@@ -98,15 +98,18 @@ function Set-TargetResource {
     )
 
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+
+    Write-Verbose  -Message "Entering Set-TargetResource"
+    Write-Verbose  -Message "Retrieving information about team channel $($DisplayName) to see if it already exists"
+    $channel = Get-TargetResource @PSBoundParameters
+
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
 
-    $channel = Get-TargetResource @PSBoundParameters
-    Write-Verbose -Message "Channel: $channel"
 
     if ($Ensure -eq "Present") {
-        # Remap attribute from DisplayName to current display name for Set-TeamChannel cmdlet
+           # Remap attribute from DisplayName to current display name for Set-TeamChannel cmdlet
         if ($channel.DisplayName) {
             if ($CurrentParameters.ContainsKey("NewDisplayName")) {
                 $CurrentParameters.Add("CurrentDisplayName", $DisplayName)
@@ -115,16 +118,18 @@ function Set-TargetResource {
             }
         }   
         else {
+            if ($CurrentParameters.ContainsKey("NewDisplayName")) {
+                $CurrentParameters.Remove("NewDisplayName")
+            }
             Write-Verbose -Message "Creating team channel  $DislayName" 
             New-TeamChannel @CurrentParameters   
         }
     }
     else {
-        if ($CurrentParameters.ContainsKey("Description")) {
-            $CurrentParameters.Remove("Description")
+        if ($channel.DisplayName) {
+            Write-Verbose -Message "Removing team channel $DislayName" 
+            Remove-TeamChannel -GroupId $GroupID -DisplayName $DisplayName
         }
-        Write-Verbose -Message "Removing team channel $DislayName" 
-        Remove-TeamChannel @CurrentParameters
     }
 }
    
@@ -162,12 +167,13 @@ function Test-TargetResource {
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing creation of new Team"
+    Write-Verbose -Message "Testing creation of new Team's channel"
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("Ensure", `
-            "DisplayName"
+            "DisplayName", `
+            "NewDisplayName"
     )
 }           
 
