@@ -4,9 +4,10 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param (
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Tenant,
+        [parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [String]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.String]
@@ -106,26 +107,27 @@ function Get-TargetResource
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
-        SharingCapability                           = $null
-        ShowEveryoneClaim                           = $null
-        ShowAllUsersClaim                           = $null
-        ShowEveryoneExceptExternalUsersClaim        = $null
-        ProvisionSharedWithEveryoneFolder           = $null
-        EnableGuestSignInAcceleration               = $null
-        BccExternalSharingInvitations               = $null
-        BccExternalSharingInvitationsList           = $null
-        RequireAnonymousLinksExpireInDays           = $null
-        SharingAllowedDomainList                    = $null
-        SharingBlockedDomainList                    = $null
-        SharingDomainRestrictionMode                = $null
-        DefaultSharingLinkType                      = $null
-        PreventExternalUsersFromResharing           = $null
-        ShowPeoplePickerSuggestionsForGuestUsers    = $null
-        FileAnonymousLinkType                       = $null
-        FolderAnonymousLinkType                     = $null
-        NotifyOwnersWhenItemsReshared               = $null
-        DefaultLinkPermission                       = $null
-        RequireAcceptingAccountMatchInvitedAccount  = $null
+        IsSingleInstance                           = 'Yes'
+        SharingCapability                          = $null
+        ShowEveryoneClaim                          = $null
+        ShowAllUsersClaim                          = $null
+        ShowEveryoneExceptExternalUsersClaim       = $null
+        ProvisionSharedWithEveryoneFolder          = $null
+        EnableGuestSignInAcceleration              = $null
+        BccExternalSharingInvitations              = $null
+        BccExternalSharingInvitationsList          = $null
+        RequireAnonymousLinksExpireInDays          = $null
+        SharingAllowedDomainList                   = $null
+        SharingBlockedDomainList                   = $null
+        SharingDomainRestrictionMode               = $null
+        DefaultSharingLinkType                     = $null
+        PreventExternalUsersFromResharing          = $null
+        ShowPeoplePickerSuggestionsForGuestUsers   = $null
+        FileAnonymousLinkType                      = $null
+        FolderAnonymousLinkType                    = $null
+        NotifyOwnersWhenItemsReshared              = $null
+        DefaultLinkPermission                      = $null
+        RequireAcceptingAccountMatchInvitedAccount = $null
     }
     
     try
@@ -133,26 +135,27 @@ function Get-TargetResource
         $SPOSharingSettings = Get-SPOTenant
 
         return @{
-            SharingCapability                           = $SPOSharingSettings.SharingCapability
-            ShowEveryoneClaim                           = $SPOSharingSettings.ShowEveryoneClaim
-            ShowAllUsersClaim                           = $SPOSharingSettings.ShowAllUsersClaim
-            ShowEveryoneExceptExternalUsersClaim        = $SPOSharingSettings.ShowEveryoneExceptExternalUsersClaim
-            ProvisionSharedWithEveryoneFolder           = $SPOSharingSettings.ProvisionSharedWithEveryoneFolder
-            EnableGuestSignInAcceleration               = $SPOSharingSettings.EnableGuestSignInAcceleration
-            BccExternalSharingInvitations               = $SPOSharingSettings.BccExternalSharingInvitations
-            BccExternalSharingInvitationsList           = $SPOSharingSettings.BccExternalSharingInvitationsList
-            RequireAnonymousLinksExpireInDays           = $SPOSharingSettings.RequireAnonymousLinksExpireInDays
-            SharingAllowedDomainList                    = $SPOSharingSettings.SharingAllowedDomainList
-            SharingBlockedDomainList                    = $SPOSharingSettings.SharingBlockedDomainList
-            SharingDomainRestrictionMode                = $SPOSharingSettings.SharingDomainRestrictionMode
-            DefaultSharingLinkType                      = $SPOSharingSettings.DefaultSharingLinkType
-            PreventExternalUsersFromResharing           = $SPOSharingSettings.PreventExternalUsersFromResharing
-            ShowPeoplePickerSuggestionsForGuestUsers    = $SPOSharingSettings.ShowPeoplePickerSuggestionsForGuestUsers
-            FileAnonymousLinkType                       = $SPOSharingSettings.FileAnonymousLinkType
-            FolderAnonymousLinkType                     = $SPOSharingSettings.FolderAnonymousLinkType
-            NotifyOwnersWhenItemsReshared               = $SPOSharingSettings.NotifyOwnersWhenItemsReshared
-            DefaultLinkPermission                       = $SPOSharingSettings.DefaultLinkPermission
-            RequireAcceptingAccountMatchInvitedAccount  = $SPOSharingSettings.RequireAcceptingAccountMatchInvitedAccount
+            IsSingleInstance                           = 'Yes'
+            SharingCapability                          = $SPOSharingSettings.SharingCapability
+            ShowEveryoneClaim                          = $SPOSharingSettings.ShowEveryoneClaim
+            ShowAllUsersClaim                          = $SPOSharingSettings.ShowAllUsersClaim
+            ShowEveryoneExceptExternalUsersClaim       = $SPOSharingSettings.ShowEveryoneExceptExternalUsersClaim
+            ProvisionSharedWithEveryoneFolder          = $SPOSharingSettings.ProvisionSharedWithEveryoneFolder
+            EnableGuestSignInAcceleration              = $SPOSharingSettings.EnableGuestSignInAcceleration
+            BccExternalSharingInvitations              = $SPOSharingSettings.BccExternalSharingInvitations
+            BccExternalSharingInvitationsList          = $SPOSharingSettings.BccExternalSharingInvitationsList
+            RequireAnonymousLinksExpireInDays          = $SPOSharingSettings.RequireAnonymousLinksExpireInDays
+            SharingAllowedDomainList                   = $SPOSharingSettings.SharingAllowedDomainList
+            SharingBlockedDomainList                   = $SPOSharingSettings.SharingBlockedDomainList
+            SharingDomainRestrictionMode               = $SPOSharingSettings.SharingDomainRestrictionMode
+            DefaultSharingLinkType                     = $SPOSharingSettings.DefaultSharingLinkType
+            PreventExternalUsersFromResharing          = $SPOSharingSettings.PreventExternalUsersFromResharing
+            ShowPeoplePickerSuggestionsForGuestUsers   = $SPOSharingSettings.ShowPeoplePickerSuggestionsForGuestUsers
+            FileAnonymousLinkType                      = $SPOSharingSettings.FileAnonymousLinkType
+            FolderAnonymousLinkType                    = $SPOSharingSettings.FolderAnonymousLinkType
+            NotifyOwnersWhenItemsReshared              = $SPOSharingSettings.NotifyOwnersWhenItemsReshared
+            DefaultLinkPermission                      = $SPOSharingSettings.DefaultLinkPermission
+            RequireAcceptingAccountMatchInvitedAccount = $SPOSharingSettings.RequireAcceptingAccountMatchInvitedAccount
         }
     }
     catch
@@ -170,9 +173,10 @@ function Set-TargetResource
     [CmdletBinding()]
     param (
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Tenant,
+        [parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [String]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.String]
@@ -274,12 +278,8 @@ function Set-TargetResource
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
-    $CurrentParameters.Remove("Ensure")
     $CurrentParameters.Remove("Verbose")
 
-    Write-Verbose -Message "%%% Setting Tenant: $Tenant %%%"
-    $CurrentParameters.Remove("Tenant")
-    
     if ($null -eq $SignInAccelerationDomain)
     {
         $CurrentParameters.remove("SignInAccelerationDomain")
@@ -324,9 +324,10 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param (
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Tenant,
+        [parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [String]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.String]
@@ -427,7 +428,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
+        -ValuesToCheck @("IsSingleInstance", `
             "SharingCapability", `
             "ShowEveryoneClaim", `
             "ShowAllUsersClaim", `
@@ -450,4 +451,119 @@ function Test-TargetResource
             "DefaultLinkPermission"
     )
 }
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [String]
+        $IsSingleInstance,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
+        $SharingCapability,
+
+        [Parameter()]
+        [System.boolean]
+        $ShowEveryoneClaim,
+
+        [Parameter()]
+        [System.boolean]
+        $ShowAllUsersClaim,
+
+        [Parameter()]
+        [System.boolean]
+        $ShowEveryoneExceptExternalUsersClaim,
+
+        [Parameter()]
+        [System.boolean]
+        $ProvisionSharedWithEveryoneFolder,
+
+        [Parameter()]
+        [System.boolean]
+        $EnableGuestSignInAcceleration,
+
+        [Parameter()]
+        [System.boolean]
+        $BccExternalSharingInvitations,
+
+        [Parameter()]
+        [System.String]
+        $BccExternalSharingInvitationsList,
+
+        [Parameter()]
+        [System.Uint32]
+        $RequireAnonymousLinksExpireInDays,
+
+        [Parameter()]
+        [System.String]
+        $SharingAllowedDomainList,
+
+        [Parameter()]
+        [System.String]
+        $SharingBlockedDomainList,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("None", "AllowList", "BlockList")]
+        $SharingDomainRestrictionMode,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("None", "Direct", "Internal", "AnonymousAccess")]
+        $DefaultSharingLinkType,
+
+        [Parameter()]
+        [System.boolean]
+        $PreventExternalUsersFromResharing,
+
+        [Parameter()]
+        [System.boolean]
+        $ShowPeoplePickerSuggestionsForGuestUsers,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("View", "Edit")]
+        $FileAnonymousLinkType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("View", "Edit")]
+        $FolderAnonymousLinkType,
+
+        [Parameter()]
+        [System.boolean]
+        $NotifyOwnersWhenItemsReshared,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("View", "Edit")]
+        $DefaultLinkPermission,
+
+        [Parameter()]
+        [System.boolean]
+        $RequireAcceptingAccountMatchInvitedAccount,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CentralAdminUrl,
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+    Test-SPOServiceConnection -GlobalAdminAccount $GlobalAdminAccount -SPOCentralAdminUrl $CentralAdminUrl
+    $result = Get-TargetResource @PSBoundParameters
+    $content = "SPOSharingSettings " + (New-GUID).ToString() + "`r`n"
+    $content += "{`r`n"
+    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += "}`r`n"
+    return $content
+}
+
 Export-ModuleMember -Function *-TargetResource

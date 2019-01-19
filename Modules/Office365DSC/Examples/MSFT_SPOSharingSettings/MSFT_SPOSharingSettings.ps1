@@ -1,3 +1,8 @@
+<#
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+#>
+
 Configuration MSFT_SPOSharingSettings
 {
     Import-DSCResource -ModuleName Office365DSC
@@ -6,7 +11,7 @@ Configuration MSFT_SPOSharingSettings
     {
         SPOSharingSettings MyTenant
         {
-            Tenant                                        = "MyTenant"
+            IsSingleInstance                              = "Yes"
             CentralAdminUrl                               = "https://o365dsc1-admin.sharepoint.com"
             GlobalAdminAccount                            = $credsGlobalAdmin
             SharingCapability                             = 'ExternalUserSharingOnly'
