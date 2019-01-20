@@ -57,7 +57,7 @@ function Get-TargetResource
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
-        Url = $null
+        Url = $Url
         Owner = $null
         #TimeZoneId = $null
         LocaleId = $null
@@ -67,13 +67,14 @@ function Get-TargetResource
         CompatibilityLevel = $null
         Title = $null
         Ensure = "Absent"
+        CentralAdminUrl = $CentralAdminUrl
     }
 
     try
     {
         Write-Verbose -Message "Getting site collection $Url"
         $site = Get-SPOSite $Url
-        if(!$site)
+        if ($null -eq $site)
         {
             Write-Verbose "The specified Site Collection doesn't already exist."
             return $nullReturn
@@ -88,6 +89,7 @@ function Get-TargetResource
             StorageQuota = $site.StorageQuota
             CompatibilityLevel = $site.CompatibilityLevel
             Title = $site.Title
+            CentralAdminUrl = $CentralAdminUrl
             Ensure = "Present"
         }
     }
@@ -170,7 +172,7 @@ function Set-TargetResource
             $CurrentParameters = $PSBoundParameters
             $CurrentParameters.Remove("CentralAdminUrl")
             $CurrentParameters.Remove("GlobalAdminAccount")
-
+            $CurrentParameters.Remove("Ensure")
             New-SPOSite @CurrentParameters
         }
     }

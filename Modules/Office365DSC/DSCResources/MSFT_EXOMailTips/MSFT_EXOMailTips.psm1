@@ -53,7 +53,7 @@ function Get-TargetResource
         Get-OrganizationConfig
     }
 
-    if(!$OrgConfig)
+    if (!$OrgConfig)
     {
         Write-Verbose "Can't find the information about the Organization Configuration."
         return $nullReturn
@@ -227,7 +227,7 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Organization,
 

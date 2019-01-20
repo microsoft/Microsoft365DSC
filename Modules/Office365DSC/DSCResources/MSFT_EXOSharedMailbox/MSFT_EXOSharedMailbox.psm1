@@ -100,9 +100,12 @@ function Set-TargetResource
     $currentMailbox = Get-TargetResource @PSBoundParameters
 
     #region Validation
-    if ($Aliases -and $Aliases.Contains($PrimarySMTPAddress))
+    foreach ($alias in $Aliases)
     {
-        throw "You cannot have the Aliases list contain the PrimarySMTPAddress"
+        if ($alias.ToLower() -eq $PrimarySMTPAddress.ToLower())
+        {
+            throw "You cannot have the Aliases list contain the PrimarySMTPAddress"
+        }
     }
     #endregion
 

@@ -94,7 +94,7 @@ function Get-TargetResource
             return $nullReturn
         }
 
-        switch($GroupType)
+        switch ($GroupType)
         {
             "Office365"
             {
@@ -105,15 +105,25 @@ function Get-TargetResource
                     Get-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType "Members"
                 }
 
-                $members = @()
-                foreach($link in $groupLinks)
+                $groupMembers = ""
+                foreach ($link in $groupLinks.Name)
                 {
-                    $member += $link.Name
+                    $groupMembers += $link.ToString() + ","
+                }
+                if ($groupMembers -ne "")
+                {
+                    # Remove the trailing comma
+                    $groupMembers = $groupMembers.Remove($groupMembers.Length -1, 1)
+                    $groupMembers = $groupMembers.Split(',')
+                }
+                else
+                {
+                    $groupMembers = @()
                 }
                 return @{
                     DisplayName = $group.DisplayName
                     GroupType = $GroupType
-                    Members = $Members
+                    Members = $groupMembers
                     ManagedBy = $group.ManagedBy
                     Description = $group.Notes
                     GlobalAdminAccount = $GlobalAdminAccount
@@ -144,8 +154,6 @@ function Get-TargetResource
             }
         }
     }
-    Write-Verbose "The specified Group doesn't already exist."
-    return $nullReturn
 }
 
 function Set-TargetResource
@@ -194,7 +202,7 @@ function Set-TargetResource
     Write-Verbose "Entering Set-TargetResource"
     Write-Verbose "Retrieving information about group $($DisplayName) to see if it already exists"
     $currentGroup = Get-TargetResource @PSBoundParameters
-    if( $Ensure -eq "Present")
+    if ($Ensure -eq "Present")
     {
         $CurrentParameters = $PSBoundParameters
         $CurrentParameters.Remove("Ensure")
@@ -207,8 +215,9 @@ function Set-TargetResource
             Write-Verbose -Message "Creating Security Group $DisplayName"
             New-MsolGroup @CurrentParameters
         }
-        else {
-            switch($GroupType)
+        else
+        {
+            switch ($GroupType)
             {
                 "Office365"
                 {
@@ -228,7 +237,7 @@ function Set-TargetResource
                         Get-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType "Members"
                     }
                     $curMembers = @()
-                    foreach($link in $groupLinks)
+                    foreach ($link in $groupLinks)
                     {
                         if ($link.Name -and $link.Name -ne $currentGroup.ManagedBy)
                         {
@@ -243,7 +252,7 @@ function Set-TargetResource
                         Write-Verbose "Detected a difference in the current list of members and the desired one"
                         $membersToRemove = @()
                         $membersToAdd = @()
-                        foreach($diff in $difference)
+                        foreach ($diff in $difference)
                         {
                             if ($diff.SideIndicator -eq "<=" -and $diff.InputObject -ne $ManagedBy.Split('@')[0])
                             {
@@ -298,6 +307,10 @@ function Set-TargetResource
                                                   -Type "Security" `
                                                   -PrimarySMTPAddress $args[0].PrimarySMTPAddress
                     }
+                }
+                Default
+                {
+                    throw "The specified GroupType is not valid"
                 }
             }
         }

@@ -33,6 +33,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 StorageQuota = 1000
                 CentralAdminUrl = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
+                Ensure= "Present"
             }
 
             Mock -CommandName New-SPOSite -MockWith { 
