@@ -12,16 +12,25 @@ Configuration Teams
         <#
         TeamsTeam MyTeam
         {
-            #GroupId = "85beae77-0ba7-4af9-833c-4d5211a75a4a"
-            DisplayName = "MyTeam"
+            GroupId = "22fcf71a-8a20-4074-89e9-e3ab5e800ab8"
+            DisplayName = "DSC Team2"
             Description = "My new team"
             AccessType = "Private"
-            Alias = "Myteam"
+            Alias = "DSCTeam2"
             GlobalAdminAccount = $credsGlobalAdmin
-            Ensure = "Present"
-        }              
-        
+            Ensure = "Absent"
+        }        
         #>
+        
+        TeamsTeam MyTeam
+        {
+            GroupId = "74424c8f-c776-4a28-9d91-52f884313a18"
+            DisplayName = "DSC Team"
+            GlobalAdminAccount = $credsGlobalAdmin
+            Ensure = "Absent"
+        }        
+
+
         <#
         TeamsUser MyTeam {
             GroupID            = "f2d2365d-5e77-49c0-99fa-7c468cce021a"
@@ -42,6 +51,7 @@ Configuration Teams
             GlobalAdminAccount = $credsGlobalAdmin
         }  
         #>
+        <#
         TeamsChannel MyChannel
         {
             GroupID = "f2d2365d-5e77-49c0-99fa-7c468cce021a"
@@ -51,7 +61,7 @@ Configuration Teams
             Ensure = "Absent"
             GlobalAdminAccount = $credsGlobalAdmin
         }
-        
+        #>
     }
 }
 

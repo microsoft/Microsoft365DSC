@@ -56,7 +56,7 @@ function Get-TargetResource {
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount  
     
     $nullReturn = @{
-        DisplayName    = $null
+        DisplayName    = $DisplayName
         Group          = $null
         GroupId        = $null
         Description    = $null
@@ -67,52 +67,67 @@ function Get-TargetResource {
         Ensure         = "Absent"
     }
 
-    # try 
-    # {
-    Write-Verbose -Message "Checking for existance of Team"
-    $allGroups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-        -ScriptBlock {
-        Get-UnifiedGroup 
-    }
-             
-    if ($CurrentParameters.ContainsKey("GroupId")) {
-        $teamGroup = $allGroups | Where-Object {$_.Name.split("_")[0] -eq $GroupId}
-        $team = Get-Team |  Where-Object {($_.GroupId -eq $GroupId)}
-        if (!$team) {
-            Write-Verbose "Failed to get Teams with GroupId $($GroupId)"
-            return $nullReturn
-        }
-    }
-    else {
-        $team = Get-Team |  Where-Object {($_.DisplayName -eq $DisplayName)}
-        if (!$team) {
-            Write-Verbose "Failed to get Teams with displayname $DisplayName"
-            return $nullReturn
-        }
-        if ($team.Count -gt 1) {
-            throw "Duplicate Teams name $DisplayName exist in tenant"
-        }
-    }
+    try {
+        Write-Verbose -Message "Checking for existance of Team $DisplayName"
+                  
+        $CurrentParameters = $PSBoundParameters
+        ##Check if team exists first before loading EXO modules
 
-    Write-Verbose -Message "Found Team $($team.DisplayName) and groupid of $($team.GroupId)"
+        if ($CurrentParameters.ContainsKey("GroupId")) {
+            $team = Get-Team |  Where-Object {($_.GroupId -eq $GroupId)}
+            if (!$team) {
+                Write-Verbose "Failed to get Teams with GroupId $($GroupId)"
+                return $nullReturn
+            }
 
-    return @{
-        DisplayName    = $team.DisplayName
-        Group          = $null
-        GroupId        = $team.GroupId
-        Description    = $team.Description
-        Owner          = $null
-        Classification = $null
-        Alias          = $teamGroup.Alias
-        AccessType     = $teamGroup.AccessType
-        Ensure         = "Present"
+        }
+        else {
+            $team = Get-Team |  Where-Object {($_.DisplayName -eq $DisplayName)}
+            if (!$team) {
+                Write-Verbose "Failed to get Teams with displayname $DisplayName"
+                return $nullReturn
+            }
+            if ($team.Count -gt 1) {
+                throw "Duplicate Teams name $DisplayName exist in tenant"
+            }
+        }
+        Write-Verbose -Message "Found Team $($team.DisplayName) and groupid of $($team.GroupId)"
+
+        ## Team exists check O365 group for additional info for Set operation skip if new team or delete 
+        if ($Ensure -eq "Present") {
+            $allGroups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                -ScriptBlock {
+                Get-UnifiedGroup 
+            }
+
+            if ($CurrentParameters.ContainsKey("GroupId")) {
+                $teamGroup = $allGroups | Where-Object {$_.ExternalDirectoryObjectId -eq $GroupId}
+    
+            }  ##### Else using display name for lookup for set operation
+            else {
+                $teamGroup = $allGroups | Where-Object {$_.DisplayName -eq $DisplayName}
+            }
+                
+            Write-Verbose -Message "Found O365 group $teamGroup"
+            Write-Verbose -Message "Alias = $($teamGroup.Alias) and team accesstype = $($teamGroup.AccessType)"
+        }
+        return @{
+            DisplayName    = $team.DisplayName
+            Group          = $null
+            GroupId        = $team.GroupId
+            Description    = $team.Description
+            Owner          = $null
+            Classification = $null
+            Alias          = $teamGroup.Alias 
+            AccessType     = $teamGroup.AccessType
+            Ensure         = "Present"
+        }
+    }
+    catch {
+        Write-Verbose "Failed to get Teams from the tenant."
+        return $nullReturn
     }
 }
-#    catch {
-#        Write-Verbose "Failed to get Teams from the tenant."
-#        return $nullReturn
-#    }
-#}
 
 function Set-TargetResource {
     [CmdletBinding()]
@@ -164,22 +179,21 @@ function Set-TargetResource {
     )
 
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount  
-   
+    Write-Verbose  -Message "Entering Set-TargetResource"
+    Write-Verbose  -Message "Retrieving information about team $($DisplayName) to see if it already exists"
     $team = Get-TargetResource @PSBoundParameters
     
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
+    $CurrentParameters.Remove("Ensure")
 
     if ($CurrentParameters.ContainsKey("Group") -and $CurrentParameters.Count -gt 1) {
         throw "If group is set no other parameters can be passed"    
     }
 
-    Write-Verbose -Message "Team group id $($team.GroupId)"
+    Write-Verbose -Message "Found Team group id $($team.GroupId)"
     
     if ($Ensure -eq "Present") {
-        if ($CurrentParameters.ContainsKey("Ensure")) {
-            $CurrentParameters.Remove("Ensure")
-        }
         if ($team.DisplayName) {
             if ($CurrentParameters.ContainsKey("Owner")) {
                 $CurrentParameters.Remove("Owner")
@@ -187,10 +201,6 @@ function Set-TargetResource {
             if ($CurrentParameters.ContainsKey("AccessType")) {
                 $CurrentParameters.Remove("AccessType")
                 $CurrentParameters.Add("Visibility", $AccessType)
-            }
-            # GroupId not passed into parameters but found a group with same display name
-            if (!$CurrentParameters.ContainsKey("GroupId")) {
-                $CurrentParameters.Add("GroupId", $team.GroupId)
             }
             Set-Team @CurrentParameters 
             Write-Verbose -Message "Updating team group id $($GroupId)"
@@ -203,13 +213,13 @@ function Set-TargetResource {
             New-Team @CurrentParameters
         }
     }
-    if (($Ensure -eq "Absent") -and ($team.GroupId)) {
-        if ($CurrentParameters.ContainsKey("Ensure")) {
-            $CurrentParameters.Remove("Ensure")
-        }
-        Write-Verbose -Message "Removing team $DisplayName"   
-        Remove-team -GroupId $team.GroupId
-    }   
+    else {
+        if ($team.GroupId) {
+            Write-Verbose -Message "Removing team $DisplayName"   
+            Remove-team -GroupId $team.GroupId
+        }   
+    }
+
 }
 
 function Test-TargetResource {
