@@ -9,19 +9,19 @@ Configuration Teams
     $credsGlobalAdmin = Get-Credential -UserName "derek@smaystate.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
-        <#
+        
         TeamsTeam MyTeam
         {
-            GroupId = "22fcf71a-8a20-4074-89e9-e3ab5e800ab8"
-            DisplayName = "DSC Team2"
+            GroupId = "f51a3df3-14af-4f52-b22b-30be60ca3fc4"
+            DisplayName = "DSC Team"
             Description = "My new team"
-            AccessType = "Private"
+            AccessType = "Public"
             Alias = "DSCTeam2"
             GlobalAdminAccount = $credsGlobalAdmin
-            Ensure = "Absent"
+            Ensure = "Present"
         }        
-        #>
         
+        <#
         TeamsTeam MyTeam
         {
             GroupId = "74424c8f-c776-4a28-9d91-52f884313a18"
@@ -29,7 +29,7 @@ Configuration Teams
             GlobalAdminAccount = $credsGlobalAdmin
             Ensure = "Absent"
         }        
-
+        #>
 
         <#
         TeamsUser MyTeam {

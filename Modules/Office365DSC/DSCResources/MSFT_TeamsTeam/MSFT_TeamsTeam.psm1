@@ -190,11 +190,9 @@ function Set-TargetResource {
     if ($CurrentParameters.ContainsKey("Group") -and $CurrentParameters.Count -gt 1) {
         throw "If group is set no other parameters can be passed"    
     }
-
-    Write-Verbose -Message "Found Team group id $($team.GroupId)"
     
     if ($Ensure -eq "Present") {
-        if ($team.DisplayName) {
+        if ($team.GroupId) {
             if ($CurrentParameters.ContainsKey("Owner")) {
                 $CurrentParameters.Remove("Owner")
             }
