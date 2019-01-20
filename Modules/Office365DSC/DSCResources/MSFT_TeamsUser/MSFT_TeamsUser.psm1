@@ -29,7 +29,7 @@ function Get-TargetResource {
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount  
     
     $nullReturn = @{
-        User   = $null
+        User   = $User
         Role   = $null
         Ensure = "Absent"
     }
@@ -44,7 +44,7 @@ function Get-TargetResource {
             $allMembers = Get-TeamUser -GroupId $GroupID
         }
 
-        if (!$allMembers) {
+        if ($allMembers -eq $null) {
             Write-Verbose "Failed to get Team's users groupId $GroupID"
             return $nullReturn
         }
