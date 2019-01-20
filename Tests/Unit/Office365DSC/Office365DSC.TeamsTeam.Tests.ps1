@@ -28,6 +28,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the Team doesnt exist" -Fixture {
             $testParams = @{
                 DisplayName = "Test Team"
+                Alias = "TestTeam"
                 Description = "Test team description"
                 AccessType = "Private"
                 CentralAdminUrl = "https://contoso.sharepoint.com"
@@ -55,6 +56,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 DisplayName = "Test Team"
                 Description = "Test team description"
+                Alias = "TestTeam"
                 AccessType = "Private"
                 CentralAdminUrl = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
@@ -81,6 +83,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DisplayName = "Test Team"
                 Description = "Test team description"
                 AccessType = "Private"
+                Alias = "TestTeam"
                 CentralAdminUrl = "https://contoso.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }

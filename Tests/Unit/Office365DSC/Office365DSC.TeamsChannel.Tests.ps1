@@ -25,19 +25,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts 
-        Context -Name "When the Team user doesnt exist" -Fixture {
+        Context -Name "WHen a channel doesnt exist" -Fixture {
             $testParams = @{
                 GroupID            = "12345-12345-12345-12345-12345"
-                Role               = "Member"
-                User               = "JohnSmith@contoso.onmicrosoft.com"
+                DisplayName        = "Test Channel"
+                Description        = "Test description"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Add-TeamUser` -MockWith { 
-                return @{User = $null}
+            Mock -CommandName New-TeamChannel` -MockWith { 
+                return @{DisplayName = $null}
             }
 
-            Mock -CommandName Get-TeamUser -MockWith { 
+            Mock -CommandName Get-TeamChannel -MockWith { 
                 return $null
             }
 
@@ -45,24 +45,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-            It "Creates the MS Team in the Set method" {
+            It "Creates the MS Team channel in the Set method" {
                 Set-TargetResource @testParams
             }
         }
 
-        Context -Name "The Team already exists" -Fixture {
+        Context -Name "Channel already exists" -Fixture {
             $testParams = @{
                 GroupID            = "12345-12345-12345-12345-12345"
-                Role               = "Member"
-                User               = "JohnSmith@contoso.onmicrosoft.com"
+                DisplayName        = "Test Channel"
+                NewDisplayName     = "Test Channel 1"
+                Description        = "Test description"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-TeamUser -MockWith { 
+            Mock -CommandName Get-TeamChannel -MockWith { 
                 return @{
-                    GroupID = "12345-12345-12345-12345-12345"
-                    User    = "JohnSmith@contoso.onmicrosoft.com"
-                    Ensure  = "Present"
+                    DisplayName = "Test Channel 1"
+                    Ensure      = "Present"
                 }
             }
             
@@ -78,14 +78,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GroupID            = "12345-12345-12345-12345-12345"
-                Role               = "Member"
-                User               = "JohnSmith@contoso.onmicrosoft.com"
+                DisplayName        = "Test Channel"
+                Description        = "Test description"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-TeamUser -MockWith { 
+            Mock -CommandName Get-TeamChannel -MockWith { 
                 return @{
-                    User = "JohnSmith@contoso.onmicrosoft.com"
+                    DisplayName = "Test Channel"
                 }
             }
 

@@ -35,7 +35,7 @@ Configuration Teams
         TeamsUser MyTeam {
             GroupID            = "f51a3df3-14af-4f52-b22b-30be60ca3fc4"
             User               = "jdoe@dsazure.com"
-           # Role               = "Member"
+            Role               = "Owner"
             Ensure             = "Absent"
             GlobalAdminAccount = $credsGlobalAdmin
         }
