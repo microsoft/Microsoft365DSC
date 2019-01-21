@@ -31,7 +31,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Alias = "TestTeam"
                 Description = "Test team description"
                 AccessType = "Private"
-                CentralAdminUrl = "https://contoso.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -58,7 +57,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Description = "Test team description"
                 Alias = "TestTeam"
                 AccessType = "Private"
-                CentralAdminUrl = "https://contoso-admin.sharepoint.com"
+                Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -69,7 +68,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
             
-            It "Should return absent from the Get method" {
+            It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present" 
             }
 
@@ -84,7 +83,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Description = "Test team description"
                 AccessType = "Private"
                 Alias = "TestTeam"
-                CentralAdminUrl = "https://contoso.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

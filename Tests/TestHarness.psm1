@@ -15,6 +15,7 @@ function Invoke-TestHarness
         [Switch]
         $IgnoreCodeCoverage
     )
+    
 
     Write-Verbose -Message 'Commencing all Office365DSC tests'
 

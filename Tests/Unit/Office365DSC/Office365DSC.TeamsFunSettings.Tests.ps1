@@ -32,12 +32,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GiphyContentRating = "Moderate"
                 AllowStickersAndMemes = $true 
                 AllowCustomMemes = $true
-                CentralAdminUrl = "https://contoso.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Set-TeamFunSettings -MockWith { 
-                return @{OneDriveStorageQuota = $null}
+                return @{AllowGiphy = $null
+                        GilphyContentRating = $null
+                        AllowStickersAndMemes = $null
+                        AllowCustomMemes = $null
+                    }
             }
 
             Mock -CommandName Get-TeamFunSettings -MockWith { 
@@ -61,7 +64,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GiphyContentRating = "Moderate"
                 AllowStickersAndMemes = $true 
                 AllowCustomMemes = $true
-                CentralAdminUrl = "https://contoso.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -72,10 +74,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GiphyContentRating = "Moderate"
                     AllowStickersAndMemes = $true 
                     AllowCustomMemes = $true
+                    Ensure = "Present"
                 }
             }
            
-            It "Should return absent from the Get method" {
+            It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present" 
             }
 
@@ -91,7 +94,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GiphyContentRating = "Moderate"
                 AllowStickersAndMemes = $true 
                 AllowCustomMemes = $true
-                CentralAdminUrl = "https://contoso.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

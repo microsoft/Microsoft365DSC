@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "TeamsTeam"
+    -DscResource "TeamsUser"
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -45,12 +45,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-            It "Creates the MS Team in the Set method" {
+            It "Adds user to MS Team in the Set method" {
                 Set-TargetResource @testParams
             }
         }
 
-        Context -Name "The Team already exists" -Fixture {
+        Context -Name "The user already exists" -Fixture {
             $testParams = @{
                 GroupID            = "12345-12345-12345-12345-12345"
                 Role               = "Member"
@@ -66,7 +66,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
             
-            It "Should return absent from the Get method" {
+            It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present" 
             }
 
