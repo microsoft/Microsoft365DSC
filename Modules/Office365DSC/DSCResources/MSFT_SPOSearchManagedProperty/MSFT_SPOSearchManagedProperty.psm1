@@ -26,6 +26,10 @@ function Get-TargetResource
         $FullTextIndex,
 
         [Parameter()]
+        [System.Int32]
+        $FullTextContext,
+
+        [Parameter()]
         [System.Boolean]
         $Queryable,
 
@@ -38,12 +42,12 @@ function Get-TargetResource
         $AllowMultipleValues,
 
         [Parameter()]
-        [ValidateSet("No", "Yes - latent", "Yes")] 
+        [ValidateSet("No", "Yes - latent", "Yes")]
         [System.String]
         $Refinable,
 
         [Parameter()]
-        [ValidateSet("No", "Yes - latent", "Yes")] 
+        [ValidateSet("No", "Yes - latent", "Yes")]
         [System.String]
         $Sortable,
 
@@ -72,6 +76,10 @@ function Get-TargetResource
         $FinerQueryTokenization,
 
         [Parameter()]
+        [System.String[]]
+        $MappedCrawledProperties,
+
+        [Parameter()]
         [System.Boolean]
         $CompanyNameExtraction,
 
@@ -97,6 +105,7 @@ function Get-TargetResource
         Description = $null
         Searchable = $null
         FullTextIndex = $null
+        FullTextContext = $null
         Queryable = $null
         Retrievable = $null
         AllowMultipleValues = $null
@@ -108,6 +117,7 @@ function Get-TargetResource
         CompleteMatching = $null
         LanguageNeutralTokenization = $null
         FinerQueryTokenization = $null
+        MappedCrawledProperties = $null
         CompanyNameExtraction = $null
         Ensure = "Absent"
         CentralAdminUrl = $CentralAdminUrl
@@ -128,13 +138,30 @@ function Get-TargetResource
     {
         $CompanyNameExtraction = $true
     }
+    $FullTextIndex = $null
+    if ([string] $property.Value.FullTextIndex -ne "System.Xml.XmlElement")
+    {
+        $FullTextIndex = [string] $property.Value.FullTextIndex
+    }
+
+    # Get Mapped Crawled Properties
+    $currentManagedPID = [string] $property.Value.Pid
+    $mappedProperties = $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.Mappings.dictionary.KeyValueOfstringMappingInfoy6h3NzC8 `
+                            | Where-Object { $_.Value.ManagedPid -eq $currentManagedPID }
+
+    $mappings = @()
+    foreach ($mappedProperty in $mappedProperties)
+    {
+        $mappings += $mappedProperty.Value.CrawledPropertyName.ToString()
+    }
 
     return @{
         Name = [string] $property.Value.Name
         Type = [string] $property.Value.ManagedType
         Description = [string] $property.Value.Description
         Searchable = [boolean] $property.Value.Searchable
-        FullTextIndex = [string] $property.Value.FullTextIndex
+        FullTextIndex = $FullTextIndex
+        FullTextContext = [System.Int32] $property.Value.Context
         Queryable = [boolean] $property.Value.Queryable
         Retrievable = [boolean] $property.Value.Retrievable
         AllowMultipleValues = [boolean] $property.Value.HasMultipleValues
@@ -146,6 +173,7 @@ function Get-TargetResource
         CompleteMatching = [boolean] $property.Value.CompleteMatching
         LanguageNeutralTokenization = [boolean] $property.Value.LanguageNeutralTokenization
         FinerQueryTokenization = [boolean] $property.Value.ExpandSegments
+        MappedCrawledProperties = $mappings
         CompanyNameExtraction = $CompanyNameExtraction
         CentralAdminUrl = $CentralAdminUrl
         Ensure = "Present"
@@ -179,6 +207,10 @@ function Set-TargetResource
         $FullTextIndex,
 
         [Parameter()]
+        [System.Int32]
+        $FullTextContext,
+
+        [Parameter()]
         [System.Boolean]
         $Queryable,
 
@@ -223,6 +255,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $FinerQueryTokenization,
+
+        [Parameter()]
+        [System.String[]]
+        $MappedCrawledProperties,
 
         [Parameter()]
         [System.Boolean]
@@ -293,6 +329,10 @@ function Test-TargetResource
         $FullTextIndex,
 
         [Parameter()]
+        [System.Int32]
+        $FullTextContext,
+
+        [Parameter()]
         [System.Boolean]
         $Queryable,
 
@@ -337,6 +377,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $FinerQueryTokenization,
+
+        [Parameter()]
+        [System.String[]]
+        $MappedCrawledProperties,
 
         [Parameter()]
         [System.Boolean]

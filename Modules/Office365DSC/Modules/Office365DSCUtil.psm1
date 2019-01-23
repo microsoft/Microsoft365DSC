@@ -1397,7 +1397,7 @@ function Export-O365Configuration
     }
     #endregion
 
-    #region "SPOSearchMAnagedProperty"
+    #region "SPOSearchManagedProperty"
     $SPOSearchManagedPropertyModulePath = Join-Path -Path $PSScriptRoot `
                                     -ChildPath "..\DSCResources\MSFT_SPOSearchManagedProperty\MSFT_SPOSearchManagedProperty.psm1" `
                                     -Resolve
