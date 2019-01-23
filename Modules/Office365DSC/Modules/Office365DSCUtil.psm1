@@ -1397,6 +1397,26 @@ function Export-O365Configuration
     }
     #endregion
 
+    #region "SPOSearchMAnagedProperty"
+    $SPOSearchManagedPropertyModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_SPOSearchManagedProperty\MSFT_SPOSearchManagedProperty.psm1" `
+                                    -Resolve
+
+    Import-Module $SPOSearchManagedPropertyModulePath
+
+    Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+    $properties =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
+
+    foreach ($property in $properties)
+    {
+        $DSCContent += Export-TargetResource -Name $property.Value.Name `
+                                             -Type $property.Value.ManagedType `
+                                             -CentralAdminUrl $centralAdminUrl `
+                                             -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "SPOSite"
     $SPOSiteModulePath = Join-Path -Path $PSScriptRoot `
                                     -ChildPath "..\DSCResources\MSFT_SPOSite\MSFT_SPOSite.psm1" `
