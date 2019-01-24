@@ -42,6 +42,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            It "Should return absent from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent" 
+            }
+
             It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should Be $false
             }
@@ -55,8 +59,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 GroupID            = "12345-12345-12345-12345-12345"
                 DisplayName        = "Test Channel"
-                NewDisplayName     = "Test Channel 1"
-                Description        = "Test description"
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -65,6 +67,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     GroupID     = "12345-12345-12345-12345-12345"
                     DisplayName = "Test Channel 1"
+                    Ensure             = "Present"
 
                 }
             }

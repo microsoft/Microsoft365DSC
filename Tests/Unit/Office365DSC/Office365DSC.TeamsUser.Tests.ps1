@@ -33,7 +33,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Add-TeamUser` -MockWith { 
+            Mock -CommandName Add-TeamUser -MockWith { 
                 return @{User = $null}
             }
 
@@ -53,7 +53,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The user already exists" -Fixture {
             $testParams = @{
                 GroupID            = "12345-12345-12345-12345-12345"
-                Role               = "Member"
                 User               = "JohnSmith@contoso.onmicrosoft.com"
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
@@ -63,7 +62,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     GroupID = "12345-12345-12345-12345-12345"
                     User    = "JohnSmith@contoso.onmicrosoft.com"
-                    Ensure  = "Present"
                 }
             }
             
@@ -81,7 +79,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GroupID            = "12345-12345-12345-12345-12345"
                 Role               = "Member"
                 User               = "JohnSmith@contoso.onmicrosoft.com"
-                Enusre             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

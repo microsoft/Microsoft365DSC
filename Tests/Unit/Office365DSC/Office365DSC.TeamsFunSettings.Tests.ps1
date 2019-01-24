@@ -46,7 +46,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-TeamFunSettings -MockWith { 
                 return $null
             }
-            
+
+            It "Should return absent from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent" 
+            }
 
             It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should Be $false
