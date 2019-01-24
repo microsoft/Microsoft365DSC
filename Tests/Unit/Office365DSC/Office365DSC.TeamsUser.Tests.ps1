@@ -3,14 +3,13 @@ param(
     [Parameter()]
     [string] 
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\Stubs\Office365DSC.psm1" `
+            -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
 
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
-
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
     -DscResource "TeamsUser"
 
@@ -30,6 +29,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GroupID            = "12345-12345-12345-12345-12345"
                 Role               = "Member"
                 User               = "JohnSmith@contoso.onmicrosoft.com"
+                Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -55,6 +55,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GroupID            = "12345-12345-12345-12345-12345"
                 Role               = "Member"
                 User               = "JohnSmith@contoso.onmicrosoft.com"
+                Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -80,6 +81,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GroupID            = "12345-12345-12345-12345-12345"
                 Role               = "Member"
                 User               = "JohnSmith@contoso.onmicrosoft.com"
+                Enusre             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

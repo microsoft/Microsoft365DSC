@@ -3,7 +3,7 @@ param(
     [Parameter()]
     [string] 
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\Stubs\Office365DSC.psm1" `
+                                         -ChildPath "..\Stubs\Office365.psm1" `
                                          -Resolve)
 )
 
@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
                                 -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                                -DscResource "TeamFunSettings"
+                                                -DscResource "TeamsFunSettings"
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {

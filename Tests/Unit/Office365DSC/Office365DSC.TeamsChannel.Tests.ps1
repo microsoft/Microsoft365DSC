@@ -3,14 +3,14 @@ param(
     [Parameter()]
     [string] 
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\Stubs\Office365DSC.psm1" `
+            -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
 
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
-
+                                
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
     -DscResource "TeamsChannel"
 
@@ -25,7 +25,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts 
-        Context -Name "WHen a channel doesnt exist" -Fixture {
+        Context -Name "When a channel doesnt exist" -Fixture {
             $testParams = @{
                 GroupID            = "12345-12345-12345-12345-12345"
                 DisplayName        = "Test Channel"
@@ -33,12 +33,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName New-TeamChannel` -MockWith { 
-                return @{DisplayName = $null}
-            }
-
             Mock -CommandName Get-TeamChannel -MockWith { 
                 return $null
+            }
+
+            Mock -CommandName New-TeamChannel -MockWith { 
+                return @{GroupID = $null
+                }
             }
 
             It "Should return false from the Test method" {
@@ -56,13 +57,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DisplayName        = "Test Channel"
                 NewDisplayName     = "Test Channel 1"
                 Description        = "Test description"
+                Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-TeamChannel -MockWith { 
                 return @{
+                    GroupID     = "12345-12345-12345-12345-12345"
                     DisplayName = "Test Channel 1"
-                    Ensure      = "Present"
+
                 }
             }
             

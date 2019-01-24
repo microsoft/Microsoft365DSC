@@ -1,4 +1,122 @@
 ﻿<# EXO - Custom Office365DSC #>
+function Get-Team{
+    [CmdletBinding()]
+    param()
+}
+
+function New-Team{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $DisplayName,
+
+        [Parameter()]
+        [string]
+        $Description,
+
+        [Parameter()]
+        [string]
+        $Alias,
+
+        [Parameter()]
+        [string]
+        $Owner,
+
+        [Parameter()]
+        [string]
+        $Classification,
+
+        [Parameter()]
+        [string]
+        $AccessType
+     
+    )
+}
+function Get-TeamUser{
+    [CmdletBinding()]
+    param()
+}
+
+function Add-TeamUser{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $Description,
+
+        [Parameter()]
+        [string]
+        $User,
+
+        [Parameter()]
+        [string]
+        $Role
+            
+    )
+}
+
+function Get-TeamChannel{
+    [CmdletBinding()]
+    param()
+}
+
+
+function New-TeamChannel{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $DisplayName,
+
+        [Parameter()]
+        [string]
+        $NewDisplayName,
+
+        [Parameter()]
+        [string]
+        $Description
+    )
+}
+
+function Get-TeamFunSettings{
+    [CmdletBinding()]
+    param()
+}
+
+function Set-TeamFunSettings{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $AllowGiphy,
+
+        [Parameter()]
+        [string]
+        $GiphyContentRating,
+
+        [Parameter()]
+        [string]
+        $AllowStickersAndMemes,
+
+        [Parameter()]
+        [string]
+        $AllowCustomMemes
+    )
+}
+
 function Set-SPOTenant{
     [CmdletBinding()]
     param(
@@ -9034,6 +9152,3 @@ param(
 
  
  } 
-
-
-

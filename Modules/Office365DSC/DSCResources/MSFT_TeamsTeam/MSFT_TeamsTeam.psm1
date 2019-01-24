@@ -333,7 +333,7 @@ function Export-TargetResource {
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )
-    Test-SPOServiceConnection -GlobalAdminAccount $GlobalAdminAccount -SPOCentralAdminUrl $CentralAdminUrl
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     $content = "TeamsTeam " + (New-GUID).ToString() + "`r`n"
     $content += "{`r`n"

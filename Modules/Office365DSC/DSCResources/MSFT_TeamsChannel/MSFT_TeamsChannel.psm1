@@ -173,7 +173,8 @@ function Test-TargetResource {
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("Ensure", `
             "DisplayName", `
-            "NewDisplayName"
+            "NewDisplayName", `
+            "Description"
     )
 }           
 
