@@ -280,7 +280,7 @@ function Set-TargetResource
 
     Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     $SearchConfigTemplatePath =  Join-Path -Path $PSScriptRoot `
-                                           -ChildPath "..\Dependencies\SearchConfigurationSettings.xml" `
+                                           -ChildPath "..\..\Dependencies\SearchConfigurationSettings.xml" `
                                            -Resolve
     $SearchConfigXML = [Xml] (Get-Content $SearchConfigTemplatePath -Raw)
     # Get the managed property back if it already exists.
@@ -672,7 +672,8 @@ function Test-TargetResource
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                            -DesiredValues $PSBoundParameters `
                                            -ValuesToCheck @("Ensure", `
-                                                            "Name")
+                                                            "Name",
+                                                            "Type")
 }
 
 function Export-TargetResource
