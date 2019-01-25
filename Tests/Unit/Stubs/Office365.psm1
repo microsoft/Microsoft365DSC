@@ -59,13 +59,10 @@ function Add-TeamUser{
             
     )
 }
-
 function Get-TeamChannel{
     [CmdletBinding()]
     param()
 }
-
-
 function New-TeamChannel{
     [CmdletBinding()]
     param(

@@ -45,7 +45,7 @@ function Get-TargetResource {
     try {
         Write-Verbose -Message "Checking for existance of team channels "
         $channel = Get-TeamChannel -GroupId $GroupID | Where-Object {($_.DisplayName -eq $DisplayName)}
-        if (!$channel) {
+        if ($channel -eq $null) {
             Write-Verbose "Failed to get team channels with ID $GroupId and display name of $DisplayName"
             return $nullReturn
         }

@@ -75,7 +75,7 @@ function Get-TargetResource {
 
         if ($CurrentParameters.ContainsKey("GroupId")) {
             $team = Get-Team |  Where-Object {($_.GroupId -eq $GroupId)}
-            if (!$team) {
+            if ($team -eq $null) {
                 Write-Verbose "Failed to get Teams with GroupId $($GroupId)"
                 return $nullReturn
             }
@@ -83,7 +83,7 @@ function Get-TargetResource {
         }
         else {
             $team = Get-Team |  Where-Object {($_.DisplayName -eq $DisplayName)}
-            if (!$team) {
+            if ($team -eq $null) {
                 Write-Verbose "Failed to get Teams with displayname $DisplayName"
                 return $nullReturn
             }
@@ -102,8 +102,7 @@ function Get-TargetResource {
 
             if ($CurrentParameters.ContainsKey("GroupId")) {
                 $teamGroup = $allGroups | Where-Object {$_.ExternalDirectoryObjectId -eq $GroupId}
-    
-            }  ##### Else using display name for lookup for set operation
+               }  ##### Else using display name for lookup for set operation
             else {
                 $teamGroup = $allGroups | Where-Object {$_.DisplayName -eq $DisplayName}
             }

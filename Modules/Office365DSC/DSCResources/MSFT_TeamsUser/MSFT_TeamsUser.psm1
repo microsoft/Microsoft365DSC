@@ -56,7 +56,6 @@ function Get-TargetResource {
             Role   = $myUser.Role 
             Ensure = "Present"
         }
-            
     }
     catch {
         Write-Verbose "Failed to get Teams from the tenant."

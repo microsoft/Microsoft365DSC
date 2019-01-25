@@ -58,21 +58,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Channel already exists" -Fixture {
             $testParams = @{
                 GroupID            = "12345-12345-12345-12345-12345"
-                DisplayName        = "Test Channel"
-                Ensure             = "Present"
+                DisplayName = "Test Channel"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-TeamChannel -MockWith { 
                 return @{
-                    GroupID     = "12345-12345-12345-12345-12345"
-                    DisplayName = "Test Channel 1"
-                    Ensure             = "Present"
-
+                    DisplayName = "Test Channel"
+                    Ensure = "Present"
                 }
             }
             
-            It "Should return absent from the Get method" {
+            It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present" 
             }
 
@@ -80,6 +77,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $true
             }
         }
+        
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
