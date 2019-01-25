@@ -1,4 +1,38 @@
-﻿<# EXO - Custom Office365DSC #>
+﻿function Test-PnPOnlineConnection{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $SPOCentralAdminUrl
+    )
+}
+
+function Get-PnPSearchConfiguration{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Scope,
+
+        [Parameter()]
+        [System.String]
+        $Path
+    )
+}
+
+function Get-PnPSearchConfiguration{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Scope
+    )
+}
+
 function Set-SPOTenant{
     [CmdletBinding()]
     param(

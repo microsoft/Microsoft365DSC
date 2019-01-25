@@ -288,6 +288,7 @@ function Set-TargetResource
                                            -ChildPath "..\..\Dependencies\SearchConfigurationSettings.xml" `
                                            -Resolve
     $SearchConfigXML = [Xml] (Get-Content $SearchConfigTemplatePath -Raw)
+
     # Get the managed property back if it already exists.
     $currentConfigXML = [XML] (Get-PnpSearchCOnfiguration -Scope Subscription)
     $property =  $currentConfigXML.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
