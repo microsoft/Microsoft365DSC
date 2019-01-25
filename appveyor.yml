@@ -19,7 +19,7 @@ install:
         $webClient.DownloadFile($url, $path)
         msiexec /i $path /quiet /qn /norestart
 
-        Install-Module Microsoft.Online.SharePoint.PowerShell -RequiredVersion 16.0.8414.0 -Force
+        Install-Module Microsoft.Online.SharePoint.PowerShell -RequiredVersion 16.0.8414.1200 -Force
         Import-Module Microsoft.Online.SharePoint.PowerShell -Force
         Import-Module SharePointPnPPowerShellOnline -Force
         Import-Module -Name "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
