@@ -524,8 +524,7 @@ function Set-TargetResource
     $catch = $prop.AppendChild($newManagedPropertyElement)
 
     $tempPath = Join-Path -Path $ENV:TEMP `
-                           -ChildPath ((New-Guid).ToString().Split('-')[0] + ".config") `
-                           -Resolve
+                           -ChildPath ((New-Guid).ToString().Split('-')[0] + ".config")
     $SearchConfigXML.OuterXml | Out-File $tempPath
 
     # Create the Managed Property if it doesn't already exist
@@ -587,8 +586,7 @@ function Set-TargetResource
         }
 
         $tempPath = Join-Path -Path $ENV:TEMP `
-                              -ChildPath ((New-Guid).ToString().Split('-')[0] + ".config") `
-                              -Resolve
+                              -ChildPath ((New-Guid).ToString().Split('-')[0] + ".config")
         Write-Verbose "Configuring SPO Search Schema with the following XML Document"
         Write-Verbose $SearchConfigXML.OuterXML
         $SearchConfigXML.OuterXml | Out-File $tempPath
