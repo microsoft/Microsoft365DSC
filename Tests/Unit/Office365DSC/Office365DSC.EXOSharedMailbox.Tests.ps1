@@ -29,7 +29,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 DisplayName = "Test Shared Mailbox"
                 PrimarySMTPAddress = "Testh@contoso.onmicrosoft.com"
-                Aliases = @("alias1@contoso.microsoft.com", "alias2@contoso.onmicrosoft.com")
                 Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -59,7 +58,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 DisplayName = "Test Shared Mailbox"
                 PrimarySMTPAddress = "Test@contoso.onmicrosoft.com"
-                Aliases = @("alias1@contoso.microsoft.com", "alias2@contoso.onmicrosoft.com")
                 Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -77,31 +75,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
-            It "Should update the mailbox properties from the Set method" {
-                Set-TargetResource @testParams
-            }
-
             It "Should return True from the Test method" {
                 { Test-TargetResource @testParams } | Should Be $True
             }
         }
 
-        Context -Name "Aliases contains the PrimarySMTPAddress" -Fixture {
+        Context -Name "Alias is Contained in the PrimarySMTP Address" -Fixture {
             $testParams = @{
                 DisplayName = "Test Shared Mailbox"
                 PrimarySMTPAddress = "Test@contoso.onmicrosoft.com"
-                Aliases = @("alias1@contoso.microsoft.com", "Test@contoso.onmicrosoft.com")
+                Aliases = @("Test@contoso.onmicrosoft.com")
                 Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
-            }
-
-            Mock -CommandName Get-Mailbox -MockWith { 
-                return @{
-                    Identity = "Test Shared Mailbox"
-                    RecipientTypeDetails = "SharedMailbox"
-                    EmailAddresses = @("smtp:user@contoso.onmicrosoft.com", "SMTP:test@contoso.onmicrosoft.com")
-                    PrimarySMTPAddress = "test@contoso.onmicrosoft.com"
-                }
             }
 
             It "Should throw an error from the Set method" {
@@ -109,11 +94,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Shared mailbox exists but shouldn't" -Fixture {
+        Context -Name "Mailbox exists but it should not" -Fixture {
             $testParams = @{
                 DisplayName = "Test Shared Mailbox"
                 PrimarySMTPAddress = "Test@contoso.onmicrosoft.com"
-                Aliases = @("alias1@contoso.microsoft.com")
+                Aliases = @("User1@contoso.onmicrosoft.com")
                 Ensure = "Absent"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -127,7 +112,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should delete the existing mailbox from the Set method" {
+            Mock -CommandName Remove-Mailbox -MockWith {
+                return $null
+            }
+
+            It "Should call the Set method" {
+                Set-TargetResource @testParams
+                Assert-MockCalled -CommandName Remove-Mailbox -Times 1
+            }
+        }
+
+        Context -Name "Aliases are specified" -Fixture {
+            $testParams = @{
+                DisplayName = "Test Shared Mailbox"
+                PrimarySMTPAddress = "Test@contoso.onmicrosoft.com"
+                Aliases = @("User1@contoso.onmicrosoft.com")
+                Ensure = "Present"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-Mailbox -MockWith { 
+                return @{
+                    Identity = "Test Shared Mailbox"
+                    RecipientTypeDetails = "SharedMailbox"
+                    EmailAddresses = @("smtp:user@contoso.onmicrosoft.com", "SMTP:test@contoso.onmicrosoft.com")
+                    PrimarySMTPAddress = "test@contoso.onmicrosoft.com"
+                }
+            }
+
+            It "Should call the Set method" {
                 Set-TargetResource @testParams
             }
         }
