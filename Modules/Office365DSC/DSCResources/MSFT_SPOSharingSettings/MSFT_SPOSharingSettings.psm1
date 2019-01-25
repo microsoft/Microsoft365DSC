@@ -283,8 +283,8 @@ function Set-TargetResource
 
     if ($null -eq $SignInAccelerationDomain)
     {
-        $CurrentParameters.remove("SignInAccelerationDomain")
-        $CurrentParameters.remove("EnableGuestSignInAcceleration")#removing EnableGuestSignInAcceleration since it can only be configured with a configured SignINAccerlation domain
+        $CurrentParameters.Remove("SignInAccelerationDomain")
+        $CurrentParameters.Remove("EnableGuestSignInAcceleration")#removing EnableGuestSignInAcceleration since it can only be configured with a configured SignINAccerlation domain
     }
     if ($SharingCapability -ne "ExternalUserAndGuestSharing")
     {

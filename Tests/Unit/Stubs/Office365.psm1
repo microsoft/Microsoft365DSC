@@ -3,10 +3,6 @@ function Set-SPOTenant{
     [CmdletBinding()]
     param(
         [Parameter()]
-        [String]
-        $IsSingleInstance,
-
-        [Parameter()]
         [System.String]
         $SharingCapability,
 

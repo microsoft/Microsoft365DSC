@@ -55,7 +55,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Set-SPOTenant -MockWith { 
                 return @{
-                    IsSingleInstance                           = "Yes"
                     SharingCapability                          = 'ExternalUserSharingOnly'
                     ShowEveryoneClaim                          = $false
                     ShowAllUsersClaim                          = $false
@@ -81,7 +80,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-SPOTenant -MockWith { 
                 return @{
-                    IsSingleInstance                           = "Yes"
                     SharingCapability                          = 'Disabled'
                     ShowEveryoneClaim                          = $false
                     ShowAllUsersClaim                          = $false
@@ -141,11 +139,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 RequireAcceptingAccountMatchInvitedAccount = $false
             }
 
-            Mock -CommandName Get-SPOSite -MockWith { 
+            Mock -CommandName Get-SPOTenant -MockWith { 
                 return @{
                     CentralAdminUrl                            = "https://o365dsc1-admin.sharepoint.com"
                     GlobalAdminAccount                         = $GlobalAdminAccount
-                    IsSingleInstance                           = "Yes"
                     SharingCapability                          = 'ExternalUserSharingOnly'
                     ShowEveryoneClaim                          = $false
                     ShowAllUsersClaim                          = $false
