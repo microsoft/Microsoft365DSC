@@ -278,6 +278,11 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    if ($Ensure -eq "Absent")
+    {
+        throw "This ressource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
+    }
+
     Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     $SearchConfigTemplatePath =  Join-Path -Path $PSScriptRoot `
                                            -ChildPath "..\..\Dependencies\SearchConfigurationSettings.xml" `
@@ -574,6 +579,7 @@ function Set-TargetResource
         }
 
         $tempPath = $ENV:TEMP + "\" + (New-Guid).ToString().SPlit('-')[0] + ".config"
+        Write-Verbose "Configuring SPO Search Schema with the following XML Document"
         Write-Verbose $SearchConfigXML.OuterXML
         $SearchConfigXML.OuterXml | Out-File $tempPath
 
