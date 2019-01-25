@@ -230,6 +230,34 @@ function Get-OrganizationConfig
     )
 }
 
+function Get-MailboxRegionalConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Set-MailboxRegionalConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Language,
+
+        [Parameter()]
+        [System.String]
+        $TimeZone
+    )
+}
+
 function Set-OrganizationConfig
 {
     [CmdletBinding()]
