@@ -99,33 +99,33 @@ function Get-TargetResource
 
     if ($Ensure -eq "Absent")
     {
-        throw "This ressource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
+        throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
     }
 
     Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
-        Name = $Name
-        Type = $null
-        Description = $null
-        Searchable = $null
-        FullTextIndex = $null
-        FullTextContext = $null
-        Queryable = $null
-        Retrievable = $null
-        AllowMultipleValues = $null
-        Refinable = $null
-        Sortable = $null
-        Safe = $null
-        Aliases = $null
-        TokenNormalization = $null
-        CompleteMatching = $null
+        Name                        = $Name
+        Type                        = $null
+        Description                 = $null
+        Searchable                  = $null
+        FullTextIndex               = $null
+        FullTextContext             = $null
+        Queryable                   = $null
+        Retrievable                 = $null
+        AllowMultipleValues         = $null
+        Refinable                   = $null
+        Sortable                    = $null
+        Safe                        = $null
+        Aliases                     = $null
+        TokenNormalization          = $null
+        CompleteMatching            = $null
         LanguageNeutralTokenization = $null
-        FinerQueryTokenization = $null
-        MappedCrawledProperties = $null
-        CompanyNameExtraction = $null
-        Ensure = "Absent"
-        CentralAdminUrl = $CentralAdminUrl
+        FinerQueryTokenization      = $null
+        MappedCrawledProperties     = $null
+        CompanyNameExtraction       = $null
+        Ensure                      = "Absent"
+        CentralAdminUrl             = $CentralAdminUrl
     }
 
     $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
@@ -166,7 +166,7 @@ function Get-TargetResource
         Description = [string] $property.Value.Description
         Searchable = [boolean] $property.Value.Searchable
         FullTextIndex = $FullTextIndex
-        FullTextContext = [System.Int32] $property.Value.Context
+        FullTextContext = [UInt32] $property.Value.Context
         Queryable = [boolean] $property.Value.Queryable
         Retrievable = [boolean] $property.Value.Retrievable
         AllowMultipleValues = [boolean] $property.Value.HasMultipleValues
@@ -285,7 +285,7 @@ function Set-TargetResource
 
     if ($Ensure -eq "Absent")
     {
-        throw "This ressource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
+        throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
     }
 
     Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
@@ -523,7 +523,9 @@ function Set-TargetResource
     $newManagedPropertyElement.AppendChild($valueNode)
     $catch = $prop.AppendChild($newManagedPropertyElement)
 
-    $tempPath = $ENV:TEMP + "\" + (New-Guid).ToString().SPlit('-')[0] + ".config"
+    $tempPath = Join-Path -Path $ENV:TEMP `
+                           -ChildPath ((New-Guid).ToString().Split('-')[0] + ".config") `
+                           -Resolve
     $SearchConfigXML.OuterXml | Out-File $tempPath
 
     # Create the Managed Property if it doesn't already exist
@@ -584,7 +586,9 @@ function Set-TargetResource
             $aliasProp.AppendChild($mainNode)
         }
 
-        $tempPath = $ENV:TEMP + "\" + (New-Guid).ToString().SPlit('-')[0] + ".config"
+        $tempPath = Join-Path -Path $ENV:TEMP `
+                              -ChildPath ((New-Guid).ToString().Split('-')[0] + ".config") `
+                              -Resolve
         Write-Verbose "Configuring SPO Search Schema with the following XML Document"
         Write-Verbose $SearchConfigXML.OuterXML
         $SearchConfigXML.OuterXml | Out-File $tempPath

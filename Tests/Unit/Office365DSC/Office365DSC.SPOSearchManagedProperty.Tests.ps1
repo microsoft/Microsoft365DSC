@@ -223,8 +223,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should throw and errors" {
-                { Get-TargetResource @testParams } | Should Throw "This ressource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
-                { Set-TargetResource @testParams } | Should Throw "This ressource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
+                { Get-TargetResource @testParams } | Should Throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
+                { Set-TargetResource @testParams } | Should Throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
             }
         }
 
