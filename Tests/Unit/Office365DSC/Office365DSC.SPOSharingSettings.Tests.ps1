@@ -28,21 +28,80 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts 
         Context -Name "SPOSharing settings are not configured" -Fixture {
             $testParams = @{
-                IsSingleInstance   = "Yes"
-                SharingCapability  = "Disabled"
-                CentralAdminUrl    = "https://o365dsc1-admin.sharepoint.com"
-                GlobalAdminAccount = $GlobalAdminAccount
+                CentralAdminUrl                            = "https://o365dsc1-admin.sharepoint.com"
+                GlobalAdminAccount                         = $GlobalAdminAccount
+                IsSingleInstance                           = "Yes"
+                SharingCapability                          = 'ExternalUserSharingOnly'
+                ShowEveryoneClaim                          = $false
+                ShowAllUsersClaim                          = $false
+                ShowEveryoneExceptExternalUsersClaim       = $true
+                ProvisionSharedWithEveryoneFolder          = $false
+                EnableGuestSignInAcceleration              = $false
+                BccExternalSharingInvitations              = $false
+                BccExternalSharingInvitationsList          = ""
+                RequireAnonymousLinksExpireInDays          = 730
+                SharingAllowedDomainList                   = "contoso.com"
+                SharingBlockedDomainList                   = "contoso.com"
+                SharingDomainRestrictionMode               = "None"
+                DefaultSharingLinkType                     = "AnonymousAccess"
+                PreventExternalUsersFromResharing          = $false
+                ShowPeoplePickerSuggestionsForGuestUsers   = $false
+                FileAnonymousLinkType                      = "Edit"
+                FolderAnonymousLinkType                    = "Edit"
+                NotifyOwnersWhenItemsReshared              = $true
+                DefaultLinkPermission                      = "View"
+                RequireAcceptingAccountMatchInvitedAccount = $false
             }
 
             Mock -CommandName Set-SPOTenant -MockWith { 
-                return @{IsSingleInstance = "Yes"
-                    SharingCapability = 'Disabled'
+                return @{
+                    IsSingleInstance                           = "Yes"
+                    SharingCapability                          = 'ExternalUserSharingOnly'
+                    ShowEveryoneClaim                          = $false
+                    ShowAllUsersClaim                          = $false
+                    ShowEveryoneExceptExternalUsersClaim       = $true
+                    ProvisionSharedWithEveryoneFolder          = $false
+                    EnableGuestSignInAcceleration              = $false
+                    BccExternalSharingInvitations              = $false
+                    BccExternalSharingInvitationsList          = ""
+                    RequireAnonymousLinksExpireInDays          = 730
+                    SharingAllowedDomainList                   = "contoso.com"
+                    SharingBlockedDomainList                   = "contoso.com"
+                    SharingDomainRestrictionMode               = "None"
+                    DefaultSharingLinkType                     = "AnonymousAccess"
+                    PreventExternalUsersFromResharing          = $false
+                    ShowPeoplePickerSuggestionsForGuestUsers   = $false
+                    FileAnonymousLinkType                      = "Edit"
+                    FolderAnonymousLinkType                    = "Edit"
+                    NotifyOwnersWhenItemsReshared              = $true
+                    DefaultLinkPermission                      = "View"
+                    RequireAcceptingAccountMatchInvitedAccount = $false
                 }
             }
 
             Mock -CommandName Get-SPOTenant -MockWith { 
-                return @{IsSingleInstance = "Yes"
-                    SharingCapability = 'ExternalUserSharingOnly'
+                return @{
+                    IsSingleInstance                           = "Yes"
+                    SharingCapability                          = 'Disabled'
+                    ShowEveryoneClaim                          = $false
+                    ShowAllUsersClaim                          = $false
+                    ShowEveryoneExceptExternalUsersClaim       = $true
+                    ProvisionSharedWithEveryoneFolder          = $false
+                    EnableGuestSignInAcceleration              = $false
+                    BccExternalSharingInvitations              = $false
+                    BccExternalSharingInvitationsList          = ""
+                    RequireAnonymousLinksExpireInDays          = 730
+                    SharingAllowedDomainList                   = ""
+                    SharingBlockedDomainList                   = ""
+                    SharingDomainRestrictionMode               = ""
+                    DefaultSharingLinkType                     = "AnonymousAccess"
+                    PreventExternalUsersFromResharing          = $false
+                    ShowPeoplePickerSuggestionsForGuestUsers   = $false
+                    FileAnonymousLinkType                      = "Edit"
+                    FolderAnonymousLinkType                    = "Edit"
+                    NotifyOwnersWhenItemsReshared              = $true
+                    DefaultLinkPermission                      = "View"
+                    RequireAcceptingAccountMatchInvitedAccount = $true
                 }
             }
 
@@ -54,7 +113,67 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 set-TargetResource @testParams
             }
         }
-    }
-}
+        
+        Context -Name "ReverseDSC Tests" -Fixture {
+            $testParams = @{
+                CentralAdminUrl                            = "https://o365dsc1-admin.sharepoint.com"
+                GlobalAdminAccount                         = $GlobalAdminAccount
+                IsSingleInstance                           = "Yes"
+                SharingCapability                          = 'ExternalUserSharingOnly'
+                ShowEveryoneClaim                          = $false
+                ShowAllUsersClaim                          = $false
+                ShowEveryoneExceptExternalUsersClaim       = $true
+                ProvisionSharedWithEveryoneFolder          = $false
+                EnableGuestSignInAcceleration              = $false
+                BccExternalSharingInvitations              = $false
+                BccExternalSharingInvitationsList          = ""
+                RequireAnonymousLinksExpireInDays          = 730
+                SharingAllowedDomainList                   = "contoso.com"
+                SharingBlockedDomainList                   = "contoso.com"
+                SharingDomainRestrictionMode               = "None"
+                DefaultSharingLinkType                     = "AnonymousAccess"
+                PreventExternalUsersFromResharing          = $false
+                ShowPeoplePickerSuggestionsForGuestUsers   = $false
+                FileAnonymousLinkType                      = "Edit"
+                FolderAnonymousLinkType                    = "Edit"
+                NotifyOwnersWhenItemsReshared              = $true
+                DefaultLinkPermission                      = "View"
+                RequireAcceptingAccountMatchInvitedAccount = $false
+            }
+
+            Mock -CommandName Get-SPOSite -MockWith { 
+                return @{
+                    CentralAdminUrl                            = "https://o365dsc1-admin.sharepoint.com"
+                    GlobalAdminAccount                         = $GlobalAdminAccount
+                    IsSingleInstance                           = "Yes"
+                    SharingCapability                          = 'ExternalUserSharingOnly'
+                    ShowEveryoneClaim                          = $false
+                    ShowAllUsersClaim                          = $false
+                    ShowEveryoneExceptExternalUsersClaim       = $true
+                    ProvisionSharedWithEveryoneFolder          = $false
+                    EnableGuestSignInAcceleration              = $false
+                    BccExternalSharingInvitations              = $false
+                    BccExternalSharingInvitationsList          = ""
+                    RequireAnonymousLinksExpireInDays          = 730
+                    SharingAllowedDomainList                   = "contoso.com"
+                    SharingBlockedDomainList                   = "contoso.com"
+                    SharingDomainRestrictionMode               = "None"
+                    DefaultSharingLinkType                     = "AnonymousAccess"
+                    PreventExternalUsersFromResharing          = $false
+                    ShowPeoplePickerSuggestionsForGuestUsers   = $false
+                    FileAnonymousLinkType                      = "Edit"
+                    FolderAnonymousLinkType                    = "Edit"
+                    NotifyOwnersWhenItemsReshared              = $true
+                    DefaultLinkPermission                      = "View"
+                    RequireAcceptingAccountMatchInvitedAccount = $false
+                }
+            }
+
+            It "Should Reverse Engineer resource from the Export method" {
+                Export-TargetResource @testParams
+            }
+        }
+    }#inmodulescope
+}#describe
 
 Invoke-Command -ScriptBlock $Global:DscHelper.CleanupScript -NoNewScope

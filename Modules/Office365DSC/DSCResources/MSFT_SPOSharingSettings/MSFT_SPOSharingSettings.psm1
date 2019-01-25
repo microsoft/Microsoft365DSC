@@ -279,6 +279,7 @@ function Set-TargetResource
     $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Verbose")
+    $CurrentParameters.Remove("IsSingleInstance")
 
     if ($null -eq $SignInAccelerationDomain)
     {
