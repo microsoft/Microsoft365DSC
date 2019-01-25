@@ -83,6 +83,26 @@ function New-TeamChannel{
         $Description
     )
 }
+function Set-TeamChannel{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $DisplayName,
+
+        [Parameter()]
+        [string]
+        $NewDisplayName,
+
+        [Parameter()]
+        [string]
+        $Description
+    )
+}
 
 function Get-TeamFunSettings{
     [CmdletBinding()]

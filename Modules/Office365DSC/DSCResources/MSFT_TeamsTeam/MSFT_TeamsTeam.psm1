@@ -75,7 +75,7 @@ function Get-TargetResource {
 
         if ($CurrentParameters.ContainsKey("GroupId")) {
             $team = Get-Team |  Where-Object {($_.GroupId -eq $GroupId)}
-            if ($team -eq $null) {
+            if ($null -eq $team) {
                 Write-Verbose "Failed to get Teams with GroupId $($GroupId)"
                 return $nullReturn
             }
@@ -83,7 +83,7 @@ function Get-TargetResource {
         }
         else {
             $team = Get-Team |  Where-Object {($_.DisplayName -eq $DisplayName)}
-            if ($team -eq $null) {
+            if ($null -eq $team) {
                 Write-Verbose "Failed to get Teams with displayname $DisplayName"
                 return $nullReturn
             }

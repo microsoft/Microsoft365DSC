@@ -61,23 +61,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DisplayName        = "Test Team"
                 Description        = "Test team description"
                 Alias              = "TestTeam"
-                AccessType         = "Private"
+                AccessType         = "Public"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-Team -MockWith { 
                 return @{
                     DisplayName = "Test Team"
+                    Description = "Test team description"
+                    Alias       = "TestTeam"
+                    AccessType  = "Private"
                     Ensure      = "Present"
                 }
             }
             
+            Mock -CommandName Set-Team -MockWith {
+                
+            }
+
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present" 
             }
-
+            It "Should set access type to public in set" {
+                Set-TargetResource @testParams 
+            }
             It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should Be $true
+                Test-TargetResource @testParams | Should Be $false
             }
         }
 

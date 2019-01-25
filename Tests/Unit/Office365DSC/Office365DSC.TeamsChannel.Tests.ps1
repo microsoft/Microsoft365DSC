@@ -58,23 +58,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Channel already exists" -Fixture {
             $testParams = @{
                 GroupID            = "12345-12345-12345-12345-12345"
-                DisplayName = "Test Channel"
+                DisplayName        = "Test Channel"
+                NewDisplayName     = "Test Channel 1"
+                Description        = "Test description"
+                Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-TeamChannel -MockWith { 
                 return @{
-                    DisplayName = "Test Channel"
+                    GroupID            = "12345-12345-12345-12345-12345"
+                    DisplayName        = "Test Channel"
+                    NewDisplayName     = "Test Channel 1"
+                    Description        = "Test description"
                     Ensure = "Present"
                 }
+            }   
+
+            Mock -CommandName Set-TeamChannel -MockWith{
+
             }
-            
+                     
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present" 
             }
-
-            It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should Be $true
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
+            }
+            It "Set the MS Team channel in the Set method" {
+                Set-TargetResource @testParams | Should be $true 
             }
         }
         

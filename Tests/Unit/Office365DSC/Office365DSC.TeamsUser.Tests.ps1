@@ -54,6 +54,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 GroupID            = "12345-12345-12345-12345-12345"
                 User               = "JohnSmith@contoso.onmicrosoft.com"
+                Role               = "Owner"
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -61,16 +62,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-TeamUser -MockWith { 
                 return @{
                     GroupID = "12345-12345-12345-12345-12345"
+                    Role    = "Member"
+                    Ensure  = "Present"
                     User    = "JohnSmith@contoso.onmicrosoft.com"
                 }
+            }
+
+            Mock -CommandName Add-TeamUser -MockWith {
+
             }
             
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present" 
             }
-
+            it "Should set role to owner in set method"{
+                Set-TargetResource @testParams 
+            }
             It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should Be $true
+                Test-TargetResource @testParams | Should Be $false
             }
         }
 

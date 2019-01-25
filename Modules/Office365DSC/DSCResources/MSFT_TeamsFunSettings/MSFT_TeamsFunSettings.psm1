@@ -34,8 +34,8 @@ function Get-TargetResource {
         $GlobalAdminAccount
     )
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount | Out-Null
-    
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+
     $nullReturn = @{
         GroupID               = $null
         AllowGiphy            = $null
@@ -48,7 +48,7 @@ function Get-TargetResource {
     try {
         Write-Verbose -Message "Getting Team fun settings for $GroupID"
         $team = Get-TeamFunSettings -GroupId $GroupID
-        if (!$team) {
+        if ($null -eq $team) {
             Write-Verbose "The specified Team doesn't exist."
             return $nullReturn
         }

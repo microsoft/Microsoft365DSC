@@ -67,6 +67,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GiphyContentRating = "Moderate"
                 AllowStickersAndMemes = $true 
                 AllowCustomMemes = $true
+                Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -75,19 +76,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GroupID = "12345-12345-12345-12345-12345"
                     AllowGiphy = $true
                     GiphyContentRating = "Moderate"
-                    AllowStickersAndMemes = $true 
-                    AllowCustomMemes = $true
+                    AllowStickersAndMemes = $false 
+                    AllowCustomMemes = $false
                     Ensure = "Present"
                 }
             }
-           
+
+            Mock -CommandName Set-TeamFunSettings -MockWith{
+
+            }
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present" 
             }
-
-            It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should Be $true
+            It "Should allowCustomerMemes and AllowStickersMeme in set method" {
+                Set-TargetResource @testParams 
             }
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams  | Should be $false
+            }
+         
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
