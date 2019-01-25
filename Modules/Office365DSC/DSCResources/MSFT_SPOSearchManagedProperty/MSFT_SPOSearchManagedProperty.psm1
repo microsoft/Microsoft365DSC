@@ -26,7 +26,7 @@ function Get-TargetResource
         $FullTextIndex,
 
         [Parameter()]
-        [System.Int32]
+        [System.UInt32]
         $FullTextContext,
 
         [Parameter()]
@@ -212,7 +212,7 @@ function Set-TargetResource
         $FullTextIndex,
 
         [Parameter()]
-        [System.Int32]
+        [System.UInt32]
         $FullTextContext,
 
         [Parameter()]
@@ -622,7 +622,7 @@ function Test-TargetResource
         $FullTextIndex,
 
         [Parameter()]
-        [System.Int32]
+        [System.UInt32]
         $FullTextContext,
 
         [Parameter()]

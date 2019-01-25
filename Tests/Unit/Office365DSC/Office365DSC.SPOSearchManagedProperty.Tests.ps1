@@ -146,17 +146,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                          -ChildPath "..\..\..\Modules\Office365DSC\Dependencies\SearchConfigurationSettings.xml" `
                                          -Resolve
             $emptyXMLTemplate = Get-Content $xmlTemplatePath
-            Mock -CommandName Get-PnPSearchConfiguration -MockWith { 
+            Mock -CommandName Get-PnPSearchConfiguration -MockWith {
                 
                 return $emptyXMLTemplate
             }
 
-            Mock -CommandName Set-PnPSearchConfiguration -MockWith { 
+            Mock -CommandName Set-PnPSearchConfiguration -MockWith {
 
             }
 
             It "Should return Absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
             }
 
             It "Should return false from the Test method" {
