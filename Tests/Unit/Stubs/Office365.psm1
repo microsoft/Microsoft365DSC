@@ -11,7 +11,7 @@
     )
 }
 
-function Get-PnPSearchConfiguration{
+function Set-PnPSearchConfiguration{
     [CmdletBinding()]
     param(
         [Parameter()]

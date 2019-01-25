@@ -97,6 +97,11 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    if ($Ensure -eq "Absent")
+    {
+        throw "This ressource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
+    }
+
     Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -290,7 +295,7 @@ function Set-TargetResource
     $SearchConfigXML = [Xml] (Get-Content $SearchConfigTemplatePath -Raw)
 
     # Get the managed property back if it already exists.
-    $currentConfigXML = [XML] (Get-PnpSearchCOnfiguration -Scope Subscription)
+    $currentConfigXML = [XML] (Get-PnpSearchConfiguration -Scope Subscription)
     $property =  $currentConfigXML.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
                     | Where-Object { $_.Value.Name -eq $Name }
     if ($null -ne $property)
@@ -388,7 +393,7 @@ function Set-TargetResource
     #region LanguageNeutralWordBreaker
     if ($LanguageNeutralTokenization -and $CompleteMatching)
     {
-        throw "You cannot have CompleteMatching set to $true if LanguageNeutralTokenization is set to $true"
+        throw "You cannot have CompleteMatching set to True if LanguageNeutralTokenization is set to True"
     }
     $node = $SearchConfigXML.CreateElement("d3p1:LanguageNeutralWordBreaker", `
                                            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
