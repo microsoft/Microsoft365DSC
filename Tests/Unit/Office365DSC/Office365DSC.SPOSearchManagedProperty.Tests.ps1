@@ -139,7 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 FinerQueryTokenization = $false
                 CompanyNameExtraction = $true
                 Ensure = "Present"
-                GlobalAdminAccount = $Global:AdminAccount
+                GlobalAdminAccount = $GlobalAdminAccount
                 CentralAdminUrl = "https://contoso-admin.sharepoint.com"
             }
             $xmlTemplatePath = Join-Path -Path $PSScriptRoot `
@@ -188,7 +188,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 FinerQueryTokenization = $false
                 CompanyNameExtraction = $true
                 Ensure = "Present"
-                GlobalAdminAccount = $Global:AdminAccount
+                GlobalAdminAccount = $GlobalAdminAccount
                 CentralAdminUrl = "https://contoso-admin.sharepoint.com"
             }
             Mock -CommandName Get-PnPSearchConfiguration -MockWith { 
@@ -218,7 +218,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Name ="TestMP"
                 Type = "Text"
                 Ensure = "Absent"
-                GlobalAdminAccount = $Global:AdminAccount
+                GlobalAdminAccount = $GlobalAdminAccount
                 CentralAdminUrl = "https://contoso-admin.sharepoint.com"
             }
 
@@ -235,7 +235,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 LanguageNeutralTokenization = $true
                 CompleteMatching = $true
                 Ensure = "Present"
-                GlobalAdminAccount = $Global:AdminAccount
+                GlobalAdminAccount = $GlobalAdminAccount
                 CentralAdminUrl = "https://contoso-admin.sharepoint.com"
             }
 
