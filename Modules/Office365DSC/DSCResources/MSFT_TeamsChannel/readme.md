@@ -1,3 +1,3 @@
 # Description
 
-This resource used to update Teams Channel
+This resource used to add/ update Teams Channel to existing teams 
