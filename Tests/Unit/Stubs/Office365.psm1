@@ -33,6 +33,18 @@ function New-Team{
      
     )
 }
+
+function Remove-Team{
+    [CmdletBinding()]
+    param(
+     
+        [Parameter()]
+        [string]
+        $GroupId,  
+     
+    )
+}
+
 function Get-TeamUser{
     [CmdletBinding()]
     param()
@@ -59,6 +71,25 @@ function Add-TeamUser{
             
     )
 }
+
+function Remove-TeamUser{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $User,
+
+        [Parameter()]
+        [string]
+        $Role
+            
+    )
+}
+
 function Get-TeamChannel{
     [CmdletBinding()]
     param()
@@ -101,6 +132,20 @@ function Set-TeamChannel{
         [Parameter()]
         [string]
         $Description
+    )
+}
+
+function Remove-TeamChannel{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $DisplayName,
+        
     )
 }
 
