@@ -21,7 +21,7 @@ Configuration Teams
             Ensure = "Present"
         }        
         #>
-        
+        <#
         TeamsTeam MyTeam
         {
             #GroupId = "74424c8f-c776-4a28-9d91-52f884313a18"
@@ -32,7 +32,7 @@ Configuration Teams
             GlobalAdminAccount = $credsGlobalAdmin
             Ensure = "Absent"
         }        
-        
+        #>
 
         <#
         TeamsUser MyTeam {
@@ -54,17 +54,17 @@ Configuration Teams
             GlobalAdminAccount = $credsGlobalAdmin
         }  
         #>
-        <#
+        
         TeamsChannel MyChannel
         {
             GroupID = "f2d2365d-5e77-49c0-99fa-7c468cce021a"
-            DisplayName = "SQL Review teams group"
-            #NewDisplayName = "SQl2 Review teams group"
-            Description = "SQL Code reviews for SPFX"
+            DisplayName = "SP2013 Review teams group"
+            #NewDisplayName = "SP2013 Review teams group"
+            Description = "SP2013 Code reviews for SPFX"
             Ensure = "Present"
             GlobalAdminAccount = $credsGlobalAdmin
         }
-        #>
+        
     }
 }
 

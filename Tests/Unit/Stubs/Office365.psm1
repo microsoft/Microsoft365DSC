@@ -40,7 +40,7 @@ function Remove-Team{
      
         [Parameter()]
         [string]
-        $GroupId,  
+        $GroupId  
      
     )
 }
@@ -144,7 +144,7 @@ function Remove-TeamChannel{
 
         [Parameter()]
         [string]
-        $DisplayName,
+        $DisplayName
         
     )
 }

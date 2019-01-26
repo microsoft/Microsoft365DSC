@@ -32,13 +32,13 @@ function Get-TargetResource {
         $GlobalAdminAccount
     )
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount  
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount   
     
     $nullReturn = @{
         GroupID        = $GroupID
-        DisplayName    = $null
-        Description    = $null
-        NewDisplayName = $null
+        DisplayName    = $DisplayName
+        Description    = $Description
+        NewDisplayName = $NewDisplayName
         Ensure         = "Absent"
     }
 
@@ -52,9 +52,9 @@ function Get-TargetResource {
 
         return @{
             DisplayName    = $channel.DisplayName
-            GroupID        = $team.GroupID 
+            GroupID        = $GroupID 
             Description    = $channel.Description
-            NewDisplayName = $channel.DisplayName
+            NewDisplayName = $NewDisplayName 
             Ensure         = "Present"
         }
     }
@@ -110,10 +110,11 @@ function Set-TargetResource {
 
     if ($Ensure -eq "Present") {
            # Remap attribute from DisplayName to current display name for Set-TeamChannel cmdlet
-        if ($channel.DisplayName) {
+        if ($channel.Ensure -eq "Present") {
             if ($CurrentParameters.ContainsKey("NewDisplayName")) {
                 $CurrentParameters.Add("CurrentDisplayName", $DisplayName)
-                $CurrentParameters.Remove("DisplayName")    
+                $CurrentParameters.Remove("DisplayName")  
+                Write-Verbose -Message "Updating team channel to new channel name $NewDisplayName"   
                 Set-TeamChannel @CurrentParameters
             }
         }   

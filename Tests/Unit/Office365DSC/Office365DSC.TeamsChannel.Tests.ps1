@@ -22,6 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
         Mock -CommandName Test-TeamsServiceConnection -MockWith {
+          
         }
 
         # Test contexts 
@@ -46,10 +47,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should Be "Absent" 
             }
 
-            It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $false
-            }
-
             It "Creates the MS Team channel in the Set method" {
                 Set-TargetResource @testParams
             }
@@ -59,37 +56,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 GroupID            = "12345-12345-12345-12345-12345"
                 DisplayName        = "Test Channel"
-                NewDisplayName     = "Test Channel 1"
-                Description        = "Test description"
-                Ensure = "Present"
+                Ensure             = "Absent"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-TeamChannel -MockWith { 
                 return @{
-                    GroupID            = "12345-12345-12345-12345-12345"
-                    DisplayName        = "Test Channel"
-                    Ensure = "Present"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                    DisplayName = "Test Channel"
                 }
             }   
 
-            Mock -CommandName Set-TeamChannel -MockWith{
-
+            Mock -CommandName Set-TeamChannel -MockWith {
             }
 
-            Mock -CommandName Remove-TeamChannel -MockWith{
-
+            Mock -CommandName Remove-TeamChannel -MockWith {
             }
-                     
+
+            It "Creates the MS Team channel in the Set method" {
+                Set-TargetResource @testParams
+            }
+
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure  | Should be "Present"
             }
-            It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $false
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $true 
             }
-            It "Set the MS Team channel in the Set method" {
-                Set-TargetResource @testParams | Should be $true 
-            }
+
         }
         
 

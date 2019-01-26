@@ -111,29 +111,25 @@ function Set-TargetResource {
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
-
-    if ($Ensure -eq "Present") {
         
-        if ($CurrentParameters.ContainsKey("AllowGiphy")) {
-            Set-TeamFunSettings -GroupId $GroupID -AllowGiphy $AllowGiphy
-            Write-Verbose -Message "Setting Team AllowGiphy to  $AllowGiphy"
-        }
+    if ($CurrentParameters.ContainsKey("AllowGiphy")) {
+        Set-TeamFunSettings -GroupId $GroupID -AllowGiphy $AllowGiphy
+        Write-Verbose -Message "Setting Team AllowGiphy to  $AllowGiphy"
+    }
 
-        if ($CurrentParameters.ContainsKey("GiphyContentRating")) {
-            Set-TeamFunSettings -GroupId $GroupID -GiphyContentRating $GiphyContentRating
-            Write-Verbose -Message "Setting Team GiphyContentRating to  $GiphyContentRating"
-        }
+    if ($CurrentParameters.ContainsKey("GiphyContentRating")) {
+        Set-TeamFunSettings -GroupId $GroupID -GiphyContentRating $GiphyContentRating
+        Write-Verbose -Message "Setting Team GiphyContentRating to  $GiphyContentRating"
+    }
 
-        if ($CurrentParameters.ContainsKey("AllowStickersAndMemes")) {
-            Set-TeamFunSettings -GroupId $GroupID -AllowStickersAndMemes $AllowStickersAndMemes
-            Write-Verbose -Message "Setting Team AllowStickersAndMemes to  $AllowStickersAndMemes"
-        }
+    if ($CurrentParameters.ContainsKey("AllowStickersAndMemes")) {
+        Set-TeamFunSettings -GroupId $GroupID -AllowStickersAndMemes $AllowStickersAndMemes
+        Write-Verbose -Message "Setting Team AllowStickersAndMemes to  $AllowStickersAndMemes"
+    }
 
-        if ($CurrentParameters.ContainsKey("AllowCustomMemes")) {
-            Set-TeamFunSettings -GroupId $GroupID -AllowCustomMemes $AllowCustomMemes
-            Write-Verbose -Message "Setting Team AllowCustomMemes to  $AllowCustomMemes"
-        }
-        
+    if ($CurrentParameters.ContainsKey("AllowCustomMemes")) {
+        Set-TeamFunSettings -GroupId $GroupID -AllowCustomMemes $AllowCustomMemes
+        Write-Verbose -Message "Setting Team AllowCustomMemes to  $AllowCustomMemes"
     }
 }
 
@@ -177,8 +173,7 @@ function Test-TargetResource {
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "AllowGiphy", `
+        -ValuesToCheck @("AllowGiphy", `
             "GiphyContentRating", `
             "AllowStickersAndMemes", `
             "AllowCustomMemes"

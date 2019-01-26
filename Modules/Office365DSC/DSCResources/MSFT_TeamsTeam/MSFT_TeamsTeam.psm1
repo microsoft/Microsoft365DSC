@@ -59,11 +59,11 @@ function Get-TargetResource {
         DisplayName    = $DisplayName
         Group          = $null
         GroupId        = $null
-        Description    = $null
-        Owner          = $null
+        Description    = $Description
+        Owner          = $Owner
         Classification = $null
-        Alias          = $null   
-        AccessType     = "Private"
+        Alias          = $Alias   
+        AccessType     = $AccessType
         Ensure         = "Absent"
     }
 
