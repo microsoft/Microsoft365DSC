@@ -30,7 +30,7 @@ function Get-TargetResource {
     
     $nullReturn = @{
         User   = $User
-        Role   = $null
+        Role   = $Role
         Ensure = "Absent"
     }
 

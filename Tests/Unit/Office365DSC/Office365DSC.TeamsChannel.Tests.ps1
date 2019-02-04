@@ -56,7 +56,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 GroupID            = "12345-12345-12345-12345-12345"
                 DisplayName        = "Test Channel"
-                Ensure             = "Absent"
+                Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -64,6 +64,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     GroupID     = "12345-12345-12345-12345-12345"
                     DisplayName = "Test Channel"
+                    Ensure      = "Present"
                 }
             }   
 
