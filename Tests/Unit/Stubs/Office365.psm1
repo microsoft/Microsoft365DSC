@@ -33,6 +33,17 @@ function New-Team{
      
     )
 }
+function Set-Team{
+    [CmdletBinding()]
+    param(
+     
+        [Parameter()]
+        [string]
+        $GroupId  
+     
+    )
+}
+
 
 function Remove-Team{
     [CmdletBinding()]
