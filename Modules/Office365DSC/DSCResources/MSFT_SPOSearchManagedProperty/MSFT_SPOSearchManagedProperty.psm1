@@ -270,7 +270,7 @@ function Set-TargetResource
         $CompanyNameExtraction,
 
         [Parameter()] 
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String] 
         $Ensure = "Present",
 
