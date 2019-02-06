@@ -1,4 +1,5 @@
-function Get-TargetResource {
+function Get-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -42,10 +43,12 @@ function Get-TargetResource {
         Ensure         = "Absent"
     }
 
-    try {
+    try
+    {
         Write-Verbose -Message "Checking for existance of team channels "
         $channel = Get-TeamChannel -GroupId $GroupID | Where-Object {($_.DisplayName -eq $DisplayName)}
-        if ($null -eq $channel) {
+        if ($null -eq $channel) 
+        {
             Write-Verbose "Failed to get team channels with ID $GroupId and display name of $DisplayName"
             return $nullReturn
         }
@@ -58,13 +61,15 @@ function Get-TargetResource {
             Ensure         = "Present"
         }
     }
-    catch {
+    catch
+    {
         Write-Verbose -Message "Failed to get Teams from the tenant."
         return $nullReturn
     }
 }
 
-function Set-TargetResource {
+function Set-TargetResource
+{
     [CmdletBinding()]
     param
     (
@@ -108,33 +113,41 @@ function Set-TargetResource {
     $CurrentParameters.Remove("Ensure")
 
 
-    if ($Ensure -eq "Present") {
+    if ($Ensure -eq "Present")
+    {
            # Remap attribute from DisplayName to current display name for Set-TeamChannel cmdlet
-        if ($channel.Ensure -eq "Present") {
-            if ($CurrentParameters.ContainsKey("NewDisplayName")) {
+        if ($channel.Ensure -eq "Present")
+        {
+            if ($CurrentParameters.ContainsKey("NewDisplayName")) 
+            {
                 $CurrentParameters.Add("CurrentDisplayName", $DisplayName)
                 $CurrentParameters.Remove("DisplayName")  
                 Write-Verbose -Message "Updating team channel to new channel name $NewDisplayName"   
                 Set-TeamChannel @CurrentParameters
             }
         }   
-        else {
-            if ($CurrentParameters.ContainsKey("NewDisplayName")) {
+        else
+        {
+            if ($CurrentParameters.ContainsKey("NewDisplayName"))
+            {
                 $CurrentParameters.Remove("NewDisplayName")
             }
             Write-Verbose -Message "Creating team channel  $DislayName" 
             New-TeamChannel @CurrentParameters   
         }
     }
-    else {
-        if ($channel.DisplayName) {
+    else
+    {
+        if ($channel.DisplayName)
+        {
             Write-Verbose -Message "Removing team channel $DislayName" 
             Remove-TeamChannel -GroupId $GroupID -DisplayName $DisplayName
         }
     }
 }
    
-function Test-TargetResource {
+function Test-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
@@ -179,7 +192,8 @@ function Test-TargetResource {
     )
 }           
 
-function Export-TargetResource {
+function Export-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.String])]
     param
