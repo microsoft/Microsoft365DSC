@@ -94,22 +94,21 @@ function Get-TargetResource {
         Write-Verbose -Message "Found Team $($team.DisplayName) and groupid of $($team.GroupId)"
 
         ## Team exists check O365 group for additional info for Set operation skip if new team or delete 
-        if ($Ensure -eq "Present") {
-            $allGroups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                -ScriptBlock {
-                Get-UnifiedGroup 
-            }
-
-            if ($CurrentParameters.ContainsKey("GroupId")) {
-                $teamGroup = $allGroups | Where-Object {$_.ExternalDirectoryObjectId -eq $GroupId}
-               }  ##### Else using display name for lookup for set operation
-            else {
-                $teamGroup = $allGroups | Where-Object {$_.DisplayName -eq $DisplayName}
-            }
-                
-            Write-Verbose -Message "Found O365 group $teamGroup"
-            Write-Verbose -Message "Alias = $($teamGroup.Alias) and team accesstype = $($teamGroup.AccessType)"
+        $allGroups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+            -ScriptBlock {
+            Get-UnifiedGroup 
         }
+
+        if ($CurrentParameters.ContainsKey("GroupId")) {
+            $teamGroup = $allGroups | Where-Object {$_.ExternalDirectoryObjectId -eq $GroupId}
+        }  ##### Else using display name for lookup for set operation
+        else {
+            $teamGroup = $allGroups | Where-Object {$_.DisplayName -eq $DisplayName}
+        }
+                
+        Write-Verbose -Message "Found O365 group $teamGroup"
+        Write-Verbose -Message "Alias = $($teamGroup.Alias) and team accesstype = $($teamGroup.AccessType)"
+
         return @{
             DisplayName    = $team.DisplayName
             Group          = $null
