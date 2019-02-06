@@ -14,7 +14,7 @@ install:
 
         $webClient = new-object System.Net.WebClient
         $url = "https://github.com/Microsoft/Office365DSC/blob/Dev/Modules/Office365DSC/Dependencies/SharePointOnlineManagementShell_8525-1200_x64_en-us.msi?raw=true"
-        $path = $PSScriptRoot + "\SharePointOnlineManagementShell_8316-1200_x64_en-us.msi"
+        $path = $PSScriptRoot + "\SharePointOnlineManagementShell.msi"
         $webClient.DownloadFile($url, $path)
         msiexec /i $path /quiet /qn /norestart
 
