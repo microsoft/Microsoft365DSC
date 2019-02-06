@@ -4,16 +4,16 @@ function Test-SPOServiceConnection
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [System.String]
         $SPOCentralAdminUrl,
 
-        [Parameter(Mandatory = $true)] 
+        [Parameter(Mandatory = $false)] 
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
-    )    
+    )
     Write-Verbose "Verifying the LCM connection state to SharePoint Online"
-    Connect-SPOService -Url $SPOCentralAdminUrl -Credential $GlobalAdminAccount
+    Test-MSCloudLogin -Platform SharePointOnline
 }
 
 function Test-O365ServiceConnection
@@ -22,12 +22,13 @@ function Test-O365ServiceConnection
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)] 
+        [Parameter(Mandatory = $false)] 
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )    
     Write-Verbose "Verifying the LCM connection state to Microsoft Azure Active Directory Services"
-    Connect-AzureAD -Credential $GlobalAdminAccount
+    Test-MSCloudLogin -Platform AzureAD 
+    Test-MSCloudLogin -Platform MSOnline
 }
 
 function Invoke-ExoCommand
@@ -315,7 +316,7 @@ function Get-UsersLicences
         $GlobalAdminAccount
     )
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Store all users licences information in Global Variable for futur usage."
+    Write-Verbose "Store all users licences information in Global Variable for future usage."
     #Store information to be able to check later if the users is correctly licences for features.
     if ($null -eq $Global:UsersLicences)
     {
@@ -331,10 +332,14 @@ function Export-O365Configuration
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param(
-        [Parameter(Mandatory = $true)] 
+        [Parameter(Mandatory = $false)] 
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )
+    if ($null -eq $GlobalAdminAccount)
+    {
+        $GlobalAdminAccount = Get-O365Credentials -Username $env:USERNAME
+    }
     $VerbosePreference = 'Continue'
     $AzureAutomation = $false
     $DSCContent = "Configuration O365TenantConfig `r`n{`r`n"
