@@ -39,7 +39,7 @@ function Get-TargetResource
         Get-MailboxRegionalConfiguration -Identity $args[0].DisplayName
     }
 
-    if (!$mailboxSettings)
+    if ($null -eq $mailboxSettings)
     {
         Write-Verbose "The specified Mailbox doesn't already exist."
         return $nullReturn
@@ -95,7 +95,7 @@ function Set-TargetResource
     $AllowedTimeZones = (Get-ChildItem "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Time zones" | `
         foreach {Get-ItemProperty $_.PSPath}).PSChildName
 
-    if (!$AllowedTimeZones.Contains($TimeZone))
+    if ($AllowedTimeZones.Contains($TimeZone) -eq $false)
     {
         throw "The specified Time Zone {$($TimeZone)} is not valid."
     }
