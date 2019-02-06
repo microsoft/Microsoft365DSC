@@ -908,6 +908,24 @@ function Test-SPOServiceConnection
     Connect-SPOService -Url $SPOCentralAdminUrl -Credential $GlobalAdminAccount
 }
 
+function Test-PnPOnlineConnection
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SPOCentralAdminUrl,
+
+        [Parameter(Mandatory = $true)] 
+        [System.Management.Automation.PSCredential] 
+        $GlobalAdminAccount
+    )
+    Write-Verbose "Verifying the LCM connection state to SharePoint Online with PnP"
+    Connect-PnPOnline -Url $SPOCentralAdminUrl -Credentials $GlobalAdminAccount
+}
+
 function Test-O365ServiceConnection
 {
     [CmdletBinding()]
@@ -1227,7 +1245,7 @@ function Export-O365Configuration
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )
-    $VerbosePreference = 'Continue'
+    #$VerbosePreference = 'Continue'
     $AzureAutomation = $false
     $DSCContent = "Configuration O365TenantConfig `r`n{`r`n"
     $DSCContent += "    Import-DSCResource -ModuleName Office365DSC`r`n`r`n"
@@ -1397,6 +1415,26 @@ function Export-O365Configuration
     if ($centralAdminUrl)
     {
         $DSCContent += Export-TargetResource -CentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "SPOSearchManagedProperty"
+    $SPOSearchManagedPropertyModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_SPOSearchManagedProperty\MSFT_SPOSearchManagedProperty.psm1" `
+                                                    -Resolve
+
+    Import-Module $SPOSearchManagedPropertyModulePath
+    Write-Verbose "Getting here to PnP"
+    Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+    $properties =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.Mappings.dictionary.KeyValueOfstringMappingInfoy6h3NzC8
+
+    foreach ($property in $properties)
+    {
+        $DSCContent += Export-TargetResource -Name $property.Value.Name `
+                                             -Type $property.Value.ManagedType `
+                                             -CentralAdminUrl $centralAdminUrl `
+                                             -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
 
