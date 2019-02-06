@@ -8,7 +8,7 @@ configuration, and monitoring of Office 365 Tenants via PowerShell
 Desired State Configuration. The compiled configuration needs to be
 executed from an agent's Local Configuration Manager (LCM) (machine
 or container) which can communicate back remotely to Office 365 via
-remote API calls (therefore requires internet connectivity).
+remote API calls (therefore requires internet connectivity)
 
 # How to Install
 

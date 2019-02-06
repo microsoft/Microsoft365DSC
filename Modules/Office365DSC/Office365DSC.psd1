@@ -74,13 +74,13 @@ RequiredModules = @(@{ModuleName = 'ReverseDSC'; ModuleVersion = '1.9.2.13'; },
 NestedModules = @('modules\Office365DSCUtil.psm1')
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = 'Test-Office365DSCParameterState', 'Invoke-ExoCommand', 
-               'Get-UsersLicences', 'Test-O365ServiceConnection', 
-               'Test-SPOServiceConnection', 'Export-O365Configuration'
+#FunctionsToExport = @()
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = 'Test-SPOServiceConnection', 'Test-Office365DSCParameterState', 
-               'Test-O365ServiceConnection', 'Invoke-ExoCommand', 'Export-O365Configuration'
+               'Test-O365ServiceConnection', 'Invoke-ExoCommand', 'Export-O365Configuration', 
+               'Get-TimeZoneNameFromID', 'Get-TimeZoneIDFromName', 'Get-LocaleIDFromName',
+               'Get-LocaleNameFromID'
 
 # Variables to export from this module
 # VariablesToExport = @()

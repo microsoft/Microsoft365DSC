@@ -1,3 +1,895 @@
+$Locales = @(
+    @{
+        EnglishName = "Arabic (Algeria)"
+        ID = "5121"
+    },
+    @{
+        EnglishName = "Arabic (Bahrain)"
+        ID = "15361"
+    },
+    @{
+        EnglishName = "Arabic (Egypt)"
+        ID = "3073"
+    },
+    @{
+        EnglishName = "Arabic (Iraq)"
+        ID = "2049"
+    },
+    @{
+        EnglishName = "Arabic (Jordan)"
+        ID = "11265"
+    },
+    @{
+        EnglishName = "Arabic (Kuwait)"
+        ID = "13313"
+    },
+    @{
+        EnglishName = "Arabic (Lebanon)"
+        ID = "12289"
+    },
+    @{
+        EnglishName = "Arabic (Libya)"
+        ID = "4097"
+    },
+    @{
+        EnglishName = "Arabic (Morocco)"
+        ID = "6145"
+    },
+    @{
+        EnglishName = "Arabic (Oman)"
+        ID = "8193"
+    },
+    @{
+        EnglishName = "Arabic (Qatar)"
+        ID = "16385"
+    },
+    @{
+        EnglishName = "Arabic (Saudi Arabia)"
+        ID = "1025"
+    },
+    @{
+        EnglishName = "Arabic (Syria)"
+        ID = "10241"
+    },
+    @{
+        EnglishName = "Arabic (Tunisia)"
+        ID = "7169"
+    },
+    @{
+        EnglishName = "Arabic (U.A.E.)"
+        ID = "14337"
+    },
+    @{
+        EnglishName = "Arabic (Yemen)"
+        ID = "9217"
+    },
+    @{
+        EnglishName = "Basque"
+        ID = "1069"
+    },
+    @{
+        EnglishName = "Bulgarian"
+        ID = "1026"
+    },
+    @{
+        EnglishName = "Catalan"
+        ID = "1027"
+    },
+    @{
+        EnglishName = "Chinese (Hong Kong S.A.R)"
+        ID = "3076"
+    },
+    @{
+        EnglishName = "Chinese (Macau S.A.R)"
+        ID = "5124"
+    },
+    @{
+        EnglishName = "Chinese (People's Republic of China)"
+        ID = "2052"
+    },
+    @{
+        EnglishName = "Chinese (Singapore)"
+        ID = "4100"
+    },
+    @{
+        EnglishName = "Chinese (Taiwan)"
+        ID = "1028"
+    },
+    @{
+        EnglishName = "Croatian"
+        ID = "1050"
+    },
+    @{
+        EnglishName = "Czech"
+        ID = "1029"
+    },
+    @{
+        EnglishName = "Danish"
+        ID = "1030"
+    },
+    @{
+        EnglishName = "Dutch (Belgium)"
+        ID = "2067"
+    },
+    @{
+        EnglishName = "Dutch (Netherlands)"
+        ID = "1043"
+    },
+    @{
+        EnglishName = "English (Australia)"
+        ID = "3081"
+    },
+    @{
+        EnglishName = "English (Belize)"
+        ID = "10249"
+    },
+    @{
+        EnglishName = "English (Canada)"
+        ID = "4105"
+    },
+    @{
+        EnglishName = "English (Caribbean)"
+        ID = "9225"
+    },
+    @{
+        EnglishName = "English (Ireland)"
+        ID = "6153"
+    },
+    @{
+        EnglishName = "English (Jamaica)"
+        ID = "8201"
+    },
+    @{
+        EnglishName = "English (New Zealand)"
+        ID = "5129"
+    },
+    @{
+        EnglishName = "English (Republic of the Philippines)"
+        ID = "13321"
+    },
+    @{
+        EnglishName = "English (South Africa)"
+        ID = "7177"
+    },
+    @{
+        EnglishName = "English (Trinidad)"
+        ID = "11273"
+    },
+    @{
+        EnglishName = "English (United Kingdom)"
+        ID = "2057"
+    },
+    @{
+        EnglishName = "English (United States)"
+        ID = "1033"
+    },
+    @{
+        EnglishName = "English (Zimbabwe)"
+        ID = "12297"
+    },
+    @{
+        EnglishName = "Estonian"
+        ID = "1061"
+    },
+    @{
+        EnglishName = "Filipino (Philippines)"
+        ID = "1124"
+    },
+    @{
+        EnglishName = "Finnish"
+        ID = "1035"
+    },
+    @{
+        EnglishName = "French (Belgium)"
+        ID = "2060"
+    },
+    @{
+        EnglishName = "French (Canada)"
+        ID = "3084"
+    },
+    @{
+        EnglishName = "French (France)"
+        ID = "1036"
+    },
+    @{
+        EnglishName = "French (Luxembourg)"
+        ID = "5132"
+    },
+    @{
+        EnglishName = "French (Principality of Monaco)"
+        ID = "6156"
+    },
+    @{
+        EnglishName = "French (Switzerland)"
+        ID = "4108"
+    },
+    @{
+        EnglishName = "German (Austria)"
+        ID = "3079"
+    },
+    @{
+        EnglishName = "German (Germany)"
+        ID = "1031"
+    },
+    @{
+        EnglishName = "German (Liechtenstein)"
+        ID = "5127"
+    },
+    @{
+        EnglishName = "German (Luxembourg)"
+        ID = "4103"
+    },
+    @{
+        EnglishName = "German (Switzerland)"
+        ID = "2055"
+    },
+    @{
+        EnglishName = "Greek"
+        ID = "1032"
+    },
+    @{
+        EnglishName = "Hebrew"
+        ID = "1037"
+    },
+    @{
+        EnglishName = "Hindi"
+        ID = "1081"
+    },
+    @{
+        EnglishName = "Hungarian"
+        ID = "1038"
+    },
+    @{
+        EnglishName = "Icelandic"
+        ID = "1039"
+    },
+    @{
+        EnglishName = "Indonesian"
+        ID = "1057"
+    },
+    @{
+        EnglishName = "Italian (Italy)"
+        ID = "1040"
+    },
+    @{
+        EnglishName = "Italian (Switzerland)"
+        ID = "2064"
+    },
+    @{
+        EnglishName = "Japanese"
+        ID = "1041"
+    },
+    @{
+        EnglishName = "Kazakh"
+        ID = "1087"
+    },
+    @{
+        EnglishName = "Korean"
+        ID = "1042"
+    },
+    @{
+        EnglishName = "Latvian"
+        ID = "1062"
+    },
+    @{
+        EnglishName = "Lithuanian"
+        ID = "1063"
+    },
+    @{
+        EnglishName = "Malay"
+        ID = "1086"
+    },
+    @{
+        EnglishName = "Norwegian (Bokmal)"
+        ID = "1044"
+    },
+    @{
+        EnglishName = "Persian"
+        ID = "1065"
+    },
+    @{
+        EnglishName = "Polish"
+        ID = "1045"
+    },
+    @{
+        EnglishName = "Portuguese (Brazil)"
+        ID = "1046"
+    },
+    @{
+        EnglishName = "Portuguese (Portugal)"
+        ID = "2070"
+    },
+    @{
+        EnglishName = "Romanian"
+        ID = "1048"
+    },
+    @{
+        EnglishName = "Russian"
+        ID = "1049"
+    },
+    @{
+        EnglishName = "Serbian (Cyrillic)"
+        ID = "3098"
+    },
+    @{
+        EnglishName = "Serbian (Latin)"
+        ID = "2074"
+    },
+    @{
+        EnglishName = "Slovak"
+        ID = "1051"
+    },
+    @{
+        EnglishName = "Slovenian"
+        ID = "1060"
+    },
+    @{
+        EnglishName = "Spanish (Argentina)"
+        ID = "11274"
+    },
+    @{
+        EnglishName = "Spanish (Bolivia)"
+        ID = "16394"
+    },
+    @{
+        EnglishName = "Spanish (Chile)"
+        ID = "13322"
+    },
+    @{
+        EnglishName = "Spanish (Colombia)"
+        ID = "9226"
+    },
+    @{
+        EnglishName = "Spanish (Costa Rica)"
+        ID = "5130"
+    },
+    @{
+        EnglishName = "Spanish (Dominican Republic)"
+        ID = "7178"
+    },
+    @{
+        EnglishName = "Spanish (Ecuador)"
+        ID = "12298"
+    },
+    @{
+        EnglishName = "Spanish (El Salvador)"
+        ID = "17418"
+    },
+    @{
+        EnglishName = "Spanish (Guatemala)"
+        ID = "4106"
+    },
+    @{
+        EnglishName = "Spanish (Honduras)"
+        ID = "18442"
+    },
+    @{
+        EnglishName = "Spanish (Mexico)"
+        ID = "2058"
+    },
+    @{
+        EnglishName = "Spanish (Nicaragua)"
+        ID = "19466"
+    },
+    @{
+        EnglishName = "Spanish (Panama)"
+        ID = "6154"
+    },
+    @{
+        EnglishName = "Spanish (Paraguay)"
+        ID = "15370"
+    },
+    @{
+        EnglishName = "Spanish (Peru)"
+        ID = "10250"
+    },
+    @{
+        EnglishName = "Spanish (Puerto Rico)"
+        ID = "20490"
+    },
+    @{
+        EnglishName = "Spanish (International Sort)"
+        ID = "3082"
+    },
+    @{
+        EnglishName = "Spanish (Traditional Sort)"
+        ID = "1034"
+    },
+    @{
+        EnglishName = "Spanish (Uruguay)"
+        ID = "14346"
+    },
+    @{
+        EnglishName = "Spanish (Venezuela)"
+        ID = "8202"
+    },
+    @{
+        EnglishName = "Swedish (Finland)"
+        ID = "2077"
+    },
+    @{
+        EnglishName = "Swedish (Sweden)"
+        ID = "1053"
+    },
+    @{
+        EnglishName = "Thai"
+        ID = "1054"
+    },
+    @{
+        EnglishName = "Turkish"
+        ID = "1055"
+    },
+    @{
+        EnglishName = "Ukrainian"
+        ID = "1058"
+    },
+    @{
+        EnglishName = "Urdu"
+        ID = "1056"
+    },
+    @{
+        EnglishName = "Vietnamese"
+        ID = "1066"
+    }
+)
+
+$TimeZones = @(
+    @{
+        ID = "000"
+        EnglishName = "Dateline Standard Time"
+        EnglishDescription = "(GMT-12:00) International Date Line West"
+    },
+    @{
+        ID = "001"
+        EnglishName = "Samoa Standard Time"
+        EnglishDescription = "(GMT-11:00) Midway Island, Samoa"
+    },
+    @{
+        ID = "002"
+        EnglishName = "Hawaiian Standard Time"
+        EnglishDescription = "(GMT-10:00) Hawaii"
+    },
+    @{
+        ID = "003"
+        EnglishName = "Alaskan Standard Time"
+        EnglishDescription = "(GMT-09:00) Alaska"
+    },
+    @{
+        ID = "004"
+        EnglishName = "Pacific Standard Time"
+        EnglishDescription = "(GMT-08:00) Pacific Time (US and Canada); Tijuana"
+    },
+    @{
+        ID = "010"
+        EnglishName = "Mountain Standard Time"
+        EnglishDescription = "(GMT-07:00) Mountain Time (US and Canada)"
+    },
+    @{
+        ID = "013"
+        EnglishName = "Mexico Standard Time 2"
+        EnglishDescription = "(GMT-07:00) Chihuahua, La Paz, Mazatlan"
+    },
+    @{
+        ID = "015"
+        EnglishName = "U.S. Mountain Standard Time"
+        EnglishDescription = "(GMT-07:00) Arizona"
+    },
+    @{
+        ID = "020"
+        EnglishName = "Central Standard Time"
+        EnglishDescription = "(GMT-06:00) Central Time (US and Canada"
+    },
+    @{
+        ID = "025"
+        EnglishName = "Canada Central Standard Time"
+        EnglishDescription = "(GMT-06:00) Saskatchewan"
+    },
+    @{
+        ID = "030"
+        EnglishName = "Mexico Standard Time"
+        EnglishDescription = "(GMT-06:00) Guadalajara, Mexico City, Monterrey"
+    },
+    @{
+        ID = "033"
+        EnglishName = "Central America Standard Time"
+        EnglishDescription = "(GMT-06:00) Central America"
+    },
+    @{
+        ID = "035"
+        EnglishName = "Eastern Standard Time"
+        EnglishDescription = "(GMT-05:00) Eastern Time (US and Canada)"
+    },
+    @{
+        ID = "040"
+        EnglishName = "U.S. Eastern Standard Time"
+        EnglishDescription = "(GMT-05:00) Indiana (East)"
+    },
+    @{
+        ID = "045"
+        EnglishName = "S.A. Pacific Standard Time"
+        EnglishDescription = "(GMT-05:00) Bogota, Lima, Quito"
+    },
+    @{
+        ID = "050"
+        EnglishName = "Atlantic Standard Time"
+        EnglishDescription = "(GMT-04:00) Atlantic Time (Canada)"
+    },
+    @{
+        ID = "055"
+        EnglishName = "S.A. Western Standard Time"
+        EnglishDescription = "(GMT-04:00) Caracas, La Paz"
+    },
+    @{
+        ID = "056"
+        EnglishName = "Pacific S.A. Standard Time"
+        EnglishDescription = "(GMT-04:00) Santiago"
+    },
+    @{
+        ID = "060"
+        EnglishName = "Newfoundland and Labrador Standard Time"
+        EnglishDescription = "(GMT-03:30) Newfoundland and Labrador"
+    },
+    @{
+        ID = "065"
+        EnglishName = "E. South America Standard Time"
+        EnglishDescription = "(GMT-03:00) Brasilia"
+    },
+    @{
+        ID = "070"
+        EnglishName = "S.A. Eastern Standard Time"
+        EnglishDescription = "(GMT-03:00) Buenos Aires, Georgetown"
+    },
+    @{
+        ID = "073"
+        EnglishName = "Greenland Standard Time"
+        EnglishDescription = "(GMT-03:00) Greenland"
+    },
+    @{
+        ID = "075"
+        EnglishName = "Mid-Atlantic Standard Time"
+        EnglishDescription = "(GMT-02:00) Mid-Atlantic"
+    },
+    @{
+        ID = "080"
+        EnglishName = "Azores Standard Time"
+        EnglishDescription = "(GMT-01:00) Azores"
+    },
+    @{
+        ID = "083"
+        EnglishName = "Cape Verde Standard Time"
+        EnglishDescription = "(GMT-01:00) Cape Verde Islands"
+    },
+    @{
+        ID = "085"
+        EnglishName = "GMT Standard Time"
+        EnglishDescription = "(GMT) Greenwich Mean Time: Dublin, Edinburgh, Lisbon, London"
+    },
+    @{
+        ID = "090"
+        EnglishName = "Greenwich Standard Time"
+        EnglishDescription = "(GMT) Casablanca, Monrovia"
+    },
+    @{
+        ID = "095"
+        EnglishName = "Central Europe Standard Time"
+        EnglishDescription = "(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague"
+    },
+    @{
+        ID = "100"
+        EnglishName = "Central European Standard Time"
+        EnglishDescription = "(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb"
+    },
+    @{
+        ID = "105"
+        EnglishName = "Romance Standard Time"
+        EnglishDescription = "(GMT+01:00) Brussels, Copenhagen, Madrid, Paris"
+    },
+    @{
+        ID = "110"
+        EnglishName = "W. Europe Standard Time"
+        EnglishDescription = "(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna"
+    },
+    @{
+        ID = "113"
+        EnglishName = "W. Central Africa Standard Time"
+        EnglishDescription = "(GMT+01:00) West Central Africa"
+    },
+    @{
+        ID = "115"
+        EnglishName = "E. Europe Standard Time"
+        EnglishDescription = "(GMT+02:00) Bucharest"
+    },
+    @{
+        ID = "120"
+        EnglishName = "Egypt Standard Time"
+        EnglishDescription = "(GMT+02:00) Cairo"
+    },
+    @{
+        ID = "125"
+        EnglishName = "FLE Standard Time"
+        EnglishDescription = "(GMT+02:00) Helsinki, Kiev, Riga, Sofia, Tallinn, Vilnius"
+    },
+    @{
+        ID = "130"
+        EnglishName = "GTB Standard Time"
+        EnglishDescription = "(GMT+02:00) Athens, Istanbul, Minsk"
+    },
+    @{
+        ID = "135"
+        EnglishName = "Israel Standard Time"
+        EnglishDescription = "(GMT+02:00) Jerusalem"
+    },
+    @{
+        ID = "140"
+        EnglishName = "South Africa Standard Time"
+        EnglishDescription = "(GMT+02:00) Harare, Pretoria"
+    },
+    @{
+        ID = "145"
+        EnglishName = "Russian Standard Time"
+        EnglishDescription = "(GMT+03:00) Moscow, St. Petersburg, Volgograd"
+    },
+    @{
+        ID = "150"
+        EnglishName = "Arab Standard Time"
+        EnglishDescription = "(GMT+03:00) Kuwait, Riyadh"
+    },
+    @{
+        ID = "155"
+        EnglishName = "E. Africa Standard Time"
+        EnglishDescription = "(GMT+03:00) Nairobi"
+    },
+    @{
+        ID = "158"
+        EnglishName = "Arabic Standard Time"
+        EnglishDescription = "(GMT+03:00) Baghdad"
+    },
+    @{
+        ID = "160"
+        EnglishName = "Iran Standard Time"
+        EnglishDescription = "(GMT+03:30) Tehran"
+    },
+    @{
+        ID = "165"
+        EnglishName = "Arabian Standard Time"
+        EnglishDescription = "(GMT+04:00) Abu Dhabi, Muscat"
+    },
+    @{
+        ID = "170"
+        EnglishName = "Caucasus Standard Time"
+        EnglishDescription = "(GMT+04:00) Baku, Tbilisi, Yerevan"
+    },
+    @{
+        ID = "175"
+        EnglishName = "Transitional Islamic State of Afghanistan Standard Time"
+        EnglishDescription = "(GMT+04:30) Kabul"
+    },
+    @{
+        ID = "180"
+        EnglishName = "Ekaterinburg Standard Time"
+        EnglishDescription = "(GMT+05:00) Ekaterinburg"
+    },
+    @{
+        ID = "185"
+        EnglishName = "West Asia Standard Time"
+        EnglishDescription = "(GMT+05:00) Islamabad, Karachi, Tashkent"
+    },
+    @{
+        ID = "190"
+        EnglishName = "India Standard Time"
+        EnglishDescription = "(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi"
+    },
+    @{
+        ID = "193"
+        EnglishName = "Nepal Standard Time"
+        EnglishDescription = "(GMT+05:45) Kathmandu"
+    },
+    @{
+        ID = "195"
+        EnglishName = "Central Asia Standard Time"
+        EnglishDescription = "(GMT+06:00) Astana, Dhaka"
+    },
+    @{
+        ID = "200"
+        EnglishName = "Sri Lanka Standard Time"
+        EnglishDescription = "(GMT+06:00) Sri Jayawardenepura"
+    },
+    @{
+        ID = "201"
+        EnglishName = "N. Central Asia Standard Time"
+        EnglishDescription = "(GMT+06:00) Almaty, Novosibirsk"
+    },
+    @{
+        ID = "203"
+        EnglishName = "Myanmar Standard Time"
+        EnglishDescription = "(GMT+06:30) Yangon Rangoon"
+    },
+    @{
+        ID = "205"
+        EnglishName = "S.E. Asia Standard Time"
+        EnglishDescription = "(GMT+07:00) Bangkok, Hanoi, Jakarta"
+    },
+    @{
+        ID = "207"
+        EnglishName = "North Asia Standard Time"
+        EnglishDescription = "(GMT+07:00) Krasnoyarsk"
+    },
+    @{
+        ID = "210"
+        EnglishName = "China Standard Time"
+        EnglishDescription = "(GMT+08:00) Beijing, Chongqing, Hong Kong SAR, Urumqi"
+    },
+    @{
+        ID = "215"
+        EnglishName = "Singapore Standard Time"
+        EnglishDescription = "(GMT+08:00) Kuala Lumpur, Singapore"
+    },
+    @{
+        ID = "220"
+        EnglishName = "Taipei Standard Time"
+        EnglishDescription = "(GMT+08:00) Taipei"
+    },
+    @{
+        ID = "225"
+        EnglishName = "W. Australia Standard Time"
+        EnglishDescription = "(GMT+08:00) Perth"
+    },
+    @{
+        ID = "227"
+        EnglishName = "North Asia East Standard Time"
+        EnglishDescription = "(GMT+08:00) Irkutsk, Ulaanbaatar"
+    },
+    @{
+        ID = "230"
+        EnglishName = "Korea Standard Time"
+        EnglishDescription = "(GMT+09:00) Seoul"
+    },
+    @{
+        ID = "235"
+        EnglishName = "Tokyo Standard Time"
+        EnglishDescription = "(GMT+09:00) Osaka, Sapporo, Tokyo"
+    },
+    @{
+        ID = "240"
+        EnglishName = "Yakutsk Standard Time"
+        EnglishDescription = "(GMT+09:00) Yakutsk"
+    },
+    @{
+        ID = "245"
+        EnglishName = "A.U.S. Central Standard Time"
+        EnglishDescription = "(GMT+09:30) Darwin"
+    },
+    @{
+        ID = "250"
+        EnglishName = "Cen. Australia Standard Time"
+        EnglishDescription = "(GMT+09:30) Adelaide"
+    },
+    @{
+        ID = "255"
+        EnglishName = "A.U.S. Eastern Standard Time"
+        EnglishDescription = "(GMT+10:00) Canberra, Melbourne, Sydney"
+    },
+    @{
+        ID = "260"
+        EnglishName = "E. Australia Standard Time"
+        EnglishDescription = "(GMT+10:00) Brisbane"
+    },
+    @{
+        ID = "265"
+        EnglishName = "Tasmania Standard Time"
+        EnglishDescription = "(GMT+10:00) Hobart"
+    },
+    @{
+        ID = "270"
+        EnglishName = "Vladivostok Standard Time"
+        EnglishDescription = "(GMT+10:00) Vladivostok"
+    },
+    @{
+        ID = "275"
+        EnglishName = "West Pacific Standard Time"
+        EnglishDescription = "(GMT+10:00) Guam, Port Moresby"
+    },
+    @{
+        ID = "280"
+        EnglishName = "Central Pacific Standard Time"
+        EnglishDescription = "(GMT+11:00) Magadan, Solomon Islands, New Caledonia"
+    },
+    @{
+        ID = "285"
+        EnglishName = "Fiji Islands Standard Time"
+        EnglishDescription = "(GMT+12:00) Fiji Islands, Kamchatka, Marshall Islands"
+    },
+    @{
+        ID = "290"
+        EnglishName = "New Zealand Standard Time"
+        EnglishDescription = "(GMT+12:00) Auckland, Wellington"
+    },
+    @{
+        ID = "300"
+        EnglishName = "Tonga Standard Time"
+        EnglishDescription = "(GMT+13:00) Nuku’alofa"
+    }
+)
+
+function Get-LocaleIDFromName
+{
+    [CmdletBinding()]
+    [OutputType([String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name
+    )
+
+    $LocaleObject = $Locales | Where-Object { $_.EnglishName -eq $Name }
+
+    if ($null -eq $LocaleObject)
+    {
+        throw "The specified Locale name {$($Name)} is not valid"
+    }
+    return $LocaleObject.ID
+}
+
+function Get-LocaleNameFromID
+{
+    [CmdletBinding()]
+    [OutputType([String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ID
+    )
+
+    $LocaleObject = $Locales | Where-Object { $_.ID -eq $ID }
+
+    if ($null -eq $LocaleObject)
+    {
+        throw "The specified Locale with ID {$($ID)} is not valid"
+    }
+    return $LocaleObject.EnglishName
+}
+
+function Get-TimeZoneNameFromID
+{
+    [CmdletBinding()]
+    [OutputType([String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ID
+    )
+
+    $TimezoneObject = $Timezones | Where-Object { $_.ID -eq $ID }
+
+    if ($null -eq $TimezoneObject)
+    {
+        throw "The specified Timzone with ID {$($ID)} is not valid"
+    }
+    return $TimezoneObject.EnglishName
+}
+function Get-TimeZoneIDFromName
+{
+    [CmdletBinding()]
+    [OutputType([String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name
+    )
+
+    $TimezoneObject = $Timezones | Where-Object { $_.EnglishName -eq $Name }
+
+    if ($null -eq $TimezoneObject)
+    {
+        throw "The specified Timzone {$($Name)} is not valid"
+    }
+    return $TimezoneObject.ID
+}
+
 function Test-SPOServiceConnection
 {
     [CmdletBinding()]
@@ -350,6 +1242,27 @@ function Export-O365Configuration
 
     # Add the GlobalAdminAccount to the Credentials List
     Save-Credentials -UserName $GlobalAdminAccount.UserName
+
+    #region "EXOMailboxSettings"
+    $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `
+                                              -ChildPath "..\DSCResources\MSFT_EXOMailboxSettings\MSFT_EXOMailboxSettings.psm1" `
+                                              -Resolve
+
+    Import-Module $EXOMailboxSettingsModulePath
+    $mailboxes = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                   -ScriptBlock {
+        Get-Mailbox
+    }
+
+    foreach ($mailbox in $mailboxes)
+    {
+        $mailboxName = $mailbox.Name
+        if ($mailboxName)
+        {
+            $DSCContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
 
     #region "EXOMailTips"
     $OrgConfig = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
