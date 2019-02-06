@@ -61,17 +61,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DisplayName        = "Test Team"
                 Description        = "Test team description"
                 Alias              = "TestTeam"
-                AccessType         = "Public"
+                AccessType         = "Private"
+                Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-Team -MockWith { 
                 return @{
                     DisplayName = "Test Team"
-                    Description = "Test team description"
-                    Alias       = "TestTeam"
-                    AccessType  = "Private"
-                    Ensure      = "Present"
                 }
             }
             

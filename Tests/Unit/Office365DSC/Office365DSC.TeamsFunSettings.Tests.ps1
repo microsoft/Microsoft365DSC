@@ -78,7 +78,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GiphyContentRating = "Moderate"
                     AllowStickersAndMemes = $false 
                     AllowCustomMemes = $false
-                    Ensure = "Present"
+                    
                 }
             }
 

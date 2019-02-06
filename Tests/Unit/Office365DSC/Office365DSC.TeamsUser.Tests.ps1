@@ -63,7 +63,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     GroupID = "12345-12345-12345-12345-12345"
                     Role    = "Member"
-                    Ensure  = "Present"
                     User    = "JohnSmith@contoso.onmicrosoft.com"
                 }
             }

@@ -1,7 +1,11 @@
 ﻿<# EXO - Custom Office365DSC #>
 function Get-Team{
     [CmdletBinding()]
-    param()
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $DisplayName
+    )
 }
 
 function New-Team{
@@ -58,7 +62,23 @@ function Remove-Team{
 
 function Get-TeamUser{
     [CmdletBinding()]
-    param()
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $Description,
+
+        [Parameter()]
+        [string]
+        $User,
+
+        [Parameter()]
+        [string]
+        $Role
+    )
 }
 
 function Add-TeamUser{
@@ -103,7 +123,16 @@ function Remove-TeamUser{
 
 function Get-TeamChannel{
     [CmdletBinding()]
-    param()
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $DisplayName
+
+    )
 }
 function New-TeamChannel{
     [CmdletBinding()]
@@ -162,7 +191,27 @@ function Remove-TeamChannel{
 
 function Get-TeamFunSettings{
     [CmdletBinding()]
-    param()
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $AllowGiphy,
+
+        [Parameter()]
+        [string]
+        $GiphyContentRating,
+
+        [Parameter()]
+        [string]
+        $AllowStickersAndMemes,
+
+        [Parameter()]
+        [string]
+        $AllowCustomMemes
+    )
 }
 
 function Set-TeamFunSettings{
