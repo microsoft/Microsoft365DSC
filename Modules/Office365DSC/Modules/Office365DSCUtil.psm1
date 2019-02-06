@@ -1245,7 +1245,7 @@ function Export-O365Configuration
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )
-    $VerbosePreference = 'Continue'
+    #$VerbosePreference = 'Continue'
     $AzureAutomation = $false
     $DSCContent = "Configuration O365TenantConfig `r`n{`r`n"
     $DSCContent += "    Import-DSCResource -ModuleName Office365DSC`r`n`r`n"
@@ -1399,14 +1399,14 @@ function Export-O365Configuration
 
     #region "SPOSearchManagedProperty"
     $SPOSearchManagedPropertyModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_SPOSearchManagedProperty\MSFT_SPOSearchManagedProperty.psm1" `
-                                    -Resolve
+                                                    -ChildPath "..\DSCResources\MSFT_SPOSearchManagedProperty\MSFT_SPOSearchManagedProperty.psm1" `
+                                                    -Resolve
 
     Import-Module $SPOSearchManagedPropertyModulePath
-
+    Write-Verbose "Getting here to PnP"
     Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
-    $properties =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
+    $properties =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.Mappings.dictionary.KeyValueOfstringMappingInfoy6h3NzC8
 
     foreach ($property in $properties)
     {
