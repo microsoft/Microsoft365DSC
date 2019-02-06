@@ -62,9 +62,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-TeamChannel -MockWith { 
                 return @{
-                    GroupID     = "12345-12345-12345-12345-12345"
-                    DisplayName = "Test Channel"
-                    Ensure      = "Present"
+                    GroupID = "12345-12345-12345-12345-12345"
+                    Ensure  = "Present"
                 }
             }   
 
@@ -72,10 +71,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Remove-TeamChannel -MockWith {
-            }
-
-            It "Creates the MS Team channel in the Set method" {
-                Set-TargetResource @testParams
             }
 
             It "Should return present from the Get method" {
