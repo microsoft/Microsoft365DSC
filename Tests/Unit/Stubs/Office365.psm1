@@ -1,4 +1,4 @@
-﻿function Test-PnPOnlineConnection{
+﻿﻿function Test-PnPOnlineConnection{
     [CmdletBinding()]
     param(
         [Parameter()]
@@ -9176,3 +9176,193 @@ param(
 
  
  } 
+ function Get-Team{
+    [CmdletBinding()]
+    param()
+}
+
+function New-Team{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $DisplayName,
+
+        [Parameter()]
+        [string]
+        $Description,
+
+        [Parameter()]
+        [string]
+        $Alias,
+
+        [Parameter()]
+        [string]
+        $Owner,
+
+        [Parameter()]
+        [string]
+        $Classification,
+
+        [Parameter()]
+        [string]
+        $AccessType
+     
+    )
+}
+function Set-Team{
+    [CmdletBinding()]
+    param(
+     
+        [Parameter()]
+        [string]
+        $GroupId  
+     
+    )
+}
+
+
+function Remove-Team{
+    [CmdletBinding()]
+    param(
+     
+        [Parameter()]
+        [string]
+        $GroupId  
+     
+    )
+}
+
+function Get-TeamUser{
+    [CmdletBinding()]
+    param()
+}
+
+function Add-TeamUser{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $Description,
+
+        [Parameter()]
+        [string]
+        $User,
+
+        [Parameter()]
+        [string]
+        $Role
+            
+    )
+}
+
+function Remove-TeamUser{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $User,
+
+        [Parameter()]
+        [string]
+        $Role
+            
+    )
+}
+
+function Get-TeamChannel{
+    [CmdletBinding()]
+    param()
+}
+function New-TeamChannel{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $DisplayName,
+
+        [Parameter()]
+        [string]
+        $NewDisplayName,
+
+        [Parameter()]
+        [string]
+        $Description
+    )
+}
+function Set-TeamChannel{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $DisplayName,
+
+        [Parameter()]
+        [string]
+        $NewDisplayName,
+
+        [Parameter()]
+        [string]
+        $Description
+    )
+}
+
+function Remove-TeamChannel{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $DisplayName
+        
+    )
+}
+
+function Get-TeamFunSettings{
+    [CmdletBinding()]
+    param()
+}
+
+function Set-TeamFunSettings{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $AllowGiphy,
+
+        [Parameter()]
+        [string]
+        $GiphyContentRating,
+
+        [Parameter()]
+        [string]
+        $AllowStickersAndMemes,
+
+        [Parameter()]
+        [string]
+        $AllowCustomMemes
+    )
+}
