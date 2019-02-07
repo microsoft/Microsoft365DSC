@@ -1,220 +1,121 @@
-﻿<# EXO - Custom Office365DSC #>
-function Get-TeamUser{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]
-        $GroupId,
-
-        [Parameter()]
-        [string]
-        $Description,
-
-        [Parameter()]
-        [string]
-        $User,
-
-        [Parameter()]
-        [string]
-        $Role
-    )
-}
-
-function Add-TeamUser{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]
-        $GroupId,
-
-        [Parameter()]
-        [string]
-        $Description,
-
-        [Parameter()]
-        [string]
-        $User,
-
-        [Parameter()]
-        [string]
-        $Role
-            
-    )
-}
-
-function Remove-TeamUser{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]
-        $GroupId,
-
-        [Parameter()]
-        [string]
-        $User,
-
-        [Parameter()]
-        [string]
-        $Role
-            
-    )
-}
-
-function Get-TeamChannel{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]
-        $GroupId,
-
-        [Parameter()]
-        [string]
-        $DisplayName
-
-    )
-}
-function New-TeamChannel{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]
-        $GroupId,
-
-        [Parameter()]
-        [string]
-        $DisplayName,
-
-        [Parameter()]
-        [string]
-        $NewDisplayName,
-
-        [Parameter()]
-        [string]
-        $Description
-    )
-}
-function Set-TeamChannel{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]
-        $GroupId,
-
-        [Parameter()]
-        [string]
-        $DisplayName,
-
-        [Parameter()]
-        [string]
-        $NewDisplayName,
-
-        [Parameter()]
-        [string]
-        $Description
-    )
-}
-
-function Remove-TeamChannel{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]
-        $GroupId,
-
-        [Parameter()]
-        [string]
-        $DisplayName
-        
-    )
-}
-
-function Get-TeamFunSettings{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]
-        $GroupId,
-
-        [Parameter()]
-        [string]
-        $AllowGiphy,
-
-        [Parameter()]
-        [string]
-        $GiphyContentRating,
-
-        [Parameter()]
-        [string]
-        $AllowStickersAndMemes,
-
-        [Parameter()]
-        [string]
-        $AllowCustomMemes
-    )
-}
-
-function Set-TeamFunSettings{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]
-        $GroupId,
-
-        [Parameter()]
-        [string]
-        $AllowGiphy,
-
-        [Parameter()]
-        [string]
-        $GiphyContentRating,
-
-        [Parameter()]
-        [string]
-        $AllowStickersAndMemes,
-
-        [Parameter()]
-        [string]
-        $AllowCustomMemes
-    )
-}
-
-function Get-Team{
+﻿function Test-PnPOnlineConnection{
     [CmdletBinding()]
     param(
         [Parameter()]
-        [String]
-        $DisplayName 
+        [System.String]
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $SPOCentralAdminUrl
     )
 }
 
-function Set-Team{
+function Set-PnPSearchConfiguration{
     [CmdletBinding()]
     param(
         [Parameter()]
-        [String]
-        $DisplayName 
+        [System.String]
+        $Scope,
+
+        [Parameter()]
+        [System.String]
+        $Path
     )
 }
 
-function New-Team{
+function Get-PnPSearchConfiguration{
     [CmdletBinding()]
     param(
         [Parameter()]
-        [String]
-        $DisplayName 
+        [System.String]
+        $Scope
     )
-}
-
-function Get-UnifiedGroup {
-    [CmdletBinding()]
-    param (
-    )
-    
 }
 
 function Set-SPOTenant{
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.String]
+        $SharingCapability,
+
+        [Parameter()]
+        [System.boolean]
+        $ShowEveryoneClaim,
+
+        [Parameter()]
+        [System.boolean]
+        $ShowAllUsersClaim,
+
+        [Parameter()]
+        [System.boolean]
+        $ShowEveryoneExceptExternalUsersClaim,
+
+        [Parameter()]
+        [System.boolean]
+        $ProvisionSharedWithEveryoneFolder,
+
+        [Parameter()]
+        [System.boolean]
+        $EnableGuestSignInAcceleration,
+
+        [Parameter()]
+        [System.boolean]
+        $BccExternalSharingInvitations,
+
+        [Parameter()]
+        [System.String]
+        $BccExternalSharingInvitationsList,
+
+        [Parameter()]
+        [System.Uint32]
+        $RequireAnonymousLinksExpireInDays,
+
+        [Parameter()]
+        [System.String]
+        $SharingAllowedDomainList,
+
+        [Parameter()]
+        [System.String]
+        $SharingBlockedDomainList,
+
+        [Parameter()]
+        [System.String]
+        $SharingDomainRestrictionMode,
+
+        [Parameter()]
+        [System.String]
+        $DefaultSharingLinkType,
+
+        [Parameter()]
+        [System.boolean]
+        $PreventExternalUsersFromResharing,
+
+        [Parameter()]
+        [System.boolean]
+        $ShowPeoplePickerSuggestionsForGuestUsers,
+
+        [Parameter()]
+        [System.String]
+        $FileAnonymousLinkType,
+
+        [Parameter()]
+        [System.String]
+        $FolderAnonymousLinkType,
+
+        [Parameter()]
+        [System.boolean]
+        $NotifyOwnersWhenItemsReshared,
+
+        [Parameter()]
+        [System.String]
+        $DefaultLinkPermission,
+
+        [Parameter()]
+        [System.boolean]
+        $RequireAcceptingAccountMatchInvitedAccount,
+
         [Parameter()]
         [System.UInt32]
         $OneDriveStorageQuota,
