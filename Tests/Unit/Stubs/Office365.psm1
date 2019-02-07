@@ -9218,9 +9218,29 @@ function Set-Team{
     [CmdletBinding()]
     param(
      
+        [Parameter(Mandatory=$true)]
+        [string]
+        $DisplayName,
+
         [Parameter()]
         [string]
-        $GroupId  
+        $Description,
+
+        [Parameter()]
+        [string]
+        $Alias,
+
+        [Parameter()]
+        [string]
+        $Owner,
+
+        [Parameter()]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $AccessType
      
     )
 }

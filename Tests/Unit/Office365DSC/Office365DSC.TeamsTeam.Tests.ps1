@@ -24,6 +24,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Test-TeamsServiceConnection -MockWith {
         }
 
+        Mock Invoke-ExoCommand {
+            return Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $Arguments -NoNewScope
+        }
+
         # Test contexts 
         Context -Name "When the Team doesnt exist" -Fixture {
             $testParams = @{
@@ -60,21 +64,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            
+            Mock -CommandName Get-UnifiedGroup -MockWith { 
+                return $null
+            }
+
+
             Mock -CommandName Get-Team -MockWith { 
                 return @{
                     DisplayName = "TestTeam"
                 }
             }
 
-            Mock -CommandName Get-UnifiedGroup -MockWith{
-                $null
-            }
-
+            
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present" 
             }
-
 
             It "Should return true from the Test method" {
                 Test-TargetResource @testParams | Should Be $true
