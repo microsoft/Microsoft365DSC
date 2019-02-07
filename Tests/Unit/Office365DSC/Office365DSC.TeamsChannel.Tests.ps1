@@ -78,6 +78,64 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
         
 
+        Context -Name "Rename existing channel" -Fixture{
+            $testParams = @{
+                GroupID            = "12345-12345-12345-12345-12345"
+                DisplayName        = "Test Channel"
+                Ensure             = "Present"
+                NewDisplayName = "Test Channel Updated"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-TeamChannel -MockWith { 
+                return @{
+                    GroupID     = "12345-12345-12345-12345-12345"
+                    DisplayName = "Test Channel"
+                }
+            }   
+
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure  | Should be "Present"
+            }
+
+            It "Renames existing channel in the Set method" {
+                Set-TargetResource @testParams
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $true 
+            }
+        }
+
+        Context -Name "Remove existing channel" -Fixture{
+            $testParams = @{
+                GroupID            = "12345-12345-12345-12345-12345"
+                DisplayName        = "Test Channel"
+                Ensure             = "Absent"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Remove-TeamChannel -MockWith {
+                return $null
+            }
+
+            Mock -CommandName Get-TeamChannel -MockWith { 
+                return @{
+                    GroupID     = "12345-12345-12345-12345-12345"
+                    DisplayName = "Test Channel"
+                }
+            }   
+
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure  | Should be "Present"
+            }
+
+            It "Remove channel in the Set method" {
+                Set-TargetResource @testParams
+            }
+
+        }
+
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GroupID            = "12345-12345-12345-12345-12345"

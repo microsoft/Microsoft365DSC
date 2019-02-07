@@ -9198,6 +9198,11 @@ function New-Team{
 
         [Parameter()]
         [string]
+        $Group,
+
+
+        [Parameter()]
+        [string]
         $Alias,
 
         [Parameter()]
@@ -9229,6 +9234,11 @@ function Set-Team{
         [Parameter()]
         [string]
         $Alias,
+
+        
+        [Parameter()]
+        [string]
+        $Visibility,
 
         [Parameter()]
         [string]
@@ -9357,6 +9367,10 @@ function Set-TeamChannel{
         [Parameter()]
         [string]
         $NewDisplayName,
+
+        [Parameter()]
+        [string]
+        $CurrentDisplayName,
 
         [Parameter()]
         [string]

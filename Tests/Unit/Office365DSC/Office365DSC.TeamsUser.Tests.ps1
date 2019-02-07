@@ -86,6 +86,91 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name "The user already exists" -Fixture {
+            $testParams = @{
+                GroupID            = "12345-12345-12345-12345-12345"
+                User               = "JohnSmith@contoso.onmicrosoft.com"
+                Role               = "Owner"
+                Ensure             = "Present"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-TeamUser -MockWith { 
+                return @{
+                    GroupID = "12345-12345-12345-12345-12345"
+                    Role    = "Member"
+                    User    = "JohnSmith@contoso.onmicrosoft.com"
+                }
+            }
+
+            Mock -CommandName Add-TeamUser -MockWith {
+
+            }
+            
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+            }
+            it "Should set role to owner in set method"{
+                Set-TargetResource @testParams 
+            }
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
+            }
+        }
+
+        Context -Name "Failed to get team" -Fixture {
+            $testParams = @{
+                GroupID            = "12345-12345-12345-12345-12345"
+                User               = "JohnSmith@contoso.onmicrosoft.com"
+                Role               = "Owner"
+                Ensure             = "Present"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-TeamUser -MockWith { 
+                return $null
+            }
+
+            
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent" 
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
+            }
+        }
+
+        Context -Name "Remove existing user from team" -Fixture {
+            $testParams = @{
+                GroupID            = "12345-12345-12345-12345-12345"
+                User               = "JohnSmith@contoso.onmicrosoft.com"
+                Role               = "Member"
+                Ensure             = "Absent"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-TeamUser -MockWith { 
+                return @{
+                    GroupID = "12345-12345-12345-12345-12345"
+                    Role    = "Member"
+                    User    = "JohnSmith@contoso.onmicrosoft.com"
+                }
+            }
+
+            Mock -CommandName Remove-TeamUser -MockWith {
+                return $null
+            }
+            
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+            }
+            it "Should remove user from Team in set method"{
+                Set-TargetResource @testParams 
+            }
+
+        }
+
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GroupID            = "12345-12345-12345-12345-12345"
