@@ -3,6 +3,86 @@ function Set-SPOTenant{
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.String]
+        $SharingCapability,
+
+        [Parameter()]
+        [System.boolean]
+        $ShowEveryoneClaim,
+
+        [Parameter()]
+        [System.boolean]
+        $ShowAllUsersClaim,
+
+        [Parameter()]
+        [System.boolean]
+        $ShowEveryoneExceptExternalUsersClaim,
+
+        [Parameter()]
+        [System.boolean]
+        $ProvisionSharedWithEveryoneFolder,
+
+        [Parameter()]
+        [System.boolean]
+        $EnableGuestSignInAcceleration,
+
+        [Parameter()]
+        [System.boolean]
+        $BccExternalSharingInvitations,
+
+        [Parameter()]
+        [System.String]
+        $BccExternalSharingInvitationsList,
+
+        [Parameter()]
+        [System.Uint32]
+        $RequireAnonymousLinksExpireInDays,
+
+        [Parameter()]
+        [System.String]
+        $SharingAllowedDomainList,
+
+        [Parameter()]
+        [System.String]
+        $SharingBlockedDomainList,
+
+        [Parameter()]
+        [System.String]
+        $SharingDomainRestrictionMode,
+
+        [Parameter()]
+        [System.String]
+        $DefaultSharingLinkType,
+
+        [Parameter()]
+        [System.boolean]
+        $PreventExternalUsersFromResharing,
+
+        [Parameter()]
+        [System.boolean]
+        $ShowPeoplePickerSuggestionsForGuestUsers,
+
+        [Parameter()]
+        [System.String]
+        $FileAnonymousLinkType,
+
+        [Parameter()]
+        [System.String]
+        $FolderAnonymousLinkType,
+
+        [Parameter()]
+        [System.boolean]
+        $NotifyOwnersWhenItemsReshared,
+
+        [Parameter()]
+        [System.String]
+        $DefaultLinkPermission,
+
+        [Parameter()]
+        [System.boolean]
+        $RequireAcceptingAccountMatchInvitedAccount,
+
+        [Parameter()]
         [System.UInt32]
         $OneDriveStorageQuota,
 
