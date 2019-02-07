@@ -1,65 +1,4 @@
 ﻿<# EXO - Custom Office365DSC #>
-function Get-Team{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]
-        $DisplayName
-    )
-}
-
-function New-Team{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]
-        $DisplayName,
-
-        [Parameter()]
-        [string]
-        $Description,
-
-        [Parameter()]
-        [string]
-        $Alias,
-
-        [Parameter()]
-        [string]
-        $Owner,
-
-        [Parameter()]
-        [string]
-        $Classification,
-
-        [Parameter()]
-        [string]
-        $AccessType
-     
-    )
-}
-function Set-Team{
-    [CmdletBinding()]
-    param(
-     
-        [Parameter()]
-        [string]
-        $GroupId  
-     
-    )
-}
-
-
-function Remove-Team{
-    [CmdletBinding()]
-    param(
-     
-        [Parameter()]
-        [string]
-        $GroupId  
-     
-    )
-}
-
 function Get-TeamUser{
     [CmdletBinding()]
     param(
@@ -237,6 +176,40 @@ function Set-TeamFunSettings{
         [string]
         $AllowCustomMemes
     )
+}
+
+function Get-Team{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [String]
+        $DisplayName 
+    )
+}
+
+function Set-Team{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [String]
+        $DisplayName 
+    )
+}
+
+function New-Team{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [String]
+        $DisplayName 
+    )
+}
+
+function Get-UnifiedGroup {
+    [CmdletBinding()]
+    param (
+    )
+    
 }
 
 function Set-SPOTenant{

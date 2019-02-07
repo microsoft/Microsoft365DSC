@@ -71,8 +71,6 @@ function Get-TargetResource {
         Write-Verbose -Message "Checking for existance of Team $DisplayName"
                   
         $CurrentParameters = $PSBoundParameters
-        ##Check if team exists first before loading EXO modules
-
         if ($CurrentParameters.ContainsKey("GroupId")) {
             $team = Get-Team |  Where-Object {($_.GroupId -eq $GroupId)}
             if ($null -eq $team) {
@@ -93,7 +91,6 @@ function Get-TargetResource {
         }
         Write-Verbose -Message "Found Team $($team.DisplayName) and groupid of $($team.GroupId)"
 
-        ## Team exists check O365 group for additional info for Set operation skip if new team or delete 
         $allGroups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
             -ScriptBlock {
             Get-UnifiedGroup 

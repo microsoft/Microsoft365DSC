@@ -27,22 +27,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts 
         Context -Name "When the Team doesnt exist" -Fixture {
             $testParams = @{
-                DisplayName        = "Test Team"
-                Alias              = "TestTeam"
-                Description        = "Test team description"
-                AccessType         = "Private"
+                DisplayName        = "TestTeam"
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
-            }
-
-            Mock -CommandName New-Team -MockWith { 
-                return @{DisplayName = $null}
             }
 
             Mock -CommandName Get-Team -MockWith { 
                 return $null
             }
             
+            Mock -CommandName New-Team -MockWith {
+                return @{DisplayName = "TestTeam"}
+            }
+
             It "Should return absent from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Absent" 
             }
@@ -51,39 +48,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-            It "Creates the MS Team in the Set method" {
+            It "Updates the Team fun settings in the Set method" {
                 Set-TargetResource @testParams
             }
         }
 
         Context -Name "The Team already exists" -Fixture {
             $testParams = @{
-                DisplayName        = "Test Team"
-                Description        = "Test team description"
-                Alias              = "TestTeam"
-                AccessType         = "Private"
+                DisplayName        = "TestTeam"
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
+            
             Mock -CommandName Get-Team -MockWith { 
                 return @{
-                    DisplayName = "Test Team"
+                    DisplayName = "TestTeam"
                 }
             }
-            
-            Mock -CommandName Set-Team -MockWith {
-                
+
+            Mock -CommandName Get-UnifiedGroup -MockWith{
+                $null
             }
 
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present" 
             }
-            It "Should set access type to public in set" {
-                Set-TargetResource @testParams 
-            }
+
+
             It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should Be $false
+                Test-TargetResource @testParams | Should Be $true
             }
         }
 
@@ -93,13 +87,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Description        = "Test team description"
                 AccessType         = "Private"
                 Alias              = "TestTeam"
+                Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-Team -MockWith { 
                 return @{
                     DisplayName = "Test Team"
-                    Ensure      = "Present"
                 }
             }
 
