@@ -74,11 +74,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-TeamFunSettings -MockWith { 
                 return @{
                     GroupID = "12345-12345-12345-12345-12345"
-                    AllowGiphy = $true
-                    GiphyContentRating = "Moderate"
-                    AllowStickersAndMemes = $false 
-                    AllowCustomMemes = $false
-                    
+                   
                 }
             }
 
