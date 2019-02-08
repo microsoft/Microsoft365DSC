@@ -53,7 +53,7 @@ function Get-TargetResource
         Get-OrganizationConfig
     }
 
-    if(!$OrgConfig)
+    if (!$OrgConfig)
     {
         Write-Verbose "Can't find the information about the Organization Configuration."
         return $nullReturn
@@ -227,7 +227,7 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Organization,
 
@@ -236,10 +236,12 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    $content = "EXOMailTips " + (New-GUID).ToString() + "`r`n"
-    $content += "{`r`n"
-    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += "}`r`n"
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $content = "        EXOMailTips " + (New-GUID).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += "        }`r`n"
     return $content
 }
 

@@ -33,6 +33,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 StorageQuota = 1000
                 CentralAdminUrl = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
+                Ensure= "Present"
             }
 
             Mock -CommandName New-SPOSite -MockWith { 
@@ -84,8 +85,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 Url = "https://contoso.com/sites/TestSite"
-                Owner = "testuser@contoso.com"
-                StorageQuota = 1000
                 CentralAdminUrl = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }

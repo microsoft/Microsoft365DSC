@@ -1,4 +1,38 @@
-﻿<# EXO - Custom Office365DSC #>
+﻿function Test-PnPOnlineConnection{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $SPOCentralAdminUrl
+    )
+}
+
+function Set-PnPSearchConfiguration{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Scope,
+
+        [Parameter()]
+        [System.String]
+        $Path
+    )
+}
+
+function Get-PnPSearchConfiguration{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Scope
+    )
+}
+
 function Set-SPOTenant{
     [CmdletBinding()]
     param(
@@ -179,7 +213,11 @@ function Remove-Mailbox{
     param(
         [Parameter(Mandatory=$true)]
         [string]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
     )
 }
 
@@ -188,6 +226,34 @@ function Get-OrganizationConfig
     [CmdletBinding()]
     param(
 
+    )
+}
+
+function Get-MailboxRegionalConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Set-MailboxRegionalConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Language,
+
+        [Parameter()]
+        [System.String]
+        $TimeZone
     )
 }
 

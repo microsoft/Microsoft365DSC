@@ -8,7 +8,7 @@ configuration, and monitoring of Office 365 Tenants via PowerShell
 Desired State Configuration. The compiled configuration needs to be
 executed from an agent's Local Configuration Manager (LCM) (machine
 or container) which can communicate back remotely to Office 365 via
-remote API calls (therefore requires internet connectivity).
+remote API calls (therefore requires internet connectivity)
 
 # How to Install
 
@@ -28,11 +28,3 @@ done, run the following line of PowerShell to acquire the latest
 Office365DSC module's alpha release from the PowerShell Gallery:
 
 Install-Module -Name Office365DSC -AllowPrerelease -Force
-
-# Components
-
-The following screen capture show what resource must be used to
-configure the various elements that are available via the Graphical
-User Interface of the Office 365 Administration Center.
-
-![Components](https://github.com/Microsoft/Office365DSC/raw/Dev/Images/Navigation.png)

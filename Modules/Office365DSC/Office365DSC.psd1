@@ -51,9 +51,10 @@ PowerShellVersion = '5.1'
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-RequiredModules = @(@{ModuleName = 'ReverseDSC'; ModuleVersion = '1.9.2.11'; },
+RequiredModules = @(@{ModuleName = 'ReverseDSC'; ModuleVersion = '1.9.2.13'; },
                     @{ModuleName = 'MSOnline'; ModuleVersion = '1.1.183.17'; },
-                    @{ModuleName = 'Microsoft.Online.SharePoint.PowerShell'; ModuleVersion = '16.0.8316.0'; })
+                    @{ModuleName = 'Microsoft.Online.SharePoint.PowerShell'; ModuleVersion = '16.0.8414.0'; },
+                    @{ModuleName = 'SharePointPnPPowerShellOnline'; ModuleVersion = '3.5.1901.0' })
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
@@ -71,13 +72,13 @@ RequiredModules = @(@{ModuleName = 'ReverseDSC'; ModuleVersion = '1.9.2.11'; },
 NestedModules = @('modules\Office365DSCUtil.psm1')
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = 'Test-Office365DSCParameterState', 'Invoke-ExoCommand', 
-               'Get-UsersLicences', 'Test-O365ServiceConnection', 
-               'Test-SPOServiceConnection'
+#FunctionsToExport = @()
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = 'Test-SPOServiceConnection', 'Test-Office365DSCParameterState', 
-               'Test-O365ServiceConnection', 'Invoke-ExoCommand'
+               'Test-O365ServiceConnection', 'Invoke-ExoCommand', 'Export-O365Configuration', 
+               'Get-TimeZoneNameFromID', 'Get-TimeZoneIDFromName', 'Get-LocaleIDFromName',
+               'Get-LocaleNameFromID'
 
 # Variables to export from this module
 # VariablesToExport = @()

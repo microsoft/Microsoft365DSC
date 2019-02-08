@@ -8,11 +8,11 @@ function Get-TargetResource
         [System.String]
         $Url,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Owner,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.UInt32]
         $StorageQuota,
 
@@ -55,9 +55,9 @@ function Get-TargetResource
     )
 
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-    
+
     $nullReturn = @{
-        Url = $null
+        Url = $Url
         Owner = $null
         #TimeZoneId = $null
         LocaleId = $null
@@ -67,13 +67,14 @@ function Get-TargetResource
         CompatibilityLevel = $null
         Title = $null
         Ensure = "Absent"
+        CentralAdminUrl = $CentralAdminUrl
     }
 
     try
     {
         Write-Verbose -Message "Getting site collection $Url"
         $site = Get-SPOSite $Url
-        if(!$site)
+        if ($null -eq $site)
         {
             Write-Verbose "The specified Site Collection doesn't already exist."
             return $nullReturn
@@ -88,6 +89,7 @@ function Get-TargetResource
             StorageQuota = $site.StorageQuota
             CompatibilityLevel = $site.CompatibilityLevel
             Title = $site.Title
+            CentralAdminUrl = $CentralAdminUrl
             Ensure = "Present"
         }
     }
@@ -107,11 +109,11 @@ function Set-TargetResource
         [System.String]
         $Url,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Owner,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.UInt32]
         $StorageQuota,
 
@@ -170,7 +172,7 @@ function Set-TargetResource
             $CurrentParameters = $PSBoundParameters
             $CurrentParameters.Remove("CentralAdminUrl")
             $CurrentParameters.Remove("GlobalAdminAccount")
-
+            $CurrentParameters.Remove("Ensure")
             New-SPOSite @CurrentParameters
         }
     }
@@ -186,11 +188,11 @@ function Test-TargetResource
         [System.String]
         $Url,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Owner,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.UInt32]
         $StorageQuota,
 
@@ -253,26 +255,19 @@ function Export-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Owner,
-
-        [Parameter(Mandatory = $true)]
-        [System.UInt32]
-        $StorageQuota,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
         $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)] 
         [System.Management.Automation.PSCredential] 
         $GlobalAdminAccount
     )
-    Test-SPOServiceConnection -GlobalAdminAccount $GlobalAdminAccount -SPOCentralAdminUrl $CentralAdminUrl
     $result = Get-TargetResource @PSBoundParameters
-    $content = "SPOSite " + (New-GUID).ToString() + "`r`n"
-    $content += "{`r`n"
-    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += "}`r`n"
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $content = "        SPOSite " + (New-GUID).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += "        }`r`n"
     return $content
 }
 
