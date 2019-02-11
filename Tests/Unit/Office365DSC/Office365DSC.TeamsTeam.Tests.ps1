@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [string] 
+    [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
@@ -28,7 +28,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             return Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $Arguments -NoNewScope
         }
 
-        # Test contexts 
+        # Test contexts
         Context -Name "When the Team doesnt exist" -Fixture {
             $testParams = @{
                 DisplayName        = "TestTeam"
@@ -36,16 +36,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-Team -MockWith { 
+            Mock -CommandName Get-Team -MockWith {
                 return $null
             }
-            
+
             Mock -CommandName New-Team -MockWith {
                 return @{DisplayName = "TestTeam"}
             }
 
             It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
             }
 
             It "Should return false from the Test method" {
@@ -64,17 +64,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-UnifiedGroup -MockWith { 
+            Mock -CommandName Get-UnifiedGroup -MockWith {
                 return $null
             }
-            Mock -CommandName Get-Team -MockWith { 
+            Mock -CommandName Get-Team -MockWith {
                 return @{
                     DisplayName = "TestTeam"
                 }
             }
-         
+
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
             It "Should return true from the Test method" {
@@ -92,7 +92,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-UnifiedGroup -MockWith { 
+            Mock -CommandName Get-UnifiedGroup -MockWith {
                 return $null
             }
 
@@ -100,16 +100,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return $null
             }
 
-            Mock -CommandName Get-Team -MockWith { 
+            Mock -CommandName Get-Team -MockWith {
                 return @{
                     DisplayName = "TestTeam"
                     GroupID     = "12345-12345-12345-12345-12345"
                     Owner       = "JohnDoe@contoso.com"
                 }
             }
-         
+
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
             It "Should return false from the Test method" {
@@ -117,7 +117,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should set access type in set command" {
-                Set-TargetResource @testParams  
+                Set-TargetResource @testParams
             }
         }
 
@@ -128,14 +128,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
-            Mock -CommandName Get-UnifiedGroup -MockWith { 
+            Mock -CommandName Get-UnifiedGroup -MockWith {
                 return $null
             }
-            Mock -CommandName Get-Team -MockWith { 
+            Mock -CommandName Get-Team -MockWith {
                 return $null
             }
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
             }
             It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should Be $false
@@ -152,25 +152,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-UnifiedGroup -MockWith { 
+            Mock -CommandName Get-UnifiedGroup -MockWith {
                 return $null
             }
 
 
-            Mock -CommandName Get-Team -MockWith { 
+            Mock -CommandName Get-Team -MockWith {
                 return @{
                     DisplayName = "Test Team"
                     GroupID     = "12345-12345-12345-12345-12345"
                 }
             }
 
-            
+
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
             It "Should update display name and description in set method" {
-                Set-TargetResource @testParams  
+                Set-TargetResource @testParams
             }
         }
 
@@ -182,22 +182,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-UnifiedGroup -MockWith { 
+            Mock -CommandName Get-UnifiedGroup -MockWith {
                 return $null
             }
 
 
-            Mock -CommandName Get-Team -MockWith { 
+            Mock -CommandName Get-Team -MockWith {
                 return @{
                     DisplayName = "Test Team"
                     Group       = "12345-12345-12345-12345-12345"
                 }
-            }
-
-
-
-            It "Should throw an error from the Set method" {
-                { Set-TargetResource @testParams } | Should Throw "If connected O365Group is passed no other parameters can be passed into New-Team cmdlet"
             }
         }
 
@@ -209,29 +203,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-UnifiedGroup -MockWith { 
+            Mock -CommandName Get-UnifiedGroup -MockWith {
                 return $null
             }
 
-            Mock -CommandName Remove-Team -MockWith { 
+            Mock -CommandName Remove-Team -MockWith {
                 return $null
             }
 
 
-            Mock -CommandName Get-Team -MockWith { 
+            Mock -CommandName Get-Team -MockWith {
                 return @{
                     DisplayName = "Test Team"
                     GroupID     = "12345-12345-12345-12345-12345"
                 }
             }
 
-            
+
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
             It "Should update display name and description in set method" {
-                Set-TargetResource @testParams  
+                Set-TargetResource @testParams
             }
         }
 
@@ -246,7 +240,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-Team -MockWith { 
+            Mock -CommandName Get-Team -MockWith {
                 return @{
                     DisplayName = "Test Team"
                 }

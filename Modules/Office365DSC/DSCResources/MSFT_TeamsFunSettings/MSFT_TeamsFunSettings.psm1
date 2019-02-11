@@ -1,4 +1,5 @@
-function Get-TargetResource {
+function Get-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -12,7 +13,7 @@ function Get-TargetResource {
         $AllowGiphy,
 
         [Parameter()]
-        [ValidateSet("Strict", "Moderate")] 
+        [ValidateSet("Strict", "Moderate")]
         [System.String]
         $GiphyContentRating,
 
@@ -24,13 +25,9 @@ function Get-TargetResource {
         [System.String]
         $AllowCustomMemes,
 
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
-        $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -39,40 +36,43 @@ function Get-TargetResource {
     $nullReturn = @{
         GroupID               = $null
         AllowGiphy            = $null
-        GiphyContentRating    = "Strict"
+        GiphyContentRating    = $null
         AllowStickersAndMemes = $null
         AllowCustomMemes      = $null
-        Ensure                = "Absent"
     }
 
-    try {
-        Write-Verbose -Message "Getting Team fun settings for $GroupID"
-        $team = Get-TeamFunSettings -GroupId $GroupID
-        if ($null -eq $team) {
-            Write-Verbose "The specified Team doesn't exist."
-            return $nullReturn
-        }
-        Write-Verbose "Team fun settings for AllowGiphy = $($team.AllowGiphy)"
-        Write-Verbose "Team fun settings for GiphyContentRating = $($team.GiphyContentRating)"
-        Write-Verbose "Team fun settings for AllowStickersAndMemes = $($team.AllowStickersAndMemes)"
-        Write-Verbose "Team fun settings for AllowCustomMemes = $($team.AllowCustomMemes)"
 
-        return @{
-            GroupID               = $team.GroupID
-            AllowGiphy            = $team.AllowGiphy
-            GiphyContentRating    = $team.GiphyContentRating
-            AllowStickersAndMemes = $team.AllowStickersAndMemes
-            AllowCustomMemes      = $team.AllowCustomMemes
-            Ensure                = "Present"
-        }
+    Write-Verbose -Message "Getting Team fun settings for $GroupID"
+
+    $teamExists = Get-TeamByGroupID $GroupID
+    if ($teamExists -eq $false)
+    {
+        throw "Team with groupid of  $GroupID doesnt exist in tenant"
     }
-    catch {
+
+    $team = Get-TeamFunSettings -GroupId $GroupID -ErrorAction SilentlyContinue
+    if ($null -eq $team)
+    {
         Write-Verbose "The specified Team doesn't exist."
         return $nullReturn
     }
+
+    Write-Verbose "Team fun settings for AllowGiphy = $($team.AllowGiphy)"
+    Write-Verbose "Team fun settings for GiphyContentRating = $($team.GiphyContentRating)"
+    Write-Verbose "Team fun settings for AllowStickersAndMemes = $($team.AllowStickersAndMemes)"
+    Write-Verbose "Team fun settings for AllowCustomMemes = $($team.AllowCustomMemes)"
+
+    return @{
+        GroupID               = $team.GroupID
+        AllowGiphy            = $team.AllowGiphy
+        GiphyContentRating    = $team.GiphyContentRating
+        AllowStickersAndMemes = $team.AllowStickersAndMemes
+        AllowCustomMemes      = $team.AllowCustomMemes
+    }
+
 }
 
-function Set-TargetResource {
+function Set-TargetResource{
     [CmdletBinding()]
     param
     (
@@ -85,7 +85,7 @@ function Set-TargetResource {
         $AllowGiphy,
 
         [Parameter()]
-        [ValidateSet("Strict", "Moderate")] 
+        [ValidateSet("Strict", "Moderate")]
         [System.String]
         $GiphyContentRating,
 
@@ -97,13 +97,8 @@ function Set-TargetResource {
         [System.String]
         $AllowCustomMemes,
 
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
-        $Ensure = "Present",
-
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -111,14 +106,12 @@ function Set-TargetResource {
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
-    $CurrentParameters.Remove("Ensure")
-
     Set-TeamFunSettings @CurrentParameters
- 
 
 }
 
-function Test-TargetResource {
+function Test-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
@@ -132,7 +125,7 @@ function Test-TargetResource {
         $AllowGiphy,
 
         [Parameter()]
-        [ValidateSet("Strict", "Moderate")] 
+        [ValidateSet("Strict", "Moderate")]
         [System.String]
         $GiphyContentRating,
 
@@ -144,13 +137,8 @@ function Test-TargetResource {
         [System.String]
         $AllowCustomMemes,
 
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
-        $Ensure = "Present",
-
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -165,7 +153,8 @@ function Test-TargetResource {
     )
 }
 
-function Export-TargetResource {
+function Export-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.String])]
     param
@@ -179,7 +168,7 @@ function Export-TargetResource {
         $AllowGiphy,
 
         [Parameter()]
-        [ValidateSet("Strict", "Moderate")] 
+        [ValidateSet("Strict", "Moderate")]
         [System.String]
         $GiphyContentRating,
 
@@ -191,16 +180,11 @@ function Export-TargetResource {
         [System.String]
         $AllowCustomMemes,
 
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
-        $Ensure = "Present",
-
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount  
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     $content = "TeamFunSettings " + (New-GUID).ToString() + "`r`n"
     $content += "{`r`n"

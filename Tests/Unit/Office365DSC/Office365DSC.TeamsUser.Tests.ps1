@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [string] 
+    [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Test-TeamsServiceConnection -MockWith {
         }
 
-        # Test contexts 
+        # Test contexts
         Context -Name "When the Team user doesnt exist" -Fixture {
             $testParams = @{
                 GroupID            = "12345-12345-12345-12345-12345"
@@ -33,16 +33,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Add-TeamUser -MockWith { 
+
+            Mock -CommandName Get-TeamByGroupID -MockWith {
                 return @{User = $null}
             }
 
-            Mock -CommandName Get-TeamUser -MockWith { 
+            Mock -CommandName Add-TeamUser -MockWith {
+                return @{User = $null}
+            }
+
+            Mock -CommandName Get-TeamUser -MockWith {
                 return $null
             }
 
             It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
             }
 
             It "Should return false from the Test method" {
@@ -63,7 +68,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-TeamUser -MockWith { 
+            Mock -CommandName Get-TeamUser -MockWith {
                 return @{
                     GroupID = "12345-12345-12345-12345-12345"
                     Role    = "Member"
@@ -71,15 +76,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Get-TeamByGroupID -MockWith {
+                return @{GroupID = "12345-12345-12345-12345-12345"}
+            }
+
             Mock -CommandName Add-TeamUser -MockWith {
 
             }
-            
+
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
-            it "Should set role to owner in set method"{
-                Set-TargetResource @testParams 
+            it "Should set role to owner in set method" {
+                Set-TargetResource @testParams
             }
             It "Should return true from the Test method" {
                 Test-TargetResource @testParams | Should Be $false
@@ -95,7 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-TeamUser -MockWith { 
+            Mock -CommandName Get-TeamUser -MockWith {
                 return @{
                     GroupID = "12345-12345-12345-12345-12345"
                     Role    = "Member"
@@ -103,15 +112,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Get-TeamByGroupID -MockWith {
+                return @{GroupID = "12345-12345-12345-12345-12345"}
+            }
+
             Mock -CommandName Add-TeamUser -MockWith {
 
             }
-            
+
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
-            it "Should set role to owner in set method"{
-                Set-TargetResource @testParams 
+            it "Should set role to owner in set method" {
+                Set-TargetResource @testParams
             }
             It "Should return true from the Test method" {
                 Test-TargetResource @testParams | Should Be $false
@@ -127,13 +140,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-TeamUser -MockWith { 
+            Mock -CommandName Get-TeamByGroupID -MockWith {
                 return $null
             }
 
-            
+            Mock -CommandName Get-TeamUser -MockWith {
+                return $null
+            }
+
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
             }
 
             It "Should return true from the Test method" {
@@ -150,7 +166,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-TeamUser -MockWith { 
+            Mock -CommandName Get-TeamUser -MockWith {
                 return @{
                     GroupID = "12345-12345-12345-12345-12345"
                     Role    = "Member"
@@ -158,15 +174,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Get-TeamByGroupID -MockWith {
+                return @{GroupID = "12345-12345-12345-12345-12345"}
+            }
+
             Mock -CommandName Remove-TeamUser -MockWith {
                 return $null
             }
-            
+
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
-            it "Should remove user from Team in set method"{
-                Set-TargetResource @testParams 
+            it "Should remove user from Team in set method" {
+                Set-TargetResource @testParams
             }
 
         }
@@ -179,7 +199,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-TeamUser -MockWith { 
+            Mock -CommandName Get-TeamByGroupID -MockWith {
+                return @{GroupID = "12345-12345-12345-12345-12345"}
+            }
+
+            Mock -CommandName Get-TeamUser -MockWith {
                 return @{
                     User = "JohnSmith@contoso.onmicrosoft.com"
                 }

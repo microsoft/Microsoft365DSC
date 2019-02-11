@@ -1,18 +1,18 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [string] 
+    [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\Stubs\Office365.psm1" `
-                                         -Resolve)
+            -ChildPath "..\Stubs\Office365.psm1" `
+            -Resolve)
 )
 
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\UnitTestHelper.psm1" `
-                                -Resolve)
+        -ChildPath "..\UnitTestHelper.psm1" `
+        -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                                -DscResource "TeamsFunSettings"
+    -DscResource "TeamsFunSettings"
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -24,32 +24,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Test-TeamsServiceConnection -MockWith {
         }
 
-        # Test contexts 
+        # Test contexts
         Context -Name "Check Team Fun settings" -Fixture {
             $testParams = @{
-                GroupID = "12345-12345-12345-12345-12345"
-                AllowGiphy = $true
-                GiphyContentRating = "Moderate"
-                AllowStickersAndMemes = $true 
-                AllowCustomMemes = $true
-                GlobalAdminAccount = $GlobalAdminAccount
+                GroupID               = "12345-12345-12345-12345-12345"
+                AllowGiphy            = $true
+                GiphyContentRating    = "Moderate"
+                AllowStickersAndMemes = $true
+                AllowCustomMemes      = $true
+                GlobalAdminAccount    = $GlobalAdminAccount
             }
 
-            Mock -CommandName Set-TeamFunSettings -MockWith { 
-                return @{AllowGiphy = $null
-                        GilphyContentRating = $null
-                        AllowStickersAndMemes = $null
-                        AllowCustomMemes = $null
-                    }
+            Mock -CommandName Set-TeamFunSettings -MockWith {
+                return @{AllowGiphy       = $null
+                    GilphyContentRating   = $null
+                    AllowStickersAndMemes = $null
+                    AllowCustomMemes      = $null
+                }
             }
 
-            Mock -CommandName Get-TeamFunSettings -MockWith { 
+            Mock -CommandName Get-TeamByGroupID -MockWith {
+                return @{GroupID = "12345-12345-12345-12345-12345"}
+            }
+
+            Mock -CommandName Get-TeamFunSettings -MockWith {
                 return $null
             }
 
-            It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent" 
-            }
 
             It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should Be $false
@@ -62,54 +63,61 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Set Team Fun settings" -Fixture {
             $testParams = @{
-                GroupID = "12345-12345-12345-12345-12345"
-                AllowGiphy = $true
-                GiphyContentRating = "Moderate"
-                AllowStickersAndMemes = $true 
-                AllowCustomMemes = $true
-                Ensure = "Present"
-                GlobalAdminAccount = $GlobalAdminAccount
+                GroupID               = "12345-12345-12345-12345-12345"
+                AllowGiphy            = $true
+                GiphyContentRating    = "Moderate"
+                AllowStickersAndMemes = $true
+                AllowCustomMemes      = $true
+                GlobalAdminAccount    = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-TeamFunSettings -MockWith { 
+            Mock -CommandName Get-TeamByGroupID -MockWith {
+                return @{GroupID = "12345-12345-12345-12345-12345"}
+            }
+
+            Mock -CommandName Get-TeamFunSettings -MockWith {
                 return @{
                     GroupID = "12345-12345-12345-12345-12345"
-                   
+
                 }
             }
 
-            Mock -CommandName Set-TeamFunSettings -MockWith{
+
+            Mock -CommandName Set-TeamFunSettings -MockWith {
 
             }
-            It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
-            }
+
             It "Should allowCustomerMemes and AllowStickersMeme in set method" {
-                Set-TargetResource @testParams 
+                Set-TargetResource @testParams
             }
             It "Should return true from the Test method" {
                 Test-TargetResource @testParams  | Should be $false
             }
-         
+
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                GroupID = "12345-12345-12345-12345-12345"
-                AllowGiphy = $true
-                GiphyContentRating = "Moderate"
-                AllowStickersAndMemes = $true 
-                AllowCustomMemes = $true
-                GlobalAdminAccount = $GlobalAdminAccount
+                GroupID               = "12345-12345-12345-12345-12345"
+                AllowGiphy            = $true
+                GiphyContentRating    = "Moderate"
+                AllowStickersAndMemes = $true
+                AllowCustomMemes      = $true
+                GlobalAdminAccount    = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-TeamFunSettings -MockWith { 
+
+            Mock -CommandName Get-TeamByGroupID -MockWith {
+                return @{GroupID = "12345-12345-12345-12345-12345"}
+            }
+
+            Mock -CommandName Get-TeamFunSettings -MockWith {
                 return @{
-                    GroupID = "12345-12345-12345-12345-12345"
-                    AllowGiphy = $true
-                    GiphyContentRating = "Moderate"
-                    AllowStickersAndMemes = $true 
-                    AllowCustomMemes = $true
+                    GroupID               = "12345-12345-12345-12345-12345"
+                    AllowGiphy            = $true
+                    GiphyContentRating    = "Moderate"
+                    AllowStickersAndMemes = $true
+                    AllowCustomMemes      = $true
                 }
             }
 

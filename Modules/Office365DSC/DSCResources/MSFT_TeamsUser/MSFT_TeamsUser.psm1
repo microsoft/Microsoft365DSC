@@ -1,4 +1,5 @@
-function Get-TargetResource {
+function Get-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -13,57 +14,64 @@ function Get-TargetResource {
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Member", "Owner")] 
+        [ValidateSet("Member", "Owner")]
         $Role,
-              
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount  
-    
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+
     $nullReturn = @{
-        User   = $User
-        Role   = $Role
-        Ensure = "Absent"
+        User    = $User
+        Role    = $Role
+        GroupId = $null
+        Ensure  = "Absent"
     }
 
-    try {
-        Write-Verbose -Message "Checking for existance of Team User $User"
 
-        if ($Role) {
-            $allMembers = Get-TeamUser -GroupId $GroupID -Role $Role
-        }
-        else {
-            $allMembers = Get-TeamUser -GroupId $GroupID
-        }
-
-        if ($allMembers -eq $null) {
-            Write-Verbose "Failed to get Team's users groupId $GroupID"
-            return $nullReturn
-        }
-
-        $myUser = $allMembers | Where-Object {$_.User -eq $User}
-        Write-Verbose -Message "Found team user $($myUser.User) with role:$($myUser.Role)"
-        return @{
-            User   = $myUser.User
-            Role   = $myUser.Role 
-            Ensure = "Present"
-        }
+    Write-Verbose -Message "Checking for existance of Team User $User"
+    $teamExists = Get-TeamByGroupID $GroupID
+    if ($teamExists -eq $false)
+    {
+        throw "Team with groupid of  $GroupID doesnt exist in tenant"
     }
-    catch {
-        Write-Verbose "Failed to get Teams from the tenant."
+
+    if ($Role)
+    {
+        $allMembers = Get-TeamUser -GroupId $GroupID -Role $Role -ErrorAction SilentlyContinue
+    }
+    else
+    {
+        $allMembers = Get-TeamUser -GroupId $GroupID -ErrorAction SilentlyContinue
+    }
+
+    if ($null -eq $allMembers)
+    {
+        Write-Verbose "Failed to get Team's users groupId $GroupID"
         return $nullReturn
     }
+
+    $myUser = $allMembers | Where-Object {$_.User -eq $User}
+    Write-Verbose -Message "Found team user $($myUser.User) with role:$($myUser.Role)"
+    return @{
+        User    = $myUser.User
+        Role    = $myUser.Role
+        GroupId = $GroupID
+        Ensure  = "Present"
+    }
+
 }
 
-function Set-TargetResource {
+function Set-TargetResource
+{
     [CmdletBinding()]
     param
     (
@@ -77,16 +85,16 @@ function Set-TargetResource {
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Member", "Owner")] 
+        [ValidateSet("Member", "Owner")]
         $Role,
-              
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -95,13 +103,16 @@ function Set-TargetResource {
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
- 
-    if ($Ensure -eq "Present") {
+
+    if ($Ensure -eq "Present")
+    {
         Write-Verbose -Message "Adding team user $User with role:$Role"
-        Add-TeamUser @CurrentParameters 
+        Add-TeamUser @CurrentParameters
     }
-    else {
-        if ($Role -eq "Member" -and $CurrentParameters.ContainsKey("Role")) {
+    else
+    {
+        if ($Role -eq "Member" -and $CurrentParameters.ContainsKey("Role"))
+        {
             $CurrentParameters.Remove("Role")
             Write-Verbose -Message "Removed role parameter"
         }
@@ -110,7 +121,8 @@ function Set-TargetResource {
     }
 }
 
-function Test-TargetResource {
+function Test-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
@@ -125,16 +137,16 @@ function Test-TargetResource {
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Member", "Owner")] 
+        [ValidateSet("Member", "Owner")]
         $Role,
-              
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -146,9 +158,10 @@ function Test-TargetResource {
             "User", `
             "Role"
     )
-}           
+}
 
-function Export-TargetResource {
+function Export-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.String])]
     param
@@ -163,19 +176,19 @@ function Export-TargetResource {
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Member", "Owner")] 
+        [ValidateSet("Member", "Owner")]
         $Role,
-              
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount 
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     $content = "TeamsUser " + (New-GUID).ToString() + "`r`n"
     $content += "{`r`n"

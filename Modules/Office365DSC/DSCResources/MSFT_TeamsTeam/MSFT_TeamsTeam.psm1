@@ -1,4 +1,5 @@
-function Get-TargetResource {
+function Get-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -15,7 +16,7 @@ function Get-TargetResource {
         [Parameter()]
         [System.String]
         $GroupId,
-        
+
         [Parameter()]
         [System.String]
         [ValidateLength(1, 1024)]
@@ -35,26 +36,27 @@ function Get-TargetResource {
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private")] 
+        [ValidateSet("Public", "Private")]
         $AccessType,
-        
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     $CurrentParameters = $PSBoundParameters
-    if ($CurrentParameters.ContainsKey("Group") -and $CurrentParameters.Count -gt 1) {
-        throw "If connected O365Group is passed no other parameters can be passed into New-Team cmdlet"
+    if ($CurrentParameters.ContainsKey("Group"))
+    {
+        Write-Verbose -Message "When Group is passed all other parameters will be ignored."
     }
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount  
-    
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+
     $nullReturn = @{
         DisplayName    = $DisplayName
         Group          = $null
@@ -62,69 +64,72 @@ function Get-TargetResource {
         Description    = $Description
         Owner          = $Owner
         Classification = $null
-        Alias          = $Alias   
+        Alias          = $Alias
         AccessType     = $AccessType
         Ensure         = "Absent"
     }
 
-    try {
-        Write-Verbose -Message "Checking for existance of Team $DisplayName"
-                  
-        $CurrentParameters = $PSBoundParameters
-        if ($CurrentParameters.ContainsKey("GroupId")) {
-            $team = Get-Team |  Where-Object {($_.GroupId -eq $GroupId)}
-            if ($null -eq $team) {
-                Write-Verbose "Failed to get Teams with GroupId $($GroupId)"
-                return $nullReturn
-            }
 
-        }
-        else {
-            $team = Get-Team |  Where-Object {($_.DisplayName -eq $DisplayName)}
-            if ($null -eq $team) {
-                Write-Verbose "Failed to get Teams with displayname $DisplayName"
-                return $nullReturn
-            }
-            if ($team.Count -gt 1) {
-                throw "Duplicate Teams name $DisplayName exist in tenant"
-            }
-        }
-        Write-Verbose -Message "Found Team $($team.DisplayName) and groupid of $($team.GroupId)"
+    Write-Verbose -Message "Checking for existance of Team $DisplayName"
 
-        $allGroups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-            -ScriptBlock {
-            Get-UnifiedGroup 
+    $CurrentParameters = $PSBoundParameters
+    if ($CurrentParameters.ContainsKey("GroupId"))
+    {
+        $team = Get-Team  |  Where-Object {($_.GroupId -eq $GroupId)}
+        if ($null -eq $team)
+        {
+            Write-Verbose "Failed to get Teams with GroupId $($GroupId)"
+            return $nullReturn
         }
 
-        if ($CurrentParameters.ContainsKey("GroupId")) {
-            $teamGroup = $allGroups | Where-Object {$_.ExternalDirectoryObjectId -eq $GroupId}
-        }  ##### Else using display name for lookup for set operation
-        else {
-            $teamGroup = $allGroups | Where-Object {$_.DisplayName -eq $DisplayName}
+    }
+    else
+    {
+        $team = Get-Team |  Where-Object {($_.DisplayName -eq $DisplayName)}
+        if ($null -eq $team)
+        {
+            Write-Verbose "Failed to get Teams with displayname $DisplayName"
+            return $nullReturn
         }
-                
-        Write-Verbose -Message "Found O365 group $teamGroup"
-        Write-Verbose -Message "Alias = $($teamGroup.Alias) and team accesstype = $($teamGroup.AccessType)"
-
-        return @{
-            DisplayName    = $team.DisplayName
-            Group          = $null
-            GroupId        = $team.GroupId
-            Description    = $team.Description
-            Owner          = $null
-            Classification = $null
-            Alias          = $teamGroup.Alias 
-            AccessType     = $teamGroup.AccessType
-            Ensure         = "Present"
+        if ($team.Count -gt 1)
+        {
+            throw "Duplicate Teams name $DisplayName exist in tenant"
         }
     }
-    catch {
-        Write-Verbose "Failed to get Teams from the tenant."
-        return $nullReturn
+    Write-Verbose -Message "Found Team $($team.DisplayName) and groupid of $($team.GroupId)"
+
+    $allGroups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+        -ScriptBlock {
+        Get-UnifiedGroup
+    }
+
+    if ($CurrentParameters.ContainsKey("GroupId"))
+    {
+        $teamGroup = $allGroups | Where-Object {$_.ExternalDirectoryObjectId -eq $GroupId}
+    }  ##### Else using display name for lookup for set operation
+    else
+    {
+        $teamGroup = $allGroups | Where-Object {$_.DisplayName -eq $DisplayName}
+    }
+
+    Write-Verbose -Message "Found O365 group $teamGroup"
+    Write-Verbose -Message "Alias = $($teamGroup.Alias) and team accesstype = $($teamGroup.AccessType)"
+
+    return @{
+        DisplayName    = $team.DisplayName
+        Group          = $null
+        GroupId        = $team.GroupId
+        Description    = $team.Description
+        Owner          = $null
+        Classification = $null
+        Alias          = $teamGroup.Alias
+        AccessType     = $teamGroup.AccessType
+        Ensure         = "Present"
     }
 }
 
-function Set-TargetResource {
+function Set-TargetResource
+{
     [CmdletBinding()]
     param
     (
@@ -160,58 +165,79 @@ function Set-TargetResource {
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private")] 
+        [ValidateSet("Public", "Private")]
         $AccessType,
-       
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount  
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose  -Message "Entering Set-TargetResource"
     Write-Verbose  -Message "Retrieving information about team $($DisplayName) to see if it already exists"
     $team = Get-TargetResource @PSBoundParameters
-    
+
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
-    
-    if ($Ensure -eq "Present") {
-        if ($team.GroupId) {
-            if ($CurrentParameters.ContainsKey("Owner")) {
+
+    if ($Ensure -eq "Present")
+    {
+        if ($team.GroupId)
+        {
+            ## Can't pass Owner parm into set opertaion and accesstype is called visibility on set 
+            if ($CurrentParameters.ContainsKey("Owner"))
+            {
                 $CurrentParameters.Remove("Owner")
             }
-            if ($CurrentParameters.ContainsKey("AccessType")) {
+            if ($CurrentParameters.ContainsKey("AccessType"))
+            {
                 $CurrentParameters.Remove("AccessType")
                 $CurrentParameters.Add("Visibility", $AccessType)
             }
-            Set-Team @CurrentParameters 
+            Set-Team @CurrentParameters
             Write-Verbose -Message "Updating team group id $($GroupId)"
         }
-        else {
-            if ($CurrentParameters.ContainsKey("GroupId")) {
+        else
+        {
+            ## Remove GroupId for New-Team cmdlet creation
+            if ($CurrentParameters.ContainsKey("GroupId"))
+            {
                 $CurrentParameters.Remove("GroupId")
             }
-            Write-Verbose -Message "Creating team $DisplayName"
-            New-Team @CurrentParameters
+            #IF Group passed as parameter the New_team cmdlet only accepts this parameter
+            if ($CurrentParameters.ContainsKey("Group"))
+            {
+                Write-Verbose -Message "Discarding all parameters since group $Group was passed to resources"
+                New-Team  -Group $Group
+            }
+            #Create new team with parameters
+            else
+            {
+                Write-Verbose -Message "Creating team $DisplayName"
+                New-Team @CurrentParameters
+            }
         }
     }
-    else {
-        if ($team.GroupId) {
-            Write-Verbose -Message "Removing team $DisplayName"   
+    else
+    {
+        if ($team.GroupId)
+        {
+            Write-Verbose -Message "Removing team $DisplayName"
             Remove-team -GroupId $team.GroupId
-        }   
+        }
     }
 
 }
 
-function Test-TargetResource {
+function Test-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
@@ -249,16 +275,16 @@ function Test-TargetResource {
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private")] 
+        [ValidateSet("Public", "Private")]
         $AccessType,
-       
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -270,11 +296,13 @@ function Test-TargetResource {
             "Description", `
             "Alias", `
             "AccessType", `
+            "Classification", `
             "Ensure"
     )
-}           
+}
 
-function Export-TargetResource {
+function Export-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.String])]
     param
@@ -311,17 +339,17 @@ function Export-TargetResource {
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Public", "Private")] 
+        [ValidateSet("Public", "Private")]
         $AccessType,
 
 
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount

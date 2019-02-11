@@ -22,19 +22,19 @@ function Get-TargetResource
         [System.String]
         [ValidateLength(1, 1024)]
         $Description,
-        
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount   
-    
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+
     $nullReturn = @{
         GroupID        = $GroupID
         DisplayName    = $DisplayName
@@ -43,29 +43,39 @@ function Get-TargetResource
         Ensure         = "Absent"
     }
 
-    try
-    {
-        Write-Verbose -Message "Checking for existance of team channels "
-        $channel = Get-TeamChannel -GroupId $GroupID | Where-Object {($_.DisplayName -eq $DisplayName)}
-        if ($null -eq $channel) 
-        {
-            Write-Verbose "Failed to get team channels with ID $GroupId and display name of $DisplayName"
-            return $nullReturn
-        }
 
-        return @{
-            DisplayName    = $channel.DisplayName
-            GroupID        = $GroupID 
-            Description    = $channel.Description
-            NewDisplayName = $NewDisplayName 
-            Ensure         = "Present"
-        }
-    }
-    catch
+    Write-Verbose -Message "Checking for existance of team channels"
+    $CurrentParameters = $PSBoundParameters
+
+    $teamExists = Get-TeamByGroupID $GroupID
+    if ($teamExists -eq $false)
     {
-        Write-Verbose -Message "Failed to get Teams from the tenant."
+        throw "Team with groupid of  $GroupID doesnt exist in tenant"
+    }
+
+    $channel = Get-TeamChannel -GroupId $GroupID -ErrorAction SilentlyContinue | Where-Object {($_.DisplayName -eq $DisplayName)}
+
+    #Current channel doesnt exist and trying to rename throw an error
+    if (($null -eq $channel) -and $CurrentParameters.ContainsKey("NewDisplayName"))
+    {
+        Write-Verbose "Cannot rename channel $DisplayName , doesnt exist in current Team"
+        throw "Channel named $DisplayName doesnt exist in current Team"
+    }
+
+    if ($null -eq $channel)
+    {
+        Write-Verbose "Failed to get team channels with ID $GroupId and display name of $DisplayName"
         return $nullReturn
     }
+
+    return @{
+        DisplayName    = $channel.DisplayName
+        GroupID        = $GroupID
+        Description    = $channel.Description
+        NewDisplayName = $NewDisplayName
+        Ensure         = "Present"
+    }
+
 }
 
 function Set-TargetResource
@@ -91,14 +101,14 @@ function Set-TargetResource
         [System.String]
         [ValidateLength(1, 1024)]
         $Description,
-       
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -115,37 +125,37 @@ function Set-TargetResource
 
     if ($Ensure -eq "Present")
     {
-           # Remap attribute from DisplayName to current display name for Set-TeamChannel cmdlet
+        # Remap attribute from DisplayName to current display name for Set-TeamChannel cmdlet
         if ($channel.Ensure -eq "Present")
         {
-            if ($CurrentParameters.ContainsKey("NewDisplayName")) 
+            if ($CurrentParameters.ContainsKey("NewDisplayName"))
             {
                 $CurrentParameters.Add("CurrentDisplayName", $DisplayName)
-                $CurrentParameters.Remove("DisplayName")  
-                Write-Verbose -Message "Updating team channel to new channel name $NewDisplayName"   
+                $CurrentParameters.Remove("DisplayName")
+                Write-Verbose -Message "Updating team channel to new channel name $NewDisplayName"
                 Set-TeamChannel @CurrentParameters
             }
-        }   
+        }
         else
         {
             if ($CurrentParameters.ContainsKey("NewDisplayName"))
             {
                 $CurrentParameters.Remove("NewDisplayName")
             }
-            Write-Verbose -Message "Creating team channel  $DislayName" 
-            New-TeamChannel @CurrentParameters   
+            Write-Verbose -Message "Creating team channel  $DislayName"
+            New-TeamChannel @CurrentParameters
         }
     }
     else
     {
         if ($channel.DisplayName)
         {
-            Write-Verbose -Message "Removing team channel $DislayName" 
+            Write-Verbose -Message "Removing team channel $DislayName"
             Remove-TeamChannel -GroupId $GroupID -DisplayName $DisplayName
         }
     }
 }
-   
+
 function Test-TargetResource
 {
     [CmdletBinding()]
@@ -170,14 +180,14 @@ function Test-TargetResource
         [System.String]
         [ValidateLength(1, 1024)]
         $Description,
-       
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -190,7 +200,7 @@ function Test-TargetResource
             "NewDisplayName", `
             "Description"
     )
-}           
+}
 
 function Export-TargetResource
 {
@@ -217,13 +227,13 @@ function Export-TargetResource
         [ValidateLength(1, 1024)]
         $Description,
 
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
