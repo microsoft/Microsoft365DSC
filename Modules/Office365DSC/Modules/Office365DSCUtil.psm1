@@ -890,6 +890,26 @@ function Get-TimeZoneIDFromName
     return $TimezoneObject.ID
 }
 
+function Get-TeamByGroupID
+{
+    [CmdletBinding()]
+    [OutputType([Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $GroupId
+    )
+
+    $team = Get-Team  |  Where-Object {($_.GroupId -eq $GroupId)}
+    if ($null -eq $team)
+    {
+        return $false
+    }
+    return $true
+}
+
+
 function Test-SPOServiceConnection
 {
     [CmdletBinding()]
@@ -900,8 +920,8 @@ function Test-SPOServiceConnection
         [System.String]
         $SPOCentralAdminUrl,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Write-Verbose "Verifying the LCM connection state to SharePoint Online"
@@ -918,8 +938,8 @@ function Test-PnPOnlineConnection
         [System.String]
         $SPOCentralAdminUrl,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Write-Verbose "Verifying the LCM connection state to SharePoint Online with PnP"
@@ -932,10 +952,10 @@ function Test-O365ServiceConnection
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
-    )    
+    )
     Write-Verbose "Verifying the LCM connection state to Microsoft Azure Active Directory Services"
     Connect-AzureAD -Credential $GlobalAdminAccount
 }
@@ -944,10 +964,10 @@ function Test-TeamsServiceConnection {
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
-    )    
+    )
     Write-Verbose "Verifying the LCM connection state to Teams"
     Connect-MicrosoftTeams -Credential $GlobalAdminAccount | Out-Null
 }
@@ -960,11 +980,11 @@ function Invoke-ExoCommand
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
-    
+
         [Parameter()]
         [Object[]]
         $Arguments,
-    
+
         [Parameter(Mandatory = $true)]
         [ScriptBlock]
         $ScriptBlock
@@ -1034,7 +1054,7 @@ function Invoke-ExoCommand
         $Global:ExoPSSessionConnected = $true
         $result = Invoke-Command @invokeArgs -Verbose
     }
-    
+
     return $result
 }
 
@@ -1206,8 +1226,8 @@ function Get-UsersLicences {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param(
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
@@ -1227,8 +1247,8 @@ function Export-O365Configuration
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param(
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     #$VerbosePreference = 'Continue'
