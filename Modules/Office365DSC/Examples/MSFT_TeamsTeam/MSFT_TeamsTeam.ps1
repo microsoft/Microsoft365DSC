@@ -6,7 +6,7 @@ It is not meant to use as a production baseline.
 Configuration Teams
 {
     Import-DSCResource -ModuleName Office365DSC
-    $credsGlobalAdmin = Get-Credential -UserName "derek@smaystate.onmicrosoft.com" -Message "Global Admin"
+    $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
 
@@ -22,49 +22,7 @@ Configuration Teams
         }
 
 
-        TeamsTeam MyTeam
-        {
-            #GroupId = "74424c8f-c776-4a28-9d91-52f884313a18"
-            DisplayName = "Testing Team"
-            Description = "something here"
-            Owner = "jdoe@dsazure.com"
-            Alias = "jdtestteam"
-            GlobalAdminAccount = $credsGlobalAdmin
-            Ensure = "Absent"
-        }
-        
-
-        <#
-        TeamsUser MyTeam {
-            GroupID            = "f51a3df3-14af-4f52-b22b-30be60ca3fc4"
-            User               = "jdoe@dsazure.com"
-            Role               = "Owner"
-            Ensure             = "Absent"
-            GlobalAdminAccount = $credsGlobalAdmin
-        }
-        #>
-        <#
-        TeamsFunSettings MyTeamFunSettings
-        {
-            GroupID = "f2d2365d-5e77-49c0-99fa-7c468cce021a"
-            AllowGiphy = $true
-            GiphyContentRating = "Moderate"
-            AllowStickersAndMemes = $true
-            AllowCustomMemes = $true
-            GlobalAdminAccount = $credsGlobalAdmin
-        }
-        #>
-        <#
-        TeamsChannel MyChannel
-        {
-            GroupID = "f2d2365d-5e77-49c0-99fa-7c468cce021a"
-            DisplayName = "SP2013 Review teams group"
-            #NewDisplayName = "SP2013 Review teams group"
-            Description = "SP2013 Code reviews for SPFX"
-            Ensure = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
-        }
-        #>
+       
     }
 }
 
