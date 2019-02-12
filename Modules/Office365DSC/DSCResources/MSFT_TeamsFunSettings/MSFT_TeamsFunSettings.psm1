@@ -63,7 +63,7 @@ function Get-TargetResource
     Write-Verbose "Team fun settings for AllowCustomMemes = $($team.AllowCustomMemes)"
 
     return @{
-        GroupID               = $team.GroupID
+        GroupID               = $GroupID
         AllowGiphy            = $team.AllowGiphy
         GiphyContentRating    = $team.GiphyContentRating
         AllowStickersAndMemes = $team.AllowStickersAndMemes
@@ -144,13 +144,14 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing Team fun settings for  $GroupID"
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
+
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("AllowGiphy", `
-            "GiphyContentRating", `
-            "AllowStickersAndMemes", `
-            "AllowCustomMemes"
-    )
+        -ValuesToCheck @("GiphyContentRating", `
+                        "AllowGiphy", `
+                        "AllowStickersAndMemes",`
+                        "AllowCustomMemes")
 }
 
 function Export-TargetResource
