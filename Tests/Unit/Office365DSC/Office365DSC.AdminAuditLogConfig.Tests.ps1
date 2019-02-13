@@ -28,6 +28,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "Set-TargetResource When the Unified Audit Log Ingestion is Disabled" -Fixture {
             $testParams = @{
+                IsSingleInstance                = 'Yes'
                 UnifiedAuditLogIngestionEnabled = 'Enabled'
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -51,6 +52,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Set-TargetResource When the Unified Audit Log Ingestion is Enabled" -Fixture {
             $testParams = @{
+                IsSingleInstance                = 'Yes'
                 UnifiedAuditLogIngestionEnabled = 'Disabled'
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -75,6 +77,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Test Passes When the Unified Audit Log Ingestion is Disabled" -Fixture {
             $testParams = @{
+                IsSingleInstance                = 'Yes'
                 UnifiedAuditLogIngestionEnabled = 'Disabled'
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -95,6 +98,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Test Passes When the Unified Audit Log Ingestion is Enabled" -Fixture {
             $testParams = @{
+                IsSingleInstance                = 'Yes'
                 UnifiedAuditLogIngestionEnabled = 'Enabled'
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -115,6 +119,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
+                IsSingleInstance                = 'Yes'
                 UnifiedAuditLogIngestionEnabled = 'Enabled'
                 GlobalAdminAccount = $GlobalAdminAccount
             }
