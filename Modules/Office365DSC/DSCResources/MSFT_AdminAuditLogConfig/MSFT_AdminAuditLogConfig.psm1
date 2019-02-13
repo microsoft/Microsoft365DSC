@@ -27,8 +27,15 @@ function Get-TargetResource
     {
         Write-Verbose -Message 'Getting AdminAuditLogConfig'
         $GetResults = Get-AdminAuditLogConfig
+        if ($GetResults.UnifiedAuditLogIngestionEnabled) {
+            $UnifiedAuditLogIngestionEnabledReturnValue = 'Enabled'
+        }
+        else {
+            $UnifiedAuditLogIngestionEnabledReturnValue = 'Disabled'
+        }
+
         return @{
-            UnifiedAuditLogIngestionEnabled = $GetResults.UnifiedAuditLogIngestionEnabled
+            UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
         }
     }
     catch
