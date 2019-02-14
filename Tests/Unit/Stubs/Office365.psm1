@@ -14,6 +14,13 @@ function Get-AdminAuditLogConfig{
     )
 }
 
+function Set-AdminAuditLogConfig{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+
 function Test-PnPOnlineConnection{
     [CmdletBinding()]
     param(
