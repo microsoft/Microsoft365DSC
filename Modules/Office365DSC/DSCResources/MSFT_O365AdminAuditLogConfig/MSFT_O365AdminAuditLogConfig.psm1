@@ -10,17 +10,29 @@ function Get-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
+        [ValidateSet("Present")]
+        [string]$Ensure = "Present",
+
+        [Parameter(Mandatory = $true)]
         [ValidateSet('Enabled', 'Disabled')]
         [System.String]
-        $UnifiedAuditLogIngestionEnabled = 'Disabled',
+        $UnifiedAuditLogIngestionEnabled,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    if ('Absent' -eq $Ensure)
+    {
+        throw "This resource cannot accept a parameter named Ensure with value Absent."
+    }
+
     Test-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
+        IsSingleInstance                = $IsSingleInstance
+        Ensure                          = 'Present'
+        GlobalAdminAccount              = $GlobalAdminAccount
         UnifiedAuditLogIngestionEnabled = 'Disabled'
     }
 
@@ -38,6 +50,9 @@ function Get-TargetResource
         }
 
         return @{
+            IsSingleInstance                = $IsSingleInstance
+            Ensure                          = 'Present'
+            GlobalAdminAccount              = $GlobalAdminAccount
             UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
         }
     }
@@ -59,15 +74,24 @@ function Set-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
+        [ValidateSet("Present")]
+        [string]$Ensure = "Present",
+
+        [Parameter(Mandatory = $true)]
         [ValidateSet('Enabled', 'Disabled')]
         [System.String]
-        $UnifiedAuditLogIngestionEnabled = 'Disabled',
+        $UnifiedAuditLogIngestionEnabled,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Write-Verbose -Message 'Setting O365AdminAuditLogConfig'
+    if ('Absent' -eq $Ensure)
+    {
+        throw "This resource cannot accept a parameter named Ensure with value Absent."
+    }
+
     Test-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
 
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
@@ -92,9 +116,13 @@ function Test-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
+        [ValidateSet("Present")]
+        [string]$Ensure = "Present",
+
+        [Parameter(Mandatory = $true)]
         [ValidateSet('Enabled', 'Disabled')]
         [System.String]
-        $UnifiedAuditLogIngestionEnabled = 'Disabled',
+        $UnifiedAuditLogIngestionEnabled,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -119,9 +147,13 @@ function Export-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
+        [ValidateSet("Present")]
+        [string]$Ensure = "Present",
+
+        [Parameter(Mandatory = $true)]
         [ValidateSet('Enabled', 'Disabled')]
         [System.String]
-        $UnifiedAuditLogIngestionEnabled = 'Disabled',
+        $UnifiedAuditLogIngestionEnabled,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
