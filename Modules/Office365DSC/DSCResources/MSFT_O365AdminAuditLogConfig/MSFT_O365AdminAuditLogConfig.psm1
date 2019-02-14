@@ -26,7 +26,7 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message 'Getting AdminAuditLogConfig'
+        Write-Verbose -Message 'Getting O365AdminAuditLogConfig'
         $GetResults = Get-AdminAuditLogConfig
         if ($GetResults.UnifiedAuditLogIngestionEnabled)
         {
@@ -67,7 +67,7 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message 'Setting AdminAuditLogConfig'
+    Write-Verbose -Message 'Setting O365AdminAuditLogConfig'
     Test-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
 
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
@@ -100,7 +100,7 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message 'Testing AdminAuditLogConfig'
+    Write-Verbose -Message 'Testing O365AdminAuditLogConfig'
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
@@ -130,7 +130,7 @@ function Export-TargetResource
     $IsSingleInstance = 'Yes'
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
-    $content = "        AdminAuditLogConfig " + (New-GUID).ToString() + "`r`n"
+    $content = "        O365AdminAuditLogConfig " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'

@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("AdminAuditLogConfig")]
-class MSFT_AdminAuditLogConfig : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("O365AdminAuditLogConfig")]
+class MSFT_O365AdminAuditLogConfig : OMI_BaseResource
 {
     [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'"), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write, Description("Determins if Unified Audit Log Ingestion is enabled"),ValueMap{"Enabled","Disabled"}, Values{"Enabled","Disabled"}] string UnifiedAuditLogIngestionEnabled;

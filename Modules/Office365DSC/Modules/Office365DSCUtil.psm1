@@ -1274,15 +1274,15 @@ function Export-O365Configuration
     # Add the GlobalAdminAccount to the Credentials List
     Save-Credentials -UserName $GlobalAdminAccount.UserName
 
-    #region "AdminAuditLogConfig"
-    $AdminAuditLogConfig = Get-AdminAuditLogConfig
+    #region "O365AdminAuditLogConfig"
+    $O365AdminAuditLogConfig = Get-AdminAuditLogConfig
 
-    $AdminAuditLogConfigModulePath = Join-Path -Path $PSScriptRoot `
-                                       -ChildPath "..\DSCResources\MSFT_AdminAuditLogConfig\MSFT_AdminAuditLogConfig.psm1" `
+    $O365AdminAuditLogConfigModulePath = Join-Path -Path $PSScriptRoot `
+                                       -ChildPath "..\DSCResources\MSFT_O365AdminAuditLogConfig\MSFT_O365AdminAuditLogConfig.psm1" `
                                        -Resolve
 
-    Import-Module $AdminAuditLogConfigModulePath
-    $DSCContent += Export-TargetResource -UnifiedAuditLogIngestionEnabled $AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled -GlobalAdminAccount $GlobalAdminAccount
+    Import-Module $O365AdminAuditLogConfigModulePath
+    $DSCContent += Export-TargetResource -UnifiedAuditLogIngestionEnabled $O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled -GlobalAdminAccount $GlobalAdminAccount -IsSingleInstance 'Yes'
     #endregion
 
     #region "EXOMailboxSettings"
