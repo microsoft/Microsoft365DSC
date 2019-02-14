@@ -3,16 +3,16 @@ param(
     [Parameter()]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\Stubs\Office365.psm1" `
-                                         -Resolve)
+            -ChildPath "..\Stubs\Office365.psm1" `
+            -Resolve)
 )
 
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\UnitTestHelper.psm1" `
-                                -Resolve)
+        -ChildPath "..\UnitTestHelper.psm1" `
+        -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                                -DscResource "O365AdminAuditLogConfig"
+    -DscResource "O365AdminAuditLogConfig"
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -29,8 +29,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Set-TargetResource When the Unified Audit Log Ingestion is Disabled" -Fixture {
             $testParams = @{
                 IsSingleInstance                = 'Yes'
+                Ensure                          = 'Absent'
+                GlobalAdminAccount              = $GlobalAdminAccount
                 UnifiedAuditLogIngestionEnabled = 'Enabled'
-                GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-AdminAuditLogConfig -MockWith {
@@ -55,8 +56,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Set-TargetResource When the Unified Audit Log Ingestion is Enabled" -Fixture {
             $testParams = @{
                 IsSingleInstance                = 'Yes'
+                Ensure                          = 'Absent'
+                GlobalAdminAccount              = $GlobalAdminAccount
                 UnifiedAuditLogIngestionEnabled = 'Disabled'
-                GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-AdminAuditLogConfig -MockWith {
@@ -82,8 +84,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Test Passes When the Unified Audit Log Ingestion is Disabled" -Fixture {
             $testParams = @{
                 IsSingleInstance                = 'Yes'
+                Ensure                          = 'Absent'
+                GlobalAdminAccount              = $GlobalAdminAccount
                 UnifiedAuditLogIngestionEnabled = 'Disabled'
-                GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-AdminAuditLogConfig -MockWith {
@@ -105,8 +108,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Test Passes When the Unified Audit Log Ingestion is Enabled" -Fixture {
             $testParams = @{
                 IsSingleInstance                = 'Yes'
+                Ensure                          = 'Absent'
+                GlobalAdminAccount              = $GlobalAdminAccount
                 UnifiedAuditLogIngestionEnabled = 'Enabled'
-                GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-AdminAuditLogConfig -MockWith {
@@ -125,11 +129,39 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
+        Context -Name "Test Fails When the Ensure Absent is specified" -Fixture {
+            $testParams = @{
+                IsSingleInstance                = 'Yes'
+                Ensure                          = 'Absent'
+                GlobalAdminAccount              = $GlobalAdminAccount
+                UnifiedAuditLogIngestionEnabled = 'Enabled'
+            }
+
+            Mock -CommandName Get-AdminAuditLogConfig -MockWith {
+                return @{
+                    UnifiedAuditLogIngestionEnabled = $true
+                }
+            }
+
+            It "Should throw error from the Get method" {
+                Get-TargetResource @testParams | Should Throw
+            }
+
+            It "Should throw error from the Sest method" {
+                Set-TargetResource @testParams | Should Throw
+            }
+
+            It "Should throw error from the Test method" {
+                Test-TargetResource @testParams | Should Throw
+            }
+        }
+
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 IsSingleInstance                = 'Yes'
+                Ensure                          = 'Present'
                 UnifiedAuditLogIngestionEnabled = 'Enabled'
-                GlobalAdminAccount = $GlobalAdminAccount
+                GlobalAdminAccount              = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-AdminAuditLogConfig -MockWith {
