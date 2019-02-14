@@ -3,6 +3,7 @@
 This resource configures Security and Compliance Center Admin Audit Log.
 
 # Example
+
 ```PowerShell
         AdminAuditLogConfig EnableUnifiedAuditLog {
             IsSingleInstance                = 'Yes'
