@@ -33,7 +33,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            It "Should return disabled from the Get method" {
+            Mock -CommandName Get-AdminAuditLogConfig -MockWith {
+                return @{
+                    UnifiedAuditLogIngestionEnabled = $false
+                }
+            }
+
+            It "Should return Disabled from the Get method" {
                 (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be 'Disabled'
             }
 
@@ -53,7 +59,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            It "Should return false from the Get method" {
+            Mock -CommandName Get-AdminAuditLogConfig -MockWith {
+                return @{
+                    UnifiedAuditLogIngestionEnabled = $true
+                }
+            }
+
+            It "Should return Enabled from the Get method" {
                 (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be 'Enabled'
             }
 
@@ -74,11 +86,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            It "Should return false from the Get method" {
+            Mock -CommandName Get-AdminAuditLogConfig -MockWith {
+                return @{
+                    UnifiedAuditLogIngestionEnabled = $false
+                }
+            }
+
+            It "Should return Disabled from the Get method" {
                 (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be 'Disabled'
             }
 
-            It "Should return false from the Test method" {
+            It "Should return true from the Test method" {
                 Test-TargetResource @testParams | Should Be $true
             }
 
@@ -91,11 +109,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            It "Should return false from the Get method" {
-                (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be 'Disabled'
+            Mock -CommandName Get-AdminAuditLogConfig -MockWith {
+                return @{
+                    UnifiedAuditLogIngestionEnabled = $true
+                }
             }
 
-            It "Should return false from the Test method" {
+            It "Should return Enabled from the Get method" {
+                (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be 'Enabled'
+            }
+
+            It "Should return true from the Test method" {
                 Test-TargetResource @testParams | Should Be $true
             }
 
