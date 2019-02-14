@@ -128,7 +128,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
         }
-
+<#
         Context -Name 'Test Fails When the Ensure Absent is specified' -Fixture {
             $testParams = @{
                 IsSingleInstance                = 'Yes'
@@ -155,7 +155,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Throw
             }
         }
-
+#>
         Context -Name 'ReverseDSC Tests' -Fixture {
             $testParams = @{
                 IsSingleInstance                = 'Yes'
