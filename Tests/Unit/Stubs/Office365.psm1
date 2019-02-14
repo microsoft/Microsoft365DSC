@@ -17,6 +17,7 @@ function Get-AdminAuditLogConfig{
 function Set-AdminAuditLogConfig{
     [CmdletBinding()]
     param(
+        [Parameter()]
         [System.Boolean]
         $UnifiedAuditLogIngestionEnabled = $false
     )

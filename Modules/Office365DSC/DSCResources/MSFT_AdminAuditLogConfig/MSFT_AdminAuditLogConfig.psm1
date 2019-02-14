@@ -4,11 +4,12 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [ValidateSet('Yes')]
         [String]
         $IsSingleInstance,
 
+        [Parameter()]
         [ValidateSet('Enabled', 'Disabled')]
         [System.String]
         $UnifiedAuditLogIngestionEnabled = 'Disabled',
@@ -27,10 +28,12 @@ function Get-TargetResource
     {
         Write-Verbose -Message 'Getting AdminAuditLogConfig'
         $GetResults = Get-AdminAuditLogConfig
-        if ($GetResults.UnifiedAuditLogIngestionEnabled) {
+        if ($GetResults.UnifiedAuditLogIngestionEnabled)
+        {
             $UnifiedAuditLogIngestionEnabledReturnValue = 'Enabled'
         }
-        else {
+        else
+        {
             $UnifiedAuditLogIngestionEnabledReturnValue = 'Disabled'
         }
 
@@ -50,11 +53,12 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [ValidateSet('Yes')]
         [String]
         $IsSingleInstance,
 
+        [Parameter()]
         [ValidateSet('Enabled', 'Disabled')]
         [System.String]
         $UnifiedAuditLogIngestionEnabled = 'Disabled',
@@ -63,6 +67,7 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    Write-Verbose -Message 'Setting AdminAuditLogConfig'
     Test-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
 
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
@@ -81,11 +86,12 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [ValidateSet('Yes')]
         [String]
         $IsSingleInstance,
 
+        [Parameter()]
         [ValidateSet('Enabled', 'Disabled')]
         [System.String]
         $UnifiedAuditLogIngestionEnabled = 'Disabled',
@@ -107,11 +113,12 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [ValidateSet('Yes')]
         [String]
         $IsSingleInstance,
 
+        [Parameter()]
         [ValidateSet('Enabled', 'Disabled')]
         [System.String]
         $UnifiedAuditLogIngestionEnabled = 'Disabled',
