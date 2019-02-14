@@ -1,8 +1,10 @@
-# Description
+# AdminAuditLogConfig
+
+## Description
 
 This resource configures Security and Compliance Center Admin Audit Log.
 
-# Example
+## Example
 
 ```PowerShell
         AdminAuditLogConfig EnableUnifiedAuditLog {
