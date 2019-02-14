@@ -10,8 +10,8 @@ function Get-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet("Present")]
-        [string]$Ensure = "Present",
+        [ValidateSet('Present')]
+        [string]$Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('Enabled', 'Disabled')]
@@ -74,8 +74,8 @@ function Set-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet("Present")]
-        [string]$Ensure = "Present",
+        [ValidateSet('Present')]
+        [string]$Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('Enabled', 'Disabled')]
@@ -116,8 +116,8 @@ function Test-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet("Present")]
-        [string]$Ensure = "Present",
+        [ValidateSet('Present')]
+        [string]$Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('Enabled', 'Disabled')]
@@ -147,8 +147,8 @@ function Export-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet("Present")]
-        [string]$Ensure = "Present",
+        [ValidateSet('Present')]
+        [string]$Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('Enabled', 'Disabled')]

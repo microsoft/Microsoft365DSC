@@ -3,30 +3,30 @@ param(
     [Parameter()]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\Stubs\Office365.psm1" `
+            -ChildPath '..\Stubs\Office365.psm1' `
             -Resolve)
 )
 
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\UnitTestHelper.psm1" `
+        -ChildPath '..\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "O365AdminAuditLogConfig"
+    -DscResource 'O365AdminAuditLogConfig'
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
 
         Mock -CommandName Test-SecurityAndComplianceCenterConnection -MockWith {
 
         }
 
         # Test contexts
-        Context -Name "Set-TargetResource When the Unified Audit Log Ingestion is Disabled" -Fixture {
+        Context -Name 'Set-TargetResource When the Unified Audit Log Ingestion is Disabled' -Fixture {
             $testParams = @{
                 IsSingleInstance                = 'Yes'
                 Ensure                          = 'Present'
@@ -40,20 +40,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should return Disabled from the Get method" {
+            It 'Should return Disabled from the Get method' {
                 (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be 'Disabled'
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-            It "Enables UnifiedAuditLogIngestionEnabled in the Set method" {
+            It 'Enables UnifiedAuditLogIngestionEnabled in the Set method' {
                 Set-TargetResource @testParams
             }
         }
 
-        Context -Name "Set-TargetResource When the Unified Audit Log Ingestion is Enabled" -Fixture {
+        Context -Name 'Set-TargetResource When the Unified Audit Log Ingestion is Enabled' -Fixture {
             $testParams = @{
                 IsSingleInstance                = 'Yes'
                 Ensure                          = 'Present'
@@ -67,21 +67,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should return Enabled from the Get method" {
+            It 'Should return Enabled from the Get method' {
                 (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be 'Enabled'
             }
 
-            It "Should return false from the Test method" {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-            It "Enables UnifiedAuditLogIngestionEnabled in the Set method" {
+            It 'Enables UnifiedAuditLogIngestionEnabled in the Set method' {
                 Set-TargetResource @testParams
             }
         }
 
 
-        Context -Name "Test Passes When the Unified Audit Log Ingestion is Disabled" -Fixture {
+        Context -Name 'Test Passes When the Unified Audit Log Ingestion is Disabled' -Fixture {
             $testParams = @{
                 IsSingleInstance                = 'Yes'
                 Ensure                          = 'Present'
@@ -95,17 +95,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should return Disabled from the Get method" {
+            It 'Should return Disabled from the Get method' {
                 (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be 'Disabled'
             }
 
-            It "Should return true from the Test method" {
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should Be $true
             }
 
         }
 
-        Context -Name "Test Passes When the Unified Audit Log Ingestion is Enabled" -Fixture {
+        Context -Name 'Test Passes When the Unified Audit Log Ingestion is Enabled' -Fixture {
             $testParams = @{
                 IsSingleInstance                = 'Yes'
                 Ensure                          = 'Present'
@@ -119,17 +119,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should return Enabled from the Get method" {
+            It 'Should return Enabled from the Get method' {
                 (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be 'Enabled'
             }
 
-            It "Should return true from the Test method" {
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should Be $true
             }
 
         }
 
-        Context -Name "Test Fails When the Ensure Absent is specified" -Fixture {
+        Context -Name 'Test Fails When the Ensure Absent is specified' -Fixture {
             $testParams = @{
                 IsSingleInstance                = 'Yes'
                 Ensure                          = 'Absent'
@@ -143,20 +143,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should throw error from the Get method" {
+            It 'Should throw error from the Get method' {
                 Get-TargetResource @testParams | Should -Throw
             }
 
-            It "Should throw error from the Sest method" {
+            It 'Should throw error from the Set method' {
                 Set-TargetResource @testParams | Should -Throw
             }
 
-            It "Should throw error from the Test method" {
+            It 'Should throw error from the Test method' {
                 Test-TargetResource @testParams | Should -Throw
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             $testParams = @{
                 IsSingleInstance                = 'Yes'
                 Ensure                          = 'Present'
@@ -170,7 +170,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should Reverse Engineer resource from the Export method" {
+            It 'Should Reverse Engineer resource from the Export method' {
                 Export-TargetResource @testParams
             }
         }
