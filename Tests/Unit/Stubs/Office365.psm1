@@ -9,15 +9,39 @@
 
 function Get-AdminAuditLogConfig{
     [CmdletBinding()]
-    param(
+    param
+    (
+        [parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [String]
+        $IsSingleInstance,
 
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $UnifiedAuditLogIngestionEnabled = 'Disabled',
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
     )
 }
 
 function Set-AdminAuditLogConfig{
     [CmdletBinding()]
-    param(
+    param
+    (
+        [parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [String]
+        $IsSingleInstance,
 
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $UnifiedAuditLogIngestionEnabled = 'Disabled',
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
     )
 }
 
