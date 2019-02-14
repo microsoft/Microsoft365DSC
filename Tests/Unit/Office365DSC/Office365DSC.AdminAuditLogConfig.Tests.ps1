@@ -33,10 +33,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-AdminAuditLogConfig -MockWith {
-                return $null
-            }
-
             It "Should return disabled from the Get method" {
                 (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be 'Disabled'
             }
@@ -55,10 +51,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 IsSingleInstance                = 'Yes'
                 UnifiedAuditLogIngestionEnabled = 'Disabled'
                 GlobalAdminAccount = $GlobalAdminAccount
-            }
-
-            Mock -CommandName Get-AdminAuditLogConfig -MockWith {
-                return $null
             }
 
             It "Should return false from the Get method" {
@@ -82,10 +74,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-AdminAuditLogConfig -MockWith {
-                return $null
-            }
-
             It "Should return false from the Get method" {
                 (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be 'Disabled'
             }
@@ -101,10 +89,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 IsSingleInstance                = 'Yes'
                 UnifiedAuditLogIngestionEnabled = 'Enabled'
                 GlobalAdminAccount = $GlobalAdminAccount
-            }
-
-            Mock -CommandName Get-AdminAuditLogConfig -MockWith {
-                return $null
             }
 
             It "Should return false from the Get method" {
