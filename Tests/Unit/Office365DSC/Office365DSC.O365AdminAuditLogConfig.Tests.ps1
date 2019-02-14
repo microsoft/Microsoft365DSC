@@ -29,7 +29,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Set-TargetResource When the Unified Audit Log Ingestion is Disabled" -Fixture {
             $testParams = @{
                 IsSingleInstance                = 'Yes'
-                Ensure                          = 'Absent'
+                Ensure                          = 'Present'
                 GlobalAdminAccount              = $GlobalAdminAccount
                 UnifiedAuditLogIngestionEnabled = 'Enabled'
             }
@@ -56,7 +56,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Set-TargetResource When the Unified Audit Log Ingestion is Enabled" -Fixture {
             $testParams = @{
                 IsSingleInstance                = 'Yes'
-                Ensure                          = 'Absent'
+                Ensure                          = 'Present'
                 GlobalAdminAccount              = $GlobalAdminAccount
                 UnifiedAuditLogIngestionEnabled = 'Disabled'
             }
@@ -84,7 +84,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Test Passes When the Unified Audit Log Ingestion is Disabled" -Fixture {
             $testParams = @{
                 IsSingleInstance                = 'Yes'
-                Ensure                          = 'Absent'
+                Ensure                          = 'Present'
                 GlobalAdminAccount              = $GlobalAdminAccount
                 UnifiedAuditLogIngestionEnabled = 'Disabled'
             }
@@ -108,7 +108,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Test Passes When the Unified Audit Log Ingestion is Enabled" -Fixture {
             $testParams = @{
                 IsSingleInstance                = 'Yes'
-                Ensure                          = 'Absent'
+                Ensure                          = 'Present'
                 GlobalAdminAccount              = $GlobalAdminAccount
                 UnifiedAuditLogIngestionEnabled = 'Enabled'
             }
