@@ -37,8 +37,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return $null
             }
 
-            It "Should return false from the Get method" {
-                (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be $false
+            It "Should return disabled from the Get method" {
+                (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be 'Disabled'
             }
 
             It "Should return false from the Test method" {
@@ -62,7 +62,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return false from the Get method" {
-                (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be $true
+                (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be 'Enabled'
             }
 
             It "Should return false from the Test method" {
@@ -87,7 +87,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return false from the Get method" {
-                (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be $false
+                (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be 'Disabled'
             }
 
             It "Should return false from the Test method" {
@@ -108,7 +108,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return false from the Get method" {
-                (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be $true
+                (Get-TargetResource @testParams).UnifiedAuditLogIngestionEnabled | Should Be 'Disabled'
             }
 
             It "Should return false from the Test method" {
@@ -126,7 +126,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AdminAuditLogConfig -MockWith {
                 return @{
-                    UnifiedAuditLogIngestionEnabled = $true
+                    UnifiedAuditLogIngestionEnabled = 'Enabled'
                 }
             }
 
