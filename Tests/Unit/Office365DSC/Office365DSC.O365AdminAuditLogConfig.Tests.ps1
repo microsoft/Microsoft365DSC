@@ -144,15 +144,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should throw error from the Get method" {
-                Get-TargetResource @testParams | Should Throw
+                Get-TargetResource @testParams | Should -Throw
             }
 
             It "Should throw error from the Sest method" {
-                Set-TargetResource @testParams | Should Throw
+                Set-TargetResource @testParams | Should -Throw
             }
 
             It "Should throw error from the Test method" {
-                Test-TargetResource @testParams | Should Throw
+                Test-TargetResource @testParams | Should -Throw
             }
         }
 
