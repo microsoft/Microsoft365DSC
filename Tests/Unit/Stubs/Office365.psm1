@@ -1,4 +1,20 @@
-﻿function Test-PnPOnlineConnection{
+﻿function Test-SecurityAndComplianceCenterConnection{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $GlobalAdminAccount
+    )
+}
+
+function Get-AdminAuditLogConfig{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+
+function Test-PnPOnlineConnection{
     [CmdletBinding()]
     param(
         [Parameter()]
