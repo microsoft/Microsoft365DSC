@@ -16,9 +16,8 @@ function Get-AdminAuditLogConfig{
         [String]
         $IsSingleInstance,
 
-        [ValidateSet('Enabled', 'Disabled')]
-        [System.String]
-        $UnifiedAuditLogIngestionEnabled = 'Disabled',
+        [System.Boolean]
+        $UnifiedAuditLogIngestionEnabled = $false,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -35,9 +34,8 @@ function Set-AdminAuditLogConfig{
         [String]
         $IsSingleInstance,
 
-        [ValidateSet('Enabled', 'Disabled')]
-        [System.String]
-        $UnifiedAuditLogIngestionEnabled = 'Disabled',
+        [System.Boolean]
+        $UnifiedAuditLogIngestionEnabled = $false,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
