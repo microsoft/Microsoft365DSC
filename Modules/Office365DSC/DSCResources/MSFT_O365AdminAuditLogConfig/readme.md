@@ -8,11 +8,12 @@ This resource configures Security and Compliance Center Admin Audit Log.
 
     Ensure
       - Required: No (Defaults to 'Present')
-      - Description: `Present` is the only value accepted, configurations using `Ensure = 'Absent'` will throw an Error!
+      - Description: `Present` is the only value accepted.
+          Configurations using `Ensure = 'Absent'` will throw an Error!
 
     IsSingleInstance
       - Required: Yes
-      - Description: Specifies the resource is a single instance, the value must be 'Yes'
+      - Description: Single instance resource, the value must be 'Yes'
 
     GlobalAdminAccount
       - Required: Yes
