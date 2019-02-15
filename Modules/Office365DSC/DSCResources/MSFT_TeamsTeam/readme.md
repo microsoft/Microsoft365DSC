@@ -1,3 +1,3 @@
 # Description
 
-This resource used to create and update new MS Teams
+This resource is used to create and update MS Teams

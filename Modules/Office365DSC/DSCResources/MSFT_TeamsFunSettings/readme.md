@@ -1,3 +1,3 @@
 # Description
 
-This resource used to set Team fun setting on a specific Team
+This resource is used to set Team fun setting on a specific Team
