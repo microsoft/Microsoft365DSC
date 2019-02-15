@@ -6,15 +6,15 @@ It is not meant to use as a production baseline.
 Configuration MSFT_TeamsFunSettings
 {
     Import-DSCResource -ModuleName Office365DSC
-    $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
+    $credsGlobalAdmin = Get-Credential -UserName "derek@smaystate.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
         TeamsFunSettings MyTeamFunSettings
         {
-            GroupID               = "6c1d4863-d0c0-402d-b169-ead1bb6a2f59"
+            GroupID               = "f51a3df3-14af-4f52-b22b-30be60ca3fc4"
             AllowGiphy            = $True
-            GiphyContentRating    = "Strict"
-            AllowStickersAndMemes = $True
+            GiphyContentRating    = "strict"
+            AllowStickersAndMemes = $False
             AllowCustomMemes      = $False
             GlobalAdminAccount    = $credsGlobalAdmin
         }

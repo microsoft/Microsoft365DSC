@@ -9,20 +9,15 @@ Configuration Teams
     $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
-
         TeamsTeam MyTeam
         {
-            #GroupId = "f51a3df3-14af-4f52-b22b-30be60ca3fc4"
             DisplayName = "Sample3"
-            #Description = "Sample"
-            #AccessType = "Private"
-            #Alias = "DSCTeam2"
+            Description = "Sample"
+            AccessType = "Private"
+            Alias = "DSCTeam2"
             GlobalAdminAccount = $credsGlobalAdmin
             Ensure = "Present"
         }
-
-
-       
     }
 }
 
