@@ -64,7 +64,7 @@ function Get-TargetResource
 
     if ($null -eq $channel)
     {
-        Write-Verbose "Failed to get team channels with ID $GroupId and display name of $DisplayName"
+        Write-Verbose "Failed to get team channels with ID $GroupID and display name of $DisplayName"
         return $nullReturn
     }
 
@@ -130,10 +130,8 @@ function Set-TargetResource
         {
             if ($CurrentParameters.ContainsKey("NewDisplayName"))
             {
-                $CurrentParameters.Add("CurrentDisplayName", $DisplayName)
-                $CurrentParameters.Remove("DisplayName")
                 Write-Verbose -Message "Updating team channel to new channel name $NewDisplayName"
-                Set-TeamChannel @CurrentParameters
+                Set-TeamChannel @CurrentParameters -CurrentDisplayName $DisplayName
             }
         }
         else
