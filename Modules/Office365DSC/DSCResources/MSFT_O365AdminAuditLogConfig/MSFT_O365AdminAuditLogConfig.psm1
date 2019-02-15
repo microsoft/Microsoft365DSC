@@ -24,7 +24,7 @@ function Get-TargetResource
     )
     if ('Absent' -eq $Ensure)
     {
-        throw "This resource cannot accept a parameter named Ensure with value Absent."
+        throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
     }
 
     Test-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
@@ -89,7 +89,7 @@ function Set-TargetResource
     Write-Verbose -Message 'Setting O365AdminAuditLogConfig'
     if ('Absent' -eq $Ensure)
     {
-        throw "This resource cannot accept a parameter named Ensure with value Absent."
+        throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
     }
 
     Test-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
