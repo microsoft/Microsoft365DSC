@@ -909,6 +909,23 @@ function Get-TeamByGroupID
     return $true
 }
 
+function Test-SecurityAndComplianceCenterConnection
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+    Write-Verbose "Verifying the LCM connection state to Exchange Online"
+    $ExchangeOnlineSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
+    [void](Import-PSSession $ExchangeOnlineSession -WarningAction SilentlyContinue )
+    Write-Verbose "Verifying the LCM connection state to Security and Compliance Center"
+    $SecurityAndComplianceCenterSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
+    [void](Import-PSSession $SecurityAndComplianceCenterSession -WarningAction SilentlyContinue )
+}
 
 function Test-SPOServiceConnection
 {
@@ -1261,6 +1278,17 @@ function Export-O365Configuration
 
     # Add the GlobalAdminAccount to the Credentials List
     Save-Credentials -UserName $GlobalAdminAccount.UserName
+
+    #region "O365AdminAuditLogConfig"
+    $O365AdminAuditLogConfig = Get-AdminAuditLogConfig
+
+    $O365AdminAuditLogConfigModulePath = Join-Path -Path $PSScriptRoot `
+                                       -ChildPath "..\DSCResources\MSFT_O365AdminAuditLogConfig\MSFT_O365AdminAuditLogConfig.psm1" `
+                                       -Resolve
+
+    Import-Module $O365AdminAuditLogConfigModulePath
+    $DSCContent += Export-TargetResource -UnifiedAuditLogIngestionEnabled $O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled -GlobalAdminAccount $GlobalAdminAccount -IsSingleInstance 'Yes'
+    #endregion
 
     #region "EXOMailboxSettings"
     $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `
