@@ -15,7 +15,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $GroupId,
+        $GroupID,
 
         [Parameter()]
         [System.String]
@@ -59,8 +59,8 @@ function Get-TargetResource
 
     $nullReturn = @{
         DisplayName    = $DisplayName
-        Group          = $null
-        GroupId        = $null
+        Group          = $Group 
+        GroupId        = $GroupID
         Description    = $Description
         Owner          = $Owner
         Classification = $null
@@ -73,12 +73,12 @@ function Get-TargetResource
     Write-Verbose -Message "Checking for existance of Team $DisplayName"
 
     $CurrentParameters = $PSBoundParameters
-    if ($CurrentParameters.ContainsKey("GroupId"))
+    if ($CurrentParameters.ContainsKey("GroupID"))
     {
-        $team = Get-Team  |  Where-Object {($_.GroupId -eq $GroupId)}
+        $team = Get-Team  |  Where-Object {($_.GroupId -eq $GroupID)}
         if ($null -eq $team)
         {
-            Write-Verbose "Failed to get Teams with GroupId $($GroupId)"
+            Write-Verbose "Failed to get Teams with GroupId $($GroupID)"
             return $nullReturn
         }
 
@@ -96,16 +96,16 @@ function Get-TargetResource
             throw "Duplicate Teams name $DisplayName exist in tenant"
         }
     }
-    Write-Verbose -Message "Found Team $($team.DisplayName) and groupid of $($team.GroupId)"
+    Write-Verbose -Message "Found Team $($team.DisplayName) and groupid of $($team.GroupID)"
 
     $allGroups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
         -ScriptBlock {
         Get-UnifiedGroup
     }
 
-    if ($CurrentParameters.ContainsKey("GroupId"))
+    if ($CurrentParameters.ContainsKey("GroupID"))
     {
-        $teamGroup = $allGroups | Where-Object {$_.ExternalDirectoryObjectId -eq $GroupId}
+        $teamGroup = $allGroups | Where-Object {$_.ExternalDirectoryObjectId -eq $GroupID}
     }  ##### Else using display name for lookup for set operation
     else
     {
@@ -117,8 +117,8 @@ function Get-TargetResource
 
     return @{
         DisplayName    = $team.DisplayName
-        Group          = $null
-        GroupId        = $team.GroupId
+        Group          = $Group
+        GroupID        = $team.GroupId
         Description    = $team.Description
         Owner          = $null
         Classification = $null
@@ -144,7 +144,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $GroupId,
+        $GroupID,
 
         [Parameter()]
         [System.String]
@@ -187,11 +187,11 @@ function Set-TargetResource
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
 
-    if ($Ensure -eq "Present")
+    if ($team.Ensure -eq "Present")
     {
-        if ($team.GroupId)
+        if ($team.GroupID)
         {
-            ## Can't pass Owner parm into set opertaion and accesstype is called visibility on set 
+            ## Can't pass Owner parm into set opertaion and accesstype is called visibility on set
             if ($CurrentParameters.ContainsKey("Owner"))
             {
                 $CurrentParameters.Remove("Owner")
@@ -202,14 +202,14 @@ function Set-TargetResource
                 $CurrentParameters.Add("Visibility", $AccessType)
             }
             Set-Team @CurrentParameters
-            Write-Verbose -Message "Updating team group id $($GroupId)"
+            Write-Verbose -Message "Updating team group id $($GroupID)"
         }
         else
         {
             ## Remove GroupId for New-Team cmdlet creation
-            if ($CurrentParameters.ContainsKey("GroupId"))
+            if ($CurrentParameters.ContainsKey("GroupID"))
             {
-                $CurrentParameters.Remove("GroupId")
+                $CurrentParameters.Remove("GroupID")
             }
             #IF Group passed as parameter the New_team cmdlet only accepts this parameter
             if ($CurrentParameters.ContainsKey("Group"))
@@ -242,7 +242,6 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-
         [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateLength(1, 256)]
@@ -254,7 +253,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $GroupId,
+        $GroupID,
 
         [Parameter()]
         [System.String]
@@ -318,7 +317,7 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $GroupId,
+        $GroupID,
 
         [Parameter()]
         [System.String]

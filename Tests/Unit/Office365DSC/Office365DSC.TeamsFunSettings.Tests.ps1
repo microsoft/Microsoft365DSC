@@ -32,6 +32,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GiphyContentRating    = "Moderate"
                 AllowStickersAndMemes = $true
                 AllowCustomMemes      = $true
+                Ensure                = "Present"
                 GlobalAdminAccount    = $GlobalAdminAccount
             }
 
@@ -51,6 +52,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return $null
             }
 
+            It "Should return absent from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
+            }
 
             It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should Be $false
@@ -68,6 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GiphyContentRating    = "Moderate"
                 AllowStickersAndMemes = $true
                 AllowCustomMemes      = $true
+                Ensure                = "Present"
                 GlobalAdminAccount    = $GlobalAdminAccount
             }
 
@@ -85,6 +90,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Set-TeamFunSettings -MockWith {
 
+            }
+
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
             It "Should allowCustomerMemes and AllowStickersMeme in set method" {

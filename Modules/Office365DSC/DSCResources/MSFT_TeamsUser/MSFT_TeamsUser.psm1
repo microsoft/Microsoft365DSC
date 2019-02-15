@@ -32,7 +32,7 @@ function Get-TargetResource
     $nullReturn = @{
         User    = $User
         Role    = $Role
-        GroupId = $null
+        GroupId = $GroupID
         Ensure  = "Absent"
     }
 
@@ -44,13 +44,13 @@ function Get-TargetResource
         throw "Team with groupid of  $GroupID doesnt exist in tenant"
     }
 
-    if ($Role)
+    if ($null -eq $Role)
     {
-        $allMembers = Get-TeamUser -GroupId $GroupID -Role $Role -ErrorAction SilentlyContinue
+        $allMembers = Get-TeamUser -GroupId $GroupID -ErrorAction SilentlyContinue
     }
     else
     {
-        $allMembers = Get-TeamUser -GroupId $GroupID -ErrorAction SilentlyContinue
+        $allMembers = Get-TeamUser -GroupId $GroupID -Role $Role -ErrorAction SilentlyContinue
     }
 
     if ($null -eq $allMembers)
