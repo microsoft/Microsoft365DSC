@@ -73,7 +73,7 @@ function Get-TargetResource
         GiphyContentRating    = $teamFunSettings.GiphyContentRating
         AllowStickersAndMemes = $teamFunSettings.AllowStickersAndMemes
         AllowCustomMemes      = $teamFunSettings.AllowCustomMemes
-        Ensure                = "Absent"
+        Ensure                = "Present"
     }
 
 }
@@ -123,6 +123,7 @@ function Set-TargetResource
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
+    $CurrentParameters.Remove("Ensure")
     Set-TeamFunSettings @CurrentParameters
 }
 
@@ -172,7 +173,8 @@ function Test-TargetResource
         -ValuesToCheck @("GiphyContentRating", `
             "AllowGiphy", `
             "AllowStickersAndMemes", `
-            "AllowCustomMemes")
+            "AllowCustomMemes"
+    )
 }
 
 function Export-TargetResource
