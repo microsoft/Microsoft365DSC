@@ -87,7 +87,7 @@ CmdletsToExport = 'Test-SPOServiceConnection', 'Test-Office365DSCParameterState'
 AliasesToExport = @()
 
 # DSC resources to export from this module
-DscResourcesToExport = 'MSFT_O365User', 'MSFT_O365Group', 'MSFT_SPOSite', 'MSFT_EXOSharedMailbox'
+DscResourcesToExport = 'MSFT_O365User', 'MSFT_O365Group', 'MSFT_SPOSite', 'MSFT_EXOSharedMailbox', 'MSFT_O365AdminAuditLogConfig'
 
 # List of all modules packaged with this module
 # ModuleList = @()
