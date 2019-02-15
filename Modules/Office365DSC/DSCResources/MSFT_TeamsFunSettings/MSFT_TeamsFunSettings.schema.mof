@@ -2,10 +2,11 @@
 class MSFT_TeamsFunSettings : OMI_BaseResource
 {
     [Key, Description("The group id of the team")] string GroupID;
-    [Write, Description("Allow gilphy in team ")] string AllowGiphy;
+    [Write, Description("Allow giphy in team ")] string AllowGiphy;
     [Write, Description("Gilphy content rating"),ValueMap{"Strict","Moderate"}, Values{"Strict","Moderate"}] string GiphyContentRating;
     [Write, Description("Allow stickers and mimes")] string AllowStickersAndMemes;
     [Write, Description("Allow custom memes")] string AllowCustomMemes;
+    [Write, Description("Placeholder only not used in resource."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };
 
