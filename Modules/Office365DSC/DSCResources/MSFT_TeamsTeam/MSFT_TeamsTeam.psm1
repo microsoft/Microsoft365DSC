@@ -59,7 +59,7 @@ function Get-TargetResource
 
     $nullReturn = @{
         DisplayName    = $DisplayName
-        Group          = $Group 
+        Group          = $Group
         GroupId        = $GroupID
         Description    = $Description
         Owner          = $Owner
@@ -198,10 +198,15 @@ function Set-TargetResource
             }
             if ($CurrentParameters.ContainsKey("AccessType"))
             {
+                ### Parameter name is different from New-Team vs Set-Team
                 $CurrentParameters.Remove("AccessType")
-                $CurrentParameters.Add("Visibility", $AccessType)
+                Set-Team @CurrentParameters -Visibility $AccessType
             }
-            Set-Team @CurrentParameters
+            else
+            {
+                Set-Team @CurrentParameters
+            }
+
             Write-Verbose -Message "Updating team group id $($GroupID)"
         }
         else

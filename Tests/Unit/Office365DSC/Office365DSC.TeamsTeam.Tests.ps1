@@ -174,6 +174,40 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name "Update team visibility" -Fixture {
+            $testParams = @{
+                GroupID            = "12345-12345-12345-12345-12345"
+                DisplayName        = "Test Team"
+                Ensure             = "Present"
+                Alias              = "testteam"
+                AccessType         = "Public"
+                Description        = "Update description"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-UnifiedGroup -MockWith {
+                return $null
+            }
+
+
+            Mock -CommandName Get-Team -MockWith {
+                return @{
+                    DisplayName = "Test Team"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                    AccessType = "Private"
+                }
+            }
+
+
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            }
+
+            It "Should update display name and description in set method" {
+                Set-TargetResource @testParams
+            }
+        }
+
         Context -Name "Cannot only specify group only parameter" -Fixture {
             $testParams = @{
                 Group              = "12345-12345-12345-12345-12345"
