@@ -173,7 +173,8 @@ function Test-TargetResource
         -ValuesToCheck @("GiphyContentRating", `
             "AllowGiphy", `
             "AllowStickersAndMemes", `
-            "AllowCustomMemes"
+            "AllowCustomMemes", `
+            "Ensure"
     )
 }
 
