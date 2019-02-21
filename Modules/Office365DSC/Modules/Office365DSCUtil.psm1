@@ -1370,7 +1370,7 @@ function Export-O365Configuration
 
     foreach ($mailbox in $mailboxes)
     {
-        Write-Information "    MailTips for mailbox {$($mailbox.Name)}..."
+        Write-Information "    MailTips for mailbox {$($mailbox.Name)}"
         $mailboxName = $mailbox.Name
         if ($mailboxName)
         {
@@ -1393,7 +1393,7 @@ function Export-O365Configuration
 
     foreach ($securityGroup in $securityGroups)
     {
-        Write-Information "    Security Group {$($securityGroup.DisplayName)}..."
+        Write-Information "    Security Group {$($securityGroup.DisplayName)}"
         $securityGroupDisplayName = $securityGroup.DisplayName
         if ($securityGroupDisplayName)
         {
@@ -1428,7 +1428,7 @@ function Export-O365Configuration
             {
                 $groupType = "MailEnabledSecurity"
             }
-            Write-Information "    $($groupType) Group {$($groupName)}..."
+            Write-Information "    $($groupType) Group {$($groupName)}"
             $DSCContent += Export-TargetResource -DisplayName $groupName `
                                                  -GroupType $groupType `
                                                  -GlobalAdminAccount $GlobalAdminAccount
@@ -1449,7 +1449,7 @@ function Export-O365Configuration
 
     foreach ($user in $users)
     {
-        Write-Information "    User {$($user.UserPrincipalName)}..."
+        Write-Information "    User {$($user.UserPrincipalName)}"
         $userUPN = $user.UserPrincipalName
         if ($userUPN)
         {
@@ -1497,7 +1497,7 @@ function Export-O365Configuration
 
     foreach ($property in $properties)
     {
-        Write-Information "    Managed Property {$($property.Value.Name)}..."
+        Write-Information "    Managed Property {$($property.Value.Name)}"
         $DSCContent += Export-TargetResource -Name $property.Value.Name `
                                              -Type $property.Value.ManagedType `
                                              -CentralAdminUrl $centralAdminUrl `
@@ -1518,7 +1518,7 @@ function Export-O365Configuration
 
     foreach ($site in $sites)
     {
-        Write-Information "    Site Collection {$($site.Url)}..."
+        Write-Information "    Site Collection {$($site.Url)}"
         $DSCContent += Export-TargetResource -Url $site.Url `
                                              -CentralAdminUrl $centralAdminUrl `
                                              -GlobalAdminAccount $GlobalAdminAccount
@@ -1558,7 +1558,7 @@ function Export-O365Configuration
     {
         try
         {
-            Write-Output "Directory `"$OutputDSCPath`" doesn't exist; creating..."
+            Write-Information "Directory `"$OutputDSCPath`" doesn't exist; creating..."
             New-Item -Path $OutputDSCPath -ItemType Directory | Out-Null
             if ($?) {break}
         }
