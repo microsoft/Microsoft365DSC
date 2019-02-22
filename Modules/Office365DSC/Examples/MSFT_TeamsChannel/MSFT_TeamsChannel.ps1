@@ -3,7 +3,7 @@ This example is used to test new resources and showcase the usage of new resourc
 It is not meant to use as a production baseline.
 #>
 
-Configuration MSFT_TeamsChannel
+Configuration TeamsChannelConfig
 {
     Import-DSCResource -ModuleName Office365DSC
     $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
@@ -11,11 +11,11 @@ Configuration MSFT_TeamsChannel
     {
         TeamsChannel MyChannel
         {
-            GroupID = "6c1d4863-d0c0-402d-b169-ead1bb6a2f59"
-            DisplayName = "SP2013 Review teams group"
-            NewDisplayName = "SP2016 Review teams group"
-            Description = "SP2016 Code reviews for SPFX"
-            Ensure = "Present"
+            TeamName           = "SuperSecretTeam"
+            DisplayName        = "SP2013 Review teams group"
+            NewDisplayName     = "SP2016 Review teams group"
+            Description        = "SP2016 Code reviews for SPFX"
+            Ensure             = "Present"
             GlobalAdminAccount = $credsGlobalAdmin
         }
     }
@@ -27,10 +27,8 @@ $configData = @{
             NodeName                    = "localhost"
             PSDscAllowPlainTextPassword = $true;
             PSDscAllowDomainUser        = $true;
-            DebugMode = $true;
         }
     )
 }
 
-
-MSFT_TeamsChannel -ConfigurationData $configData
+TeamsChannelConfig -ConfigurationData $configData

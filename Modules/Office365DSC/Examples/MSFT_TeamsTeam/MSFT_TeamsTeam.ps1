@@ -3,7 +3,7 @@ This example is used to test new resources and showcase the usage of new resourc
 It is not meant to use as a production baseline.
 #>
 
-Configuration Teams
+Configuration TeamsConfig
 {
     Import-DSCResource -ModuleName Office365DSC
     $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
@@ -11,12 +11,12 @@ Configuration Teams
     {
         TeamsTeam MyTeam
         {
-            DisplayName = "Sample3"
-            Description = "Sample"
-            AccessType = "Private"
-            Alias = "DSCTeam2"
+            DisplayName        = "Sample3"
+            Description        = "Sample"
+            AccessType         = "Private"
+            Alias              = "DSCTeam2"
             GlobalAdminAccount = $credsGlobalAdmin
-            Ensure = "Present"
+            Ensure             = "Present"
         }
     }
 }
@@ -27,10 +27,8 @@ $configData = @{
             NodeName                    = "localhost"
             PSDscAllowPlainTextPassword = $true;
             PSDscAllowDomainUser        = $true;
-            DebugMode = $true;
         }
     )
 }
 
-
-Teams -ConfigurationData $configData
+TeamsConfig -ConfigurationData $configData

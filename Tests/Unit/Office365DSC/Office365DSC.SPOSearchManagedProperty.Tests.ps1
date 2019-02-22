@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [string] 
+    [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
                                          -ChildPath "..\Stubs\Office365DSC.psm1" `
                                          -Resolve)
@@ -118,7 +118,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         <SearchTaxonomyConfigurationSettings i:nil=`"true`"/>
         </SearchConfigurationSettings>"
 
-        # Test contexts 
+        # Test contexts
         Context -Name "When the Managed Property doesn't already exist" -Fixture {
             $testParams = @{
                 Name ="TestMP"
@@ -147,7 +147,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                          -Resolve
             $emptyXMLTemplate = Get-Content $xmlTemplatePath
             Mock -CommandName Get-PnPSearchConfiguration -MockWith {
-                
+
                 return $emptyXMLTemplate
             }
 
@@ -169,6 +169,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         Context -Name "When the Managed Property already exists" -Fixture {
+            $Script:RecentMPExtract = $null
             $testParams = @{
                 Name ="TestMP"
                 Type = "Text"
@@ -191,17 +192,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
                 CentralAdminUrl = "https://contoso-admin.sharepoint.com"
             }
-            Mock -CommandName Get-PnPSearchConfiguration -MockWith { 
-                
+            Mock -CommandName Get-PnPSearchConfiguration -MockWith {
+
                 return $existingValueXML
             }
 
-            Mock -CommandName Set-PnPSearchConfiguration -MockWith { 
+            Mock -CommandName Set-PnPSearchConfiguration -MockWith {
 
             }
 
             It "Should return Present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
             It "Should return true from the Test method" {

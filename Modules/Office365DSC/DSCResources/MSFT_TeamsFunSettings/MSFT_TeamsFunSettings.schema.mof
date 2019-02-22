@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("TeamsFunSettings")]
 class MSFT_TeamsFunSettings : OMI_BaseResource
 {
-    [Key, Description("The group id of the team")] string GroupID;
+    [Key, Description("The Name of the team")] string TeamName;
     [Write, Description("Allow giphy in team ")] string AllowGiphy;
     [Write, Description("Giphy content rating"),ValueMap{"Strict","Moderate"}, Values{"Strict","Moderate"}] string GiphyContentRating;
     [Write, Description("Allow stickers and mimes")] string AllowStickersAndMemes;

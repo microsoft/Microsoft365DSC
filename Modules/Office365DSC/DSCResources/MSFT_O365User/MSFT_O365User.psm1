@@ -28,8 +28,8 @@ function Get-TargetResource
         [System.String[]]
         $LicenseAssignment,
 
-        [Parameter()] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
         $Password,
 
         [Parameter()]
@@ -93,13 +93,13 @@ function Get-TargetResource
         [System.String]
         $UserType,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -113,6 +113,7 @@ function Get-TargetResource
         UsageLocation = $null
         LicenseAssignment = $null
         Password = $null
+        GlobalAdminAccount = $GlobalAdminAccount
         Ensure = "Absent"
     }
 
@@ -161,6 +162,7 @@ function Get-TargetResource
             StreetAddress = $user.StreetAddress
             Title = $user.Title
             UserType = $user.UserType
+            GlobalAdminAccount = $GlobalAdminAccount
             Ensure = "Present"
         }
     }
@@ -200,8 +202,8 @@ function Set-TargetResource
         [System.String[]]
         $LicenseAssignment,
 
-        [Parameter()] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
         $Password,
 
         [Parameter()]
@@ -265,13 +267,13 @@ function Set-TargetResource
         [System.String]
         $UserType,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -354,8 +356,8 @@ function Test-TargetResource
         [System.String[]]
         $LicenseAssignment,
 
-        [Parameter()] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
         $Password,
 
         [Parameter()]
@@ -419,13 +421,13 @@ function Test-TargetResource
         [System.String]
         $UserType,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -469,19 +471,23 @@ function Export-TargetResource
         [System.String]
         $UserPrincipalName,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    $result.Password = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
-    $modulePath = $PSScriptRoot + "\MSFT_O365User.psm1"
-    $content = "        O365User " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath -UseGetTargetResource
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    $content = ""
+    if ($null -ne $result.UserPrincipalName)
+    {
+        $result.Password = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+        $modulePath = $PSScriptRoot + "\MSFT_O365User.psm1"
+        $content = "        O365User " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath -UseGetTargetResource
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+    }
     return $content
 }
 

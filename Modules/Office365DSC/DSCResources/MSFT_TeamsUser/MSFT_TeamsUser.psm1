@@ -6,7 +6,7 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        $TeamName,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -30,42 +30,43 @@ function Get-TargetResource
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
-        User    = $User
-        Role    = $Role
-        GroupId = $GroupID
-        Ensure  = "Absent"
+        User               = $User
+        Role               = $Role
+        TeamName           = $TeamName
+        Ensure             = "Absent"
+        GlobalAdminAccount = $GlobalAdminAccount
     }
 
-
     Write-Verbose -Message "Checking for existance of Team User $User"
-    $teamExists = Get-TeamByGroupID $GroupID
-    if ($teamExists -eq $false)
+    $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
+    if ($null -eq $team)
     {
-        throw "Team with groupid of  $GroupID doesnt exist in tenant"
+        throw "Team with Name $TeamName doesnt exist in tenant"
     }
 
     if ($null -eq $Role)
     {
-        $allMembers = Get-TeamUser -GroupId $GroupID -ErrorAction SilentlyContinue
+        $allMembers = Get-TeamUser -GroupId $team.GroupId -ErrorAction SilentlyContinue
     }
     else
     {
-        $allMembers = Get-TeamUser -GroupId $GroupID -Role $Role -ErrorAction SilentlyContinue
+        $allMembers = Get-TeamUser -GroupId $team.GroupId -Role $Role -ErrorAction SilentlyContinue
     }
 
     if ($null -eq $allMembers)
     {
-        Write-Verbose "Failed to get Team's users groupId $GroupID"
+        Write-Verbose "Failed to get Team's users for Team $TeamName"
         return $nullReturn
     }
 
     $myUser = $allMembers | Where-Object {$_.User -eq $User}
     Write-Verbose -Message "Found team user $($myUser.User) with role:$($myUser.Role)"
     return @{
-        User    = $myUser.User
-        Role    = $myUser.Role
-        GroupId = $GroupID
-        Ensure  = "Present"
+        User               = $myUser.User
+        Role               = $myUser.Role
+        TeamName           = $TeamName
+        Ensure             = "Present"
+        GlobalAdminAccount = $GlobalAdminAccount
     }
 
 }
@@ -77,7 +78,7 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        $TeamName,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -100,7 +101,15 @@ function Set-TargetResource
 
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
+    $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
+    if ($null -eq $team)
+    {
+        throw "Team with Name $TeamName doesnt exist in tenant"
+    }
+
     $CurrentParameters = $PSBoundParameters
+    $CurrentParameters.Remove("TeamName")
+    $CurrentParameters.Add("GroupId", $team.GroupId)
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
 
@@ -129,7 +138,7 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        $TeamName,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -168,7 +177,7 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        $TeamName,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -179,21 +188,18 @@ function Export-TargetResource
         [ValidateSet("Member", "Owner")]
         $Role,
 
-        [Parameter()]
-        [ValidateSet("Present", "Absent")]
-        [System.String]
-        $Ensure = "Present",
-
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
-    $content = "TeamsUser " + (New-GUID).ToString() + "`r`n"
-    $content += "{`r`n"
-    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += "}`r`n"
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $content = "        TeamsUser " + (New-GUID).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += "        }`r`n"
     return $content
 }
 
