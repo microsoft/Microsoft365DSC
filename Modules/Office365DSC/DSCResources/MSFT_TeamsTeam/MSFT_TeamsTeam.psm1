@@ -70,7 +70,6 @@ function Get-TargetResource
         GlobalAdminAccount = $GlobalAdminAccount
     }
 
-
     Write-Verbose -Message "Checking for existance of Team $DisplayName"
 
     $CurrentParameters = $PSBoundParameters
@@ -79,7 +78,7 @@ function Get-TargetResource
         $team = Get-Team  |  Where-Object {($_.GroupId -eq $GroupID)}
         if ($null -eq $team)
         {
-            Write-Verbose "Failed to get Teams with GroupId $($GroupID)"
+            Write-Verbose "Teams with GroupId $($GroupID) doesn't exist"
             return $nullReturn
         }
     }
@@ -88,7 +87,7 @@ function Get-TargetResource
         $team = Get-Team |  Where-Object {($_.DisplayName -eq $DisplayName)}
         if ($null -eq $team)
         {
-            Write-Verbose "Failed to get Teams with displayname $DisplayName"
+            Write-Verbose "Teams with displayname $DisplayName doesn't exist"
             return $nullReturn
         }
         if ($team.Count -gt 1)
@@ -188,7 +187,7 @@ function Set-TargetResource
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
 
-    if ($team.Ensure -eq "Present")
+    if ($Ensure -eq "Present")
     {
         if ($team.GroupID)
         {
@@ -295,15 +294,14 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing creation of new Team"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+    $result = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("DisplayName", `
-            "Description", `
-            "Alias", `
-            "AccessType", `
-            "Classification", `
-            "Ensure"
-    )
+        -ValuesToCheck @("Ensure")
+    if (!$result)
+    {
+        Write-Verbose "Team $DisplayName is not in its Desired State"
+    }
+    return $result
 }
 
 function Export-TargetResource

@@ -27,7 +27,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "Check Team Fun settings" -Fixture {
             $testParams = @{
-                GroupID               = "12345-12345-12345-12345-12345"
+                TeamName              = "TestTeam"
                 AllowGiphy            = $true
                 GiphyContentRating    = "Moderate"
                 AllowStickersAndMemes = $true
@@ -44,8 +44,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-TeamByGroupID -MockWith {
-                return @{GroupID = "12345-12345-12345-12345-12345"}
+            Mock -CommandName Get-Team -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
             }
 
             Mock -CommandName Get-TeamFunSettings -MockWith {
@@ -67,7 +70,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Set Team Fun settings" -Fixture {
             $testParams = @{
-                GroupID               = "12345-12345-12345-12345-12345"
+                TeamName              = "TestTeam"
                 AllowGiphy            = $true
                 GiphyContentRating    = "Moderate"
                 AllowStickersAndMemes = $true
@@ -76,20 +79,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount    = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-TeamByGroupID -MockWith {
-                return @{GroupID = "12345-12345-12345-12345-12345"}
+            Mock -CommandName Get-Team -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
+            }
+
+            Mock -CommandName Set-TeamFunSettings -MockWith {
+
             }
 
             Mock -CommandName Get-TeamFunSettings -MockWith {
                 return @{
-                    GroupID = "12345-12345-12345-12345-12345"
-
+                    GroupID               = "12345-12345-12345-12345-12345"
+                    AllowGiphy            = $true
+                    GiphyContentRating    = "Moderate"
+                    AllowStickersAndMemes = $true
+                    AllowCustomMemes      = $true
                 }
-            }
-
-
-            Mock -CommandName Set-TeamFunSettings -MockWith {
-
             }
 
             It "Should return present from the Get method" {
@@ -100,20 +108,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
             }
             It "Should return true from the Test method" {
-                Test-TargetResource @testParams  | Should be $false
+                Test-TargetResource @testParams  | Should be $true
             }
 
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                GroupID               = "12345-12345-12345-12345-12345"
+                TeamName              = "TestTeam"
                 GlobalAdminAccount    = $GlobalAdminAccount
             }
 
-
-            Mock -CommandName Get-TeamByGroupID -MockWith {
-                return @{GroupID = "12345-12345-12345-12345-12345"}
+            Mock -CommandName Get-Team -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
             }
 
             Mock -CommandName Get-TeamFunSettings -MockWith {

@@ -11,7 +11,7 @@ Configuration TeamsFunSettingsConfig
     {
         TeamsFunSettings MyTeamFunSettings
         {
-            GroupID               = "f51a3df3-14af-4f52-b22b-30be60ca3fc4"
+            TeamName              = "SuperSecretTeam"
             AllowGiphy            = $True
             GiphyContentRating    = "strict"
             AllowStickersAndMemes = $False

@@ -6,12 +6,12 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        [ValidateLength(1, 50)]
+        $DisplayName,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateLength(1, 50)]
-        $DisplayName,
+        $TeamName,
 
         [Parameter()]
         [System.String]
@@ -36,7 +36,7 @@ function Get-TargetResource
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
-        GroupID            = $GroupID
+        TeamName           = $TeamName
         DisplayName        = $DisplayName
         Description        = $Description
         NewDisplayName     = $NewDisplayName
@@ -47,30 +47,30 @@ function Get-TargetResource
     Write-Verbose -Message "Checking for existance of team channels"
     $CurrentParameters = $PSBoundParameters
 
-    $teamExists = Get-TeamByGroupID $GroupID
-    if ($teamExists -eq $false)
+    $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
+    if ($null -eq $team)
     {
-        throw "Team with groupid of  $GroupID doesnt exist in tenant"
+        throw "Team with Name $TeamName doesnt exist in tenant"
     }
 
-    $channel = Get-TeamChannel -GroupId $GroupID -ErrorAction SilentlyContinue | Where-Object {($_.DisplayName -eq $DisplayName)}
+    $channel = Get-TeamChannel -GroupId $team.GroupId -ErrorAction SilentlyContinue | Where-Object {($_.DisplayName -eq $DisplayName)}
 
     #Current channel doesnt exist and trying to rename throw an error
     if (($null -eq $channel) -and $CurrentParameters.ContainsKey("NewDisplayName"))
     {
         Write-Verbose "Cannot rename channel $DisplayName , doesnt exist in current Team"
-        throw "Channel named $DisplayName doesnt exist in current Team"
+        throw "Channel named $DisplayName doesn't exist in current Team"
     }
 
     if ($null -eq $channel)
     {
-        Write-Verbose "Failed to get team channels with ID $GroupID and display name of $DisplayName"
+        Write-Verbose "Failed to get team channels with ID $($team.GroupId) and display name of $DisplayName"
         return $nullReturn
     }
 
     return @{
         DisplayName        = $channel.DisplayName
-        GroupID            = $GroupID
+        TeamName           = $team.DisplayName
         Description        = $channel.Description
         NewDisplayName     = $NewDisplayName
         Ensure             = "Present"
@@ -85,12 +85,12 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        [ValidateLength(1, 50)]
+        $DisplayName,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateLength(1, 50)]
-        $DisplayName,
+        $TeamName,
 
         [Parameter()]
         [System.String]
@@ -119,9 +119,16 @@ function Set-TargetResource
     $channel = Get-TargetResource @PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
+
+    $team = Get-Team |  Where-Object {($_.DisplayName -eq $TeamName)}
+    if ($null -eq $team)
+    {
+        throw "Team with Name $TeamName doesn't exist in tenant"
+    }
+    $CurrentParameters.Remove("TeamName")
+    $CurrentParameters.Add("GroupId", $team.GroupId)
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
-
 
     if ($Ensure -eq "Present")
     {
@@ -149,7 +156,7 @@ function Set-TargetResource
         if ($channel.DisplayName)
         {
             Write-Verbose -Message "Removing team channel $DislayName"
-            Remove-TeamChannel -GroupId $GroupID -DisplayName $DisplayName
+            Remove-TeamChannel -GroupId $team.GroupId -DisplayName $DisplayName
         }
     }
 }
@@ -162,12 +169,12 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        [ValidateLength(1, 50)]
+        $DisplayName,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateLength(1, 50)]
-        $DisplayName,
+        $TeamName,
 
         [Parameter()]
         [System.String]
@@ -193,11 +200,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "DisplayName", `
-            "NewDisplayName", `
-            "Description"
-    )
+        -ValuesToCheck @("Ensure")
 }
 
 function Export-TargetResource
@@ -208,12 +211,12 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        [ValidateLength(1, 50)]
+        $DisplayName,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateLength(1, 50)]
-        $DisplayName,
+        $TeamName,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

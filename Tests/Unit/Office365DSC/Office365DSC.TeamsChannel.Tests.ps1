@@ -26,9 +26,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name "When a channel doesnt exist" -Fixture {
+        Context -Name "When a channel doesn't exist" -Fixture {
             $testParams = @{
-                GroupID            = "12345-12345-12345-12345-12345"
+                TeamName           = "TestTeam"
                 DisplayName        = "Test Channel"
                 Description        = "Test description"
                 GlobalAdminAccount = $GlobalAdminAccount
@@ -38,8 +38,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return $null
             }
 
-            Mock -CommandName Get-TeamByGroupID -MockWith {
-                return @{GroupID = "12345-12345-12345-12345-12345"}
+
+            Mock -CommandName Get-Team -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
             }
 
             Mock -CommandName New-TeamChannel -MockWith {
@@ -58,7 +62,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Channel already exists" -Fixture {
             $testParams = @{
-                GroupID            = "12345-12345-12345-12345-12345"
+                TeamName           = "TestTeam"
                 DisplayName        = "Test Channel"
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
@@ -71,8 +75,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-TeamByGroupID -MockWith {
-                return @{GroupID = "12345-12345-12345-12345-12345"}
+            Mock -CommandName Get-Team -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
             }
 
             It "Should return present from the Get method" {
@@ -82,13 +89,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Should return true from the Test method" {
                 Test-TargetResource @testParams | Should Be $true
             }
-
         }
-
 
         Context -Name "Rename existing channel" -Fixture{
             $testParams = @{
-                GroupID            = "12345-12345-12345-12345-12345"
+                TeamName           = "TestTeam"
                 DisplayName        = "Test Channel"
                 Ensure             = "Present"
                 NewDisplayName = "Test Channel Updated"
@@ -102,8 +107,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-TeamByGroupID -MockWith {
-                return @{GroupID = "12345-12345-12345-12345-12345"}
+            Mock -CommandName Get-Team -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
             }
 
             It "Should return present from the Get method" {
@@ -121,7 +129,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Remove existing channel" -Fixture{
             $testParams = @{
-                GroupID            = "12345-12345-12345-12345-12345"
+                TeamName           = "TestTeam"
                 DisplayName        = "Test Channel"
                 Ensure             = "Absent"
                 GlobalAdminAccount = $GlobalAdminAccount
@@ -131,13 +139,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return $null
             }
 
-            Mock -CommandName Get-TeamByGroupID -MockWith {
-                return @{GroupID = "12345-12345-12345-12345-12345"}
+            Mock -CommandName Get-Team -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
             }
 
             Mock -CommandName Get-TeamChannel -MockWith {
                 return @{
-                    GroupID     = "12345-12345-12345-12345-12345"
+                    TeamName    = "TestTeam"
                     DisplayName = "Test Channel"
                 }
             }
@@ -154,13 +165,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                GroupID            = "12345-12345-12345-12345-12345"
+                TeamName           = "TestTeam"
                 DisplayName        = "Test Channel"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-TeamByGroupID -MockWith {
-                return @{GroupID = "12345-12345-12345-12345-12345"}
+            Mock -CommandName Get-Team -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
             }
 
             Mock -CommandName Get-TeamChannel -MockWith {

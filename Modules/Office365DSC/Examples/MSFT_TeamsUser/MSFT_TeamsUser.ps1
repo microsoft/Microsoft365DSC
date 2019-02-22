@@ -11,7 +11,7 @@ Configuration TeamsUserConfig
     {
         TeamsUser MyTeam
         {
-            GroupID            = "6c1d4863-d0c0-402d-b169-ead1bb6a2f59"
+            TeamName           = "SuperSecretTeam"
             User               = "jdoe@dsazure.com"
             Role               = "Member"
             Ensure             = "Absent"

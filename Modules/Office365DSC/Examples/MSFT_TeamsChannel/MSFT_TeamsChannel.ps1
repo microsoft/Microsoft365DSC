@@ -11,7 +11,7 @@ Configuration TeamsChannelConfig
     {
         TeamsChannel MyChannel
         {
-            GroupID            = "6c1d4863-d0c0-402d-b169-ead1bb6a2f59"
+            TeamName           = "SuperSecretTeam"
             DisplayName        = "SP2013 Review teams group"
             NewDisplayName     = "SP2016 Review teams group"
             Description        = "SP2016 Code reviews for SPFX"

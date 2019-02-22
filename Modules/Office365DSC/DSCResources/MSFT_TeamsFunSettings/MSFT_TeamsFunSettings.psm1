@@ -6,7 +6,7 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        $TeamName,
 
         [Parameter()]
         [System.String]
@@ -38,7 +38,7 @@ function Get-TargetResource
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
-        GroupID               = $GroupID
+        TeamName              = $TeamName
         AllowGiphy            = $null
         GiphyContentRating    = $null
         AllowStickersAndMemes = $null
@@ -47,16 +47,15 @@ function Get-TargetResource
         GlobalAdminAccount    = $GlobalAdminAccount
     }
 
+    Write-Verbose -Message "Getting Team fun settings for $TeamName"
 
-    Write-Verbose -Message "Getting Team fun settings for $GroupID"
-
-    $teamExists = Get-TeamByGroupID $GroupID
-    if ($teamExists -eq $false)
+    $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
+    if ($null -eq $team)
     {
-        throw "Team with groupid of  $GroupID doesnt exist in tenant"
+        throw "Team with Name $TeamName doesnt exist in tenant"
     }
 
-    $teamFunSettings = Get-TeamFunSettings -GroupId $GroupID -ErrorAction SilentlyContinue
+    $teamFunSettings = Get-TeamFunSettings -GroupId $team.GroupId -ErrorAction SilentlyContinue
     if ($null -eq $teamFunSettings)
     {
         Write-Verbose "The specified Team doesn't exist."
@@ -69,7 +68,7 @@ function Get-TargetResource
     Write-Verbose "Team fun settings for AllowCustomMemes = $($teamFunSettings.AllowCustomMemes)"
 
     return @{
-        GroupID               = $GroupID
+        TeamName              = $TeamName
         AllowGiphy            = $teamFunSettings.AllowGiphy
         GiphyContentRating    = $teamFunSettings.GiphyContentRating
         AllowStickersAndMemes = $teamFunSettings.AllowStickersAndMemes
@@ -87,7 +86,7 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        $TeamName,
 
         [Parameter()]
         [System.String]
@@ -123,7 +122,15 @@ function Set-TargetResource
 
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
+    $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
+    if ($null -eq $team)
+    {
+        throw "Team with Name $TeamName doesnt exist in tenant"
+    }
+
     $CurrentParameters = $PSBoundParameters
+    $CurrentParameters.Remove("TeamName")
+    $CurrentParameters.Add("GroupId", $team.GroupId)
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
     Set-TeamFunSettings @CurrentParameters
@@ -137,7 +144,7 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        $TeamName,
 
         [Parameter()]
         [System.String]
@@ -166,9 +173,8 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing Team fun settings for  $GroupID"
+    Write-Verbose -Message "Testing Team fun settings for $TeamName"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
 
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
@@ -188,7 +194,7 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        $TeamName,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

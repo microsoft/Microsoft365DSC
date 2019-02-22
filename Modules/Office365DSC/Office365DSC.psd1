@@ -79,7 +79,7 @@ NestedModules = @('modules\Office365DSCUtil.psm1')
 CmdletsToExport = 'Test-SPOServiceConnection', 'Test-Office365DSCParameterState',
                'Test-O365ServiceConnection', 'Invoke-ExoCommand', 'Export-O365Configuration',
                'Get-TimeZoneNameFromID', 'Get-TimeZoneIDFromName', 'Get-LocaleIDFromName',
-               'Get-LocaleNameFromID'
+               'Get-LocaleNameFromID', 'Test-TeamsServiceConnection'
 
 # Variables to export from this module
 # VariablesToExport = @()
@@ -88,7 +88,9 @@ CmdletsToExport = 'Test-SPOServiceConnection', 'Test-Office365DSCParameterState'
 AliasesToExport = @()
 
 # DSC resources to export from this module
-DscResourcesToExport = 'MSFT_O365User', 'MSFT_O365Group', 'MSFT_SPOSite', 'MSFT_EXOSharedMailbox', 'MSFT_O365AdminAuditLogConfig', ,'MSFT_TeamsFunSettings'
+DscResourcesToExport = 'MSFT_O365User', 'MSFT_O365Group', 'MSFT_SPOSite',
+                       'MSFT_EXOSharedMailbox', 'MSFT_O365AdminAuditLogConfig',
+                       'MSFT_TeamsFunSettings'
 
 # List of all modules packaged with this module
 # ModuleList = @()
@@ -104,7 +106,7 @@ PrivateData = @{
         # Tags applied to this module. These help with module discovery in online galleries.
         Tags = 'DesiredStateConfiguration','DSC','DSCResourceKit','DSCResource','Office365'
 
-        Prerelease = '-alpha288'
+        Prerelease = '-alpha292'
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/Microsoft/Office365/blob/master/LICENSE'

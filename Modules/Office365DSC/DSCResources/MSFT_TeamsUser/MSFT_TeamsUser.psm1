@@ -6,7 +6,7 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        $TeamName,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -32,31 +32,30 @@ function Get-TargetResource
     $nullReturn = @{
         User               = $User
         Role               = $Role
-        GroupId            = $GroupID
+        TeamName           = $TeamName
         Ensure             = "Absent"
         GlobalAdminAccount = $GlobalAdminAccount
     }
 
-
     Write-Verbose -Message "Checking for existance of Team User $User"
-    $teamExists = Get-TeamByGroupID $GroupID
-    if ($teamExists -eq $false)
+    $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
+    if ($null -eq $team)
     {
-        throw "Team with groupid of  $GroupID doesnt exist in tenant"
+        throw "Team with Name $TeamName doesnt exist in tenant"
     }
 
     if ($null -eq $Role)
     {
-        $allMembers = Get-TeamUser -GroupId $GroupID -ErrorAction SilentlyContinue
+        $allMembers = Get-TeamUser -GroupId $team.GroupId -ErrorAction SilentlyContinue
     }
     else
     {
-        $allMembers = Get-TeamUser -GroupId $GroupID -Role $Role -ErrorAction SilentlyContinue
+        $allMembers = Get-TeamUser -GroupId $team.GroupId -Role $Role -ErrorAction SilentlyContinue
     }
 
     if ($null -eq $allMembers)
     {
-        Write-Verbose "Failed to get Team's users groupId $GroupID"
+        Write-Verbose "Failed to get Team's users for Team $TeamName"
         return $nullReturn
     }
 
@@ -65,7 +64,7 @@ function Get-TargetResource
     return @{
         User               = $myUser.User
         Role               = $myUser.Role
-        GroupId            = $GroupID
+        TeamName           = $TeamName
         Ensure             = "Present"
         GlobalAdminAccount = $GlobalAdminAccount
     }
@@ -79,7 +78,7 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        $TeamName,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -102,7 +101,15 @@ function Set-TargetResource
 
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
+    $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
+    if ($null -eq $team)
+    {
+        throw "Team with Name $TeamName doesnt exist in tenant"
+    }
+
     $CurrentParameters = $PSBoundParameters
+    $CurrentParameters.Remove("TeamName")
+    $CurrentParameters.Add("GroupId", $team.GroupId)
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
 
@@ -131,7 +138,7 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        $TeamName,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -170,7 +177,7 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $GroupID,
+        $TeamName,
 
         [Parameter(Mandatory = $true)]
         [System.String]

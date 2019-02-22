@@ -994,6 +994,7 @@ function Test-TeamsServiceConnection {
     )
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
+    Import-Module MicrosoftTeams -Force
     Write-Verbose "Verifying the LCM connection state to Teams"
     $catch = Connect-MicrosoftTeams -Credential $GlobalAdminAccount | Out-Null
 }
