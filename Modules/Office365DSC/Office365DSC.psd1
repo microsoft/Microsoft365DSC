@@ -51,10 +51,10 @@ PowerShellVersion = '5.1'
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-RequiredModules = @(@{ModuleName = 'ReverseDSC'; ModuleVersion = '1.9.3.0'; },
-                    @{ModuleName = 'MSOnline'; ModuleVersion = '1.1.183.17'; },
-                    @{ModuleName = 'Microsoft.Online.SharePoint.PowerShell'; ModuleVersion = '16.0.8414.0'; },
-                    @{ModuleName = 'SharePointPnPPowerShellOnline'; ModuleVersion = '3.5.1901.0'; },
+RequiredModules = @(@{ModuleName = "ReverseDSC"; ModuleVersion = "1.9.3.0"; },
+                    @{ModuleName = "MSOnline"; ModuleVersion = "1.1.183.17"; },
+                    @{ModuleName = "Microsoft.Online.SharePoint.PowerShell"; ModuleVersion = "16.0.8414.0"; },
+                    @{ModuleName = "SharePointPnPPowerShellOnline"; ModuleVersion = "3.5.1901.0"; },
                     @{ModuleName = "MicrosoftTeams"; ModuleVersion = "0.9.6"; })
 
 # Assemblies that must be loaded prior to importing this module
