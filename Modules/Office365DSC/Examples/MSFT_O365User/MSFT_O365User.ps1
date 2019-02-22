@@ -3,18 +3,23 @@ This example is used to test new resources and showcase the usage of new resourc
 It is not meant to use as a production baseline.
 #>
 
-Configuration TeamsChannelConfig
+Configuration User
 {
     Import-DSCResource -ModuleName Office365DSC
     $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
-        TeamsChannel MyChannel
+        O365User JohnSMith
         {
-            GroupID            = "6c1d4863-d0c0-402d-b169-ead1bb6a2f59"
-            DisplayName        = "SP2013 Review teams group"
-            NewDisplayName     = "SP2016 Review teams group"
-            Description        = "SP2016 Code reviews for SPFX"
+            UserPrincipalName  = "John.Smith@O365DSC1.onmicrosoft.com"
+            FirstName          = "John"
+            LastName           = "Smith"
+            DisplayName        = "John J. Smith"
+            City               = "Gatineau"
+            Country            = "Canada"
+            Office             = "Ottawa - Queen"
+            LicenseAssignment  = @("O365dsc1:ENTERPRISEPREMIUM")
+            UsageLocation      = "US"
             Ensure             = "Present"
             GlobalAdminAccount = $credsGlobalAdmin
         }
@@ -31,4 +36,4 @@ $configData = @{
     )
 }
 
-TeamsChannelConfig -ConfigurationData $configData
+User -ConfigurationData $configData
