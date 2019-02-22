@@ -30,10 +30,11 @@ function Get-TargetResource
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
-        User    = $User
-        Role    = $Role
-        GroupId = $GroupID
-        Ensure  = "Absent"
+        User               = $User
+        Role               = $Role
+        GroupId            = $GroupID
+        Ensure             = "Absent"
+        GlobalAdminAccount = $GlobalAdminAccount
     }
 
 
@@ -62,10 +63,11 @@ function Get-TargetResource
     $myUser = $allMembers | Where-Object {$_.User -eq $User}
     Write-Verbose -Message "Found team user $($myUser.User) with role:$($myUser.Role)"
     return @{
-        User    = $myUser.User
-        Role    = $myUser.Role
-        GroupId = $GroupID
-        Ensure  = "Present"
+        User               = $myUser.User
+        Role               = $myUser.Role
+        GroupId            = $GroupID
+        Ensure             = "Present"
+        GlobalAdminAccount = $GlobalAdminAccount
     }
 
 }
@@ -179,21 +181,18 @@ function Export-TargetResource
         [ValidateSet("Member", "Owner")]
         $Role,
 
-        [Parameter()]
-        [ValidateSet("Present", "Absent")]
-        [System.String]
-        $Ensure = "Present",
-
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
-    $content = "TeamsUser " + (New-GUID).ToString() + "`r`n"
-    $content += "{`r`n"
-    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += "}`r`n"
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $content = "        TeamsUser " + (New-GUID).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += "        }`r`n"
     return $content
 }
 

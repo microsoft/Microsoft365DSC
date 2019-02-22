@@ -8,7 +8,7 @@ function Get-TargetResource
         [System.String]
         $GroupID,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateLength(1, 50)]
         $DisplayName,
@@ -36,13 +36,13 @@ function Get-TargetResource
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
-        GroupID        = $GroupID
-        DisplayName    = $DisplayName
-        Description    = $Description
-        NewDisplayName = $NewDisplayName
-        Ensure         = "Absent"
+        GroupID            = $GroupID
+        DisplayName        = $DisplayName
+        Description        = $Description
+        NewDisplayName     = $NewDisplayName
+        Ensure             = "Absent"
+        GlobalAdminAccount = $GlobalAdminAccount
     }
-
 
     Write-Verbose -Message "Checking for existance of team channels"
     $CurrentParameters = $PSBoundParameters
@@ -69,13 +69,13 @@ function Get-TargetResource
     }
 
     return @{
-        DisplayName    = $channel.DisplayName
-        GroupID        = $GroupID
-        Description    = $channel.Description
-        NewDisplayName = $NewDisplayName
-        Ensure         = "Present"
+        DisplayName        = $channel.DisplayName
+        GroupID            = $GroupID
+        Description        = $channel.Description
+        NewDisplayName     = $NewDisplayName
+        Ensure             = "Present"
+        GlobalAdminAccount = $GlobalAdminAccount
     }
-
 }
 
 function Set-TargetResource
@@ -87,7 +87,7 @@ function Set-TargetResource
         [System.String]
         $GroupID,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateLength(1, 50)]
         $DisplayName,
@@ -164,7 +164,7 @@ function Test-TargetResource
         [System.String]
         $GroupID,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateLength(1, 50)]
         $DisplayName,
@@ -210,25 +210,10 @@ function Export-TargetResource
         [System.String]
         $GroupID,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateLength(1, 50)]
         $DisplayName,
-
-        [Parameter()]
-        [System.String]
-        [ValidateLength(1, 50)]
-        $NewDisplayName,
-
-        [Parameter()]
-        [System.String]
-        [ValidateLength(1, 1024)]
-        $Description,
-
-        [Parameter()]
-        [ValidateSet("Present", "Absent")]
-        [System.String]
-        $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -236,10 +221,12 @@ function Export-TargetResource
     )
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
-    $content = "TeamsChannel " + (New-GUID).ToString() + "`r`n"
-    $content += "{`r`n"
-    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += "}`r`n"
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $content = "        TeamsChannel " + (New-GUID).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += "        }`r`n"
     return $content
 }
 

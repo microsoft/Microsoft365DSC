@@ -156,7 +156,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 GroupID            = "12345-12345-12345-12345-12345"
                 DisplayName        = "Test Channel"
-                Description        = "Test description"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

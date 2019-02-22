@@ -44,6 +44,7 @@ function Get-TargetResource
         AllowStickersAndMemes = $null
         AllowCustomMemes      = $null
         Ensure                = "Absent"
+        GlobalAdminAccount    = $GlobalAdminAccount
     }
 
 
@@ -74,6 +75,7 @@ function Get-TargetResource
         AllowStickersAndMemes = $teamFunSettings.AllowStickersAndMemes
         AllowCustomMemes      = $teamFunSettings.AllowCustomMemes
         Ensure                = "Present"
+        GlobalAdminAccount    = $GlobalAdminAccount
     }
 
 }
@@ -188,38 +190,18 @@ function Export-TargetResource
         [System.String]
         $GroupID,
 
-        [Parameter()]
-        [System.String]
-        $AllowGiphy,
-
-        [Parameter()]
-        [ValidateSet("Strict", "Moderate")]
-        [System.String]
-        $GiphyContentRating,
-
-        [Parameter()]
-        [System.String]
-        $AllowStickersAndMemes,
-
-        [Parameter()]
-        [System.String]
-        $AllowCustomMemes,
-
-        [Parameter()]
-        [ValidateSet("Present", "Absent")]
-        [System.String]
-        $Ensure = "Present",
-
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
-    $content = "TeamsFunSettings " + (New-GUID).ToString() + "`r`n"
-    $content += "{`r`n"
-    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += "}`r`n"
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $content = "        TeamsFunSettings " + (New-GUID).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += "        }`r`n"
     return $content
 }
 

@@ -982,6 +982,7 @@ function Test-O365ServiceConnection
     Write-Verbose "Verifying the LCM connection state to Microsoft Azure Active Directory Services"
     $catch = Connect-AzureAD -Credential $GlobalAdminAccount
 }
+
 function Test-TeamsServiceConnection {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -1522,6 +1523,85 @@ function Export-O365Configuration
         $DSCContent += Export-TargetResource -Url $site.Url `
                                              -CentralAdminUrl $centralAdminUrl `
                                              -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "TeamsTeam"
+    Write-Information "Extracting TeamsChannel..."
+    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                 -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
+                                 -Resolve
+
+    $catch = Import-Module $TeamsModulePath
+
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    $Teams = Get-Team
+
+    foreach ($team in $teams)
+    {
+        Write-Information "    Team {$($team.DisplayName)}"
+        $DSCContent += Export-TargetResource -DisplayName $team.DisplayName `
+                                             -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "TeamsChannel"
+    Write-Information "Extracting TeamsChannel..."
+    $TeamsChannelModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_TeamsChannel\MSFT_TeamsChannel.psm1" `
+                                    -Resolve
+
+    $catch = Import-Module $TeamsChannelModulePath
+
+    foreach ($team in $teams)
+    {
+        $channels = Get-TeamChannel -GroupId $team.GroupId
+
+        foreach ($channel in $channels)
+        {
+            Write-Information "    Team Channel {$($channel.DisplayName)}"
+            $DSCContent += Export-TargetResource -GroupId $team.GroupId `
+                                                 -DisplayName $channel.DisplayName `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
+    #region "TeamsFunSettings"
+    Write-Information "Extracting TeamsFunSettings..."
+    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                 -ChildPath "..\DSCResources\MSFT_TeamsFunSettings\MSFT_TeamsFunSettings.psm1" `
+                                 -Resolve
+
+    $catch = Import-Module $TeamsModulePath
+
+    foreach ($team in $teams)
+    {
+        Write-Information "    Team Fun Settings for Team {$($team.DisplayName)}"
+        $DSCContent += Export-TargetResource -GroupId $team.GroupId `
+                                             -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "TeamsUser"
+    Write-Information "Extracting TeamsUser..."
+    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_TeamsUser\MSFT_TeamsUser.psm1" `
+                                    -Resolve
+
+    $catch = Import-Module $TeamsModulePath
+
+    foreach ($team in $teams)
+    {
+        $users = Get-TeamUser -GroupId $team.GroupId
+        foreach ($user in $users)
+        {
+            Write-Information "    Teams User {$($user.User)}"
+            $DSCContent += Export-TargetResource -GroupId $team.GroupId `
+                                                 -User $user.User `
+                                                 -Role $user.Role `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+        }
     }
     #endregion
 

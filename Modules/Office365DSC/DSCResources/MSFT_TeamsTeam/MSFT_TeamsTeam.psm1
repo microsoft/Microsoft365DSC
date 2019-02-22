@@ -58,15 +58,16 @@ function Get-TargetResource
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
-        DisplayName    = $DisplayName
-        Group          = $Group
-        GroupId        = $GroupID
-        Description    = $Description
-        Owner          = $Owner
-        Classification = $null
-        Alias          = $Alias
-        AccessType     = $AccessType
-        Ensure         = "Absent"
+        DisplayName        = $DisplayName
+        Group              = $Group
+        GroupId            = $GroupID
+        Description        = $Description
+        Owner              = $Owner
+        Classification     = $null
+        Alias              = $Alias
+        AccessType         = $AccessType
+        Ensure             = "Absent"
+        GlobalAdminAccount = $GlobalAdminAccount
     }
 
 
@@ -81,7 +82,6 @@ function Get-TargetResource
             Write-Verbose "Failed to get Teams with GroupId $($GroupID)"
             return $nullReturn
         }
-
     }
     else
     {
@@ -116,15 +116,16 @@ function Get-TargetResource
     Write-Verbose -Message "Alias = $($teamGroup.Alias) and team accesstype = $($teamGroup.AccessType)"
 
     return @{
-        DisplayName    = $team.DisplayName
-        Group          = $Group
-        GroupID        = $team.GroupId
-        Description    = $team.Description
-        Owner          = $null
-        Classification = $null
-        Alias          = $teamGroup.Alias
-        AccessType     = $teamGroup.AccessType
-        Ensure         = "Present"
+        DisplayName        = $team.DisplayName
+        Group              = $Group
+        GroupID            = $team.GroupId
+        Description        = $team.Description
+        Owner              = $null
+        Classification     = $null
+        Alias              = $teamGroup.Alias
+        AccessType         = $teamGroup.AccessType
+        Ensure             = "Present"
+        GlobalAdminAccount = $GlobalAdminAccount
     }
 }
 
@@ -316,52 +317,18 @@ function Export-TargetResource
         [ValidateLength(1, 256)]
         $DisplayName,
 
-        [Parameter()]
-        [System.String]
-        $Group,
-
-        [Parameter()]
-        [System.String]
-        $GroupID,
-
-        [Parameter()]
-        [System.String]
-        [ValidateLength(1, 1024)]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $Alias,
-
-        [Parameter()]
-        [System.String]
-        $Owner,
-
-        [Parameter()]
-        [System.String]
-        $Classification,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("Public", "Private")]
-        $AccessType,
-
-
-        [Parameter()]
-        [ValidateSet("Present", "Absent")]
-        [System.String]
-        $Ensure = "Present",
-
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
-    $content = "TeamsTeam " + (New-GUID).ToString() + "`r`n"
-    $content += "{`r`n"
-    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += "}`r`n"
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $content = "        TeamsTeam " + (New-GUID).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += "        }`r`n"
     return $content
 }
 

@@ -108,10 +108,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GroupID               = "12345-12345-12345-12345-12345"
-                AllowGiphy            = $true
-                GiphyContentRating    = "Moderate"
-                AllowStickersAndMemes = $true
-                AllowCustomMemes      = $true
                 GlobalAdminAccount    = $GlobalAdminAccount
             }
 

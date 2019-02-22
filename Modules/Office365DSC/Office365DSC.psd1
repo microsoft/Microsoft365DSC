@@ -54,7 +54,8 @@ PowerShellVersion = '5.1'
 RequiredModules = @(@{ModuleName = 'ReverseDSC'; ModuleVersion = '1.9.3.0'; },
                     @{ModuleName = 'MSOnline'; ModuleVersion = '1.1.183.17'; },
                     @{ModuleName = 'Microsoft.Online.SharePoint.PowerShell'; ModuleVersion = '16.0.8414.0'; },
-                    @{ModuleName = 'SharePointPnPPowerShellOnline'; ModuleVersion = '3.5.1901.0' })
+                    @{ModuleName = 'SharePointPnPPowerShellOnline'; ModuleVersion = '3.5.1901.0'; },
+                    @{ModuleName = "MicrosoftTeams"; ModuleVersion = "0.9.6"; })
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
@@ -103,7 +104,7 @@ PrivateData = @{
         # Tags applied to this module. These help with module discovery in online galleries.
         Tags = 'DesiredStateConfiguration','DSC','DSCResourceKit','DSCResource','Office365'
 
-        Prerelease = '-alpha2196'
+        Prerelease = '-alpha288'
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/Microsoft/Office365/blob/master/LICENSE'
