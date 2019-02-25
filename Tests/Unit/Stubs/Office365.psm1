@@ -903,6 +903,25 @@ param(
 
  }
 
+ function Get-AcceptedDomain
+ {
+     [CmdletBinding()]
+     param
+     (
+         [Parameter()]
+         [ValidateSet('Authoritative', 'ExternalRelay', 'InternalRelay')]
+         [System.String]
+         $DomainType = 'Authoritative',
+
+         [Parameter(Mandatory = $true)]
+         [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)|(\{|\()?[A-Za-z0-9]{4}([A-Za-z0-9]{4}\-?){4}[A-Za-z0-9]{12}(\}|\()?' )]
+         [System.String]
+         $Identity
+     )
+
+ }
+
+
 
 function Get-SPOAppErrors {
  [CmdletBinding()]
@@ -2400,6 +2419,33 @@ param(
     [string]
     ${User})
 
+
+ }
+
+
+ function Set-AcceptedDomain
+ {
+     [CmdletBinding()]
+     param
+     (
+         [Parameter()]
+         [ValidateSet('Authoritative', 'ExternalRelay', 'InternalRelay')]
+         [System.String]
+         $DomainType = 'Authoritative',
+
+         [Parameter(Mandatory = $true)]
+         [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)|(\{|\()?[A-Za-z0-9]{4}([A-Za-z0-9]{4}\-?){4}[A-Za-z0-9]{12}(\}|\()?' )]
+         [System.String]
+         $Identity,
+
+         [Parameter()]
+         [System.Boolean]
+         $MatchSubDomains = $false,
+
+         [Parameter()]
+         [System.Boolean]
+         $OutboundOnly = $false
+     )
 
  }
 

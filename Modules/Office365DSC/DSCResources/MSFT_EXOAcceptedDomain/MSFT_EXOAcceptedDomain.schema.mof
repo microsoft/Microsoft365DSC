@@ -1,0 +1,11 @@
+[ClassVersion("1.0.0.0"), FriendlyName("EXOAcceptedDomain")]
+class MSFT_EXOAcceptedDomain : OMI_BaseResource
+{
+    [Write, ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Key] String Identity;
+    [Write, ValueMap{"Authoritative","ExternalRelay","InternalRelay"}, Values{"Authoritative","ExternalRelay","InternalRelay"}] String DomainType;
+    [Write, Description("The MatchSubDomains parameter enables mail to be sent by and received from users on any subdomain of this accepted domain. The default value is false.")] Boolean MatchSubDomains;
+    [Write, Description("The OutboundOnly parameter specifies whether this accepted domain is an internal relay domain for the on-premises deployment for organizations that have coexistence with a cloud-based organization. The default value is false.")] Boolean OutboundOnly;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+};
+
