@@ -52,8 +52,8 @@ function Get-TargetResource
         return $nullReturn
     }
 
-    Write-Verbose "Team fun settings for AllowGiphy = $($teamGuestSettings.AllowCreateUpdateChannels)"
-    Write-Verbose "Team fun settings for GiphyContentRating = $($teamGuestSettings.AllowDeleteChannels)"
+    Write-Verbose "Team guest settings for AllowCreateUpdateChannels = $($teamGuestSettings.AllowCreateUpdateChannels)"
+    Write-Verbose "Team guest settings for AllowDeleteChannels = $($teamGuestSettings.AllowDeleteChannels)"
 
 
     return @{
