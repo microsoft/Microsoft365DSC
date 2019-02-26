@@ -16,11 +16,12 @@ This resource configures team guest settings within a Team
 
     AllowCreateUpdateChannels
       - Required: No
-      - Description: True or false to allow team members to create or update team channels
+      - Description: True or false to allow team members to create or update
+                     team channels
 
     AllowDeleteChannels
       - Required: No
-      - Description: True or false to allow team members to delete team channels
+      - Description:True or false to allow team members to delete team channels
 
     GlobalAdminAccount
       - Required: Yes
@@ -37,4 +38,3 @@ This resource configures team guest settings within a Team
             GlobalAdminAccount              = $GlobalAdminAccount
         }
 ```
-

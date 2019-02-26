@@ -16,7 +16,8 @@ This resource configures team members settings within a Team.
 
     AllowCreateUpdateChannels
       - Required: No
-      - Description: True or false to allow team members to create or update team channels
+      - Description: True or false to allow team members to create or update
+         team channels
 
     AllowDeleteChannels
       - Required: No
@@ -24,15 +25,18 @@ This resource configures team members settings within a Team.
 
     AllowAddRemoveApps
       - Required: No
-      - Description: True or false to allow team members to add or remove team apps
+      - Description: True or false to allow team members to add or remove
+                     team apps
 
     AllowCreateUpdateRemoveTabs
       - Required: No
-      - Description: True or false to allow team members to create, update, and delete team tabs
+      - Description: True or false to allow team members to create, update,
+                     and delete team tabs
 
     AllowCreateUpdateRemoveConnectors
       - Required: No
-      - Description: True or false to allow team members to create, update, and delete team connectors
+      - Description: True or false to allow team members to create, update,
+                    and delete team connectors
 
     GlobalAdminAccount
       - Required: Yes
@@ -52,4 +56,3 @@ This resource configures team members settings within a Team.
             GlobalAdminAccount              = $GlobalAdminAccount
         }
 ```
-
