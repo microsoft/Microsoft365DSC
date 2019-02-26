@@ -16,17 +16,6 @@ function Get-TargetResource
         [System.String]
         $AllowDeleteChannels,
 
-        [Parameter()]
-        [System.String]
-        $AllowAddRemoveApps,
-
-        [Parameter()]
-        [System.String]
-        $AllowCreateUpdateRemoveTabs,
-
-        [Parameter()]
-        [System.String]
-        $AllowCreateUpdateRemoveConnectors,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -41,17 +30,14 @@ function Get-TargetResource
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
-        TeamName                          = $TeamName
-        AllowCreateUpdateChannels         = $null
-        AllowDeleteChannels               = $null
-        AllowAddRemoveApps                = $null
-        AllowCreateUpdateRemoveTabs       = $null
-        AllowCreateUpdateRemoveConnectors = $null
-        Ensure                            = "Absent"
-        GlobalAdminAccount                = $GlobalAdminAccount
+        TeamName                  = $TeamName
+        AllowCreateUpdateChannels = $null
+        AllowDeleteChannels        = $null
+        Ensure                    = "Absent"
+        GlobalAdminAccount        = $GlobalAdminAccount
     }
 
-    Write-Verbose -Message "Getting Team member settings for $TeamName"
+    Write-Verbose -Message "Getting Team guest settings for $TeamName"
 
     $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
     if ($null -eq $team)
@@ -59,29 +45,23 @@ function Get-TargetResource
         throw "Team with Name $TeamName doesnt exist in tenant"
     }
 
-    $teamMemberSettings = Get-TeamMemberSettings -GroupId $team.GroupId -ErrorAction SilentlyContinue
-    if ($null -eq $teamMemberSettings)
+    $teamGuestSettings = Get-TeamGuestSettings -GroupId $team.GroupId -ErrorAction SilentlyContinue
+    if ($null -eq $teamGuestSettings)
     {
         Write-Verbose "The specified Team doesn't exist."
         return $nullReturn
     }
 
-    Write-Verbose "Team member settings for AllowCreateUpdateChannels = $($teamMemberSettings.AllowCreateUpdateChannels)"
-    Write-Verbose "Team member settings for AllowDeleteChannels = $($teamMemberSettings.AllowDeleteChannels)"
-    Write-Verbose "Team member settings for AllowAddRemoveApps = $($teamMemberSettings.AllowAddRemoveApps)"
-    Write-Verbose "Team member settings for AllowCreateUpdateRemoveTabs = $($teamMemberSettings.AllowCreateUpdateRemoveTabs)"
-    Write-Verbose "Team member settings for AllowCreateUpdateRemoveConnectors = $($teamMemberSettings.AllowCreateUpdateRemoveConnectors)"
+    Write-Verbose "Team fun settings for AllowGiphy = $($teamGuestSettings.AllowCreateUpdateChannels)"
+    Write-Verbose "Team fun settings for GiphyContentRating = $($teamGuestSettings.AllowDeleteChannels)"
 
 
     return @{
-        TeamName                          = $TeamName
-        AllowCreateUpdateChannels         = $teamMemberSettings.AllowCreateUpdateChannels
-        AllowDeleteChannels               = $teamMemberSettings.AllowDeleteChannels
-        AllowAddRemoveApps                = $teamMemberSettings.AllowAddRemoveApps
-        AllowCreateUpdateRemoveTabs       = $teamMemberSettings.AllowCreateUpdateRemoveTabs
-        AllowCreateUpdateRemoveConnectors = $teamMemberSettings.AllowCreateUpdateRemoveConnectors
-        Ensure                            = "Present"
-        GlobalAdminAccount                = $GlobalAdminAccount
+        TeamName                  = $TeamName
+        AllowCreateUpdateChannels = $teamGuestSettings.AllowCreateUpdateChannels
+        AllowDeleteChannels       = $teamGuestSettings.AllowDeleteChannels
+        Ensure                    = "Present"
+        GlobalAdminAccount        = $GlobalAdminAccount
     }
 
 }
@@ -103,17 +83,6 @@ function Set-TargetResource
         [System.String]
         $AllowDeleteChannels,
 
-        [Parameter()]
-        [System.String]
-        $AllowAddRemoveApps,
-
-        [Parameter()]
-        [System.String]
-        $AllowCreateUpdateRemoveTabs,
-
-        [Parameter()]
-        [System.String]
-        $AllowCreateUpdateRemoveConnectors,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -143,7 +112,7 @@ function Set-TargetResource
     $CurrentParameters.Add("GroupId", $team.GroupId)
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
-    Set-TeamMemberSettings @CurrentParameters
+    Set-TeamGuestSettings @CurrentParameters
 }
 
 function Test-TargetResource
@@ -164,17 +133,6 @@ function Test-TargetResource
         [System.String]
         $AllowDeleteChannels,
 
-        [Parameter()]
-        [System.String]
-        $AllowAddRemoveApps,
-
-        [Parameter()]
-        [System.String]
-        $AllowCreateUpdateRemoveTabs,
-
-        [Parameter()]
-        [System.String]
-        $AllowCreateUpdateRemoveConnectors,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -186,18 +144,13 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing Team member settings for $TeamName"
+    Write-Verbose -Message "Testing Team guest settings for $TeamName"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
-   
 
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("AllowCreateUpdateChannels", `
             "AllowDeleteChannels", `
-            "AllowAddRemoveApps", `
-            "AllowCreateUpdateRemoveTabs", `
-            "AllowCreateUpdateRemoveConnectors", `
             "Ensure"
     )
 }
@@ -219,7 +172,7 @@ function Export-TargetResource
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
-    $content = "        TeamsMemberSettings " + (New-GUID).ToString() + "`r`n"
+    $content = "        TeamsGuestSettings " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"

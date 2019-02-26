@@ -3,20 +3,19 @@ This example is used to test new resources and showcase the usage of new resourc
 It is not meant to use as a production baseline.
 #>
 
-Configuration TeamsFunSettingsConfig
+Configuration TeamsGuestSettingsConfig
 {
     Import-DSCResource -ModuleName Office365DSC
     $credsGlobalAdmin = Get-Credential -UserName "derek@smaystate.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
-        TeamsFunSettings MyTeamFunSettings
+        TeamsGuestSettings MyTeamGuestSettings
         {
-            TeamName              = "Sample3"
-            AllowGiphy            = $True
-            GiphyContentRating    = "strict"
-            AllowStickersAndMemes = $True
-            AllowCustomMemes      = $True
-            GlobalAdminAccount    = $credsGlobalAdmin
+            TeamName                  = "Sample3"
+            AllowCreateUpdateChannels = $true
+            AllowDeleteChannels       = $false
+            Ensure                    = "Present"
+            GlobalAdminAccount        = $credsGlobalAdmin
         }
     }
 }
@@ -31,4 +30,4 @@ $configData = @{
     )
 }
 
-TeamsFunSettingsConfig -ConfigurationData $configData
+TeamsGuestSettingsConfig -ConfigurationData $configData
