@@ -2,7 +2,7 @@
 
 ## Description
 
-This resource configures team guest settings within a Team.
+This resource configures team guest settings within a Team
 
 ## Parameters
 
