@@ -9,11 +9,11 @@ function Get-TargetResource
         $TeamName,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowCreateUpdateChannels,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowDeleteChannels,
 
 
@@ -76,11 +76,11 @@ function Set-TargetResource
         $TeamName,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowCreateUpdateChannels,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowDeleteChannels,
 
 
@@ -126,11 +126,11 @@ function Test-TargetResource
         $TeamName,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowCreateUpdateChannels,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowDeleteChannels,
 
 

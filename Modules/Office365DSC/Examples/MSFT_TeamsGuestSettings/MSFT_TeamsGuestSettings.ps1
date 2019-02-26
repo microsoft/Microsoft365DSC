@@ -13,7 +13,7 @@ Configuration TeamsGuestSettingsConfig
         {
             TeamName                  = "Sample3"
             AllowCreateUpdateChannels = $true
-            AllowDeleteChannels       = $false
+            AllowDeleteChannels       = $true
             Ensure                    = "Present"
             GlobalAdminAccount        = $credsGlobalAdmin
         }

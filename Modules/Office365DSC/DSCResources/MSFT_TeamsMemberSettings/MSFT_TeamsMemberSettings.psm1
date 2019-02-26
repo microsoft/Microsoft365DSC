@@ -9,23 +9,23 @@ function Get-TargetResource
         $TeamName,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowCreateUpdateChannels,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowDeleteChannels,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowAddRemoveApps,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowCreateUpdateRemoveTabs,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowCreateUpdateRemoveConnectors,
 
         [Parameter()]
@@ -96,23 +96,23 @@ function Set-TargetResource
         $TeamName,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowCreateUpdateChannels,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowDeleteChannels,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowAddRemoveApps,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowCreateUpdateRemoveTabs,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowCreateUpdateRemoveConnectors,
 
         [Parameter()]
@@ -157,23 +157,23 @@ function Test-TargetResource
         $TeamName,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowCreateUpdateChannels,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowDeleteChannels,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowAddRemoveApps,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowCreateUpdateRemoveTabs,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $AllowCreateUpdateRemoveConnectors,
 
         [Parameter()]
@@ -189,7 +189,7 @@ function Test-TargetResource
     Write-Verbose -Message "Testing Team member settings for $TeamName"
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-   
+
 
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `

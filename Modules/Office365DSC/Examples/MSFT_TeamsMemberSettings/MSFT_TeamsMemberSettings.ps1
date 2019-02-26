@@ -12,11 +12,11 @@ Configuration TeamsMemberSettingsConfig
         TeamsMemberSettings MyTeamMemberSettings
         {
             TeamName                          = "Sample3"
-            AllowCreateUpdateChannels         = $False
-            AllowDeleteChannels               = $False
-            AllowAddRemoveApps                = $False
-            AllowCreateUpdateRemoveTabs       = $False
-            AllowCreateUpdateRemoveConnectors = $False
+            AllowCreateUpdateChannels         = $false
+            AllowDeleteChannels               = $false
+            AllowAddRemoveApps                = $false
+            AllowCreateUpdateRemoveTabs       = $false
+            AllowCreateUpdateRemoveConnectors = $false
             Ensure                            = "Present"
             GlobalAdminAccount                = $credsGlobalAdmin
         }
