@@ -72,7 +72,6 @@ function Get-TargetResource
     Write-Verbose "Team member settings for AllowCreateUpdateRemoveTabs = $($teamMemberSettings.AllowCreateUpdateRemoveTabs)"
     Write-Verbose "Team member settings for AllowCreateUpdateRemoveConnectors = $($teamMemberSettings.AllowCreateUpdateRemoveConnectors)"
 
-
     return @{
         TeamName                          = $TeamName
         AllowCreateUpdateChannels         = $teamMemberSettings.AllowCreateUpdateChannels
@@ -83,7 +82,6 @@ function Get-TargetResource
         Ensure                            = "Present"
         GlobalAdminAccount                = $GlobalAdminAccount
     }
-
 }
 
 function Set-TargetResource
@@ -127,7 +125,7 @@ function Set-TargetResource
 
     if ('Absent' -eq $Ensure)
     {
-        throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
+        throw "This resource doesn't handle Ensure = Absent. Please make sure its Ensure value is set to Present."
     }
 
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
@@ -188,8 +186,6 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing Team member settings for $TeamName"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
-
 
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `

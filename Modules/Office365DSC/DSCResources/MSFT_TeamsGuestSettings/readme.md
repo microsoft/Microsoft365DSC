@@ -10,6 +10,7 @@ This resource configures team guest settings within a Team
       - Required: No (Defaults to 'Present')
       - Description: `Present` is the only value accepted.
           Configurations using `Ensure = 'Absent'` will throw an Error!
+
     TeamName
       - Required: Yes
       - Description: Name of the Team
@@ -25,7 +26,7 @@ This resource configures team guest settings within a Team
 
     GlobalAdminAccount
       - Required: Yes
-      - Description: Credentials of the SharePoint Global Admin
+      - Description: Credentials of the Office365 Tenant Admin
 
 ## Example
 
@@ -33,8 +34,8 @@ This resource configures team guest settings within a Team
         TeamsGuestSettings SetGuestMemberSettings {
             TeamName                             = 'TestTeam'
             Ensure                               = 'Present'
-            AllowCreateUpdateChannels            = '$True'
-            AllowDeleteChannels                  = '$True'
-            GlobalAdminAccount              = $GlobalAdminAccount
+            AllowCreateUpdateChannels            =  $True
+            AllowDeleteChannels                  =  $True
+            GlobalAdminAccount                   =  $GlobalAdminAccount
         }
 ```

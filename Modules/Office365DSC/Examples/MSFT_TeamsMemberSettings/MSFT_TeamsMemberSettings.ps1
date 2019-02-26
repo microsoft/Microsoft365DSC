@@ -27,8 +27,8 @@ $configData = @{
     AllNodes = @(
         @{
             NodeName                    = "localhost"
-            PSDscAllowPlainTextPassword = $true;
-            PSDscAllowDomainUser        = $true;
+            PSDscAllowPlainTextPassword = $true
+            PSDscAllowDomainUser        = $true
         }
     )
 }
