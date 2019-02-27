@@ -909,7 +909,7 @@ function Get-TeamByGroupID
     return $true
 }
 
-function Test-SecurityAndComplianceCenterConnection
+function Open-SecurityAndComplianceCenterConnection
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
