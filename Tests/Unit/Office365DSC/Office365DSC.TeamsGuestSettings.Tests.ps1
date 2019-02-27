@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "TeamsFunSettings"
+    -DscResource "TeamsGuestSettings"
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -25,22 +25,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name "Check Team Fun settings" -Fixture {
+        Context -Name "Check Team Guest settings" -Fixture {
             $testParams = @{
-                TeamName              = "TestTeam"
-                AllowGiphy            = $true
-                GiphyContentRating    = "Moderate"
-                AllowStickersAndMemes = $true
-                AllowCustomMemes      = $true
-                Ensure                = "Present"
-                GlobalAdminAccount    = $GlobalAdminAccount
+                TeamName                          = "TestTeam"
+                AllowCreateUpdateChannels         = $true
+                AllowDeleteChannels               = $true
+                Ensure                            = "Present"
+                GlobalAdminAccount                = $GlobalAdminAccount
             }
 
-            Mock -CommandName Set-TeamFunSettings -MockWith {
-                return @{AllowGiphy       = $null
-                    GilphyContentRating   = $null
-                    AllowStickersAndMemes = $null
-                    AllowCustomMemes      = $null
+            Mock -CommandName Set-TeamGuestSettings -MockWith {
+                return @{AllowCreateUpdateChannels    = $null
+                    AllowDeleteChannels               = $null
+                    AllowAddRemoveApps                = $null
                 }
             }
 
@@ -51,7 +48,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-TeamFunSettings -MockWith {
+            Mock -CommandName Get-TeamGuestSettings -MockWith {
                 return $null
             }
 
@@ -68,15 +65,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Set Team Fun settings" -Fixture {
+        Context -Name "Check Team Guest settings" -Fixture {
             $testParams = @{
-                TeamName              = "TestTeam"
-                AllowGiphy            = $true
-                GiphyContentRating    = "Moderate"
-                AllowStickersAndMemes = $true
-                AllowCustomMemes      = $true
-                Ensure                = "Present"
-                GlobalAdminAccount    = $GlobalAdminAccount
+                TeamName                          = "TestTeam"
+                AllowCreateUpdateChannels         = $false
+                AllowDeleteChannels               = $false
+                Ensure                            = "Present"
+                GlobalAdminAccount                = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Set-TeamGuestSettings -MockWith {
+                return @{AllowCreateUpdateChannels    = $true
+                    AllowDeleteChannels               = $true
+                }
             }
 
             Mock -CommandName Get-Team -MockWith {
@@ -86,17 +87,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Set-TeamFunSettings -MockWith {
-
-            }
-
-            Mock -CommandName Get-TeamFunSettings -MockWith {
-                return @{
-                    GroupID               = "12345-12345-12345-12345-12345"
-                    AllowGiphy            = $true
-                    GiphyContentRating    = "Moderate"
-                    AllowStickersAndMemes = $true
-                    AllowCustomMemes      = $true
+            Mock -CommandName Get-TeamGuestSettings -MockWith {
+                return @{AllowCreateUpdateChannels    = $true
+                    AllowDeleteChannels               = $true
+                    AllowAddRemoveApps                = $true
                 }
             }
 
@@ -104,19 +98,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
-            It "Should allowCustomerMemes and AllowStickersMeme in set method" {
-                Set-TargetResource @testParams
-            }
-            It "Should return true from the Test method" {
-                Test-TargetResource @testParams  | Should be $true
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
             }
 
+            It "Updates the Team fun settings in the Set method" {
+                Set-TargetResource @testParams
+            }
         }
+
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                TeamName              = "TestTeam"
-                GlobalAdminAccount    = $GlobalAdminAccount
+                TeamName           = "TestTeam"
+                GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-Team -MockWith {
@@ -126,13 +121,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-TeamFunSettings -MockWith {
+            Mock -CommandName Get-TeamGuestSettings -MockWith {
                 return @{
-                    GroupID               = "12345-12345-12345-12345-12345"
-                    AllowGiphy            = $true
-                    GiphyContentRating    = "Moderate"
-                    AllowStickersAndMemes = $true
-                    AllowCustomMemes      = $true
+                    DisplayName = "TestTeam"
                 }
             }
 
@@ -140,7 +131,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Export-TargetResource @testParams
             }
         }
+
+        }
     }
-}
+
 
 Invoke-Command -ScriptBlock $Global:DscHelper.CleanupScript -NoNewScope

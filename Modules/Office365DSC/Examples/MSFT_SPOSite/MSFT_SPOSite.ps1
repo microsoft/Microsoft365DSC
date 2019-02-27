@@ -3,19 +3,25 @@ This example is used to test new resources and showcase the usage of new resourc
 It is not meant to use as a production baseline.
 #>
 
-Configuration TeamsUserConfig
+Configuration Site
 {
     Import-DSCResource -ModuleName Office365DSC
     $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
-        TeamsUser MyTeam
+        SPOSite ee4a977d-4d7d-4968-9238-2a1702aa699c
         {
-            TeamName           = "SuperSecretTeam"
-            User               = "jdoe@dsazure.com"
-            Role               = "Member"
-            Ensure             = "Absent"
+            Url                = "https://office365dsc-my.sharepoint.com/"
+            ResourceQuota      = 0
+            CentralAdminUrl    = "https://Office365DSC-admin.sharepoint.com"
+            StorageQuota       = 26214400
+            LocaleId           = 1033
+            Template           = "SPSMSITEHOST#0"
             GlobalAdminAccount = $credsGlobalAdmin
+            Owner               = "08b23058-d843-4b09-8174-d8d1b42d03c2"
+            CompatibilityLevel = 15
+            Title              = "My Site"
+            Ensure             = "Present"
         }
     }
 }
@@ -30,4 +36,4 @@ $configData = @{
     )
 }
 
-TeamsUserConfig -ConfigurationData $configData
+Site -ConfigurationData $configData

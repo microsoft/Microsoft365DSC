@@ -26,7 +26,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "When the Team user doesnt exist" -Fixture {
             $testParams = @{
-                GroupID            = "12345-12345-12345-12345-12345"
+                TeamName           = "TestTeam"
                 Role               = "Member"
                 User               = "JohnSmith@contoso.onmicrosoft.com"
                 Ensure             = "Present"
@@ -34,8 +34,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
 
-            Mock -CommandName Get-TeamByGroupID -MockWith {
-                return @{User = $null}
+            Mock -CommandName Get-Team -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
             }
 
             Mock -CommandName Add-TeamUser -MockWith {
@@ -61,7 +64,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "The user already exists" -Fixture {
             $testParams = @{
-                GroupID            = "12345-12345-12345-12345-12345"
+                TeamName           = "TestTeam"
                 User               = "JohnSmith@contoso.onmicrosoft.com"
                 Role               = "Owner"
                 Ensure             = "Present"
@@ -76,8 +79,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-TeamByGroupID -MockWith {
-                return @{GroupID = "12345-12345-12345-12345-12345"}
+            Mock -CommandName Get-Team -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
             }
 
             Mock -CommandName Add-TeamUser -MockWith {
@@ -97,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "The user already exists" -Fixture {
             $testParams = @{
-                GroupID            = "12345-12345-12345-12345-12345"
+                TeamName           = "TestTeam"
                 User               = "JohnSmith@contoso.onmicrosoft.com"
                 Role               = "Owner"
                 Ensure             = "Present"
@@ -112,8 +118,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-TeamByGroupID -MockWith {
-                return @{GroupID = "12345-12345-12345-12345-12345"}
+            Mock -CommandName Get-Team -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
             }
 
             Mock -CommandName Add-TeamUser -MockWith {
@@ -133,15 +142,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Failed to get team" -Fixture {
             $testParams = @{
-                GroupID            = "12345-12345-12345-12345-12345"
+                TeamName           = "TestTeam"
                 User               = "JohnSmith@contoso.onmicrosoft.com"
                 Role               = "Owner"
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-TeamByGroupID -MockWith {
-                return $null
+            Mock -CommandName Get-Team -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
             }
 
             Mock -CommandName Get-TeamUser -MockWith {
@@ -159,7 +171,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Remove existing user from team" -Fixture {
             $testParams = @{
-                GroupID            = "12345-12345-12345-12345-12345"
+                TeamName           = "TestTeam"
                 User               = "JohnSmith@contoso.onmicrosoft.com"
                 Role               = "Member"
                 Ensure             = "Absent"
@@ -174,8 +186,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-TeamByGroupID -MockWith {
-                return @{GroupID = "12345-12345-12345-12345-12345"}
+            Mock -CommandName Get-Team -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
             }
 
             Mock -CommandName Remove-TeamUser -MockWith {
@@ -193,14 +208,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                GroupID            = "12345-12345-12345-12345-12345"
+                TeamName           = "TestTeam"
                 Role               = "Member"
                 User               = "JohnSmith@contoso.onmicrosoft.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-TeamByGroupID -MockWith {
-                return @{GroupID = "12345-12345-12345-12345-12345"}
+            Mock -CommandName Get-Team -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
             }
 
             Mock -CommandName Get-TeamUser -MockWith {

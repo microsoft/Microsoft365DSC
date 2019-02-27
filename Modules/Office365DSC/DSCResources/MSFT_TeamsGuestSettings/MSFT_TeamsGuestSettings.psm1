@@ -9,21 +9,12 @@ function Get-TargetResource
         $TeamName,
 
         [Parameter()]
-        [System.String]
-        $AllowGiphy,
+        [System.Boolean]
+        $AllowCreateUpdateChannels,
 
         [Parameter()]
-        [ValidateSet("Strict", "Moderate")]
-        [System.String]
-        $GiphyContentRating,
-
-        [Parameter()]
-        [System.String]
-        $AllowStickersAndMemes,
-
-        [Parameter()]
-        [System.String]
-        $AllowCustomMemes,
+        [System.Boolean]
+        $AllowDeleteChannels,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -38,45 +29,38 @@ function Get-TargetResource
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
-        TeamName              = $TeamName
-        AllowGiphy            = $null
-        GiphyContentRating    = $null
-        AllowStickersAndMemes = $null
-        AllowCustomMemes      = $null
-        Ensure                = "Absent"
-        GlobalAdminAccount    = $GlobalAdminAccount
+        TeamName                  = $TeamName
+        AllowCreateUpdateChannels = $null
+        AllowDeleteChannels        = $null
+        Ensure                    = "Absent"
+        GlobalAdminAccount        = $GlobalAdminAccount
     }
 
-    Write-Verbose -Message "Getting Team fun settings for $TeamName"
+    Write-Verbose -Message "Getting Team guest settings for $TeamName"
 
     $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
     if ($null -eq $team)
     {
-        throw "Team with Name $TeamName doesnt exist in tenant"
+        throw "Team with Name $TeamName doesn't exist in tenant"
     }
 
-    $teamFunSettings = Get-TeamFunSettings -GroupId $team.GroupId -ErrorAction SilentlyContinue
-    if ($null -eq $teamFunSettings)
+    $teamGuestSettings = Get-TeamGuestSettings -GroupId $team.GroupId -ErrorAction SilentlyContinue
+    if ($null -eq $teamGuestSettings)
     {
         Write-Verbose "The specified Team doesn't exist."
         return $nullReturn
     }
 
-    Write-Verbose "Team fun settings for AllowGiphy = $($teamFunSettings.AllowGiphy)"
-    Write-Verbose "Team fun settings for GiphyContentRating = $($teamFunSettings.GiphyContentRating)"
-    Write-Verbose "Team fun settings for AllowStickersAndMemes = $($teamFunSettings.AllowStickersAndMemes)"
-    Write-Verbose "Team fun settings for AllowCustomMemes = $($teamFunSettings.AllowCustomMemes)"
+    Write-Verbose "Team guest settings for AllowCreateUpdateChannels = $($teamGuestSettings.AllowCreateUpdateChannels)"
+    Write-Verbose "Team guest settings for AllowDeleteChannels = $($teamGuestSettings.AllowDeleteChannels)"
 
     return @{
-        TeamName              = $TeamName
-        AllowGiphy            = $teamFunSettings.AllowGiphy
-        GiphyContentRating    = $teamFunSettings.GiphyContentRating
-        AllowStickersAndMemes = $teamFunSettings.AllowStickersAndMemes
-        AllowCustomMemes      = $teamFunSettings.AllowCustomMemes
-        Ensure                = "Present"
-        GlobalAdminAccount    = $GlobalAdminAccount
+        TeamName                  = $TeamName
+        AllowCreateUpdateChannels = $teamGuestSettings.AllowCreateUpdateChannels
+        AllowDeleteChannels       = $teamGuestSettings.AllowDeleteChannels
+        Ensure                    = "Present"
+        GlobalAdminAccount        = $GlobalAdminAccount
     }
-
 }
 
 function Set-TargetResource
@@ -89,21 +73,12 @@ function Set-TargetResource
         $TeamName,
 
         [Parameter()]
-        [System.String]
-        $AllowGiphy,
+        [System.Boolean]
+        $AllowCreateUpdateChannels,
 
         [Parameter()]
-        [ValidateSet("Strict", "Moderate")]
-        [System.String]
-        $GiphyContentRating,
-
-        [Parameter()]
-        [System.String]
-        $AllowStickersAndMemes,
-
-        [Parameter()]
-        [System.String]
-        $AllowCustomMemes,
+        [System.Boolean]
+        $AllowDeleteChannels,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -117,7 +92,7 @@ function Set-TargetResource
 
     if ('Absent' -eq $Ensure)
     {
-        throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
+        throw "This resource doesn't handle Ensure = Absent. Please make sure its Ensure value is set to Present."
     }
 
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
@@ -125,7 +100,7 @@ function Set-TargetResource
     $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
     if ($null -eq $team)
     {
-        throw "Team with Name $TeamName doesnt exist in tenant"
+        throw "Team with Name $TeamName doesn't exist in tenant"
     }
 
     $CurrentParameters = $PSBoundParameters
@@ -133,7 +108,8 @@ function Set-TargetResource
     $CurrentParameters.Add("GroupId", $team.GroupId)
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
-    Set-TeamFunSettings @CurrentParameters
+    Write-Verbose -Message "Setting TeamGuestSettings on team $TeamName"
+    Set-TeamGuestSettings @CurrentParameters
 }
 
 function Test-TargetResource
@@ -147,21 +123,12 @@ function Test-TargetResource
         $TeamName,
 
         [Parameter()]
-        [System.String]
-        $AllowGiphy,
+        [System.Boolean]
+        $AllowCreateUpdateChannels,
 
         [Parameter()]
-        [ValidateSet("Strict", "Moderate")]
-        [System.String]
-        $GiphyContentRating,
-
-        [Parameter()]
-        [System.String]
-        $AllowStickersAndMemes,
-
-        [Parameter()]
-        [System.String]
-        $AllowCustomMemes,
+        [System.Boolean]
+        $AllowDeleteChannels,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -173,15 +140,13 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing Team fun settings for $TeamName"
+    Write-Verbose -Message "Testing Team guest settings for $TeamName"
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("GiphyContentRating", `
-            "AllowGiphy", `
-            "AllowStickersAndMemes", `
-            "AllowCustomMemes", `
+        -ValuesToCheck @("AllowCreateUpdateChannels", `
+            "AllowDeleteChannels", `
             "Ensure"
     )
 }
@@ -203,7 +168,7 @@ function Export-TargetResource
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
-    $content = "        TeamsFunSettings " + (New-GUID).ToString() + "`r`n"
+    $content = "        TeamsGuestSettings " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"

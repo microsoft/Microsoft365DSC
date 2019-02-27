@@ -10,13 +10,17 @@
   ** Initial Release
 * EXOMailTips
   ** Initial Release
-  * ODSettings
+* ODSettings
   ** Initial Release
-  * TeamsTeam
+* TeamsTeam
   ** Initial Release
-  * TeamsFunSettings
+* TeamsFunSettings
   ** Initial Release
-  * TeamUser
+* TeamUser
   ** Initial Release
-  * TeamsChanel
+* TeamsChannel
+  ** Initial Release
+* TeamsMemberSettings
+  ** Initial Release
+* TeamsGuestSettings
   ** Initial Release
