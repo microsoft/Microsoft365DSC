@@ -24,7 +24,7 @@ function Get-TargetResource
     )
     if ('Absent' -eq $Ensure)
     {
-        throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
+        throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
     }
 
     Open-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
