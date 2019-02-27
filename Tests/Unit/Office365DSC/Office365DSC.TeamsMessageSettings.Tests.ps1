@@ -37,7 +37,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount       = $GlobalAdminAccount
             }
 
-            Mock -CommandName Set-TeamMessageSettings -MockWith {
+            Mock -CommandName Set-TeamMessagingSettings -MockWith {
                 return @{AllowUserEditMessages    = $null
                     AllowUserDeleteMessages       = $null
                     AllowOwnerDeleteMessages      = $null
@@ -53,7 +53,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-TeamMessageSettings -MockWith {
+            Mock -CommandName Get-TeamMessagingSettings -MockWith {
                 return $null
             }
 
@@ -82,7 +82,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount                = $GlobalAdminAccount
             }
 
-            Mock -CommandName Set-TeamMessageSettings -MockWith {
+            Mock -CommandName Set-TeamMessagingSettings -MockWith {
                 return @{AllowUserEditMessages    = $true
                     AllowUserDeleteMessages       = $true
                     AllowOwnerDeleteMessages      = $true
@@ -98,7 +98,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-TeamMessageSettings -MockWith {
+            Mock -CommandName Get-TeamMessagingSettings -MockWith {
                 return @{AllowUserEditMessages    = $true
                     AllowUserDeleteMessages       = $true
                     AllowOwnerDeleteMessages      = $true
@@ -134,7 +134,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-TeamMessageSettings -MockWith {
+            Mock -CommandName Get-TeamMessagingSettings -MockWith {
                 return @{
                     DisplayName = "TestTeam"
                 }
