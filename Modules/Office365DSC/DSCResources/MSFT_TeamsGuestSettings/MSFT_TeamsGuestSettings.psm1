@@ -108,6 +108,7 @@ function Set-TargetResource
     $CurrentParameters.Add("GroupId", $team.GroupId)
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
+    Write-Verbose -Message "Setting TeamGuestSettings on team $TeamName"
     Set-TeamGuestSettings @CurrentParameters
 }
 
