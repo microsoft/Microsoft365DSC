@@ -59,7 +59,7 @@ function Get-TargetResource
         throw "Team with Name $TeamName doesn't exist in tenant"
     }
 
-    $teamMemberSettings = Get-TeamMessagingSettings -GroupId $team.GroupId -ErrorAction SilentlyContinue
+    $teamMemberSettings = Get-TeamMemberSettings -GroupId $team.GroupId -ErrorAction SilentlyContinue
     if ($null -eq $teamMemberSettings)
     {
         Write-Verbose "The specified Team doesn't exist."
