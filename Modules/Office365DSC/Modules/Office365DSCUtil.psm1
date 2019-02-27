@@ -921,10 +921,12 @@ function Test-SecurityAndComplianceCenterConnection
     )
     Write-Verbose "Verifying the LCM connection state to Exchange Online"
     $ExchangeOnlineSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-    [void](Import-PSSession $ExchangeOnlineSession -WarningAction SilentlyContinue )
+    $ExchangeOnlineModules = Import-PSSession $ExchangeOnlineSession -AllowClobber -WarningAction SilentlyContinue -Verbose:$false
+    Import-Module $ExchangeOnlineModules -Global
     Write-Verbose "Verifying the LCM connection state to Security and Compliance Center"
     $SecurityAndComplianceCenterSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-    [void](Import-PSSession $SecurityAndComplianceCenterSession -WarningAction SilentlyContinue )
+    $SecurityAndComplianceCenterModules = Import-PSSession $SecurityAndComplianceCenterSession -AllowClobber -WarningAction SilentlyContinue -Verbose:$false
+    Import-Module $SecurityAndComplianceCenterModules -Global
 }
 
 function Test-SPOServiceConnection
