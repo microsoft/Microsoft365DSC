@@ -49,16 +49,23 @@ function Get-TargetResource
             $UnifiedAuditLogIngestionEnabledReturnValue = 'Disabled'
         }
 
-        return @{
+        [void](Get-PSSession | Remove-PSSession)
+        $Result = @{
             IsSingleInstance                = $IsSingleInstance
             Ensure                          = 'Present'
             GlobalAdminAccount              = $GlobalAdminAccount
             UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
         }
+        Write-Verbose "Returning Get-TargetResource Result"
+        return $Result
     }
     catch
     {
-        Write-Verbose 'Unable to determine Unified Audit Log Ingestion State.'
+        $ExceptionMessage = $_.Exception
+        Write-Verbose "Error Caught, exception message is: $ExceptionMessage"
+        Write-Warning 'Unable to determine Unified Audit Log Ingestion State.'
+        [void](Get-PSSession | Remove-PSSession)
+        Write-Verbose "Returning Get-TargetResource NULL Result"
         return $nullReturn
     }
 }
@@ -96,12 +103,14 @@ function Set-TargetResource
 
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
     {
-        Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $true
+        Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $true -Confirm:$false -Force
     }
     else
     {
-        Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $false
+        Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $false -Confirm:$false -Force
     }
+
+    [void](Get-PSSession | Remove-PSSession)
 }
 
 function Test-TargetResource
@@ -130,6 +139,8 @@ function Test-TargetResource
     )
     Write-Verbose -Message 'Testing O365AdminAuditLogConfig'
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    Write-Verbose "Test-TargetResource CurrentValues: "
+    Write-Verbose "$($CurrentValues | Out-String)"
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @('UnifiedAuditLogIngestionEnabled')
