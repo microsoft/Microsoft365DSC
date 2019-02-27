@@ -40,33 +40,40 @@ function Get-TargetResource
     {
         Write-Verbose -Message 'Getting O365AdminAuditLogConfig'
         $GetResults = Get-AdminAuditLogConfig
-        if ($GetResults.UnifiedAuditLogIngestionEnabled)
+        if (-NOT $GetResults)
         {
-            $UnifiedAuditLogIngestionEnabledReturnValue = 'Enabled'
+            Write-Warning 'Unable to determine Unified Audit Log Ingestion State.'
+            Write-Verbose "Returning Get-TargetResource NULL Result"
+            return $nullReturn
         }
         else
         {
-            $UnifiedAuditLogIngestionEnabledReturnValue = 'Disabled'
+            if ($GetResults.UnifiedAuditLogIngestionEnabled)
+            {
+                $UnifiedAuditLogIngestionEnabledReturnValue = 'Enabled'
+            }
+            else
+            {
+                $UnifiedAuditLogIngestionEnabledReturnValue = 'Disabled'
+            }
+
+            [void](Get-PSSession | Remove-PSSession)
+            $Result = @{
+                IsSingleInstance                = $IsSingleInstance
+                Ensure                          = 'Present'
+                GlobalAdminAccount              = $GlobalAdminAccount
+                UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
+            }
+            Write-Verbose "Returning Get-TargetResource Result"
+            return $Result
         }
 
-        [void](Get-PSSession | Remove-PSSession)
-        $Result = @{
-            IsSingleInstance                = $IsSingleInstance
-            Ensure                          = 'Present'
-            GlobalAdminAccount              = $GlobalAdminAccount
-            UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
-        }
-        Write-Verbose "Returning Get-TargetResource Result"
-        return $Result
     }
     catch
     {
-        $ExceptionMessage = $_.Exception
-        Write-Verbose "Error Caught, exception message is: $ExceptionMessage"
-        Write-Warning 'Unable to determine Unified Audit Log Ingestion State.'
         [void](Get-PSSession | Remove-PSSession)
-        Write-Verbose "Returning Get-TargetResource NULL Result"
-        return $nullReturn
+        $ExceptionMessage = $_.Exception
+        throw $ExceptionMessage
     }
 }
 
