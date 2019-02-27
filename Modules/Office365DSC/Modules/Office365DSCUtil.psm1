@@ -1607,7 +1607,7 @@ function Export-O365Configuration
     #endregion
     Write-Information "Extracting TeamsMemberSettings..."
     $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                 -ChildPath "..\DSCResources\MSFT_TeamsFunSettings\MSFT_TeamsMemberSettings.psm1" `
+                                 -ChildPath "..\DSCResources\MSFT_TeamsMemberSettings\MSFT_TeamsMemberSettings.psm1" `
                                  -Resolve
 
     $catch = Import-Module $TeamsModulePath
@@ -1625,9 +1625,29 @@ function Export-O365Configuration
                                              -GlobalAdminAccount $GlobalAdminAccount
     }
 
+    Write-Information "Extracting TeamsMessageSettings..."
+    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                 -ChildPath "..\DSCResources\MSFT_TeamsMessageSettings\MSFT_TeamsMessageSettings.psm1" `
+                                 -Resolve
+
+    $catch = Import-Module $TeamsModulePath
+
+    foreach ($team in $teams)
+    {
+        $teamMessageSettings = Get-TeamMemberSettings -GroupId $team.GroupId
+        Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
+        $DSCContent += Export-TargetResource -GroupId $team.GroupId `
+                                             -AllowUserEditMessages $teamMessageSettings.AllowUserEditMessages `
+                                             -AllowUserDeleteMessages $teamMessageSettings.AllowUserDeleteMessages `
+                                             -AllowOwnerDeleteMessages $teamMessageSettings.AllowOwnerDeleteMessages `
+                                             -AllowTeamMentions $teamMessageSettings.AllowTeamMentions `
+                                             -AllowChannelMentions $teamMessageSettings.AllowChannelMentions `
+                                             -GlobalAdminAccount $GlobalAdminAccount
+    }
+
     Write-Information "Extracting TeamsGuestSettings..."
     $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                 -ChildPath "..\DSCResources\MSFT_TeamsFunSettings\MSFT_TeamsGuestSettings.psm1" `
+                                 -ChildPath "..\DSCResources\MSFT_TeamsGuestSettings\MSFT_TeamsGuestSettings.psm1" `
                                  -Resolve
 
     $catch = Import-Module $TeamsModulePath
@@ -1641,7 +1661,7 @@ function Export-O365Configuration
                                              -AllowDeleteChannels $teamGuestSettings.AllowDeleteChannels `
                                              -GlobalAdminAccount $GlobalAdminAccount
     }
-    
+
     # Close the Node and Configuration declarations
     $DSCContent += "    }`r`n"
     $DSCContent += "}`r`n"
