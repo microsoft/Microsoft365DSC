@@ -103,11 +103,11 @@ function Set-TargetResource
 
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
     {
-        Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $true -Force
+        Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $true
     }
     else
     {
-        Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $false -Force
+        Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $false
     }
 
     [void](Get-PSSession | Remove-PSSession)
