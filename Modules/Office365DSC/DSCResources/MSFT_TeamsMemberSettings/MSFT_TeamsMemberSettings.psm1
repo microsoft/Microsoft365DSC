@@ -133,7 +133,7 @@ function Set-TargetResource
     $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
     if ($null -eq $team)
     {
-        throw "Team with Name $TeamName doesnt exist in tenant"
+        throw "Team with Name $TeamName doesn't exist in tenant"
     }
 
     $CurrentParameters = $PSBoundParameters
