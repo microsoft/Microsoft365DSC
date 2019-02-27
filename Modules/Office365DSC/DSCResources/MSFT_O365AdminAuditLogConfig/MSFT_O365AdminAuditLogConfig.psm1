@@ -33,7 +33,7 @@ function Get-TargetResource
         IsSingleInstance                = $IsSingleInstance
         Ensure                          = 'Present'
         GlobalAdminAccount              = $GlobalAdminAccount
-        UnifiedAuditLogIngestionEnabled = 'Disabled'
+        UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabled
     }
 
     try
