@@ -27,7 +27,7 @@ function Get-TargetResource
         throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
     }
 
-    Test-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
+    Open-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
         IsSingleInstance                = $IsSingleInstance
@@ -92,7 +92,7 @@ function Set-TargetResource
         throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
     }
 
-    Test-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
+    Open-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
 
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
     {

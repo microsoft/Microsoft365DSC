@@ -75,8 +75,8 @@ NestedModules = @('modules\Office365DSCUtil.psm1')
 #FunctionsToExport = @()
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-CmdletsToExport = 'Test-SPOServiceConnection', 'Test-Office365DSCParameterState', 
-               'Test-O365ServiceConnection', 'Invoke-ExoCommand', 'Export-O365Configuration', 
+CmdletsToExport = 'Open-SecurityAndComplianceCenterConnection','Test-SPOServiceConnection', 'Test-Office365DSCParameterState',
+               'Test-O365ServiceConnection', 'Invoke-ExoCommand', 'Export-O365Configuration',
                'Get-TimeZoneNameFromID', 'Get-TimeZoneIDFromName', 'Get-LocaleIDFromName',
                'Get-LocaleNameFromID'
 
