@@ -921,7 +921,127 @@ param(
 
  }
 
+ function Get-AntiPhishPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
 
+        [Parameter()]
+        [ValidateSet('Delete', 'MoveToJmf', 'Quarantine')]
+        [System.String]
+        $AuthenticationFailAction = 'MoveToJmf',
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAntispoofEnforcement = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAuthenticationSafetyTip = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAuthenticationSoftPassSafetyTip = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligence = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationDomainsProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarDomainsSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarUsersSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedDomainsProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedUserProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnusualCharactersSafetyTips = $false,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedDomains = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedSenders = @(),,
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $MakeDefault = $false,
+
+        [Parameter()]
+        [ValidateSet('1', '2', '3', '4')]
+        [System.String]
+        $PhishThresholdLevel = '1',
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedDomainActionRecipients = @(),
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $TargetedDomainProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedDomainsToProtect = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedUserActionRecipients = @(),
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $TargetedUserProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedUsersToProtect = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $TreatSoftPassAsAuthenticated = $true
+    )
+
+}
 
 function Get-SPOAppErrors {
  [CmdletBinding()]
@@ -2449,6 +2569,127 @@ param(
 
  }
 
+ function Set-AntiPhishPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [ValidateSet('Delete', 'MoveToJmf', 'Quarantine')]
+        [System.String]
+        $AuthenticationFailAction = 'MoveToJmf',
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAntispoofEnforcement = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAuthenticationSafetyTip = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAuthenticationSoftPassSafetyTip = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligence = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationDomainsProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarDomainsSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarUsersSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedDomainsProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedUserProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnusualCharactersSafetyTips = $false,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedDomains = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedSenders = @(),,
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $MakeDefault = $false,
+
+        [Parameter()]
+        [ValidateSet('1', '2', '3', '4')]
+        [System.String]
+        $PhishThresholdLevel = '1',
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedDomainActionRecipients = @(),
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $TargetedDomainProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedDomainsToProtect = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedUserActionRecipients = @(),
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $TargetedUserProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedUsersToProtect = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $TreatSoftPassAsAuthenticated = $true
+    )
+
+}
 
 function Set-SPOBrowserIdleSignOut {
  [CmdletBinding()]
