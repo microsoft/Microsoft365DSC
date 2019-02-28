@@ -24,42 +24,53 @@ function Get-TargetResource
     )
     if ('Absent' -eq $Ensure)
     {
-        throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
+        throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
     }
-
-    Test-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
         IsSingleInstance                = $IsSingleInstance
         Ensure                          = 'Present'
         GlobalAdminAccount              = $GlobalAdminAccount
-        UnifiedAuditLogIngestionEnabled = 'Disabled'
+        UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabled
     }
 
     try
     {
         Write-Verbose -Message 'Getting O365AdminAuditLogConfig'
         $GetResults = Get-AdminAuditLogConfig
-        if ($GetResults.UnifiedAuditLogIngestionEnabled)
+        if (-NOT $GetResults)
         {
-            $UnifiedAuditLogIngestionEnabledReturnValue = 'Enabled'
+            Write-Warning 'Unable to determine Unified Audit Log Ingestion State.'
+            Write-Verbose "Returning Get-TargetResource NULL Result"
+            return $nullReturn
         }
         else
         {
-            $UnifiedAuditLogIngestionEnabledReturnValue = 'Disabled'
+            if ($GetResults.UnifiedAuditLogIngestionEnabled)
+            {
+                $UnifiedAuditLogIngestionEnabledReturnValue = 'Enabled'
+            }
+            else
+            {
+                $UnifiedAuditLogIngestionEnabledReturnValue = 'Disabled'
+            }
+
+            $Result = @{
+                IsSingleInstance                = $IsSingleInstance
+                Ensure                          = 'Present'
+                GlobalAdminAccount              = $GlobalAdminAccount
+                UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
+            }
+            Write-Verbose "Returning Get-TargetResource Result"
+            return $Result
         }
 
-        return @{
-            IsSingleInstance                = $IsSingleInstance
-            Ensure                          = 'Present'
-            GlobalAdminAccount              = $GlobalAdminAccount
-            UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
-        }
     }
     catch
     {
-        Write-Verbose 'Unable to determine Unified Audit Log Ingestion State.'
-        return $nullReturn
+        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+        $ExceptionMessage = $_.Exception
+        throw $ExceptionMessage
     }
 }
 
@@ -89,10 +100,8 @@ function Set-TargetResource
     Write-Verbose -Message 'Setting O365AdminAuditLogConfig'
     if ('Absent' -eq $Ensure)
     {
-        throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
+        throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
     }
-
-    Test-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
 
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
     {
@@ -102,6 +111,9 @@ function Set-TargetResource
     {
         Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $false
     }
+
+    Write-Verbose "Closing Remote PowerShell Sessions"
+    $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
 }
 
 function Test-TargetResource
@@ -129,10 +141,21 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose -Message 'Testing O365AdminAuditLogConfig'
+    Open-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+    Write-Verbose "Test-TargetResource CurrentValues: "
+    Write-Verbose "$($CurrentValues | Out-String)"
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @('UnifiedAuditLogIngestionEnabled')
+    if ($TestResult)
+    {
+        Write-Verbose "Closing Remote PowerShell Sessions"
+        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+    }
+
+    return $TestResult
+
 }
 
 function Export-TargetResource
@@ -160,7 +183,10 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $IsSingleInstance = 'Yes'
+    Open-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
+    Write-Verbose "Closing Remote PowerShell Sessions"
+    $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        O365AdminAuditLogConfig " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

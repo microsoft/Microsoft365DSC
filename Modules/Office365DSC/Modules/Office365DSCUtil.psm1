@@ -909,7 +909,7 @@ function Get-TeamByGroupID
     return $true
 }
 
-function Test-SecurityAndComplianceCenterConnection
+function Open-SecurityAndComplianceCenterConnection
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -922,9 +922,11 @@ function Test-SecurityAndComplianceCenterConnection
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     $ExchangeOnlineSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-    $catch = [void](Import-PSSession $ExchangeOnlineSession -WarningAction SilentlyContinue -AllowClobber)
+    $ExchangeOnlineModules = Import-PSSession $ExchangeOnlineSession -AllowClobber
+    $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global
     $SecurityAndComplianceCenterSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-    $catch = [void](Import-PSSession $SecurityAndComplianceCenterSession -WarningAction SilentlyContinue -AllowClobber)
+    $SecurityAndComplianceCenterModules = Import-PSSession $SecurityAndComplianceCenterSession -AllowClobber
+    $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global
 }
 
 function Test-SPOServiceConnection
