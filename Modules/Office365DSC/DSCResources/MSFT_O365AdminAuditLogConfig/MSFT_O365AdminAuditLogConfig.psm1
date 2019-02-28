@@ -68,7 +68,7 @@ function Get-TargetResource
     }
     catch
     {
-        [void](Get-PSSession | Remove-PSSession)
+        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
         $ExceptionMessage = $_.Exception
         throw $ExceptionMessage
     }
@@ -113,7 +113,7 @@ function Set-TargetResource
     }
 
     Write-Verbose "Closing Remote PowerShell Sessions"
-    [void](Get-PSSession | Remove-PSSession)
+    $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
 }
 
 function Test-TargetResource
@@ -151,7 +151,7 @@ function Test-TargetResource
     if ($TestResult)
     {
         Write-Verbose "Closing Remote PowerShell Sessions"
-        [void](Get-PSSession | Remove-PSSession)
+        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
     }
 
     return $TestResult
@@ -186,7 +186,7 @@ function Export-TargetResource
     Open-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     Write-Verbose "Closing Remote PowerShell Sessions"
-    [void](Get-PSSession | Remove-PSSession)
+    $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        O365AdminAuditLogConfig " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
