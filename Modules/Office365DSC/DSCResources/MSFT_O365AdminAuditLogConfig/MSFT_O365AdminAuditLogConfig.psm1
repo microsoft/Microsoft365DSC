@@ -27,8 +27,6 @@ function Get-TargetResource
         throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
     }
 
-    Open-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
-
     $nullReturn = @{
         IsSingleInstance                = $IsSingleInstance
         Ensure                          = 'Present'
@@ -57,7 +55,6 @@ function Get-TargetResource
                 $UnifiedAuditLogIngestionEnabledReturnValue = 'Disabled'
             }
 
-            [void](Get-PSSession | Remove-PSSession)
             $Result = @{
                 IsSingleInstance                = $IsSingleInstance
                 Ensure                          = 'Present'
@@ -106,8 +103,6 @@ function Set-TargetResource
         throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
     }
 
-    Open-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
-
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
     {
         Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $true
@@ -117,6 +112,7 @@ function Set-TargetResource
         Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $false
     }
 
+    Write-Verbose "Closing Remote PowerShell Sessions"
     [void](Get-PSSession | Remove-PSSession)
 }
 
@@ -145,12 +141,21 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose -Message 'Testing O365AdminAuditLogConfig'
+    Open-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
     $CurrentValues = Get-TargetResource @PSBoundParameters
     Write-Verbose "Test-TargetResource CurrentValues: "
     Write-Verbose "$($CurrentValues | Out-String)"
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @('UnifiedAuditLogIngestionEnabled')
+    if ($TestResult)
+    {
+        Write-Verbose "Closing Remote PowerShell Sessions"
+        [void](Get-PSSession | Remove-PSSession)
+    }
+
+    return $TestResult
+
 }
 
 function Export-TargetResource
@@ -178,7 +183,10 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $IsSingleInstance = 'Yes'
+    Open-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
+    Write-Verbose "Closing Remote PowerShell Sessions"
+    [void](Get-PSSession | Remove-PSSession)
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        O365AdminAuditLogConfig " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
