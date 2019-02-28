@@ -82,7 +82,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Update existsing team access type" -Fixture {
+        Context -Name "Update existing team access type" -Fixture {
             $testParams = @{
                 DisplayName        = "TestTeam"
                 GroupID            = "12345-12345-12345-12345-12345"
@@ -110,10 +110,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present"
-            }
-
-            It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $false
             }
 
             It "Should set access type in set command" {
@@ -267,10 +263,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 DisplayName        = "Test Team"
-                Description        = "Test team description"
-                AccessType         = "Private"
-                Alias              = "TestTeam"
-                Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

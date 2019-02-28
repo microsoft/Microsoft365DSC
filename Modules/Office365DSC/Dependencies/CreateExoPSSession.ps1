@@ -1,19 +1,6 @@
 $UserPath = [Environment]::GetFolderPath("UserProfile")
 cd $UserPath
 
-Write-Host -ForegroundColor Yellow ""
-Write-Host -ForegroundColor Yellow "--------------------------------------------------------------------------"
-Write-Host -ForegroundColor Yellow ""
-Write-Host -ForegroundColor Yellow "This PowerShell module allows you to connect to Exchange Online service."
-Write-Host -ForegroundColor Yellow "To connect, use: Connect-EXOPSSession -UserPrincipalName <your UPN>"
-Write-Host -ForegroundColor Yellow "This PowerShell module allows you to connect Exchange Online Protection and Security & Compliance Center services also."
-Write-Host -ForegroundColor Yellow "To connect, use: Connect-IPPSSession -UserPrincipalName <your UPN>"
-Write-Host -ForegroundColor Yellow ""
-Write-Host -ForegroundColor Yellow "To get additional information, use: Get-Help Connect-EXOPSSession, or Get-Help Connect-IPPSSession"
-Write-Host -ForegroundColor Yellow ""
-Write-Host -ForegroundColor Yellow "--------------------------------------------------------------------------"
-Write-Host -ForegroundColor Yellow ""
-
 <#
 .Synopsis Validates a given Uri
 #>
@@ -157,14 +144,14 @@ function Get-OrgNameFromUPN
 
 ###### Begin Main ######
 
-function Connect-EXOPSSession 
+function Connect-EXOPSSession
 {
     <#
         .SYNOPSIS
             To connect in other Office 365 offerings, use the following settings:
              - Office 365 operated by 21Vianet: -ConnectionURI https://partner.outlook.cn/PowerShell-LiveID -AzureADAuthorizationEndpointUri https://login.chinacloudapi.cn/common
              - Office 365 Germany: -ConnectionURI https://outlook.office.de/PowerShell-LiveID -AzureADAuthorizationEndpointUri https://login.microsoftonline.de/common
-        
+
             - PSSessionOption accept object created using New-PSSessionOption
 
             - EnableEXOTelemetry To collect telemetry on Exchange cmdlets. Default value is False.
@@ -209,20 +196,20 @@ function Connect-EXOPSSession
             # User Credential to Logon
             $Credential = New-Object System.Management.Automation.RuntimeDefinedParameter('Credential', [System.Management.Automation.PSCredential], $attributeCollection)
             $Credential.Value = $null
-            
-            # Switch to collect telemetry on command execution. 
+
+            # Switch to collect telemetry on command execution.
             $EnableEXOTelemetry = New-Object System.Management.Automation.RuntimeDefinedParameter('EnableEXOTelemetry', [switch], $attributeCollection)
             $EnableEXOTelemetry.Value = $false
-            
-            # Where to store EXO command telemetry data. By default telemetry is stored in 
+
+            # Where to store EXO command telemetry data. By default telemetry is stored in
             # %TMP%/EXOTelemetry/EXOCmdletTelemetry-yyyymmdd-hhmmss.csv.
             $TelemetryFilePath = New-Object System.Management.Automation.RuntimeDefinedParameter('TelemetryFilePath', [string], $attributeCollection)
             $TelemetryFilePath.Value = ''
-            
+
             # Switch to Disable error message logging in telemetry file.
             $DoLogErrorMessage = New-Object System.Management.Automation.RuntimeDefinedParameter('DoLogErrorMessage', [switch], $attributeCollection)
             $DoLogErrorMessage.Value = $true
-            
+
             $paramDictionary = New-object System.Management.Automation.RuntimeDefinedParameterDictionary
             $paramDictionary.Add('UserPrincipalName', $UserPrincipalName)
             $paramDictionary.Add('Credential', $Credential)
@@ -239,7 +226,7 @@ function Connect-EXOPSSession
             $attributeCollection = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
             $attributeCollection.Add($attributes)
 
-            # Switch to MSI auth 
+            # Switch to MSI auth
             $Device = New-Object System.Management.Automation.RuntimeDefinedParameter('Device', [switch], $attributeCollection)
             $Device.Value = $false
 
@@ -261,7 +248,7 @@ function Connect-EXOPSSession
 
         # Keep track of error count at beginning.
         $errorCountAtStart = $global:Error.Count;
-        
+
         try
         {
             # Cleanup old ps sessions
@@ -286,7 +273,7 @@ function Connect-EXOPSSession
             }
 
             Import-Module $ModulePath;
-            
+
             if ($isCloudShell -eq $false)
             {
                 $PSSession = New-ExoPSSession -UserPrincipalName $UserPrincipalName.Value -ConnectionUri $ConnectionUri -AzureADAuthorizationEndpointUri $AzureADAuthorizationEndpointUri -PSSessionOption $PSSessionOption -Credential $Credential.Value -BypassMailboxAnchoring:$BypassMailboxAnchoring
@@ -301,7 +288,7 @@ function Connect-EXOPSSession
                 $PSSessionModuleInfo = Import-PSSession $PSSession -AllowClobber
                 UpdateImplicitRemotingHandler
 
-                # If we are configured to collect telemetry, add telemetry wrappers. 
+                # If we are configured to collect telemetry, add telemetry wrappers.
                 if ($EnableEXOTelemetry.Value -eq $true)
                 {
                     $TelemetryFilePath.Value = Add-EXOClientTelemetryWrapper -Organization (Get-OrgNameFromUPN -UPN $UserPrincipalName.Value) -PSSessionModuleName $PSSessionModuleInfo.Name -TelemetryFilePath $TelemetryFilePath.Value -DoLogErrorMessage:$DoLogErrorMessage.Value
@@ -310,16 +297,17 @@ function Connect-EXOPSSession
         }
         catch
         {
-            throw $_
+            global:RemoveBrokenOrClosedPSSession
+            throw "You have exceeded the maximum number of concurrent sessions to Exchange Online. Please try again in a few minutes."
         }
-        Finally 
+        Finally
         {
-            # If telemetry is enabled, log errors generated from this cmdlet also. 
+            # If telemetry is enabled, log errors generated from this cmdlet also.
             if ($EnableEXOTelemetry.Value -eq $true)
             {
-                $errorCountAtProcessEnd = $global:Error.Count 
+                $errorCountAtProcessEnd = $global:Error.Count
 
-                # If we have any errors during this cmdlet execution, log it. 
+                # If we have any errors during this cmdlet execution, log it.
                 if ($errorCountAtProcessEnd -gt $errorCountAtStart)
                 {
                     if (!$TelemetryFilePath.Value)
@@ -327,10 +315,10 @@ function Connect-EXOPSSession
                         $TelemetryFilePath.Value = New-EXOClientTelemetryFilePath
                     }
 
-                    # Log errors which are encountered during Connect-EXOPSSession execution. 
+                    # Log errors which are encountered during Connect-EXOPSSession execution.
                     Write-Warning("Writing Connect-EXOPSSession errors to " + $TelemetryFilePath.Value)
-                    
-                    Push-EXOTelemetryRecord -TelemetryFilePath $TelemetryFilePath.Value -CommandName Connect-EXOPSSession -OrganizationName  $global:ExPSTelemetryOrganization -ScriptName $global:ExPSTelemetryScriptName  -ScriptExecutionGuid $global:ExPSTelemetryScriptExecutionGuid -ErrorObject $global:Error -ErrorRecordsToConsider ($errorCountAtProcessEnd - $errorCountAtStart) 
+
+                    Push-EXOTelemetryRecord -TelemetryFilePath $TelemetryFilePath.Value -CommandName Connect-EXOPSSession -OrganizationName  $global:ExPSTelemetryOrganization -ScriptName $global:ExPSTelemetryScriptName  -ScriptExecutionGuid $global:ExPSTelemetryScriptExecutionGuid -ErrorObject $global:Error -ErrorRecordsToConsider ($errorCountAtProcessEnd - $errorCountAtStart)
                 }
             }
         }
@@ -395,7 +383,7 @@ function Connect-IPPSSession
             $attributeCollection = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
             $attributeCollection.Add($attributes)
 
-            # Switch to MSI auth 
+            # Switch to MSI auth
             $Device = New-Object System.Management.Automation.RuntimeDefinedParameter('Device', [switch], $attributeCollection)
             $Device.Value = $false
 

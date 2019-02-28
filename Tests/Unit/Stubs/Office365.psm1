@@ -1,4 +1,4 @@
-﻿function Test-SecurityAndComplianceCenterConnection{
+﻿function Open-SecurityAndComplianceCenterConnection{
     [CmdletBinding()]
     param(
         [Parameter()]

@@ -3,7 +3,7 @@ This example is used to test new resources and showcase the usage of new resourc
 It is not meant to use as a production baseline.
 #>
 
-Configuration MSFT_TeamsFunSettings
+Configuration TeamsFunSettingsConfig
 {
     Import-DSCResource -ModuleName Office365DSC
     $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
@@ -11,11 +11,11 @@ Configuration MSFT_TeamsFunSettings
     {
         TeamsFunSettings MyTeamFunSettings
         {
-            GroupID               = "f51a3df3-14af-4f52-b22b-30be60ca3fc4"
+            TeamName              = "Sample3"
             AllowGiphy            = $True
             GiphyContentRating    = "strict"
-            AllowStickersAndMemes = $False
-            AllowCustomMemes      = $False
+            AllowStickersAndMemes = $True
+            AllowCustomMemes      = $True
             GlobalAdminAccount    = $credsGlobalAdmin
         }
     }
@@ -27,10 +27,8 @@ $configData = @{
             NodeName                    = "localhost"
             PSDscAllowPlainTextPassword = $true;
             PSDscAllowDomainUser        = $true;
-            DebugMode                   = $true;
         }
     )
 }
 
-
-MSFT_TeamsFunSettings -ConfigurationData $configData
+TeamsFunSettingsConfig -ConfigurationData $configData

@@ -83,17 +83,17 @@ function Get-TargetResource
         [System.Boolean]
         $CompanyNameExtraction,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -128,8 +128,11 @@ function Get-TargetResource
         CentralAdminUrl             = $CentralAdminUrl
     }
 
-    $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
-    $property =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
+    if ($null -eq $Script:RecentMPExtract)
+    {
+        $Script:RecentMPExtract = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+    }
+    $property =  $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
                     | Where-Object { $_.Value.Name -eq $Name }
 
     if ($null -eq $property)
@@ -151,13 +154,25 @@ function Get-TargetResource
 
     # Get Mapped Crawled Properties
     $currentManagedPID = [string] $property.Value.Pid
-    $mappedProperties = $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.Mappings.dictionary.KeyValueOfstringMappingInfoy6h3NzC8 `
+    $mappedProperties = $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.Mappings.dictionary.KeyValueOfstringMappingInfoy6h3NzC8 `
                             | Where-Object { $_.Value.ManagedPid -eq $currentManagedPID }
 
     $mappings = @()
     foreach ($mappedProperty in $mappedProperties)
     {
         $mappings += $mappedProperty.Value.CrawledPropertyName.ToString()
+    }
+
+    $fixedRefinable = "No"
+    if ([boolean] $property.Value.Refinable)
+    {
+        $fixedRefinable = "Yes"
+    }
+
+    $fixedSortable = "No"
+    if ([boolean] $property.Value.Sortable)
+    {
+        $fixedSortable = "Yes"
     }
 
     return @{
@@ -170,8 +185,8 @@ function Get-TargetResource
         Queryable = [boolean] $property.Value.Queryable
         Retrievable = [boolean] $property.Value.Retrievable
         AllowMultipleValues = [boolean] $property.Value.HasMultipleValues
-        Refinable = [boolean] $property.Value.Refinable
-        Sortable = [boolean] $property.Value.Sortable
+        Refinable = $fixedRefinable
+        Sortable = $fixedSortable
         Safe = [boolean] $property.Value.SafeForAnonymous
         Aliases = [boolean] $property.Value.Aliases
         TokenNormalization = [boolean] $property.Value.TokenNormalization
@@ -269,17 +284,17 @@ function Set-TargetResource
         [System.Boolean]
         $CompanyNameExtraction,
 
-        [Parameter()] 
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
-        [System.String] 
+        [System.String]
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -295,8 +310,12 @@ function Set-TargetResource
     $SearchConfigXML = [Xml] (Get-Content $SearchConfigTemplatePath -Raw)
 
     # Get the managed property back if it already exists.
-    $currentConfigXML = [XML] (Get-PnpSearchConfiguration -Scope Subscription)
-    $property =  $currentConfigXML.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
+    if ($null -eq $Script:RecentMPExtract)
+    {
+        $Script:RecentMPExtract = [XML] (Get-PnpSearchConfiguration -Scope Subscription)
+    }
+
+    $property =  $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
                     | Where-Object { $_.Value.Name -eq $Name }
     if ($null -ne $property)
     {
@@ -356,10 +375,10 @@ function Set-TargetResource
     else
     {
         $node.InnerText = "0"
-    }    
+    }
     $catch = $valueNode.AppendChild($node)
     #endregion
-    
+
     $node = $SearchConfigXML.CreateElement("d3p1:ExpandSegments", `
                                            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $FinerQueryTokenization.ToString().Replace("$", "").ToLower()
@@ -449,7 +468,7 @@ function Set-TargetResource
                                               "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $subNode.InnerText = "1000"
     $catch = $catch = $node.AppendChild($subNode)
-        
+
     $subNode = $SearchConfigXML.CreateElement("d3p1:Divisor", `
                                               "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $subNode.InnerText = "1"
@@ -471,12 +490,12 @@ function Set-TargetResource
     $catch = $node.AppendChild($subNode)
 
     $catch = $valueNode.AppendChild($node)
-    #endregion   
+    #endregion
 
     $node = $SearchConfigXML.CreateElement("d3p1:RemoveDuplicates", `
                                               "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = "true"
-    $catch = $valueNode.AppendChild($node)    
+    $catch = $valueNode.AppendChild($node)
 
     $node = $SearchConfigXML.CreateElement("d3p1:RespectPriority", `
                                               "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
@@ -497,7 +516,7 @@ function Set-TargetResource
                                            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $Searchable.ToString().Replace("$", "").ToLower()
     $catch = $valueNode.AppendChild($node)
-    
+
     #region Sortable
     $value = $false
     if ($Sortable -eq "Yes")
@@ -509,12 +528,12 @@ function Set-TargetResource
     $node.InnerText = $value.ToString().Replace("$", "").ToLower()
     $catch = $valueNode.AppendChild($node)
     #endregion
-    
+
     $node = $SearchConfigXML.CreateElement("d3p1:SortableType", `
                                            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = "Enabled"
     $catch = $valueNode.AppendChild($node)
-    
+
     $node = $SearchConfigXML.CreateElement("d3p1:TokenNormalization", `
                                            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $TokenNormalization.ToString().Replace("$", "").ToLower()
@@ -640,12 +659,12 @@ function Test-TargetResource
         $AllowMultipleValues,
 
         [Parameter()]
-        [ValidateSet("No", "Yes - latent", "Yes")] 
+        [ValidateSet("No", "Yes - latent", "Yes")]
         [System.String]
         $Refinable,
 
         [Parameter()]
-        [ValidateSet("No", "Yes - latent", "Yes")] 
+        [ValidateSet("No", "Yes - latent", "Yes")]
         [System.String]
         $Sortable,
 
@@ -681,17 +700,17 @@ function Test-TargetResource
         [System.Boolean]
         $CompanyNameExtraction,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -722,8 +741,8 @@ function Export-TargetResource
         [System.String]
         $CentralAdminUrl,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
