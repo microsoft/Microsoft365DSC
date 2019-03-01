@@ -22,5 +22,9 @@
   ** Initial Release
 * TeamUser
   ** Initial Release
-* TeamsChanel
+* TeamsChannel
+  ** Initial Release
+* TeamsMemberSettings
+  ** Initial Release
+* TeamsGuestSettings
   ** Initial Release

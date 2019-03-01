@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
 
-        Mock -CommandName Test-SecurityAndComplianceCenterConnection -MockWith {
+        Mock -CommandName Open-SecurityAndComplianceCenterConnection -MockWith {
 
         }
 
@@ -144,15 +144,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should throw error from the Get method' {
-                { Get-TargetResource @testParams } | Should Throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
+                { Get-TargetResource @testParams } | Should Throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
             }
 
             It 'Should throw error from the Set method' {
-                { Set-TargetResource @testParams } | Should Throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
+                { Set-TargetResource @testParams } | Should Throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
             }
 
             It 'Should throw error from the Test method' {
-                { Test-TargetResource @testParams } | Should Throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
+                { Test-TargetResource @testParams } | Should Throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
             }
         }
 
