@@ -55,7 +55,7 @@ function Get-TargetResource
         $SourceURL,
 
         [Parameter()]
-        [ValidateSet("SharePoint","People", "Basic")]
+        [ValidateSet("SharePoint","People")]
         [System.String]
         $Type = "SharePoint",
 
