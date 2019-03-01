@@ -120,7 +120,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-        $user = Get-AzureADUser -UserPrincipalName $UserPrincipalName -ErrorAction SilentlyContinue
+        $user = Get-MSOLUser -UserPrincipalName $UserPrincipalName -ErrorAction SilentlyContinue
         if (!$user)
         {
             Write-Verbose "The specified User doesn't already exist."
@@ -314,16 +314,15 @@ function Set-TargetResource
                 }
             }
             Write-Verbose "Updating License Assignment"
-            Set-AzureADUserLicense -UserPrincipalName $UserPrincipalName -AddLicenses $licensesToAdd -RemoveLicenses $licensesToRemove
+            Set-MsolUserLicense -UserPrincipalName $UserPrincipalName -AddLicenses $licensesToAdd -RemoveLicenses $licensesToRemove
         }
         Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
-        Write-Verbose $CurrentParameters
-        $user = Set-AzureADUser @CurrentParameters
+        $user = Set-MsolUser @CurrentParameters
     }
     else
     {
         Write-Verbose -Message "Creating Office 365 User $UserPrincipalName"
-        $user = New-AzureADUser @CurrentParameters
+        $user = New-MsolUser @CurrentParameters
     }
 }
 

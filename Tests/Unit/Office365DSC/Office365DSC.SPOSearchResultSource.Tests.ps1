@@ -121,7 +121,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         Context -Name "When the Result Source already exists" -Fixture {
-            $Script:RecentMPExtract = $null
+            $Script:RecentExtract = $null
             $testParams = @{
                 Name               = "This is a Test"
                 Description        = "New Result Source"

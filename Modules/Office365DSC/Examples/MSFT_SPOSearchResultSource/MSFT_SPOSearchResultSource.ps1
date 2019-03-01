@@ -11,11 +11,11 @@ Configuration SearchRSConfig
     {
         SPOSearchResultSource SearchMP
         {
-            Name               = "MyResultSource"                      
+            Name               = "MyResultSource"
             Description        = "Description of item"
-	    Protocol           = "Local"
+            Protocol           = "Local"
             Type               = "SharePoint
-            GlobalAdminAccount = $credsGlobalAdmin  
+            GlobalAdminAccount = $credsGlobalAdmin
             Ensure             = "Present"
             CentralAdminUrl    = "https://Office365DSC-admin.sharepoint.com"
         }
