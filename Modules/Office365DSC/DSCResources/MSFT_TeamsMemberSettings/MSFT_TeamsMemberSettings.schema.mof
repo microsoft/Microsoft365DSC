@@ -1,0 +1,13 @@
+[ClassVersion("1.0.0.0"), FriendlyName("TeamsMemberSettings")]
+class MSFT_TeamsMemberSettings : OMI_BaseResource
+{
+    [Key, Description("The Name of the team")] string TeamName;
+    [Write, Description("Allow members to create and update channels within team.")] Boolean AllowCreateUpdateChannels;
+    [Write, Description("Allow members to delete channels within team.")] Boolean AllowDeleteChannels;
+    [Write, Description("Allow members to remove apps in team.")] Boolean AllowAddRemoveApps;
+    [Write, Description("Allow members to create, update and remove tabs in team.")] Boolean AllowCreateUpdateRemoveTabs;
+    [Write, Description("Allow members to create, update and remove connectors in team.")] Boolean AllowCreateUpdateRemoveConnectors;
+    [Write, Description("Placeholder only not used in resource."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Required, Description("Credentials of the Office365 Tenant Admin."), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+};
+

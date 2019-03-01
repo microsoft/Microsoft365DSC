@@ -11,11 +11,11 @@ Configuration TeamsFunSettingsConfig
     {
         TeamsFunSettings MyTeamFunSettings
         {
-            TeamName              = "SuperSecretTeam"
+            TeamName              = "Sample3"
             AllowGiphy            = $True
             GiphyContentRating    = "strict"
-            AllowStickersAndMemes = $False
-            AllowCustomMemes      = $False
+            AllowStickersAndMemes = $True
+            AllowCustomMemes      = $True
             GlobalAdminAccount    = $credsGlobalAdmin
         }
     }
