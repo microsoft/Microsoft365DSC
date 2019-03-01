@@ -6,17 +6,21 @@
   ** Initial Release
 * SPOSite
   ** Initial Release
+* SPOSearchManagedProperty
+  ** Initial Release
+* SPOSearchResultSource
+  ** Initial Release
 * O365Group
   ** Initial Release
 * EXOMailTips
   ** Initial Release
-  * ODSettings
+* ODSettings
   ** Initial Release
-  * TeamsTeam
+* TeamsTeam
   ** Initial Release
-  * TeamsFunSettings
+* TeamsFunSettings
   ** Initial Release
-  * TeamUser
+* TeamUser
   ** Initial Release
-  * TeamsChanel
+* TeamsChanel
   ** Initial Release

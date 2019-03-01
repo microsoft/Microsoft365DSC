@@ -33,13 +33,13 @@ function Get-TargetResource
         [System.String]
         $PrimarySMTPAddress,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve information for group $($DisplayName)"
@@ -56,7 +56,7 @@ function Get-TargetResource
     {
         Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
         Write-Verbose -Message "Getting Security Group $($DisplayName)"
-        $group = Get-MSOLGroup | Where-Object {$_.DisplayName -eq $DisplayName}
+        $group = Get-AzureADGroup | Where-Object {$_.DisplayName -eq $DisplayName}
 
         if(!$group)
         {
@@ -71,7 +71,7 @@ function Get-TargetResource
             Ensure = "Present"
         }
     }
-    else 
+    else
     {
         $RecipientTypeDetails = "GroupMailbox"
         switch($GroupType)
@@ -190,13 +190,13 @@ function Set-TargetResource
         [System.String]
         $PrimarySMTPAddress,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Write-Verbose "Entering Set-TargetResource"
@@ -213,7 +213,7 @@ function Set-TargetResource
         {
             Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
             Write-Verbose -Message "Creating Security Group $DisplayName"
-            New-MsolGroup @CurrentParameters
+            New-AzureADGroup @CurrentParameters
         }
         else
         {
@@ -352,13 +352,13 @@ function Test-TargetResource
         [System.String]
         $PrimarySMTPAddress,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -387,8 +387,8 @@ function Export-TargetResource
         [System.String]
         $GroupType,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters

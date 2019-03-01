@@ -57,7 +57,7 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet("SharePoint","People", "Basic")]
         [System.String]
-        $Type,
+        $Type = "SharePoint",
 
         [Parameter()]
         [System.String]
@@ -65,7 +65,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ShowPartialSearch,
+        $ShowPartialSearch = $true,
 
         [Parameter()]
         [System.Boolean]
@@ -106,11 +106,11 @@ function Get-TargetResource
         CentralAdminUrl     = $CentralAdminUrl
     }
 
-    if ($null -eq $Script:RecentMPExtract)
+    if ($null -eq $Script:RecentExtract)
     {
-        $Script:RecentMPExtract = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+        $Script:RecentExtract = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
     }
-    $source =  $Script:RecentMPExtract.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source `
+    $source =  $Script:RecentExtract.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source `
                     | Where-Object { $_.Name -eq $Name }
 
     if ($null -eq $source)
@@ -141,7 +141,7 @@ function Get-TargetResource
         UseAutoDiscover     = $SourceHasAutoDiscover
         ShowPartialSearch   = $allowPartial.Value
         GlobalAdminAccount  = $GlobalAdminAccount
-        Ensure              = "Absent"
+        Ensure              = "Present"
         CentralAdminUrl     = $CentralAdminUrl
     }
 }
@@ -171,7 +171,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet("SharePoint","People")]
         [System.String]
-        $Type,
+        $Type = "SharePoint",
 
         [Parameter()]
         [System.String]
@@ -179,7 +179,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ShowPartialSearch,
+        $ShowPartialSearch = $true,
 
         [Parameter()]
         [System.Boolean]
@@ -201,319 +201,145 @@ function Set-TargetResource
 
     if ($Ensure -eq "Absent")
     {
-        throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
+        throw "This resource cannot delete Result Sources. Please make sure you set its Ensure value to Present."
     }
 
     Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Write-Verbose "Reading SearchConfigurationSettings XML file"
     $SearchConfigTemplatePath =  Join-Path -Path $PSScriptRoot `
                                            -ChildPath "..\..\Dependencies\SearchConfigurationSettings.xml" `
                                            -Resolve
     $SearchConfigXML = [Xml] (Get-Content $SearchConfigTemplatePath -Raw)
 
-    # Get the managed property back if it already exists.
-    if ($null -eq $Script:RecentMPExtract)
+    # Get the result source back if it already exists.
+    if ($null -eq $Script:RecentExtract)
     {
-        $Script:RecentMPExtract = [XML] (Get-PnpSearchConfiguration -Scope Subscription)
+        $Script:RecentExtract = [XML] (Get-PnpSearchConfiguration -Scope Subscription)
     }
 
-    $property =  $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
-                    | Where-Object { $_.Value.Name -eq $Name }
-    if ($null -ne $property)
+    $source =  $Script:RecentExtract.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source `
+                    | Where-Object { $_.Name -eq $Name }
+    if ($null -ne $source)
     {
-        $currentPID = $property.Value.Pid
+        $currentID = $source.Id
     }
 
-    $prop = $SearchConfigXml.ChildNodes[0].SearchSchemaConfigurationSettings.ManagedProperties.dictionary
-    $newManagedPropertyElement = $SearchConfigXML.CreateElement("d4p1:KeyValueOfstringManagedPropertyInfoy6h3NzC8", `
-                                                                "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
-    $keyNode = $SearchConfigXML.CreateElement("d4p1:Key", `
-                                              "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
-    $keyNode.InnerText = $Name
-    $catch = $newManagedPropertyElement.AppendChild($keyNode)
+    Write-Verbose "Generating new SearchConfigurationSettings XML file"
+    $newSource = $SearchConfigXML.CreateElement("d4p1:Source", `
+                                                "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
 
-    $valueNode = $SearchConfigXML.CreateElement("d4p1:Value", `
-                                              "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
+    Write-Verbose "Setting ConnectionUrlTemplate"
+    $node = $SearchConfigXML.CreateElement("d4p1:ConnectionUrlTemplate", `
+                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
+    $node.InnerText = $SourceUrl
+    $newSource.AppendChild($node) | Out-Null
 
-    $node = $SearchConfigXML.CreateElement("d3p1:Name", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = $Name
-    $catch = $valueNode.AppendChild($node)
+    Write-Verbose "Setting CreatedDate"
+    $node = $SearchConfigXML.CreateElement("d4p1:CreatedDate", `
+                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
+    $node.InnerText = [DateTime]::Now.ToString("yyyy-MM-ddThh:mm:ss.00")
+    $newSource.AppendChild($node) | Out-Null
 
-    $node = $SearchConfigXML.CreateElement("d3p1:CompleteMatching", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = $CompleteMatching.ToString().Replace("$", "").ToLower()
-    $catch = $valueNode.AppendChild($node)
-
-    $node = $SearchConfigXML.CreateElement("d3p1:Context", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = $FullTextContext.ToString()
-    $catch = $valueNode.AppendChild($node)
-
-    $node = $SearchConfigXML.CreateElement("d3p1:DeleteDisallowed", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = "false"
-    $catch = $valueNode.AppendChild($node)
-
-    $node = $SearchConfigXML.CreateElement("d3p1:Description", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-
+    Write-Verbose "Setting Description"
+    $node = $SearchConfigXML.CreateElement("d4p1:Description", `
+                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
     $node.InnerText = $Description
-    $catch = $valueNode.AppendChild($node)
+    $newSource.AppendChild($node) | Out-Null
 
-    $node = $SearchConfigXML.CreateElement("d3p1:EnabledForScoping", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = "false"
-    $catch = $valueNode.AppendChild($node)
+    Write-Verbose "Setting Existing Id"
+    $node = $SearchConfigXML.CreateElement("d4p1:Id", `
+                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
 
-    #region EntiryExtractionBitMap
-    $node = $SearchConfigXML.CreateElement("d3p1:EntityExtractorBitMap", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-
-    if ($CompanyNameExtraction)
+    if ($null -ne $currentID)
     {
-        $node.InnerText = "4161"
+        $node.InnerText = $currentId
     }
     else
     {
-        $node.InnerText = "0"
+        $node.InnerText = (New-Guid).ToString()
     }
-    $catch = $valueNode.AppendChild($node)
-    #endregion
+    $newSource.AppendChild($node) | Out-Null
 
-    $node = $SearchConfigXML.CreateElement("d3p1:ExpandSegments", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = $FinerQueryTokenization.ToString().Replace("$", "").ToLower()
-    $catch = $valueNode.AppendChild($node)
+    Write-Verbose "Setting Name"
+    $node = $SearchConfigXML.CreateElement("d4p1:Name", `
+                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
+    $node.InnerText = $Name
+    $newSource.AppendChild($node) | Out-Null
 
-    $node = $SearchConfigXML.CreateElement("d3p1:FullTextIndex", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = $FullTextIndex
-    $catch = $valueNode.AppendChild($node)
+    Write-Verbose "Setting ProviderId"
+    $mapping = $InfoMapping | Where-Object {$_.Protocol -eq $Protocol -and $_.Type -eq $Type}
+    $node = $SearchConfigXML.CreateElement("d4p1:ProviderId", `
+                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
+    $node.InnerText = $mapping.ProviderID
+    $catch = $newSource.AppendChild($node)
 
-    $node = $SearchConfigXML.CreateElement("d3p1:HasMultipleValues", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = $AllowMultipleValues.ToString().Replace("$", "").ToLower()
-    $catch = $valueNode.AppendChild($node)
+    Write-Verbose "Setting QueryTransform"
+    $queryTransformNode = $SearchConfigXML.CreateElement("d4p1:QueryTransform", `
+                                                         "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
+    $queryTransformNode.SetAttribute("xmlns:d6p1", "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
 
-    $node = $SearchConfigXML.CreateElement("d3p1:IndexOptions", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = "0"
-    $catch = $valueNode.AppendChild($node)
+    Write-Verbose "Setting QueryTransform:Id"
+    $node = $SearchConfigXML.CreateElement("d6p1:Id", `
+                                           "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
+    $node.InnerText = (New-Guid).ToString()
+    $queryTransformNode.AppendChild($node)
 
-    $node = $SearchConfigXML.CreateElement("d3p1:IsImplicit", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = "false"
-    $catch = $valueNode.AppendChild($node)
+    Write-Verbose "Setting QueryTransform:ParentType"
+    $queryTransformNode = $SearchConfigXML.CreateElement("d6p1:ParentType", `
+                                                         "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
+    $node.InnerText = "Source"
+    $queryTransformNode.AppendChild($node)
 
-    $node = $SearchConfigXML.CreateElement("d3p1:IsReadOnly", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = "false"
-    $catch = $valueNode.AppendChild($node)
+    Write-Verbose "Setting QueryTransform:QueryPropertyExpressions"
+    $QueryPropertyExpressions = $SearchConfigXML.CreateElement("d6p1:QueryPropertyExpressions", `
+                                           "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
 
-    #region LanguageNeutralWordBreaker
-    if ($LanguageNeutralTokenization -and $CompleteMatching)
-    {
-        throw "You cannot have CompleteMatching set to True if LanguageNeutralTokenization is set to True"
-    }
-    $node = $SearchConfigXML.CreateElement("d3p1:LanguageNeutralWordBreaker", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = $LanguageNeutralTokenization.ToString().Replace("$", "").ToLower()
-    $catch = $valueNode.AppendChild($node)
-    #endregion
+    Write-Verbose "Setting QueryTransform:QueryPropertyExpressions:MaxSize"
+    $node = $SearchConfigXML.CreateElement("d6p1:MaxSize", `
+                                           "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
+    $node.InnerText = "2147483647"
+    $QueryPropertyExpressions.AppendChild($node)
 
-    $node = $SearchConfigXML.CreateElement("d3p1:ManagedType", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = $Type
-    $catch = $valueNode.AppendChild($node)
+    Write-Verbose "Setting QueryTransform:QueryPropertyExpressions:OrderedItems"
+    $node = $SearchConfigXML.CreateElement("d6p1:OrderedItems", `
+                                           "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
+    $QueryPropertyExpressions.AppendChild($node)
 
-    $node = $SearchConfigXML.CreateElement("d3p1:MappingDisallowed", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = "false"
-    $catch = $valueNode.AppendChild($node)
+    $queryTransformNode.AppendChild($QueryPropertyExpressions)
 
-    #region PID
-    if ($null -ne $currentPID)
-    {
-        $node = $SearchConfigXML.CreateElement("d3p1:Pid", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-        $node.InnerText = $currentPid
-        $catch = $valueNode.AppendChild($node)
-    }
-    #endregion
-
-    $node = $SearchConfigXML.CreateElement("d3p1:Queryable", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = $Queryable.ToString().Replace("$", "").ToLower()
-    $catch = $valueNode.AppendChild($node)
-
-    #region Refinable
-    $value = $false
-    if ($Refinable -eq "Yes")
-    {
-        $value = $true
-    }
-    $node = $SearchConfigXML.CreateElement("d3p1:Refinable", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = $value.ToString().Replace("$", "").ToLower()
-    $catch = $valueNode.AppendChild($node)
-
-    $node = $SearchConfigXML.CreateElement("d3p1:RefinerConfiguration", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-
-    $subNode = $SearchConfigXML.CreateElement("d3p1:Anchoring", `
-                                              "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $subNode.InnerText = "Auto"
-    $catch = $node.AppendChild($subNode)
-
-    $subNode = $SearchConfigXML.CreateElement("d3p1:CutoffMaxBuckets", `
-                                              "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $subNode.InnerText = "1000"
-    $catch = $catch = $node.AppendChild($subNode)
-
-    $subNode = $SearchConfigXML.CreateElement("d3p1:Divisor", `
-                                              "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $subNode.InnerText = "1"
-    $catch = $node.AppendChild($subNode)
-
-    $subNode = $SearchConfigXML.CreateElement("d3p1:Intervals", `
-                                              "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $subNode.InnerText = "4"
-    $catch = $node.AppendChild($subNode)
-
-    $subNode = $SearchConfigXML.CreateElement("d3p1:Resolution", `
-                                              "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $subNode.InnerText = "1"
-    $catch = $node.AppendChild($subNode)
-
-    $subNode = $SearchConfigXML.CreateElement("d3p1:Type", `
-                                              "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $subNode.InnerText = "Deep"
-    $catch = $node.AppendChild($subNode)
-
-    $catch = $valueNode.AppendChild($node)
-    #endregion
-
-    $node = $SearchConfigXML.CreateElement("d3p1:RemoveDuplicates", `
-                                              "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+    Write-Verbose "Setting QueryTransform:_IsReadOnly"
+    $node = $SearchConfigXML.CreateElement("d6p1:_IsReadOnly", `
+                                           "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
     $node.InnerText = "true"
-    $catch = $valueNode.AppendChild($node)
+    $queryTransformNode.AppendChild($node)
 
-    $node = $SearchConfigXML.CreateElement("d3p1:RespectPriority", `
-                                              "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = "false"
-    $catch = $valueNode.AppendChild($node)
+    Write-Verbose "Setting QueryTransform:_QueryTemplate"
+    $node = $SearchConfigXML.CreateElement("d6p1:_QueryTemplate", `
+                                           "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
+    $node.InnerText = $QueryTransform
+    $queryTransformNode.AppendChild($node) | Out-Null
 
-    $node = $SearchConfigXML.CreateElement("d3p1:Retrievable", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = $Retrievable.ToString().Replace("$", "").ToLower()
-    $catch = $valueNode.AppendChild($node)
+    Write-Verbose "Setting QueryTransform:_SourceId"
+    $node = $SearchConfigXML.CreateElement("d6p1:_SourceId", `
+                                           "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
+    $node.SetAttribute("i:nil", "true")
+    $queryTransformNode.AppendChild($node)
 
-    $node = $SearchConfigXML.CreateElement("d3p1:SafeForAnonymous", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = $Safe.ToString().Replace("$", "").ToLower()
-    $catch = $valueNode.AppendChild($node)
+    Write-Verbose "Inserting QueryTransform"
+    $newSource.AppendChild($queryTransformNode) | Out-Null
 
-    $node = $SearchConfigXML.CreateElement("d3p1:Searchable", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = $Searchable.ToString().Replace("$", "").ToLower()
-    $catch = $valueNode.AppendChild($node)
+    Write-Verbose "Inserting new Source Node"
+    $xmlNode = $SearchConfigXML.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.OwnerDocument.ImportNode($newSource, $true)
+    $SearchConfigXML.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.AppendChild($xmlNode)
 
-    #region Sortable
-    $value = $false
-    if ($Sortable -eq "Yes")
-    {
-        $value = $true
-    }
-    $node = $SearchConfigXML.CreateElement("d3p1:Sortable", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = $value.ToString().Replace("$", "").ToLower()
-    $catch = $valueNode.AppendChild($node)
-    #endregion
-
-    $node = $SearchConfigXML.CreateElement("d3p1:SortableType", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = "Enabled"
-    $catch = $valueNode.AppendChild($node)
-
-    $node = $SearchConfigXML.CreateElement("d3p1:TokenNormalization", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-    $node.InnerText = $TokenNormalization.ToString().Replace("$", "").ToLower()
-    $catch = $valueNode.AppendChild($node)
-
-    $newManagedPropertyElement.AppendChild($valueNode)
-    $catch = $prop.AppendChild($newManagedPropertyElement)
-
+    Write-Verbose "Saving XML file in a temporary location"
     $tempPath = Join-Path -Path $ENV:TEMP `
                            -ChildPath ((New-Guid).ToString().Split('-')[0] + ".config")
     $SearchConfigXML.OuterXml | Out-File $tempPath
 
-    # Create the Managed Property if it doesn't already exist
+    # Create the Result Source if it doesn't already exist
+    Write-Verbose "Applying new Search Configuration back to the Office365 Tenant"
     Set-PnPSearchConfiguration -Scope Subscription -Path $tempPath
-
-    #region Aliases
-    if ($null -ne $Aliases)
-    {
-        $aliasesArray = $Aliases.Split(';')
-        $aliasProp = $SearchConfigXml.ChildNodes[0].SearchSchemaConfigurationSettings.Aliases.dictionary
-
-        if ($null -eq $currentPID)
-        {
-            # Get the managed property back. This is the only way to ensure we have the right PID
-            $currentConfigXML = [XML] (Get-PnpSearchCOnfiguration -Scope Subscription)
-            $property =  $currentConfigXML.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
-                            | Where-Object { $_.Value.Name -eq $Name }
-            $currentPID = $property.Value.Pid
-
-            $node = $SearchConfigXML.CreateElement("d3p1:Pid", `
-                                                   "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-            $node.InnerText = $currentPID
-
-            # The order in which we list the properties matters. Pid is to appear right after MappingDisallowed.
-            $namespaceMgr = New-Object System.Xml.XmlNamespaceManager($SearchConfigXML.NameTable);
-            $namespaceMgr.AddNamespace("d3p1", "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-            $previousNode = $SearchConfigXML.SelectSingleNode("//d3p1:MappingDisallowed", $namespaceMgr)
-            $catch = $previousNode.ParentNode.InsertAfter($node, $previousNode)
-        }
-
-        foreach ($alias in $aliasesArray)
-        {
-            $mainNode = $SearchConfigXML.CreateElement("d4p1:KeyValueOfstringAliasInfoy6h3NzC8", `
-                                                   "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
-            $keyNode = $SearchConfigXML.CreateElement("d4p1:Key", `
-                                                      "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
-            $keyNode.InnerText = $alias
-
-            $valueNode = $SearchConfigXML.CreateElement("d4p1:Value", `
-                                                      "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
-            $node = $SearchConfigXML.CreateElement("d3p1:Name", `
-                                                   "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-            $node.InnerText = $alias
-            $catch = $valueNode.AppendChild($node)
-
-            $node = $SearchConfigXML.CreateElement("d3p1:ManagedPid", `
-                                                   "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-            $node.InnerText = $currentPID
-            $catch = $valueNode.AppendChild($node)
-
-            $node = $SearchConfigXML.CreateElement("d3p1:SchemaId", `
-                                                   "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
-            $node.InnerText = "6408"
-            $catch = $valueNode.AppendChild($node)
-
-            $catch = $mainNode.AppendChild($keyNode)
-            $catch = $catch = $mainNode.AppendChild($valueNode)
-            $aliasProp.AppendChild($mainNode)
-        }
-
-        $tempPath = Join-Path -Path $ENV:TEMP `
-                              -ChildPath ((New-Guid).ToString().Split('-')[0] + ".config")
-        Write-Verbose "Configuring SPO Search Schema with the following XML Document"
-        Write-Verbose $SearchConfigXML.OuterXML
-        $SearchConfigXML.OuterXml | Out-File $tempPath
-
-        # Create the aliases on the Managed Property
-        Set-PnPSearchConfiguration -Scope Subscription -Path $tempPath
-    }
 }
 
 function Test-TargetResource
@@ -542,7 +368,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet("SharePoint","People")]
         [System.String]
-        $Type,
+        $Type = "SharePoint",
 
         [Parameter()]
         [System.String]
@@ -550,7 +376,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ShowPartialSearch,
+        $ShowPartialSearch = $true,
 
         [Parameter()]
         [System.Boolean]
