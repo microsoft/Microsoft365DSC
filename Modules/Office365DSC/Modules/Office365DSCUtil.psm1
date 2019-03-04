@@ -890,6 +890,45 @@ function Get-TimeZoneIDFromName
     return $TimezoneObject.ID
 }
 
+function Get-TeamByGroupID
+{
+    [CmdletBinding()]
+    [OutputType([Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $GroupId
+    )
+
+    $team = Get-Team  |  Where-Object {($_.GroupId -eq $GroupId)}
+    if ($null -eq $team)
+    {
+        return $false
+    }
+    return $true
+}
+
+function Open-SecurityAndComplianceCenterConnection
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+    $VerbosePreference = 'SilentlyContinue'
+    $WarningPreference = "SilentlyContinue"
+    $ExchangeOnlineSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
+    $ExchangeOnlineModules = Import-PSSession $ExchangeOnlineSession -AllowClobber
+    $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global
+    $SecurityAndComplianceCenterSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
+    $SecurityAndComplianceCenterModules = Import-PSSession $SecurityAndComplianceCenterSession -AllowClobber
+    $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global
+}
+
 function Test-SPOServiceConnection
 {
     [CmdletBinding()]
@@ -900,12 +939,14 @@ function Test-SPOServiceConnection
         [System.String]
         $SPOCentralAdminUrl,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $VerbosePreference = 'SilentlyContinue'
+    $WarningPreference = "SilentlyContinue"
     Write-Verbose "Verifying the LCM connection state to SharePoint Online"
-    Connect-SPOService -Url $SPOCentralAdminUrl -Credential $GlobalAdminAccount
+    $catch = Connect-SPOService -Url $SPOCentralAdminUrl -Credential $GlobalAdminAccount
 }
 
 function Test-PnPOnlineConnection
@@ -918,12 +959,14 @@ function Test-PnPOnlineConnection
         [System.String]
         $SPOCentralAdminUrl,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $VerbosePreference = 'SilentlyContinue'
+    $WarningPreference = "SilentlyContinue"
     Write-Verbose "Verifying the LCM connection state to SharePoint Online with PnP"
-    Connect-PnPOnline -Url $SPOCentralAdminUrl -Credentials $GlobalAdminAccount
+    $catch = Connect-PnPOnline -Url $SPOCentralAdminUrl -Credentials $GlobalAdminAccount
 }
 
 function Test-O365ServiceConnection
@@ -932,12 +975,30 @@ function Test-O365ServiceConnection
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
-    )    
+    )
+    $VerbosePreference = 'SilentlyContinue'
+    $WarningPreference = "SilentlyContinue"
     Write-Verbose "Verifying the LCM connection state to Microsoft Azure Active Directory Services"
-    Connect-AzureAD -Credential $GlobalAdminAccount
+    $catch = Connect-AzureAD -Credential $GlobalAdminAccount
+}
+
+function Test-TeamsServiceConnection {
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+    $VerbosePreference = 'SilentlyContinue'
+    $WarningPreference = "SilentlyContinue"
+    Import-Module MicrosoftTeams -Force
+    Write-Verbose "Verifying the LCM connection state to Teams"
+    $catch = Connect-MicrosoftTeams -Credential $GlobalAdminAccount | Out-Null
 }
 
 function Invoke-ExoCommand
@@ -948,38 +1009,38 @@ function Invoke-ExoCommand
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
-    
+
         [Parameter()]
         [Object[]]
         $Arguments,
-    
+
         [Parameter(Mandatory = $true)]
         [ScriptBlock]
         $ScriptBlock
     )
-    $VerbosePreference = 'Continue'
+    $VerbosePreference = 'SilentlyContinue'
+    $WarningPreference = "SilentlyContinue"
     $invokeArgs = @{
         ScriptBlock = [ScriptBlock]::Create($ScriptBlock.ToString())
     }
-    if ($null -ne $Arguments)
-    {
+    if ($null -ne $Arguments) {
         $invokeArgs.Add("ArgumentList", $Arguments)
     }
 
     Write-Verbose "Verifying the LCM connection state to Exchange Online"
     $AssemblyPath = Join-Path -Path $PSScriptRoot `
-                              -ChildPath "..\Dependencies\Microsoft.Exchange.Management.ExoPowershellModule.dll" `
-                              -Resolve
+        -ChildPath "..\Dependencies\Microsoft.Exchange.Management.ExoPowershellModule.dll" `
+        -Resolve
     $AADAssemblyPath = Join-Path -Path $PSScriptRoot `
-                                 -ChildPath "..\Dependencies\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" `
-                                 -Resolve
+        -ChildPath "..\Dependencies\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" `
+        -Resolve
 
     $ScriptPath = Join-Path -Path $PSScriptRoot `
-                            -ChildPath "..\Dependencies\CreateExoPSSession.ps1" `
-                            -Resolve
+        -ChildPath "..\Dependencies\CreateExoPSSession.ps1" `
+        -Resolve
 
-    Import-Module $AssemblyPath
-    [Reflection.Assembly]::LoadFile($AADAssemblyPath)
+    $catch = Import-Module $AssemblyPath
+    $catch = [Reflection.Assembly]::LoadFile($AADAssemblyPath)
     .$ScriptPath
 
     # Somehow, every now and then, the first connection attempt will get an invalid Shell Id. Calling the function a second
@@ -988,21 +1049,18 @@ function Invoke-ExoCommand
     {
         if (!$Global:ExoPSSessionConnected)
         {
-            Connect-ExoPSSession -Credential $GlobalAdminAccount -ErrorAction SilentlyContinue
+            $catch = Connect-ExoPSSession -Credential $GlobalAdminAccount -ErrorAction SilentlyContinue
             $Global:ExoPSSessionConnected = $true
         }
     }
-    catch
-    {
+    catch {
         # Check to see if we received a payload error, and if so, wait for the requested period of time before proceeding
         # with the next call.
         $stringToFind = "you have exceeded your budget to create runspace. Please wait for "
-        if ($Error)
-        {
+        if ($Error) {
             $position = $Error[0].ErrorDetails.Message.IndexOf($stringToFind)
 
-            if($position -ge 0)
-            {
+            if ($position -ge 0) {
                 $beginning = $position + $stringToFind.Length
                 $nextSpace = $Error[0].ErrorDetails.Message.IndexOf(" ", $beginning)
 
@@ -1012,7 +1070,7 @@ function Invoke-ExoCommand
                 Start-Sleep -Seconds $timeToWaitInSeconds
             }
         }
-        Connect-ExoPSSession -Credential $GlobalAdminAccount -ErrorAction SilentlyContinue
+        $catch = Connect-ExoPSSession -Credential $GlobalAdminAccount -ErrorAction SilentlyContinue
         $Global:ExoPSSessionConnected = $true
     }
 
@@ -1022,100 +1080,87 @@ function Invoke-ExoCommand
     }
     catch
     {
-        Connect-ExoPSSession -Credential $GlobalAdminAccount -ErrorAction SilentlyContinue
+        $catch = Connect-ExoPSSession -Credential $GlobalAdminAccount -ErrorAction SilentlyContinue
         $Global:ExoPSSessionConnected = $true
         $result = Invoke-Command @invokeArgs -Verbose
     }
-    
+
     return $result
 }
 
-function Test-Office365DSCParameterState
-{
+function Test-Office365DSCParameterState {
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true, Position=1)]
+        [Parameter(Mandatory = $true, Position = 1)]
         [HashTable]
         $CurrentValues,
 
-        [Parameter(Mandatory = $true, Position=2)]
+        [Parameter(Mandatory = $true, Position = 2)]
         [Object]
         $DesiredValues,
 
-        [Parameter(, Position=3)]
+        [Parameter(, Position = 3)]
         [Array]
         $ValuesToCheck
     )
-
+    $VerbosePreference = 'SilentlyContinue'
+    $WarningPreference = "SilentlyContinue"
     $returnValue = $true
 
     if (($DesiredValues.GetType().Name -ne "HashTable") `
-        -and ($DesiredValues.GetType().Name -ne "CimInstance") `
-        -and ($DesiredValues.GetType().Name -ne "PSBoundParametersDictionary"))
-    {
+            -and ($DesiredValues.GetType().Name -ne "CimInstance") `
+            -and ($DesiredValues.GetType().Name -ne "PSBoundParametersDictionary")) {
         throw ("Property 'DesiredValues' in Test-SPDscParameterState must be either a " + `
-               "Hashtable or CimInstance. Type detected was $($DesiredValues.GetType().Name)")
+                "Hashtable or CimInstance. Type detected was $($DesiredValues.GetType().Name)")
     }
 
-    if (($DesiredValues.GetType().Name -eq "CimInstance") -and ($null -eq $ValuesToCheck))
-    {
+    if (($DesiredValues.GetType().Name -eq "CimInstance") -and ($null -eq $ValuesToCheck)) {
         throw ("If 'DesiredValues' is a CimInstance then property 'ValuesToCheck' must contain " + `
-               "a value")
+                "a value")
     }
 
-    if (($null -eq $ValuesToCheck) -or ($ValuesToCheck.Count -lt 1))
-    {
+    if (($null -eq $ValuesToCheck) -or ($ValuesToCheck.Count -lt 1)) {
         $KeyList = $DesiredValues.Keys
     }
-    else
-    {
+    else {
         $KeyList = $ValuesToCheck
     }
 
     $KeyList | ForEach-Object -Process {
-        if (($_ -ne "Verbose") -and ($_ -ne "InstallAccount"))
-        {
+        if (($_ -ne "Verbose") -and ($_ -ne "InstallAccount")) {
             if (($CurrentValues.ContainsKey($_) -eq $false) `
-            -or ($CurrentValues.$_ -ne $DesiredValues.$_) `
-            -or (($DesiredValues.ContainsKey($_) -eq $true) -and ($null -ne $DesiredValues.$_ -and $DesiredValues.$_.GetType().IsArray)))
-            {
+                    -or ($CurrentValues.$_ -ne $DesiredValues.$_) `
+                    -or (($DesiredValues.ContainsKey($_) -eq $true) -and ($null -ne $DesiredValues.$_ -and $DesiredValues.$_.GetType().IsArray))) {
                 if ($DesiredValues.GetType().Name -eq "HashTable" -or `
-                    $DesiredValues.GetType().Name -eq "PSBoundParametersDictionary")
-                {
+                        $DesiredValues.GetType().Name -eq "PSBoundParametersDictionary") {
                     $CheckDesiredValue = $DesiredValues.ContainsKey($_)
                 }
-                else
-                {
+                else {
                     $CheckDesiredValue = Test-SPDSCObjectHasProperty -Object $DesiredValues -PropertyName $_
                 }
 
-                if ($CheckDesiredValue)
-                {
+                if ($CheckDesiredValue) {
                     $desiredType = $DesiredValues.$_.GetType()
                     $fieldName = $_
-                    if ($desiredType.IsArray -eq $true)
-                    {
+                    if ($desiredType.IsArray -eq $true) {
                         if (($CurrentValues.ContainsKey($fieldName) -eq $false) `
-                        -or ($null -eq $CurrentValues.$fieldName))
-                        {
+                                -or ($null -eq $CurrentValues.$fieldName)) {
                             Write-Verbose -Message ("Expected to find an array value for " + `
-                                                    "property $fieldName in the current " + `
-                                                    "values, but it was either not present or " + `
-                                                    "was null. This has caused the test method " + `
-                                                    "to return false.")
+                                    "property $fieldName in the current " + `
+                                    "values, but it was either not present or " + `
+                                    "was null. This has caused the test method " + `
+                                    "to return false.")
                             $returnValue = $false
                         }
-                        else
-                        {
+                        else {
                             $arrayCompare = Compare-Object -ReferenceObject $CurrentValues.$fieldName `
-                                                           -DifferenceObject $DesiredValues.$fieldName
-                            if ($null -ne $arrayCompare)
-                            {
+                                -DifferenceObject $DesiredValues.$fieldName
+                            if ($null -ne $arrayCompare) {
                                 Write-Verbose -Message ("Found an array for property $fieldName " + `
-                                                        "in the current values, but this array " + `
-                                                        "does not match the desired state. " + `
-                                                        "Details of the changes are below.")
+                                        "in the current values, but this array " + `
+                                        "does not match the desired state. " + `
+                                        "Details of the changes are below.")
                                 $arrayCompare | ForEach-Object -Process {
                                     Write-Verbose -Message "$($_.InputObject) - $($_.SideIndicator)"
                                 }
@@ -1123,87 +1168,80 @@ function Test-Office365DSCParameterState
                             }
                         }
                     }
-                    else
-                    {
-                        switch ($desiredType.Name)
-                        {
+                    else {
+                        switch ($desiredType.Name) {
                             "String" {
                                 if ([string]::IsNullOrEmpty($CurrentValues.$fieldName) `
-                                -and [string]::IsNullOrEmpty($DesiredValues.$fieldName))
+                                        -and [string]::IsNullOrEmpty($DesiredValues.$fieldName))
                                 {}
-                                else
-                                {
+                                else {
                                     Write-Verbose -Message ("String value for property " + `
-                                                            "$fieldName does not match. " + `
-                                                            "Current state is " + `
-                                                            "'$($CurrentValues.$fieldName)' " + `
-                                                            "and desired state is " + `
-                                                            "'$($DesiredValues.$fieldName)'")
+                                            "$fieldName does not match. " + `
+                                            "Current state is " + `
+                                            "'$($CurrentValues.$fieldName)' " + `
+                                            "and desired state is " + `
+                                            "'$($DesiredValues.$fieldName)'")
                                     $returnValue = $false
                                 }
                             }
                             "Int32" {
                                 if (($DesiredValues.$fieldName -eq 0) `
-                                -and ($null -eq $CurrentValues.$fieldName))
+                                        -and ($null -eq $CurrentValues.$fieldName))
                                 {}
-                                else
-                                {
+                                else {
                                     Write-Verbose -Message ("Int32 value for property " + `
-                                                            "$fieldName does not match. " + `
-                                                            "Current state is " + `
-                                                            "'$($CurrentValues.$fieldName)' " + `
-                                                            "and desired state is " + `
-                                                            "'$($DesiredValues.$fieldName)'")
+                                            "$fieldName does not match. " + `
+                                            "Current state is " + `
+                                            "'$($CurrentValues.$fieldName)' " + `
+                                            "and desired state is " + `
+                                            "'$($DesiredValues.$fieldName)'")
                                     $returnValue = $false
                                 }
                             }
                             "Int16" {
                                 if (($DesiredValues.$fieldName -eq 0) `
-                                -and ($null -eq $CurrentValues.$fieldName))
+                                        -and ($null -eq $CurrentValues.$fieldName))
                                 {}
-                                else
-                                {
+                                else {
                                     Write-Verbose -Message ("Int16 value for property " + `
-                                                            "$fieldName does not match. " + `
-                                                            "Current state is " + `
-                                                            "'$($CurrentValues.$fieldName)' " + `
-                                                            "and desired state is " + `
-                                                            "'$($DesiredValues.$fieldName)'")
+                                            "$fieldName does not match. " + `
+                                            "Current state is " + `
+                                            "'$($CurrentValues.$fieldName)' " + `
+                                            "and desired state is " + `
+                                            "'$($DesiredValues.$fieldName)'")
                                     $returnValue = $false
                                 }
                             }
                             "Boolean" {
-                                if ($CurrentValues.$fieldName -ne $DesiredValues.$fieldName)
-                                {
+                                if ($CurrentValues.$fieldName -ne $DesiredValues.$fieldName) {
                                     Write-Verbose -Message ("Boolean value for property " + `
-                                                            "$fieldName does not match. " + `
-                                                            "Current state is " + `
-                                                            "'$($CurrentValues.$fieldName)' " + `
-                                                            "and desired state is " + `
-                                                            "'$($DesiredValues.$fieldName)'")
+                                            "$fieldName does not match. " + `
+                                            "Current state is " + `
+                                            "'$($CurrentValues.$fieldName)' " + `
+                                            "and desired state is " + `
+                                            "'$($DesiredValues.$fieldName)'")
                                     $returnValue = $false
                                 }
                             }
                             "Single" {
                                 if (($DesiredValues.$fieldName -eq 0) `
-                                -and ($null -eq $CurrentValues.$fieldName))
+                                        -and ($null -eq $CurrentValues.$fieldName))
                                 {}
-                                else
-                                {
+                                else {
                                     Write-Verbose -Message ("Single value for property " + `
-                                                            "$fieldName does not match. " + `
-                                                            "Current state is " + `
-                                                            "'$($CurrentValues.$fieldName)' " + `
-                                                            "and desired state is " + `
-                                                            "'$($DesiredValues.$fieldName)'")
+                                            "$fieldName does not match. " + `
+                                            "Current state is " + `
+                                            "'$($CurrentValues.$fieldName)' " + `
+                                            "and desired state is " + `
+                                            "'$($DesiredValues.$fieldName)'")
                                     $returnValue = $false
                                 }
                             }
                             default {
                                 Write-Verbose -Message ("Unable to compare property $fieldName " + `
-                                                        "as the type ($($desiredType.Name)) is " + `
-                                                        "not handled by the " + `
-                                                        "Test-SPDscParameterState cmdlet")
+                                        "as the type ($($desiredType.Name)) is " + `
+                                        "not handled by the " + `
+                                        "Test-SPDscParameterState cmdlet")
                                 $returnValue = $false
                             }
                         }
@@ -1215,13 +1253,12 @@ function Test-Office365DSCParameterState
     return $returnValue
 }
 
-function Get-UsersLicences
-{
+function Get-UsersLicences {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param(
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
@@ -1241,11 +1278,13 @@ function Export-O365Configuration
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param(
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    #$VerbosePreference = 'Continue'
+    $InformationPreference = "Continue"
+    $VerbosePreference = "SilentlyContinue"
+    $WarningPreference = "SilentlyContinue"
     $AzureAutomation = $false
     $DSCContent = "Configuration O365TenantConfig `r`n{`r`n"
     $DSCContent += "    Import-DSCResource -ModuleName Office365DSC`r`n`r`n"
@@ -1256,12 +1295,34 @@ function Export-O365Configuration
     # Add the GlobalAdminAccount to the Credentials List
     Save-Credentials -UserName $GlobalAdminAccount.UserName
 
+    #region "O365AdminAuditLogConfig"
+    Write-Information "Extracting O365AdminAuditLogConfig..."
+    $O365AdminAuditLogConfig = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                                -ScriptBlock {
+        Get-AdminAuditLogConfig
+    }
+
+    $O365AdminAuditLogConfigModulePath = Join-Path -Path $PSScriptRoot `
+                                       -ChildPath "..\DSCResources\MSFT_O365AdminAuditLogConfig\MSFT_O365AdminAuditLogConfig.psm1" `
+                                       -Resolve
+
+    $value = "Disabled"
+    if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
+    {
+        $value = "Enabled"
+    }
+
+    $catch = Import-Module $O365AdminAuditLogConfigModulePath
+    $DSCContent += Export-TargetResource -UnifiedAuditLogIngestionEnabled $value -GlobalAdminAccount $GlobalAdminAccount -IsSingleInstance 'Yes'
+    #endregion
+
     #region "EXOMailboxSettings"
+    Write-Information "Extracting EXOMailboxSettings..."
     $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `
                                               -ChildPath "..\DSCResources\MSFT_EXOMailboxSettings\MSFT_EXOMailboxSettings.psm1" `
                                               -Resolve
 
-    Import-Module $EXOMailboxSettingsModulePath
+    $catch = Import-Module $EXOMailboxSettingsModulePath
     $mailboxes = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
                                    -ScriptBlock {
         Get-Mailbox
@@ -1269,6 +1330,7 @@ function Export-O365Configuration
 
     foreach ($mailbox in $mailboxes)
     {
+        Write-Information "    Settings for Mailbox {$($mailbox.Name)}"
         $mailboxName = $mailbox.Name
         if ($mailboxName)
         {
@@ -1278,6 +1340,7 @@ function Export-O365Configuration
     #endregion
 
     #region "EXOMailTips"
+    Write-Information "Extracting EXOMailTips..."
     $OrgConfig = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
                                     -ScriptBlock {
         Get-OrganizationConfig
@@ -1293,7 +1356,7 @@ function Export-O365Configuration
                                        -ChildPath "..\DSCResources\MSFT_EXOMailTips\MSFT_EXOMailTips.psm1" `
                                        -Resolve
 
-    Import-Module $EXOMailTipsModulePath
+    $catch = Import-Module $EXOMailTipsModulePath
     $DSCContent += Export-TargetResource -Organization $organizationName -GlobalAdminAccount $GlobalAdminAccount
     #endregion
 
@@ -1302,7 +1365,7 @@ function Export-O365Configuration
                                             -ChildPath "..\DSCResources\MSFT_EXOSharedMailbox\MSFT_EXOSharedMailbox.psm1" `
                                             -Resolve
 
-    Import-Module $EXOSharedMailboxModulePath
+    $catch = Import-Module $EXOSharedMailboxModulePath
     $mailboxes = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
                                    -ScriptBlock {
         Get-Mailbox
@@ -1311,6 +1374,7 @@ function Export-O365Configuration
 
     foreach ($mailbox in $mailboxes)
     {
+        Write-Information "    MailTips for mailbox {$($mailbox.Name)}"
         $mailboxName = $mailbox.Name
         if ($mailboxName)
         {
@@ -1320,11 +1384,12 @@ function Export-O365Configuration
     #endregion
 
     #region "O365Group"
+    Write-Information "Extracting O365Group..."
     $O365GroupModulePath = Join-Path -Path $PSScriptRoot `
                                      -ChildPath "..\DSCResources\MSFT_O365Group\MSFT_O365Group.psm1" `
                                      -Resolve
 
-    Import-Module $O365GroupModulePath
+    $catch = Import-Module $O365GroupModulePath
 
     # Security Groups
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
@@ -1332,6 +1397,7 @@ function Export-O365Configuration
 
     foreach ($securityGroup in $securityGroups)
     {
+        Write-Information "    Security Group {$($securityGroup.DisplayName)}"
         $securityGroupDisplayName = $securityGroup.DisplayName
         if ($securityGroupDisplayName)
         {
@@ -1366,6 +1432,7 @@ function Export-O365Configuration
             {
                 $groupType = "MailEnabledSecurity"
             }
+            Write-Information "    $($groupType) Group {$($groupName)}"
             $DSCContent += Export-TargetResource -DisplayName $groupName `
                                                  -GroupType $groupType `
                                                  -GlobalAdminAccount $GlobalAdminAccount
@@ -1374,17 +1441,19 @@ function Export-O365Configuration
     #endregion
 
     #region "O365User"
+    Write-Information "Extracting O365User..."
     $O365UserModulePath = Join-Path -Path $PSScriptRoot `
                                     -ChildPath "..\DSCResources\MSFT_O365USer\MSFT_O365USer.psm1" `
                                     -Resolve
 
-    Import-Module $O365UserModulePath
+    $catch = Import-Module $O365UserModulePath
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $users = Get-AzureADUser
 
     foreach ($user in $users)
     {
+        Write-Information "    User {$($user.UserPrincipalName)}"
         $userUPN = $user.UserPrincipalName
         if ($userUPN)
         {
@@ -1394,11 +1463,12 @@ function Export-O365Configuration
     #endregion
 
     #region "ODSettings"
+    Write-Information "Extracting ODSettings..."
     $ODSettingsModulePath = Join-Path -Path $PSScriptRoot `
                                       -ChildPath "..\DSCResources\MSFT_ODSettings\MSFT_ODSettings.psm1" `
                                       -Resolve
 
-    Import-Module $ODSettingsModulePath
+    $catch = Import-Module $ODSettingsModulePath
 
     # Obtain central administration url from a User Principal Name
     $centralAdminUrl = $null
@@ -1419,18 +1489,19 @@ function Export-O365Configuration
     #endregion
 
     #region "SPOSearchManagedProperty"
+    Write-Information "Extracting SPOSearchManagedProperty..."
     $SPOSearchManagedPropertyModulePath = Join-Path -Path $PSScriptRoot `
                                                     -ChildPath "..\DSCResources\MSFT_SPOSearchManagedProperty\MSFT_SPOSearchManagedProperty.psm1" `
                                                     -Resolve
 
-    Import-Module $SPOSearchManagedPropertyModulePath
-    Write-Verbose "Getting here to PnP"
+    $catch = Import-Module $SPOSearchManagedPropertyModulePath
     Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
-    $properties =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.Mappings.dictionary.KeyValueOfstringMappingInfoy6h3NzC8
+    $properties =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
 
     foreach ($property in $properties)
     {
+        Write-Information "    Managed Property {$($property.Value.Name)}"
         $DSCContent += Export-TargetResource -Name $property.Value.Name `
                                              -Type $property.Value.ManagedType `
                                              -CentralAdminUrl $centralAdminUrl `
@@ -1439,22 +1510,159 @@ function Export-O365Configuration
     #endregion
 
     #region "SPOSite"
+    Write-Information "Extracting SPOSite..."
     $SPOSiteModulePath = Join-Path -Path $PSScriptRoot `
                                     -ChildPath "..\DSCResources\MSFT_SPOSite\MSFT_SPOSite.psm1" `
                                     -Resolve
 
-    Import-Module $SPOSiteModulePath
+    $catch = Import-Module $SPOSiteModulePath
 
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     $sites = Get-SPOSite
 
     foreach ($site in $sites)
     {
+        Write-Information "    Site Collection {$($site.Url)}"
         $DSCContent += Export-TargetResource -Url $site.Url `
                                              -CentralAdminUrl $centralAdminUrl `
                                              -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
+
+    #region "TeamsTeam"
+    Write-Information "Extracting TeamsChannel..."
+    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                 -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
+                                 -Resolve
+
+    $catch = Import-Module $TeamsModulePath
+
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    $Teams = Get-Team
+
+    foreach ($team in $teams)
+    {
+        Write-Information "    Team {$($team.DisplayName)}"
+        $DSCContent += Export-TargetResource -DisplayName $team.DisplayName `
+                                             -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "TeamsChannel"
+    Write-Information "Extracting TeamsChannel..."
+    $TeamsChannelModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_TeamsChannel\MSFT_TeamsChannel.psm1" `
+                                    -Resolve
+
+    $catch = Import-Module $TeamsChannelModulePath
+
+    foreach ($team in $teams)
+    {
+        $channels = Get-TeamChannel -GroupId $team.GroupId
+
+        foreach ($channel in $channels)
+        {
+            Write-Information "    Team Channel {$($channel.DisplayName)}"
+            $DSCContent += Export-TargetResource -GroupId $team.GroupId `
+                                                 -DisplayName $channel.DisplayName `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
+    #region "TeamsFunSettings"
+    Write-Information "Extracting TeamsFunSettings..."
+    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                 -ChildPath "..\DSCResources\MSFT_TeamsFunSettings\MSFT_TeamsFunSettings.psm1" `
+                                 -Resolve
+
+    $catch = Import-Module $TeamsModulePath
+
+    foreach ($team in $teams)
+    {
+        Write-Information "    Team Fun Settings for Team {$($team.DisplayName)}"
+        $DSCContent += Export-TargetResource -GroupId $team.GroupId `
+                                             -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "TeamsUser"
+    Write-Information "Extracting TeamsUser..."
+    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_TeamsUser\MSFT_TeamsUser.psm1" `
+                                    -Resolve
+
+    $catch = Import-Module $TeamsModulePath
+
+    foreach ($team in $teams)
+    {
+        $users = Get-TeamUser -GroupId $team.GroupId
+        foreach ($user in $users)
+        {
+            Write-Information "    Teams User {$($user.User)}"
+            $DSCContent += Export-TargetResource -GroupId $team.GroupId `
+                                                 -User $user.User `
+                                                 -Role $user.Role `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+    Write-Information "Extracting TeamsMemberSettings..."
+    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                 -ChildPath "..\DSCResources\MSFT_TeamsMemberSettings\MSFT_TeamsMemberSettings.psm1" `
+                                 -Resolve
+
+    $catch = Import-Module $TeamsModulePath
+
+    foreach ($team in $teams)
+    {
+        $teamMemberSettings = Get-TeamMemberSettings -GroupId $team.GroupId
+        Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
+        $DSCContent += Export-TargetResource -GroupId $team.GroupId `
+                                             -AllowCreateUpdateChannels $teamMemberSettings.AllowCreateUpdateChannels `
+                                             -AllowDeleteChannels $teamMemberSettings.AllowDeleteChannels `
+                                             -AllowAddRemoveApps $teamMemberSettings.AllowAddRemoveApps `
+                                             -AllowCreateUpdateRemoveTabs $teamMemberSettings.AllowCreateUpdateRemoveTabs `
+                                             -AllowCreateUpdateRemoveConnectors $teamMemberSettings.AllowCreateUpdateRemoveConnectors `
+                                             -GlobalAdminAccount $GlobalAdminAccount
+    }
+
+    Write-Information "Extracting TeamsMessageSettings..."
+    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                 -ChildPath "..\DSCResources\MSFT_TeamsMessageSettings\MSFT_TeamsMessageSettings.psm1" `
+                                 -Resolve
+
+    $catch = Import-Module $TeamsModulePath
+
+    foreach ($team in $teams)
+    {
+        $teamMessageSettings = Get-TeamMemberSettings -GroupId $team.GroupId
+        Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
+        $DSCContent += Export-TargetResource -GroupId $team.GroupId `
+                                             -AllowUserEditMessages $teamMessageSettings.AllowUserEditMessages `
+                                             -AllowUserDeleteMessages $teamMessageSettings.AllowUserDeleteMessages `
+                                             -AllowOwnerDeleteMessages $teamMessageSettings.AllowOwnerDeleteMessages `
+                                             -AllowTeamMentions $teamMessageSettings.AllowTeamMentions `
+                                             -AllowChannelMentions $teamMessageSettings.AllowChannelMentions `
+                                             -GlobalAdminAccount $GlobalAdminAccount
+    }
+
+    Write-Information "Extracting TeamsGuestSettings..."
+    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                 -ChildPath "..\DSCResources\MSFT_TeamsGuestSettings\MSFT_TeamsGuestSettings.psm1" `
+                                 -Resolve
+
+    $catch = Import-Module $TeamsModulePath
+
+    foreach ($team in $teams)
+    {
+        $teamGuestSettings = Get-TeamGuestSettings -GroupId $team.GroupId
+        Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
+        $DSCContent += Export-TargetResource -GroupId $team.GroupId `
+                                             -AllowCreateUpdateChannels $teamGuestSettings.AllowCreateUpdateChannels `
+                                             -AllowDeleteChannels $teamGuestSettings.AllowDeleteChannels `
+                                             -GlobalAdminAccount $GlobalAdminAccount
+    }
 
     # Close the Node and Configuration declarations
     $DSCContent += "    }`r`n"
@@ -1489,7 +1697,7 @@ function Export-O365Configuration
     {
         try
         {
-            Write-Output "Directory `"$OutputDSCPath`" doesn't exist; creating..."
+            Write-Information "Directory `"$OutputDSCPath`" doesn't exist; creating..."
             New-Item -Path $OutputDSCPath -ItemType Directory | Out-Null
             if ($?) {break}
         }

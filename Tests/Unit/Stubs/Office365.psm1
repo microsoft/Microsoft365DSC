@@ -1,4 +1,29 @@
-﻿function Test-PnPOnlineConnection{
+﻿function Open-SecurityAndComplianceCenterConnection{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $GlobalAdminAccount
+    )
+}
+
+function Get-AdminAuditLogConfig{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+
+function Set-AdminAuditLogConfig{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $UnifiedAuditLogIngestionEnabled = $false
+    )
+}
+
+function Test-PnPOnlineConnection{
     [CmdletBinding()]
     param(
         [Parameter()]
@@ -360,17 +385,17 @@ function New-DistributionGroup {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-    
+
         [Parameter(Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Alias},
-    
+
         [Parameter(Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Type},
-    
+
         [Parameter(Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [string]
@@ -385,15 +410,15 @@ function New-DistributionGroup {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-    
+
         [Parameter()]
         [string]
         ${Alias},
-    
+
         [Parameter()]
         [string]
         ${Type},
-    
+
         [Parameter()]
         [string]
         ${PrimarySMTPAddress},
@@ -435,8 +460,8 @@ param(
 }
 
 <# Microsoft.Online.SharePoint.PowerShell #>
- 
-function Add-SPOGeoAdministrator { 
+
+function Add-SPOGeoAdministrator {
  [CmdletBinding(DefaultParameterSetName='User')]
 param(
     [Parameter(ParameterSetName='Group', Mandatory=$true, Position=0)]
@@ -454,11 +479,11 @@ param(
     [guid]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Add-SPOHubSiteAssociation { 
+function Add-SPOHubSiteAssociation {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -469,22 +494,22 @@ param(
     [object]
     ${HubSite})
 
- 
- } 
+
+ }
 
 
-function Add-SPOSiteCollectionAppCatalog { 
+function Add-SPOSiteCollectionAppCatalog {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true)]
     [object]
     ${Site})
 
- 
- } 
+
+ }
 
 
-function Add-SPOSiteDesign { 
+function Add-SPOSiteDesign {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
@@ -514,11 +539,11 @@ param(
     [switch]
     ${IsDefault})
 
- 
- } 
+
+ }
 
 
-function Add-SPOSiteDesignTask { 
+function Add-SPOSiteDesignTask {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
@@ -530,11 +555,11 @@ param(
     [string]
     ${WebUrl})
 
- 
- } 
+
+ }
 
 
-function Add-SPOSiteScript { 
+function Add-SPOSiteScript {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
@@ -550,11 +575,11 @@ param(
     [string]
     ${Description})
 
- 
- } 
+
+ }
 
 
-function Add-SPOTenantCdnOrigin { 
+function Add-SPOTenantCdnOrigin {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true)]
@@ -565,11 +590,11 @@ param(
     [object]
     ${CdnType})
 
- 
- } 
+
+ }
 
 
-function Add-SPOTenantCentralAssetRepositoryLibrary { 
+function Add-SPOTenantCentralAssetRepositoryLibrary {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true)]
@@ -586,11 +611,11 @@ param(
     [object]
     ${CdnType})
 
- 
- } 
+
+ }
 
 
-function Add-SPOTheme { 
+function Add-SPOTheme {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -610,11 +635,11 @@ param(
     [switch]
     ${Overwrite})
 
- 
- } 
+
+ }
 
 
-function Add-SPOUser { 
+function Add-SPOUser {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
@@ -629,11 +654,11 @@ param(
     [string]
     ${Group})
 
- 
- } 
+
+ }
 
 
-function Approve-SPOTenantServicePrincipalPermissionGrant { 
+function Approve-SPOTenantServicePrincipalPermissionGrant {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true, Position=1)]
@@ -644,22 +669,22 @@ param(
     [string]
     ${Scope})
 
- 
- } 
+
+ }
 
 
-function Approve-SPOTenantServicePrincipalPermissionRequest { 
+function Approve-SPOTenantServicePrincipalPermissionRequest {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true)]
     [guid]
     ${RequestId})
 
- 
- } 
+
+ }
 
 
-function Connect-SPOService { 
+function Connect-SPOService {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -683,11 +708,11 @@ param(
     [string]
     ${AuthenticationUrl})
 
- 
- } 
+
+ }
 
 
-function ConvertTo-SPOMigrationEncryptedPackage { 
+function ConvertTo-SPOMigrationEncryptedPackage {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='ImplicitSourceParameterSet', Mandatory=$true)]
@@ -723,11 +748,11 @@ param(
     [switch]
     ${NoLogFile})
 
- 
- } 
+
+ }
 
 
-function ConvertTo-SPOMigrationTargetedPackage { 
+function ConvertTo-SPOMigrationTargetedPackage {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
@@ -791,46 +816,46 @@ param(
     [switch]
     ${NoLogFile})
 
- 
- } 
+
+ }
 
 
-function Deny-SPOTenantServicePrincipalPermissionRequest { 
+function Deny-SPOTenantServicePrincipalPermissionRequest {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true)]
     [guid]
     ${RequestId})
 
- 
- } 
+
+ }
 
 
-function Disable-SPOTenantServicePrincipal { 
+function Disable-SPOTenantServicePrincipal {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param()
 
- 
- } 
+
+ }
 
 
-function Disconnect-SPOService { 
+function Disconnect-SPOService {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Enable-SPOTenantServicePrincipal { 
+function Enable-SPOTenantServicePrincipal {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param()
 
- 
- } 
+
+ }
 
 
-function Export-SPOQueryLogs { 
+function Export-SPOQueryLogs {
  [CmdletBinding(DefaultParameterSetName='All')]
 param(
     [Parameter(Mandatory=$true)]
@@ -843,11 +868,11 @@ param(
     [string]
     ${OutputFolder})
 
- 
- } 
+
+ }
 
 
-function Export-SPOUserInfo { 
+function Export-SPOUserInfo {
  [CmdletBinding(DefaultParameterSetName='All')]
 param(
     [Parameter(Mandatory=$true)]
@@ -861,11 +886,11 @@ param(
     [string]
     ${OutputFolder})
 
- 
- } 
+
+ }
 
 
-function Export-SPOUserProfile { 
+function Export-SPOUserProfile {
  [CmdletBinding(DefaultParameterSetName='All')]
 param(
     [Parameter(Mandatory=$true)]
@@ -875,11 +900,11 @@ param(
     [string]
     ${OutputFolder})
 
- 
- } 
+
+ }
 
 
-function Get-SPOAppErrors { 
+function Get-SPOAppErrors {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
@@ -894,11 +919,11 @@ param(
     [datetime]
     ${EndTimeInUtc})
 
- 
- } 
+
+ }
 
 
-function Get-SPOAppInfo { 
+function Get-SPOAppInfo {
  [CmdletBinding()]
 param(
     [Parameter(Position=1)]
@@ -909,19 +934,19 @@ param(
     [string]
     ${Name})
 
- 
- } 
+
+ }
 
 
-function Get-SPOBrowserIdleSignOut { 
+function Get-SPOBrowserIdleSignOut {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-SPOCrossGeoMovedUsers { 
+function Get-SPOCrossGeoMovedUsers {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
@@ -929,11 +954,11 @@ param(
     [string]
     ${Direction})
 
- 
- } 
+
+ }
 
 
-function Get-SPOCrossGeoMoveReport { 
+function Get-SPOCrossGeoMoveReport {
  [CmdletBinding()]
 param(
     [ValidateRange(1, 1000)]
@@ -956,33 +981,33 @@ param(
     [object]
     ${MoveDirection})
 
- 
- } 
+
+ }
 
 
-function Get-SPOCrossGeoUsers { 
+function Get-SPOCrossGeoUsers {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
     [bool]
     ${ValidDataLocation})
 
- 
- } 
+
+ }
 
 
-function Get-SPODataEncryptionPolicy { 
+function Get-SPODataEncryptionPolicy {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [object]
     ${Identity})
 
- 
- } 
+
+ }
 
 
-function Get-SPODeletedSite { 
+function Get-SPODeletedSite {
  [CmdletBinding(DefaultParameterSetName='ParameterSetAllSites')]
 param(
     [Parameter(Position=0, ValueFromPipeline=$true)]
@@ -1000,11 +1025,11 @@ param(
     [switch]
     ${IncludeOnlyPersonalSite})
 
- 
- } 
+
+ }
 
 
-function Get-SPOExternalUser { 
+function Get-SPOExternalUser {
  [CmdletBinding(DefaultParameterSetName='All')]
 param(
     [Parameter(ParameterSetName='All', Position=1)]
@@ -1031,56 +1056,56 @@ param(
     [bool]
     ${ShowOnlyUsersWithAcceptingAccountNotMatchInvitedAccount})
 
- 
- } 
+
+ }
 
 
-function Get-SPOGeoAdministrator { 
+function Get-SPOGeoAdministrator {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-SPOGeoMoveCrossCompatibilityStatus { 
+function Get-SPOGeoMoveCrossCompatibilityStatus {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-SPOGeoStorageQuota { 
+function Get-SPOGeoStorageQuota {
  [CmdletBinding()]
 param(
     [switch]
     ${AllLocations})
 
- 
- } 
+
+ }
 
 
-function Get-SPOHideDefaultThemes { 
+function Get-SPOHideDefaultThemes {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-SPOHubSite { 
+function Get-SPOHubSite {
  [CmdletBinding()]
 param(
     [Parameter(Position=0, ValueFromPipeline=$true)]
     [object]
     ${Identity})
 
- 
- } 
+
+ }
 
 
-function Get-SPOMigrationJobProgress { 
+function Get-SPOMigrationJobProgress {
  [CmdletBinding()]
 param(
     [ValidateNotNullOrEmpty()]
@@ -1113,11 +1138,11 @@ param(
     [switch]
     ${NoLogFile})
 
- 
- } 
+
+ }
 
 
-function Get-SPOMigrationJobStatus { 
+function Get-SPOMigrationJobStatus {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
@@ -1136,35 +1161,35 @@ param(
     [switch]
     ${NoLogFile})
 
- 
- } 
+
+ }
 
 
-function Get-SPOMultiGeoCompanyAllowedDataLocation { 
+function Get-SPOMultiGeoCompanyAllowedDataLocation {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-SPOMultiGeoExperience { 
+function Get-SPOMultiGeoExperience {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-SPOPublicCdnOrigins { 
+function Get-SPOPublicCdnOrigins {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-SPOSite { 
+function Get-SPOSite {
  [CmdletBinding(DefaultParameterSetName='ParamSet1')]
 param(
     [Parameter(ParameterSetName='ParamSet1', Position=0, ValueFromPipeline=$true)]
@@ -1202,55 +1227,55 @@ param(
     [System.Nullable[bool]]
     ${GroupIdDefined})
 
- 
- } 
+
+ }
 
 
-function Get-SPOSiteCollectionAppCatalogs { 
+function Get-SPOSiteCollectionAppCatalogs {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
     [object]
     ${Site})
 
- 
- } 
+
+ }
 
 
-function Get-SPOSiteContentMoveState { 
+function Get-SPOSiteContentMoveState {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
     [string]
     ${SourceSiteUrl})
 
- 
- } 
+
+ }
 
 
-function Get-SPOSiteDataEncryptionPolicy { 
+function Get-SPOSiteDataEncryptionPolicy {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [object]
     ${Identity})
 
- 
- } 
+
+ }
 
 
-function Get-SPOSiteDesign { 
+function Get-SPOSiteDesign {
  [CmdletBinding()]
 param(
     [Parameter(Position=0, ValueFromPipeline=$true)]
     [object]
     ${Identity})
 
- 
- } 
+
+ }
 
 
-function Get-SPOSiteDesignRights { 
+function Get-SPOSiteDesignRights {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -1258,11 +1283,11 @@ param(
     [object]
     ${Identity})
 
- 
- } 
+
+ }
 
 
-function Get-SPOSiteDesignRun { 
+function Get-SPOSiteDesignRun {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
@@ -1273,22 +1298,22 @@ param(
     [object]
     ${SiteDesignId})
 
- 
- } 
+
+ }
 
 
-function Get-SPOSiteDesignRunStatus { 
+function Get-SPOSiteDesignRunStatus {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [object]
     ${Run})
 
- 
- } 
+
+ }
 
 
-function Get-SPOSiteDesignTask { 
+function Get-SPOSiteDesignTask {
  [CmdletBinding()]
 param(
     [Parameter(Position=0, ValueFromPipeline=$true)]
@@ -1299,11 +1324,11 @@ param(
     [string]
     ${WebUrl})
 
- 
- } 
+
+ }
 
 
-function Get-SPOSiteGroup { 
+function Get-SPOSiteGroup {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
@@ -1317,33 +1342,33 @@ param(
     [int]
     ${Limit})
 
- 
- } 
+
+ }
 
 
-function Get-SPOSiteScript { 
+function Get-SPOSiteScript {
  [CmdletBinding()]
 param(
     [Parameter(Position=0, ValueFromPipeline=$true)]
     [object]
     ${Identity})
 
- 
- } 
+
+ }
 
 
-function Get-SPOSiteScriptFromList { 
+function Get-SPOSiteScriptFromList {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [string]
     ${ListUrl})
 
- 
- } 
+
+ }
 
 
-function Get-SPOStorageEntity { 
+function Get-SPOStorageEntity {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
@@ -1354,68 +1379,68 @@ param(
     [string]
     ${Key})
 
- 
- } 
+
+ }
 
 
-function Get-SPOTenant { 
+function Get-SPOTenant {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-SPOTenantCdnEnabled { 
+function Get-SPOTenantCdnEnabled {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
     [object]
     ${CdnType})
 
- 
- } 
+
+ }
 
 
-function Get-SPOTenantCdnOrigins { 
+function Get-SPOTenantCdnOrigins {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
     [object]
     ${CdnType})
 
- 
- } 
+
+ }
 
 
-function Get-SPOTenantCdnPolicies { 
+function Get-SPOTenantCdnPolicies {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
     [object]
     ${CdnType})
 
- 
- } 
+
+ }
 
 
-function Get-SPOTenantCentralAssetRepository { 
+function Get-SPOTenantCentralAssetRepository {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-SPOTenantContentTypeReplicationParameters { 
+function Get-SPOTenantContentTypeReplicationParameters {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-SPOTenantLogEntry { 
+function Get-SPOTenantLogEntry {
  [CmdletBinding(DefaultParameterSetName='SiteSubscriptionId')]
 param(
     [Parameter(ParameterSetName='CorrelationId', Mandatory=$true)]
@@ -1444,62 +1469,62 @@ param(
     [uint32]
     ${MaxRows})
 
- 
- } 
+
+ }
 
 
-function Get-SPOTenantLogLastAvailableTimeInUtc { 
+function Get-SPOTenantLogLastAvailableTimeInUtc {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-SPOTenantServicePrincipalPermissionGrants { 
+function Get-SPOTenantServicePrincipalPermissionGrants {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-SPOTenantServicePrincipalPermissionRequests { 
+function Get-SPOTenantServicePrincipalPermissionRequests {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-SPOTenantSyncClientRestriction { 
+function Get-SPOTenantSyncClientRestriction {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-SPOTenantTaxonomyReplicationParameters { 
+function Get-SPOTenantTaxonomyReplicationParameters {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-SPOTheme { 
+function Get-SPOTheme {
  [CmdletBinding()]
 param(
     [Parameter(Position=0, ValueFromPipeline=$true)]
     [string]
     ${Name})
 
- 
- } 
+
+ }
 
 
-function Get-SPOUnifiedGroup { 
+function Get-SPOUnifiedGroup {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
@@ -1507,22 +1532,22 @@ param(
     [string]
     ${GroupAlias})
 
- 
- } 
+
+ }
 
 
-function Get-SPOUnifiedGroupMoveState { 
+function Get-SPOUnifiedGroupMoveState {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
     [string]
     ${GroupAlias})
 
- 
- } 
+
+ }
 
 
-function Get-SPOUser { 
+function Get-SPOUser {
  [CmdletBinding(DefaultParameterSetName='All')]
 param(
     [Parameter(Mandatory=$true, Position=1)]
@@ -1542,11 +1567,11 @@ param(
     [string]
     ${Limit})
 
- 
- } 
+
+ }
 
 
-function Get-SPOUserAndContentMoveState { 
+function Get-SPOUserAndContentMoveState {
  [CmdletBinding(DefaultParameterSetName='MoveReport')]
 param(
     [Parameter(ParameterSetName='UserPrincipalName', Mandatory=$true)]
@@ -1580,22 +1605,22 @@ param(
     [object]
     ${MoveDirection})
 
- 
- } 
+
+ }
 
 
-function Get-SPOUserOneDriveLocation { 
+function Get-SPOUserOneDriveLocation {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
     [string]
     ${UserPrincipalName})
 
- 
- } 
+
+ }
 
 
-function Get-SPOWebTemplate { 
+function Get-SPOWebTemplate {
  [CmdletBinding()]
 param(
     [Parameter(Position=0)]
@@ -1611,11 +1636,11 @@ param(
     [string]
     ${Title})
 
- 
- } 
+
+ }
 
 
-function Grant-SPOHubSiteRights { 
+function Grant-SPOHubSiteRights {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -1631,11 +1656,11 @@ param(
     [object]
     ${Rights})
 
- 
- } 
+
+ }
 
 
-function Grant-SPOSiteDesignRights { 
+function Grant-SPOSiteDesignRights {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -1652,11 +1677,11 @@ param(
     [object]
     ${Rights})
 
- 
- } 
+
+ }
 
 
-function Invoke-SPOMigrationEncryptUploadSubmit { 
+function Invoke-SPOMigrationEncryptUploadSubmit {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='ImplicitSourceParameterSet', Mandatory=$true)]
@@ -1690,11 +1715,11 @@ param(
     [switch]
     ${ParallelUpload})
 
- 
- } 
+
+ }
 
 
-function Invoke-SPOSiteDesign { 
+function Invoke-SPOSiteDesign {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
@@ -1707,19 +1732,19 @@ param(
     [string]
     ${WebUrl})
 
- 
- } 
+
+ }
 
 
-function New-SPOMigrationEncryptionParameters { 
+function New-SPOMigrationEncryptionParameters {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function New-SPOMigrationPackage { 
+function New-SPOMigrationPackage {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
@@ -1762,22 +1787,22 @@ param(
     [switch]
     ${NoAzureADLookup})
 
- 
- } 
+
+ }
 
 
-function New-SPOPublicCdnOrigin { 
+function New-SPOPublicCdnOrigin {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [string]
     ${Url})
 
- 
- } 
+
+ }
 
 
-function New-SPOSdnProvider { 
+function New-SPOSdnProvider {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -1788,11 +1813,11 @@ param(
     [string]
     ${License})
 
- 
- } 
+
+ }
 
 
-function New-SPOSite { 
+function New-SPOSite {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -1832,11 +1857,11 @@ param(
     [switch]
     ${NoWait})
 
- 
- } 
+
+ }
 
 
-function New-SPOSiteGroup { 
+function New-SPOSiteGroup {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
@@ -1851,11 +1876,11 @@ param(
     [string[]]
     ${PermissionLevels})
 
- 
- } 
+
+ }
 
 
-function Register-SPODataEncryptionPolicy { 
+function Register-SPODataEncryptionPolicy {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -1886,11 +1911,11 @@ param(
     [guid]
     ${SecondaryKeyVersion})
 
- 
- } 
+
+ }
 
 
-function Register-SPOHubSite { 
+function Register-SPOHubSite {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -1903,11 +1928,11 @@ param(
     [string[]]
     ${Principals})
 
- 
- } 
+
+ }
 
 
-function Remove-SPODeletedSite { 
+function Remove-SPODeletedSite {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -1917,22 +1942,22 @@ param(
     [switch]
     ${NoWait})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOExternalUser { 
+function Remove-SPOExternalUser {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(ParameterSetName='All', Mandatory=$true, Position=1)]
     [string[]]
     ${UniqueIDs})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOGeoAdministrator { 
+function Remove-SPOGeoAdministrator {
  [CmdletBinding(DefaultParameterSetName='User')]
 param(
     [Parameter(ParameterSetName='Group', Mandatory=$true, Position=0)]
@@ -1950,22 +1975,22 @@ param(
     [guid]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOHubSiteAssociation { 
+function Remove-SPOHubSiteAssociation {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [object]
     ${Site})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOMigrationJob { 
+function Remove-SPOMigrationJob {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
@@ -1985,11 +2010,11 @@ param(
     [switch]
     ${NoLogFile})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOMultiGeoCompanyAllowedDataLocation { 
+function Remove-SPOMultiGeoCompanyAllowedDataLocation {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true, Position=0)]
@@ -1997,30 +2022,30 @@ param(
     [string]
     ${Location})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOPublicCdnOrigin { 
+function Remove-SPOPublicCdnOrigin {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [string]
     ${Identity})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOSdnProvider { 
+function Remove-SPOSdnProvider {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param()
 
- 
- } 
+
+ }
 
 
-function Remove-SPOSite { 
+function Remove-SPOSite {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -2030,33 +2055,33 @@ param(
     [switch]
     ${NoWait})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOSiteCollectionAppCatalog { 
+function Remove-SPOSiteCollectionAppCatalog {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
     [object]
     ${Site})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOSiteCollectionAppCatalogById { 
+function Remove-SPOSiteCollectionAppCatalogById {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
     [guid]
     ${SiteId})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOSiteDesign { 
+function Remove-SPOSiteDesign {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -2064,22 +2089,22 @@ param(
     [object]
     ${Identity})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOSiteDesignTask { 
+function Remove-SPOSiteDesignTask {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [object]
     ${Identity})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOSiteGroup { 
+function Remove-SPOSiteGroup {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
@@ -2090,11 +2115,11 @@ param(
     [string]
     ${Identity})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOSiteScript { 
+function Remove-SPOSiteScript {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -2102,11 +2127,11 @@ param(
     [object]
     ${Identity})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOStorageEntity { 
+function Remove-SPOStorageEntity {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
@@ -2117,11 +2142,11 @@ param(
     [string]
     ${Key})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOTenantCdnOrigin { 
+function Remove-SPOTenantCdnOrigin {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true)]
@@ -2132,11 +2157,11 @@ param(
     [object]
     ${CdnType})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOTenantCentralAssetRepositoryLibrary { 
+function Remove-SPOTenantCentralAssetRepositoryLibrary {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true)]
@@ -2150,19 +2175,19 @@ param(
     [object]
     ${CdnType})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOTenantSyncClientRestriction { 
+function Remove-SPOTenantSyncClientRestriction {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Remove-SPOTheme { 
+function Remove-SPOTheme {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -2170,11 +2195,11 @@ param(
     [object]
     ${Identity})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOUser { 
+function Remove-SPOUser {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
@@ -2189,11 +2214,11 @@ param(
     [string]
     ${Group})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOUserInfo { 
+function Remove-SPOUserInfo {
  [CmdletBinding(DefaultParameterSetName='All')]
 param(
     [Parameter(Mandatory=$true)]
@@ -2207,11 +2232,11 @@ param(
     [string]
     ${RedactName})
 
- 
- } 
+
+ }
 
 
-function Remove-SPOUserProfile { 
+function Remove-SPOUserProfile {
  [CmdletBinding(DefaultParameterSetName='All')]
 param(
     [Parameter(Mandatory=$true)]
@@ -2221,11 +2246,11 @@ param(
     [string]
     ${UserId})
 
- 
- } 
+
+ }
 
 
-function Repair-SPOSite { 
+function Repair-SPOSite {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -2238,11 +2263,11 @@ param(
     [switch]
     ${RunAlways})
 
- 
- } 
+
+ }
 
 
-function Request-SPOPersonalSite { 
+function Request-SPOPersonalSite {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
@@ -2253,11 +2278,11 @@ param(
     [switch]
     ${NoWait})
 
- 
- } 
+
+ }
 
 
-function Request-SPOUpgradeEvaluationSite { 
+function Request-SPOUpgradeEvaluationSite {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -2270,11 +2295,11 @@ param(
     [switch]
     ${NoEmail})
 
- 
- } 
+
+ }
 
 
-function Restore-SPODataEncryptionPolicy { 
+function Restore-SPODataEncryptionPolicy {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -2305,11 +2330,11 @@ param(
     [guid]
     ${SecondaryKeyVersion})
 
- 
- } 
+
+ }
 
 
-function Restore-SPODeletedSite { 
+function Restore-SPODeletedSite {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -2320,11 +2345,11 @@ param(
     [switch]
     ${NoWait})
 
- 
- } 
+
+ }
 
 
-function Revoke-SPOHubSiteRights { 
+function Revoke-SPOHubSiteRights {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -2336,11 +2361,11 @@ param(
     [string[]]
     ${Principals})
 
- 
- } 
+
+ }
 
 
-function Revoke-SPOSiteDesignRights { 
+function Revoke-SPOSiteDesignRights {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -2353,33 +2378,33 @@ param(
     [string[]]
     ${Principals})
 
- 
- } 
+
+ }
 
 
-function Revoke-SPOTenantServicePrincipalPermission { 
+function Revoke-SPOTenantServicePrincipalPermission {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Revoke-SPOUserSession { 
+function Revoke-SPOUserSession {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true, Position=0)]
     [string]
     ${User})
 
- 
- } 
+
+ }
 
 
-function Set-SPOBrowserIdleSignOut { 
+function Set-SPOBrowserIdleSignOut {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
@@ -2392,11 +2417,11 @@ param(
     [timespan]
     ${SignOutAfter})
 
- 
- } 
+
+ }
 
 
-function Set-SPOGeoStorageQuota { 
+function Set-SPOGeoStorageQuota {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
@@ -2407,22 +2432,22 @@ param(
     [long]
     ${StorageQuotaMB})
 
- 
- } 
+
+ }
 
 
-function Set-SPOHideDefaultThemes { 
+function Set-SPOHideDefaultThemes {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
     [bool]
     ${HideDefaultThemes})
 
- 
- } 
+
+ }
 
 
-function Set-SPOHubSite { 
+function Set-SPOHubSite {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -2445,11 +2470,11 @@ param(
     [System.Nullable[bool]]
     ${RequiresJoinApproval})
 
- 
- } 
+
+ }
 
 
-function Set-SPOMigrationPackageAzureSource { 
+function Set-SPOMigrationPackageAzureSource {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='ImplicitSourceImplicitAzure', Mandatory=$true)]
@@ -2528,11 +2553,11 @@ param(
     [switch]
     ${ParallelUpload})
 
- 
- } 
+
+ }
 
 
-function Set-SPOMultiGeoCompanyAllowedDataLocation { 
+function Set-SPOMultiGeoCompanyAllowedDataLocation {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true, Position=0)]
@@ -2545,19 +2570,19 @@ param(
     [string]
     ${InitialDomain})
 
- 
- } 
+
+ }
 
 
-function Set-SPOMultiGeoExperience { 
+function Set-SPOMultiGeoExperience {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param()
 
- 
- } 
+
+ }
 
 
-function Set-SPOSite { 
+function Set-SPOSite {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -2712,11 +2737,11 @@ param(
     [System.Nullable[object]]
     ${DefaultLinkPermission})
 
- 
- } 
+
+ }
 
 
-function Set-SPOSiteDesign { 
+function Set-SPOSiteDesign {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -2748,11 +2773,11 @@ param(
     [System.Nullable[int]]
     ${Version})
 
- 
- } 
+
+ }
 
 
-function Set-SPOSiteGroup { 
+function Set-SPOSiteGroup {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
@@ -2779,11 +2804,11 @@ param(
     [string]
     ${Owner})
 
- 
- } 
+
+ }
 
 
-function Set-SPOSiteOffice365Group { 
+function Set-SPOSiteOffice365Group {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -2817,11 +2842,11 @@ param(
     [switch]
     ${KeepOldHomepage})
 
- 
- } 
+
+ }
 
 
-function Set-SPOSiteScript { 
+function Set-SPOSiteScript {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
@@ -2844,11 +2869,11 @@ param(
     [System.Nullable[int]]
     ${Version})
 
- 
- } 
+
+ }
 
 
-function Set-SPOStorageEntity { 
+function Set-SPOStorageEntity {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true)]
@@ -2871,14 +2896,14 @@ param(
     [string]
     ${Description})
 
- 
- } 
+
+ }
 
 
 
 
 
-function Set-SPOTenantCdnEnabled { 
+function Set-SPOTenantCdnEnabled {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [bool]
@@ -2890,11 +2915,11 @@ param(
     [switch]
     ${NoDefaultOrigins})
 
- 
- } 
+
+ }
 
 
-function Set-SPOTenantCdnPolicy { 
+function Set-SPOTenantCdnPolicy {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
@@ -2909,11 +2934,11 @@ param(
     [object]
     ${CdnType})
 
- 
- } 
+
+ }
 
 
-function Set-SPOTenantContentTypeReplicationParameters { 
+function Set-SPOTenantContentTypeReplicationParameters {
  [CmdletBinding(DefaultParameterSetName='ReplicateSelectedContentTypes')]
 param(
     [Parameter(ParameterSetName='ReplicateAllContentTypes', Mandatory=$true)]
@@ -2925,11 +2950,11 @@ param(
     [string[]]
     ${ReplicatedContentTypes})
 
- 
- } 
+
+ }
 
 
-function Set-SPOTenantSyncClientRestriction { 
+function Set-SPOTenantSyncClientRestriction {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='Blocking')]
@@ -2957,11 +2982,11 @@ param(
     [bool]
     ${DisableReportProblemDialog})
 
- 
- } 
+
+ }
 
 
-function Set-SPOTenantTaxonomyReplicationParameters { 
+function Set-SPOTenantTaxonomyReplicationParameters {
  [CmdletBinding(DefaultParameterSetName='ReplicateSelectedGroups')]
 param(
     [Parameter(ParameterSetName='ReplicateAllGroups', Mandatory=$true)]
@@ -2973,11 +2998,11 @@ param(
     [string[]]
     ${ReplicatedGroups})
 
- 
- } 
+
+ }
 
 
-function Set-SPOUnifiedGroup { 
+function Set-SPOUnifiedGroup {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
@@ -2990,11 +3015,11 @@ param(
     [string]
     ${PreferredDataLocation})
 
- 
- } 
+
+ }
 
 
-function Set-SPOUser { 
+function Set-SPOUser {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
@@ -3013,11 +3038,11 @@ param(
     [switch]
     ${UpdateUserTypeFromAzureAD})
 
- 
- } 
+
+ }
 
 
-function Set-SPOWebTheme { 
+function Set-SPOWebTheme {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -3029,11 +3054,11 @@ param(
     [object]
     ${Web})
 
- 
- } 
+
+ }
 
 
-function Start-SPOSiteContentMove { 
+function Start-SPOSiteContentMove {
  [CmdletBinding(DefaultParameterSetName='UrlAndDestinationDataLocation')]
 param(
     [Parameter(ParameterSetName='UrlAndDestinationUrl', Mandatory=$true, Position=0)]
@@ -3081,11 +3106,11 @@ param(
     [switch]
     ${SuppressAllWarnings})
 
- 
- } 
+
+ }
 
 
-function Start-SPOSiteRename { 
+function Start-SPOSiteRename {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true, Position=0)]
@@ -3110,11 +3135,11 @@ param(
     [switch]
     ${SuppressAllWarnings})
 
- 
- } 
+
+ }
 
 
-function Start-SPOUnifiedGroupMove { 
+function Start-SPOUnifiedGroupMove {
  [CmdletBinding(DefaultParameterSetName='GroupAliasAndDestinationDataLocation')]
 param(
     [Parameter(ParameterSetName='GroupAliasAndDestinationDataLocation', Mandatory=$true, Position=0)]
@@ -3157,11 +3182,11 @@ param(
     [switch]
     ${SuppressAllWarnings})
 
- 
- } 
+
+ }
 
 
-function Start-SPOUserAndContentMove { 
+function Start-SPOUserAndContentMove {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
@@ -3192,22 +3217,22 @@ param(
     [switch]
     ${ValidationOnly})
 
- 
- } 
+
+ }
 
 
-function Stop-SPOUserAndContentMove { 
+function Stop-SPOUserAndContentMove {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
     [string]
     ${UserPrincipalName})
 
- 
- } 
+
+ }
 
 
-function Submit-SPOMigrationJob { 
+function Submit-SPOMigrationJob {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
@@ -3245,11 +3270,11 @@ param(
     [object]
     ${EncryptionParameters})
 
- 
- } 
+
+ }
 
 
-function Test-SPOSite { 
+function Test-SPOSite {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -3262,11 +3287,11 @@ param(
     [switch]
     ${RunAlways})
 
- 
- } 
+
+ }
 
 
-function Unregister-SPOHubSite { 
+function Unregister-SPOHubSite {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -3277,11 +3302,11 @@ param(
     [switch]
     ${Force})
 
- 
- } 
+
+ }
 
 
-function Update-SPODataEncryptionPolicy { 
+function Update-SPODataEncryptionPolicy {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -3304,22 +3329,22 @@ param(
     [object]
     ${KeyType})
 
- 
- } 
+
+ }
 
 
-function Update-UserType { 
+function Update-UserType {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
     [string]
     ${LoginName})
 
- 
- } 
+
+ }
 
 
-function Upgrade-SPOSite { 
+function Upgrade-SPOSite {
  [CmdletBinding(DefaultParameterSetName='SPSiteById', SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -3335,11 +3360,11 @@ param(
     [switch]
     ${NoEmail})
 
- 
- } 
+
+ }
 
 <# MSOnline #>
-function Add-MsolAdministrativeUnitMember { 
+function Add-MsolAdministrativeUnitMember {
  [CmdletBinding(DefaultParameterSetName='AddAdministrativeUnitMembers__0')]
 param(
     [Parameter(ParameterSetName='AddAdministrativeUnitMembers__0', Mandatory=$true)]
@@ -3354,11 +3379,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Add-MsolForeignGroupToRole { 
+function Add-MsolForeignGroupToRole {
  [CmdletBinding(DefaultParameterSetName='AddForeignGroupToRole__0')]
 param(
     [Parameter(ParameterSetName='AddForeignGroupToRole__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -3377,11 +3402,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Add-MsolGroupMember { 
+function Add-MsolGroupMember {
  [CmdletBinding(DefaultParameterSetName='AddGroupMembers__0')]
 param(
     [Parameter(ParameterSetName='AddGroupMembers__0', Mandatory=$true)]
@@ -3400,11 +3425,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Add-MsolRoleMember { 
+function Add-MsolRoleMember {
  [CmdletBinding(DefaultParameterSetName='AddRoleMembers__0')]
 param(
     [Parameter(ParameterSetName='AddRoleMembers__0', Mandatory=$true)]
@@ -3434,11 +3459,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Add-MsolScopedRoleMember { 
+function Add-MsolScopedRoleMember {
  [CmdletBinding(DefaultParameterSetName='AddRoleScopedMembers__0')]
 param(
     [Parameter(ParameterSetName='AddRoleScopedMembers__0', Mandatory=$true)]
@@ -3461,11 +3486,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Confirm-MsolDomain { 
+function Confirm-MsolDomain {
  [CmdletBinding(DefaultParameterSetName='VerifyDomain2__0')]
 param(
     [Parameter(ParameterSetName='VerifyDomain2__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -3536,11 +3561,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Confirm-MsolEmailVerifiedDomain { 
+function Confirm-MsolEmailVerifiedDomain {
  [CmdletBinding(DefaultParameterSetName='VerifyEmailVerifiedDomain__0')]
 param(
     [Parameter(ParameterSetName='VerifyEmailVerifiedDomain__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -3551,11 +3576,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Connect-MsolService { 
+function Connect-MsolService {
  [CmdletBinding(DefaultParameterSetName='None__0')]
 param(
     [Parameter(ParameterSetName='Credential')]
@@ -3577,11 +3602,11 @@ param(
     [object]
     ${AzureEnvironment})
 
- 
- } 
+
+ }
 
 
-function Convert-MsolDomainToFederated { 
+function Convert-MsolDomainToFederated {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [switch]
@@ -3592,11 +3617,11 @@ param(
     [string]
     ${DomainName})
 
- 
- } 
+
+ }
 
 
-function Convert-MsolDomainToStandard { 
+function Convert-MsolDomainToStandard {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true)]
@@ -3612,11 +3637,11 @@ param(
     [string]
     ${DomainName})
 
- 
- } 
+
+ }
 
 
-function Convert-MsolFederatedUser { 
+function Convert-MsolFederatedUser {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='ConvertFederatedUserToManaged__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -3631,11 +3656,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Disable-MsolDevice { 
+function Disable-MsolDevice {
  [CmdletBinding(DefaultParameterSetName='DisableDeviceByDeviceId', SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(ParameterSetName='DisableDeviceByDeviceId', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -3649,11 +3674,11 @@ param(
     [guid]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Enable-MsolDevice { 
+function Enable-MsolDevice {
  [CmdletBinding(DefaultParameterSetName='EnableDeviceByDeviceId', SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(ParameterSetName='EnableDeviceByDeviceId', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -3667,22 +3692,22 @@ param(
     [guid]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolAccountSku { 
+function Get-MsolAccountSku {
  [CmdletBinding(DefaultParameterSetName='ListAccountSkus__0')]
 param(
     [Parameter(ValueFromPipelineByPropertyName=$true)]
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolAdministrativeUnit { 
+function Get-MsolAdministrativeUnit {
  [CmdletBinding(DefaultParameterSetName='ListAdministrativeUnits__0')]
 param(
     [Parameter(ParameterSetName='GetAdministrativeUnit__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -3716,11 +3741,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolAdministrativeUnitMember { 
+function Get-MsolAdministrativeUnitMember {
  [CmdletBinding(DefaultParameterSetName='ListAdministrativeUnitMembers__0')]
 param(
     [Parameter(ParameterSetName='ListAdministrativeUnitMembers__0')]
@@ -3740,33 +3765,33 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolCompanyAllowedDataLocation { 
+function Get-MsolCompanyAllowedDataLocation {
  [CmdletBinding()]
 param(
     [Parameter(ValueFromPipelineByPropertyName=$true)]
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolCompanyInformation { 
+function Get-MsolCompanyInformation {
  [CmdletBinding()]
 param(
     [Parameter(ValueFromPipelineByPropertyName=$true)]
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolContact { 
+function Get-MsolContact {
  [CmdletBinding(DefaultParameterSetName='ListContacts__0')]
 param(
     [Parameter(ParameterSetName='GetContact__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -3795,11 +3820,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolDevice { 
+function Get-MsolDevice {
  [CmdletBinding(DefaultParameterSetName='GetDeviceByDeviceName')]
 param(
     [Parameter(ParameterSetName='GetDeviceAll', Mandatory=$true)]
@@ -3834,30 +3859,30 @@ param(
     [string]
     ${RegisteredOwnerUpn})
 
- 
- } 
+
+ }
 
 
-function Get-MsolDeviceRegistrationServicePolicy { 
+function Get-MsolDeviceRegistrationServicePolicy {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-MsolDirSyncConfiguration { 
+function Get-MsolDirSyncConfiguration {
  [CmdletBinding()]
 param(
     [Parameter(ValueFromPipelineByPropertyName=$true)]
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolDirSyncFeatures { 
+function Get-MsolDirSyncFeatures {
  [CmdletBinding(DefaultParameterSetName='GetCompanyDirSyncFeatures__0')]
 param(
     [Parameter(ParameterSetName='GetCompanyDirSyncFeatures__0', ValueFromPipelineByPropertyName=$true)]
@@ -3868,11 +3893,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolDirSyncProvisioningError { 
+function Get-MsolDirSyncProvisioningError {
  [CmdletBinding(DefaultParameterSetName='ListDirSyncProvisioningErrors__0')]
 param(
     [Parameter(ParameterSetName='ListDirSyncProvisioningErrors__0')]
@@ -3917,11 +3942,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolDomain { 
+function Get-MsolDomain {
  [CmdletBinding(DefaultParameterSetName='ListDomains__0')]
 param(
     [Parameter(ParameterSetName='GetDomain__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -3944,11 +3969,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolDomainFederationSettings { 
+function Get-MsolDomainFederationSettings {
  [CmdletBinding(DefaultParameterSetName='GetDomainFederationSettings__0')]
 param(
     [Parameter(ParameterSetName='GetDomainFederationSettings__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -3959,11 +3984,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolDomainVerificationDns { 
+function Get-MsolDomainVerificationDns {
  [CmdletBinding(DefaultParameterSetName='GetDomainVerificationDns__0')]
 param(
     [Parameter(ParameterSetName='GetDomainVerificationDns__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -3978,11 +4003,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolFederationProperty { 
+function Get-MsolFederationProperty {
  [CmdletBinding()]
 param(
     [switch]
@@ -3993,27 +4018,27 @@ param(
     [string]
     ${DomainName})
 
- 
- } 
+
+ }
 
 
-function Get-MsolGroup { 
+function Get-MsolGroup {
  [CmdletBinding(DefaultParameterSetName='ListGroups__0')]
 param(
     [Parameter(ParameterSetName='GetGroup__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
     [guid]
     ${ObjectId},
-    
+
     [Parameter(ParameterSetName='ListGroups__0')]
     [Parameter(ParameterSetName='All__0')]
     [string]
     ${UserPrincipalName})
 
- 
- } 
+
+ }
 
 
-function Get-MsolGroupMember { 
+function Get-MsolGroupMember {
  [CmdletBinding(DefaultParameterSetName='ListGroupMembers__0')]
 param(
     [Parameter(ParameterSetName='ListGroupMembers__0')]
@@ -4021,22 +4046,22 @@ param(
     [guid]
     ${GroupObjectId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolHasObjectsWithDirSyncProvisioningErrors { 
+function Get-MsolHasObjectsWithDirSyncProvisioningErrors {
  [CmdletBinding()]
 param(
     [Parameter(ValueFromPipelineByPropertyName=$true)]
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolPartnerContract { 
+function Get-MsolPartnerContract {
  [CmdletBinding(DefaultParameterSetName='ListPartnerContracts__0')]
 param(
     [Parameter(ParameterSetName='ListPartnerContracts__0')]
@@ -4061,22 +4086,22 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolPartnerInformation { 
+function Get-MsolPartnerInformation {
  [CmdletBinding(DefaultParameterSetName='GetPartnerInformation__0')]
 param(
     [Parameter(ValueFromPipelineByPropertyName=$true)]
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolPasswordPolicy { 
+function Get-MsolPasswordPolicy {
  [CmdletBinding(DefaultParameterSetName='GetPasswordPolicy__0')]
 param(
     [Parameter(ParameterSetName='GetPasswordPolicy__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4087,11 +4112,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolRole { 
+function Get-MsolRole {
  [CmdletBinding(DefaultParameterSetName='ListRoles__0')]
 param(
     [Parameter(ParameterSetName='GetRole__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4106,11 +4131,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolRoleMember { 
+function Get-MsolRoleMember {
  [CmdletBinding(DefaultParameterSetName='ListRoleMembers__0')]
 param(
     [Parameter(ParameterSetName='ListRoleMembers__0')]
@@ -4141,11 +4166,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolScopedRoleMember { 
+function Get-MsolScopedRoleMember {
  [CmdletBinding(DefaultParameterSetName='ListRoleScopedMembers__0')]
 param(
     [Parameter(ParameterSetName='ListRoleScopedMembers__0')]
@@ -4170,11 +4195,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolServicePrincipal { 
+function Get-MsolServicePrincipal {
  [CmdletBinding(DefaultParameterSetName='ListServicePrincipals__0')]
 param(
     [Parameter(ParameterSetName='GetServicePrincipal__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4206,11 +4231,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolServicePrincipalCredential { 
+function Get-MsolServicePrincipalCredential {
  [CmdletBinding(DefaultParameterSetName='ListServicePrincipalCredentials__0')]
 param(
     [Parameter(ParameterSetName='ListServicePrincipalCredentials__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4235,11 +4260,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolSubscription { 
+function Get-MsolSubscription {
  [CmdletBinding(DefaultParameterSetName='ListSubscriptions__0')]
 param(
     [Parameter(ParameterSetName='GetSubscription__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4250,21 +4275,21 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolUser { 
+function Get-MsolUser {
  [CmdletBinding(DefaultParameterSetName='ListUsers__0')]
 param(
     [Parameter(ParameterSetName='GetUserByUpn__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${UserPrincipalName}
 )
- } 
+ }
 
 
-function Get-MsolUserByStrongAuthentication { 
+function Get-MsolUserByStrongAuthentication {
  [CmdletBinding(DefaultParameterSetName='ListUsersByStrongAuthentication__0')]
 param(
     [Parameter(ParameterSetName='ListUsersByStrongAuthentication__0')]
@@ -4300,11 +4325,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Get-MsolUserRole { 
+function Get-MsolUserRole {
  [CmdletBinding(DefaultParameterSetName='ListRolesForUser__0')]
 param(
     [Parameter(ParameterSetName='ListRolesForUser__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4319,11 +4344,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function New-MsolAdministrativeUnit { 
+function New-MsolAdministrativeUnit {
  [CmdletBinding(DefaultParameterSetName='AddAdministrativeUnit__0')]
 param(
     [Parameter(ParameterSetName='AddAdministrativeUnit__0', ValueFromPipelineByPropertyName=$true)]
@@ -4338,11 +4363,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function New-MsolDomain { 
+function New-MsolDomain {
  [CmdletBinding(DefaultParameterSetName='AddDomain__0')]
 param(
     [Parameter(ParameterSetName='AddDomain__0', ValueFromPipelineByPropertyName=$true)]
@@ -4361,11 +4386,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function New-MsolFederatedDomain { 
+function New-MsolFederatedDomain {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Low')]
 param(
     [switch]
@@ -4376,11 +4401,11 @@ param(
     [string]
     ${DomainName})
 
- 
- } 
+
+ }
 
 
-function New-MsolGroup { 
+function New-MsolGroup {
  [CmdletBinding(DefaultParameterSetName='AddGroup__0')]
 param(
     [Parameter(ParameterSetName='AddGroup__0', ValueFromPipelineByPropertyName=$true)]
@@ -4399,11 +4424,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function New-MsolLicenseOptions { 
+function New-MsolLicenseOptions {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='NewMsolLicenseOptions', Mandatory=$true)]
@@ -4414,11 +4439,11 @@ param(
     [System.Collections.Generic.List[string]]
     ${DisabledPlans})
 
- 
- } 
+
+ }
 
 
-function New-MsolServicePrincipal { 
+function New-MsolServicePrincipal {
  [CmdletBinding(DefaultParameterSetName='AddServicePrincipal__0')]
 param(
     [Parameter(ParameterSetName='AddServicePrincipal__0', ValueFromPipelineByPropertyName=$true)]
@@ -4467,11 +4492,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function New-MsolServicePrincipalAddresses { 
+function New-MsolServicePrincipalAddresses {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='NewServicePrincipalAddresses', Mandatory=$true)]
@@ -4482,11 +4507,11 @@ param(
     [object]
     ${AddressType})
 
- 
- } 
+
+ }
 
 
-function New-MsolServicePrincipalCredential { 
+function New-MsolServicePrincipalCredential {
  [CmdletBinding(DefaultParameterSetName='AddServicePrincipalCredentials__0')]
 param(
     [Parameter(ParameterSetName='AddServicePrincipalCredentials__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4525,11 +4550,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function New-MsolUser { 
+function New-MsolUser {
  [CmdletBinding(DefaultParameterSetName='AddUser__0')]
 param(
     [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
@@ -4560,11 +4585,11 @@ param(
     [string[]]
     ${LicenseAssignment}
 )
- 
- } 
+
+ }
 
 
-function New-MsolWellKnownGroup { 
+function New-MsolWellKnownGroup {
  [CmdletBinding(DefaultParameterSetName='AddWellKnownGroup__0')]
 param(
     [Parameter(ParameterSetName='AddWellKnownGroup__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4575,11 +4600,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Redo-MsolProvisionContact { 
+function Redo-MsolProvisionContact {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='RetryContactProvisioning__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4590,11 +4615,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Redo-MsolProvisionGroup { 
+function Redo-MsolProvisionGroup {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='RetryGroupProvisioning__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4605,11 +4630,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Redo-MsolProvisionUser { 
+function Redo-MsolProvisionUser {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='RetryUserProvisioning__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4620,11 +4645,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Remove-MsolAdministrativeUnit { 
+function Remove-MsolAdministrativeUnit {
  [CmdletBinding(DefaultParameterSetName='RemoveAdministrativeUnit__0')]
 param(
     [Parameter(ParameterSetName='RemoveAdministrativeUnit__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4638,11 +4663,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Remove-MsolAdministrativeUnitMember { 
+function Remove-MsolAdministrativeUnitMember {
  [CmdletBinding(DefaultParameterSetName='RemoveAdministrativeUnitMembers__0')]
 param(
     [Parameter(ParameterSetName='RemoveAdministrativeUnitMembers__0', Mandatory=$true)]
@@ -4657,11 +4682,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Remove-MsolApplicationPassword { 
+function Remove-MsolApplicationPassword {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='DeleteApplicationPassword__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4676,11 +4701,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Remove-MsolContact { 
+function Remove-MsolContact {
  [CmdletBinding(DefaultParameterSetName='RemoveContact__0')]
 param(
     [Parameter(ParameterSetName='RemoveContact__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4694,11 +4719,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Remove-MsolDevice { 
+function Remove-MsolDevice {
  [CmdletBinding(DefaultParameterSetName='RemoveDeviceByDeviceId', SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(ParameterSetName='RemoveDeviceByDeviceId', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4712,11 +4737,11 @@ param(
     [guid]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Remove-MsolDomain { 
+function Remove-MsolDomain {
  [CmdletBinding(DefaultParameterSetName='RemoveDomain__0')]
 param(
     [Parameter(ParameterSetName='RemoveDomain__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4730,11 +4755,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Remove-MsolFederatedDomain { 
+function Remove-MsolFederatedDomain {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [switch]
@@ -4745,11 +4770,11 @@ param(
     [string]
     ${DomainName})
 
- 
- } 
+
+ }
 
 
-function Remove-MsolForeignGroupFromRole { 
+function Remove-MsolForeignGroupFromRole {
  [CmdletBinding(DefaultParameterSetName='RemoveForeignGroupFromRole__0')]
 param(
     [Parameter(ParameterSetName='RemoveForeignGroupFromRole__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4768,11 +4793,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Remove-MsolGroup { 
+function Remove-MsolGroup {
  [CmdletBinding(DefaultParameterSetName='RemoveGroup__0')]
 param(
     [Parameter(ParameterSetName='RemoveGroup__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4786,11 +4811,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Remove-MsolGroupMember { 
+function Remove-MsolGroupMember {
  [CmdletBinding(DefaultParameterSetName='RemoveGroupMembers__0')]
 param(
     [Parameter(ParameterSetName='RemoveGroupMembers__0', Mandatory=$true)]
@@ -4809,11 +4834,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Remove-MsolRoleMember { 
+function Remove-MsolRoleMember {
  [CmdletBinding(DefaultParameterSetName='RemoveRoleMembers__0')]
 param(
     [Parameter(ParameterSetName='RemoveRoleMembers__0', Mandatory=$true)]
@@ -4843,11 +4868,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Remove-MsolScopedRoleMember { 
+function Remove-MsolScopedRoleMember {
  [CmdletBinding(DefaultParameterSetName='RemoveRoleScopedMembers__0')]
 param(
     [Parameter(ParameterSetName='RemoveRoleScopedMembers__0', Mandatory=$true)]
@@ -4870,11 +4895,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Remove-MsolServicePrincipal { 
+function Remove-MsolServicePrincipal {
  [CmdletBinding(DefaultParameterSetName='RemoveServicePrincipal__0')]
 param(
     [Parameter(ParameterSetName='RemoveServicePrincipal__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4893,11 +4918,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Remove-MsolServicePrincipalCredential { 
+function Remove-MsolServicePrincipalCredential {
  [CmdletBinding(DefaultParameterSetName='RemoveServicePrincipalCredentials__0')]
 param(
     [Parameter(ParameterSetName='RemoveServicePrincipalCredentials__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4923,11 +4948,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Remove-MsolUser { 
+function Remove-MsolUser {
  [CmdletBinding(DefaultParameterSetName='RemoveUser__0')]
 param(
     [Parameter(ParameterSetName='RemoveUser__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4950,11 +4975,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Reset-MsolStrongAuthenticationMethodByUpn { 
+function Reset-MsolStrongAuthenticationMethodByUpn {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='ResetStrongAuthenticationMethodByUpn__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4965,11 +4990,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Restore-MsolUser { 
+function Restore-MsolUser {
  [CmdletBinding(DefaultParameterSetName='RestoreUser__0')]
 param(
     [Parameter(ParameterSetName='RestoreUser__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -4994,11 +5019,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolADFSContext { 
+function Set-MsolADFSContext {
  [CmdletBinding()]
 param(
     [pscredential]
@@ -5012,11 +5037,11 @@ param(
     [string]
     ${LogFile})
 
- 
- } 
+
+ }
 
 
-function Set-MsolAdministrativeUnit { 
+function Set-MsolAdministrativeUnit {
  [CmdletBinding(DefaultParameterSetName='SetAdministrativeUnit__0')]
 param(
     [Parameter(ParameterSetName='SetAdministrativeUnit__0', ValueFromPipelineByPropertyName=$true)]
@@ -5035,11 +5060,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolCompanyAllowedDataLocation { 
+function Set-MsolCompanyAllowedDataLocation {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='SetCompanyAllowedDataLocation__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5066,11 +5091,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolCompanyContactInformation { 
+function Set-MsolCompanyContactInformation {
  [CmdletBinding(DefaultParameterSetName='SetCompanyContactInformation__0')]
 param(
     [Parameter(ParameterSetName='SetCompanyContactInformation__0', ValueFromPipelineByPropertyName=$true)]
@@ -5087,11 +5112,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolCompanyMultiNationalEnabled { 
+function Set-MsolCompanyMultiNationalEnabled {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='SetCompanyMultiNationalEnabled__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5106,11 +5131,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolCompanySecurityComplianceContactInformation { 
+function Set-MsolCompanySecurityComplianceContactInformation {
  [CmdletBinding(DefaultParameterSetName='SetCompanySecurityComplianceContactInformation__0')]
 param(
     [Parameter(ParameterSetName='SetCompanySecurityComplianceContactInformation__0', ValueFromPipelineByPropertyName=$true)]
@@ -5127,11 +5152,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolCompanySettings { 
+function Set-MsolCompanySettings {
  [CmdletBinding(DefaultParameterSetName='SetCompanySettings__0')]
 param(
     [Parameter(ParameterSetName='SetCompanySettings__0', ValueFromPipelineByPropertyName=$true)]
@@ -5170,11 +5195,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolDeviceRegistrationServicePolicy { 
+function Set-MsolDeviceRegistrationServicePolicy {
  [CmdletBinding()]
 param(
     [ValidateSet('All','None','Selected')]
@@ -5218,11 +5243,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function Set-MsolDirSyncConfiguration { 
+function Set-MsolDirSyncConfiguration {
  [CmdletBinding(DefaultParameterSetName='SetAccidentalDeletionThreshold__0')]
 param(
     [Parameter(ParameterSetName='SetAccidentalDeletionThreshold__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5236,11 +5261,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolDirSyncEnabled { 
+function Set-MsolDirSyncEnabled {
  [CmdletBinding(DefaultParameterSetName='SetCompanyDirSyncEnabled__0')]
 param(
     [Parameter(ParameterSetName='SetCompanyDirSyncEnabled__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5254,11 +5279,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolDirSyncFeature { 
+function Set-MsolDirSyncFeature {
  [CmdletBinding(DefaultParameterSetName='SetCompanyDirSyncFeature__0')]
 param(
     [Parameter(ParameterSetName='SetCompanyDirSyncFeature__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5276,11 +5301,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolDomain { 
+function Set-MsolDomain {
  [CmdletBinding(DefaultParameterSetName='SetDomain__0')]
 param(
     [Parameter(ParameterSetName='SetDomain__0', ValueFromPipelineByPropertyName=$true)]
@@ -5295,11 +5320,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolDomainAuthentication { 
+function Set-MsolDomainAuthentication {
  [CmdletBinding(DefaultParameterSetName='SetDomainAuthentication__0')]
 param(
     [Parameter(ParameterSetName='SetDomainAuthentication__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5370,11 +5395,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolDomainFederationSettings { 
+function Set-MsolDomainFederationSettings {
  [CmdletBinding(DefaultParameterSetName='SetDomainFederationSettings__0')]
 param(
     [Parameter(ParameterSetName='SetDomainFederationSettings__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5441,11 +5466,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolGroup { 
+function Set-MsolGroup {
  [CmdletBinding(DefaultParameterSetName='SetGroup__0')]
 param(
     [Parameter(ParameterSetName='SetGroup__0', ValueFromPipelineByPropertyName=$true)]
@@ -5468,11 +5493,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolPartnerInformation { 
+function Set-MsolPartnerInformation {
  [CmdletBinding(DefaultParameterSetName='SetPartnerInformation__0')]
 param(
     [Parameter(ParameterSetName='SetPartnerInformation__0', ValueFromPipelineByPropertyName=$true)]
@@ -5513,11 +5538,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolPasswordPolicy { 
+function Set-MsolPasswordPolicy {
  [CmdletBinding(DefaultParameterSetName='SetPasswordPolicy__0')]
 param(
     [Parameter(ParameterSetName='SetPasswordPolicy__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5536,11 +5561,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolServicePrincipal { 
+function Set-MsolServicePrincipal {
  [CmdletBinding(DefaultParameterSetName='SetServicePrincipal__0')]
 param(
     [Parameter(ParameterSetName='SetServicePrincipal__0', ValueFromPipelineByPropertyName=$true)]
@@ -5573,11 +5598,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolUser { 
+function Set-MsolUser {
  [CmdletBinding()]
 param(
     [Parameter()]
@@ -5659,11 +5684,11 @@ param(
     [Parameter()]
     [object]
     $UserType)
- 
- } 
+
+ }
 
 
-function Set-MsolUserLicense { 
+function Set-MsolUserLicense {
  [CmdletBinding(DefaultParameterSetName='SetUserLicenses__0')]
 param(
     [Parameter(ParameterSetName='SetUserLicenses__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5692,11 +5717,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolUserPassword { 
+function Set-MsolUserPassword {
  [CmdletBinding(DefaultParameterSetName='ResetUserPassword__0')]
 param(
     [Parameter(ParameterSetName='ResetUserPassword__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5726,11 +5751,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Set-MsolUserPrincipalName { 
+function Set-MsolUserPrincipalName {
  [CmdletBinding(DefaultParameterSetName='ChangeUserPrincipalName__0')]
 param(
     [Parameter(ParameterSetName='ChangeUserPrincipalName__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5760,11 +5785,11 @@ param(
     [System.Nullable[guid]]
     ${TenantId})
 
- 
- } 
+
+ }
 
 
-function Update-MsolFederatedDomain { 
+function Update-MsolFederatedDomain {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [switch]
@@ -5775,12 +5800,12 @@ param(
     [string]
     ${DomainName})
 
- 
- } 
+
+ }
 
 
 <# AzureAD #>
-function Get-AzureADApplicationProxyConnectorGroupMembers { 
+function Get-AzureADApplicationProxyConnectorGroupMembers {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5799,11 +5824,11 @@ param(
     [string]
     ${Filter})
 
- 
- } 
+
+ }
 
 
-function Add-AzureADApplicationOwner { 
+function Add-AzureADApplicationOwner {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5814,11 +5839,11 @@ param(
     [string]
     ${RefObjectId})
 
- 
- } 
+
+ }
 
 
-function Add-AzureADDeviceRegisteredOwner { 
+function Add-AzureADDeviceRegisteredOwner {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5829,11 +5854,11 @@ param(
     [string]
     ${RefObjectId})
 
- 
- } 
+
+ }
 
 
-function Add-AzureADDeviceRegisteredUser { 
+function Add-AzureADDeviceRegisteredUser {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5844,11 +5869,11 @@ param(
     [string]
     ${RefObjectId})
 
- 
- } 
+
+ }
 
 
-function Add-AzureADDirectoryRoleMember { 
+function Add-AzureADDirectoryRoleMember {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5859,11 +5884,11 @@ param(
     [string]
     ${RefObjectId})
 
- 
- } 
+
+ }
 
 
-function Add-AzureADGroupMember { 
+function Add-AzureADGroupMember {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5874,11 +5899,11 @@ param(
     [string]
     ${RefObjectId})
 
- 
- } 
+
+ }
 
 
-function Add-AzureADGroupOwner { 
+function Add-AzureADGroupOwner {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5889,11 +5914,11 @@ param(
     [string]
     ${RefObjectId})
 
- 
- } 
+
+ }
 
 
-function Add-AzureADMSLifecyclePolicyGroup { 
+function Add-AzureADMSLifecyclePolicyGroup {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5926,11 +5951,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function Add-AzureADServicePrincipalOwner { 
+function Add-AzureADServicePrincipalOwner {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -5941,22 +5966,22 @@ param(
     [string]
     ${RefObjectId})
 
- 
- } 
+
+ }
 
 
-function Confirm-AzureADDomain { 
+function Confirm-AzureADDomain {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Name})
 
- 
- } 
+
+ }
 
 
-function Connect-AzureAD { 
+function Connect-AzureAD {
  [CmdletBinding(DefaultParameterSetName='UserCredential', SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [ValidateNotNullOrEmpty()]
@@ -6005,19 +6030,19 @@ param(
     [string]
     ${LogFilePath})
 
- 
- } 
+
+ }
 
 
-function Disconnect-AzureAD { 
+function Disconnect-AzureAD {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param()
 
- 
- } 
+
+ }
 
 
-function Enable-AzureADDirectoryRole { 
+function Enable-AzureADDirectoryRole {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param()
 
@@ -6047,11 +6072,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function Get-AzureADApplication { 
+function Get-AzureADApplication {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ParameterSetName='GetVague', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6074,33 +6099,33 @@ param(
     [string]
     ${Filter})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADApplicationExtensionProperty { 
+function Get-AzureADApplicationExtensionProperty {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADApplicationKeyCredential { 
+function Get-AzureADApplicationKeyCredential {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADApplicationLogo { 
+function Get-AzureADApplicationLogo {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6119,11 +6144,11 @@ param(
     [bool]
     ${View})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADApplicationOwner { 
+function Get-AzureADApplicationOwner {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6138,44 +6163,44 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADApplicationPasswordCredential { 
+function Get-AzureADApplicationPasswordCredential {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADApplicationProxyApplication { 
+function Get-AzureADApplicationProxyApplication {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADApplicationProxyApplicationConnectorGroup { 
+function Get-AzureADApplicationProxyApplicationConnectorGroup {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADApplicationProxyConnector { 
+function Get-AzureADApplicationProxyConnector {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ParameterSetName='GetVague', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6198,11 +6223,11 @@ param(
     [string]
     ${Filter})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADApplicationProxyConnectorGroup { 
+function Get-AzureADApplicationProxyConnectorGroup {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ParameterSetName='GetVague', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6225,11 +6250,11 @@ param(
     [string]
     ${Filter})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADApplicationProxyConnectorGroupMember { 
+function Get-AzureADApplicationProxyConnectorGroupMember {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6248,22 +6273,22 @@ param(
     [string]
     ${Filter})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADApplicationProxyConnectorMemberOf { 
+function Get-AzureADApplicationProxyConnectorMemberOf {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Id})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADApplicationServiceEndpoint { 
+function Get-AzureADApplicationServiceEndpoint {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6278,11 +6303,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADContact { 
+function Get-AzureADContact {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6301,11 +6326,11 @@ param(
     [string]
     ${Filter})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADContactDirectReport { 
+function Get-AzureADContactDirectReport {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6320,22 +6345,22 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADContactManager { 
+function Get-AzureADContactManager {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADContactMembership { 
+function Get-AzureADContactMembership {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6350,11 +6375,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADContactThumbnailPhoto { 
+function Get-AzureADContactThumbnailPhoto {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6373,11 +6398,11 @@ param(
     [bool]
     ${View})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADContract { 
+function Get-AzureADContract {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6396,19 +6421,19 @@ param(
     [string]
     ${Filter})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADCurrentSessionInfo { 
+function Get-AzureADCurrentSessionInfo {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-AzureADDeletedApplication { 
+function Get-AzureADDeletedApplication {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ParameterSetName='GetVague', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6427,11 +6452,11 @@ param(
     [string]
     ${Filter})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADDevice { 
+function Get-AzureADDevice {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ParameterSetName='GetVague', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6454,19 +6479,19 @@ param(
     [string]
     ${Filter})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADDeviceConfiguration { 
+function Get-AzureADDeviceConfiguration {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-AzureADDeviceRegisteredOwner { 
+function Get-AzureADDeviceRegisteredOwner {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6481,11 +6506,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADDeviceRegisteredUser { 
+function Get-AzureADDeviceRegisteredUser {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6500,11 +6525,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADDirectoryRole { 
+function Get-AzureADDirectoryRole {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6515,11 +6540,11 @@ param(
     [string]
     ${Filter})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADDirectoryRoleMember { 
+function Get-AzureADDirectoryRoleMember {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6530,63 +6555,63 @@ param(
     [string]
     ${Filter})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADDirectoryRoleTemplate { 
+function Get-AzureADDirectoryRoleTemplate {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Get-AzureADDomain { 
+function Get-AzureADDomain {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Name})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADDomainNameReference { 
+function Get-AzureADDomainNameReference {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Name})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADDomainServiceConfigurationRecord { 
+function Get-AzureADDomainServiceConfigurationRecord {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Name})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADDomainVerificationDnsRecord { 
+function Get-AzureADDomainVerificationDnsRecord {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Name})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADExtensionProperty { 
+function Get-AzureADExtensionProperty {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param()
 
@@ -6616,11 +6641,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function Get-AzureADGroup { 
+function Get-AzureADGroup {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ParameterSetName='GetVague', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6643,11 +6668,11 @@ param(
     [string]
     ${Filter})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADGroupAppRoleAssignment { 
+function Get-AzureADGroupAppRoleAssignment {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6662,11 +6687,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADGroupMember { 
+function Get-AzureADGroupMember {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6681,11 +6706,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADGroupOwner { 
+function Get-AzureADGroupOwner {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6700,22 +6725,22 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADMSDeletedDirectoryObject { 
+function Get-AzureADMSDeletedDirectoryObject {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Id})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADMSDeletedGroup { 
+function Get-AzureADMSDeletedGroup {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ParameterSetName='GetVague', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6738,11 +6763,11 @@ param(
     [string]
     ${Filter})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADMSGroup { 
+function Get-AzureADMSGroup {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ParameterSetName='GetVague', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6765,33 +6790,33 @@ param(
     [string]
     ${Filter})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADMSGroupLifecyclePolicy { 
+function Get-AzureADMSGroupLifecyclePolicy {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Id})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADMSLifecyclePolicyGroup { 
+function Get-AzureADMSLifecyclePolicyGroup {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Id})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADOAuth2PermissionGrant { 
+function Get-AzureADOAuth2PermissionGrant {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6802,11 +6827,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADObjectByObjectId { 
+function Get-AzureADObjectByObjectId {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param()
 
@@ -6836,11 +6861,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function Get-AzureADServiceAppRoleAssignedTo { 
+function Get-AzureADServiceAppRoleAssignedTo {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6855,11 +6880,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADServiceAppRoleAssignment { 
+function Get-AzureADServiceAppRoleAssignment {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6874,11 +6899,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADServicePrincipal { 
+function Get-AzureADServicePrincipal {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ParameterSetName='GetVague', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6901,11 +6926,11 @@ param(
     [string]
     ${Filter})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADServicePrincipalCreatedObject { 
+function Get-AzureADServicePrincipalCreatedObject {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6920,22 +6945,22 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADServicePrincipalKeyCredential { 
+function Get-AzureADServicePrincipalKeyCredential {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADServicePrincipalMembership { 
+function Get-AzureADServicePrincipalMembership {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6950,11 +6975,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADServicePrincipalOAuth2PermissionGrant { 
+function Get-AzureADServicePrincipalOAuth2PermissionGrant {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6969,11 +6994,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADServicePrincipalOwnedObject { 
+function Get-AzureADServicePrincipalOwnedObject {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -6988,11 +7013,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADServicePrincipalOwner { 
+function Get-AzureADServicePrincipalOwner {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7007,33 +7032,33 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADServicePrincipalPasswordCredential { 
+function Get-AzureADServicePrincipalPasswordCredential {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADSubscribedSku { 
+function Get-AzureADSubscribedSku {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADTenantDetail { 
+function Get-AzureADTenantDetail {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7044,11 +7069,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADTrustedCertificateAuthority { 
+function Get-AzureADTrustedCertificateAuthority {
  [CmdletBinding()]
 param(
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, HelpMessage='The ID of the tenant of instance of Azure Active Directory')]
@@ -7059,11 +7084,11 @@ param(
     [string]
     ${TrustedIssuerSki})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADUser { 
+function Get-AzureADUser {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ParameterSetName='GetVague', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7086,11 +7111,11 @@ param(
     [string]
     ${Filter})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADUserAppRoleAssignment { 
+function Get-AzureADUserAppRoleAssignment {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7105,11 +7130,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADUserCreatedObject { 
+function Get-AzureADUserCreatedObject {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7124,11 +7149,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADUserDirectReport { 
+function Get-AzureADUserDirectReport {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7143,44 +7168,44 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADUserExtension { 
+function Get-AzureADUserExtension {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADUserLicenseDetail { 
+function Get-AzureADUserLicenseDetail {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADUserManager { 
+function Get-AzureADUserManager {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADUserMembership { 
+function Get-AzureADUserMembership {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7195,11 +7220,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADUserOAuth2PermissionGrant { 
+function Get-AzureADUserOAuth2PermissionGrant {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7214,11 +7239,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADUserOwnedDevice { 
+function Get-AzureADUserOwnedDevice {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7233,11 +7258,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADUserOwnedObject { 
+function Get-AzureADUserOwnedObject {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7252,11 +7277,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADUserRegisteredDevice { 
+function Get-AzureADUserRegisteredDevice {
  [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7271,11 +7296,11 @@ param(
     [System.Nullable[int]]
     ${Top})
 
- 
- } 
+
+ }
 
 
-function Get-AzureADUserThumbnailPhoto { 
+function Get-AzureADUserThumbnailPhoto {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7294,11 +7319,11 @@ param(
     [bool]
     ${View})
 
- 
- } 
+
+ }
 
 
-function New-AzureADApplication { 
+function New-AzureADApplication {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param()
 
@@ -7328,11 +7353,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function New-AzureADApplicationExtensionProperty { 
+function New-AzureADApplicationExtensionProperty {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7365,11 +7390,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function New-AzureADApplicationKeyCredential { 
+function New-AzureADApplicationKeyCredential {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7400,11 +7425,11 @@ param(
     [string]
     ${Value})
 
- 
- } 
+
+ }
 
 
-function New-AzureADApplicationPasswordCredential { 
+function New-AzureADApplicationPasswordCredential {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7427,11 +7452,11 @@ param(
     [string]
     ${Value})
 
- 
- } 
+
+ }
 
 
-function New-AzureADApplicationProxyApplication { 
+function New-AzureADApplicationProxyApplication {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7470,22 +7495,22 @@ param(
     [string]
     ${ConnectorGroupId})
 
- 
- } 
+
+ }
 
 
-function New-AzureADApplicationProxyConnectorGroup { 
+function New-AzureADApplicationProxyConnectorGroup {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [object]
     ${Name})
 
- 
- } 
+
+ }
 
 
-function New-AzureADDevice { 
+function New-AzureADDevice {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param()
 
@@ -7515,11 +7540,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function New-AzureADDomain { 
+function New-AzureADDomain {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param()
 
@@ -7549,11 +7574,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function New-AzureADGroup { 
+function New-AzureADGroup {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param()
 
@@ -7583,11 +7608,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function New-AzureADGroupAppRoleAssignment { 
+function New-AzureADGroupAppRoleAssignment {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7620,11 +7645,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function New-AzureADMSGroup { 
+function New-AzureADMSGroup {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param()
 
@@ -7654,11 +7679,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function New-AzureADMSGroupLifecyclePolicy { 
+function New-AzureADMSGroupLifecyclePolicy {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param()
 
@@ -7688,11 +7713,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function New-AzureADMSInvitation { 
+function New-AzureADMSInvitation {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param()
 
@@ -7722,11 +7747,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function New-AzureADServiceAppRoleAssignment { 
+function New-AzureADServiceAppRoleAssignment {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7759,11 +7784,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function New-AzureADServicePrincipal { 
+function New-AzureADServicePrincipal {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param()
 
@@ -7793,11 +7818,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function New-AzureADServicePrincipalKeyCredential { 
+function New-AzureADServicePrincipalKeyCredential {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7828,11 +7853,11 @@ param(
     [string]
     ${Value})
 
- 
- } 
+
+ }
 
 
-function New-AzureADServicePrincipalPasswordCredential { 
+function New-AzureADServicePrincipalPasswordCredential {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7855,22 +7880,22 @@ param(
     [string]
     ${Value})
 
- 
- } 
+
+ }
 
 
-function New-AzureADTrustedCertificateAuthority { 
+function New-AzureADTrustedCertificateAuthority {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, HelpMessage='Trusted certificate authority list')]
     [object]
     ${CertificateAuthorityInformation})
 
- 
- } 
+
+ }
 
 
-function New-AzureADUser { 
+function New-AzureADUser {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param()
 
@@ -7900,11 +7925,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function New-AzureADUserAppRoleAssignment { 
+function New-AzureADUserAppRoleAssignment {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7937,22 +7962,22 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADApplication { 
+function Remove-AzureADApplication {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADApplicationExtensionProperty { 
+function Remove-AzureADApplicationExtensionProperty {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7963,11 +7988,11 @@ param(
     [string]
     ${ExtensionPropertyId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADApplicationKeyCredential { 
+function Remove-AzureADApplicationKeyCredential {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7978,11 +8003,11 @@ param(
     [string]
     ${KeyId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADApplicationOwner { 
+function Remove-AzureADApplicationOwner {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -7993,11 +8018,11 @@ param(
     [string]
     ${OwnerId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADApplicationPasswordCredential { 
+function Remove-AzureADApplicationPasswordCredential {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8008,11 +8033,11 @@ param(
     [string]
     ${KeyId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADApplicationProxyApplication { 
+function Remove-AzureADApplicationProxyApplication {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8023,77 +8048,77 @@ param(
     [System.Nullable[bool]]
     ${RemoveADApplication})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADApplicationProxyApplicationConnectorGroup { 
+function Remove-AzureADApplicationProxyApplicationConnectorGroup {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADApplicationProxyConnectorGroup { 
+function Remove-AzureADApplicationProxyConnectorGroup {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Id})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADContact { 
+function Remove-AzureADContact {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADContactManager { 
+function Remove-AzureADContactManager {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADDeletedApplication { 
+function Remove-AzureADDeletedApplication {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADDevice { 
+function Remove-AzureADDevice {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADDeviceRegisteredOwner { 
+function Remove-AzureADDeviceRegisteredOwner {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8104,11 +8129,11 @@ param(
     [string]
     ${OwnerId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADDeviceRegisteredUser { 
+function Remove-AzureADDeviceRegisteredUser {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8119,11 +8144,11 @@ param(
     [string]
     ${UserId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADDirectoryRoleMember { 
+function Remove-AzureADDirectoryRoleMember {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8134,33 +8159,33 @@ param(
     [string]
     ${MemberId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADDomain { 
+function Remove-AzureADDomain {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Name})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADGroup { 
+function Remove-AzureADGroup {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADGroupAppRoleAssignment { 
+function Remove-AzureADGroupAppRoleAssignment {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8171,11 +8196,11 @@ param(
     [string]
     ${AppRoleAssignmentId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADGroupMember { 
+function Remove-AzureADGroupMember {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8186,11 +8211,11 @@ param(
     [string]
     ${MemberId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADGroupOwner { 
+function Remove-AzureADGroupOwner {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8201,44 +8226,44 @@ param(
     [string]
     ${OwnerId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADMSDeletedDirectoryObject { 
+function Remove-AzureADMSDeletedDirectoryObject {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Id})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADMSGroup { 
+function Remove-AzureADMSGroup {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Id})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADMSGroupLifecyclePolicy { 
+function Remove-AzureADMSGroupLifecyclePolicy {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Id})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADMSLifecyclePolicyGroup { 
+function Remove-AzureADMSLifecyclePolicyGroup {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8271,22 +8296,22 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADOAuth2PermissionGrant { 
+function Remove-AzureADOAuth2PermissionGrant {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADServiceAppRoleAssignment { 
+function Remove-AzureADServiceAppRoleAssignment {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8297,22 +8322,22 @@ param(
     [string]
     ${AppRoleAssignmentId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADServicePrincipal { 
+function Remove-AzureADServicePrincipal {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADServicePrincipalKeyCredential { 
+function Remove-AzureADServicePrincipalKeyCredential {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8323,11 +8348,11 @@ param(
     [string]
     ${KeyId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADServicePrincipalOwner { 
+function Remove-AzureADServicePrincipalOwner {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8338,11 +8363,11 @@ param(
     [string]
     ${OwnerId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADServicePrincipalPasswordCredential { 
+function Remove-AzureADServicePrincipalPasswordCredential {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8353,33 +8378,33 @@ param(
     [string]
     ${KeyId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADTrustedCertificateAuthority { 
+function Remove-AzureADTrustedCertificateAuthority {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, HelpMessage='The unique identifier of the object specific Azure Active Directory object')]
     [object]
     ${CertificateAuthorityInformation})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADUser { 
+function Remove-AzureADUser {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADUserAppRoleAssignment { 
+function Remove-AzureADUserAppRoleAssignment {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8390,11 +8415,11 @@ param(
     [string]
     ${AppRoleAssignmentId})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADUserExtension { 
+function Remove-AzureADUserExtension {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='SetSingle', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8410,33 +8435,33 @@ param(
     [System.Collections.Generic.List[string]]
     ${ExtensionNames})
 
- 
- } 
+
+ }
 
 
-function Remove-AzureADUserManager { 
+function Remove-AzureADUserManager {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Reset-AzureADMSLifeCycleGroup { 
+function Reset-AzureADMSLifeCycleGroup {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Id})
 
- 
- } 
+
+ }
 
 
-function Restore-AzureADDeletedApplication { 
+function Restore-AzureADDeletedApplication {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8469,41 +8494,41 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function Restore-AzureADMSDeletedDirectoryObject { 
+function Restore-AzureADMSDeletedDirectoryObject {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Id})
 
- 
- } 
+
+ }
 
 
-function Revoke-AzureADSignedInUserAllRefreshToken { 
+function Revoke-AzureADSignedInUserAllRefreshToken {
  [CmdletBinding()]
 param()
 
- 
- } 
+
+ }
 
 
-function Revoke-AzureADUserAllRefreshToken { 
+function Revoke-AzureADUserAllRefreshToken {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
 
- 
- } 
+
+ }
 
 
-function Select-AzureADGroupIdsContactIsMemberOf { 
+function Select-AzureADGroupIdsContactIsMemberOf {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8514,11 +8539,11 @@ param(
     [object]
     ${GroupIdsForMembershipCheck})
 
- 
- } 
+
+ }
 
 
-function Select-AzureADGroupIdsGroupIsMemberOf { 
+function Select-AzureADGroupIdsGroupIsMemberOf {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8529,11 +8554,11 @@ param(
     [object]
     ${GroupIdsForMembershipCheck})
 
- 
- } 
+
+ }
 
 
-function Select-AzureADGroupIdsServicePrincipalIsMemberOf { 
+function Select-AzureADGroupIdsServicePrincipalIsMemberOf {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8544,11 +8569,11 @@ param(
     [object]
     ${GroupIdsForMembershipCheck})
 
- 
- } 
+
+ }
 
 
-function Select-AzureADGroupIdsUserIsMemberOf { 
+function Select-AzureADGroupIdsUserIsMemberOf {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8559,11 +8584,11 @@ param(
     [object]
     ${GroupIdsForMembershipCheck})
 
- 
- } 
+
+ }
 
 
-function Set-AzureADApplication { 
+function Set-AzureADApplication {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8596,11 +8621,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function Set-AzureADApplicationLogo { 
+function Set-AzureADApplicationLogo {
  [CmdletBinding(DefaultParameterSetName='File')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8622,11 +8647,11 @@ param(
     [byte[]]
     ${ImageByteArray})
 
- 
- } 
+
+ }
 
 
-function Set-AzureADApplicationProxyApplication { 
+function Set-AzureADApplicationProxyApplication {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8665,11 +8690,11 @@ param(
     [string]
     ${ConnectorGroupId})
 
- 
- } 
+
+ }
 
 
-function Set-AzureADApplicationProxyApplicationConnectorGroup { 
+function Set-AzureADApplicationProxyApplicationConnectorGroup {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8680,11 +8705,11 @@ param(
     [string]
     ${ConnectorGroupId})
 
- 
- } 
+
+ }
 
 
-function Set-AzureADApplicationProxyApplicationCustomDomainCertificate { 
+function Set-AzureADApplicationProxyApplicationCustomDomainCertificate {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8699,11 +8724,11 @@ param(
     [securestring]
     ${Password})
 
- 
- } 
+
+ }
 
 
-function Set-AzureADApplicationProxyApplicationSingleSignOn { 
+function Set-AzureADApplicationProxyApplicationSingleSignOn {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8722,11 +8747,11 @@ param(
     [System.Nullable[object]]
     ${KerberosDelegatedLoginIdentity})
 
- 
- } 
+
+ }
 
 
-function Set-AzureADApplicationProxyConnector { 
+function Set-AzureADApplicationProxyConnector {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8737,11 +8762,11 @@ param(
     [string]
     ${ConnectorGroupId})
 
- 
- } 
+
+ }
 
 
-function Set-AzureADApplicationProxyConnectorGroup { 
+function Set-AzureADApplicationProxyConnectorGroup {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8752,11 +8777,11 @@ param(
     [object]
     ${Name})
 
- 
- } 
+
+ }
 
 
-function Set-AzureADDevice { 
+function Set-AzureADDevice {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8789,11 +8814,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function Set-AzureADDomain { 
+function Set-AzureADDomain {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8826,11 +8851,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function Set-AzureADGroup { 
+function Set-AzureADGroup {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8863,11 +8888,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function Set-AzureADMSGroup { 
+function Set-AzureADMSGroup {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8900,11 +8925,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function Set-AzureADMSGroupLifecyclePolicy { 
+function Set-AzureADMSGroupLifecyclePolicy {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8937,11 +8962,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function Set-AzureADServicePrincipal { 
+function Set-AzureADServicePrincipal {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -8974,11 +8999,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function Set-AzureADTenantDetail { 
+function Set-AzureADTenantDetail {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param()
 
@@ -9008,22 +9033,22 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function Set-AzureADTrustedCertificateAuthority { 
+function Set-AzureADTrustedCertificateAuthority {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, HelpMessage='Trusted certificate authority list')]
     [object]
     ${CertificateAuthorityInformation})
 
- 
- } 
+
+ }
 
 
-function Set-AzureADUser { 
+function Set-AzureADUser {
  [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -9056,11 +9081,11 @@ dynamicparam
     }
 }
 
- 
- } 
+
+ }
 
 
-function Set-AzureADUserExtension { 
+function Set-AzureADUserExtension {
  [CmdletBinding()]
 param(
     [Parameter(ParameterSetName='SetSingle', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -9080,11 +9105,11 @@ param(
     [System.Collections.Generic.Dictionary[string,string]]
     ${ExtensionNameValues})
 
- 
- } 
+
+ }
 
 
-function Set-AzureADUserLicense { 
+function Set-AzureADUserLicense {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -9095,11 +9120,11 @@ param(
     [object]
     ${AssignedLicenses})
 
- 
- } 
+
+ }
 
 
-function Set-AzureADUserManager { 
+function Set-AzureADUserManager {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -9110,11 +9135,11 @@ param(
     [string]
     ${RefObjectId})
 
- 
- } 
+
+ }
 
 
-function Set-AzureADUserPassword { 
+function Set-AzureADUserPassword {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -9133,11 +9158,11 @@ param(
     [bool]
     ${EnforceChangePasswordPolicy})
 
- 
- } 
+
+ }
 
 
-function Set-AzureADUserThumbnailPhoto { 
+function Set-AzureADUserThumbnailPhoto {
  [CmdletBinding(DefaultParameterSetName='File')]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -9159,11 +9184,11 @@ param(
     [byte[]]
     ${ImageByteArray})
 
- 
- } 
+
+ }
 
 
-function Update-AzureADSignedInUserPassword { 
+function Update-AzureADSignedInUserPassword {
  [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -9174,8 +9199,283 @@ param(
     [securestring]
     ${NewPassword})
 
- 
- } 
+
+ }
+ function Get-Team{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $DisplayName
+    )
+}
+
+function New-Team{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $DisplayName,
+
+        [Parameter()]
+        [string]
+        $Description,
+
+        [Parameter()]
+        [string]
+        $Group,
 
 
+        [Parameter()]
+        [string]
+        $Alias,
 
+        [Parameter()]
+        [string]
+        $Owner,
+
+        [Parameter()]
+        [string]
+        $Classification,
+
+        [Parameter()]
+        [string]
+        $AccessType
+
+    )
+}
+function Set-Team{
+    [CmdletBinding()]
+    param(
+
+        [Parameter(Mandatory=$true)]
+        [string]
+        $DisplayName,
+
+        [Parameter()]
+        [string]
+        $Description,
+
+        [Parameter()]
+        [string]
+        $Alias,
+
+
+        [Parameter()]
+        [string]
+        $Visibility,
+
+        [Parameter()]
+        [string]
+        $Owner,
+
+        [Parameter()]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $AccessType
+
+    )
+}
+
+
+function Remove-Team{
+    [CmdletBinding()]
+    param(
+
+        [Parameter()]
+        [string]
+        $GroupId
+
+    )
+}
+
+function Get-TeamUser{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $User,
+
+        [Parameter()]
+        [string]
+        $Role
+    )
+}
+
+function Add-TeamUser{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $Description,
+
+        [Parameter()]
+        [string]
+        $User,
+
+        [Parameter()]
+        [string]
+        $Role
+
+    )
+}
+
+function Remove-TeamUser{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $User,
+
+        [Parameter()]
+        [string]
+        $Role
+
+    )
+}
+
+function Get-TeamChannel{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId
+
+    )
+}
+function New-TeamChannel{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $DisplayName,
+
+        [Parameter()]
+        [string]
+        $NewDisplayName,
+
+        [Parameter()]
+        [string]
+        $Description
+    )
+}
+function Set-TeamChannel{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $DisplayName,
+
+        [Parameter()]
+        [string]
+        $NewDisplayName,
+
+        [Parameter()]
+        [string]
+        $CurrentDisplayName,
+
+        [Parameter()]
+        [string]
+        $Description
+    )
+}
+
+function Remove-TeamChannel{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $DisplayName
+
+    )
+}
+
+function Get-TeamFunSettings{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $AllowGiphy,
+
+        [Parameter()]
+        [string]
+        $GiphyContentRating,
+
+        [Parameter()]
+        [string]
+        $AllowStickersAndMemes,
+
+        [Parameter()]
+        [string]
+        $AllowCustomMemes
+    )
+}
+
+function Set-TeamFunSettings{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $GroupId,
+
+        [Parameter()]
+        [string]
+        $AllowGiphy,
+
+        [Parameter()]
+        [string]
+        $GiphyContentRating,
+
+        [Parameter()]
+        [string]
+        $AllowStickersAndMemes,
+
+        [Parameter()]
+        [string]
+        $AllowCustomMemes
+    )
+}
+function Get-UnifiedGroup{
+    [CmdletBinding()]
+    param()
+}
+
+function Get-TeamByGroupID{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $GroupID
+    )
+}
