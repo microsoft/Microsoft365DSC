@@ -5,7 +5,7 @@ function Get-TargetResource
     param
     (
         [Parameter()]
-        [ValidateSet('Authoritative', 'ExternalRelay', 'InternalRelay')]
+        [ValidateSet('Authoritative')]
         [System.String]
         $DomainType = 'Authoritative',
 
@@ -19,52 +19,104 @@ function Get-TargetResource
         $GlobalAdminAccount,
 
         [Parameter(Mandatory = $true)]
-        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)|(\{|\()?[A-Za-z0-9]{4}([A-Za-z0-9]{4}\-?){4}[A-Za-z0-9]{12}(\}|\()?' )]
+        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
         [System.String]
         $Identity,
 
         [Parameter()]
+        [ValidateScript( {$false -eq $_})]
         [System.Boolean]
         $MatchSubDomains = $false,
 
         [Parameter()]
+        [ValidateScript( {$false -eq $_})]
         [System.Boolean]
         $OutboundOnly = $false
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve Accepted Domain configuration for $($Identity)"
-    $nullReturn = @{
-        DomainType         = $null
-        Ensure             = 'Absent'
-        GlobalAdminAccount = $null
-        Identity           = $Identity
-        MatchSubDomains    = $null
-        OutboundOnly       = $null
+
+    try
+    {
+        $AllAcceptedDomains = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+            -ScriptBlock {
+            Get-AcceptedDomain
+        }
+    }
+    catch
+    {
+        $ExceptionMessage = $_.Exception
+        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+        Write-Error $ExceptionMessage
     }
 
-    $AcceptedDomain = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-        -ScriptBlock {
-        Get-AcceptedDomain -Identity $Identity
-    }
+    $AcceptedDomain = ($AllAcceptedDomains | Where-Object Identity -IMatch $Identity)
 
     if (!$AcceptedDomain)
     {
         Write-Verbose "AcceptedDomain configuration for $($Identity) does not exist."
-        return $nullReturn
+
+        # Check to see if $Identity matches a verified domain in the O365 Tenant
+        try
+        {
+            Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+            $VerifiedDomains = (Get-AzureADDomain | Where-Object IsVerified)
+            $MatchingVerifiedDomain = $VerifiedDomains | Where-Object Name -eq $Identity
+        }
+        catch
+        {
+            $ExceptionMessage = $_.Exception
+            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+            Write-Error $ExceptionMessage
+        }
+
+        if (-NOT $MatchingVerifiedDomain)
+        {
+            Write-Verbose "A verified domain matching $($Identity) does not exist in this O365 Tenant."
+            $nullReturn = @{
+                DomainType         = $DomainType
+                Ensure             = $Ensure
+                GlobalAdminAccount = $GlobalAdminAccount
+                Identity           = $Identity
+                MatchSubDomains    = $MatchSubDomains
+                OutboundOnly       = $OutboundOnly
+            }
+            <#
+            if AcceptedDomain does not exist and does not match a verified domain, return submitted parameters for ReverseDSC.
+            This also prevents Set-TargetResource from running when current state could not be determined
+            #>
+            return $nullReturn
+        }
+        else
+        {
+            $result = @{
+                DomainType         = $DomainType
+                Ensure             = 'Absent'
+                GlobalAdminAccount = $GlobalAdminAccount
+                Identity           = $Identity
+                MatchSubDomains    = $MatchSubDomains
+                OutboundOnly       = $OutboundOnly
+            }
+            # if AcceptedDomain does not exist for a verfied domain, return 'Absent' with submitted parameters to Test-TargetResource.
+            return $result
+        }
+
+    }
+    else
+    {
+        $result = @{
+            DomainType         = $AcceptedDomain.DomainType
+            Ensure             = 'Present'
+            GlobalAdminAccount = $GlobalAdminAccount
+            Identity           = $AcceptedDomain.Identity
+            MatchSubDomains    = $AcceptedDomain.MatchSubDomains
+            OutboundOnly       = $AcceptedDomain.OutboundOnly
+        }
+
+        Write-Verbose "Found AcceptedDomain configuration for $($Identity)"
+        return $result
     }
 
-    $result = @{
-        DomainType         = $AcceptedDomain.DomainType
-        Ensure             = $Ensure
-        GlobalAdminAccount = $GlobalAdminAccount
-        Identity           = $Identity
-        MatchSubDomains    = $AcceptedDomain.MatchSubDomains
-        OutboundOnly       = $AcceptedDomain.OutboundOnly
-    }
-
-    Write-Verbose "Found AcceptedDomain configuration for $($Identity)"
-    return $result
 }
-
 
 function Set-TargetResource
 {
@@ -72,7 +124,7 @@ function Set-TargetResource
     param
     (
         [Parameter()]
-        [ValidateSet('Authoritative', 'ExternalRelay', 'InternalRelay')]
+        [ValidateSet('Authoritative')]
         [System.String]
         $DomainType = 'Authoritative',
 
@@ -86,15 +138,17 @@ function Set-TargetResource
         $GlobalAdminAccount,
 
         [Parameter(Mandatory = $true)]
-        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)|(\{|\()?[A-Za-z0-9]{4}([A-Za-z0-9]{4}\-?){4}[A-Za-z0-9]{12}(\}|\()?' )]
+        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
         [System.String]
         $Identity,
 
         [Parameter()]
+        [ValidateScript( {$false -eq $_})]
         [System.Boolean]
         $MatchSubDomains = $false,
 
         [Parameter()]
+        [ValidateScript( {$false -eq $_})]
         [System.Boolean]
         $OutboundOnly = $false
     )
@@ -109,9 +163,19 @@ function Set-TargetResource
         OutboundOnly    = $OutboundOnly
     }
 
-    Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-        -Arguments $PSBoundParameters `
-        -ScriptBlock { Set-AcceptedDomain @AcceptedDomainParams }
+    try
+    {
+        Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+            -Arguments $AcceptedDomainParams `
+            -ScriptBlock { Set-AcceptedDomain }
+    }
+    catch
+    {
+        $ExceptionMessage = $_.Exception
+        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+        Write-Error $ExceptionMessage
+    }
+
 }
 
 
@@ -122,7 +186,7 @@ function Test-TargetResource
     param
     (
         [Parameter()]
-        [ValidateSet('Authoritative', 'ExternalRelay', 'InternalRelay')]
+        [ValidateSet('Authoritative')]
         [System.String]
         $DomainType = 'Authoritative',
 
@@ -136,29 +200,29 @@ function Test-TargetResource
         $GlobalAdminAccount,
 
         [Parameter(Mandatory = $true)]
-        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)|(\{|\()?[A-Za-z0-9]{4}([A-Za-z0-9]{4}\-?){4}[A-Za-z0-9]{12}(\}|\()?' )]
+        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
         [System.String]
         $Identity,
 
         [Parameter()]
+        [ValidateScript( {$false -eq $_})]
         [System.Boolean]
         $MatchSubDomains = $false,
 
         [Parameter()]
+        [ValidateScript( {$false -eq $_})]
         [System.Boolean]
         $OutboundOnly = $false
     )
 
     Write-Verbose -Message "Testing AcceptedDomain for $($Identity)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck = $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @('DomainType',
-        'Ensure',
-        'Identity',
-        'MatchSubDomains',
-        'OutboundOnly'
-    )
+        -ValuesToCheck @ValuesToCheck
 }
 
 function Export-TargetResource
@@ -168,7 +232,7 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [ValidateSet('Authoritative', 'ExternalRelay', 'InternalRelay')]
+        [ValidateSet('Authoritative')]
         [System.String]
         $DomainType = 'Authoritative',
 
@@ -182,19 +246,22 @@ function Export-TargetResource
         $GlobalAdminAccount,
 
         [Parameter(Mandatory = $true)]
-        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)|(\{|\()?[A-Za-z0-9]{4}([A-Za-z0-9]{4}\-?){4}[A-Za-z0-9]{12}(\}|\()?' )]
+        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
         [System.String]
         $Identity,
 
         [Parameter()]
+        [ValidateScript( {$false -eq $_})]
         [System.Boolean]
         $MatchSubDomains = $false,
 
         [Parameter()]
+        [ValidateScript( {$false -eq $_})]
         [System.Boolean]
         $OutboundOnly = $false
     )
     $result = Get-TargetResource @PSBoundParameters
+    $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        EXOAcceptedDomain " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

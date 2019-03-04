@@ -108,68 +108,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Context -Name "Authoritative Accepted Domain should exist.  Domain exists, MatchSubDomains mismatch. Test should fail." -Fixture {
-            $testParams = @{
-                DomainType         = 'Authoritative'
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
-                Identity           = 'contoso.com'
-            }
-
-            Mock -CommandName Get-AcceptedDomain -MockWith {
-                return @{
-                    DomainType         = 'Authoritative'
-                    Identity           = 'contoso.com'
-                    MatchSubDomains    = $true
-                    OutboundOnly       = $false
-                }
-            }
-
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should Be $false
-            }
-
-            Mock -CommandName Set-AcceptedDomain -MockWith {
-
-            }
-
-            It 'Should return true from the Set method' {
-                Set-TargetResource @testParams | Should Be $true
-            }
-
-        }
-
-        Context -Name "Authoritative Accepted Domain should exist.  Domain exists, OutboundOnly mismatch. Test should fail." -Fixture {
-            $testParams = @{
-                DomainType         = 'Authoritative'
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
-                Identity           = 'contoso.com'
-            }
-
-            Mock -CommandName Get-AcceptedDomain -MockWith {
-                return @{
-                    DomainType         = 'Authoritative'
-                    Identity           = 'contoso.com'
-                    MatchSubDomains    = $false
-                    OutboundOnly       = $true
-                }
-            }
-
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should Be $false
-            }
-
-            Mock -CommandName Set-AcceptedDomain -MockWith {
-
-            }
-
-            It 'Should return true from the Set method' {
-                Set-TargetResource @testParams | Should Be $true
-            }
-
-        }
-
     }
 }
 
