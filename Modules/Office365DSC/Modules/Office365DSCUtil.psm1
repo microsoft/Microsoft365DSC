@@ -1316,6 +1316,16 @@ function Export-O365Configuration
     $DSCContent += Export-TargetResource -UnifiedAuditLogIngestionEnabled $value -GlobalAdminAccount $GlobalAdminAccount -IsSingleInstance 'Yes'
     #endregion
 
+    #region "EXOAcceptedDomain"
+    Write-Information "Extracting EXOAcceptedDomain..."
+    $EXOAcceptedDomainModulePath = Join-Path -Path $PSScriptRoot `
+                                              -ChildPath "..\DSCResources\MSFT_EXOAcceptedDomain\MSFT_EXOAcceptedDomain.psm1" `
+                                              -Resolve
+
+    $catch = Import-Module $EXOAcceptedDomainModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
     #region "EXOMailboxSettings"
     Write-Information "Extracting EXOMailboxSettings..."
     $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `

@@ -24,6 +24,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             return Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $Arguments -NoNewScope
         }
 
+        Mock -CommandName Test-O365ServiceConnection -MockWith {
+
+        }
+
+        Mock -CommandName Get-PSSession -MockWith {
+
+        }
+
+        Mock -CommandName Remove-PSSession -MockWith {
+
+        }
+
         # Test contexts
         Context -Name "Authoritative Accepted Domain should exist.  Domain is missing. Test should fail." -Fixture {
             $testParams = @{
@@ -33,12 +45,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Identity           = 'contoso.com'
             }
 
+            Mock -CommandName Get-AzureADDomain -MockWith {
+                return @{
+                    Name = 'different.contoso.com'
+                    IsVerified = $true
+                }
+
+            }
+
             Mock -CommandName Get-AcceptedDomain -MockWith {
                 return @{
                     DomainType         = 'Authoritative'
-                    Ensure             = 'Absent'
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    Identity           = 'contoso.com'
+                    Identity           = 'different.contoso.com'
+                    MatchSubDomains    = $false
+                    OutboundOnly       = $false
                 }
             }
 
@@ -62,6 +82,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
                 Identity           = 'contoso.com'
+            }
+
+            Mock -CommandName Get-AzureADDomain -MockWith {
+                return @{
+                    Name = 'contoso.com'
+                    IsVerified = $true
+                }
+
             }
 
             Mock -CommandName Get-AcceptedDomain -MockWith {

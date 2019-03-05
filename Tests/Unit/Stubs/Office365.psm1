@@ -1,4 +1,18 @@
-﻿function Open-SecurityAndComplianceCenterConnection{
+﻿function Get-PSSession{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+
+function Remove-PSSession{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+
+function Open-SecurityAndComplianceCenterConnection{
     [CmdletBinding()]
     param(
         [Parameter()]
@@ -906,36 +920,8 @@ param(
  function Get-AcceptedDomain
  {
      [CmdletBinding()]
-     param
-     (
-         [Parameter()]
-         [ValidateSet('Authoritative')]
-         [System.String]
-         $DomainType = 'Authoritative',
+     param(
 
-         [Parameter()]
-         [ValidateSet('Present', 'Absent')]
-         [System.String]
-         $Ensure = 'Present',
-
-         [Parameter(Mandatory = $true)]
-         [System.Management.Automation.PSCredential]
-         $GlobalAdminAccount,
-
-         [Parameter(Mandatory = $true)]
-         [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
-         [System.String]
-         $Identity,
-
-         [Parameter()]
-         [ValidateScript( {$false -eq $_})]
-         [System.Boolean]
-         $MatchSubDomains = $false,
-
-         [Parameter()]
-         [ValidateScript( {$false -eq $_})]
-         [System.Boolean]
-         $OutboundOnly = $false
      )
 
  }
@@ -2565,36 +2551,8 @@ param(
  function Set-AcceptedDomain
  {
      [CmdletBinding()]
-     param
-     (
-         [Parameter()]
-         [ValidateSet('Authoritative')]
-         [System.String]
-         $DomainType = 'Authoritative',
+     param(
 
-         [Parameter()]
-         [ValidateSet('Present', 'Absent')]
-         [System.String]
-         $Ensure = 'Present',
-
-         [Parameter(Mandatory = $true)]
-         [System.Management.Automation.PSCredential]
-         $GlobalAdminAccount,
-
-         [Parameter(Mandatory = $true)]
-         [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
-         [System.String]
-         $Identity,
-
-         [Parameter()]
-         [ValidateScript( {$false -eq $_})]
-         [System.Boolean]
-         $MatchSubDomains = $false,
-
-         [Parameter()]
-         [ValidateScript( {$false -eq $_})]
-         [System.Boolean]
-         $OutboundOnly = $false
      )
 
  }
