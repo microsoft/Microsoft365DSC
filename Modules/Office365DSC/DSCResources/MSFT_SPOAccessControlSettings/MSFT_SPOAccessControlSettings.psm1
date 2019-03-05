@@ -110,7 +110,6 @@ function Get-TargetResource
         }
         return $nullReturn
     }
-
 }
 function Set-TargetResource
 {
@@ -180,7 +179,6 @@ function Set-TargetResource
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
-    $CurrentParameters.Remove("Verbose")
     $CurrentParameters.Remove("IsSingleInstance")
 
     if($IPAddressAllowList -eq "")
@@ -287,50 +285,6 @@ function Export-TargetResource
         [ValidateSet('Yes')]
         [String]
         $IsSingleInstance,
-
-        [Parameter()]
-        [System.Boolean]
-        $DisplayStartASiteOption,
-
-        [Parameter()]
-        [System.String]
-        $StartASiteFormUrl,
-
-        [Parameter()]
-        [System.Boolean]
-        $IPAddressEnforcement,
-
-        [Parameter()]
-        [System.String]
-        $IPAddressAllowList,
-
-        [Parameter()]
-        [System.UInt32]
-        $IPAddressWACTokenLifetime,
-
-        [Parameter()]
-        [System.Boolean]
-        $CommentsOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $SocialBarOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $DisallowInfectedFileDownload,
-
-        [Parameter()]
-        [System.boolean]
-        $ExternalServicesEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $EmailAttestationRequired,
-
-        [Parameter()]
-        [System.UInt32]
-        $EmailAttestationReAuthDays,
 
         [Parameter(Mandatory = $true)]
         [System.String]

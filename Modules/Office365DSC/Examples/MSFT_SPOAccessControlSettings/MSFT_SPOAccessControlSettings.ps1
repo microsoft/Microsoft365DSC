@@ -17,7 +17,6 @@ Configuration MSFT_SPOAccessControlSettings
             DisplayStartASiteOption      = $false
             StartASiteFormUrl            = "https://o365dsc1.sharepoint.com"
             IPAddressEnforcement         = $false
-            #IPAddressAllowList           = "" #would generate an error while writing this resource
             IPAddressWACTokenLifetime    = 15
             CommentsOnSitePagesDisabled  = $false
             SocialBarOnSitePagesDisabled = $false
