@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("SPOSharingSettings")]
-class MSFT_SPOSharingSettings : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("PNPAccessControlSettings")]
+class MSFT_PNPAccessControlSettings : OMI_BaseResource
 {
     [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'"),ValueMap{"Yes"},Values{"Yes"}] String IsSingleInstance;
     [Write, Description("Determines whether tenant users see the Start a Site menu option")] boolean DisplayStartASiteOption;
