@@ -118,41 +118,54 @@ function Get-TargetResource
         $TreatSoftPassAsAuthenticated = $true
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve AntiPhishPolicy $($Identity)"
-    $AntiPhishPolicies = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-        -ScriptBlock {
-        Get-AntiPhishPolicy -Identity $Identity
+    try
+    {
+        $AntiPhishPolicies = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+            -ScriptBlock {
+            Get-AntiPhishPolicy
+        }
     }
+    catch
+    {
+        $ExceptionMessage = $_.Exception
+        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+        Write-Error $ExceptionMessage
+    }
+
     $AntiPhishPolicy = $AntiPhishPolicies | Where-Object Identity -eq $Identity
     if (!$AntiPhishPolicy)
     {
         Write-Verbose "AntiPhishPolicy $($Identity) does not exist."
-        $nullReturn = @{
-            Ensure             = $Ensure
+        $result = @{
+            Ensure             = 'Absent'
             GlobalAdminAccount = $GlobalAdminAccount
             Identity           = $Identity
         }
-        return $nullReturn
+        return $result
     }
-
-    $result = foreach ($KeyName in $PSBoundParameters.Keys )
+    else
     {
-        if ($AntiPhishPolicy.$KeyName)
+        $result = foreach ($KeyName in $PSBoundParameters.Keys )
         {
-            @{
-                $KeyName = $AntiPhishPolicy.$KeyName
+            if ($AntiPhishPolicy.$KeyName)
+            {
+                @{
+                    $KeyName = $AntiPhishPolicy.$KeyName
+                }
             }
-        }
-        else
-        {
-            @{
-                $KeyName = $PSBoundParameters[$KeyName]
+            else
+            {
+                @{
+                    $KeyName = $PSBoundParameters[$KeyName]
+                }
             }
+
         }
 
+        Write-Verbose "Found AntiPhishPolicy $($Identity)"
+        return $result
     }
 
-    Write-Verbose "Found AntiPhishPolicy $($Identity)"
-    return $result
 }
 
 
@@ -274,33 +287,90 @@ function Set-TargetResource
         [System.Boolean]
         $TreatSoftPassAsAuthenticated = $true
     )
+    $ConfirmPreference='None'
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Retrieving information about AntiPhishPolicy configuration'
-    $AntiPhishPolicies = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-        -ScriptBlock {
-        Get-AntiPhishPolicy -Identity $Identity
+    try
+    {
+        $AntiPhishPolicies = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+            -ScriptBlock {
+            Get-AntiPhishPolicy
+        }
     }
+    catch
+    {
+        $ExceptionMessage = $_.Exception
+        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+        Write-Error $ExceptionMessage
+    }
+
     $AntiPhishPolicy = $AntiPhishPolicies | Where-Object Identity -eq $Identity
     $AntiPhishPolicySetParams = $PSBoundParameters
     $AntiPhishPolicySetParams.Remove("GlobalAdminAccount") | out-null
     $AntiPhishPolicySetParams.Remove("Ensure") | out-null
-    if (-NOT $AntiPhishPolicy)
-    {
-        Write-Verbose "Creating New AntiPhishPolicy $($Identity) with values: $($PSBoundParameters)"
-        Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-            -Arguments $AntiPhishPolicySetParams `
-            -ScriptBlock {
-            New-AntiPhishPolicy
-        }
+    $AntiPhishPolicySetParams.Remove("Verbose") | out-null
+    $AntiPhishPolicySetParams += @{
+        Name = $Identity
     }
-    else
+    $AntiPhishPolicySetParams.Remove("Identity") | out-null
+    if ( ('Present' -eq $Ensure ) -and (-NOT $AntiPhishPolicy) )
     {
-        Write-Verbose "Setting AntiPhishPolicy for $($Identity) with values: $($PSBoundParameters)"
-        Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-            -Arguments $AntiPhishPolicySetParams `
-            -ScriptBlock {
-            Set-AntiPhishPolicy
+        Write-Verbose "Creating New AntiPhishPolicy $($Identity) with values: $($AntiPhishPolicySetParams | Out-String)"
+        try
+        {
+            Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                -Arguments $AntiPhishPolicySetParams `
+                -ScriptBlock {
+                New-AntiPhishPolicy
+            }
         }
+        catch
+        {
+            $ExceptionMessage = $_.Exception
+            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+            Write-Error $ExceptionMessage
+        }
+
+    }
+
+    if ( ('Present' -eq $Ensure ) -and ($AntiPhishPolicy) )
+    {
+        Write-Verbose "Setting AntiPhishPolicy $($Identity) with values: $($AntiPhishPolicySetParams | Out-String)"
+        try
+        {
+            Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                -Arguments $AntiPhishPolicySetParams `
+                -ScriptBlock {
+                Set-AntiPhishPolicy
+            }
+        }
+        catch
+        {
+            $ExceptionMessage = $_.Exception
+            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+            Write-Error $ExceptionMessage
+        }
+
+    }
+
+    if ( ('Absent' -eq $Ensure ) -and ($AntiPhishPolicy) )
+    {
+        Write-Verbose "Removing AntiPhishPolicy $($Identity) "
+        try
+        {
+            Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                -Arguments $AntiPhishPolicySetParams `
+                -ScriptBlock {
+                Set-AntiPhishPolicy
+            }
+        }
+        catch
+        {
+            $ExceptionMessage = $_.Exception
+            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+            Write-Error $ExceptionMessage
+        }
+
     }
 
 }
@@ -429,7 +499,6 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $AntiPhishPolicyTestParams = $PSBoundParameters
     $AntiPhishPolicyTestParams.Remove("GlobalAdminAccount") | out-null
-    $AntiPhishPolicyTestParams.Remove("Ensure") | out-null
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $AntiPhishPolicyTestParams.Keys
