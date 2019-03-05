@@ -81,28 +81,28 @@ function Get-TargetResource
 
     try
     {
-        $PNPAccessControlSettings = Get-PNPTenant
+        $SPOAccessControlSettings = Get-PNPTenant
 
         return @{
             IsSingleInstance             = 'Yes'
-            DisplayStartASiteOption      = $PNPAccessControlSettings.DisplayStartASiteOption
-            StartASiteFormUrl            = $PNPAccessControlSettings.StartASiteFormUrl
-            IPAddressEnforcement         = $PNPAccessControlSettings.IPAddressEnforcement
-            IPAddressAllowList           = $PNPAccessControlSettings.IPAddressAllowList
-            IPAddressWACTokenLifetime    = $PNPAccessControlSettings.IPAddressWACTokenLifetime
-            CommentsOnSitePagesDisabled  = $PNPAccessControlSettings.CommentsOnSitePagesDisabled
-            SocialBarOnSitePagesDisabled = $PNPAccessControlSettings.SocialBarOnSitePagesDisabled
-            DisallowInfectedFileDownload = $PNPAccessControlSettings.DisallowInfectedFileDownload
-            ExternalServicesEnabled      = $PNPAccessControlSettings.ExternalServicesEnabled
-            EmailAttestationRequired     = $PNPAccessControlSettings.EmailAttestationRequired
-            EmailAttestationReAuthDays   = $PNPAccessControlSettings.EmailAttestationReAuthDays
+            DisplayStartASiteOption      = $SPOAccessControlSettings.DisplayStartASiteOption
+            StartASiteFormUrl            = $SPOAccessControlSettings.StartASiteFormUrl
+            IPAddressEnforcement         = $SPOAccessControlSettings.IPAddressEnforcement
+            IPAddressAllowList           = $SPOAccessControlSettings.IPAddressAllowList
+            IPAddressWACTokenLifetime    = $SPOAccessControlSettings.IPAddressWACTokenLifetime
+            CommentsOnSitePagesDisabled  = $SPOAccessControlSettings.CommentsOnSitePagesDisabled
+            SocialBarOnSitePagesDisabled = $SPOAccessControlSettings.SocialBarOnSitePagesDisabled
+            DisallowInfectedFileDownload = $SPOAccessControlSettings.DisallowInfectedFileDownload
+            ExternalServicesEnabled      = $SPOAccessControlSettings.ExternalServicesEnabled
+            EmailAttestationRequired     = $SPOAccessControlSettings.EmailAttestationRequired
+            EmailAttestationReAuthDays   = $SPOAccessControlSettings.EmailAttestationReAuthDays
         }
     }
     catch
     {
         if ($error[0].Exception.Message -like "No connection available")
         {
-            Write-Verbose "Make sure that you are connected to your PNPService"
+            Write-Verbose "Make sure that you are connected to your SPOService"
         }
         return $nullReturn
     }
@@ -252,7 +252,7 @@ function Test-TargetResource
     )
     Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
-    Write-Verbose -Message "Testing PnP Tenant"
+    Write-Verbose -Message "Testing SPO Tenant"
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
@@ -339,7 +339,7 @@ function Export-TargetResource
     Test-PnPOnlineConnection -GlobalAdminAccount $GlobalAdminAccount -SPOCentralAdminUrl $CentralAdminUrl
 
     $result = Get-TargetResource @PSBoundParameters
-    $content = "PNPAccessControlSettings " + (New-GUID).ToString() + "`r`n"
+    $content = "SPOAccessControlSettings " + (New-GUID).ToString() + "`r`n"
     $content += "{`r`n"
     $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += "}`r`n"
