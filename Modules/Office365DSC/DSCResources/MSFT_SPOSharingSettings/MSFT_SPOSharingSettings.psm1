@@ -128,6 +128,8 @@ function Get-TargetResource
         NotifyOwnersWhenItemsReshared              = $null
         DefaultLinkPermission                      = $null
         RequireAcceptingAccountMatchInvitedAccount = $null
+        CentralAdminUrl                            = $null
+        GlobalAdminAccount                         = $null
     }
     
     try
@@ -156,6 +158,8 @@ function Get-TargetResource
             NotifyOwnersWhenItemsReshared              = $SPOSharingSettings.NotifyOwnersWhenItemsReshared
             DefaultLinkPermission                      = $SPOSharingSettings.DefaultLinkPermission
             RequireAcceptingAccountMatchInvitedAccount = $SPOSharingSettings.RequireAcceptingAccountMatchInvitedAccount
+            CentralAdminUrl                            = $CentralAdminUrl
+            GlobalAdminAccount                         = $GlobalAdminAccount
         }
     }
     catch
