@@ -77,6 +77,8 @@ function Get-TargetResource
         ExternalServicesEnabled      = $null
         EmailAttestationRequired     = $null
         EmailAttestationReAuthDays   = $null
+        CentralAdminUrl              = $null
+        GlobalAdminAccount           = $null
     }
 
     try
@@ -96,6 +98,8 @@ function Get-TargetResource
             ExternalServicesEnabled      = $SPOAccessControlSettings.ExternalServicesEnabled
             EmailAttestationRequired     = $SPOAccessControlSettings.EmailAttestationRequired
             EmailAttestationReAuthDays   = $SPOAccessControlSettings.EmailAttestationReAuthDays
+            CentralAdminUrl              = $CentralAdminUrl
+            GlobalAdminAccount           = $GlobalAdminAccount
         }
     }
     catch
