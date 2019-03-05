@@ -154,7 +154,6 @@ function Set-TargetResource
     )
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Retrieving information about AcceptedDomain configuration'
-    $AcceptedDomain = Get-TargetResource @PSBoundParameters
     Write-Verbose "Setting AcceptedDomain for $($Identity) with values: $($PSBoundParameters)"
     $AcceptedDomainParams = @{
         DomainType      = $DomainType
