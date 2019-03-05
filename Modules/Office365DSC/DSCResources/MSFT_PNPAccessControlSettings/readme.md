@@ -2,4 +2,4 @@
 # PNP Access Control Settings
 
 This resource allows users to configure and monitor the access control settings for
-your SPO tenant sharing settings.
+your SPO tenant sharing settings using PnP PowerShell.
