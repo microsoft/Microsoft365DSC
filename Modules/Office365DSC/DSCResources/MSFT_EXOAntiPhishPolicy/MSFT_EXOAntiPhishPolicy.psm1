@@ -145,17 +145,18 @@ function Get-TargetResource
     }
     else
     {
-        $result = foreach ($KeyName in $PSBoundParameters.Keys )
+        $result = @{}
+        foreach ($KeyName in $PSBoundParameters.Keys )
         {
             if ($AntiPhishPolicy.$KeyName)
             {
-                @{
+                $result += @{
                     $KeyName = $AntiPhishPolicy.$KeyName
                 }
             }
             else
             {
-                @{
+                $result += @{
                     $KeyName = $PSBoundParameters[$KeyName]
                 }
             }
