@@ -287,7 +287,7 @@ function Set-TargetResource
         [System.Boolean]
         $TreatSoftPassAsAuthenticated = $true
     )
-    $ConfirmPreference='None'
+    $ConfirmPreference = 'None'
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Retrieving information about AntiPhishPolicy configuration'
     try
@@ -356,10 +356,13 @@ function Set-TargetResource
     if ( ('Absent' -eq $Ensure ) -and ($AntiPhishPolicy) )
     {
         Write-Verbose "Removing AntiPhishPolicy $($Identity) "
+        $AntiPhishPolicyRemoveParams = @{
+            Name = $Identity
+        }
         try
         {
             Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                -Arguments $AntiPhishPolicySetParams `
+                -Arguments $AntiPhishPolicyRemoveParams `
                 -ScriptBlock {
                 Set-AntiPhishPolicy
             }
