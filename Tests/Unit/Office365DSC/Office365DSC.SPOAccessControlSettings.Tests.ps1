@@ -90,17 +90,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 CentralAdminUrl              = "https://o365dsc1-admin.sharepoint.com"
                 GlobalAdminAccount           = $GlobalAdminAccount
                 IsSingleInstance             = "Yes"
-                DisplayStartASiteOption      = $false
-                StartASiteFormUrl            = "https://o365dsc1.sharepoint.com"
-                IPAddressEnforcement         = $false
-                #IPAddressAllowList           = "" #would generate an error while writing this resource
-                IPAddressWACTokenLifetime    = 15
-                CommentsOnSitePagesDisabled  = $false
-                SocialBarOnSitePagesDisabled = $false
-                DisallowInfectedFileDownload = $false
-                ExternalServicesEnabled      = $true
-                EmailAttestationRequired     = $false
-                EmailAttestationReAuthDays   = 30
             }
 
             Mock -CommandName Get-PnPTenant -MockWith {
