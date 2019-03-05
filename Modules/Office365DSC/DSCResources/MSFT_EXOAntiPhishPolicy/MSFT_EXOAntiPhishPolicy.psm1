@@ -68,7 +68,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $ExcludedSenders = @(),,
+        $ExcludedSenders = @(),
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -117,21 +117,20 @@ function Get-TargetResource
         [System.Boolean]
         $TreatSoftPassAsAuthenticated = $true
     )
-    Write-Verbose "Get-TargetResource will attempt to retrieve Accepted Domain configuration for $($Identity)"
-    $nullReturn = @{
-        Ensure             = $Ensure
-        GlobalAdminAccount = $GlobalAdminAccount
-        Identity           = $Identity
-    }
-
-    $AntiPhishPolicy = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+    Write-Verbose "Get-TargetResource will attempt to retrieve AntiPhishPolicy $($Identity)"
+    $AntiPhishPolicies = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
         -ScriptBlock {
         Get-AntiPhishPolicy -Identity $Identity
     }
-
+    $AntiPhishPolicy = $AntiPhishPolicies | Where-Object Identity -eq $Identity
     if (!$AntiPhishPolicy)
     {
-        Write-Verbose "AntiPhishPolicy configuration for $($Identity) does not exist."
+        Write-Verbose "AntiPhishPolicy $($Identity) does not exist."
+        $nullReturn = @{
+            Ensure             = $Ensure
+            GlobalAdminAccount = $GlobalAdminAccount
+            Identity           = $Identity
+        }
         return $nullReturn
     }
 
@@ -152,7 +151,7 @@ function Get-TargetResource
 
     }
 
-    Write-Verbose "Found AntiPhishPolicy configuration for $($Identity)"
+    Write-Verbose "Found AntiPhishPolicy $($Identity)"
     return $result
 }
 
@@ -226,7 +225,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $ExcludedSenders = @(),,
+        $ExcludedSenders = @(),
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -277,16 +276,14 @@ function Set-TargetResource
     )
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Retrieving information about AntiPhishPolicy configuration'
-
-    $AntiPhishPolicy = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+    $AntiPhishPolicies = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
         -ScriptBlock {
         Get-AntiPhishPolicy -Identity $Identity
     }
-
+    $AntiPhishPolicy = $AntiPhishPolicies | Where-Object Identity -eq $Identity
     $AntiPhishPolicySetParams = $PSBoundParameters
     $AntiPhishPolicySetParams.Remove("GlobalAdminAccount") | out-null
     $AntiPhishPolicySetParams.Remove("Ensure") | out-null
-
     if (-NOT $AntiPhishPolicy)
     {
         Write-Verbose "Creating New AntiPhishPolicy $($Identity) with values: $($PSBoundParameters)"
@@ -379,7 +376,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $ExcludedSenders = @(),,
+        $ExcludedSenders = @(),
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -508,7 +505,7 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $ExcludedSenders = @(),,
+        $ExcludedSenders = @(),
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

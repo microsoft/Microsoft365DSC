@@ -35,7 +35,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AcceptedDomain -MockWith {
                 return @{
-
+                    DomainType         = 'Authoritative'
+                    Ensure             = 'Absent'
+                    GlobalAdminAccount = $GlobalAdminAccount
+                    Identity           = 'contoso.com'
                 }
             }
 

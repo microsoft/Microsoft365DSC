@@ -909,14 +909,33 @@ param(
      param
      (
          [Parameter()]
-         [ValidateSet('Authoritative', 'ExternalRelay', 'InternalRelay')]
+         [ValidateSet('Authoritative')]
          [System.String]
          $DomainType = 'Authoritative',
 
-         [Parameter(Mandatory = $true)]
-         [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)|(\{|\()?[A-Za-z0-9]{4}([A-Za-z0-9]{4}\-?){4}[A-Za-z0-9]{12}(\}|\()?' )]
+         [Parameter()]
+         [ValidateSet('Present', 'Absent')]
          [System.String]
-         $Identity
+         $Ensure = 'Present',
+
+         [Parameter(Mandatory = $true)]
+         [System.Management.Automation.PSCredential]
+         $GlobalAdminAccount,
+
+         [Parameter(Mandatory = $true)]
+         [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
+         [System.String]
+         $Identity,
+
+         [Parameter()]
+         [ValidateScript( {$false -eq $_})]
+         [System.Boolean]
+         $MatchSubDomains = $false,
+
+         [Parameter()]
+         [ValidateScript( {$false -eq $_})]
+         [System.Boolean]
+         $OutboundOnly = $false
      )
 
  }
@@ -991,7 +1010,7 @@ param(
 
         [Parameter()]
         [System.String[]]
-        $ExcludedSenders = @(),,
+        $ExcludedSenders = @(),
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -2549,20 +2568,31 @@ param(
      param
      (
          [Parameter()]
-         [ValidateSet('Authoritative', 'ExternalRelay', 'InternalRelay')]
+         [ValidateSet('Authoritative')]
          [System.String]
          $DomainType = 'Authoritative',
 
+         [Parameter()]
+         [ValidateSet('Present', 'Absent')]
+         [System.String]
+         $Ensure = 'Present',
+
          [Parameter(Mandatory = $true)]
-         [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)|(\{|\()?[A-Za-z0-9]{4}([A-Za-z0-9]{4}\-?){4}[A-Za-z0-9]{12}(\}|\()?' )]
+         [System.Management.Automation.PSCredential]
+         $GlobalAdminAccount,
+
+         [Parameter(Mandatory = $true)]
+         [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
          [System.String]
          $Identity,
 
          [Parameter()]
+         [ValidateScript( {$false -eq $_})]
          [System.Boolean]
          $MatchSubDomains = $false,
 
          [Parameter()]
+         [ValidateScript( {$false -eq $_})]
          [System.Boolean]
          $OutboundOnly = $false
      )
@@ -2639,7 +2669,7 @@ param(
 
         [Parameter()]
         [System.String[]]
-        $ExcludedSenders = @(),,
+        $ExcludedSenders = @(),
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
