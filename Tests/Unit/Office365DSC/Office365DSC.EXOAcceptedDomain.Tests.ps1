@@ -66,12 +66,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-            Mock -CommandName Set-AcceptedDomain -MockWith {
 
+            Mock -CommandName Set-AcceptedDomain -MockWith {
+                return @{
+                    DomainType         = 'Authoritative'
+                    Ensure             = 'Present'
+                    GlobalAdminAccount = $GlobalAdminAccount
+                    Identity           = 'contoso.com'
+                }
             }
 
-            It 'Should return true from the Set method' {
-                Set-TargetResource @testParams | Should Be $true
+            It "Should call the Set method" {
+                Set-TargetResource @testParams
             }
 
         }
@@ -108,7 +114,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Context -Name "Authoritative Accepted Domain should exist.  Domain exists, DomainType mismatch. Test should fail." -Fixture {
+        Context -Name "Authoritative Accepted Domain should exist.  Domain exists, DomainType and MatchSubDomains mismatch. Test should fail." -Fixture {
             $testParams = @{
                 DomainType         = 'Authoritative'
                 Ensure             = 'Present'
@@ -116,11 +122,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Identity           = 'contoso.com'
             }
 
+            Mock -CommandName Get-AzureADDomain -MockWith {
+                return @{
+                    Name = 'contoso.com'
+                    IsVerified = $true
+                }
+
+            }
+
             Mock -CommandName Get-AcceptedDomain -MockWith {
                 return @{
                     DomainType         = 'InternalRelay'
                     Identity           = 'contoso.com'
-                    MatchSubDomains    = $false
+                    MatchSubDomains    = $true
                     OutboundOnly       = $false
                 }
             }
@@ -133,8 +147,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
-            It 'Should return true from the Set method' {
-                Set-TargetResource @testParams | Should Be $true
+            Mock -CommandName Set-AcceptedDomain -MockWith {
+                return @{
+                    DomainType         = 'Authoritative'
+                    Ensure             = 'Present'
+                    GlobalAdminAccount = $GlobalAdminAccount
+                    Identity           = 'contoso.com'
+                }
+            }
+
+            It "Should call the Set method" {
+                Set-TargetResource @testParams
             }
 
         }
