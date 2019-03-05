@@ -120,7 +120,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-        $user = Get-MSOLUser -UserPrincipalName $UserPrincipalName -ErrorAction SilentlyContinue
+        $user = Get-AzureADUser | Where-Object {$_.UserPrincipalName -eq $UserPrincipalName}
         if (!$user)
         {
             Write-Verbose "The specified User doesn't already exist."
@@ -129,21 +129,21 @@ function Get-TargetResource
 
         Write-Verbose "Found User $($UserPrincipalName)"
         $currentLicenseAssignment = @()
-        foreach($license in $user.Licenses)
+        foreach($license in ($user | Get-AzureADUserLicenseDetail))
         {
-            $currentLicenseAssignment += $license.AccountSkuID.ToString()
+            [array]$currentLicenseAssignment += $license.SkuPartNumber.ToString()
         }
 
-        $passwordNeverExpires = $user.PasswordNeverExpires
-        if ($null -eq $passwordNeverExpires)
+        $passwordNeverExpires = $user.PasswordPolicies
+        if ($null -eq $passwordNeverExpires -or $passwordNeverExpires -eq "None")
         {
             $passwordNeverExpires = $true
         }
         return @{
             UserPrincipalName = $user.UserPrincipalName
             DisplayName = $user.DisplayName
-            FirstName = $user.FirstName
-            LastName = $user.LastName
+            GivenName = $user.GivenName
+            Surname = $user.Surname
             UsageLocation = $user.UsageLocation
             LicenseAssignment = $currentLicenseAssignment
             Password = $Password
@@ -151,16 +151,16 @@ function Get-TargetResource
             Country = $user.Country
             Department = $user.Department
             Fax = $user.Fax
-            MobilePhone = $user.MobilePhone
+            Mobile = $user.Mobile
             Office = $user.Office
             PasswordNeverExpires = $passwordNeverExpires
-            PhoneNumber = $user.PhoneNumber
+            TelephoneNumber = $user.TelephoneNumber
             PostalCode = $user.PostalCode
             PreferredDataLocation = $user.PreferredDataLocation
             PreferredLanguage = $user.PreferredLanguage
             State = $user.State
             StreetAddress = $user.StreetAddress
-            Title = $user.Title
+            JobTitle = $user.JobTitle
             UserType = $user.UserType
             GlobalAdminAccount = $GlobalAdminAccount
             Ensure = "Present"

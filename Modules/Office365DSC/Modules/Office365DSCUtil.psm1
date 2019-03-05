@@ -963,6 +963,39 @@ function Test-O365ServiceConnection
     Test-MSCloudLogin -Platform AzureAD 
     Test-MSCloudLogin -Platform MSOnline
 }
+function Test-TeamsServiceConnection
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $false)] 
+        [System.Management.Automation.PSCredential] 
+        $GlobalAdminAccount
+    )
+    $VerbosePreference = 'SilentlyContinue'
+    $WarningPreference = "SilentlyContinue"
+    Write-Verbose "Verifying the LCM connection state to Microsoft Teams"
+    Test-MSCloudLogin -Platform MicrosoftTeams 
+}
+function Test-PnPOnlineConnection
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $false)] 
+        [System.Management.Automation.PSCredential] 
+        $GlobalAdminAccount,
+        [Parameter(Mandatory = $false)] 
+        [string] 
+        $SPOCentralAdminUrl
+    )
+    $VerbosePreference = 'SilentlyContinue'
+    $WarningPreference = "SilentlyContinue"
+    Write-Verbose "Verifying the LCM connection state to SharePoint Online PnP"
+    Test-MSCloudLogin -Platform PnP 
+}
 
 function Invoke-ExoCommand
 {
@@ -1216,7 +1249,7 @@ function Test-Office365DSCParameterState {
     return $returnValue
 }
 
-function Get-UsersLicences {
+function Get-UsersLicenses {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param(
@@ -1227,11 +1260,28 @@ function Get-UsersLicences {
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose "Store all users licences information in Global Variable for future usage."
     #Store information to be able to check later if the users is correctly licences for features.
-    if ($null -eq $Global:UsersLicences)
+    if ($null -eq $Global:UsersLicenses)
     {
-        $Global:UsersLicences = Get-MsolUser -All  | Select-Object UserPrincipalName, isLicensed, Licenses
+        $Global:UsersLicenses = @()
+        $users = Get-AzureADUser
+        foreach ($user in $users)
+        {
+            $licenses = $user | Get-AzureADUserLicenseDetail
+            $isLicensed = $false
+            if ($licenses)
+            {
+                $isLicensed = $true
+            }
+            $userLicenseInfo = New-Object -TypeName System.Object
+            $userLicenseInfo | Add-Member -NotePropertyName UserPrincipalName -NotePropertyValue $user.UserPrincipalName
+            $userLicenseInfo | Add-Member -NotePropertyName isLicensed -NotePropertyValue $isLicensed
+            $userLicenseInfo | Add-Member -NotePropertyName Licenses -NotePropertyValue $licenses
+            $userLicenseInfo.GetType().ToString()
+            $userLicenseInfo
+            $Global:UsersLicenses += $userLicenseInfo
+        }
     }
-    Return $Global:UsersLicences
+    Return $Global:UsersLicenses
 }
 
 <# This is the main Office365DSC.Reverse function that extracts the DSC configuration from an existing
@@ -1358,7 +1408,7 @@ function Export-O365Configuration
 
     # Security Groups
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    $securityGroups = Get-AzureAdGroup | Where-Object {$_.SecurityEnabled -eq $true}
+    $securityGroups = Get-AzureADMSGroup | Where-Object {$_.SecurityEnabled -eq $true}
 
     foreach ($securityGroup in $securityGroups)
     {
@@ -1372,7 +1422,7 @@ function Export-O365Configuration
         }
     }
 
-    $securityGroups = Get-AzureAdGroup | Where-Object {$_.SecurityEnabled -eq $true}
+    $securityGroups = Get-AzureADMSGroup | Where-Object {$_.SecurityEnabled -eq $true}
 
     # Other Groups
     $groups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `

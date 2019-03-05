@@ -56,7 +56,7 @@ function Get-TargetResource
     {
         Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
         Write-Verbose -Message "Getting Security Group $($DisplayName)"
-        $group = Get-MSOLGroup | Where-Object {$_.DisplayName -eq $DisplayName}
+        $group = Get-AzureADMSGroup | Where-Object {$_.DisplayName -eq $DisplayName}
 
         if(!$group)
         {
@@ -213,7 +213,7 @@ function Set-TargetResource
         {
             Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
             Write-Verbose -Message "Creating Security Group $DisplayName"
-            New-MsolGroup @CurrentParameters
+            New-AzureADMSGroup @CurrentParameters
         }
         else
         {
