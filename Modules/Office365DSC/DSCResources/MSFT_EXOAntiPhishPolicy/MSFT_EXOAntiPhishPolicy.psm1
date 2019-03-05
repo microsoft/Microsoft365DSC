@@ -133,7 +133,7 @@ function Get-TargetResource
     }
 
     $AntiPhishPolicy = $AntiPhishPolicies | Where-Object Identity -eq $Identity
-    if (!$AntiPhishPolicy)
+    if (-NOT $AntiPhishPolicy)
     {
         Write-Verbose "AntiPhishPolicy $($Identity) does not exist."
         $result = @{
@@ -145,8 +145,10 @@ function Get-TargetResource
     }
     else
     {
-        $result = @{}
-        foreach ($KeyName in $PSBoundParameters.Keys )
+        $result = @{
+            Ensure = 'Present'
+        }
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -ne 'Ensure'}) )
         {
             if ($AntiPhishPolicy.$KeyName)
             {
@@ -164,6 +166,7 @@ function Get-TargetResource
         }
 
         Write-Verbose "Found AntiPhishPolicy $($Identity)"
+        Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
         return $result
     }
 
@@ -365,7 +368,7 @@ function Set-TargetResource
             Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
                 -Arguments $AntiPhishPolicyRemoveParams `
                 -ScriptBlock {
-                Set-AntiPhishPolicy
+                Set-AntiPhishPolicy -Confirm:$false
             }
         }
         catch
