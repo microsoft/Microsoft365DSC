@@ -6,6 +6,10 @@
   ** Initial Release
 * SPOSite
   ** Initial Release
+* SPOSearchManagedProperty
+  ** Initial Release
+* SPOSearchResultSource
+  ** Initial Release
 * O365Group
   ** Initial Release
 * EXOMailTips

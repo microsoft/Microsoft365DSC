@@ -1597,6 +1597,59 @@ function Export-O365Configuration
     }
     #endregion
 
+    #region "SPOSearchResultSource"
+    $InfoMapping = @(
+    @{
+        Protocol    = "Local"
+        Type        = "SharePoint"
+        ProviderID  = "fa947043-6046-4f97-9714-40d4c113963d"
+    },
+    @{
+        Protocol    = "Remote"
+        Type        = "SharePoint"
+        ProviderID  = "1e0c8601-2e5d-4ccb-9561-53743b5dbde7"
+    },
+    @{
+        Protocol    = "Exchange"
+        Type        = "SharePoint"
+        ProviderID  = "3a17e140-1574-4093-bad6-e19cdf1c0122"
+    },
+    @{
+        Protocol    = "OpenSearch"
+        Type        = "SharePoint"
+        ProviderID  = "3a17e140-1574-4093-bad6-e19cdf1c0121"
+    },
+    @{
+        Protocol   = "Local"
+        Type       = "People"
+        ProviderID = "e4bcc058-f133-4425-8ffc-1d70596ffd33"
+    },
+    @{
+        Protocol   = "Remote"
+        Type       = "People"
+        ProviderID = "e377caaa-fcaf-4a1b-b7a1-e69a506a07aa"
+    }
+    )
+    Write-Information "Extracting SPOSearchResultSource..."
+    $SPOSearchResultSourceModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_SPOSearchResultSource\MSFT_SPOSearchResultSource.psm1" `
+                                                    -Resolve
+
+    $catch = Import-Module $SPOSearchResultSourceModulePath
+    Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+    $sources =  $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
+    foreach ($source in $sources)
+    {
+        $mapping = $InfoMapping | Where-Object { $_.ProviderID -eq $source.ProviderId }
+        Write-Information "    Result Source {$($source.Name)}"
+        $DSCContent += Export-TargetResource -Name $source.Name `
+                                             -Protocol $mapping.Protocol `
+                                             -CentralAdminUrl $centralAdminUrl `
+                                             -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "SPOSearchManagedProperty"
     Write-Information "Extracting SPOSearchManagedProperty..."
     $SPOSearchManagedPropertyModulePath = Join-Path -Path $PSScriptRoot `
