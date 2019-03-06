@@ -965,7 +965,7 @@ param(
         $AdminDisplayName,
 
         [Parameter()]
-        [ValidateSet('Delete', 'MoveToJmf', 'Quarantine')]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
         [System.String]
         $AuthenticationFailAction = 'MoveToJmf',
 
@@ -2624,7 +2624,7 @@ param(
         $AdminDisplayName,
 
         [Parameter()]
-        [ValidateSet('Delete', 'MoveToJmf', 'Quarantine')]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
         [System.String]
         $AuthenticationFailAction = 'MoveToJmf',
 

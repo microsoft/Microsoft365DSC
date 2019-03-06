@@ -9,7 +9,7 @@ function Get-TargetResource
         $AdminDisplayName,
 
         [Parameter()]
-        [ValidateSet('Delete', 'MoveToJmf', 'Quarantine')]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
         [System.String]
         $AuthenticationFailAction = 'MoveToJmf',
 
@@ -185,7 +185,7 @@ function Set-TargetResource
         $AdminDisplayName,
 
         [Parameter()]
-        [ValidateSet('Delete', 'MoveToJmf', 'Quarantine')]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
         [System.String]
         $AuthenticationFailAction = 'MoveToJmf',
 
@@ -390,7 +390,7 @@ function Test-TargetResource
         $AdminDisplayName,
 
         [Parameter()]
-        [ValidateSet('Delete', 'MoveToJmf', 'Quarantine')]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
         [System.String]
         $AuthenticationFailAction = 'MoveToJmf',
 
@@ -527,7 +527,7 @@ function Export-TargetResource
         $AdminDisplayName,
 
         [Parameter()]
-        [ValidateSet('Delete', 'MoveToJmf', 'Quarantine')]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
         [System.String]
         $AuthenticationFailAction = 'MoveToJmf',
 

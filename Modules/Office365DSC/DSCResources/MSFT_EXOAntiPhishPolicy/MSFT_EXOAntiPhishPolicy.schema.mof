@@ -6,7 +6,7 @@ class MSFT_EXOAntiPhishPolicy : OMI_BaseResource
     [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
     [Write, Description("The AdminDisplayName parameter specifies a description for the policy.")] String AdminDisplayName;
     [Write, ValueMap{"1","2","3","4"}, Values{"1","2","3","4"}] String PhishThresholdLevel;
-    [Write, ValueMap{"Delete","MoveToJmf","Quarantine"}, Values{"Delete","MoveToJmf","Quarantine"}] String AuthenticationFailAction;
+    [Write, ValueMap{"MoveToJmf","Quarantine"}, Values{"MoveToJmf","Quarantine"}] String AuthenticationFailAction;
     [Write, ValueMap{"BccMessage","Delete","MoveToJmf","NoAction","Quarantine","Redirect"}, Values{"BccMessage","Delete","MoveToJmf","NoAction","Quarantine","Redirect"}] String TargetedDomainProtectionAction;
     [Write, ValueMap{"BccMessage","Delete","MoveToJmf","NoAction","Quarantine","Redirect"}, Values{"BccMessage","Delete","MoveToJmf","NoAction","Quarantine","Redirect"}] String TargetedUserProtectionAction;
     [Write] Boolean Enabled;
