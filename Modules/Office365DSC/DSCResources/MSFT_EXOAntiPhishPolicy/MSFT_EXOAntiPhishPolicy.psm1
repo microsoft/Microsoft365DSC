@@ -118,19 +118,19 @@ function Get-TargetResource
         $TreatSoftPassAsAuthenticated = $true
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve AntiPhishPolicy $($Identity)"
-    Open-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
+    Write-Verbose "Calling Connect-ExchangeOnline function:"
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Write-Verbose "Global ExchangeOnlineSession status:"
+    Write-Verbose "$( Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Out-String)"
     try
     {
         $AntiPhishPolicies = Get-AntiPhishPolicy
-        # $AntiPhishPolicies = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-        #     -ScriptBlock {
-        #     Get-AntiPhishPolicy
-        # }
     }
     catch
     {
         $ExceptionMessage = $_.Exception
-        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+        Write-Verbose "Closing Remote PowerShell Sessions"
+        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
         Write-Error $ExceptionMessage
     }
 
@@ -143,7 +143,6 @@ function Get-TargetResource
             GlobalAdminAccount = $GlobalAdminAccount
             Identity           = $Identity
         }
-        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
         return $result
     }
     else
@@ -170,7 +169,6 @@ function Get-TargetResource
 
         Write-Verbose "Found AntiPhishPolicy $($Identity)"
         Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
-        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
         return $result
     }
 
@@ -297,21 +295,20 @@ function Set-TargetResource
     )
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Retrieving information about AntiPhishPolicy configuration'
-
-    Open-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
+    Write-Verbose "Calling Connect-ExchangeOnline function:"
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Write-Verbose "Global ExchangeOnlineSession status:"
+    Write-Verbose "$( Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Out-String)"
 
     try
     {
         $AntiPhishPolicies = Get-AntiPhishPolicy
-        # $AntiPhishPolicies = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-        #     -ScriptBlock {
-        #     Get-AntiPhishPolicy
-        # }
     }
     catch
     {
         $ExceptionMessage = $_.Exception
-        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+        Write-Verbose "Closing Remote PowerShell Sessions"
+        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
         Write-Error $ExceptionMessage
     }
 
@@ -330,16 +327,12 @@ function Set-TargetResource
         try
         {
             New-AntiPhishPolicy @AntiPhishPolicySetParams
-            # Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-            #     -Arguments $AntiPhishPolicySetParams `
-            #     -ScriptBlock {
-            #     New-AntiPhishPolicy
-            # }
         }
         catch
         {
             $ExceptionMessage = $_.Exception
-            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+            Write-Verbose "Closing Remote PowerShell Sessions"
+            $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
             Write-Error $ExceptionMessage
         }
 
@@ -351,16 +344,12 @@ function Set-TargetResource
         try
         {
             Set-AntiPhishPolicy @AntiPhishPolicySetParams -Confirm:$false
-            # Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-            #     -Arguments $AntiPhishPolicySetParams `
-            #     -ScriptBlock {
-            #     Set-AntiPhishPolicy
-            # }
         }
         catch
         {
             $ExceptionMessage = $_.Exception
-            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+            Write-Verbose "Closing Remote PowerShell Sessions"
+            $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
             Write-Error $ExceptionMessage
         }
 
@@ -369,27 +358,23 @@ function Set-TargetResource
     if ( ('Absent' -eq $Ensure ) -and ($AntiPhishPolicy) )
     {
         Write-Verbose "Removing AntiPhishPolicy $($Identity) "
-        # $AntiPhishPolicyRemoveParams = @{
-        #     Identity = $Identity
-        # }
         try
         {
             Remove-AntiPhishPolicy -Identity $Identity -Confirm:$false
-            # Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-            #     -Arguments $AntiPhishPolicyRemoveParams `
-            #     -ScriptBlock {
-            #     Remove-AntiPhishPolicy
-            # }
         }
         catch
         {
             $ExceptionMessage = $_.Exception
-            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+            Write-Verbose "Closing Remote PowerShell Sessions"
+            $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
             Write-Error $ExceptionMessage
         }
 
     }
-    $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+    Write-Verbose "Closing Remote PowerShell Sessions"
+    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
+    Write-Verbose "Global ExchangeOnlineSession status: `n"
+    Write-Verbose "$( Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Out-String)"
 
 }
 
@@ -517,9 +502,18 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $AntiPhishPolicyTestParams = $PSBoundParameters
     $AntiPhishPolicyTestParams.Remove("GlobalAdminAccount") | out-null
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $AntiPhishPolicyTestParams.Keys
+    if ($TestResult)
+    {
+        Write-Verbose "Closing Remote PowerShell Sessions"
+        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
+        Write-Verbose "Global ExchangeOnlineSession status: `n"
+        Write-Verbose "$( Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Out-String)"
+    }
+
+    return $TestResult
 }
 
 function Export-TargetResource
@@ -642,6 +636,10 @@ function Export-TargetResource
         $TreatSoftPassAsAuthenticated = $true
     )
     $result = Get-TargetResource @PSBoundParameters
+    Write-Verbose "Closing Remote PowerShell Sessions"
+    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
+    Write-Verbose "Global ExchangeOnlineSession status: `n"
+    Write-Verbose "$( Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Out-String)"
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        EXOAntiPhishPolicy " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

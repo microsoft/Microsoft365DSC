@@ -909,6 +909,105 @@ function Get-TeamByGroupID
     return $true
 }
 
+function Global:Connect-ExchangeOnline
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+    $VerbosePreference = 'Continue'
+    $WarningPreference = "SilentlyContinue"
+    $ClosedOrBrokenSessions = (Get-PSSession -ErrorAction SilentlyContinue | Where-Object State -ne 'Opened' )
+    if ($ClosedOrBrokenSessions) {
+        Write-Verbose "Found Existing Unusable Session(s)."
+        foreach($SessionToBeClosed in $ClosedOrBrokenSessions)
+        {
+            Write-Verbose "Closing Session: $(($SessionToBeClosed).InstanceId)"
+            $SessionToBeClosed | Remove-PSSession -ErrorAction SilentlyContinue
+        }
+    }
+
+    $Global:OpenExchangeSession = (Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Where-Object State -eq 'Opened' )
+    if (-NOT $Global:OpenExchangeSession) {
+        try {
+            Write-Verbose "Opening New ExchangeOnline Session."
+            $VerbosePreference = 'SilentlyContinue'
+            Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
+            $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
+            $ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
+            $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global -ErrorAction SilentlyContinue
+        }
+        catch {
+            $ExceptionMessage = $_.Exception
+            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+            $VerbosePreference = 'Continue'
+            $WarningPreference = "Continue"
+            $Global:ExchangeOnlineSession = $null
+            Write-Error $ExceptionMessage
+        }
+    }
+    else
+    {
+        Write-Verbose "Using Existing ExchangeOnline Session."
+        $VerbosePreference = 'Continue'
+        $WarningPreference = "Continue"
+    }
+
+}
+function Global:Connect-SecurityAndComplianceCenter
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+    $VerbosePreference = 'Continue'
+    $WarningPreference = "SilentlyContinue"
+    $ClosedOrBrokenSessions = (Get-PSSession -ErrorAction SilentlyContinue | Where-Object State -ne 'Opened' )
+    if ($ClosedOrBrokenSessions) {
+        Write-Verbose "Found Existing Unusable Session(s)."
+        foreach($SessionToBeClosed in $ClosedOrBrokenSessions)
+        {
+            Write-Verbose "Closing Session: $(($SessionToBeClosed).InstanceId)"
+            $SessionToBeClosed | Remove-PSSession -ErrorAction SilentlyContinue
+        }
+    }
+
+    $Global:OpenSecurityAndComplianceCenterSession = (Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Where-Object InstanceId -eq ($Global:SecurityAndComplianceCenterSession).InstanceId | Where-Object State -eq 'Opened' )
+    if (-NOT $Global:OpenSecurityAndComplianceCenterSession){
+        try {
+            Write-Verbose "Opening New SecurityAndComplianceCenter Session."
+            $VerbosePreference = 'SilentlyContinue'
+            Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
+            $Global:SecurityAndComplianceCenterSession = New-PSSession -Name 'SecurityAndComplianceCenter' -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
+            $SecurityAndComplianceCenterModules = Import-PSSession $Global:SecurityAndComplianceCenterSession -AllowClobber -ErrorAction SilentlyContinue
+            $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global -ErrorAction SilentlyContinue
+        }
+        catch {
+            $ExceptionMessage = $_.Exception
+            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+            $Global:SecurityAndComplianceCenterSession = $null
+            $VerbosePreference = 'Continue'
+            $WarningPreference = "Continue"
+            Write-Error $ExceptionMessage
+        }
+    }
+    else
+    {
+        Write-Verbose "Using Existing SecurityAndComplianceCenter Session."
+        $VerbosePreference = 'Continue'
+        $WarningPreference = "Continue"
+    }
+
+}
+
 function Open-SecurityAndComplianceCenterConnection
 {
     [CmdletBinding()]
