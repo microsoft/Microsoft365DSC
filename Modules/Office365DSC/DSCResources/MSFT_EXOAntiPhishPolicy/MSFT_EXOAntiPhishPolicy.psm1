@@ -293,13 +293,67 @@ function Set-TargetResource
         [System.Boolean]
         $TreatSoftPassAsAuthenticated = $true
     )
+    function BuildAntiPhishParams
+    {
+        param (
+            [Parameter()]
+            [System.Collections.Hashtable]
+            $BuildAntiPhishParams,
+
+            [Parameter()]
+            [ValidateSet('New', 'Set')]
+            [System.String]
+            $Operation
+        )
+        $AntiPhishParams = $BuildAntiPhishParams
+        $AntiPhishParams.Remove("GlobalAdminAccount") | out-null
+        $AntiPhishParams.Remove("Ensure") | out-null
+        $AntiPhishParams.Remove("Verbose") | out-null
+        if ('New' -eq $Operation)
+        {
+            $AntiPhishParams += @{
+                Name = $Identity
+            }
+            $AntiPhishParams.Remove("Identity") | out-null
+            $AntiPhishParams.Remove("MakeDefault") | out-null
+            return $AntiPhishParams
+        }
+        if ('Set' -eq $Operation)
+        {
+            return $AntiPhishParams
+        }
+    }
+
+    function NewAntiPhishPolicy
+    {
+        param (
+            [Parameter()]
+            [System.Collections.Hashtable]
+            $NewAntiPhishPolicyParams
+        )
+        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $NewAntiPhishPolicyParams -Operation 'New' )
+        Write-Verbose "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        New-AntiPhishPolicy @BuiltParams
+    }
+
+    function SetAntiPhishPolicy
+    {
+        param (
+            [Parameter()]
+            [System.Collections.Hashtable]
+            $SetAntiPhishPolicyParams
+        )
+        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $SetAntiPhishPolicyParams -Operation 'Set' )
+        Write-Verbose "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+        Set-AntiPhishPolicy @BuiltParams -Confirm:$false
+    }
+
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Retrieving information about AntiPhishPolicy configuration'
     Write-Verbose "Calling Connect-ExchangeOnline function:"
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose "Global ExchangeOnlineSession status:"
     Write-Verbose "$( Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Out-String)"
-
     try
     {
         $AntiPhishPolicies = Get-AntiPhishPolicy
@@ -313,21 +367,14 @@ function Set-TargetResource
     }
 
     $AntiPhishPolicy = $AntiPhishPolicies | Where-Object Identity -eq $Identity
-    $AntiPhishPolicySetParams = $PSBoundParameters
-    $AntiPhishPolicySetParams.Remove("GlobalAdminAccount") | out-null
-    $AntiPhishPolicySetParams.Remove("Ensure") | out-null
-    $AntiPhishPolicySetParams.Remove("Verbose") | out-null
-    $AntiPhishPolicySetParams += @{
-        Name = $Identity
-    }
 
     if ( ('Present' -eq $Ensure ) -and (-NOT $AntiPhishPolicy) )
     {
-        $AntiPhishPolicySetParams.Remove("Identity") | out-null
-        Write-Verbose "Creating New AntiPhishPolicy $($Identity) with values: $($AntiPhishPolicySetParams | Out-String)"
         try
         {
-            New-AntiPhishPolicy @AntiPhishPolicySetParams
+            NewAntiPhishPolicy -NewAntiPhishPolicyParams $PSBoundParameters
+            Start-Sleep -Seconds 1
+            SetAntiPhishPolicy -SetAntiPhishPolicyParams $PSBoundParameters
         }
         catch
         {
@@ -341,11 +388,9 @@ function Set-TargetResource
 
     if ( ('Present' -eq $Ensure ) -and ($AntiPhishPolicy) )
     {
-        Write-Verbose "Setting AntiPhishPolicy $($Identity) with values: $($AntiPhishPolicySetParams | Out-String)"
-        $AntiPhishPolicySetParams.Remove("Name") | out-null
         try
         {
-            Set-AntiPhishPolicy @AntiPhishPolicySetParams -Confirm:$false
+            SetAntiPhishPolicy -SetAntiPhishPolicyParams $PSBoundParameters
         }
         catch
         {
@@ -379,7 +424,6 @@ function Set-TargetResource
     Write-Verbose "$( Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Out-String)"
 
 }
-
 
 function Test-TargetResource
 {
