@@ -291,15 +291,21 @@ function Set-TargetResource
         [System.Boolean]
         $TreatSoftPassAsAuthenticated = $true
     )
-    $ConfirmPreference = 'None'
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Retrieving information about AntiPhishPolicy configuration'
+
+
+    $ExchangeOnlineSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
+    $ExchangeOnlineModules = Import-PSSession $ExchangeOnlineSession -AllowClobber
+    $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global
+
     try
     {
-        $AntiPhishPolicies = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-            -ScriptBlock {
-            Get-AntiPhishPolicy
-        }
+        $AntiPhishPolicies = Get-AntiPhishPolicy
+        # $AntiPhishPolicies = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+        #     -ScriptBlock {
+        #     Get-AntiPhishPolicy
+        # }
     }
     catch
     {
@@ -322,11 +328,12 @@ function Set-TargetResource
         Write-Verbose "Creating New AntiPhishPolicy $($Identity) with values: $($AntiPhishPolicySetParams | Out-String)"
         try
         {
-            Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                -Arguments $AntiPhishPolicySetParams `
-                -ScriptBlock {
-                New-AntiPhishPolicy
-            }
+            New-AntiPhishPolicy @AntiPhishPolicySetParams
+            # Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+            #     -Arguments $AntiPhishPolicySetParams `
+            #     -ScriptBlock {
+            #     New-AntiPhishPolicy
+            # }
         }
         catch
         {
@@ -342,11 +349,12 @@ function Set-TargetResource
         Write-Verbose "Setting AntiPhishPolicy $($Identity) with values: $($AntiPhishPolicySetParams | Out-String)"
         try
         {
-            Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                -Arguments $AntiPhishPolicySetParams `
-                -ScriptBlock {
-                Set-AntiPhishPolicy
-            }
+            Set-AntiPhishPolicy @AntiPhishPolicySetParams -Confirm:$false
+            # Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+            #     -Arguments $AntiPhishPolicySetParams `
+            #     -ScriptBlock {
+            #     Set-AntiPhishPolicy
+            # }
         }
         catch
         {
@@ -360,16 +368,17 @@ function Set-TargetResource
     if ( ('Absent' -eq $Ensure ) -and ($AntiPhishPolicy) )
     {
         Write-Verbose "Removing AntiPhishPolicy $($Identity) "
-        $AntiPhishPolicyRemoveParams = @{
-            Name = $Identity
-        }
+        # $AntiPhishPolicyRemoveParams = @{
+        #     Identity = $Identity
+        # }
         try
         {
-            Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                -Arguments $AntiPhishPolicyRemoveParams `
-                -ScriptBlock {
-                Set-AntiPhishPolicy -Confirm:$false
-            }
+            Remove-AntiPhishPolicy -Identity $Identity -Confirm:$false
+            # Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+            #     -Arguments $AntiPhishPolicyRemoveParams `
+            #     -ScriptBlock {
+            #     Remove-AntiPhishPolicy
+            # }
         }
         catch
         {
@@ -379,6 +388,7 @@ function Set-TargetResource
         }
 
     }
+    $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
 
 }
 
