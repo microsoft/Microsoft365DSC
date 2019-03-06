@@ -118,12 +118,14 @@ function Get-TargetResource
         $TreatSoftPassAsAuthenticated = $true
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve AntiPhishPolicy $($Identity)"
+    Open-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
     try
     {
-        $AntiPhishPolicies = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-            -ScriptBlock {
-            Get-AntiPhishPolicy
-        }
+        $AntiPhishPolicies = Get-AntiPhishPolicy
+        # $AntiPhishPolicies = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+        #     -ScriptBlock {
+        #     Get-AntiPhishPolicy
+        # }
     }
     catch
     {
@@ -141,6 +143,7 @@ function Get-TargetResource
             GlobalAdminAccount = $GlobalAdminAccount
             Identity           = $Identity
         }
+        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
         return $result
     }
     else
@@ -167,6 +170,7 @@ function Get-TargetResource
 
         Write-Verbose "Found AntiPhishPolicy $($Identity)"
         Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
+        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
         return $result
     }
 
@@ -294,10 +298,7 @@ function Set-TargetResource
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Retrieving information about AntiPhishPolicy configuration'
 
-
-    $ExchangeOnlineSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-    $ExchangeOnlineModules = Import-PSSession $ExchangeOnlineSession -AllowClobber
-    $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global
+    Open-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
 
     try
     {
