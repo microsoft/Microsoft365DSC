@@ -320,9 +320,10 @@ function Set-TargetResource
     $AntiPhishPolicySetParams += @{
         Name = $Identity
     }
-    $AntiPhishPolicySetParams.Remove("Identity") | out-null
+
     if ( ('Present' -eq $Ensure ) -and (-NOT $AntiPhishPolicy) )
     {
+        $AntiPhishPolicySetParams.Remove("Identity") | out-null
         Write-Verbose "Creating New AntiPhishPolicy $($Identity) with values: $($AntiPhishPolicySetParams | Out-String)"
         try
         {
@@ -341,6 +342,7 @@ function Set-TargetResource
     if ( ('Present' -eq $Ensure ) -and ($AntiPhishPolicy) )
     {
         Write-Verbose "Setting AntiPhishPolicy $($Identity) with values: $($AntiPhishPolicySetParams | Out-String)"
+        $AntiPhishPolicySetParams.Remove("Name") | out-null
         try
         {
             Set-AntiPhishPolicy @AntiPhishPolicySetParams -Confirm:$false
