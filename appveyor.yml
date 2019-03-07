@@ -11,6 +11,7 @@ install:
         $mainModuleFolder = "Modules\$moduleName"
         Install-Module ReverseDSC -MinimumVersion 1.9.2.13 -Force
         Install-Module MSOnline -MinimumVersion 1.1.183.17 -Force
+        Install-Module MicrosoftTeams -MinimumVersion 0.9.6 -Force
         Install-Module SharePointPnPPowerShellOnline -MinimumVersion 3.5.1901.0 -Force
 
         $webClient = new-object System.Net.WebClient
@@ -19,7 +20,7 @@ install:
         $webClient.DownloadFile($url, $path)
         msiexec /i $path /quiet /qn /norestart
 
-        Install-Module Microsoft.Online.SharePoint.PowerShell -MinimumVersion 16.0.8316.0 -Force
+        Install-Module Microsoft.Online.SharePoint.PowerShell -RequiredVersion 16.0.8316.0 -Force
         Import-Module Microsoft.Online.SharePoint.PowerShell -Force
         Import-Module SharePointPnpPowerShellOnline
         Import-Module -Name "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"

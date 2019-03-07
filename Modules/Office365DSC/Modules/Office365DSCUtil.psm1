@@ -909,7 +909,7 @@ function Get-TeamByGroupID
     return $true
 }
 
-function Test-SecurityAndComplianceCenterConnection
+function Open-SecurityAndComplianceCenterConnection
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -922,9 +922,11 @@ function Test-SecurityAndComplianceCenterConnection
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     $ExchangeOnlineSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-    $catch = [void](Import-PSSession $ExchangeOnlineSession -WarningAction SilentlyContinue -AllowClobber)
+    $ExchangeOnlineModules = Import-PSSession $ExchangeOnlineSession -AllowClobber
+    $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global
     $SecurityAndComplianceCenterSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-    $catch = [void](Import-PSSession $SecurityAndComplianceCenterSession -WarningAction SilentlyContinue -AllowClobber)
+    $SecurityAndComplianceCenterModules = Import-PSSession $SecurityAndComplianceCenterSession -AllowClobber
+    $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global
 }
 
 function Test-SPOServiceConnection
@@ -1515,6 +1517,59 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "SPOSearchResultSource"
+    $InfoMapping = @(
+    @{
+        Protocol    = "Local"
+        Type        = "SharePoint"
+        ProviderID  = "fa947043-6046-4f97-9714-40d4c113963d"
+    },
+    @{
+        Protocol    = "Remote"
+        Type        = "SharePoint"
+        ProviderID  = "1e0c8601-2e5d-4ccb-9561-53743b5dbde7"
+    },
+    @{
+        Protocol    = "Exchange"
+        Type        = "SharePoint"
+        ProviderID  = "3a17e140-1574-4093-bad6-e19cdf1c0122"
+    },
+    @{
+        Protocol    = "OpenSearch"
+        Type        = "SharePoint"
+        ProviderID  = "3a17e140-1574-4093-bad6-e19cdf1c0121"
+    },
+    @{
+        Protocol   = "Local"
+        Type       = "People"
+        ProviderID = "e4bcc058-f133-4425-8ffc-1d70596ffd33"
+    },
+    @{
+        Protocol   = "Remote"
+        Type       = "People"
+        ProviderID = "e377caaa-fcaf-4a1b-b7a1-e69a506a07aa"
+    }
+    )
+    Write-Information "Extracting SPOSearchResultSource..."
+    $SPOSearchResultSourceModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_SPOSearchResultSource\MSFT_SPOSearchResultSource.psm1" `
+                                                    -Resolve
+
+    $catch = Import-Module $SPOSearchResultSourceModulePath
+    Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+    $sources =  $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
+    foreach ($source in $sources)
+    {
+        $mapping = $InfoMapping | Where-Object { $_.ProviderID -eq $source.ProviderId }
+        Write-Information "    Result Source {$($source.Name)}"
+        $DSCContent += Export-TargetResource -Name $source.Name `
+                                             -Protocol $mapping.Protocol `
+                                             -CentralAdminUrl $centralAdminUrl `
+                                             -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "SPOSearchManagedProperty"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSearchManagedProperty"))
     {
@@ -1652,6 +1707,62 @@ function Start-O365ConfigurationExtract
         }
     }
     #endregion
+    Write-Information "Extracting TeamsMemberSettings..."
+    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                 -ChildPath "..\DSCResources\MSFT_TeamsMemberSettings\MSFT_TeamsMemberSettings.psm1" `
+                                 -Resolve
+
+    $catch = Import-Module $TeamsModulePath
+
+    foreach ($team in $teams)
+    {
+        $teamMemberSettings = Get-TeamMemberSettings -GroupId $team.GroupId
+        Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
+        $DSCContent += Export-TargetResource -GroupId $team.GroupId `
+                                             -AllowCreateUpdateChannels $teamMemberSettings.AllowCreateUpdateChannels `
+                                             -AllowDeleteChannels $teamMemberSettings.AllowDeleteChannels `
+                                             -AllowAddRemoveApps $teamMemberSettings.AllowAddRemoveApps `
+                                             -AllowCreateUpdateRemoveTabs $teamMemberSettings.AllowCreateUpdateRemoveTabs `
+                                             -AllowCreateUpdateRemoveConnectors $teamMemberSettings.AllowCreateUpdateRemoveConnectors `
+                                             -GlobalAdminAccount $GlobalAdminAccount
+    }
+
+    Write-Information "Extracting TeamsMessageSettings..."
+    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                 -ChildPath "..\DSCResources\MSFT_TeamsMessageSettings\MSFT_TeamsMessageSettings.psm1" `
+                                 -Resolve
+
+    $catch = Import-Module $TeamsModulePath
+
+    foreach ($team in $teams)
+    {
+        $teamMessageSettings = Get-TeamMemberSettings -GroupId $team.GroupId
+        Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
+        $DSCContent += Export-TargetResource -GroupId $team.GroupId `
+                                             -AllowUserEditMessages $teamMessageSettings.AllowUserEditMessages `
+                                             -AllowUserDeleteMessages $teamMessageSettings.AllowUserDeleteMessages `
+                                             -AllowOwnerDeleteMessages $teamMessageSettings.AllowOwnerDeleteMessages `
+                                             -AllowTeamMentions $teamMessageSettings.AllowTeamMentions `
+                                             -AllowChannelMentions $teamMessageSettings.AllowChannelMentions `
+                                             -GlobalAdminAccount $GlobalAdminAccount
+    }
+
+    Write-Information "Extracting TeamsGuestSettings..."
+    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                 -ChildPath "..\DSCResources\MSFT_TeamsGuestSettings\MSFT_TeamsGuestSettings.psm1" `
+                                 -Resolve
+
+    $catch = Import-Module $TeamsModulePath
+
+    foreach ($team in $teams)
+    {
+        $teamGuestSettings = Get-TeamGuestSettings -GroupId $team.GroupId
+        Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
+        $DSCContent += Export-TargetResource -GroupId $team.GroupId `
+                                             -AllowCreateUpdateChannels $teamGuestSettings.AllowCreateUpdateChannels `
+                                             -AllowDeleteChannels $teamGuestSettings.AllowDeleteChannels `
+                                             -GlobalAdminAccount $GlobalAdminAccount
+    }
 
     # Close the Node and Configuration declarations
     $DSCContent += "    }`r`n"
