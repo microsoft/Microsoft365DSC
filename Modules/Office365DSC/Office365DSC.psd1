@@ -51,17 +51,17 @@ PowerShellVersion = '5.1'
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-RequiredModules = @(@{ModuleName = "ReverseDSC"; ModuleVersion = "1.9.3.0"; },
-                    @{ModuleName = "MSOnline"; ModuleVersion = "1.1.183.17"; },
-                    @{ModuleName = "Microsoft.Online.SharePoint.PowerShell"; ModuleVersion = "16.0.8316.0"; },
-                    @{ModuleName = "SharePointPnPPowerShellOnline"; ModuleVersion = "3.5.1901.0"; },
-                    @{ModuleName = "MicrosoftTeams"; ModuleVersion = "0.9.6"; })
+# RequiredModules = @(@{ModuleName = "ReverseDSC"; ModuleVersion = "1.9.3.0"; },
+#                     @{ModuleName = "MSOnline"; ModuleVersion = "1.1.183.17"; },
+#                     @{ModuleName = "Microsoft.Online.SharePoint.PowerShell"; ModuleVersion = "16.0.8316.0"; },
+#                     @{ModuleName = "SharePointPnPPowerShellOnline"; ModuleVersion = "3.5.1901.0"; },
+#                     @{ModuleName = "MicrosoftTeams"; ModuleVersion = "0.9.6"; })
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
 
 # Script files (.ps1) that are run in the caller's environment prior to importing this module.
-# ScriptsToProcess = @()
+  ScriptsToProcess = @('Office365DSCRequiredModules.ps1')
 
 # Type files (.ps1xml) to be loaded when importing this module
 # TypesToProcess = @()
