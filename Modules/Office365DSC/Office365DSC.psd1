@@ -79,8 +79,8 @@ NestedModules = @('modules\Office365DSCUtil.psm1', 'modules\O365DSCReverseGUI.ps
 CmdletsToExport = 'Test-SPOServiceConnection', 'Test-Office365DSCParameterState',
                'Test-O365ServiceConnection', 'Invoke-ExoCommand', 'Export-O365Configuration',
                'Get-TimeZoneNameFromID', 'Get-TimeZoneIDFromName', 'Get-LocaleIDFromName',
-               'Get-LocaleNameFromID', 'Test-TeamsServiceConnection', 'Show-O365GUI', 'Start-O365ConfigurationExtract'
-               'Get-LocaleNameFromID', 'Test-TeamsServiceConnection', 'Test-PnPOnlineConnection'
+               'Get-LocaleNameFromID', 'Test-TeamsServiceConnection', 'Show-O365GUI', 'Start-O365ConfigurationExtract',
+               'Test-PnPOnlineConnection'
 
 # Variables to export from this module
 # VariablesToExport = @()
