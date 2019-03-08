@@ -967,115 +967,22 @@ param(
      )
  }
 
+function Get-AntiPhishRule {
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
  function Get-AntiPhishPolicy
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
-        [System.String]
-        $AdminDisplayName,
 
-        [Parameter()]
-        [ValidateSet('MoveToJmf', 'Quarantine')]
-        [System.String]
-        $AuthenticationFailAction = 'MoveToJmf',
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled = $true,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableAntispoofEnforcement = $true,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableAuthenticationSafetyTip = $true,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableAuthenticationSoftPassSafetyTip = $false,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableMailboxIntelligence = $true,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableOrganizationDomainsProtection = $false,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableSimilarDomainsSafetyTips = $false,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableSimilarUsersSafetyTips = $false,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableTargetedDomainsProtection = $false,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableTargetedUserProtection = $false,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableUnusualCharactersSafetyTips = $false,
-
-        [Parameter()]
-        [System.String[]]
-        $ExcludedDomains = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExcludedSenders = @(),
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $MakeDefault = $false,
-
-        [Parameter()]
-        [ValidateSet('1', '2', '3', '4')]
-        [System.String]
-        $PhishThresholdLevel = '1',
-
-        [Parameter()]
-        [System.String[]]
-        $TargetedDomainActionRecipients = @(),
-
-        [Parameter()]
-        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
-        [System.String]
-        $TargetedDomainProtectionAction = 'NoAction',
-
-        [Parameter()]
-        [System.String[]]
-        $TargetedDomainsToProtect = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $TargetedUserActionRecipients = @(),
-
-        [Parameter()]
-        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
-        [System.String]
-        $TargetedUserProtectionAction = 'NoAction',
-
-        [Parameter()]
-        [System.String[]]
-        $TargetedUsersToProtect = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $TreatSoftPassAsAuthenticated = $true
     )
 
 }
@@ -2020,6 +1927,58 @@ param(
 
  }
 
+ function New-AntiPhishRule {
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $AntiPhishPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @()
+
+    )
+}
+
 function New-SPOMigrationEncryptionParameters {
  [CmdletBinding()]
 param()
@@ -2215,7 +2174,7 @@ param(
 
  }
 
- function Remove-AntiPhishPolicy
+function Remove-AntiPhishPolicy
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -2227,6 +2186,22 @@ param(
         [Parameter()]
         [switch]
         $Force,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+
+}
+
+function Remove-AntiPhishRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter()]
+        $Confirm = $false,
 
         [Parameter()]
         [System.String]
@@ -2849,6 +2824,54 @@ param(
         $TreatSoftPassAsAuthenticated = $true
     )
 
+}
+
+function Set-AntiPhishRule {
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $AntiPhishPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @()
+
+    )
 }
 
 function Set-SPOBrowserIdleSignOut {

@@ -47,7 +47,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AntiPhishPolicy -MockWith {
                 return @{
-                    Identity           = 'SomeOtherPolicy'
+                    Identity = 'SomeOtherPolicy'
                 }
             }
 
@@ -104,6 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AntiPhishPolicy -MockWith {
                 return @{
+                    Ensure                                = 'Present'
                     Identity                              = 'TestPolicy'
                     PhishThresholdLevel                   = '2'
                     AdminDisplayName                      = 'DSC Test Policy'
@@ -130,7 +131,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It 'Should return false from the Test method' {
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should Be $true
             }
 
@@ -219,7 +220,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AntiPhishPolicy -MockWith {
                 return @{
-                    Identity           = 'TestPolicy'
+                    Identity = 'TestPolicy'
                 }
             }
 
