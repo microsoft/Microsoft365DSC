@@ -344,7 +344,8 @@ function Set-TargetResource
             $SetAntiPhishPolicyParams
         )
         $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $SetAntiPhishPolicyParams -Operation 'Set' )
-        if ($BuiltParams.keys -gt 1) {
+        if ($BuiltParams.keys -gt 1)
+        {
             Write-Verbose "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
             Set-AntiPhishPolicy @BuiltParams -Confirm:$false
         }
