@@ -90,6 +90,7 @@ function Get-TargetResource
     {
         $result = @{
             Ensure = 'Present'
+            Enabled = $AntiPhishRule.State
         }
         foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -ne 'Ensure'}) )
         {
