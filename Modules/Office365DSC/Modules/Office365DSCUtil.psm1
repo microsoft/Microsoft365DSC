@@ -1405,6 +1405,26 @@ function Export-O365Configuration
     $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
     #endregion
 
+    #region "EXOAntiPhishPolicy"
+    Write-Information "Extracting EXOAntiPhishPolicy..."
+    $EXOAntiPhishPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                              -ChildPath "..\DSCResources\MSFT_EXOAntiPhishPolicy\MSFT_EXOAntiPhishPolicy.psm1" `
+                                              -Resolve
+
+    $catch = Import-Module $EXOAntiPhishPolicyModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXOAntiPhishRule"
+    Write-Information "Extracting EXOAntiPhishRule..."
+    $EXOAntiPhishRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                              -ChildPath "..\DSCResources\MSFT_EXOAntiPhishRule\MSFT_EXOAntiPhishRule.psm1" `
+                                              -Resolve
+
+    $catch = Import-Module $EXOAntiPhishRuleModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
     #region "EXOMailboxSettings"
     Write-Information "Extracting EXOMailboxSettings..."
     $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `
