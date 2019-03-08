@@ -128,10 +128,7 @@ function Get-TargetResource
     }
     catch
     {
-        $ExceptionMessage = $_.Exception
-        Write-Verbose "Closing Remote PowerShell Sessions"
-        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-        Write-Error $ExceptionMessage
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
 
     $AntiPhishPolicy = $AntiPhishPolicies | Where-Object Identity -eq $Identity
@@ -331,9 +328,14 @@ function Set-TargetResource
             [System.Collections.Hashtable]
             $NewAntiPhishPolicyParams
         )
-        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $NewAntiPhishPolicyParams -Operation 'New' )
-        Write-Verbose "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
-        New-AntiPhishPolicy @BuiltParams
+        try {
+            $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $NewAntiPhishPolicyParams -Operation 'New' )
+            Write-Verbose "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+            New-AntiPhishPolicy @BuiltParams
+        }
+        catch {
+            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+        }
     }
 
     function SetAntiPhishPolicy
@@ -343,15 +345,20 @@ function Set-TargetResource
             [System.Collections.Hashtable]
             $SetAntiPhishPolicyParams
         )
-        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $SetAntiPhishPolicyParams -Operation 'Set' )
-        if ($BuiltParams.keys -gt 1)
-        {
-            Write-Verbose "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
-            Set-AntiPhishPolicy @BuiltParams -Confirm:$false
+        try {
+            $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $SetAntiPhishPolicyParams -Operation 'Set' )
+            if ($BuiltParams.keys -gt 1)
+            {
+                Write-Verbose "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+                Set-AntiPhishPolicy @BuiltParams -Confirm:$false
+            }
+            else
+            {
+                Write-Verbose "No more values to Set on AntiPhishPolicy $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            }
         }
-        else
-        {
-            Write-Verbose "No more values to Set on AntiPhishPolicy $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+        catch {
+            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         }
 
     }
@@ -368,10 +375,7 @@ function Set-TargetResource
     }
     catch
     {
-        $ExceptionMessage = $_.Exception
-        Write-Verbose "Closing Remote PowerShell Sessions"
-        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-        Write-Error $ExceptionMessage
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
 
     $AntiPhishPolicy = $AntiPhishPolicies | Where-Object Identity -eq $Identity
@@ -386,10 +390,7 @@ function Set-TargetResource
         }
         catch
         {
-            $ExceptionMessage = $_.Exception
-            Write-Verbose "Closing Remote PowerShell Sessions"
-            $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-            Write-Error $ExceptionMessage
+            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         }
 
     }
@@ -402,10 +403,7 @@ function Set-TargetResource
         }
         catch
         {
-            $ExceptionMessage = $_.Exception
-            Write-Verbose "Closing Remote PowerShell Sessions"
-            $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-            Write-Error $ExceptionMessage
+            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         }
 
     }
@@ -419,10 +417,7 @@ function Set-TargetResource
         }
         catch
         {
-            $ExceptionMessage = $_.Exception
-            Write-Verbose "Closing Remote PowerShell Sessions"
-            $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-            Write-Error $ExceptionMessage
+            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         }
 
     }

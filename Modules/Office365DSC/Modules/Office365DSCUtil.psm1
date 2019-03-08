@@ -811,6 +811,19 @@ $TimeZones = @(
     }
 )
 
+function Close-SessionsAndReturnError
+{
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [String]
+        $ExceptionMessage
+    )
+    Write-Verbose "Closing Remote PowerShell Sessions"
+    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
+    Write-Error $ExceptionMessage
+}
+
 function Get-LocaleIDFromName
 {
     [CmdletBinding()]

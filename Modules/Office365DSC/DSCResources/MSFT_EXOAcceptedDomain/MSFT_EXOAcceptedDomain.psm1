@@ -44,10 +44,7 @@ function Get-TargetResource
     }
     catch
     {
-        $ExceptionMessage = $_.Exception
-        Write-Verbose "Closing Remote PowerShell Sessions"
-        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-        Write-Error $ExceptionMessage
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
 
     $AcceptedDomain = ($AllAcceptedDomains | Where-Object Identity -IMatch $Identity)
@@ -65,10 +62,7 @@ function Get-TargetResource
         }
         catch
         {
-            $ExceptionMessage = $_.Exception
-            Write-Verbose "Closing Remote PowerShell Sessions"
-            $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-            Write-Error $ExceptionMessage
+            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         }
 
         if (-NOT $MatchingVerifiedDomain)
@@ -173,10 +167,7 @@ function Set-TargetResource
     }
     catch
     {
-        $ExceptionMessage = $_.Exception
-        Write-Verbose "Closing Remote PowerShell Sessions"
-        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-        Write-Error $ExceptionMessage
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
 
 }

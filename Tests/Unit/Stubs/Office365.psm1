@@ -1,4 +1,14 @@
-﻿function Get-PSSession{
+﻿function Close-SessionsAndReturnError
+{
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [String]
+        $ExceptionMessage
+    )
+
+}
+function Get-PSSession{
     [CmdletBinding()]
     param(
     )
