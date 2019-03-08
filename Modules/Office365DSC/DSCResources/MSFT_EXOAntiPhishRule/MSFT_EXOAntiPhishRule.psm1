@@ -104,7 +104,16 @@ function Get-TargetResource
             }
 
         }
-        $result.Enabled = $AntiPhishRule.State # Accounts for Get-AntiPhishRule returning 'State' instead of 'Enabled' used by New/Set
+        if ('Enabled' -eq $AntiPhishRule.State)
+        {
+            # Accounts for Get-AntiPhishRule returning 'State' instead of 'Enabled' used by New/Set
+            $result.Enabled = $true
+        }
+        else
+        {
+            $result.Enabled = $false
+        }
+
         Write-Verbose "Found AntiPhishRule $($Identity)"
         Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
         return $result
