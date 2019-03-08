@@ -1008,26 +1008,6 @@ function Global:Connect-SecurityAndComplianceCenter
 
 }
 
-function Open-SecurityAndComplianceCenterConnection
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    $VerbosePreference = 'SilentlyContinue'
-    $WarningPreference = "SilentlyContinue"
-    $ExchangeOnlineSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-    $ExchangeOnlineModules = Import-PSSession $ExchangeOnlineSession -AllowClobber
-    $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global
-    $SecurityAndComplianceCenterSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-    $SecurityAndComplianceCenterModules = Import-PSSession $SecurityAndComplianceCenterSession -AllowClobber
-    $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global
-}
-
 function Test-SPOServiceConnection
 {
     [CmdletBinding()]

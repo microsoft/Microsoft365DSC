@@ -34,18 +34,19 @@ function Get-TargetResource
         $OutboundOnly = $false
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve Accepted Domain configuration for $($Identity)"
-
+    Write-Verbose "Calling Connect-ExchangeOnline function:"
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Write-Verbose "Global ExchangeOnlineSession status:"
+    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     try
     {
-        $AllAcceptedDomains = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-            -ScriptBlock {
-            Get-AcceptedDomain
-        }
+        $AllAcceptedDomains = Get-AcceptedDomain
     }
     catch
     {
         $ExceptionMessage = $_.Exception
-        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+        Write-Verbose "Closing Remote PowerShell Sessions"
+        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
         Write-Error $ExceptionMessage
     }
 
@@ -65,7 +66,8 @@ function Get-TargetResource
         catch
         {
             $ExceptionMessage = $_.Exception
-            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+            Write-Verbose "Closing Remote PowerShell Sessions"
+            $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
             Write-Error $ExceptionMessage
         }
 
@@ -154,24 +156,26 @@ function Set-TargetResource
     )
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Retrieving information about AcceptedDomain configuration'
-    Write-Verbose "Setting AcceptedDomain for $($Identity) with values: $($PSBoundParameters)"
+    Write-Verbose "Calling Connect-ExchangeOnline function:"
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Write-Verbose "Global ExchangeOnlineSession status:"
+    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $AcceptedDomainParams = @{
         DomainType      = $DomainType
         Identity        = $Identity
         MatchSubDomains = $MatchSubDomains
         OutboundOnly    = $OutboundOnly
     }
-
     try
     {
-        Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-            -Arguments $AcceptedDomainParams `
-            -ScriptBlock { Set-AcceptedDomain }
+        Write-Verbose "Setting AcceptedDomain for $($Identity) with values: $($AcceptedDomainParams | Out-String)"
+        Set-AcceptedDomain @AcceptedDomainParams
     }
     catch
     {
         $ExceptionMessage = $_.Exception
-        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+        Write-Verbose "Closing Remote PowerShell Sessions"
+        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
         Write-Error $ExceptionMessage
     }
 
@@ -216,7 +220,8 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing AcceptedDomain for $($Identity)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+    Write-Verbose "Closing Remote PowerShell Sessions"
+    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck = $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
@@ -260,7 +265,7 @@ function Export-TargetResource
         $OutboundOnly = $false
     )
     $result = Get-TargetResource @PSBoundParameters
-    $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        EXOAcceptedDomain " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

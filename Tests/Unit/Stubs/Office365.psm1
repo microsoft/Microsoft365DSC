@@ -10,15 +10,6 @@ function Remove-PSSession{
     )
 }
 
-function Open-SecurityAndComplianceCenterConnection{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $GlobalAdminAccount
-    )
-}
-
 function Get-AdminAuditLogConfig{
     [CmdletBinding()]
     param(
