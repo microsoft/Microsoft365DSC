@@ -152,7 +152,7 @@ function Get-TargetResource
         }
         foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -ne 'Ensure'}) )
         {
-            if ($AntiPhishPolicy.$KeyName)
+            if ($null -ne $AntiPhishPolicy.$KeyName)
             {
                 $result += @{
                     $KeyName = $AntiPhishPolicy.$KeyName
