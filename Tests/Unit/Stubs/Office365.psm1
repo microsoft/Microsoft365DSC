@@ -697,6 +697,30 @@ param(
 
  }
 
+ function Global:Connect-ExchangeOnline
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+}
+function Global:Connect-SecurityAndComplianceCenter
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+}
 
 function Connect-SPOService {
  [CmdletBinding()]
