@@ -121,7 +121,7 @@ function Get-TargetResource
     Write-Verbose "Calling Connect-ExchangeOnline function:"
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Out-String)"
+    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     try
     {
         $AntiPhishPolicies = Get-AntiPhishPolicy
@@ -312,7 +312,7 @@ function Set-TargetResource
         if ('New' -eq $Operation)
         {
             $AntiPhishParams += @{
-                Name = $Identity
+                Name = $AntiPhishParams.Identity
             }
             $AntiPhishParams.Remove("Identity") | out-null
             $AntiPhishParams.Remove("MakeDefault") | out-null
@@ -344,8 +344,15 @@ function Set-TargetResource
             $SetAntiPhishPolicyParams
         )
         $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $SetAntiPhishPolicyParams -Operation 'Set' )
-        Write-Verbose "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
-        Set-AntiPhishPolicy @BuiltParams -Confirm:$false
+        if ($BuiltParams.keys -gt 1) {
+            Write-Verbose "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Set-AntiPhishPolicy @BuiltParams -Confirm:$false
+        }
+        else
+        {
+            Write-Verbose "No more values to Set on AntiPhishPolicy $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+        }
+
     }
 
     Write-Verbose 'Entering Set-TargetResource'
@@ -353,7 +360,7 @@ function Set-TargetResource
     Write-Verbose "Calling Connect-ExchangeOnline function:"
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Out-String)"
+    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     try
     {
         $AntiPhishPolicies = Get-AntiPhishPolicy
@@ -407,7 +414,7 @@ function Set-TargetResource
         Write-Verbose "Removing AntiPhishPolicy $($Identity) "
         try
         {
-            Remove-AntiPhishPolicy -Identity $Identity -Confirm:$false
+            Remove-AntiPhishPolicy -Identity $Identity -Confirm:$false -Force
         }
         catch
         {
@@ -421,7 +428,7 @@ function Set-TargetResource
     Write-Verbose "Closing Remote PowerShell Sessions"
     $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
     Write-Verbose "Global ExchangeOnlineSession status: `n"
-    Write-Verbose "$( Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Out-String)"
+    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
 
 }
 
@@ -556,7 +563,7 @@ function Test-TargetResource
         Write-Verbose "Closing Remote PowerShell Sessions"
         $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
         Write-Verbose "Global ExchangeOnlineSession status: `n"
-        Write-Verbose "$( Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Out-String)"
+        Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     }
 
     return $TestResult
@@ -685,7 +692,7 @@ function Export-TargetResource
     Write-Verbose "Closing Remote PowerShell Sessions"
     $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
     Write-Verbose "Global ExchangeOnlineSession status: `n"
-    Write-Verbose "$( Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Out-String)"
+    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        EXOAntiPhishPolicy " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

@@ -43,7 +43,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AntiPhishPolicy -MockWith {
                 return @{
-
+                    Identity           = 'SomeOtherPolicy'
                 }
             }
 
