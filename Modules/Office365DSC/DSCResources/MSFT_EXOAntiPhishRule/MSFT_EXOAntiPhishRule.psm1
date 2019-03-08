@@ -42,7 +42,7 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [Int32]
+        [uint32]
         $Priority,
 
         [Parameter()]
@@ -165,7 +165,7 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [Int32]
+        [uint32]
         $Priority,
 
         [Parameter()]
@@ -376,7 +376,7 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [Int32]
+        [uint32]
         $Priority,
 
         [Parameter()]
@@ -454,7 +454,7 @@ function Export-TargetResource
         $Identity,
 
         [Parameter()]
-        [Int32]
+        [uint32]
         $Priority,
 
         [Parameter()]
