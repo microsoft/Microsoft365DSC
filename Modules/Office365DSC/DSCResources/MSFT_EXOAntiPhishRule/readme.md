@@ -9,7 +9,8 @@ Reference: https://docs.microsoft.com/en-us/powershell/module/exchange/advanced-
 
     AntiPhishPolicy
       - Required: Yes
-      - Description: The Identity of the AntiPhish Policy to associate with this AntiPhish Rule.
+      - Description: The Identity of the AntiPhish Policy to associate with
+        this AntiPhish Rule.
 
     Ensure
       - Required: No (Defaults to 'Present')
@@ -23,8 +24,6 @@ Reference: https://docs.microsoft.com/en-us/powershell/module/exchange/advanced-
     Identity
       - Required: Yes
       - Description: Domain name of the AcceptedDomain
-
-
 
 ## Example
 

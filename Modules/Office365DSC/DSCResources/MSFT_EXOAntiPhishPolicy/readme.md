@@ -20,8 +20,6 @@ Reference: https://docs.microsoft.com/en-us/powershell/module/exchange/advanced-
       - Required: Yes
       - Description: Domain name of the AcceptedDomain
 
-
-
 ## Example
 
 ```PowerShell

@@ -26,14 +26,16 @@ This resource configures the Accepted Email Domains in Exchange Online.
 
     MatchSubDomains
       - Required: No
-      - Description: MatchSubDomains enables mail to be sent by and received from users on any subdomain of this accepted domain.
+      - Description: MatchSubDomains enables mail to be sent by and received
+        from users on any subdomain of this accepted domain.
         This value must be false on Authoritative domains.
         The EXOAcceptedDomain DSC Resources only accepts a value of $false
         The default value is false.
 
     OutboundOnly
       - Required: No
-      - Description: OutboundOnly specifies whether this accepted domain is an internal relay domain for the on-premises
+      - Description: OutboundOnly specifies whether this accepted domain is an
+        internal relay domain for the on-premises
         deployment for organizations that have coexistence with a cloud-based organization.
         This value must be false on Authoritative domains.
         The EXOAcceptedDomain DSC Resources only accepts a value of $false
