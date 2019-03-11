@@ -14,7 +14,7 @@ This resource configures the Accepted Email Domains in Exchange Online.
     DomainType
       - Required: No (Defaults to 'Authoritative')
       - Description: The DomainType parameter specifies the accepted domain type.
-         The EXOAcceptedDomain DSC Resources only accepts a value of 'Athoritative'
+         The EXOAcceptedDomain DSC Resources only accepts a value of 'Authoritative'
 
     GlobalAdminAccount
       - Required: Yes
