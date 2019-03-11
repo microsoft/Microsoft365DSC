@@ -158,6 +158,7 @@ function Set-TargetResource
         MatchSubDomains = $MatchSubDomains
         OutboundOnly    = $OutboundOnly
     }
+
     try
     {
         Write-Verbose "Setting AcceptedDomain for $($Identity) with values: $($AcceptedDomainParams | Out-String)"

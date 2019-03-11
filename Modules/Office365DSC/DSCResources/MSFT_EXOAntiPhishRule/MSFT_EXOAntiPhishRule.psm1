@@ -240,6 +240,7 @@ function Set-TargetResource
             Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         }
     }
+
     Write-Verbose "Closing Remote PowerShell Sessions"
     $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
     Write-Verbose "Global ExchangeOnlineSession status: `n"
@@ -319,6 +320,7 @@ function Test-TargetResource
         Write-Verbose "Global ExchangeOnlineSession status: `n"
         Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     }
+
     return $TestResult
 }
 
