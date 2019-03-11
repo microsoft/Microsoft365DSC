@@ -9479,3 +9479,41 @@ function Get-TeamByGroupID{
         $GroupID
     )
 }
+
+function Grant-PnPSiteDesignRights
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [string]
+        $Principals,
+
+        [Parameter()]
+        [string]
+        $Rights
+    )
+}
+
+function Get-PnPSiteDesign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Identity
+    )
+}
+
+function Get-PnPSiteDesignRights
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Identity
+    )
+}
