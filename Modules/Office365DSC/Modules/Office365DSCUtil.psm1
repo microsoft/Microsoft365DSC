@@ -953,7 +953,7 @@ function Get-TeamByGroupID
     return $true
 }
 
-function Global:Connect-ExchangeOnline
+function Connect-ExchangeOnline
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -1002,7 +1002,7 @@ function Global:Connect-ExchangeOnline
     }
 
 }
-function Global:Connect-SecurityAndComplianceCenter
+function Connect-SecurityAndComplianceCenter
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
