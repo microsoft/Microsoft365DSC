@@ -83,7 +83,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Should call the Set method" {
                 Set-TargetResource @testParams
             }
-
         }
 
         Context -Name "Authoritative Accepted Domain should exist.  Domain exists. Test should pass." -Fixture {
@@ -114,8 +113,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should Be $true
             }
-
-
         }
 
         Context -Name "Authoritative Accepted Domain should exist.  Domain exists, DomainType and MatchSubDomains mismatch. Test should fail." -Fixture {
@@ -165,7 +162,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
         }
-
     }
 }
 

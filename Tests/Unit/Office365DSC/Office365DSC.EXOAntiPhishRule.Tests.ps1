@@ -71,7 +71,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Should call the Set method" {
                 Set-TargetResource @testParams
             }
-
         }
 
         Context -Name "AntiPhishRule update not required." -Fixture {
@@ -109,8 +108,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should Be $true
             }
-
-
         }
 
         Context -Name "AntiPhishRule update needed." -Fixture {
@@ -159,7 +156,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Should call the Set method" {
                 Set-TargetResource @testParams
             }
-
         }
 
         Context -Name "AntiPhishRule removal." -Fixture {
@@ -189,9 +185,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Should call the Set method" {
                 Set-TargetResource @testParams
             }
-
         }
-
     }
 }
 
