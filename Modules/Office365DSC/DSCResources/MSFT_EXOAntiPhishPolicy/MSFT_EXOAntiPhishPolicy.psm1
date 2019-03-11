@@ -390,7 +390,6 @@ function Set-TargetResource
         {
             Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         }
-
     }
 
     if ( ('Present' -eq $Ensure ) -and ($AntiPhishPolicy) )
@@ -403,7 +402,6 @@ function Set-TargetResource
         {
             Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         }
-
     }
 
     if ( ('Absent' -eq $Ensure ) -and ($AntiPhishPolicy) )

@@ -176,7 +176,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $SentToMemberOf = @()
-
     )
     function BuildAntiPhishParams
     {
@@ -280,7 +279,6 @@ function Set-TargetResource
         {
             Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         }
-
     }
 
     if ( ('Present' -eq $Ensure ) -and ($AntiPhishRule) )
@@ -305,7 +303,6 @@ function Set-TargetResource
         {
             Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         }
-
     }
 
     if ( ('Absent' -eq $Ensure ) -and ($AntiPhishRule) )
@@ -319,7 +316,6 @@ function Set-TargetResource
         {
             Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         }
-
     }
     Write-Verbose "Closing Remote PowerShell Sessions"
     $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
@@ -385,7 +381,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $SentToMemberOf = @()
-
     )
     Write-Verbose -Message "Testing AntiPhishRule for $($Identity)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -462,7 +457,6 @@ function Export-TargetResource
         [Parameter()]
         [System.String[]]
         $SentToMemberOf = @()
-
     )
     $result = Get-TargetResource @PSBoundParameters
     Write-Verbose "Closing Remote PowerShell Sessions"
