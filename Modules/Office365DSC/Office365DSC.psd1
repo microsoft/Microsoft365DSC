@@ -79,7 +79,8 @@ NestedModules = @('modules\Office365DSCUtil.psm1')
 CmdletsToExport = 'Test-SPOServiceConnection', 'Test-Office365DSCParameterState',
                'Test-O365ServiceConnection', 'Invoke-ExoCommand', 'Export-O365Configuration',
                'Get-TimeZoneNameFromID', 'Get-TimeZoneIDFromName', 'Get-LocaleIDFromName',
-               'Get-LocaleNameFromID', 'Test-TeamsServiceConnection','Test-PnPOnlineConnection'
+               'Get-LocaleNameFromID', 'Test-TeamsServiceConnection','Test-PnPOnlineConnection',
+               'Connect-ExchangeOnline', 'Connect-SecurityAndComplianceCenter'
 
 # Variables to export from this module
 # VariablesToExport = @()
@@ -89,8 +90,8 @@ AliasesToExport = @()
 
 # DSC resources to export from this module
 DscResourcesToExport = 'MSFT_O365User', 'MSFT_O365Group', 'MSFT_SPOSite',
-                       'MSFT_EXOSharedMailbox', 'MSFT_O365AdminAuditLogConfig',
-                       'MSFT_TeamsFunSettings'
+                       'MSFT_EXOSharedMailbox', 'MSFT_O365AdminAuditLogConfig','MSFT_EXOAcceptedDomain','MSFT_EXOAntiPhishPolicy',
+                       'MSFT_EXOAntiPhishRule','MSFT_TeamsFunSettings'
 
 # List of all modules packaged with this module
 # ModuleList = @()
