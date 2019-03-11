@@ -36,8 +36,37 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        # Test contexts
+        Mock -CommandName New-AntiPhishRule -MockWith {
+            return @{
 
+            }
+        }
+
+        Mock -CommandName Set-AntiPhishRule -MockWith {
+            return @{
+
+            }
+        }
+
+        Mock -CommandName Remove-AntiPhishRule -MockWith {
+            return @{
+
+            }
+        }
+
+        Mock -CommandName NewAntiPhishRule -MockWith {
+            return @{
+
+            }
+        }
+
+        Mock -CommandName SetAntiPhishRule -MockWith {
+            return @{
+
+            }
+        }
+
+        # Test contexts
         Context -Name "AntiPhishRule creation." -Fixture {
             $testParams = @{
                 Ensure             = 'Present'
@@ -54,18 +83,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should Be $false
-            }
-
-            Mock -CommandName New-AntiPhishRule -MockWith {
-                return @{
-
-                }
-            }
-
-            Mock -CommandName Set-AntiPhishRule -MockWith {
-                return @{
-
-                }
             }
 
             It "Should call the Set method" {
@@ -147,12 +164,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-            Mock -CommandName Set-AntiPhishRule -MockWith {
-                return @{
-
-                }
-            }
-
             It "Should call the Set method" {
                 Set-TargetResource @testParams
             }
@@ -174,12 +185,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should Be $false
-            }
-
-            Mock -CommandName Remove-AntiPhishRule -MockWith {
-                return @{
-
-                }
             }
 
             It "Should call the Set method" {

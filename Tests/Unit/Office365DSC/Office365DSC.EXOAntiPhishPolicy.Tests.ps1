@@ -36,8 +36,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        # Test contexts
+        Mock -CommandName New-AntiPhishPolicy -MockWith {
+            return @{
 
+            }
+        }
+
+        Mock -CommandName Set-AntiPhishPolicy -MockWith {
+            return @{
+
+            }
+        }
+
+        Mock -CommandName NewAntiPhishPolicy -MockWith {
+            return @{
+
+            }
+        }
+
+        Mock -CommandName SetAntiPhishPolicy -MockWith {
+            return @{
+
+            }
+        }
+
+        # Test contexts
         Context -Name "AntiPhishPolicy creation." -Fixture {
             $testParams = @{
                 Ensure             = 'Present'
@@ -53,18 +76,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should Be $false
-            }
-
-            Mock -CommandName New-AntiPhishPolicy -MockWith {
-                return @{
-
-                }
-            }
-
-            Mock -CommandName Set-AntiPhishPolicy -MockWith {
-                return @{
-
-                }
             }
 
             It "Should call the Set method" {
