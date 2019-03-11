@@ -227,26 +227,6 @@ function Export-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter()]
-        [ValidateSet('Authoritative')]
-        [System.String]
-        $DomainType = 'Authoritative',
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
-        [ValidateScript( {$false -eq $_})]
-        [System.Boolean]
-        $MatchSubDomains = $false,
-
-        [Parameter()]
-        [ValidateScript( {$false -eq $_})]
-        [System.Boolean]
-        $OutboundOnly = $false,
-
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount

@@ -338,47 +338,6 @@ function Export-TargetResource
         [System.String]
         $AntiPhishPolicy,
 
-        [Parameter()]
-        [System.String]
-        $Comments,
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled = $true,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfRecipientDomainIs = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentToMemberOf = @(),
-
-        [Parameter()]
-        [uint32]
-        $Priority,
-
-        [Parameter()]
-        [System.String[]]
-        $RecipientDomainIs = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SentToMemberOf = @(),
-
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
