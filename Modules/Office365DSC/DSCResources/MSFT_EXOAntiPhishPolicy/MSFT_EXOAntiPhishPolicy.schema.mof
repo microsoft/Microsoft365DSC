@@ -1,9 +1,8 @@
 [ClassVersion("1.0.0.0"), FriendlyName("EXOAntiPhishPolicy")]
 class MSFT_EXOAntiPhishPolicy : OMI_BaseResource
 {
-    [Write, ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Key, Description("The Identity parameter specifies the antiphishing policy that you want to modify.")] String Identity;
-    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Write, ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("The AdminDisplayName parameter specifies a description for the policy.")] String AdminDisplayName;
     [Write, ValueMap{"1","2","3","4"}, Values{"1","2","3","4"}] String PhishThresholdLevel;
     [Write, ValueMap{"MoveToJmf","Quarantine"}, Values{"MoveToJmf","Quarantine"}] String AuthenticationFailAction;
@@ -28,4 +27,5 @@ class MSFT_EXOAntiPhishPolicy : OMI_BaseResource
     [Write] String TargetedDomainsToProtect[];
     [Write] String TargetedUserActionRecipients[];
     [Write] String TargetedUsersToProtect[];
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };

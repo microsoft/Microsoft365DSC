@@ -4,6 +4,11 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
+        [System.String]
+        $Identity,
+
         [Parameter()]
         [ValidateSet('Authoritative')]
         [System.String]
@@ -14,15 +19,6 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter(Mandatory = $true)]
-        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
-        [System.String]
-        $Identity,
-
         [Parameter()]
         [ValidateScript( {$false -eq $_})]
         [System.Boolean]
@@ -31,7 +27,11 @@ function Get-TargetResource
         [Parameter()]
         [ValidateScript( {$false -eq $_})]
         [System.Boolean]
-        $OutboundOnly = $false
+        $OutboundOnly = $false,
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve Accepted Domain configuration for $($Identity)"
     Write-Verbose "Calling Connect-ExchangeOnline function:"
@@ -117,6 +117,11 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
+        [System.String]
+        $Identity,
+
         [Parameter()]
         [ValidateSet('Authoritative')]
         [System.String]
@@ -127,15 +132,6 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter(Mandatory = $true)]
-        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
-        [System.String]
-        $Identity,
-
         [Parameter()]
         [ValidateScript( {$false -eq $_})]
         [System.Boolean]
@@ -144,7 +140,11 @@ function Set-TargetResource
         [Parameter()]
         [ValidateScript( {$false -eq $_})]
         [System.Boolean]
-        $OutboundOnly = $false
+        $OutboundOnly = $false,
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
     )
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Retrieving information about AcceptedDomain configuration'
@@ -175,6 +175,11 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
+        [System.String]
+        $Identity,
+
         [Parameter()]
         [ValidateSet('Authoritative')]
         [System.String]
@@ -185,15 +190,6 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter(Mandatory = $true)]
-        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
-        [System.String]
-        $Identity,
-
         [Parameter()]
         [ValidateScript( {$false -eq $_})]
         [System.Boolean]
@@ -202,7 +198,11 @@ function Test-TargetResource
         [Parameter()]
         [ValidateScript( {$false -eq $_})]
         [System.Boolean]
-        $OutboundOnly = $false
+        $OutboundOnly = $false,
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
     )
     Write-Verbose -Message "Testing AcceptedDomain for $($Identity)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -221,6 +221,11 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
+        [System.String]
+        $Identity,
+
         [Parameter()]
         [ValidateSet('Authoritative')]
         [System.String]
@@ -231,15 +236,6 @@ function Export-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter(Mandatory = $true)]
-        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
-        [System.String]
-        $Identity,
-
         [Parameter()]
         [ValidateScript( {$false -eq $_})]
         [System.Boolean]
@@ -248,7 +244,11 @@ function Export-TargetResource
         [Parameter()]
         [ValidateScript( {$false -eq $_})]
         [System.Boolean]
-        $OutboundOnly = $false
+        $OutboundOnly = $false,
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
     $ClosedPSSessions = (Get-PSSession | Remove-PSSession)

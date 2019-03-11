@@ -4,6 +4,10 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
         [Parameter()]
         [System.String]
         $AdminDisplayName,
@@ -70,14 +74,6 @@ function Get-TargetResource
         [System.String[]]
         $ExcludedSenders = @(),
 
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
         [Parameter()]
         [System.Boolean]
         $MakeDefault = $false,
@@ -115,7 +111,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $TreatSoftPassAsAuthenticated = $true
+        $TreatSoftPassAsAuthenticated = $true,
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve AntiPhishPolicy $($Identity)"
     Write-Verbose "Calling Connect-ExchangeOnline function:"
@@ -175,6 +175,10 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
         [Parameter()]
         [System.String]
         $AdminDisplayName,
@@ -241,14 +245,6 @@ function Set-TargetResource
         [System.String[]]
         $ExcludedSenders = @(),
 
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
         [Parameter()]
         [System.Boolean]
         $MakeDefault = $false,
@@ -286,7 +282,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $TreatSoftPassAsAuthenticated = $true
+        $TreatSoftPassAsAuthenticated = $true,
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
     )
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Retrieving information about AntiPhishPolicy configuration'
@@ -355,6 +355,10 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
         [Parameter()]
         [System.String]
         $AdminDisplayName,
@@ -421,14 +425,6 @@ function Test-TargetResource
         [System.String[]]
         $ExcludedSenders = @(),
 
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
         [Parameter()]
         [System.Boolean]
         $MakeDefault = $false,
@@ -466,7 +462,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $TreatSoftPassAsAuthenticated = $true
+        $TreatSoftPassAsAuthenticated = $true,
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
     )
     Write-Verbose -Message "Testing AntiPhishPolicy for $($Identity)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -492,6 +492,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
         [Parameter()]
         [System.String]
         $AdminDisplayName,
@@ -558,14 +562,6 @@ function Export-TargetResource
         [System.String[]]
         $ExcludedSenders = @(),
 
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
         [Parameter()]
         [System.Boolean]
         $MakeDefault = $false,
@@ -603,7 +599,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $TreatSoftPassAsAuthenticated = $true
+        $TreatSoftPassAsAuthenticated = $true,
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
     Write-Verbose "Closing Remote PowerShell Sessions"

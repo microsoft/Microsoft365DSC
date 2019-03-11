@@ -1,9 +1,8 @@
 [ClassVersion("1.0.0.0"), FriendlyName("EXOAntiPhishRule")]
 class MSFT_EXOAntiPhishRule : OMI_BaseResource
 {
-    [Write, ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Key, Description("The Identity parameter specifies the antiphishing rule that you want to modify.")] String Identity;
-    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Write, ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Required] String AntiPhishPolicy;
     [Write] Boolean Enabled;
     [Write] uint32 Priority;
@@ -14,4 +13,5 @@ class MSFT_EXOAntiPhishRule : OMI_BaseResource
     [Write] String RecipientDomainIs[];
     [Write] String SentTo[];
     [Write] String SentToMemberOf[];
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };

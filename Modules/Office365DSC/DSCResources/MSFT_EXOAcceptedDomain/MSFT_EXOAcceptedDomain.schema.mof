@@ -1,8 +1,8 @@
 [ClassVersion("1.0.0.0"), FriendlyName("EXOAcceptedDomain")]
 class MSFT_EXOAcceptedDomain : OMI_BaseResource
 {
-    [Write, ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Key] String Identity;
+    [Write, ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, ValueMap{"Authoritative"}, Values{"Authoritative"}] String DomainType;
     [Write, Description("The MatchSubDomains parameter must be false on Authoritative domains. The default value is false.")] Boolean MatchSubDomains;
     [Write, Description("The OutboundOnly must be false on Authoritative domains. The default value is false.")] Boolean OutboundOnly;

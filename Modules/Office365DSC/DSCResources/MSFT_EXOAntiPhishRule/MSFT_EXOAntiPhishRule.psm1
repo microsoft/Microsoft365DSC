@@ -6,6 +6,10 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
         $AntiPhishPolicy,
 
         [Parameter()]
@@ -33,14 +37,6 @@ function Get-TargetResource
         [System.String[]]
         $ExceptIfSentToMemberOf = @(),
 
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
         [Parameter()]
         [uint32]
         $Priority,
@@ -55,7 +51,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $SentToMemberOf = @()
+        $SentToMemberOf = @(),
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve AntiPhishRule $($Identity)"
     Write-Verbose "Calling Connect-ExchangeOnline function:"
@@ -126,6 +126,10 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
         $AntiPhishPolicy,
 
         [Parameter()]
@@ -153,14 +157,6 @@ function Set-TargetResource
         [System.String[]]
         $ExceptIfSentToMemberOf = @(),
 
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
         [Parameter()]
         [uint32]
         $Priority,
@@ -175,7 +171,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $SentToMemberOf = @()
+        $SentToMemberOf = @(),
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
     )
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Retrieving information about AntiPhishRule configuration'
@@ -256,6 +256,10 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
         $AntiPhishPolicy,
 
         [Parameter()]
@@ -283,14 +287,6 @@ function Test-TargetResource
         [System.String[]]
         $ExceptIfSentToMemberOf = @(),
 
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
         [Parameter()]
         [uint32]
         $Priority,
@@ -305,7 +301,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $SentToMemberOf = @()
+        $SentToMemberOf = @(),
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
     )
     Write-Verbose -Message "Testing AntiPhishRule for $($Identity)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -332,6 +332,10 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
         $AntiPhishPolicy,
 
         [Parameter()]
@@ -359,14 +363,6 @@ function Export-TargetResource
         [System.String[]]
         $ExceptIfSentToMemberOf = @(),
 
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
         [Parameter()]
         [uint32]
         $Priority,
@@ -381,7 +377,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $SentToMemberOf = @()
+        $SentToMemberOf = @(),
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
     Write-Verbose "Closing Remote PowerShell Sessions"
