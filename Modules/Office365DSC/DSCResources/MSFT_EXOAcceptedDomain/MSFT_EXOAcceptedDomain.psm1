@@ -95,7 +95,6 @@ function Get-TargetResource
             # if AcceptedDomain does not exist for a verfied domain, return 'Absent' with submitted parameters to Test-TargetResource.
             return $result
         }
-
     }
     else
     {
@@ -111,7 +110,6 @@ function Get-TargetResource
         Write-Verbose "Found AcceptedDomain configuration for $($Identity)"
         return $result
     }
-
 }
 
 function Set-TargetResource
@@ -169,9 +167,7 @@ function Set-TargetResource
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
-
 }
-
 
 function Test-TargetResource
 {
@@ -208,7 +204,6 @@ function Test-TargetResource
         [System.Boolean]
         $OutboundOnly = $false
     )
-
     Write-Verbose -Message "Testing AcceptedDomain for $($Identity)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
     Write-Verbose "Closing Remote PowerShell Sessions"

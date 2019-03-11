@@ -130,7 +130,6 @@ function Get-TargetResource
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
-
     $AntiPhishPolicy = $AntiPhishPolicies | Where-Object Identity -eq $Identity
     if (-NOT $AntiPhishPolicy)
     {
@@ -168,7 +167,6 @@ function Get-TargetResource
         Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
         return $result
     }
-
 }
 
 
@@ -419,13 +417,11 @@ function Set-TargetResource
         {
             Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         }
-
     }
     Write-Verbose "Closing Remote PowerShell Sessions"
     $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
     Write-Verbose "Global ExchangeOnlineSession status: `n"
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-
 }
 
 function Test-TargetResource

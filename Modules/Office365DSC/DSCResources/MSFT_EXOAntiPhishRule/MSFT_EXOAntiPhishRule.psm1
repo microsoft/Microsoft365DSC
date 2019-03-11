@@ -56,7 +56,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $SentToMemberOf = @()
-
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve AntiPhishRule $($Identity)"
     Write-Verbose "Calling Connect-ExchangeOnline function:"
@@ -71,7 +70,6 @@ function Get-TargetResource
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
-
     $AntiPhishRule = $AntiPhishRules | Where-Object Identity -eq $Identity
     if (-NOT $AntiPhishRule)
     {
@@ -118,7 +116,6 @@ function Get-TargetResource
         Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
         return $result
     }
-
 }
 
 
@@ -256,7 +253,6 @@ function Set-TargetResource
             Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         }
     }
-
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Retrieving information about AntiPhishRule configuration'
     Write-Verbose "Calling Connect-ExchangeOnline function:"
@@ -329,7 +325,6 @@ function Set-TargetResource
     $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
     Write-Verbose "Global ExchangeOnlineSession status: `n"
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-
 }
 
 function Test-TargetResource
@@ -406,7 +401,6 @@ function Test-TargetResource
         Write-Verbose "Global ExchangeOnlineSession status: `n"
         Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     }
-
     return $TestResult
 }
 
