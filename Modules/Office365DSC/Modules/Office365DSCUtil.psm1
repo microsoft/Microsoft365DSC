@@ -810,6 +810,37 @@ $TimeZones = @(
         EnglishDescription = "(GMT+13:00) Nuku’alofa"
     }
 )
+function BuildAntiPhishParams
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $BuildAntiPhishParams,
+
+        [Parameter()]
+        [ValidateSet('New', 'Set')]
+        [System.String]
+        $Operation
+    )
+    $AntiPhishParams = $BuildAntiPhishParams
+    $AntiPhishParams.Remove("GlobalAdminAccount") | out-null
+    $AntiPhishParams.Remove("Ensure") | out-null
+    $AntiPhishParams.Remove("Verbose") | out-null
+    if ('New' -eq $Operation)
+    {
+        $AntiPhishParams += @{
+            Name = $AntiPhishParams.Identity
+        }
+        $AntiPhishParams.Remove("Identity") | out-null
+        $AntiPhishParams.Remove("MakeDefault") | out-null
+        return $AntiPhishParams
+    }
+    if ('Set' -eq $Operation)
+    {
+        $AntiPhishParams.Remove("Enabled") | out-null
+        return $AntiPhishParams
+    }
+}
 
 function Close-SessionsAndReturnError
 {
@@ -1019,6 +1050,92 @@ function Global:Connect-SecurityAndComplianceCenter
         $WarningPreference = "Continue"
     }
 
+}
+
+function NewAntiPhishPolicy
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $NewAntiPhishPolicyParams
+    )
+    try {
+        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $NewAntiPhishPolicyParams -Operation 'New' )
+        Write-Verbose "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        New-AntiPhishPolicy @BuiltParams
+    }
+    catch {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function NewAntiPhishRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $NewAntiPhishRuleParams
+    )
+    try
+    {
+        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $NewAntiPhishRuleParams -Operation 'New' )
+        Write-Verbose "Creating New AntiPhishRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        New-AntiPhishRule @BuiltParams -Confirm:$false
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function SetAntiPhishRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SetAntiPhishRuleParams
+    )
+    try
+    {
+        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $SetAntiPhishRuleParams -Operation 'Set' )
+        if ($BuiltParams.keys -gt 1)
+        {
+            Write-Verbose "Setting AntiPhishRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Set-AntiPhishRule @BuiltParams -Confirm:$false
+        }
+        else
+        {
+            Write-Verbose "No more values to Set on AntiPhishRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+        }
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function SetAntiPhishPolicy
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SetAntiPhishPolicyParams
+    )
+    try {
+        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $SetAntiPhishPolicyParams -Operation 'Set' )
+        if ($BuiltParams.keys -gt 1)
+        {
+            Write-Verbose "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Set-AntiPhishPolicy @BuiltParams -Confirm:$false
+        }
+        else
+        {
+            Write-Verbose "No more values to Set on AntiPhishPolicy $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+        }
+    }
+    catch {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
 }
 
 function Test-SPOServiceConnection
