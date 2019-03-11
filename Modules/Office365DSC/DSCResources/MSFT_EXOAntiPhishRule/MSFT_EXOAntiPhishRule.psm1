@@ -118,7 +118,6 @@ function Get-TargetResource
     }
 }
 
-
 function Set-TargetResource
 {
     [CmdletBinding()]
