@@ -222,7 +222,6 @@ function Set-TargetResource
             {
                 SetAntiPhishRule -SetAntiPhishRuleParams $PSBoundParameters
             }
-
         }
         catch
         {
