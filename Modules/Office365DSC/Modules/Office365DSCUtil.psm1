@@ -810,6 +810,50 @@ $TimeZones = @(
         EnglishDescription = "(GMT+13:00) Nuku’alofa"
     }
 )
+function BuildAntiPhishParams
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $BuildAntiPhishParams,
+
+        [Parameter()]
+        [ValidateSet('New', 'Set')]
+        [System.String]
+        $Operation
+    )
+    $AntiPhishParams = $BuildAntiPhishParams
+    $AntiPhishParams.Remove("GlobalAdminAccount") | out-null
+    $AntiPhishParams.Remove("Ensure") | out-null
+    $AntiPhishParams.Remove("Verbose") | out-null
+    if ('New' -eq $Operation)
+    {
+        $AntiPhishParams += @{
+            Name = $AntiPhishParams.Identity
+        }
+        $AntiPhishParams.Remove("Identity") | out-null
+        $AntiPhishParams.Remove("MakeDefault") | out-null
+        return $AntiPhishParams
+    }
+    if ('Set' -eq $Operation)
+    {
+        $AntiPhishParams.Remove("Enabled") | out-null
+        return $AntiPhishParams
+    }
+}
+
+function Close-SessionsAndReturnError
+{
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [String]
+        $ExceptionMessage
+    )
+    Write-Verbose "Closing Remote PowerShell Sessions"
+    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
+    Write-Error $ExceptionMessage
+}
 
 function Get-LocaleIDFromName
 {
@@ -909,7 +953,7 @@ function Get-TeamByGroupID
     return $true
 }
 
-function Open-SecurityAndComplianceCenterConnection
+function Connect-ExchangeOnline
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -919,14 +963,179 @@ function Open-SecurityAndComplianceCenterConnection
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $VerbosePreference = 'SilentlyContinue'
+    $VerbosePreference = 'Continue'
     $WarningPreference = "SilentlyContinue"
-    $ExchangeOnlineSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-    $ExchangeOnlineModules = Import-PSSession $ExchangeOnlineSession -AllowClobber
-    $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global
-    $SecurityAndComplianceCenterSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-    $SecurityAndComplianceCenterModules = Import-PSSession $SecurityAndComplianceCenterSession -AllowClobber
-    $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global
+    $ClosedOrBrokenSessions = (Get-PSSession -ErrorAction SilentlyContinue | Where-Object State -ne 'Opened' )
+    if ($ClosedOrBrokenSessions) {
+        Write-Verbose "Found Existing Unusable Session(s)."
+        foreach($SessionToBeClosed in $ClosedOrBrokenSessions)
+        {
+            Write-Verbose "Closing Session: $(($SessionToBeClosed).InstanceId)"
+            $SessionToBeClosed | Remove-PSSession -ErrorAction SilentlyContinue
+        }
+    }
+
+    $Global:OpenExchangeSession = (Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Where-Object State -eq 'Opened' )
+    if (-NOT $Global:OpenExchangeSession) {
+        try {
+            Write-Verbose "Opening New ExchangeOnline Session."
+            $VerbosePreference = 'SilentlyContinue'
+            Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
+            $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
+            $ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
+            $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global -ErrorAction SilentlyContinue
+        }
+        catch {
+            $ExceptionMessage = $_.Exception
+            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+            $VerbosePreference = 'Continue'
+            $WarningPreference = "Continue"
+            $Global:ExchangeOnlineSession = $null
+            Write-Error $ExceptionMessage
+        }
+    }
+    else
+    {
+        Write-Verbose "Using Existing ExchangeOnline Session."
+        $VerbosePreference = 'Continue'
+        $WarningPreference = "Continue"
+    }
+
+}
+function Connect-SecurityAndComplianceCenter
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+    $VerbosePreference = 'Continue'
+    $WarningPreference = "SilentlyContinue"
+    $ClosedOrBrokenSessions = (Get-PSSession -ErrorAction SilentlyContinue | Where-Object State -ne 'Opened' )
+    if ($ClosedOrBrokenSessions) {
+        Write-Verbose "Found Existing Unusable Session(s)."
+        foreach($SessionToBeClosed in $ClosedOrBrokenSessions)
+        {
+            Write-Verbose "Closing Session: $(($SessionToBeClosed).InstanceId)"
+            $SessionToBeClosed | Remove-PSSession -ErrorAction SilentlyContinue
+        }
+    }
+
+    $Global:OpenSecurityAndComplianceCenterSession = (Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Where-Object InstanceId -eq ($Global:SecurityAndComplianceCenterSession).InstanceId | Where-Object State -eq 'Opened' )
+    if (-NOT $Global:OpenSecurityAndComplianceCenterSession){
+        try {
+            Write-Verbose "Opening New SecurityAndComplianceCenter Session."
+            $VerbosePreference = 'SilentlyContinue'
+            Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
+            $Global:SecurityAndComplianceCenterSession = New-PSSession -Name 'SecurityAndComplianceCenter' -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
+            $SecurityAndComplianceCenterModules = Import-PSSession $Global:SecurityAndComplianceCenterSession -AllowClobber -ErrorAction SilentlyContinue
+            $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global -ErrorAction SilentlyContinue
+        }
+        catch {
+            $ExceptionMessage = $_.Exception
+            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+            $Global:SecurityAndComplianceCenterSession = $null
+            $VerbosePreference = 'Continue'
+            $WarningPreference = "Continue"
+            Write-Error $ExceptionMessage
+        }
+    }
+    else
+    {
+        Write-Verbose "Using Existing SecurityAndComplianceCenter Session."
+        $VerbosePreference = 'Continue'
+        $WarningPreference = "Continue"
+    }
+
+}
+
+function NewAntiPhishPolicy
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $NewAntiPhishPolicyParams
+    )
+    try {
+        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $NewAntiPhishPolicyParams -Operation 'New' )
+        Write-Verbose "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        New-AntiPhishPolicy @BuiltParams
+    }
+    catch {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function NewAntiPhishRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $NewAntiPhishRuleParams
+    )
+    try
+    {
+        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $NewAntiPhishRuleParams -Operation 'New' )
+        Write-Verbose "Creating New AntiPhishRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        New-AntiPhishRule @BuiltParams -Confirm:$false
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function SetAntiPhishRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SetAntiPhishRuleParams
+    )
+    try
+    {
+        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $SetAntiPhishRuleParams -Operation 'Set' )
+        if ($BuiltParams.keys -gt 1)
+        {
+            Write-Verbose "Setting AntiPhishRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Set-AntiPhishRule @BuiltParams -Confirm:$false
+        }
+        else
+        {
+            Write-Verbose "No more values to Set on AntiPhishRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+        }
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function SetAntiPhishPolicy
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SetAntiPhishPolicyParams
+    )
+    try {
+        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $SetAntiPhishPolicyParams -Operation 'Set' )
+        if ($BuiltParams.keys -gt 1)
+        {
+            Write-Verbose "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Set-AntiPhishPolicy @BuiltParams -Confirm:$false
+        }
+        else
+        {
+            Write-Verbose "No more values to Set on AntiPhishPolicy $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+        }
+    }
+    catch {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
 }
 
 function Test-SPOServiceConnection
@@ -1314,6 +1523,36 @@ function Export-O365Configuration
 
     $catch = Import-Module $O365AdminAuditLogConfigModulePath
     $DSCContent += Export-TargetResource -UnifiedAuditLogIngestionEnabled $value -GlobalAdminAccount $GlobalAdminAccount -IsSingleInstance 'Yes'
+    #endregion
+
+    #region "EXOAcceptedDomain"
+    Write-Information "Extracting EXOAcceptedDomain..."
+    $EXOAcceptedDomainModulePath = Join-Path -Path $PSScriptRoot `
+                                              -ChildPath "..\DSCResources\MSFT_EXOAcceptedDomain\MSFT_EXOAcceptedDomain.psm1" `
+                                              -Resolve
+
+    $catch = Import-Module $EXOAcceptedDomainModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXOAntiPhishPolicy"
+    Write-Information "Extracting EXOAntiPhishPolicy..."
+    $EXOAntiPhishPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                              -ChildPath "..\DSCResources\MSFT_EXOAntiPhishPolicy\MSFT_EXOAntiPhishPolicy.psm1" `
+                                              -Resolve
+
+    $catch = Import-Module $EXOAntiPhishPolicyModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXOAntiPhishRule"
+    Write-Information "Extracting EXOAntiPhishRule..."
+    $EXOAntiPhishRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                              -ChildPath "..\DSCResources\MSFT_EXOAntiPhishRule\MSFT_EXOAntiPhishRule.psm1" `
+                                              -Resolve
+
+    $catch = Import-Module $EXOAntiPhishRuleModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
     #endregion
 
     #region "EXOMailboxSettings"
