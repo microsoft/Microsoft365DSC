@@ -14,7 +14,7 @@ This resource configures the Accepted Email Domains in Exchange Online.
     DomainType
       - Required: No (Defaults to 'Authoritative')
       - Description: The DomainType parameter specifies the accepted domain type.
-         The EXOAcceptedDomain DSC Resources only accepts a value of 'Authoritative'
+         The EXOAcceptedDomain DSC Resource only accepts a value of 'Authoritative'
 
     GlobalAdminAccount
       - Required: Yes
@@ -29,7 +29,7 @@ This resource configures the Accepted Email Domains in Exchange Online.
       - Description: MatchSubDomains enables mail to be sent by and received
         from users on any subdomain of this accepted domain.
         This value must be false on Authoritative domains.
-        The EXOAcceptedDomain DSC Resources only accepts a value of $false
+        The EXOAcceptedDomain DSC Resource only accepts a value of $false
         The default value is false.
 
     OutboundOnly
@@ -38,7 +38,7 @@ This resource configures the Accepted Email Domains in Exchange Online.
         internal relay domain for the on-premises
         deployment for organizations that have coexistence with a cloud-based organization.
         This value must be false on Authoritative domains.
-        The EXOAcceptedDomain DSC Resources only accepts a value of $false
+        The EXOAcceptedDomain DSC Resource only accepts a value of $false
         The default value is false.
 
 ## Example
