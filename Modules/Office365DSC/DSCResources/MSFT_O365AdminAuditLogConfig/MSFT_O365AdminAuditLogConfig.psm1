@@ -37,6 +37,14 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message 'Getting O365AdminAuditLogConfig'
+        Write-Verbose "Calling Connect-ExchangeOnline function:"
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Write-Verbose "Global ExchangeOnlineSession status:"
+        Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
+        Write-Verbose "Calling Connect-SecurityAndComplianceCenter function:"
+        Connect-SecurityAndComplianceCenter -GlobalAdminAccount $GlobalAdminAccount
+        Write-Verbose "Global SecurityAndComplianceCenterSession status:"
+        Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'SecurityAndComplianceCenter' | Out-String)"
         $GetResults = Get-AdminAuditLogConfig
         if (-NOT $GetResults)
         {
@@ -68,7 +76,7 @@ function Get-TargetResource
     }
     catch
     {
-        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
         $ExceptionMessage = $_.Exception
         throw $ExceptionMessage
     }
@@ -98,6 +106,14 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose -Message 'Setting O365AdminAuditLogConfig'
+    Write-Verbose "Calling Connect-ExchangeOnline function:"
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Write-Verbose "Global ExchangeOnlineSession status:"
+    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
+    Write-Verbose "Calling Connect-SecurityAndComplianceCenter function:"
+    Connect-SecurityAndComplianceCenter -GlobalAdminAccount $GlobalAdminAccount
+    Write-Verbose "Global SecurityAndComplianceCenterSession status:"
+    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'SecurityAndComplianceCenter' | Out-String)"
     if ('Absent' -eq $Ensure)
     {
         throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
@@ -113,7 +129,7 @@ function Set-TargetResource
     }
 
     Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
 }
 
 function Test-TargetResource
@@ -141,7 +157,14 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose -Message 'Testing O365AdminAuditLogConfig'
-    Open-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
+    Write-Verbose "Calling Connect-ExchangeOnline function:"
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Write-Verbose "Global ExchangeOnlineSession status:"
+    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
+    Write-Verbose "Calling Connect-SecurityAndComplianceCenter function:"
+    Connect-SecurityAndComplianceCenter -GlobalAdminAccount $GlobalAdminAccount
+    Write-Verbose "Global SecurityAndComplianceCenterSession status:"
+    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'SecurityAndComplianceCenter' | Out-String)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
     Write-Verbose "Test-TargetResource CurrentValues: "
     Write-Verbose "$($CurrentValues | Out-String)"
@@ -151,7 +174,7 @@ function Test-TargetResource
     if ($TestResult)
     {
         Write-Verbose "Closing Remote PowerShell Sessions"
-        $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
     }
 
     return $TestResult
@@ -183,10 +206,17 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $IsSingleInstance = 'Yes'
-    Open-SecurityAndComplianceCenterConnection -GlobalAdminAccount $GlobalAdminAccount
+    Write-Verbose "Calling Connect-ExchangeOnline function:"
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Write-Verbose "Global ExchangeOnlineSession status:"
+    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
+    Write-Verbose "Calling Connect-SecurityAndComplianceCenter function:"
+    Connect-SecurityAndComplianceCenter -GlobalAdminAccount $GlobalAdminAccount
+    Write-Verbose "Global SecurityAndComplianceCenterSession status:"
+    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'SecurityAndComplianceCenter' | Out-String)"
     $result = Get-TargetResource @PSBoundParameters
     Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        O365AdminAuditLogConfig " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
