@@ -1630,7 +1630,6 @@ function Start-O365ConfigurationExtract
     }
 
     foreach ($mailbox in $mailboxes)
->>>>>>> Dev
     {
         Write-Information "Extracting EXOMailboxSettings..."
         $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `
