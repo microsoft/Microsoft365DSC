@@ -18,7 +18,7 @@ This resource configures rights on Site Designs.
 
     UserPrincipals
       - Required: Yes
-      - Description: List of users with permissions to Site Design
+      - Description: List of users with permissions to Site Design.
 
     Rights
       - Required: Yes
