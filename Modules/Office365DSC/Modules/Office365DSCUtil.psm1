@@ -982,16 +982,14 @@ function Connect-ExchangeOnline
             $VerbosePreference = 'SilentlyContinue'
             Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
             $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-            $ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
+            $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
             $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global -ErrorAction SilentlyContinue
         }
         catch {
-            $ExceptionMessage = $_.Exception
-            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
             $VerbosePreference = 'Continue'
             $WarningPreference = "Continue"
             $Global:ExchangeOnlineSession = $null
-            Write-Error $ExceptionMessage
+            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         }
     }
     else
@@ -1002,6 +1000,31 @@ function Connect-ExchangeOnline
     }
 
 }
+
+function Confirm-ExchangeOnlineCmdletIsAvailable {
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CmdletName
+    )
+    try {
+        $CmdletIsAvailable = ($global:ExchangeOnlineModules.ExportedCommands.Keys -contains $CmdletName)
+        if ($CmdletIsAvailable) {
+            return $true
+        }
+        else
+        {
+            Close-SessionsAndReturnError -ExceptionMessage "Cmdlet $CmdletName is not available in this O365 Tenant."
+        }
+    }
+    catch {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
 function Connect-SecurityAndComplianceCenter
 {
     [CmdletBinding()]
@@ -1031,16 +1054,14 @@ function Connect-SecurityAndComplianceCenter
             $VerbosePreference = 'SilentlyContinue'
             Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
             $Global:SecurityAndComplianceCenterSession = New-PSSession -Name 'SecurityAndComplianceCenter' -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-            $SecurityAndComplianceCenterModules = Import-PSSession $Global:SecurityAndComplianceCenterSession -AllowClobber -ErrorAction SilentlyContinue
+            $Global:SecurityAndComplianceCenterModules = Import-PSSession $Global:SecurityAndComplianceCenterSession -AllowClobber -ErrorAction SilentlyContinue
             $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global -ErrorAction SilentlyContinue
         }
         catch {
-            $ExceptionMessage = $_.Exception
-            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
             $Global:SecurityAndComplianceCenterSession = $null
             $VerbosePreference = 'Continue'
             $WarningPreference = "Continue"
-            Write-Error $ExceptionMessage
+            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         }
     }
     else
@@ -1050,6 +1071,30 @@ function Connect-SecurityAndComplianceCenter
         $WarningPreference = "Continue"
     }
 
+}
+
+function Confirm-SecurityAndComplianceCenterCmdletIsAvailable {
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CmdletName
+    )
+    try {
+        $CmdletIsAvailable = ($global:SecurityAndComplianceCenterModules.ExportedCommands.Keys -contains $CmdletName)
+        if ($CmdletIsAvailable) {
+            return $true
+        }
+        else
+        {
+            Close-SessionsAndReturnError -ExceptionMessage "Cmdlet $CmdletName is not available in this O365 Tenant."
+        }
+    }
+    catch {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
 }
 
 function NewAntiPhishPolicy
