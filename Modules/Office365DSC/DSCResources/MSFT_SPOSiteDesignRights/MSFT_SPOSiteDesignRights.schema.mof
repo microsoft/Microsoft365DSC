@@ -8,4 +8,3 @@ class MSFT_SPOSiteDesignRights : OMI_BaseResource
     [Required, Description("The Url of the SharePoint Online Central Administration")] string CentralAdminUrl;
     [Required, Description("Credentials of the Office365 Tenant Admin."), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };
-
