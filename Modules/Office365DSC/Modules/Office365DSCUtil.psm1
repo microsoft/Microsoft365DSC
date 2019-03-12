@@ -1524,7 +1524,7 @@ function Get-UsersLicences
     #Store information to be able to check later if the users is correctly licences for features.
     if ($null -eq $Global:UsersLicences)
     {
-        $Global:UsersLicences = Get-MsolUser -All  | Select-Object UserPrincipalName, isLicensed, Licenses
+        $Global:UsersLicences = Get-MsolUser -All | Select-Object UserPrincipalName, isLicensed, Licenses
     }
     Return $Global:UsersLicences
 }
