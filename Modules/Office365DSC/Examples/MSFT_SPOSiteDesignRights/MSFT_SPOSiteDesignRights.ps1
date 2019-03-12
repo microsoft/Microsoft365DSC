@@ -12,7 +12,7 @@ Configuration SiteDesignRights
         SPOSiteDesignRights MyTenant
         {
             SiteDesignTitle    = "Customer List"
-            UserPrincipals     = "jdoe@dsazure.com"
+            UserPrincipals     = "jdoe@O365DSC1.onmicrosoft.com"
             Rights             = "View"
             Ensure             = "Present"
             CentralAdminUrl    = "https://o365dsc1-admin.sharepoint.com"
