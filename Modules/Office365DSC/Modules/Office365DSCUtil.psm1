@@ -2183,7 +2183,7 @@ function Start-O365ConfigurationExtract
             Write-Warning "$($_.Exception.Message)"
             Write-Warning "Could not create folder $OutputDSCPath!"
         }
-        $OutputDSCPath = Read-Host "Please Enter Output Folder for DSC Configuration (Will be Created as Necessary)"
+        $OutputDSCPath = Read-Host "Please Provide Output Folder for DSC Configuration (Will be Created as Necessary)"
     }
     <## Ensures the path we specify ends with a Slash, in order to make sure the resulting file path is properly structured. #>
     if (!$OutputDSCPath.EndsWith("\") -and !$OutputDSCPath.EndsWith("/"))
