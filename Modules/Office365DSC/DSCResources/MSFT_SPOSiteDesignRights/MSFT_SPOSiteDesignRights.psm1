@@ -167,7 +167,6 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Granting SiteDesign rights on site design $SiteDesignTitle"
         Grant-PnPSiteDesignRights -Identity $cursiteDesign.Id -Principals $UserPrincipals -Rights $Rights
-
     }
 }
 

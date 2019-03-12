@@ -8,8 +8,9 @@ This resource configures rights on Site Designs.
 
     Ensure
       - Required: No (Defaults to 'Present')
-      - Description: `Present` is the only value accepted.
-          Configurations using `Ensure = 'Absent'` will throw an Error!
+      - Description: `Present` or `Absent` are the only value accepted.
+          Absent will remove user principals from site design rights
+          Present will add user principals to site design rights
 
     SiteDesignTitle
       - Required: Yes
