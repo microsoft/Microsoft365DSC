@@ -65,10 +65,7 @@ function Get-TargetResource
 
     foreach ($siteDesignRight in $siteDesignRights)
     {
-        if ($siteDesignRight.PrincipalName.split("|".Count -eq 2))
-        {
-            $curUserPrincipals += $siteDesignRight.PrincipalName.split("|")[2]
-        }
+        $curUserPrincipals += $siteDesignRight.PrincipalName.split("|")[2]
     }
 
     Write-Verbose "Site Design Rights User Principals = $($curUserPrincipals)"

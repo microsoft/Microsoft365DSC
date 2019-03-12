@@ -37,7 +37,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Grant-PnPSiteDesignRights -MockWith {
                 return @{
-                    SiteDesignTitle = $null
                     UserPrincipals  = $null
                     Rights          = $null
                     Identity        = $null
@@ -84,11 +83,58 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPSiteDesignRights -MockWith {
                 return @{
-                    UserPrincipals = "jdoe@dsazure.com"
+                    PrincipalName = "i:0#.f|membership|jdoe@dsazure.com"
                     Rights         = "View"
                 }
             }
 
+            mock -CommandName Grant-PnPSiteDesignRights -MockWith {
+                return $null
+            }
+
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $true
+            }
+
+            It "Updates the Team fun settings in the Set method" {
+                Set-TargetResource @testParams
+            }
+        }
+
+        Context -Name "Adding new user Site Design rights" -Fixture {
+            $testParams = @{
+                SiteDesignTitle    = "Customer List"
+                UserPrincipals     = "jdoe@dsazure.com","dsmay@dsazure.com"
+                Rights             = "View"
+                Ensure             = "Present"
+                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-PnPSiteDesign -MockWith {
+                return @{
+                    Id = "12345-12345-12345-12345-12345"
+                }
+            }
+
+            Mock -CommandName Get-PnPSiteDesignRights -MockWith {
+                return @{
+                    PrincipalName = "i:0#.f|membership|jdoe@dsazure.com"
+                    Rights         = "View"
+                }
+            }
+
+            Mock -CommandName Grant-PnPSiteDesignRights -MockWith {
+                return $null
+            }
+
+            Mock -CommandName Revoke-PnPSiteDesignRights -MockWith {
+                return $null
+            }
 
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present"
@@ -98,10 +144,56 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-            It "Updates the Team fun settings in the Set method" {
+            It "Updates the user design rights in the Set method" {
                 Set-TargetResource @testParams
             }
         }
+
+        Context -Name "Removing a user Site Design rights" -Fixture {
+            $testParams = @{
+                SiteDesignTitle    = "Customer List"
+                UserPrincipals     = "dsmay@dsazure.com"
+                Rights             = "View"
+                Ensure             = "Present"
+                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-PnPSiteDesign -MockWith {
+                return @{
+                    Id = "12345-12345-12345-12345-12345"
+                }
+            }
+
+            Mock -CommandName Get-PnPSiteDesignRights -MockWith {
+                return @{
+                    PrincipalName = "i:0#.f|membership|jdoe@dsazure.com"
+                    Rights         = "View"
+                }
+            }
+
+            Mock -CommandName Grant-PnPSiteDesignRights -MockWith {
+                return $null
+            }
+
+            Mock -CommandName Revoke-PnPSiteDesignRights -MockWith {
+                return $null
+            }
+
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            }
+
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
+            }
+
+            It "Updates the user design rights in the Set method" {
+                Set-TargetResource @testParams
+            }
+        }
+
+           
 
 
         Context -Name "ReverseDSC Tests" -Fixture {

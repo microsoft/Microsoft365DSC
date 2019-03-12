@@ -14,7 +14,7 @@ Configuration SiteDesignRights
             SiteDesignTitle    = "Customer List"
             UserPrincipals     = "jdoe@dsazure.com","dsmay@dsazure.com"
             Rights             = "View"
-            Ensure             = "Absent"
+            Ensure             = "Present"
             CentralAdminUrl    = "https://smaystate-admin.sharepoint.com"
             GlobalAdminAccount = $credsGlobalAdmin
         }

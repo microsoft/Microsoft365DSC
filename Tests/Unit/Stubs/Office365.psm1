@@ -9959,12 +9959,26 @@ function Grant-PnPSiteDesignRights
         $Identity,
 
         [Parameter()]
-        [string]
+        [string[]]
         $Principals,
 
         [Parameter()]
         [string]
         $Rights
+    )
+}
+
+function Revoke-PnPSiteDesignRights
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [string[]]
+        $Principals
     )
 }
 
