@@ -6,16 +6,16 @@ It is not meant to use as a production baseline.
 Configuration SiteDesignRights
 {
     Import-DSCResource -ModuleName Office365DSC
-    $credsGlobalAdmin = Get-Credential -UserName "derek@smaystate.onmicrosoft.com" -Message "Global Admin"
+    $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
         SPOSiteDesignRights MyTenant
         {
             SiteDesignTitle    = "Customer List"
-            UserPrincipals     = "jdoe@dsazure.com","dsmay@dsazure.com"
+            UserPrincipals     = "jdoe@dsazure.com"
             Rights             = "View"
             Ensure             = "Present"
-            CentralAdminUrl    = "https://smaystate-admin.sharepoint.com"
+            CentralAdminUrl    = "https://o365dsc1-admin.sharepoint.com"
             GlobalAdminAccount = $credsGlobalAdmin
         }
     }
