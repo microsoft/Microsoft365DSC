@@ -1533,12 +1533,20 @@ function Get-UsersLicences
    Office 365 Tenant. #>
 function Export-O365Configuration
 {
+    Show-O365GUI
+}
+function Start-O365ConfigurationExtract
+{
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param(
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String[]]
+        $ComponentsToExtract
     )
     $InformationPreference = "Continue"
     $VerbosePreference = "SilentlyContinue"
@@ -1554,24 +1562,27 @@ function Export-O365Configuration
     Save-Credentials -UserName $GlobalAdminAccount.UserName
 
     #region "O365AdminAuditLogConfig"
-    Write-Information "Extracting O365AdminAuditLogConfig..."
-    $O365AdminAuditLogConfig = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-        -ScriptBlock {
-        Get-AdminAuditLogConfig
-    }
-
-    $O365AdminAuditLogConfigModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_O365AdminAuditLogConfig\MSFT_O365AdminAuditLogConfig.psm1" `
-        -Resolve
-
-    $value = "Disabled"
-    if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckO365AdminAuditLogConfig"))
     {
-        $value = "Enabled"
-    }
+        Write-Information "Extracting O365AdminAuditLogConfig..."
+        $O365AdminAuditLogConfig = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                                    -ScriptBlock {
+            Get-AdminAuditLogConfig
+        }
 
-    $catch = Import-Module $O365AdminAuditLogConfigModulePath
-    $DSCContent += Export-TargetResource -UnifiedAuditLogIngestionEnabled $value -GlobalAdminAccount $GlobalAdminAccount -IsSingleInstance 'Yes'
+        $O365AdminAuditLogConfigModulePath = Join-Path -Path $PSScriptRoot `
+                                                       -ChildPath "..\DSCResources\MSFT_O365AdminAuditLogConfig\MSFT_O365AdminAuditLogConfig.psm1" `
+                                                       -Resolve
+
+        $value = "Disabled"
+        if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
+        {
+            $value = "Enabled"
+        }
+
+        Import-Module $O365AdminAuditLogConfigModulePath | Out-Null
+        $DSCContent += Export-TargetResource -UnifiedAuditLogIngestionEnabled $value -GlobalAdminAccount $GlobalAdminAccount -IsSingleInstance 'Yes'
+    }
     #endregion
 
     #region "EXOAcceptedDomain"
@@ -1605,6 +1616,8 @@ function Export-O365Configuration
     #endregion
 
     #region "EXOMailboxSettings"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOMailboxSettings"))
+    {
     Write-Information "Extracting EXOMailboxSettings..."
     $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `
         -ChildPath "..\DSCResources\MSFT_EXOMailboxSettings\MSFT_EXOMailboxSettings.psm1" `
@@ -1617,341 +1630,464 @@ function Export-O365Configuration
     }
 
     foreach ($mailbox in $mailboxes)
+>>>>>>> Dev
     {
-        Write-Information "    Settings for Mailbox {$($mailbox.Name)}"
-        $mailboxName = $mailbox.Name
-        if ($mailboxName)
+        Write-Information "Extracting EXOMailboxSettings..."
+        $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `
+                                                  -ChildPath "..\DSCResources\MSFT_EXOMailboxSettings\MSFT_EXOMailboxSettings.psm1" `
+                                                  -Resolve
+
+        Import-Module $EXOMailboxSettingsModulePath | Out-Null
+        $mailboxes = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                       -ScriptBlock {
+            Get-Mailbox
+        }
+
+        foreach ($mailbox in $mailboxes)
         {
-            $DSCContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+            Write-Information "    Settings for Mailbox {$($mailbox.Name)}"
+            $mailboxName = $mailbox.Name
+            if ($mailboxName)
+<# This is the main Office365DSC.Reverse function that extracts the DSC configuration from an existing
+   Office 365 Tenant. #>
+function Export-O365Configuration
+{
+    Show-O365GUI
+}
+function Start-O365ConfigurationExtract
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String[]]
+        $ComponentsToExtract
+    )
+    $InformationPreference = "Continue"
+    $VerbosePreference = "SilentlyContinue"
+    $WarningPreference = "SilentlyContinue"
+    $AzureAutomation = $false
+    $DSCContent = "Configuration O365TenantConfig `r`n{`r`n"
+    $DSCContent += "    Import-DSCResource -ModuleName Office365DSC`r`n`r`n"
+    $DSCContent += "    <# Credentials #>`r`n"
+    $DSCContent += "    Node localhost`r`n"
+    $DSCContent += "    {`r`n"
+
+    # Add the GlobalAdminAccount to the Credentials List
+    Save-Credentials -UserName $GlobalAdminAccount.UserName
+
+    #region "O365AdminAuditLogConfig"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckO365AdminAuditLogConfig"))
+    {
+        Write-Information "Extracting O365AdminAuditLogConfig..."
+        $O365AdminAuditLogConfig = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                                    -ScriptBlock {
+            Get-AdminAuditLogConfig
+        }
+
+        $O365AdminAuditLogConfigModulePath = Join-Path -Path $PSScriptRoot `
+                                                       -ChildPath "..\DSCResources\MSFT_O365AdminAuditLogConfig\MSFT_O365AdminAuditLogConfig.psm1" `
+                                                       -Resolve
+
+        $value = "Disabled"
+        if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
+        {
+            $value = "Enabled"
+        }
+
+        Import-Module $O365AdminAuditLogConfigModulePath | Out-Null
+        $DSCContent += Export-TargetResource -UnifiedAuditLogIngestionEnabled $value -GlobalAdminAccount $GlobalAdminAccount -IsSingleInstance 'Yes'
+    }
+    #endregion
+
+    #region "EXOMailboxSettings"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOMailboxSettings"))
+    {
+        Write-Information "Extracting EXOMailboxSettings..."
+        $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `
+                                                  -ChildPath "..\DSCResources\MSFT_EXOMailboxSettings\MSFT_EXOMailboxSettings.psm1" `
+                                                  -Resolve
+
+        Import-Module $EXOMailboxSettingsModulePath | Out-Null
+        $mailboxes = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                       -ScriptBlock {
+            Get-Mailbox
+        }
+
+        foreach ($mailbox in $mailboxes)
+        {
+            Write-Information "    Settings for Mailbox {$($mailbox.Name)}"
+            $mailboxName = $mailbox.Name
+            if ($mailboxName)
+            {
+                $DSCContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+            }
         }
     }
     #endregion
 
     #region "EXOMailTips"
-    Write-Information "Extracting EXOMailTips..."
-    $OrgConfig = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-        -ScriptBlock {
-        Get-OrganizationConfig
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOMailTips"))
+    {
+        Write-Information "Extracting EXOMailTips..."
+        $OrgConfig = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                       -ScriptBlock {
+            Get-OrganizationConfig
+        }
+
+        $organizationName = $OrgConfig.Name
+        Add-ConfigurationDataEntry -Node "localhost" `
+                                   -Key "OrganizationName" `
+                                   -Value $organizationName `
+                                   -Description "Name of the Organization"
+
+        $EXOMailTipsModulePath = Join-Path -Path $PSScriptRoot `
+                                           -ChildPath "..\DSCResources\MSFT_EXOMailTips\MSFT_EXOMailTips.psm1" `
+                                           -Resolve
+
+        Import-Module $EXOMailTipsModulePath | Out-Null
+        $DSCContent += Export-TargetResource -Organization $organizationName -GlobalAdminAccount $GlobalAdminAccount
     }
-
-    $organizationName = $OrgConfig.Name
-    Add-ConfigurationDataEntry -Node "localhost" `
-        -Key "OrganizationName" `
-        -Value $organizationName `
-        -Description "Name of the Organization"
-
-    $EXOMailTipsModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_EXOMailTips\MSFT_EXOMailTips.psm1" `
-        -Resolve
-
-    $catch = Import-Module $EXOMailTipsModulePath
-    $DSCContent += Export-TargetResource -Organization $organizationName -GlobalAdminAccount $GlobalAdminAccount
     #endregion
 
     #region "EXOSharedMailbox"
-    $EXOSharedMailboxModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_EXOSharedMailbox\MSFT_EXOSharedMailbox.psm1" `
-        -Resolve
-
-    $catch = Import-Module $EXOSharedMailboxModulePath
-    $mailboxes = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-        -ScriptBlock {
-        Get-Mailbox
-    }
-    $mailboxes = $mailboxes | Where-Object {$_.RecipientTypeDetails -eq "SharedMailbox"}
-
-    foreach ($mailbox in $mailboxes)
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSharedMailbox"))
     {
-        Write-Information "    MailTips for mailbox {$($mailbox.Name)}"
-        $mailboxName = $mailbox.Name
-        if ($mailboxName)
+        $EXOSharedMailboxModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOSharedMailbox\MSFT_EXOSharedMailbox.psm1" `
+                                                -Resolve
+
+        Import-Module $EXOSharedMailboxModulePath | Out-Null
+        $mailboxes = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                       -ScriptBlock {
+            Get-Mailbox
+        }
+        $mailboxes = $mailboxes | Where-Object {$_.RecipientTypeDetails -eq "SharedMailbox"}
+
+        foreach ($mailbox in $mailboxes)
         {
-            $DSCContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+            Write-Information "    MailTips for mailbox {$($mailbox.Name)}"
+            $mailboxName = $mailbox.Name
+            if ($mailboxName)
+            {
+                $DSCContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+            }
         }
     }
     #endregion
 
     #region "O365Group"
-    Write-Information "Extracting O365Group..."
-    $O365GroupModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_O365Group\MSFT_O365Group.psm1" `
-        -Resolve
-
-    $catch = Import-Module $O365GroupModulePath
-
-    # Security Groups
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    $securityGroups = Get-AzureAdGroup | Where-Object {$_.SecurityEnabled -eq $true}
-
-    foreach ($securityGroup in $securityGroups)
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckO365Group"))
     {
-        Write-Information "    Security Group {$($securityGroup.DisplayName)}"
-        $securityGroupDisplayName = $securityGroup.DisplayName
-        if ($securityGroupDisplayName)
+        Write-Information "Extracting O365Group..."
+        $O365GroupModulePath = Join-Path -Path $PSScriptRoot `
+                                         -ChildPath "..\DSCResources\MSFT_O365Group\MSFT_O365Group.psm1" `
+                                         -Resolve
+
+        Import-Module $O365GroupModulePath | Out-Null
+
+        # Security Groups
+        Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+        $securityGroups = Get-AzureAdGroup | Where-Object {$_.SecurityEnabled -eq $true}
+
+        foreach ($securityGroup in $securityGroups)
         {
-            $DSCContent += Export-TargetResource -DisplayName $securityGroupDisplayName `
-                -GroupType "Security" `
-                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Information "    Security Group {$($securityGroup.DisplayName)}"
+            $securityGroupDisplayName = $securityGroup.DisplayName
+            if ($securityGroupDisplayName)
+            {
+                $DSCContent += Export-TargetResource -DisplayName $securityGroupDisplayName `
+                                                    -GroupType "Security" `
+                                                    -GlobalAdminAccount $GlobalAdminAccount
+            }
         }
-    }
 
-    $securityGroups = Get-AzureAdGroup | Where-Object {$_.SecurityEnabled -eq $true}
+        $securityGroups = Get-AzureAdGroup | Where-Object {$_.SecurityEnabled -eq $true}
 
-    # Other Groups
-    $groups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-        -ScriptBlock {
-        Get-Group
-    }
-    $groups = $groups | Where-Object { `
+        # Other Groups
+        $groups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
+                                    -ScriptBlock {
+            Get-Group
+        }
+        $groups = $groups | Where-Object { `
             $_.RecipientType -eq "MailUniversalDistributionGroup" `
             -or $_.RecipientType -eq "MailUniversalSecurityGroup" `
-    }
-    foreach ($group in $groups)
-    {
-        $groupName = $group.DisplayName
-        if ($groupName)
+        }
+        foreach ($group in $groups)
         {
-            $groupType = "DistributionList"
-            if ($group.RecipientTypeDetails -eq "GroupMailbox")
+            $groupName = $group.DisplayName
+            if ($groupName)
             {
-                $groupType = "Office365"
+                $groupType = "DistributionList"
+                if ($group.RecipientTypeDetails -eq "GroupMailbox")
+                {
+                    $groupType = "Office365"
+                }
+                elseif ($group.RecipientTypeDetails -eq "MailUniversalSecurityGroup")
+                {
+                    $groupType = "MailEnabledSecurity"
+                }
+                Write-Information "    $($groupType) Group {$($groupName)}"
+                $DSCContent += Export-TargetResource -DisplayName $groupName `
+                                                    -GroupType $groupType `
+                                                    -GlobalAdminAccount $GlobalAdminAccount
             }
-            elseif ($group.RecipientTypeDetails -eq "MailUniversalSecurityGroup")
-            {
-                $groupType = "MailEnabledSecurity"
-            }
-            Write-Information "    $($groupType) Group {$($groupName)}"
-            $DSCContent += Export-TargetResource -DisplayName $groupName `
-                -GroupType $groupType `
-                -GlobalAdminAccount $GlobalAdminAccount
         }
     }
     #endregion
 
     #region "O365User"
-    Write-Information "Extracting O365User..."
-    $O365UserModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_O365USer\MSFT_O365USer.psm1" `
-        -Resolve
-
-    $catch = Import-Module $O365UserModulePath
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-
-    $users = Get-AzureADUser
-
-    foreach ($user in $users)
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckO365User"))
     {
-        Write-Information "    User {$($user.UserPrincipalName)}"
-        $userUPN = $user.UserPrincipalName
-        if ($userUPN)
+        Write-Information "Extracting O365User..."
+        $O365UserModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_O365USer\MSFT_O365USer.psm1" `
+                                        -Resolve
+
+        $catch = Import-Module $O365UserModulePath
+        Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+
+        $users = Get-AzureADUser
+
+        foreach ($user in $users)
         {
-            $DSCContent += Export-TargetResource -UserPrincipalName $userUPN -GlobalAdminAccount $GlobalAdminAccount
+            Write-Information "    User {$($user.UserPrincipalName)}"
+            $userUPN = $user.UserPrincipalName
+            if ($userUPN)
+            {
+                $DSCContent += Export-TargetResource -UserPrincipalName $userUPN -GlobalAdminAccount $GlobalAdminAccount
+            }
         }
     }
     #endregion
 
     #region "ODSettings"
-    Write-Information "Extracting ODSettings..."
-    $ODSettingsModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_ODSettings\MSFT_ODSettings.psm1" `
-        -Resolve
-
-    $catch = Import-Module $ODSettingsModulePath
-
-    # Obtain central administration url from a User Principal Name
-    $centralAdminUrl = $null
-    if ($users.Count -gt 0)
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckODSettings"))
     {
-        $tenantParts = $users[0].UserPrincipalName.Split('@')
-        if ($tenantParts.Length -gt 0)
+        Write-Information "Extracting ODSettings..."
+        $ODSettingsModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_ODSettings\MSFT_ODSettings.psm1" `
+                                        -Resolve
+
+        $catch = Import-Module $ODSettingsModulePath
+
+        # Obtain central administration url from a User Principal Name
+        $centralAdminUrl = $null
+        if ($users.Count -gt 0)
         {
-            $tenantName = $tenantParts[1].Split(".")[0]
-            $centralAdminUrl = "https://" + $tenantName + "-admin.sharepoint.com"
+            $tenantParts = $users[0].UserPrincipalName.Split('@')
+            if ($tenantParts.Length -gt 0)
+            {
+                $tenantName = $tenantParts[1].Split(".")[0]
+                $centralAdminUrl = "https://" + $tenantName + "-admin.sharepoint.com"
+            }
         }
-    }
 
-    if ($centralAdminUrl)
-    {
-        $DSCContent += Export-TargetResource -CentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        if ($centralAdminUrl)
+        {
+            $DSCContent += Export-TargetResource -CentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        }
     }
     #endregion
 
     #region "SPOSearchResultSource"
     $InfoMapping = @(
-        @{
-            Protocol   = "Local"
-            Type       = "SharePoint"
-            ProviderID = "fa947043-6046-4f97-9714-40d4c113963d"
-        },
-        @{
-            Protocol   = "Remote"
-            Type       = "SharePoint"
-            ProviderID = "1e0c8601-2e5d-4ccb-9561-53743b5dbde7"
-        },
-        @{
-            Protocol   = "Exchange"
-            Type       = "SharePoint"
-            ProviderID = "3a17e140-1574-4093-bad6-e19cdf1c0122"
-        },
-        @{
-            Protocol   = "OpenSearch"
-            Type       = "SharePoint"
-            ProviderID = "3a17e140-1574-4093-bad6-e19cdf1c0121"
-        },
-        @{
-            Protocol   = "Local"
-            Type       = "People"
-            ProviderID = "e4bcc058-f133-4425-8ffc-1d70596ffd33"
-        },
-        @{
-            Protocol   = "Remote"
-            Type       = "People"
-            ProviderID = "e377caaa-fcaf-4a1b-b7a1-e69a506a07aa"
-        }
+    @{
+        Protocol    = "Local"
+        Type        = "SharePoint"
+        ProviderID  = "fa947043-6046-4f97-9714-40d4c113963d"
+    },
+    @{
+        Protocol    = "Remote"
+        Type        = "SharePoint"
+        ProviderID  = "1e0c8601-2e5d-4ccb-9561-53743b5dbde7"
+    },
+    @{
+        Protocol    = "Exchange"
+        Type        = "SharePoint"
+        ProviderID  = "3a17e140-1574-4093-bad6-e19cdf1c0122"
+    },
+    @{
+        Protocol    = "OpenSearch"
+        Type        = "SharePoint"
+        ProviderID  = "3a17e140-1574-4093-bad6-e19cdf1c0121"
+    },
+    @{
+        Protocol   = "Local"
+        Type       = "People"
+        ProviderID = "e4bcc058-f133-4425-8ffc-1d70596ffd33"
+    },
+    @{
+        Protocol   = "Remote"
+        Type       = "People"
+        ProviderID = "e377caaa-fcaf-4a1b-b7a1-e69a506a07aa"
+    }
     )
     Write-Information "Extracting SPOSearchResultSource..."
     $SPOSearchResultSourceModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_SPOSearchResultSource\MSFT_SPOSearchResultSource.psm1" `
-        -Resolve
+                                                    -ChildPath "..\DSCResources\MSFT_SPOSearchResultSource\MSFT_SPOSearchResultSource.psm1" `
+                                                    -Resolve
 
     $catch = Import-Module $SPOSearchResultSourceModulePath
     Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
-    $sources = $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
+    $sources =  $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
     foreach ($source in $sources)
     {
         $mapping = $InfoMapping | Where-Object { $_.ProviderID -eq $source.ProviderId }
         Write-Information "    Result Source {$($source.Name)}"
         $DSCContent += Export-TargetResource -Name $source.Name `
-            -Protocol $mapping.Protocol `
-            -CentralAdminUrl $centralAdminUrl `
-            -GlobalAdminAccount $GlobalAdminAccount
+                                             -Protocol $mapping.Protocol `
+                                             -CentralAdminUrl $centralAdminUrl `
+                                             -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
 
     #region "SPOSearchManagedProperty"
-    Write-Information "Extracting SPOSearchManagedProperty..."
-    $SPOSearchManagedPropertyModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_SPOSearchManagedProperty\MSFT_SPOSearchManagedProperty.psm1" `
-        -Resolve
-
-    $catch = Import-Module $SPOSearchManagedPropertyModulePath
-    Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-    $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
-    $properties = $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
-
-    foreach ($property in $properties)
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSearchManagedProperty"))
     {
-        Write-Information "    Managed Property {$($property.Value.Name)}"
-        $DSCContent += Export-TargetResource -Name $property.Value.Name `
-            -Type $property.Value.ManagedType `
-            -CentralAdminUrl $centralAdminUrl `
-            -GlobalAdminAccount $GlobalAdminAccount
+        Write-Information "Extracting SPOSearchManagedProperty..."
+        $SPOSearchManagedPropertyModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_SPOSearchManagedProperty\MSFT_SPOSearchManagedProperty.psm1" `
+                                                        -Resolve
+
+        $catch = Import-Module $SPOSearchManagedPropertyModulePath
+        Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+        $properties =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
+
+        foreach ($property in $properties)
+        {
+            Write-Information "    Managed Property {$($property.Value.Name)}"
+            $DSCContent += Export-TargetResource -Name $property.Value.Name `
+                                                -Type $property.Value.ManagedType `
+                                                -CentralAdminUrl $centralAdminUrl `
+                                                -GlobalAdminAccount $GlobalAdminAccount
+        }
     }
     #endregion
 
     #region "SPOSite"
-    Write-Information "Extracting SPOSite..."
-    $SPOSiteModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_SPOSite\MSFT_SPOSite.psm1" `
-        -Resolve
-
-    $catch = Import-Module $SPOSiteModulePath
-
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-    $sites = Get-SPOSite
-
-    foreach ($site in $sites)
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSite"))
     {
-        Write-Information "    Site Collection {$($site.Url)}"
-        $DSCContent += Export-TargetResource -Url $site.Url `
-            -CentralAdminUrl $centralAdminUrl `
-            -GlobalAdminAccount $GlobalAdminAccount
+        Write-Information "Extracting SPOSite..."
+        $SPOSiteModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_SPOSite\MSFT_SPOSite.psm1" `
+                                        -Resolve
+
+        $catch = Import-Module $SPOSiteModulePath
+
+        Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        $sites = Get-SPOSite
+
+        foreach ($site in $sites)
+        {
+            Write-Information "    Site Collection {$($site.Url)}"
+            $DSCContent += Export-TargetResource -Url $site.Url `
+                                                -CentralAdminUrl $centralAdminUrl `
+                                                -GlobalAdminAccount $GlobalAdminAccount
+        }
     }
     #endregion
 
     #region "TeamsTeam"
-    Write-Information "Extracting TeamsChannel..."
-    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
-        -Resolve
-
-    $catch = Import-Module $TeamsModulePath
-
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    $Teams = Get-Team
-
-    foreach ($team in $teams)
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsTeam"))
     {
-        Write-Information "    Team {$($team.DisplayName)}"
-        $DSCContent += Export-TargetResource -DisplayName $team.DisplayName `
-            -GlobalAdminAccount $GlobalAdminAccount
+        Write-Information "Extracting TeamsTeam..."
+        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
+                                    -Resolve
+
+        $catch = Import-Module $TeamsModulePath
+
+        Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+        $Teams = Get-Team
+
+        foreach ($team in $teams)
+        {
+            Write-Information "    Team {$($team.DisplayName)}"
+            $DSCContent += Export-TargetResource -DisplayName $team.DisplayName `
+                                                -GlobalAdminAccount $GlobalAdminAccount
+        }
     }
     #endregion
 
     #region "TeamsChannel"
-    Write-Information "Extracting TeamsChannel..."
-    $TeamsChannelModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_TeamsChannel\MSFT_TeamsChannel.psm1" `
-        -Resolve
-
-    $catch = Import-Module $TeamsChannelModulePath
-
-    foreach ($team in $teams)
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsChannel"))
     {
-        $channels = Get-TeamChannel -GroupId $team.GroupId
+        Write-Information "Extracting TeamsChannel..."
+        $TeamsChannelModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_TeamsChannel\MSFT_TeamsChannel.psm1" `
+                                        -Resolve
 
-        foreach ($channel in $channels)
+        $catch = Import-Module $TeamsChannelModulePath
+
+        foreach ($team in $teams)
         {
-            Write-Information "    Team Channel {$($channel.DisplayName)}"
-            $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-                -DisplayName $channel.DisplayName `
-                -GlobalAdminAccount $GlobalAdminAccount
+            $channels = Get-TeamChannel -GroupId $team.GroupId
+
+            foreach ($channel in $channels)
+            {
+                Write-Information "    Team Channel {$($channel.DisplayName)}"
+                $DSCContent += Export-TargetResource -GroupId $team.GroupId `
+                                                    -DisplayName $channel.DisplayName `
+                                                    -GlobalAdminAccount $GlobalAdminAccount
+            }
         }
     }
     #endregion
 
     #region "TeamsFunSettings"
-    Write-Information "Extracting TeamsFunSettings..."
-    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_TeamsFunSettings\MSFT_TeamsFunSettings.psm1" `
-        -Resolve
-
-    $catch = Import-Module $TeamsModulePath
-
-    foreach ($team in $teams)
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsFunSettings"))
     {
-        Write-Information "    Team Fun Settings for Team {$($team.DisplayName)}"
-        $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-            -GlobalAdminAccount $GlobalAdminAccount
+        Write-Information "Extracting TeamsFunSettings..."
+        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_TeamsFunSettings\MSFT_TeamsFunSettings.psm1" `
+                                    -Resolve
+
+        $catch = Import-Module $TeamsModulePath
+
+        foreach ($team in $teams)
+        {
+            Write-Information "    Team Fun Settings for Team {$($team.DisplayName)}"
+            $DSCContent += Export-TargetResource -GroupId $team.GroupId `
+                                                -GlobalAdminAccount $GlobalAdminAccount
+        }
     }
     #endregion
 
     #region "TeamsUser"
-    Write-Information "Extracting TeamsUser..."
-    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_TeamsUser\MSFT_TeamsUser.psm1" `
-        -Resolve
-
-    $catch = Import-Module $TeamsModulePath
-
-    foreach ($team in $teams)
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsUser"))
     {
-        $users = Get-TeamUser -GroupId $team.GroupId
-        foreach ($user in $users)
+        Write-Information "Extracting TeamsUser..."
+        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_TeamsUser\MSFT_TeamsUser.psm1" `
+                                        -Resolve
+
+        $catch = Import-Module $TeamsModulePath
+
+        foreach ($team in $teams)
         {
-            Write-Information "    Teams User {$($user.User)}"
-            $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-                -User $user.User `
-                -Role $user.Role `
-                -GlobalAdminAccount $GlobalAdminAccount
+            $users = Get-TeamUser -GroupId $team.GroupId
+            foreach ($user in $users)
+            {
+                Write-Information "    Teams User {$($user.User)}"
+                $DSCContent += Export-TargetResource -GroupId $team.GroupId `
+                                                    -User $user.User `
+                                                    -Role $user.Role `
+                                                    -GlobalAdminAccount $GlobalAdminAccount
+            }
         }
     }
     #endregion
     Write-Information "Extracting TeamsMemberSettings..."
     $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_TeamsMemberSettings\MSFT_TeamsMemberSettings.psm1" `
-        -Resolve
+                                 -ChildPath "..\DSCResources\MSFT_TeamsMemberSettings\MSFT_TeamsMemberSettings.psm1" `
+                                 -Resolve
 
     $catch = Import-Module $TeamsModulePath
 
@@ -1960,18 +2096,18 @@ function Export-O365Configuration
         $teamMemberSettings = Get-TeamMemberSettings -GroupId $team.GroupId
         Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
         $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-            -AllowCreateUpdateChannels $teamMemberSettings.AllowCreateUpdateChannels `
-            -AllowDeleteChannels $teamMemberSettings.AllowDeleteChannels `
-            -AllowAddRemoveApps $teamMemberSettings.AllowAddRemoveApps `
-            -AllowCreateUpdateRemoveTabs $teamMemberSettings.AllowCreateUpdateRemoveTabs `
-            -AllowCreateUpdateRemoveConnectors $teamMemberSettings.AllowCreateUpdateRemoveConnectors `
-            -GlobalAdminAccount $GlobalAdminAccount
+                                             -AllowCreateUpdateChannels $teamMemberSettings.AllowCreateUpdateChannels `
+                                             -AllowDeleteChannels $teamMemberSettings.AllowDeleteChannels `
+                                             -AllowAddRemoveApps $teamMemberSettings.AllowAddRemoveApps `
+                                             -AllowCreateUpdateRemoveTabs $teamMemberSettings.AllowCreateUpdateRemoveTabs `
+                                             -AllowCreateUpdateRemoveConnectors $teamMemberSettings.AllowCreateUpdateRemoveConnectors `
+                                             -GlobalAdminAccount $GlobalAdminAccount
     }
 
     Write-Information "Extracting TeamsMessageSettings..."
     $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_TeamsMessageSettings\MSFT_TeamsMessageSettings.psm1" `
-        -Resolve
+                                 -ChildPath "..\DSCResources\MSFT_TeamsMessageSettings\MSFT_TeamsMessageSettings.psm1" `
+                                 -Resolve
 
     $catch = Import-Module $TeamsModulePath
 
@@ -1980,18 +2116,18 @@ function Export-O365Configuration
         $teamMessageSettings = Get-TeamMemberSettings -GroupId $team.GroupId
         Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
         $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-            -AllowUserEditMessages $teamMessageSettings.AllowUserEditMessages `
-            -AllowUserDeleteMessages $teamMessageSettings.AllowUserDeleteMessages `
-            -AllowOwnerDeleteMessages $teamMessageSettings.AllowOwnerDeleteMessages `
-            -AllowTeamMentions $teamMessageSettings.AllowTeamMentions `
-            -AllowChannelMentions $teamMessageSettings.AllowChannelMentions `
-            -GlobalAdminAccount $GlobalAdminAccount
+                                             -AllowUserEditMessages $teamMessageSettings.AllowUserEditMessages `
+                                             -AllowUserDeleteMessages $teamMessageSettings.AllowUserDeleteMessages `
+                                             -AllowOwnerDeleteMessages $teamMessageSettings.AllowOwnerDeleteMessages `
+                                             -AllowTeamMentions $teamMessageSettings.AllowTeamMentions `
+                                             -AllowChannelMentions $teamMessageSettings.AllowChannelMentions `
+                                             -GlobalAdminAccount $GlobalAdminAccount
     }
 
     Write-Information "Extracting TeamsGuestSettings..."
     $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_TeamsGuestSettings\MSFT_TeamsGuestSettings.psm1" `
-        -Resolve
+                                 -ChildPath "..\DSCResources\MSFT_TeamsGuestSettings\MSFT_TeamsGuestSettings.psm1" `
+                                 -Resolve
 
     $catch = Import-Module $TeamsModulePath
 
@@ -2000,35 +2136,10 @@ function Export-O365Configuration
         $teamGuestSettings = Get-TeamGuestSettings -GroupId $team.GroupId
         Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
         $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-            -AllowCreateUpdateChannels $teamGuestSettings.AllowCreateUpdateChannels `
-            -AllowDeleteChannels $teamGuestSettings.AllowDeleteChannels `
-            -GlobalAdminAccount $GlobalAdminAccount
+                                             -AllowCreateUpdateChannels $teamGuestSettings.AllowCreateUpdateChannels `
+                                             -AllowDeleteChannels $teamGuestSettings.AllowDeleteChannels `
+                                             -GlobalAdminAccount $GlobalAdminAccount
     }
-
-    #region "SPOSiteDesignRights"
-    Write-Information "Extracting SPOSiteDesignRights..."
-    $siteDesignRightsModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_SPOSiteDesignRights\MSFT_SPOSiteDesignRights.psm1" `
-        -Resolve
-
-    $catch = Import-Module $siteDesignRightsModulePath
-
-    Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-    $siteDesigns = Get-PnPSiteDesign
-
-    foreach ($siteDesign in $siteDesigns)
-    {
-        $siteDesginRights = Get-PnPSiteDesignRights -Identity $siteDesign.Id
-        foreach ($siteDesignRight in $siteDesginRights)
-        {
-            Write-Information " User Principal {$($siteDesignRight.PrincipalName)}"
-            $DSCContent += Export-TargetResource -UserPrincipals $siteDesignRight.PrincipalName `
-                -Rights $siteDesignRight.Rights `
-                -CentralAdminUrl $centralAdminUrl `
-                -GlobalAdminAccount $GlobalAdminAccount
-        }
-    }
-    #endregion
 
     # Close the Node and Configuration declarations
     $DSCContent += "    }`r`n"
@@ -2065,9 +2176,7 @@ function Export-O365Configuration
         {
             Write-Information "Directory `"$OutputDSCPath`" doesn't exist; creating..."
             New-Item -Path $OutputDSCPath -ItemType Directory | Out-Null
-            if ($?)
-            {break
-            }
+            if ($?) {break}
         }
         catch
         {
