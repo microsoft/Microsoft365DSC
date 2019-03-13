@@ -1524,130 +1524,11 @@ function Get-UsersLicences
     #Store information to be able to check later if the users is correctly licences for features.
     if ($null -eq $Global:UsersLicences)
     {
-        $Global:UsersLicences = Get-MsolUser -All  | Select-Object UserPrincipalName, isLicensed, Licenses
+        $Global:UsersLicences = Get-MsolUser -All | Select-Object UserPrincipalName, isLicensed, Licenses
     }
     Return $Global:UsersLicences
 }
 
-<# This is the main Office365DSC.Reverse function that extracts the DSC configuration from an existing
-   Office 365 Tenant. #>
-function Export-O365Configuration
-{
-    Show-O365GUI
-}
-function Start-O365ConfigurationExtract
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String[]]
-        $ComponentsToExtract
-    )
-    $InformationPreference = "Continue"
-    $VerbosePreference = "SilentlyContinue"
-    $WarningPreference = "SilentlyContinue"
-    $AzureAutomation = $false
-    $DSCContent = "Configuration O365TenantConfig `r`n{`r`n"
-    $DSCContent += "    Import-DSCResource -ModuleName Office365DSC`r`n`r`n"
-    $DSCContent += "    <# Credentials #>`r`n"
-    $DSCContent += "    Node localhost`r`n"
-    $DSCContent += "    {`r`n"
-
-    # Add the GlobalAdminAccount to the Credentials List
-    Save-Credentials -UserName $GlobalAdminAccount.UserName
-
-    #region "O365AdminAuditLogConfig"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckO365AdminAuditLogConfig"))
-    {
-        Write-Information "Extracting O365AdminAuditLogConfig..."
-        $O365AdminAuditLogConfig = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                                    -ScriptBlock {
-            Get-AdminAuditLogConfig
-        }
-
-        $O365AdminAuditLogConfigModulePath = Join-Path -Path $PSScriptRoot `
-                                                       -ChildPath "..\DSCResources\MSFT_O365AdminAuditLogConfig\MSFT_O365AdminAuditLogConfig.psm1" `
-                                                       -Resolve
-
-        $value = "Disabled"
-        if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
-        {
-            $value = "Enabled"
-        }
-
-        Import-Module $O365AdminAuditLogConfigModulePath | Out-Null
-        $DSCContent += Export-TargetResource -UnifiedAuditLogIngestionEnabled $value -GlobalAdminAccount $GlobalAdminAccount -IsSingleInstance 'Yes'
-    }
-    #endregion
-
-    #region "EXOAcceptedDomain"
-    Write-Information "Extracting EXOAcceptedDomain..."
-    $EXOAcceptedDomainModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_EXOAcceptedDomain\MSFT_EXOAcceptedDomain.psm1" `
-        -Resolve
-
-    $catch = Import-Module $EXOAcceptedDomainModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
-    #endregion
-
-    #region "EXOAntiPhishPolicy"
-    Write-Information "Extracting EXOAntiPhishPolicy..."
-    $EXOAntiPhishPolicyModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_EXOAntiPhishPolicy\MSFT_EXOAntiPhishPolicy.psm1" `
-        -Resolve
-
-    $catch = Import-Module $EXOAntiPhishPolicyModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
-    #endregion
-
-    #region "EXOAntiPhishRule"
-    Write-Information "Extracting EXOAntiPhishRule..."
-    $EXOAntiPhishRuleModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_EXOAntiPhishRule\MSFT_EXOAntiPhishRule.psm1" `
-        -Resolve
-
-    $catch = Import-Module $EXOAntiPhishRuleModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
-    #endregion
-
-    #region "EXOMailboxSettings"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOMailboxSettings"))
-    {
-    Write-Information "Extracting EXOMailboxSettings..."
-    $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\DSCResources\MSFT_EXOMailboxSettings\MSFT_EXOMailboxSettings.psm1" `
-        -Resolve
-
-    $catch = Import-Module $EXOMailboxSettingsModulePath
-    $mailboxes = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-        -ScriptBlock {
-        Get-Mailbox
-    }
-
-    foreach ($mailbox in $mailboxes)
->>>>>>> Dev
-    {
-        Write-Information "Extracting EXOMailboxSettings..."
-        $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `
-                                                  -ChildPath "..\DSCResources\MSFT_EXOMailboxSettings\MSFT_EXOMailboxSettings.psm1" `
-                                                  -Resolve
-
-        Import-Module $EXOMailboxSettingsModulePath | Out-Null
-        $mailboxes = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                       -ScriptBlock {
-            Get-Mailbox
-        }
-
-        foreach ($mailbox in $mailboxes)
-        {
-            Write-Information "    Settings for Mailbox {$($mailbox.Name)}"
-            $mailboxName = $mailbox.Name
-            if ($mailboxName)
 <# This is the main Office365DSC.Reverse function that extracts the DSC configuration from an existing
    Office 365 Tenant. #>
 function Export-O365Configuration
@@ -2183,7 +2064,7 @@ function Start-O365ConfigurationExtract
             Write-Warning "$($_.Exception.Message)"
             Write-Warning "Could not create folder $OutputDSCPath!"
         }
-        $OutputDSCPath = Read-Host "Please Enter Output Folder for DSC Configuration (Will be Created as Necessary)"
+        $OutputDSCPath = Read-Host "Please Provide Output Folder for DSC Configuration (Will be Created as Necessary)"
     }
     <## Ensures the path we specify ends with a Slash, in order to make sure the resulting file path is properly structured. #>
     if (!$OutputDSCPath.EndsWith("\") -and !$OutputDSCPath.EndsWith("/"))
