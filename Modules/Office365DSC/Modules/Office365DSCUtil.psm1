@@ -966,7 +966,8 @@ function Connect-ExchangeOnline
     $VerbosePreference = 'Continue'
     $WarningPreference = "SilentlyContinue"
     $ClosedOrBrokenSessions = (Get-PSSession -ErrorAction SilentlyContinue | Where-Object State -ne 'Opened' )
-    if ($ClosedOrBrokenSessions) {
+    if ($ClosedOrBrokenSessions)
+    {
         Write-Verbose "Found Existing Unusable Session(s)."
         foreach($SessionToBeClosed in $ClosedOrBrokenSessions)
         {
@@ -976,8 +977,10 @@ function Connect-ExchangeOnline
     }
 
     $Global:OpenExchangeSession = (Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Where-Object State -eq 'Opened' )
-    if (-NOT $Global:OpenExchangeSession) {
-        try {
+    if (-NOT $Global:OpenExchangeSession)
+    {
+        try
+        {
             Write-Verbose "Opening New ExchangeOnline Session."
             $VerbosePreference = 'SilentlyContinue'
             Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
@@ -985,7 +988,8 @@ function Connect-ExchangeOnline
             $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
             $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global -ErrorAction SilentlyContinue
         }
-        catch {
+        catch
+        {
             $VerbosePreference = 'Continue'
             $WarningPreference = "Continue"
             $Global:ExchangeOnlineSession = $null
@@ -1001,18 +1005,19 @@ function Connect-ExchangeOnline
 
 }
 
-function Confirm-ExchangeOnlineCmdletIsAvailable {
+function Confirm-ImportedCmdletIsAvailable {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
     param
     (
         [Parameter(Mandatory = $true)]
         [System.String]
         $CmdletName
     )
-    try {
-        $CmdletIsAvailable = ($global:ExchangeOnlineModules.ExportedCommands.Keys -contains $CmdletName)
-        if ($CmdletIsAvailable) {
+    try
+    {
+        $CmdletIsAvailable = (Get-Command -Name $CmdletName )
+        if ($CmdletIsAvailable)
+        {
             return $true
         }
         else
@@ -1020,7 +1025,8 @@ function Confirm-ExchangeOnlineCmdletIsAvailable {
             Close-SessionsAndReturnError -ExceptionMessage "Cmdlet $CmdletName is not available in this O365 Tenant."
         }
     }
-    catch {
+    catch
+    {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
 }
@@ -1038,7 +1044,8 @@ function Connect-SecurityAndComplianceCenter
     $VerbosePreference = 'Continue'
     $WarningPreference = "SilentlyContinue"
     $ClosedOrBrokenSessions = (Get-PSSession -ErrorAction SilentlyContinue | Where-Object State -ne 'Opened' )
-    if ($ClosedOrBrokenSessions) {
+    if ($ClosedOrBrokenSessions)
+    {
         Write-Verbose "Found Existing Unusable Session(s)."
         foreach($SessionToBeClosed in $ClosedOrBrokenSessions)
         {
@@ -1048,8 +1055,10 @@ function Connect-SecurityAndComplianceCenter
     }
 
     $Global:OpenSecurityAndComplianceCenterSession = (Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Where-Object InstanceId -eq ($Global:SecurityAndComplianceCenterSession).InstanceId | Where-Object State -eq 'Opened' )
-    if (-NOT $Global:OpenSecurityAndComplianceCenterSession){
-        try {
+    if (-NOT $Global:OpenSecurityAndComplianceCenterSession)
+    {
+        try
+        {
             Write-Verbose "Opening New SecurityAndComplianceCenter Session."
             $VerbosePreference = 'SilentlyContinue'
             Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
@@ -1057,7 +1066,8 @@ function Connect-SecurityAndComplianceCenter
             $Global:SecurityAndComplianceCenterModules = Import-PSSession $Global:SecurityAndComplianceCenterSession -AllowClobber -ErrorAction SilentlyContinue
             $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global -ErrorAction SilentlyContinue
         }
-        catch {
+        catch
+        {
             $Global:SecurityAndComplianceCenterSession = $null
             $VerbosePreference = 'Continue'
             $WarningPreference = "Continue"
@@ -1104,12 +1114,14 @@ function NewAntiPhishPolicy
         [System.Collections.Hashtable]
         $NewAntiPhishPolicyParams
     )
-    try {
+    try
+    {
         $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $NewAntiPhishPolicyParams -Operation 'New' )
         Write-Verbose "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-AntiPhishPolicy @BuiltParams
     }
-    catch {
+    catch
+    {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
 }
@@ -1178,7 +1190,8 @@ function SetAntiPhishPolicy
             Write-Verbose "No more values to Set on AntiPhishPolicy $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
         }
     }
-    catch {
+    catch
+    {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
 }
