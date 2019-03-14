@@ -1083,30 +1083,6 @@ function Connect-SecurityAndComplianceCenter
 
 }
 
-function Confirm-SecurityAndComplianceCenterCmdletIsAvailable {
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CmdletName
-    )
-    try {
-        $CmdletIsAvailable = ($global:SecurityAndComplianceCenterModules.ExportedCommands.Keys -contains $CmdletName)
-        if ($CmdletIsAvailable) {
-            return $true
-        }
-        else
-        {
-            Close-SessionsAndReturnError -ExceptionMessage "Cmdlet $CmdletName is not available in this O365 Tenant."
-        }
-    }
-    catch {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
-}
-
 function NewAntiPhishPolicy
 {
     param (
