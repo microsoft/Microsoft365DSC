@@ -241,11 +241,10 @@ function Set-TargetResource
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("IsSingleInstance")
 
-    if($IPAddressAllowList -eq "")
+    if($PublicCdnEnabled -eq $false)
     {
-        Write-Verbose -Message "The IPAddressAllowList is not configured, for that the IPAddressEnforcement parameter can not be set and will be removed"
-        $CurrentParameters.Remove("IPAddressEnforcement")
-        $CurrentParameters.Remove("IPAddressAllowList")
+        Write-Verbose -Message "The use of the public CDN is not enabled, for that the PublicCdnAllowedFileTypes parameter can not be configured and will be removed"
+        $CurrentParameters.Remove("PublicCdnAllowedFileTypes")
     }
     $tenant = Set-PnPTenant @CurrentParameters
 }

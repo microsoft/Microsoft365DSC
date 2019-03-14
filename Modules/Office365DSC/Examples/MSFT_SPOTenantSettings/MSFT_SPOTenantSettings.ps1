@@ -14,23 +14,23 @@ Configuration MSFT_SPOTenantSettings
             IsSingleInstance             = "Yes"
             CentralAdminUrl              = "https://o365dsc1-admin.sharepoint.com"
             GlobalAdminAccount           = $credsGlobalAdmin
-            MinCompatibilityLevel                           = 15
-            #MaxCompatibilityLevel                           = $null
-            #SearchResolveExactEmailOrUPN                    = $null
-            #OfficeClientADALDisabled                        = $null
-            #LegacyAuthProtocolsEnabled                      = $null
-            #RequireAcceptingAccountMatchInvitedAccount      = $null
-            #SignInAccelerationDomain                        = $null
-            #UsePersistentCookiesForExplorerView             = $null
-            #UserVoiceForFeedbackEnabled                     = $null
-            #PublicCdnEnabled                                = $null
-            #PublicCdnAllowedFileTypes                       = $null
-            #UseFindPeopleInPeoplePicker                     = $null
-            #NotificationsInSharePointEnabled                = $null
-            #OwnerAnonymousNotification                      = $null
-            #ApplyAppEnforcedRestrictionsToAdHocRecipients   = $null
-            #FilePickerExternalImageSearchEnabled            = $null
-            #HideDefaultThemes                               = $null
+            MinCompatibilityLevel                           = 16
+            MaxCompatibilityLevel                           = 16
+            SearchResolveExactEmailOrUPN                    = $false
+            OfficeClientADALDisabled                        = $false
+            LegacyAuthProtocolsEnabled                      = $true
+            RequireAcceptingAccountMatchInvitedAccount      = $true
+            SignInAccelerationDomain                        = ""
+            UsePersistentCookiesForExplorerView             = $false
+            UserVoiceForFeedbackEnabled                     = $true
+            PublicCdnEnabled                                = $false
+            PublicCdnAllowedFileTypes                       = "CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF"
+            UseFindPeopleInPeoplePicker                     = $false
+            NotificationsInSharePointEnabled                = $true
+            OwnerAnonymousNotification                      = $true
+            ApplyAppEnforcedRestrictionsToAdHocRecipients   = $true
+            FilePickerExternalImageSearchEnabled            = $true
+            HideDefaultThemes                               = $false
         }
     }
 }
