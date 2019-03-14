@@ -30,7 +30,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 IsSingleInstance                                = "Yes"
                 CentralAdminUrl                                 = "https://contoso-admin.sharepoint.com"
-                GlobalAdminAccount                              = $credsGlobalAdmin
+                GlobalAdminAccount                              = $GlobalAdminAccount
                 MinCompatibilityLevel                           = 16
                 MaxCompatibilityLevel                           = 16
                 SearchResolveExactEmailOrUPN                    = $false
@@ -47,14 +47,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 OwnerAnonymousNotification                      = $true
                 ApplyAppEnforcedRestrictionsToAdHocRecipients   = $true
                 FilePickerExternalImageSearchEnabled            = $true
-                HideDefaultThemes                               = $true
+                HideDefaultThemes                               = $false
             }
 
             Mock -CommandName Set-PnPTenant -MockWith {
                 return @{
-                    IsSingleInstance                                = "Yes"
-                    CentralAdminUrl                                 = "https://contoso-admin.sharepoint.com"
-                    GlobalAdminAccount                              = $credsGlobalAdmin
                     MinCompatibilityLevel                           = 16
                     MaxCompatibilityLevel                           = 16
                     SearchResolveExactEmailOrUPN                    = $false
@@ -71,15 +68,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     OwnerAnonymousNotification                      = $true
                     ApplyAppEnforcedRestrictionsToAdHocRecipients   = $true
                     FilePickerExternalImageSearchEnabled            = $true
-                    HideDefaultThemes                               = $false
+                    HideDefaultThemes                               = $true
                 }
             }
 
             Mock -CommandName Get-PnPTenant -MockWith {
                 return @{
-                    IsSingleInstance             = "Yes"
-                    CentralAdminUrl              = "https://contoso-admin.sharepoint.com"
-                    GlobalAdminAccount           = $credsGlobalAdmin
                     MinCompatibilityLevel                           = 16
                     MaxCompatibilityLevel                           = 16
                     SearchResolveExactEmailOrUPN                    = $false
@@ -96,7 +90,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     OwnerAnonymousNotification                      = $true
                     ApplyAppEnforcedRestrictionsToAdHocRecipients   = $true
                     FilePickerExternalImageSearchEnabled            = $true
-                    HideDefaultThemes                               = $false
+                    HideDefaultThemes                               = $true
                 }
             }
 
@@ -118,9 +112,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPTenant -MockWith {
                 return @{
-                    IsSingleInstance                                = "Yes"
-                    CentralAdminUrl                                 = "https://contoso-admin.sharepoint.com"
-                    GlobalAdminAccount                              = $credsGlobalAdmin
                     MinCompatibilityLevel                           = 16
                     MaxCompatibilityLevel                           = 16
                     SearchResolveExactEmailOrUPN                    = $false
