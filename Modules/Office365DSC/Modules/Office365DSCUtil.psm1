@@ -990,11 +990,6 @@ function Connect-ExchangeOnline
         }
         catch
         {
-<<<<<<< HEAD
-=======
-            $ExceptionMessage = $_.Exception
-            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
->>>>>>> Dev
             $VerbosePreference = 'Continue'
             $WarningPreference = "Continue"
             $Global:ExchangeOnlineSession = $null
@@ -1073,11 +1068,6 @@ function Connect-SecurityAndComplianceCenter
         }
         catch
         {
-<<<<<<< HEAD
-=======
-            $ExceptionMessage = $_.Exception
-            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
->>>>>>> Dev
             $Global:SecurityAndComplianceCenterSession = $null
             $VerbosePreference = 'Continue'
             $WarningPreference = "Continue"
