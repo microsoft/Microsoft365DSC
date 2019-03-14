@@ -89,26 +89,26 @@ function Get-TargetResource
     Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
-        IsSingleInstance                                = 'Yes'
-        MinCompatibilityLevel                           = $null
-        MaxCompatibilityLevel                           = $null
-        SearchResolveExactEmailOrUPN                    = $null
-        OfficeClientADALDisabled                        = $null
-        LegacyAuthProtocolsEnabled                      = $null
-        RequireAcceptingAccountMatchInvitedAccount      = $null
-        SignInAccelerationDomain                        = $null
-        UsePersistentCookiesForExplorerView             = $null
-        UserVoiceForFeedbackEnabled                     = $null
-        PublicCdnEnabled                                = $null
-        PublicCdnAllowedFileTypes                       = $null
-        UseFindPeopleInPeoplePicker                     = $null
-        NotificationsInSharePointEnabled                = $null
-        OwnerAnonymousNotification                      = $null
-        ApplyAppEnforcedRestrictionsToAdHocRecipients   = $null
-        FilePickerExternalImageSearchEnabled            = $null
-        HideDefaultThemes                               = $null
-        CentralAdminUrl                                 = $null
-        GlobalAdminAccount                              = $null
+        IsSingleInstance                              = 'Yes'
+        MinCompatibilityLevel                         = $null
+        MaxCompatibilityLevel                         = $null
+        SearchResolveExactEmailOrUPN                  = $null
+        OfficeClientADALDisabled                      = $null
+        LegacyAuthProtocolsEnabled                    = $null
+        RequireAcceptingAccountMatchInvitedAccount    = $null
+        SignInAccelerationDomain                      = $null
+        UsePersistentCookiesForExplorerView           = $null
+        UserVoiceForFeedbackEnabled                   = $null
+        PublicCdnEnabled                              = $null
+        PublicCdnAllowedFileTypes                     = $null
+        UseFindPeopleInPeoplePicker                   = $null
+        NotificationsInSharePointEnabled              = $null
+        OwnerAnonymousNotification                    = $null
+        ApplyAppEnforcedRestrictionsToAdHocRecipients = $null
+        FilePickerExternalImageSearchEnabled          = $null
+        HideDefaultThemes                             = $null
+        CentralAdminUrl                               = $null
+        GlobalAdminAccount                            = $null
     }
 
     try
@@ -116,26 +116,26 @@ function Get-TargetResource
         $SPOTenantSettings = Get-PNPTenant
 
         return @{
-            IsSingleInstance                                = 'Yes'
-            MinCompatibilityLevel                           = $SPOTenantSettings.MinCompatibilityLevel
-            MaxCompatibilityLevel                           = $SPOTenantSettings.MaxCompatibilityLevel
-            SearchResolveExactEmailOrUPN                    = $SPOTenantSettings.SearchResolveExactEmailOrUPN
-            OfficeClientADALDisabled                        = $SPOTenantSettings.OfficeClientADALDisabled
-            LegacyAuthProtocolsEnabled                      = $SPOTenantSettings.LegacyAuthProtocolsEnabled
-            RequireAcceptingAccountMatchInvitedAccount      = $SPOTenantSettings.RequireAcceptingAccountMatchInvitedAccount
-            SignInAccelerationDomain                        = $SPOTenantSettings.SignInAccelerationDomain
-            UsePersistentCookiesForExplorerView             = $SPOTenantSettings.UsePersistentCookiesForExplorerView
-            UserVoiceForFeedbackEnabled                     = $SPOTenantSettings.UserVoiceForFeedbackEnabled
-            PublicCdnEnabled                                = $SPOTenantSettings.PublicCdnEnabled
-            PublicCdnAllowedFileTypes                       = $SPOTenantSettings.PublicCdnAllowedFileTypes
-            UseFindPeopleInPeoplePicker                     = $SPOTenantSettings.UseFindPeopleInPeoplePicker
-            NotificationsInSharePointEnabled                = $SPOTenantSettings.NotificationsInSharePointEnabled
-            OwnerAnonymousNotification                      = $SPOTenantSettings.OwnerAnonymousNotification
-            ApplyAppEnforcedRestrictionsToAdHocRecipients   = $SPOTenantSettings.ApplyAppEnforcedRestrictionsToAdHocRecipients
-            FilePickerExternalImageSearchEnabled            = $SPOTenantSettings.FilePickerExternalImageSearchEnabled
-            HideDefaultThemes                               = $SPOTenantSettings.HideDefaultThemes
-            CentralAdminUrl                                 = $CentralAdminUrl
-            GlobalAdminAccount                              = $GlobalAdminAccount
+            IsSingleInstance                              = 'Yes'
+            MinCompatibilityLevel                         = $SPOTenantSettings.MinCompatibilityLevel
+            MaxCompatibilityLevel                         = $SPOTenantSettings.MaxCompatibilityLevel
+            SearchResolveExactEmailOrUPN                  = $SPOTenantSettings.SearchResolveExactEmailOrUPN
+            OfficeClientADALDisabled                      = $SPOTenantSettings.OfficeClientADALDisabled
+            LegacyAuthProtocolsEnabled                    = $SPOTenantSettings.LegacyAuthProtocolsEnabled
+            RequireAcceptingAccountMatchInvitedAccount    = $SPOTenantSettings.RequireAcceptingAccountMatchInvitedAccount
+            SignInAccelerationDomain                      = $SPOTenantSettings.SignInAccelerationDomain
+            UsePersistentCookiesForExplorerView           = $SPOTenantSettings.UsePersistentCookiesForExplorerView
+            UserVoiceForFeedbackEnabled                   = $SPOTenantSettings.UserVoiceForFeedbackEnabled
+            PublicCdnEnabled                              = $SPOTenantSettings.PublicCdnEnabled
+            PublicCdnAllowedFileTypes                     = $SPOTenantSettings.PublicCdnAllowedFileTypes
+            UseFindPeopleInPeoplePicker                   = $SPOTenantSettings.UseFindPeopleInPeoplePicker
+            NotificationsInSharePointEnabled              = $SPOTenantSettings.NotificationsInSharePointEnabled
+            OwnerAnonymousNotification                    = $SPOTenantSettings.OwnerAnonymousNotification
+            ApplyAppEnforcedRestrictionsToAdHocRecipients = $SPOTenantSettings.ApplyAppEnforcedRestrictionsToAdHocRecipients
+            FilePickerExternalImageSearchEnabled          = $SPOTenantSettings.FilePickerExternalImageSearchEnabled
+            HideDefaultThemes                             = $SPOTenantSettings.HideDefaultThemes
+            CentralAdminUrl                               = $CentralAdminUrl
+            GlobalAdminAccount                            = $GlobalAdminAccount
         }
     }
     catch
@@ -147,6 +147,7 @@ function Get-TargetResource
         return $nullReturn
     }
 }
+
 function Set-TargetResource
 {
     [CmdletBinding()]
@@ -248,6 +249,7 @@ function Set-TargetResource
     }
     $tenant = Set-PnPTenant @CurrentParameters
 }
+
 function Test-TargetResource
 {
     [CmdletBinding()]

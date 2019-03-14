@@ -11,9 +11,9 @@ Configuration MSFT_SPOTenantSettings
     {
         SPOTenantSettings MyTenantSettings
         {
-            IsSingleInstance             = "Yes"
-            CentralAdminUrl              = "https://o365dsc1-admin.sharepoint.com"
-            GlobalAdminAccount           = $credsGlobalAdmin
+            IsSingleInstance                                = "Yes"
+            CentralAdminUrl                                 = "https://o365dsc1-admin.sharepoint.com"
+            GlobalAdminAccount                              = $credsGlobalAdmin
             MinCompatibilityLevel                           = 16
             MaxCompatibilityLevel                           = 16
             SearchResolveExactEmailOrUPN                    = $false
