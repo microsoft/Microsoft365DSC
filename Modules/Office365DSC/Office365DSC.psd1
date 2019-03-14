@@ -91,7 +91,7 @@ AliasesToExport = @()
 # DSC resources to export from this module
 DscResourcesToExport = 'MSFT_O365User', 'MSFT_O365Group', 'MSFT_SPOSite',
                        'MSFT_EXOSharedMailbox', 'MSFT_O365AdminAuditLogConfig','MSFT_EXOAcceptedDomain','MSFT_EXOAntiPhishPolicy',
-                       'MSFT_EXOAntiPhishRule','MSFT_TeamsFunSettings'
+                       'MSFT_EXOAntiPhishRule', 'MSFT_EXOAtpPolicyForO365', 'MSFT_TeamsFunSettings'
 
 # List of all modules packaged with this module
 # ModuleList = @()

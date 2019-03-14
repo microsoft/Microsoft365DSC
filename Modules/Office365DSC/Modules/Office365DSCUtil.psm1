@@ -1589,6 +1589,16 @@ function Export-O365Configuration
     $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
     #endregion
 
+    #region "EXOAtpPolicyForO365"
+    Write-Information "Extracting EXOAtpPolicyForO365..."
+    $EXOAtpPolicyForO365ModulePath = Join-Path -Path $PSScriptRoot `
+                                              -ChildPath "..\DSCResources\MSFT_EXOAtpPolicyForO365\MSFT_EXOAtpPolicyForO365.psm1" `
+                                              -Resolve
+
+    $catch = Import-Module $EXOAtpPolicyForO365ModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
     #region "EXOMailboxSettings"
     Write-Information "Extracting EXOMailboxSettings..."
     $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `

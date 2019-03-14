@@ -976,7 +976,7 @@ function Get-AntiPhishRule {
     )
 }
 
- function Get-AntiPhishPolicy
+function Get-AntiPhishPolicy
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -984,7 +984,16 @@ function Get-AntiPhishRule {
     (
 
     )
+}
 
+function Get-AtpPolicyForO365
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
 }
 
 function Get-SPOAppErrors {
@@ -2871,6 +2880,38 @@ function Set-AntiPhishRule {
         [System.String[]]
         $SentToMemberOf = @()
 
+    )
+}
+
+function Set-AtpPolicyForO365
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Identity = 'Default',
+
+        [Parameter()]
+        [Boolean]
+        $AllowClickThrough = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockUrls = @(),
+
+        [Parameter()]
+        [Boolean]
+        $EnableATPForSPOTeamsODB = $false,
+
+        [Parameter()]
+        [Boolean]
+        $EnableSafeLinksForClients = $false,
+
+        [Parameter()]
+        [Boolean]
+        $TrackClicks = $true
     )
 }
 
