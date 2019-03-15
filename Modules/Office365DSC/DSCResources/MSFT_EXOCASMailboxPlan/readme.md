@@ -13,7 +13,7 @@ This resource configures Client Access services (CAS) mailbox plans in cloud-bas
 
     GlobalAdminAccount
       - Required: Yes
-      - Description: Credentials of the SharePoint Global Admin
+      - Description: Credentials of the Office 365 Global Admin
 
     Identity
       - Required: Yes

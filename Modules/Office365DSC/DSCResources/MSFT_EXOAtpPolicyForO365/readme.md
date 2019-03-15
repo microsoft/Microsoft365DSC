@@ -17,7 +17,7 @@ This resource configures the Advanced Threat Protection (ATP) policy in Office 3
 
     GlobalAdminAccount
       - Required: Yes
-      - Description: Credentials of the SharePoint Global Admin
+      - Description: Credentials of the Office 365 Global Admin
 
     Identity
       - Required: No
