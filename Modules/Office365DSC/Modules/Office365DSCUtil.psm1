@@ -1628,6 +1628,16 @@ function Start-O365ConfigurationExtract
     $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
     #endregion
 
+    #region "EXOClientAccessRule"
+    Write-Information "Extracting EXOClientAccessRule..."
+    $EXOClientAccessRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                              -ChildPath "..\DSCResources\MSFT_EXOClientAccessRule\MSFT_EXOClientAccessRule.psm1" `
+                                              -Resolve
+
+    $catch = Import-Module $EXOClientAccessRuleModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
     #region "EXOMailboxSettings"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOMailboxSettings"))
     {

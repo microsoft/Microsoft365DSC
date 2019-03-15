@@ -1006,6 +1006,16 @@ function Get-CASMailboxPlan
     )
 }
 
+function Get-ClientAccessRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
 function Get-SPOAppErrors {
  [CmdletBinding()]
 param(
@@ -1998,6 +2008,76 @@ param(
     )
 }
 
+function New-ClientAccessRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('AllowAccess', 'DenyAccess')]
+        [System.String]
+        $Action,
+
+        [Parameter()]
+        [ValidateSet('AdfsAuthentication', 'BasicAuthentication', 'CertificateBasedAuthentication', 'NonBasicAuthentication', 'OAuthAuthentication')]
+        [System.String[]]
+        $AnyOfAuthenticationTypes = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfClientIPAddressesOrRanges = @(),
+
+        [Parameter()]
+        [ValidateSet('ExchangeActiveSync','ExchangeAdminCenter','ExchangeWebServices','IMAP4','OfflineAddressBook','OutlookAnywhere','OutlookWebApp','POP3','PowerShellWebServices','RemotePowerShell','REST','UniversalOutlook')]
+        [System.String[]]
+        $AnyOfProtocols = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [ValidateSet('AdfsAuthentication', 'BasicAuthentication', 'CertificateBasedAuthentication', 'NonBasicAuthentication', 'OAuthAuthentication')]
+        [System.String[]]
+        $ExceptAnyOfAuthenticationTypes = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptAnyOfClientIPAddressesOrRanges = @(),
+
+        [Parameter()]
+        [ValidateSet('ExchangeActiveSync','ExchangeAdminCenter','ExchangeWebServices','IMAP4','OfflineAddressBook','OutlookAnywhere','OutlookWebApp','POP3','PowerShellWebServices','RemotePowerShell','REST','UniversalOutlook')]
+        [System.String[]]
+        $ExceptAnyOfProtocols = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptUsernameMatchesAnyOfPatterns = @(),
+
+        [Parameter()]
+        [uint32]
+        $Priority,
+
+        [Parameter()]
+        [ValidateSet('All', 'Users')]
+        [System.String]
+        $Scope,
+
+        [Parameter()]
+        [System.String[]]
+        $UserRecipientFilter = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $UsernameMatchesAnyOfPatterns = @()
+    )
+}
+
 function New-SPOMigrationEncryptionParameters {
  [CmdletBinding()]
 param()
@@ -2227,6 +2307,18 @@ function Remove-AntiPhishRule
         $Identity
     )
 
+}
+
+function Remove-ClientAccessRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
 }
 
 function Remove-SPODeletedSite {
@@ -2949,12 +3041,77 @@ function Set-CASMailboxPlan
 
         [Parameter()]
         [Boolean]
-        ${PopEnabled} = $true,
+        ${PopEnabled} = $true
+    )
+}
+
+function Set-ClientAccessRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('AllowAccess', 'DenyAccess')]
+        [System.String]
+        $Action,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('AdfsAuthentication', 'BasicAuthentication', 'CertificateBasedAuthentication', 'NonBasicAuthentication', 'OAuthAuthentication')]
+        [System.String[]]
+        $AnyOfAuthenticationTypes = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfClientIPAddressesOrRanges = @(),
+
+        [Parameter()]
+        [ValidateSet('ExchangeActiveSync','ExchangeAdminCenter','ExchangeWebServices','IMAP4','OfflineAddressBook','OutlookAnywhere','OutlookWebApp','POP3','PowerShellWebServices','RemotePowerShell','REST','UniversalOutlook')]
+        [System.String[]]
+        $AnyOfProtocols = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [ValidateSet('AdfsAuthentication', 'BasicAuthentication', 'CertificateBasedAuthentication', 'NonBasicAuthentication', 'OAuthAuthentication')]
+        [System.String[]]
+        $ExceptAnyOfAuthenticationTypes = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptAnyOfClientIPAddressesOrRanges = @(),
+
+        [Parameter()]
+        [ValidateSet('ExchangeActiveSync','ExchangeAdminCenter','ExchangeWebServices','IMAP4','OfflineAddressBook','OutlookAnywhere','OutlookWebApp','POP3','PowerShellWebServices','RemotePowerShell','REST','UniversalOutlook')]
+        [System.String[]]
+        $ExceptAnyOfProtocols = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptUsernameMatchesAnyOfPatterns = @(),
+
+        [Parameter()]
+        [uint32]
+        $Priority,
+
+        [Parameter()]
+        [ValidateSet('All', 'Users')]
         [System.String]
-        ${Ensure} = 'Present'
+        $Scope,
+
+        [Parameter()]
+        [System.String[]]
+        $UserRecipientFilter = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $UsernameMatchesAnyOfPatterns = @()
     )
 }
 
