@@ -47,7 +47,21 @@ function Get-TargetResource
     Write-Verbose -Message "Checking for existance of team channels"
     $CurrentParameters = $PSBoundParameters
 
-    $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
+    $loopCounter = 0
+    do
+    {
+        $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
+        if ($null -eq $team)
+        {
+            Start-Sleep 5
+        }
+        $loopCounter +=1
+        if ($loopCounter -gt 5)
+        {
+            break
+        }
+    } while ($null -eq $team)
+
     if ($null -eq $team)
     {
         throw "Team with Name $TeamName doesnt exist in tenant"
@@ -119,12 +133,26 @@ function Set-TargetResource
     $channel = Get-TargetResource @PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
+    $loopCounter = 0
+    do
+    {
+        $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
+        if ($null -eq $team)
+        {
+            Start-Sleep 5
+        }
+        $loopCounter +=1
+        if ($loopCounter -gt 5)
+        {
+            break
+        }
+    } while ($null -eq $team)
 
-    $team = Get-Team |  Where-Object {($_.DisplayName -eq $TeamName)}
     if ($null -eq $team)
     {
-        throw "Team with Name $TeamName doesn't exist in tenant"
+        throw "Team with Name $TeamName doesnt exist in tenant"
     }
+
     $CurrentParameters.Remove("TeamName")
     $CurrentParameters.Add("GroupId", $team.GroupId)
     $CurrentParameters.Remove("GlobalAdminAccount")
