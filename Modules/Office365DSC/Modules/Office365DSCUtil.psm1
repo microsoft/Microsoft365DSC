@@ -1618,6 +1618,16 @@ function Start-O365ConfigurationExtract
     $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
     #endregion
 
+    #region "EXOCASMailboxPlan"
+    Write-Information "Extracting EXOCASMailboxPlan..."
+    $EXOCASMailboxPlanModulePath = Join-Path -Path $PSScriptRoot `
+                                              -ChildPath "..\DSCResources\MSFT_EXOCASMailboxPlan\MSFT_EXOCASMailboxPlan.psm1" `
+                                              -Resolve
+
+    $catch = Import-Module $EXOCASMailboxPlanModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
     #region "EXOMailboxSettings"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOMailboxSettings"))
     {

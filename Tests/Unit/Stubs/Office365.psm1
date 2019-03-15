@@ -996,6 +996,16 @@ function Get-AtpPolicyForO365
     )
 }
 
+function Get-CASMailboxPlan
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
 function Get-SPOAppErrors {
  [CmdletBinding()]
 param(
@@ -2912,6 +2922,39 @@ function Set-AtpPolicyForO365
         [Parameter()]
         [Boolean]
         $TrackClicks = $true
+    )
+}
+
+function Set-CASMailboxPlan
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        ${Identity},
+
+        [Parameter()]
+        [Boolean]
+        ${ActiveSyncEnabled} = $true,
+
+        [Parameter()]
+        [Boolean]
+        ${ImapEnabled} = $false,
+
+        [Parameter()]
+        [System.String]
+        ${OwaMailboxPolicy} = 'OwaMailboxPolicy-Default',
+
+        [Parameter()]
+        [Boolean]
+        ${PopEnabled} = $true,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        ${Ensure} = 'Present'
     )
 }
 
