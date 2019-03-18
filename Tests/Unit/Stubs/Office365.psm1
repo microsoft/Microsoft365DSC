@@ -1026,6 +1026,16 @@ function Get-DkimSigningConfig
     )
 }
 
+function Get-HostedConnectionFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
 function Get-SPOAppErrors {
  [CmdletBinding()]
 param(
@@ -2124,6 +2134,38 @@ function New-DkimSigningConfig
     )
 }
 
+function New-HostedConnectionFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [Boolean]
+        $EnableSafeList = $false,
+
+        [Parameter()]
+        [System.String[]]
+        $IPAllowList = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $IPBlockList = @(),
+
+        [Parameter()]
+        [Boolean]
+        $MakeDefault = $false
+    )
+}
+
 function New-SPOMigrationEncryptionParameters {
  [CmdletBinding()]
 param()
@@ -2368,6 +2410,18 @@ function Remove-ClientAccessRule
 }
 
 function Remove-DkimSigningConfig
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-HostedConnectionFilterPolicy
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -3210,6 +3264,38 @@ function Set-DkimSigningConfig
         [ValidateSet(1024)]
         [uint16]
         $KeySize = 1024
+    )
+}
+
+function Set-HostedConnectionFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [Boolean]
+        $EnableSafeList = $false,
+
+        [Parameter()]
+        [System.String[]]
+        $IPAllowList = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $IPBlockList = @(),
+
+        [Parameter()]
+        [Boolean]
+        $MakeDefault = $false
     )
 }
 
