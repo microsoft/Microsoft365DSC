@@ -1638,6 +1638,16 @@ function Start-O365ConfigurationExtract
     $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
     #endregion
 
+    #region "EXODkimSigningConfig"
+    Write-Information "Extracting EXODkimSigningConfig..."
+    $EXODkimSigningConfigModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXODkimSigningConfig\MSFT_EXODkimSigningConfig.psm1" `
+                                                -Resolve
+
+    $catch = Import-Module $EXODkimSigningConfigModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
     #region "EXOMailboxSettings"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOMailboxSettings"))
     {

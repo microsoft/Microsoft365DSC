@@ -1016,6 +1016,16 @@ function Get-ClientAccessRule
     )
 }
 
+function Get-DkimSigningConfig
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
 function Get-SPOAppErrors {
  [CmdletBinding()]
 param(
@@ -2078,6 +2088,42 @@ function New-ClientAccessRule
     )
 }
 
+function New-DkimSigningConfig
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [ValidateSet('Simple', 'Relaxed')]
+        [System.String]
+        $BodyCanonicalization = 'Relaxed',
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [ValidateSet('Simple', 'Relaxed')]
+        [System.String]
+        $HeaderCanonicalization = 'Relaxed',
+
+        [Parameter()]
+        [ValidateSet(1024)]
+        [uint16]
+        $KeySize = 1024
+    )
+}
+
 function New-SPOMigrationEncryptionParameters {
  [CmdletBinding()]
 param()
@@ -2310,6 +2356,18 @@ function Remove-AntiPhishRule
 }
 
 function Remove-ClientAccessRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-DkimSigningConfig
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -3112,6 +3170,46 @@ function Set-ClientAccessRule
         [Parameter()]
         [System.String[]]
         $UsernameMatchesAnyOfPatterns = @()
+    )
+}
+
+function Set-DkimSigningConfig
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [ValidateSet('Simple', 'Relaxed')]
+        [System.String]
+        $BodyCanonicalization = 'Relaxed',
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [ValidateSet('Simple', 'Relaxed')]
+        [System.String]
+        $HeaderCanonicalization = 'Relaxed',
+
+        [Parameter()]
+        [ValidateSet(1024)]
+        [uint16]
+        $KeySize = 1024
     )
 }
 
