@@ -1056,6 +1056,16 @@ function Get-HostedContentFilterRule
     )
 }
 
+function Get-HostedOutboundSpamFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
 function Get-SPOAppErrors {
  [CmdletBinding()]
 param(
@@ -3884,6 +3894,38 @@ function Set-HostedContentFilterRule {
         [System.String[]]
         $SentToMemberOf = @()
 
+    )
+}
+
+function Set-HostedOutboundSpamFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Identity = 'Default',
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $BccSuspiciousOutboundAdditionalRecipients = @(),
+
+        [Parameter()]
+        [Boolean]
+        $BccSuspiciousOutboundMail = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $NotifyOutboundSpamRecipients = @(),
+
+        [Parameter()]
+        [Boolean]
+        $NotifyOutboundSpam = $true
     )
 }
 
