@@ -1036,6 +1036,16 @@ function Get-HostedConnectionFilterPolicy
     )
 }
 
+function Get-HostedContentFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
 function Get-SPOAppErrors {
  [CmdletBinding()]
 param(
@@ -2166,6 +2176,228 @@ function New-HostedConnectionFilterPolicy
     )
 }
 
+function New-HostedContentFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $AddXHeaderValue,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowedSenderDomains = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AllowedSenders = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $BlockedSenderDomains = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $BlockedSenders = @(),
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine')]
+        [System.String[]]
+        $BulkSpamAction = @('MoveToJmf'),
+
+        [Parameter()]
+        [ValidateRange(1,9)]
+        [uint32]
+        $BulkThreshold = 7,
+
+        [Parameter()]
+        [System.Boolean]
+        $DownloadLink = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableEndUserSpamNotifications = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableLanguageBlockList = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableRegionBlockList = $false,
+
+        [Parameter()]
+        [ValidatePattern("^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")]
+        [System.String]
+        $EndUserSpamNotificationCustomFromAddress,
+
+        [Parameter()]
+        [System.String]
+        $EndUserSpamNotificationCustomFromName,
+
+        [Parameter()]
+        [System.String]
+        $EndUserSpamNotificationCustomSubject,
+
+        [Parameter()]
+        [ValidateRange(1,15)]
+        [uint32]
+        $EndUserSpamNotificationFrequency = 3,
+
+        [Parameter()]
+        [ValidateSet('Default','English','French','German','Italian','Japanese','Spanish','Korean','Portuguese','Russian','ChineseSimplified','ChineseTraditional','Amharic','Arabic','Bulgarian','BengaliIndia','Catalan','Czech','Cyrillic','Danish','Greek','Estonian','Basque','Farsi','Finnish','Filipino','Galician','Gujarati','Hebrew','Hindi','Croatian','Hungarian','Indonesian','Icelandic','Kazakh','Kannada','Lithuanian','Latvian','Malayalam','Marathi','Malay','Dutch','NorwegianNynorsk','Norwegian','Oriya','Polish','PortuguesePortugal','Romanian','Slovak','Slovenian','SerbianCyrillic','Serbian','Swedish','Swahili','Tamil','Telugu','Thai','Turkish','Ukrainian','Urdu','Vietnamese')]
+        [System.String[]]
+        $EndUserSpamNotificationLanguage = @('Default'),
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [System.String[]]
+        $HighConfidenceSpamAction = @('MoveToJmf'),
+
+        [Parameter()]
+        [System.Boolean]
+        $InlineSafetyTipsEnabled = $true,
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $IncreaseScoreWithBizOrInfoUrls = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $IncreaseScoreWithImageLinks = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $IncreaseScoreWithNumericIps = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $IncreaseScoreWithRedirectToOtherPort ='Off',
+
+        [Parameter()]
+        [System.String[]]
+        $LanguageBlockList = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $MakeDefault = $false,
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamBulkMail = 'On',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamEmbedTagsInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamEmptyMessages = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamFormTagsInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamFramesInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamFromAddressAuthFail = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamJavaScriptInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamNdrBackscatter = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamObjectTagsInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamSensitiveWordList = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamSpfRecordHardFail = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamWebBugsInHtml = 'Off',
+
+        [Parameter()]
+        [System.String]
+        $ModifySubjectValue,
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [System.String[]]
+        $PhishSpamAction = @('MoveToJmf'),
+
+        [Parameter()]
+        [ValidateRange(1,15)]
+        [uint32]
+        $QuarantineRetentionPeriod = 15,
+
+        [Parameter()]
+        [System.String[]]
+        $RedirectToRecipients = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $RegionBlockList = @(),
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [System.String[]]
+        $SpamAction = @('MoveToJmf'),
+
+        [Parameter()]
+        [ValidateSet('None','AddXHeader','BccMessage')]
+        [System.String[]]
+        $TestModeAction = @('None'),
+
+        [Parameter()]
+        [System.String[]]
+        $TestModeBccToRecipients = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $ZapEnabled = $true
+    )
+}
+
 function New-SPOMigrationEncryptionParameters {
  [CmdletBinding()]
 param()
@@ -2422,6 +2654,18 @@ function Remove-DkimSigningConfig
 }
 
 function Remove-HostedConnectionFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-HostedContentFilterPolicy
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -3296,6 +3540,228 @@ function Set-HostedConnectionFilterPolicy
         [Parameter()]
         [Boolean]
         $MakeDefault = $false
+    )
+}
+
+function Set-HostedContentFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $AddXHeaderValue,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowedSenderDomains = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AllowedSenders = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $BlockedSenderDomains = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $BlockedSenders = @(),
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine')]
+        [System.String[]]
+        $BulkSpamAction = @('MoveToJmf'),
+
+        [Parameter()]
+        [ValidateRange(1,9)]
+        [uint32]
+        $BulkThreshold = 7,
+
+        [Parameter()]
+        [System.Boolean]
+        $DownloadLink = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableEndUserSpamNotifications = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableLanguageBlockList = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableRegionBlockList = $false,
+
+        [Parameter()]
+        [ValidatePattern("^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")]
+        [System.String]
+        $EndUserSpamNotificationCustomFromAddress,
+
+        [Parameter()]
+        [System.String]
+        $EndUserSpamNotificationCustomFromName,
+
+        [Parameter()]
+        [System.String]
+        $EndUserSpamNotificationCustomSubject,
+
+        [Parameter()]
+        [ValidateRange(1,15)]
+        [uint32]
+        $EndUserSpamNotificationFrequency = 3,
+
+        [Parameter()]
+        [ValidateSet('Default','English','French','German','Italian','Japanese','Spanish','Korean','Portuguese','Russian','ChineseSimplified','ChineseTraditional','Amharic','Arabic','Bulgarian','BengaliIndia','Catalan','Czech','Cyrillic','Danish','Greek','Estonian','Basque','Farsi','Finnish','Filipino','Galician','Gujarati','Hebrew','Hindi','Croatian','Hungarian','Indonesian','Icelandic','Kazakh','Kannada','Lithuanian','Latvian','Malayalam','Marathi','Malay','Dutch','NorwegianNynorsk','Norwegian','Oriya','Polish','PortuguesePortugal','Romanian','Slovak','Slovenian','SerbianCyrillic','Serbian','Swedish','Swahili','Tamil','Telugu','Thai','Turkish','Ukrainian','Urdu','Vietnamese')]
+        [System.String[]]
+        $EndUserSpamNotificationLanguage = @('Default'),
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [System.String[]]
+        $HighConfidenceSpamAction = @('MoveToJmf'),
+
+        [Parameter()]
+        [System.Boolean]
+        $InlineSafetyTipsEnabled = $true,
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $IncreaseScoreWithBizOrInfoUrls = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $IncreaseScoreWithImageLinks = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $IncreaseScoreWithNumericIps = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $IncreaseScoreWithRedirectToOtherPort ='Off',
+
+        [Parameter()]
+        [System.String[]]
+        $LanguageBlockList = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $MakeDefault = $false,
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamBulkMail = 'On',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamEmbedTagsInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamEmptyMessages = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamFormTagsInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamFramesInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamFromAddressAuthFail = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamJavaScriptInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamNdrBackscatter = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamObjectTagsInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamSensitiveWordList = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamSpfRecordHardFail = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamWebBugsInHtml = 'Off',
+
+        [Parameter()]
+        [System.String]
+        $ModifySubjectValue,
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [System.String[]]
+        $PhishSpamAction = @('MoveToJmf'),
+
+        [Parameter()]
+        [ValidateRange(1,15)]
+        [uint32]
+        $QuarantineRetentionPeriod = 15,
+
+        [Parameter()]
+        [System.String[]]
+        $RedirectToRecipients = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $RegionBlockList = @(),
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [System.String[]]
+        $SpamAction = @('MoveToJmf'),
+
+        [Parameter()]
+        [ValidateSet('None','AddXHeader','BccMessage')]
+        [System.String[]]
+        $TestModeAction = @('None'),
+
+        [Parameter()]
+        [System.String[]]
+        $TestModeBccToRecipients = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $ZapEnabled = $true
     )
 }
 

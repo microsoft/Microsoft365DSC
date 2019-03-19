@@ -1658,6 +1658,16 @@ function Start-O365ConfigurationExtract
     $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
     #endregion
 
+    #region "EXOHostedContentFilterPolicy"
+    Write-Information "Extracting EXOHostedContentFilterPolicy..."
+    $EXOHostedContentFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterPolicy\MSFT_EXOHostedContentFilterPolicy.psm1" `
+                                                -Resolve
+
+    $catch = Import-Module $EXOHostedContentFilterPolicyModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
     #region "EXOMailboxSettings"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOMailboxSettings"))
     {
