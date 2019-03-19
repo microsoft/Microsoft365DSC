@@ -1046,6 +1046,16 @@ function Get-HostedContentFilterPolicy
     )
 }
 
+function Get-HostedContentFilterRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
 function Get-SPOAppErrors {
  [CmdletBinding()]
 param(
@@ -2398,6 +2408,58 @@ function New-HostedContentFilterPolicy
     )
 }
 
+function New-HostedContentFilterRule {
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $HostedContentFilterPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @()
+
+    )
+}
+
 function New-SPOMigrationEncryptionParameters {
  [CmdletBinding()]
 param()
@@ -2666,6 +2728,18 @@ function Remove-HostedConnectionFilterPolicy
 }
 
 function Remove-HostedContentFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-HostedContentFilterRule
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -3762,6 +3836,54 @@ function Set-HostedContentFilterPolicy
         [Parameter()]
         [System.Boolean]
         $ZapEnabled = $true
+    )
+}
+
+function Set-HostedContentFilterRule {
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $HostedContentFilterPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @()
+
     )
 }
 

@@ -842,6 +842,38 @@ function BuildAntiPhishParams
     }
 }
 
+function BuildHostedContentFilterParams
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $BuildHostedContentFilterParams,
+
+        [Parameter()]
+        [ValidateSet('New', 'Set')]
+        [System.String]
+        $Operation
+    )
+    $HostedContentFilterParams = $BuildHostedContentFilterParams
+    $HostedContentFilterParams.Remove("GlobalAdminAccount") | out-null
+    $HostedContentFilterParams.Remove("Ensure") | out-null
+    $HostedContentFilterParams.Remove("Verbose") | out-null
+    if ('New' -eq $Operation)
+    {
+        $HostedContentFilterParams += @{
+            Name = $HostedContentFilterParams.Identity
+        }
+        $HostedContentFilterParams.Remove("Identity") | out-null
+        $HostedContentFilterParams.Remove("MakeDefault") | out-null
+        return $HostedContentFilterParams
+    }
+    if ('Set' -eq $Operation)
+    {
+        $HostedContentFilterParams.Remove("Enabled") | out-null
+        return $HostedContentFilterParams
+    }
+}
+
 function Close-SessionsAndReturnError
 {
     [CmdletBinding()]
@@ -1121,6 +1153,25 @@ function NewAntiPhishRule
     }
 }
 
+function NewHostedContentFilterRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $NewHostedContentFilterRuleParams
+    )
+    try
+    {
+        $BuiltParams = (BuildHostedContentFilterParams -BuildHostedContentFilterParams $NewHostedContentFilterRuleParams -Operation 'New' )
+        Write-Verbose "Creating New HostedContentFilterRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        New-HostedContentFilterRule @BuiltParams -Confirm:$false
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
 function SetAntiPhishRule
 {
     param (
@@ -1165,6 +1216,32 @@ function SetAntiPhishPolicy
         else
         {
             Write-Verbose "No more values to Set on AntiPhishPolicy $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+        }
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function SetHostedContentFilterRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SetHostedContentFilterRuleParams
+    )
+    try
+    {
+        $BuiltParams = (BuildHostedContentFilterParams -BuildHostedContentFilterParams $SetHostedContentFilterRuleParams -Operation 'Set' )
+        if ($BuiltParams.keys -gt 1)
+        {
+            Write-Verbose "Setting HostedContentFilterRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Set-HostedContentFilterRule @BuiltParams -Confirm:$false
+        }
+        else
+        {
+            Write-Verbose "No more values to Set on HostedContentFilterRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
         }
     }
     catch
@@ -1665,6 +1742,16 @@ function Start-O365ConfigurationExtract
                                                 -Resolve
 
     $catch = Import-Module $EXOHostedContentFilterPolicyModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXOHostedContentFilterRule"
+    Write-Information "Extracting EXOHostedContentFilterRule..."
+    $EXOHostedContentFilterRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterRule\MSFT_EXOHostedContentFilterRule.psm1" `
+                                                -Resolve
+
+    $catch = Import-Module $EXOHostedContentFilterRuleModulePath
     $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
     #endregion
 
