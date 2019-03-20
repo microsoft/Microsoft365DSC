@@ -3,25 +3,44 @@ This example is used to test new resources and showcase the usage of new resourc
 It is not meant to use as a production baseline.
 #>
 
-Configuration Site
+Configuration MSFT_SPOSite
 {
     Import-DSCResource -ModuleName Office365DSC
-    $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
+    $credsGlobalAdmin = Get-Credential -UserName "admin@Office365DSC.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
         SPOSite ee4a977d-4d7d-4968-9238-2a1702aa699c
         {
-            Url                = "https://office365dsc-my.sharepoint.com/"
-            ResourceQuota      = 0
-            CentralAdminUrl    = "https://Office365DSC-admin.sharepoint.com"
-            StorageQuota       = 26214400
-            LocaleId           = 1033
-            Template           = "SPSMSITEHOST#0"
-            GlobalAdminAccount = $credsGlobalAdmin
-            Owner               = "08b23058-d843-4b09-8174-d8d1b42d03c2"
-            CompatibilityLevel = 15
-            Title              = "My Site"
-            Ensure             = "Present"
+            Url                                         = "https://office365dsc.sharepoint.com/sites/testsite"
+            ResourceQuota                               = 0
+            CentralAdminUrl                             = "https://Office365DSC-admin.sharepoint.com"
+            StorageQuota                                = 26214400
+            LocaleId                                    = 1033
+            Template                                    = "STS#3"
+            GlobalAdminAccount                          = $credsGlobalAdmin
+            Owner                                       = "admin@Office365DSC.onmicrosoft.com"
+            CompatibilityLevel                          = 15
+            Title                                       = "TestSite"
+            Ensure                                      = "Present"
+            #AllowSelfServiceUpgrade                     = $true
+            #DenyAddAndCustomizePages                    = "Disabled"
+            #ResourceQuotaWarningLevel                   = 0
+            #StorageQuotaWarningLevel                    = 25574400
+            LockState                                   = "Unlock"
+            SharingCapability                           = "Disabled"
+            CommentsOnSitePagesDisabled                 = $false
+            SocialBarOnSitePagesDisabled                = $false
+            #DisableAppViews                             =
+            #DisableCompanyWideSharingLinks              =
+            #DisableFlows                                =
+            #DisabledWebpartIds                          =
+            #RestrictedToGeo                             =
+            #SharingAllowedDomainList                    =
+            #SharingBlockedDomainList                    =
+            #SharingDomainRestrictionMode                =
+            #ShowPeoplePickerSuggestionsForGuestUsers    =
+            #DefaultSharingLinkType                      =
+            #DefaultLinkPermission                       =
         }
     }
 }
@@ -36,4 +55,4 @@ $configData = @{
     )
 }
 
-Site -ConfigurationData $configData
+MSFT_SPOSite -ConfigurationData $configData
