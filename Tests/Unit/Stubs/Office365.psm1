@@ -1066,6 +1066,16 @@ function Get-HostedOutboundSpamFilterPolicy
     )
 }
 
+function Get-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
 function Get-SPOAppErrors {
  [CmdletBinding()]
 param(
@@ -2470,6 +2480,43 @@ function New-HostedContentFilterRule {
     )
 }
 
+function New-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [ValidateSet('Block', 'Replace', 'Allow', 'DynamicDelivery')]
+        [System.String]
+        $Action = 'Block',
+
+        [Parameter()]
+        [Boolean]
+        $ActionOnError = $false,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [Boolean]
+        $Enable = $false,
+
+        [Parameter()]
+        [Boolean]
+        $Redirect = $false,
+
+        [Parameter()]
+        [System.String]
+        $RedirectAddress
+    )
+}
+
 function New-SPOMigrationEncryptionParameters {
  [CmdletBinding()]
 param()
@@ -2750,6 +2797,18 @@ function Remove-HostedContentFilterPolicy
 }
 
 function Remove-HostedContentFilterRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-SafeAttachmentPolicy
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -3926,6 +3985,43 @@ function Set-HostedOutboundSpamFilterPolicy
         [Parameter()]
         [Boolean]
         $NotifyOutboundSpam = $true
+    )
+}
+
+function Set-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [ValidateSet('Block', 'Replace', 'Allow', 'DynamicDelivery')]
+        [System.String]
+        $Action = 'Block',
+
+        [Parameter()]
+        [Boolean]
+        $ActionOnError = $false,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [Boolean]
+        $Enable = $false,
+
+        [Parameter()]
+        [Boolean]
+        $Redirect = $false,
+
+        [Parameter()]
+        [System.String]
+        $RedirectAddress
     )
 }
 

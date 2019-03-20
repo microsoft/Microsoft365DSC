@@ -93,7 +93,8 @@
                         'MSFT_EXOSharedMailbox', 'MSFT_O365AdminAuditLogConfig','MSFT_EXOAcceptedDomain','MSFT_EXOAntiPhishPolicy',
                         'MSFT_EXOAntiPhishRule', 'MSFT_EXOAtpPolicyForO365', 'MSFT_EXOCASMailboxPlan', 'MSFT_EXOClientAccessRule',
                         'MSFT_EXODkimSigningConfig', 'MSFT_EXOHostedConnectionFilterPolicy', 'MSFT_EXOHostedContentFilterPolicy',
-                        'MSFT_EXOHostedContentFilterRule', 'MSFT_EXOHostedOutboundSpamFilterPolicy', 'MSFT_TeamsFunSettings'
+                        'MSFT_EXOHostedContentFilterRule', 'MSFT_EXOHostedOutboundSpamFilterPolicy', 'MSFT_EXOSafeAttachmentPolicy',
+                        'MSFT_TeamsFunSettings'
 
   # List of all modules packaged with this module
   # ModuleList = @()
