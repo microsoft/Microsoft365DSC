@@ -810,67 +810,36 @@ $TimeZones = @(
         EnglishDescription = "(GMT+13:00) Nuku’alofa"
     }
 )
-function BuildAntiPhishParams
+function Build-EXOParams
 {
+    [CmdletBinding()]
     param (
         [Parameter()]
         [System.Collections.Hashtable]
-        $BuildAntiPhishParams,
+        $InputEXOParams,
 
         [Parameter()]
         [ValidateSet('New', 'Set')]
         [System.String]
         $Operation
     )
-    $AntiPhishParams = $BuildAntiPhishParams
-    $AntiPhishParams.Remove("GlobalAdminAccount") | out-null
-    $AntiPhishParams.Remove("Ensure") | out-null
-    $AntiPhishParams.Remove("Verbose") | out-null
+    $EXOParams = $InputEXOParams
+    $EXOParams.Remove("GlobalAdminAccount") | out-null
+    $EXOParams.Remove("Ensure") | out-null
+    $EXOParams.Remove("Verbose") | out-null
     if ('New' -eq $Operation)
     {
-        $AntiPhishParams += @{
-            Name = $AntiPhishParams.Identity
+        $EXOParams += @{
+            Name = $EXOParams.Identity
         }
-        $AntiPhishParams.Remove("Identity") | out-null
-        $AntiPhishParams.Remove("MakeDefault") | out-null
-        return $AntiPhishParams
+        $EXOParams.Remove("Identity") | out-null
+        $EXOParams.Remove("MakeDefault") | out-null
+        return $EXOParams
     }
     if ('Set' -eq $Operation)
     {
-        $AntiPhishParams.Remove("Enabled") | out-null
-        return $AntiPhishParams
-    }
-}
-
-function BuildHostedContentFilterParams
-{
-    param (
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $BuildHostedContentFilterParams,
-
-        [Parameter()]
-        [ValidateSet('New', 'Set')]
-        [System.String]
-        $Operation
-    )
-    $HostedContentFilterParams = $BuildHostedContentFilterParams
-    $HostedContentFilterParams.Remove("GlobalAdminAccount") | out-null
-    $HostedContentFilterParams.Remove("Ensure") | out-null
-    $HostedContentFilterParams.Remove("Verbose") | out-null
-    if ('New' -eq $Operation)
-    {
-        $HostedContentFilterParams += @{
-            Name = $HostedContentFilterParams.Identity
-        }
-        $HostedContentFilterParams.Remove("Identity") | out-null
-        $HostedContentFilterParams.Remove("MakeDefault") | out-null
-        return $HostedContentFilterParams
-    }
-    if ('Set' -eq $Operation)
-    {
-        $HostedContentFilterParams.Remove("Enabled") | out-null
-        return $HostedContentFilterParams
+        $EXOParams.Remove("Enabled") | out-null
+        return $EXOParams
     }
 }
 
@@ -1124,7 +1093,7 @@ function NewAntiPhishPolicy
     )
     try
     {
-        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $NewAntiPhishPolicyParams -Operation 'New' )
+        $BuiltParams = (Build-EXOParams -InputEXOParams $NewAntiPhishPolicyParams -Operation 'New' )
         Write-Verbose "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-AntiPhishPolicy @BuiltParams
     }
@@ -1143,7 +1112,7 @@ function NewAntiPhishRule
     )
     try
     {
-        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $NewAntiPhishRuleParams -Operation 'New' )
+        $BuiltParams = (Build-EXOParams -InputEXOParams $NewAntiPhishRuleParams -Operation 'New' )
         Write-Verbose "Creating New AntiPhishRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-AntiPhishRule @BuiltParams -Confirm:$false
     }
@@ -1162,7 +1131,7 @@ function NewHostedContentFilterRule
     )
     try
     {
-        $BuiltParams = (BuildHostedContentFilterParams -BuildHostedContentFilterParams $NewHostedContentFilterRuleParams -Operation 'New' )
+        $BuiltParams = (Build-EXOParams -InputEXOParams $NewHostedContentFilterRuleParams -Operation 'New' )
         Write-Verbose "Creating New HostedContentFilterRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-HostedContentFilterRule @BuiltParams -Confirm:$false
     }
@@ -1181,7 +1150,7 @@ function SetAntiPhishRule
     )
     try
     {
-        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $SetAntiPhishRuleParams -Operation 'Set' )
+        $BuiltParams = (Build-EXOParams -InputEXOParams $SetAntiPhishRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting AntiPhishRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
@@ -1207,7 +1176,7 @@ function SetAntiPhishPolicy
     )
     try
     {
-        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $SetAntiPhishPolicyParams -Operation 'Set' )
+        $BuiltParams = (Build-EXOParams -InputEXOParams $SetAntiPhishPolicyParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
@@ -1233,7 +1202,7 @@ function SetHostedContentFilterRule
     )
     try
     {
-        $BuiltParams = (BuildHostedContentFilterParams -BuildHostedContentFilterParams $SetHostedContentFilterRuleParams -Operation 'Set' )
+        $BuiltParams = (Build-EXOParams -InputEXOParams $SetHostedContentFilterRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting HostedContentFilterRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
