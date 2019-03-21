@@ -191,12 +191,11 @@ function Test-TargetResource
     )
     Write-Verbose -Message "Testing CASMailboxPlan for $($Identity)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $CASMailboxPlanTestParams = $PSBoundParameters
-    $CASMailboxPlanTestParams.Remove('GlobalAdminAccount') | out-null
-    $CASMailboxPlanTestParams.Remove('Verbose') | out-null
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $CASMailboxPlanTestParams.Keys
+        -ValuesToCheck $ValuesToCheck.Keys
     if ($TestResult)
     {
         Write-Verbose 'Test-TargetResource returned True'

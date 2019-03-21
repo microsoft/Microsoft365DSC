@@ -237,12 +237,11 @@ function Test-TargetResource
     )
     Write-Verbose -Message "Testing SafeAttachmentPolicy for $($Identity)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $SafeAttachmentPolicyTestParams = $PSBoundParameters
-    $SafeAttachmentPolicyTestParams.Remove('GlobalAdminAccount') | out-null
-    $SafeAttachmentPolicyTestParams.Remove('Verbose') | out-null
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $SafeAttachmentPolicyTestParams.Keys
+        -ValuesToCheck $ValuesToCheck.Keys
     if ($TestResult)
     {
         Write-Verbose 'Test-TargetResource returned True'

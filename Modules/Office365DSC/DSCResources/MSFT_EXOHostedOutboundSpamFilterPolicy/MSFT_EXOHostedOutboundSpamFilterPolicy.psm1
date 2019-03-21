@@ -228,13 +228,14 @@ function Test-TargetResource
     )
     Write-Verbose -Message "Testing HostedOutboundSpamFilterPolicy for $($Identity)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $HostedOutboundSpamFilterPolicyTestParams = $PSBoundParameters
-    $HostedOutboundSpamFilterPolicyTestParams.Remove('GlobalAdminAccount') | out-null
-    $HostedOutboundSpamFilterPolicyTestParams.Remove('IsSingleInstance') | out-null
-    $HostedOutboundSpamFilterPolicyTestParams.Remove('Verbose') | out-null
+    $CurrentValues = Get-TargetResource @PSBoundParameters
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
+    $ValuesToCheck.Remove('IsSingleInstance') | out-null
+    $ValuesToCheck.Remove('Verbose') | out-null
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $HostedOutboundSpamFilterPolicyTestParams.Keys
+        -ValuesToCheck $ValuesToCheck.Keys
     if ($TestResult)
     {
         Write-Verbose 'Test-TargetResource returned True'

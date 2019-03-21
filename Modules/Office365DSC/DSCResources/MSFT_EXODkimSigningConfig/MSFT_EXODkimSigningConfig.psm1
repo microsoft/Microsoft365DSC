@@ -247,18 +247,22 @@ function Test-TargetResource
     )
     Write-Verbose -Message "Testing DkimSigningConfig for $($Identity)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $DkimSigningConfigTestParams = $PSBoundParameters
-    $DkimSigningConfigTestParams.Remove('GlobalAdminAccount') | out-null
-    $DkimSigningConfigTestParams.Remove('KeySize') | out-null
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $DkimSigningConfigTestParams.Keys
+        -ValuesToCheck $ValuesToCheck.Keys
     if ($TestResult)
     {
+        Write-Verbose 'Test-TargetResource returned True'
         Write-Verbose 'Closing Remote PowerShell Sessions'
         $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-        Write-Verbose "Global ExchangeOnlineSession status: `n"
+        Write-Verbose 'Global ExchangeOnlineSession status: '
         Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
+    }
+    else
+    {
+        Write-Verbose 'Test-TargetResource returned False'
     }
 
     return $TestResult
