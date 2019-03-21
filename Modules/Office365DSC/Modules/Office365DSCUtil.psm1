@@ -1257,9 +1257,11 @@ function NewAntiPhishPolicy
     )
     try
     {
+        $VerbosePreference = 'Continue'
         $BuiltParams = (Build-EXOParams -InputEXOParams $NewAntiPhishPolicyParams -Operation 'New' )
         Write-Verbose "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-AntiPhishPolicy @BuiltParams
+        $VerbosePreference = 'SilentlyContinue'
     }
     catch
     {
@@ -1276,9 +1278,11 @@ function NewAntiPhishRule
     )
     try
     {
+        $VerbosePreference = 'Continue'
         $BuiltParams = (Build-EXOParams -InputEXOParams $NewAntiPhishRuleParams -Operation 'New' )
         Write-Verbose "Creating New AntiPhishRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-AntiPhishRule @BuiltParams -Confirm:$false
+        $VerbosePreference = 'SilentlyContinue'
     }
     catch
     {
@@ -1295,9 +1299,11 @@ function NewHostedContentFilterRule
     )
     try
     {
+        $VerbosePreference = 'Continue'
         $BuiltParams = (Build-EXOParams -InputEXOParams $NewHostedContentFilterRuleParams -Operation 'New' )
         Write-Verbose "Creating New HostedContentFilterRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-HostedContentFilterRule @BuiltParams -Confirm:$false
+        $VerbosePreference = 'SilentlyContinue'
     }
     catch
     {
@@ -1314,9 +1320,32 @@ function NewSafeAttachmentRule
     )
     try
     {
+        $VerbosePreference = 'Continue'
         $BuiltParams = (Build-EXOParams -InputEXOParams $NewSafeAttachmentRuleParams -Operation 'New' )
         Write-Verbose "Creating New SafeAttachmentRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-SafeAttachmentRule @BuiltParams -Confirm:$false
+        $VerbosePreference = 'SilentlyContinue'
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function NewSafeLinksRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $NewSafeLinksRuleParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Build-EXOParams -InputEXOParams $NewSafeLinksRuleParams -Operation 'New' )
+        Write-Verbose "Creating New SafeLinksRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        New-SafeLinksRule @BuiltParams -Confirm:$false
+        $VerbosePreference = 'SilentlyContinue'
     }
     catch
     {
@@ -1333,15 +1362,18 @@ function SetAntiPhishRule
     )
     try
     {
+        $VerbosePreference = 'Continue'
         $BuiltParams = (Build-EXOParams -InputEXOParams $SetAntiPhishRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting AntiPhishRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
             Set-AntiPhishRule @BuiltParams -Confirm:$false
+            $VerbosePreference = 'SilentlyContinue'
         }
         else
         {
             Write-Verbose "No more values to Set on AntiPhishRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            $VerbosePreference = 'SilentlyContinue'
         }
     }
     catch
@@ -1359,15 +1391,18 @@ function SetAntiPhishPolicy
     )
     try
     {
+        $VerbosePreference = 'Continue'
         $BuiltParams = (Build-EXOParams -InputEXOParams $SetAntiPhishPolicyParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
             Set-AntiPhishPolicy @BuiltParams -Confirm:$false
+            $VerbosePreference = 'SilentlyContinue'
         }
         else
         {
             Write-Verbose "No more values to Set on AntiPhishPolicy $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            $VerbosePreference = 'SilentlyContinue'
         }
     }
     catch
@@ -1385,15 +1420,18 @@ function SetHostedContentFilterRule
     )
     try
     {
+        $VerbosePreference = 'Continue'
         $BuiltParams = (Build-EXOParams -InputEXOParams $SetHostedContentFilterRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting HostedContentFilterRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
             Set-HostedContentFilterRule @BuiltParams -Confirm:$false
+            $VerbosePreference = 'SilentlyContinue'
         }
         else
         {
             Write-Verbose "No more values to Set on HostedContentFilterRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            $VerbosePreference = 'SilentlyContinue'
         }
     }
     catch
@@ -1411,15 +1449,47 @@ function SetSafeAttachmentRule
     )
     try
     {
+        $VerbosePreference = 'Continue'
         $BuiltParams = (Build-EXOParams -InputEXOParams $SetSafeAttachmentRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting SafeAttachmentRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
             Set-SafeAttachmentRule @BuiltParams -Confirm:$false
+            $VerbosePreference = 'SilentlyContinue'
         }
         else
         {
             Write-Verbose "No more values to Set on SafeAttachmentRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            $VerbosePreference = 'SilentlyContinue'
+        }
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function SetSafeLinksRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SetSafeLinksRuleParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Build-EXOParams -InputEXOParams $SetSafeLinksRuleParams -Operation 'Set' )
+        if ($BuiltParams.keys -gt 1)
+        {
+            Write-Verbose "Setting SafeLinksRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Set-SafeLinksRule @BuiltParams -Confirm:$false
+            $VerbosePreference = 'SilentlyContinue'
+        }
+        else
+        {
+            Write-Verbose "No more values to Set on SafeLinksRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            $VerbosePreference = 'SilentlyContinue'
         }
     }
     catch
@@ -1970,6 +2040,16 @@ function Start-O365ConfigurationExtract
                                                 -Resolve
 
     $catch = Import-Module $EXOSafeLinksPolicyModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXOSafeLinksRule"
+    Write-Information "Extracting EXOSafeLinksRule..."
+    $EXOSafeLinksRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOSafeLinksRule\MSFT_EXOSafeLinksRule.psm1" `
+                                                -Resolve
+
+    $catch = Import-Module $EXOSafeLinksRuleModulePath
     $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
     #endregion
 
