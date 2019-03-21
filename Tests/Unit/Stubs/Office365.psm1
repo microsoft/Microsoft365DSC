@@ -1076,6 +1076,16 @@ function Get-SafeAttachmentPolicy
     )
 }
 
+function Get-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
 function Get-SPOAppErrors {
  [CmdletBinding()]
 param(
@@ -2517,6 +2527,58 @@ function New-SafeAttachmentPolicy
     )
 }
 
+function New-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SafeAttachmentPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter()]
+        [uint32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @()
+    )
+}
+
 function New-SPOMigrationEncryptionParameters {
  [CmdletBinding()]
 param()
@@ -2809,6 +2871,18 @@ function Remove-HostedContentFilterRule
 }
 
 function Remove-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-SafeAttachmentRule
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -4022,6 +4096,58 @@ function Set-SafeAttachmentPolicy
         [Parameter()]
         [System.String]
         $RedirectAddress
+    )
+}
+
+function Set-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SafeAttachmentPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter()]
+        [uint32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @()
     )
 }
 

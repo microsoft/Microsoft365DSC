@@ -1305,6 +1305,25 @@ function NewHostedContentFilterRule
     }
 }
 
+function NewSafeAttachmentRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $NewSafeAttachmentRuleParams
+    )
+    try
+    {
+        $BuiltParams = (Build-EXOParams -InputEXOParams $NewSafeAttachmentRuleParams -Operation 'New' )
+        Write-Verbose "Creating New SafeAttachmentRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        New-SafeAttachmentRule @BuiltParams -Confirm:$false
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
 function SetAntiPhishRule
 {
     param (
@@ -1375,6 +1394,32 @@ function SetHostedContentFilterRule
         else
         {
             Write-Verbose "No more values to Set on HostedContentFilterRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+        }
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function SetSafeAttachmentRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SetSafeAttachmentRuleParams
+    )
+    try
+    {
+        $BuiltParams = (Build-EXOParams -InputEXOParams $SetSafeAttachmentRuleParams -Operation 'Set' )
+        if ($BuiltParams.keys -gt 1)
+        {
+            Write-Verbose "Setting SafeAttachmentRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Set-SafeAttachmentRule @BuiltParams -Confirm:$false
+        }
+        else
+        {
+            Write-Verbose "No more values to Set on SafeAttachmentRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
         }
     }
     catch
@@ -1905,6 +1950,16 @@ function Start-O365ConfigurationExtract
                                                 -Resolve
 
     $catch = Import-Module $EXOSafeAttachmentPolicyModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXOSafeAttachmentRule"
+    Write-Information "Extracting EXOSafeAttachmentRule..."
+    $EXOSafeAttachmentRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentRule\MSFT_EXOSafeAttachmentRule.psm1" `
+                                                -Resolve
+
+    $catch = Import-Module $EXOSafeAttachmentRuleModulePath
     $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
     #endregion
 
