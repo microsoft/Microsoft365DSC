@@ -2,7 +2,8 @@
 
 ## Description
 
-This resource configures Client Access services (CAS) mailbox plans in cloud-based organizations.
+This resource configures Client Access services (CAS) mailbox plans
+in cloud-based organizations.
 
 ## Parameters
 

@@ -36,8 +36,9 @@ Note: Not all authentication types are supported for all protocols.
 
     AnyOfAuthenticationTypes
       -  Required: No
-      -  Description: The AnyOfAuthenticationTypes parameter specifies a condition for the
-         client access rule that's based on the client's authentication type.
+      -  Description: The AnyOfAuthenticationTypes parameter specifies a
+         condition for the client access rule that's based on the client's
+         authentication type.
          Valid values for this parameter are:
              AdfsAuthentication
              BasicAuthentication
@@ -163,19 +164,19 @@ Note: Not all authentication types are supported for all protocols.
 ## Example
 
 ```PowerShell
-        EXOClientAccessRule CliendAccessRuleExampleConfig {
-            Ensure                               = 'Present'
-            Identity                             = 'ExampleCASRule'
-            GlobalAdminAccount                   = $GlobalAdminAccount
-            Action                               = 'AllowAccess'
-            AnyOfAuthenticationTypes             = @('AdfsAuthentication', 'BasicAuthentication')
-            AnyOfClientIPAddressesOrRanges       = @('192.168.1.100', '10.1.1.0/24', '172.16.5.1-172.16.5.150')
-            AnyOfProtocols                       = @('ExchangeAdminCenter', 'OutlookWebApp')
-            Enabled                              = $false
-            ExceptAnyOfClientIPAddressesOrRanges = @('10.1.1.13', '172.16.5.2')
-            ExceptUsernameMatchesAnyOfPatterns   = @('*ThatGuy*', 'contoso\JohnDoe')
-            Priority                             = 1
-            RuleScope                            = 'Users'
-            UserRecipientFilter                  = '{City -eq "Redmond"}'
-        }
+EXOClientAccessRule CliendAccessRuleExampleConfig {
+    Ensure                               = 'Present'
+    Identity                             = 'ExampleCASRule'
+    GlobalAdminAccount                   = $GlobalAdminAccount
+    Action                               = 'AllowAccess'
+    AnyOfAuthenticationTypes             = @('AdfsAuthentication', 'BasicAuthentication')
+    AnyOfClientIPAddressesOrRanges       = @('192.168.1.100', '10.1.1.0/24', '172.16.5.1-172.16.5.150')
+    AnyOfProtocols                       = @('ExchangeAdminCenter', 'OutlookWebApp')
+    Enabled                              = $false
+    ExceptAnyOfClientIPAddressesOrRanges = @('10.1.1.13', '172.16.5.2')
+    ExceptUsernameMatchesAnyOfPatterns   = @('*ThatGuy*', 'contoso\JohnDoe')
+    Priority                             = 1
+    RuleScope                            = 'Users'
+    UserRecipientFilter                  = '{City -eq "Redmond"}'
+}
 ```

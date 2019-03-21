@@ -64,15 +64,15 @@ in your cloud-based organization.
 ## Example
 
 ```PowerShell
-        EXOHostedOutboundSpamFilterPolicy HostedOutboundSpamFilterPolicyExample {
-                IsSingleInstance                          = 'Yes'
-                Ensure                                    = 'Present'
-                Identity                                  = 'Default'
-                GlobalAdminAccount                        = $GlobalAdminAccount
-                AdminDisplayName                          = 'Default Outbound Spam Filter Policy'
-                BccSuspiciousOutboundMail                 = $true
-                BccSuspiciousOutboundAdditionalRecipients = @('admin@contoso.com')
-                NotifyOutboundSpam                        = $true
-                NotifyOutboundSpamRecipients              = @('supervisor@contoso.com')
-        }
+EXOHostedOutboundSpamFilterPolicy HostedOutboundSpamFilterPolicyExample {
+  IsSingleInstance                          = 'Yes'
+  Ensure                                    = 'Present'
+  Identity                                  = 'Default'
+  GlobalAdminAccount                        = $GlobalAdminAccount
+  AdminDisplayName                          = 'Default Outbound Spam Filter Policy'
+  BccSuspiciousOutboundMail                 = $true
+  BccSuspiciousOutboundAdditionalRecipients = @('admin@contoso.com')
+  NotifyOutboundSpam                        = $true
+  NotifyOutboundSpamRecipients              = @('supervisor@contoso.com')
+}
 ```
