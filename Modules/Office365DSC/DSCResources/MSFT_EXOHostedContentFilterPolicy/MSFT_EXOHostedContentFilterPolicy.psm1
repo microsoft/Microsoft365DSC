@@ -35,7 +35,7 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine')]
         [System.String]
-        $BulkSpamAction = @('MoveToJmf'),
+        $BulkSpamAction = 'MoveToJmf',
 
         [Parameter()]
         [ValidateRange(1,9)]
@@ -84,7 +84,7 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
         [System.String]
-        $HighConfidenceSpamAction = @('MoveToJmf'),
+        $HighConfidenceSpamAction = 'MoveToJmf',
 
         [Parameter()]
         [System.Boolean]
@@ -185,7 +185,7 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
         [System.String]
-        $PhishSpamAction = @('MoveToJmf'),
+        $PhishSpamAction = 'MoveToJmf',
 
         [Parameter()]
         [ValidateRange(1,15)]
@@ -203,12 +203,12 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
         [System.String]
-        $SpamAction = @('MoveToJmf'),
+        $SpamAction = 'MoveToJmf',
 
         [Parameter()]
         [ValidateSet('None','AddXHeader','BccMessage')]
         [System.String]
-        $TestModeAction = @('None'),
+        $TestModeAction = 'None',
 
         [Parameter()]
         [System.String[]]
@@ -327,7 +327,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine')]
         [System.String]
-        $BulkSpamAction = @('MoveToJmf'),
+        $BulkSpamAction = 'MoveToJmf',
 
         [Parameter()]
         [ValidateRange(1,9)]
@@ -376,7 +376,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
         [System.String]
-        $HighConfidenceSpamAction = @('MoveToJmf'),
+        $HighConfidenceSpamAction = 'MoveToJmf',
 
         [Parameter()]
         [System.Boolean]
@@ -477,7 +477,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
         [System.String]
-        $PhishSpamAction = @('MoveToJmf'),
+        $PhishSpamAction = 'MoveToJmf',
 
         [Parameter()]
         [ValidateRange(1,15)]
@@ -495,12 +495,12 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
         [System.String]
-        $SpamAction = @('MoveToJmf'),
+        $SpamAction = 'MoveToJmf',
 
         [Parameter()]
         [ValidateSet('None','AddXHeader','BccMessage')]
         [System.String]
-        $TestModeAction = @('None'),
+        $TestModeAction = 'None',
 
         [Parameter()]
         [System.String[]]
@@ -630,7 +630,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine')]
         [System.String]
-        $BulkSpamAction = @('MoveToJmf'),
+        $BulkSpamAction = 'MoveToJmf',
 
         [Parameter()]
         [ValidateRange(1,9)]
@@ -679,7 +679,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
         [System.String]
-        $HighConfidenceSpamAction = @('MoveToJmf'),
+        $HighConfidenceSpamAction = 'MoveToJmf',
 
         [Parameter()]
         [System.Boolean]
@@ -780,7 +780,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
         [System.String]
-        $PhishSpamAction = @('MoveToJmf'),
+        $PhishSpamAction = 'MoveToJmf',
 
         [Parameter()]
         [ValidateRange(1,15)]
@@ -798,12 +798,12 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
         [System.String]
-        $SpamAction = @('MoveToJmf'),
+        $SpamAction = 'MoveToJmf',
 
         [Parameter()]
         [ValidateSet('None','AddXHeader','BccMessage')]
         [System.String]
-        $TestModeAction = @('None'),
+        $TestModeAction = 'None',
 
         [Parameter()]
         [System.String[]]

@@ -60,7 +60,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $UserRecipientFilter = @(),
+        $UserRecipientFilter,
 
         [Parameter()]
         [System.String[]]
@@ -192,7 +192,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $UserRecipientFilter = @(),
+        $UserRecipientFilter,
 
         [Parameter()]
         [System.String[]]
@@ -342,7 +342,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $UserRecipientFilter = @(),
+        $UserRecipientFilter,
 
         [Parameter()]
         [System.String[]]

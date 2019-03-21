@@ -2160,7 +2160,7 @@ function New-ClientAccessRule
 
         [Parameter()]
         [System.String[]]
-        $UserRecipientFilter = @(),
+        $UserRecipientFilter,
 
         [Parameter()]
         [System.String[]]
@@ -2273,7 +2273,7 @@ function New-HostedContentFilterPolicy
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine')]
         [System.String]
-        $BulkSpamAction = @('MoveToJmf'),
+        $BulkSpamAction = 'MoveToJmf',
 
         [Parameter()]
         [ValidateRange(1,9)]
@@ -2322,7 +2322,7 @@ function New-HostedContentFilterPolicy
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
         [System.String]
-        $HighConfidenceSpamAction = @('MoveToJmf'),
+        $HighConfidenceSpamAction = 'MoveToJmf',
 
         [Parameter()]
         [System.Boolean]
@@ -2423,7 +2423,7 @@ function New-HostedContentFilterPolicy
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
         [System.String]
-        $PhishSpamAction = @('MoveToJmf'),
+        $PhishSpamAction = 'MoveToJmf',
 
         [Parameter()]
         [ValidateRange(1,15)]
@@ -2441,12 +2441,12 @@ function New-HostedContentFilterPolicy
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
         [System.String]
-        $SpamAction = @('MoveToJmf'),
+        $SpamAction = 'MoveToJmf',
 
         [Parameter()]
         [ValidateSet('None','AddXHeader','BccMessage')]
         [System.String]
-        $TestModeAction = @('None'),
+        $TestModeAction = 'None',
 
         [Parameter()]
         [System.String[]]
@@ -3821,7 +3821,7 @@ function Set-ClientAccessRule
 
         [Parameter()]
         [System.String[]]
-        $UserRecipientFilter = @(),
+        $UserRecipientFilter,
 
         [Parameter()]
         [System.String[]]
@@ -3938,7 +3938,7 @@ function Set-HostedContentFilterPolicy
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine')]
         [System.String]
-        $BulkSpamAction = @('MoveToJmf'),
+        $BulkSpamAction = 'MoveToJmf',
 
         [Parameter()]
         [ValidateRange(1,9)]
@@ -3987,7 +3987,7 @@ function Set-HostedContentFilterPolicy
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
         [System.String]
-        $HighConfidenceSpamAction = @('MoveToJmf'),
+        $HighConfidenceSpamAction = 'MoveToJmf',
 
         [Parameter()]
         [System.Boolean]
@@ -4088,7 +4088,7 @@ function Set-HostedContentFilterPolicy
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
         [System.String]
-        $PhishSpamAction = @('MoveToJmf'),
+        $PhishSpamAction = 'MoveToJmf',
 
         [Parameter()]
         [ValidateRange(1,15)]
@@ -4106,12 +4106,12 @@ function Set-HostedContentFilterPolicy
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
         [System.String]
-        $SpamAction = @('MoveToJmf'),
+        $SpamAction = 'MoveToJmf',
 
         [Parameter()]
         [ValidateSet('None','AddXHeader','BccMessage')]
         [System.String[]]
-        $TestModeAction = @('None'),
+        $TestModeAction = 'None',
 
         [Parameter()]
         [System.String[]]
