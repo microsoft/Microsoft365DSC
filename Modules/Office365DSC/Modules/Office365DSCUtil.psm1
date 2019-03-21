@@ -1963,6 +1963,16 @@ function Start-O365ConfigurationExtract
     $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
     #endregion
 
+    #region "EXOSafeLinksPolicy"
+    Write-Information "Extracting EXOSafeLinksPolicy..."
+    $EXOSafeLinksPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOSafeLinksPolicy\MSFT_EXOSafeLinksPolicy.psm1" `
+                                                -Resolve
+
+    $catch = Import-Module $EXOSafeLinksPolicyModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
     #region "EXOMailboxSettings"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOMailboxSettings"))
     {

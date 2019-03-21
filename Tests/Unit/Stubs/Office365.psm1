@@ -1086,6 +1086,16 @@ function Get-SafeAttachmentRule
     )
 }
 
+function Get-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
 function Get-SPOAppErrors {
  [CmdletBinding()]
 param(
@@ -2579,6 +2589,46 @@ function New-SafeAttachmentRule
     )
 }
 
+function New-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [Boolean]
+        $DoNotAllowClickThrough = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $DoNotRewriteUrls = @(),
+
+        [Parameter()]
+        [Boolean]
+        $DoNotTrackUserClicks = $true,
+
+        [Parameter()]
+        [Boolean]
+        $EnableForInternalSenders,
+
+        [Parameter()]
+        [Boolean]
+        $IsEnabled,
+
+        [Parameter()]
+        [Boolean]
+        $ScanUrls = $false
+    )
+}
+
 function New-SPOMigrationEncryptionParameters {
  [CmdletBinding()]
 param()
@@ -2883,6 +2933,18 @@ function Remove-SafeAttachmentPolicy
 }
 
 function Remove-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-SafeLinksPolicy
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -4148,6 +4210,46 @@ function Set-SafeAttachmentRule
         [Parameter()]
         [System.String[]]
         $SentToMemberOf = @()
+    )
+}
+
+function Set-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [Boolean]
+        $DoNotAllowClickThrough = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $DoNotRewriteUrls = @(),
+
+        [Parameter()]
+        [Boolean]
+        $DoNotTrackUserClicks = $true,
+
+        [Parameter()]
+        [Boolean]
+        $EnableForInternalSenders,
+
+        [Parameter()]
+        [Boolean]
+        $IsEnabled,
+
+        [Parameter()]
+        [Boolean]
+        $ScanUrls = $false
     )
 }
 

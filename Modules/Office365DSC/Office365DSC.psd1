@@ -94,7 +94,7 @@
                         'MSFT_EXOAntiPhishRule', 'MSFT_EXOAtpPolicyForO365', 'MSFT_EXOCASMailboxPlan', 'MSFT_EXOClientAccessRule',
                         'MSFT_EXODkimSigningConfig', 'MSFT_EXOHostedConnectionFilterPolicy', 'MSFT_EXOHostedContentFilterPolicy',
                         'MSFT_EXOHostedContentFilterRule', 'MSFT_EXOHostedOutboundSpamFilterPolicy', 'MSFT_EXOSafeAttachmentPolicy',
-                        'MSFT_EXOSafeAttachmentRule', 'MSFT_TeamsFunSettings'
+                        'MSFT_EXOSafeAttachmentRule', 'MSFT_EXOSafeLinksPolicy', 'MSFT_TeamsFunSettings'
 
   # List of all modules packaged with this module
   # ModuleList = @()
