@@ -2115,7 +2115,7 @@ function New-ClientAccessRule
 
         [Parameter()]
         [ValidateSet('AdfsAuthentication', 'BasicAuthentication', 'CertificateBasedAuthentication', 'NonBasicAuthentication', 'OAuthAuthentication')]
-        [System.String[]
+        [System.String[]]
         $AnyOfAuthenticationTypes = @(),
 
         [Parameter()]
