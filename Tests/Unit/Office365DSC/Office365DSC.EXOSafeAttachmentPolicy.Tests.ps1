@@ -175,7 +175,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Should call the Set method" {
                 Set-TargetResource @testParams
             }
-
         }
     }
 }
