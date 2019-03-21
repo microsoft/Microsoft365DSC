@@ -61,12 +61,8 @@ function Get-TargetResource
     if (-NOT $SafeAttachmentPolicy)
     {
         Write-Verbose "SafeAttachmentPolicy $($Identity) does not exist."
-        $result = @{
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
-            Identity           = $Identity
-        }
-
+        $result = $PSBoundParameters
+        $result.Ensure = 'Absent'
         return $result
     }
     else

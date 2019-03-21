@@ -55,11 +55,8 @@ function Get-TargetResource
     if (-NOT $HostedConnectionFilterPolicy)
     {
         Write-Verbose "HostedConnectionFilterPolicy $($Identity) does not exist."
-        $result = @{
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
-            Identity           = $Identity
-        }
+        $result = $PSBoundParameters
+        $result.Ensure = 'Absent'
         return $result
     }
     else

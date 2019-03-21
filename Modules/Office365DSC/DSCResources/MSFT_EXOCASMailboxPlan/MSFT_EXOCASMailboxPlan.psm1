@@ -57,11 +57,8 @@ function Get-TargetResource
     if (-NOT $CASMailboxPlan)
     {
         Write-Verbose "CASMailboxPlan $($Identity) does not exist."
-        $result = @{
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
-            Identity           = $Identity
-        }
+        $result = $PSBoundParameters
+        $result.Ensure = 'Absent'
         return $result
     }
     else

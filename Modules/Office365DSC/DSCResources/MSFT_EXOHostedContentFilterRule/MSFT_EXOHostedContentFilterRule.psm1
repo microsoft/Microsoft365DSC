@@ -74,11 +74,8 @@ function Get-TargetResource
     if (-NOT $HostedContentFilterRule)
     {
         Write-Verbose "HostedContentFilterRule $($Identity) does not exist."
-        $result = @{
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
-            Identity           = $Identity
-        }
+        $result = $PSBoundParameters
+        $result.Ensure = 'Absent'
         return $result
     }
     else

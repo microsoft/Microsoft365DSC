@@ -71,11 +71,8 @@ function Get-TargetResource
     if (-NOT $AtpPolicyForO365)
     {
         Write-Verbose "AtpPolicyForO365 $($Identity) does not exist."
-        $result = @{
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
-            Identity           = $Identity
-        }
+        $result = $PSBoundParameters
+        $result.Ensure = 'Absent'
         return $result
     }
     else
