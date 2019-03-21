@@ -155,29 +155,44 @@ function Set-TargetResource
     }
 
     $SafeAttachmentPolicy = $SafeAttachmentPolicies | Where-Object Identity -eq $Identity
-    if (-NOT $SafeAttachmentPolicy)
+    if ('Present' -eq $Ensure )
     {
-        try
+        if (-NOT $SafeAttachmentPolicy)
         {
-            Write-Verbose "Creating SafeAttachmentPolicy $($Identity)."
-            $SafeAttachmentPolicyParams += @{
-                Name = $SafeAttachmentPolicyParams.Identity
-            }
+            try
+            {
+                Write-Verbose "Creating SafeAttachmentPolicy $($Identity)."
+                $SafeAttachmentPolicyParams += @{
+                    Name = $SafeAttachmentPolicyParams.Identity
+                }
 
-            $SafeAttachmentPolicyParams.Remove('Identity') | out-null
-            New-SafeAttachmentPolicy @SafeAttachmentPolicyParams
+                $SafeAttachmentPolicyParams.Remove('Identity') | out-null
+                New-SafeAttachmentPolicy @SafeAttachmentPolicyParams
+            }
+            catch
+            {
+                Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+            }
         }
-        catch
+        else
         {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+            try
+            {
+                Write-Verbose "Setting SafeAttachmentPolicy $Identity with values: $($SafeAttachmentPolicyParams | Out-String)"
+                Set-SafeAttachmentPolicy @SafeAttachmentPolicyParams
+            }
+            catch
+            {
+                Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+            }
         }
     }
-    else
+    elseif (('Absent' -eq $Ensure) -and ($SafeAttachmentPolicy))
     {
+        Write-Verbose "Removing SafeAttachmentPolicy $($Identity) "
         try
         {
-            Write-Verbose "Setting SafeAttachmentPolicy $Identity with values: $($SafeAttachmentPolicyParams | Out-String)"
-            Set-SafeAttachmentPolicy @SafeAttachmentPolicyParams
+            Remove-SafeAttachmentPolicy -Identity $Identity -Confirm:$false -Force
         }
         catch
         {
