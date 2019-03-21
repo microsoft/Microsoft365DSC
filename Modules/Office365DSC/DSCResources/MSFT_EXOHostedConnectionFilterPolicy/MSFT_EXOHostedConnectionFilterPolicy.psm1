@@ -175,7 +175,8 @@ function Set-TargetResource
                 Name = $HostedConnectionFilterPolicyParams.Identity
             }
             $HostedConnectionFilterPolicyParams.Remove('Identity') | Out-Null
-            if ($PSBoundParameters.MakeDefault) {
+            if ($PSBoundParameters.MakeDefault)
+            {
                 New-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -MakeDefault -Confirm:$false
             }
             else
@@ -192,7 +193,8 @@ function Set-TargetResource
     {
         try
         {
-            if ($PSBoundParameters.MakeDefault) {
+            if ($PSBoundParameters.MakeDefault)
+            {
                 Set-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -MakeDefault -Confirm:$false
             }
             else

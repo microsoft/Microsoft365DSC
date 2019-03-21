@@ -226,7 +226,8 @@ function Set-TargetResource
     $ClientAccessRuleParams = $PSBoundParameters
     $ClientAccessRuleParams.Remove('Ensure') | Out-Null
     $ClientAccessRuleParams.Remove('GlobalAdminAccount') | Out-Null
-    if ($ClientAccessRuleParams.RuleScope) {
+    if ($ClientAccessRuleParams.RuleScope)
+    {
         $ClientAccessRuleParams += @{
             Scope = $ClientAccessRuleParams.RuleScope
         }

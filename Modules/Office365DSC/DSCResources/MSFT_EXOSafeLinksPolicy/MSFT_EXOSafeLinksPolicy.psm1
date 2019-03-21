@@ -181,7 +181,6 @@ function Set-TargetResource
     {
         try
         {
-
             Write-Verbose "Setting SafeLinksPolicy $($Identity) with values: $($SafeLinksPolicyParams | Out-String)"
             Set-SafeLinksPolicy @SafeLinksPolicyParams -Confirm:$false
         }

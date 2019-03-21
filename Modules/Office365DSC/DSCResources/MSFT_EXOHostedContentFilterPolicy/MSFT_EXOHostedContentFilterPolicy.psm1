@@ -561,7 +561,8 @@ function Set-TargetResource
         try
         {
             Write-Verbose "Setting HostedContentFilterPolicy $($Identity) with values: $($HostedContentFilterPolicyParams | Out-String)."
-            if ($PSBoundParameters.MakeDefault) {
+            if ($PSBoundParameters.MakeDefault)
+            {
                 Set-HostedContentFilterPolicy @HostedContentFilterPolicyParams -MakeDefault -Confirm:$false
             }
             else
