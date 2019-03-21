@@ -962,7 +962,11 @@ function Connect-ExchangeOnline
     (
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $CommandsToImport
     )
     $VerbosePreference = 'Continue'
     $WarningPreference = "SilentlyContinue"
@@ -983,18 +987,126 @@ function Connect-ExchangeOnline
         try
         {
             Write-Verbose "Opening New ExchangeOnline Session."
+            $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+            while ($PowerShellConnections)
+            {
+                Write-Verbose "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
+                Write-Verbose "Waiting for closing connections to close..."
+                Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
+                Start-Sleep -seconds 1
+                $CheckConnectionsWithoutKillingWhileLoop = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+                if (-NOT $CheckConnectionsWithoutKillingWhileLoop) {
+                    Write-Verbose "Connections have closed.  Waiting 5 more seconds..."
+                    Start-Sleep -seconds 5
+                    $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+                }
+            }
             $VerbosePreference = 'SilentlyContinue'
-            Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
-            $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-            $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
+            $Global:ExchangeOnlineSession = $null
+            while (-NOT $Global:ExchangeOnlineSession)
+            {
+                $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
+            }
+
+            if ($CommandsToImport)
+            {
+                $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -CommandName $CommandsToImport -AllowClobber -ErrorAction SilentlyContinue
+            }
+            else
+            {
+                $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
+            }
+
             $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global -ErrorAction SilentlyContinue
         }
         catch
         {
+            $ExceptionMessage = $_.Exception
+            $Error.Clear()
             $VerbosePreference = 'Continue'
-            $WarningPreference = "Continue"
-            $Global:ExchangeOnlineSession = $null
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+            if ($ExceptionMessage -imatch 'Please wait for [0-9]* seconds' )
+            {
+                Write-Verbose "Waiting for available runspace..."
+                [regex]$WaitTimePattern = 'Please wait for [0-9]* seconds'
+                $WaitTimePatternMatch = (($WaitTimePattern.Match($ExceptionMessage)).Value | Select-String -Pattern '[0-9]*' -AllMatches )
+                $WaitTimeInSeconds = ($WaitTimePatternMatch | ForEach-Object {$_.Matches} | Where-Object Value -NotLike $null).Value
+                Write-Verbose "Waiting for requested $WaitTimeInSeconds seconds..."
+                Start-Sleep -Seconds ($WaitTimeInSeconds + 1)
+                try
+                {
+                    Write-Verbose "Opening New ExchangeOnline Session."
+                    $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+                    while ($PowerShellConnections)
+                    {
+                        Write-Verbose "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
+                        Write-Verbose "Waiting for closing connections to close..."
+                        Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
+                        Start-Sleep -seconds 1
+                        $CheckConnectionsWithoutKillingWhileLoop = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+                        if (-NOT $CheckConnectionsWithoutKillingWhileLoop) {
+                            Write-Verbose "Connections have closed.  Waiting 5 more seconds..."
+                            Start-Sleep -seconds 5
+                            $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+                        }
+                    }
+                    $VerbosePreference = 'SilentlyContinue'
+                    $Global:ExchangeOnlineSession = $null
+                    while (-NOT $Global:ExchangeOnlineSession)
+                    {
+                        $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
+                    }
+
+                    if ($CommandsToImport)
+                    {
+                        $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -CommandName $CommandsToImport -AllowClobber -ErrorAction SilentlyContinue
+                    }
+                    else
+                    {
+                        $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
+                    }
+
+                    $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global -ErrorAction SilentlyContinue
+                }
+                catch
+                {
+                    $VerbosePreference = 'Continue'
+                    $WarningPreference = "Continue"
+                    $Global:ExchangeOnlineSession = $null
+                    Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+                }
+            }
+            else
+            {
+                $VerbosePreference = 'Continue'
+                Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
+                Write-Verbose "Exchange Online connection failed."
+                Write-Verbose "Waiting 60 seconds..."
+                Start-Sleep -Seconds 60
+                try
+                {
+                    Write-Verbose "Opening New ExchangeOnline Session."
+                    $VerbosePreference = 'SilentlyContinue'
+                    Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
+                    $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
+                    if ($CommandsToImport)
+                    {
+                        $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -CommandName $CommandsToImport -AllowClobber -ErrorAction SilentlyContinue
+                    }
+                    else
+                    {
+                        $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
+                    }
+
+                    $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global -ErrorAction SilentlyContinue
+                }
+                catch
+                {
+                    $VerbosePreference = 'Continue'
+                    $WarningPreference = "Continue"
+                    $Global:ExchangeOnlineSession = $null
+                    Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+                }
+            }
         }
     }
     else
@@ -1055,24 +1167,76 @@ function Connect-SecurityAndComplianceCenter
         }
     }
 
-    $Global:OpenSecurityAndComplianceCenterSession = (Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Where-Object InstanceId -eq ($Global:SecurityAndComplianceCenterSession).InstanceId | Where-Object State -eq 'Opened' )
+    $Global:OpenSecurityAndComplianceCenterSession = (Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Where-Object State -eq 'Opened' )
     if (-NOT $Global:OpenSecurityAndComplianceCenterSession)
     {
+        $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+        while ($PowerShellConnections)
+        {
+            Write-Verbose "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
+            Write-Verbose "Waiting for closing connections to close..."
+            Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Remove-PSSession
+            Start-Sleep -seconds 1
+            $CheckConnectionsWithoutKillingWhileLoop = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+            if (-NOT $CheckConnectionsWithoutKillingWhileLoop) {
+                Write-Verbose "Connections have closed.  Waiting 5 more seconds..."
+                Start-Sleep -seconds 5
+                $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+            }
+        }
+
         try
         {
             Write-Verbose "Opening New SecurityAndComplianceCenter Session."
             $VerbosePreference = 'SilentlyContinue'
-            Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
-            $Global:SecurityAndComplianceCenterSession = New-PSSession -Name 'SecurityAndComplianceCenter' -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
+            $Global:SecurityAndComplianceCenterSession = $null
+            while (-NOT $Global:SecurityAndComplianceCenterSession)
+            {
+                $Global:SecurityAndComplianceCenterSession = New-PSSession -Name 'SecurityAndComplianceCenter' -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
+            }
+
             $Global:SecurityAndComplianceCenterModules = Import-PSSession $Global:SecurityAndComplianceCenterSession -AllowClobber -ErrorAction SilentlyContinue
             $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global -ErrorAction SilentlyContinue
         }
         catch
         {
-            $Global:SecurityAndComplianceCenterSession = $null
-            $VerbosePreference = 'Continue'
-            $WarningPreference = "Continue"
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+            $ExceptionMessage = $_.Exception
+            $Error.Clear()
+            if ($ExceptionMessage -imatch 'Please wait for [0-9]* seconds' )
+            {
+                Write-Verbose "Waiting for available runspace..."
+                [regex]$WaitTimePattern = 'Please wait for [0-9]* seconds'
+                $WaitTimePatternMatch = (($WaitTimePattern.Match($ExceptionMessage)).Value | Select-String -Pattern '[0-9]*' -AllMatches )
+                $WaitTimeInSeconds = ($WaitTimePatternMatch | ForEach-Object {$_.Matches} | Where-Object Value -NotLike $null).Value
+                Start-Sleep -Seconds ($WaitTimeInSeconds + 1)
+                try
+                {
+                    Write-Verbose "Opening New SecurityAndComplianceCenter Session."
+                    $VerbosePreference = 'SilentlyContinue'
+                    $Global:SecurityAndComplianceCenterSession = $null
+                    while (-NOT $Global:SecurityAndComplianceCenterSession)
+                    {
+                        $Global:SecurityAndComplianceCenterSession = New-PSSession -Name 'SecurityAndComplianceCenter' -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
+                    }
+
+                    $Global:SecurityAndComplianceCenterModules = Import-PSSession $Global:SecurityAndComplianceCenterSession -AllowClobber -ErrorAction SilentlyContinue
+                    $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global -ErrorAction SilentlyContinue
+                }
+                catch
+                {
+                    $VerbosePreference = 'Continue'
+                    $WarningPreference = "Continue"
+                    $Global:ExchangeOnlineSession = $null
+                    Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+                }
+            }
+            else
+            {
+                $VerbosePreference = 'Continue'
+                $WarningPreference = "Continue"
+                $Global:ExchangeOnlineSession = $null
+                Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+            }
         }
     }
     else

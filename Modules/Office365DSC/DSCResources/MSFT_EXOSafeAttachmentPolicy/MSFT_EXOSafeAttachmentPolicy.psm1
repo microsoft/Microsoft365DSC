@@ -44,7 +44,7 @@ function Get-TargetResource
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve SafeAttachmentPolicy $($Identity)"
     Write-Verbose 'Calling Connect-ExchangeOnline function:'
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*SafeAttachmentPolicy'
     Write-Verbose 'Global ExchangeOnlineSession status:'
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $CmdletIsAvailable = Confirm-ImportedCmdletIsAvailable -CmdletName 'Get-SafeAttachmentPolicy'
@@ -138,7 +138,7 @@ function Set-TargetResource
     )
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Calling Connect-ExchangeOnline function:'
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*SafeAttachmentPolicy'
     Write-Verbose 'Global ExchangeOnlineSession status:'
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $CmdletIsAvailable = Confirm-ImportedCmdletIsAvailable -CmdletName 'Set-SafeAttachmentPolicy'

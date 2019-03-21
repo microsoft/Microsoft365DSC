@@ -54,7 +54,7 @@ function Get-TargetResource
 
     Write-Verbose "Get-TargetResource will attempt to retrieve AtpPolicyForO365 $($Identity)"
     Write-Verbose 'Calling Connect-ExchangeOnline function:'
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*AtpPolicyForO365'
     Write-Verbose 'Global ExchangeOnlineSession status:'
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $CmdletIsAvailable = Confirm-ImportedCmdletIsAvailable -CmdletName 'Get-AtpPolicyForO365'
@@ -158,7 +158,7 @@ function Set-TargetResource
 
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Calling Connect-ExchangeOnline function:'
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*AtpPolicyForO365'
     Write-Verbose 'Global ExchangeOnlineSession status:'
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $CmdletIsAvailable = Confirm-ImportedCmdletIsAvailable -CmdletName 'Set-AtpPolicyForO365'

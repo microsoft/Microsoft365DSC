@@ -40,7 +40,7 @@ function Get-TargetResource
 
     Write-Verbose "Get-TargetResource will attempt to retrieve CASMailboxPlan $($Identity)"
     Write-Verbose 'Calling Connect-ExchangeOnline function:'
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*CASMailboxPlan'
     Write-Verbose 'Global ExchangeOnlineSession status:'
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $CmdletIsAvailable = Confirm-ImportedCmdletIsAvailable -CmdletName 'Get-CASMailboxPlan'
@@ -131,7 +131,7 @@ function Set-TargetResource
 
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Calling Connect-ExchangeOnline function:'
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*CASMailboxPlan'
     Write-Verbose 'Global ExchangeOnlineSession status:'
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $CmdletIsAvailable = Confirm-ImportedCmdletIsAvailable -CmdletName 'Set-CASMailboxPlan'
