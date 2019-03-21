@@ -2,8 +2,8 @@
 
 ## Description
 
-This resource configures the Advanced Threat Protection (ATP) policy in Office 365.
-Tenant must be subscribed to ATP.
+This resource configures the Advanced Threat Protection (ATP) policy
+in Office 365.  Tenant must be subscribed to ATP.
 
 ## Parameters
 
@@ -22,33 +22,37 @@ Tenant must be subscribed to ATP.
 
     Identity
       - Required: No
-      - Description: The Identity parameter specifies the ATP policy that you want to modify.
-         There's only one policy namd Default.
+      - Description: The Identity parameter specifies the ATP policy that you
+        want to modify. There's only one policy namd Default.
 
     AllowClickThrough
       - Required: No
-      - Description: The AllowClickThrough parameter specifies whether to allow users to click
-         through to the original blocked URL in Office 365 ProPlus. The default value is $true
+      - Description: The AllowClickThrough parameter specifies whether to allow
+         users to click through to the original blocked URL in
+         Office 365 ProPlus. The default value is $true
 
     BlockUrls
       -  Required: No
-      -  Description: The BlockUrls parameter specifies the URLs that are always blocked by Safe Links scanning.
+      -  Description: The BlockUrls parameter specifies the URLs that are
+         always blocked by Safe Links scanning.
          You can specify multiple values separated by commas.
 
     EnableATPForSPOTeamsODB
       -  Required: No
-      -  Description: The EnableATPForSPOTeamsODB parameter specifies whether ATP is enabled for
-         SharePoint Online, OneDrive for Business and Microsoft Teams. The default value is $false
+      -  Description: The EnableATPForSPOTeamsODB parameter specifies whether
+         ATP is enabled for SharePoint Online, OneDrive for Business and
+         Microsoft Teams. The default value is $false
 
     EnableSafeLinksForClients
       -  Required: No
-      -  Description: The EnableSafeLinksForClients parameter specifies whether Safe Links is enabled
-         for Office 365 ProPlus clients. The default value is $false
+      -  Description: The EnableSafeLinksForClients parameter specifies whether
+         Safe Links is enabled for Office 365 ProPlus clients.
+         The default value is $false
 
     TrackClicks
       -  Required: No
-      -  Description: The TrackClicks parameter specifies whether to track user clicks related to blocked URLs.
-         The default value is $false
+      -  Description: The TrackClicks parameter specifies whether to track user
+         clicks related to blocked URLs. The default value is $false
 
 ## Example
 

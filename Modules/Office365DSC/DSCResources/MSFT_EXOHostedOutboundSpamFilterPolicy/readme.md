@@ -2,7 +2,8 @@
 
 ## Description
 
-This resource configures the settings of the outbound spam filter policy in your cloud-based organization.
+This resource configures the settings of the outbound spam filter policy
+in your cloud-based organization.
 
 ## Parameters
 
@@ -21,34 +22,43 @@ This resource configures the settings of the outbound spam filter policy in your
 
     Identity
       - Required: No
-      - Description: The Identity parameter specifies the policy that you want to modify.
-         There's only one policy namd Default.
+      - Description: The Identity parameter specifies the policy that
+        you want to modify. There's only one policy namd Default.
 
     AdminDisplayName
       - Required: No
-      - Description: The AdminDisplayName parameter specifies a description for the policy.
+      - Description: The AdminDisplayName parameter specifies a
+         description for the policy.
 
     BccSuspiciousOutboundMail
       - Required: No
-      - Description: The BccSuspiciousOutboundMail parameter enables or disables adding recipients to the Bcc field of outgoing
-         spam messages. Valid input for this parameter is $true or $false. The default value is $false. You specify the additional
-         recipients using the BccSuspiciousOutboundAdditionalRecipients parameter.
+      - Description: The BccSuspiciousOutboundMail parameter enables or
+        disables adding recipients to the Bcc field of outgoing spam messages.
+        Valid input for this parameter is $true or $false.
+        The default value is $false.
+        You specify the additional recipients using the
+        BccSuspiciousOutboundAdditionalRecipients parameter.
 
     BccSuspiciousOutboundAdditionalRecipients
       -  Required: No
-      -  Description: The BccSuspiciousOutboundAdditionalRecipients parameter specifies the recipients to add to the Bcc field
-         of outgoing spam messages. You can specify multiple values separated by commas.
+      -  Description: The BccSuspiciousOutboundAdditionalRecipients parameter
+         specifies the recipients to add to the Bcc field of outgoing
+         spam messages. You can specify multiple values separated by commas.
 
     NotifyOutboundSpam
       -  Required: No
-      -  Description: The NotifyOutboundSpam parameter enables or disables sending notification messages to administrators when
-         an outgoing message is determined to be spam. Valid input for this parameter is $true or $false.
-         The default value is $false. You specify the administrators to notify by using the NotifyOutboundSpamRecipients parameter.
+      -  Description: The NotifyOutboundSpam parameter enables or disables
+         sending notification messages to administrators when an outgoing
+         message is determined to be spam. Valid input for this parameter is
+         $true or $false. The default value is $false.
+         You specify the administrators to notify by using the
+         NotifyOutboundSpamRecipients parameter.
 
     NotifyOutboundSpamRecipients
       -  Required: No
-      -  Description: The NotifyOutboundSpamRecipients parameter specifies the administrators to notify when an outgoing message
-         is determined to be spam. Valid input for this parameter is an email address.
+      -  Description: The NotifyOutboundSpamRecipients parameter specifies the
+         administrators to notify when an outgoing message is determined to be
+         spam. Valid input for this parameter is an email address.
          Separate multiple email addresses with commas.
 
 ## Example

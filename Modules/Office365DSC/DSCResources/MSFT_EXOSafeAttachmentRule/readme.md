@@ -8,12 +8,13 @@ This resource configures an Safe Attachment Rule in Exchange Online.
 
     SafeAttachmentPolicy
       - Required: Yes
-      - Description: The Identity of the SafeAttachment Policy to associate with
-        this SafeAttachment Rule.
+      - Description: The Identity of the SafeAttachment Policy to associate
+        with this SafeAttachment Rule.
 
     Ensure
       - Required: No (Defaults to 'Present')
-      - Description: Specifies if the configuration should be `Present` or `Absent`
+      - Description: Specifies if the configuration should be
+        `Present` or `Absent`
 
     GlobalAdminAccount
       - Required: Yes

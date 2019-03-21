@@ -2,7 +2,8 @@
 
 ## Description
 
-This resource configures the settings of connection filter policies in your cloud-based organization.
+This resource configures the settings of connection filter policies
+in your cloud-based organization.
 
 ## Parameters
 
@@ -21,7 +22,8 @@ This resource configures the settings of connection filter policies in your clou
 
     AdminDisplayName
       - Required: No
-      - Description: The AdminDisplayName parameter specifies a description for the policy.
+      - Description: The AdminDisplayName parameter specifies a
+         description for the policy.
 
 ## Example
 

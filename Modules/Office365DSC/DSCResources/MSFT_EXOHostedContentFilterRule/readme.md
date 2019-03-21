@@ -9,8 +9,8 @@ Reference: https://docs.microsoft.com/en-us/powershell/module/exchange/advanced-
 
     HostedContentFilterPolicy
       - Required: Yes
-      - Description: The Identity of the HostedContentFilter Policy to associate with
-        this HostedContentFilter Rule.
+      - Description: The Identity of the HostedContentFilter Policy to
+        associate with this HostedContentFilter Rule.
 
     Ensure
       - Required: No (Defaults to 'Present')
