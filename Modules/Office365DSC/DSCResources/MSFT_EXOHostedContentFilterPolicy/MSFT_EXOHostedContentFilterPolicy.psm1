@@ -548,6 +548,7 @@ function Set-TargetResource
                 Name = $HostedContentFilterPolicyParams.Identity
             }
             $HostedContentFilterPolicyParams.Remove('Identity') | Out-Null
+            Write-Verbose "Creating HostedContentFilterPolicy $($Identity)."
             New-HostedContentFilterPolicy @HostedContentFilterPolicyParams -Confirm:$false
         }
         catch
@@ -559,6 +560,7 @@ function Set-TargetResource
     {
         try
         {
+            Write-Verbose "Setting HostedContentFilterPolicy $($Identity) with values: $($HostedContentFilterPolicyParams | Out-String)."
             if ($PSBoundParameters.MakeDefault) {
                 Set-HostedContentFilterPolicy @HostedContentFilterPolicyParams -MakeDefault -Confirm:$false
             }

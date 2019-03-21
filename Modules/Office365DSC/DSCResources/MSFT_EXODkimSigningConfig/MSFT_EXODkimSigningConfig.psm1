@@ -161,6 +161,7 @@ function Set-TargetResource
                 DomainName = $PSBoundParameters.Identity
             }
             $DkimSigningConfigParams.Remove('Identity') | Out-Null
+            Write-Verbose "Creating DkimSigningConfig $($Identity)."
             New-DkimSigningConfig @DkimSigningConfigParams -Confirm:$false
         }
         catch
@@ -176,6 +177,7 @@ function Set-TargetResource
             $DkimSigningConfigParams.Remove('Ensure') | Out-Null
             $DkimSigningConfigParams.Remove('GlobalAdminAccount') | Out-Null
             $DkimSigningConfigParams.Remove('KeySize') | Out-Null
+            Write-Verbose "Setting DkimSigningConfig $($Identity) with values: $($DkimSigningConfigParams | Out-String)"
             Set-DkimSigningConfig @DkimSigningConfigParams -Confirm:$false
         }
         catch

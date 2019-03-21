@@ -241,6 +241,7 @@ function Set-TargetResource
                 Name = $ClientAccessRuleParams.Identity
             }
             $ClientAccessRuleParams.Remove('Identity') | Out-Null
+            Write-Verbose "Creating ClientAccessRule $($Identity)."
             New-ClientAccessRule @ClientAccessRuleParams -Confirm:$false
         }
         catch
@@ -252,6 +253,7 @@ function Set-TargetResource
     {
         try
         {
+            Write-Verbose "Setting ClientAccessRule $($Identity) with values: $($ClientAccessRuleParams | Out-String)"
             Set-ClientAccessRule @ClientAccessRuleParams -Confirm:$false
         }
         catch
