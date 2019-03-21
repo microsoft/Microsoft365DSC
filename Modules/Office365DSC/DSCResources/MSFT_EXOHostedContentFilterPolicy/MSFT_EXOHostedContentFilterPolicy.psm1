@@ -234,14 +234,14 @@ function Get-TargetResource
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     try
     {
-        $HostedContentFilterPolicys = Get-HostedContentFilterPolicy
+        $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
     }
     catch
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
 
-    $HostedContentFilterPolicy = $HostedContentFilterPolicys | Where-Object Identity -eq $Identity
+    $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object Identity -eq $Identity
     if (-NOT $HostedContentFilterPolicy)
     {
         Write-Verbose "HostedContentFilterPolicy $($Identity) does not exist."
@@ -527,14 +527,14 @@ function Set-TargetResource
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     try
     {
-        $HostedContentFilterPolicys = Get-HostedContentFilterPolicy
+        $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
     }
     catch
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
 
-    $HostedContentFilterPolicy = $HostedContentFilterPolicys | Where-Object Identity -eq $Identity
+    $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object Identity -eq $Identity
     $HostedContentFilterPolicyParams = $PSBoundParameters
     $HostedContentFilterPolicyParams.Remove('Ensure') | Out-Null
     $HostedContentFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
