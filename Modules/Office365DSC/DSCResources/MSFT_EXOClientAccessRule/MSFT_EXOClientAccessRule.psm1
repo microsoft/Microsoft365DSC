@@ -59,7 +59,7 @@ function Get-TargetResource
         $RuleScope,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $UserRecipientFilter = @(),
 
         [Parameter()]
@@ -191,7 +191,7 @@ function Set-TargetResource
         $RuleScope,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $UserRecipientFilter = @(),
 
         [Parameter()]
@@ -341,7 +341,7 @@ function Test-TargetResource
         $RuleScope,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $UserRecipientFilter = @(),
 
         [Parameter()]

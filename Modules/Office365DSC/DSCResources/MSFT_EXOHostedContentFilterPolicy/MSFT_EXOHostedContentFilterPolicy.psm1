@@ -34,7 +34,7 @@ function Get-TargetResource
 
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine')]
-        [System.String[]]
+        [System.String]
         $BulkSpamAction = @('MoveToJmf'),
 
         [Parameter()]
@@ -78,12 +78,12 @@ function Get-TargetResource
 
         [Parameter()]
         [ValidateSet('Default','English','French','German','Italian','Japanese','Spanish','Korean','Portuguese','Russian','ChineseSimplified','ChineseTraditional','Amharic','Arabic','Bulgarian','BengaliIndia','Catalan','Czech','Cyrillic','Danish','Greek','Estonian','Basque','Farsi','Finnish','Filipino','Galician','Gujarati','Hebrew','Hindi','Croatian','Hungarian','Indonesian','Icelandic','Kazakh','Kannada','Lithuanian','Latvian','Malayalam','Marathi','Malay','Dutch','NorwegianNynorsk','Norwegian','Oriya','Polish','PortuguesePortugal','Romanian','Slovak','Slovenian','SerbianCyrillic','Serbian','Swedish','Swahili','Tamil','Telugu','Thai','Turkish','Ukrainian','Urdu','Vietnamese')]
-        [System.String[]]
+        [System.String]
         $EndUserSpamNotificationLanguage = @('Default'),
 
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
-        [System.String[]]
+        [System.String]
         $HighConfidenceSpamAction = @('MoveToJmf'),
 
         [Parameter()]
@@ -184,7 +184,7 @@ function Get-TargetResource
 
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
-        [System.String[]]
+        [System.String]
         $PhishSpamAction = @('MoveToJmf'),
 
         [Parameter()]
@@ -202,12 +202,12 @@ function Get-TargetResource
 
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
-        [System.String[]]
+        [System.String]
         $SpamAction = @('MoveToJmf'),
 
         [Parameter()]
         [ValidateSet('None','AddXHeader','BccMessage')]
-        [System.String[]]
+        [System.String]
         $TestModeAction = @('None'),
 
         [Parameter()]
@@ -326,7 +326,7 @@ function Set-TargetResource
 
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine')]
-        [System.String[]]
+        [System.String]
         $BulkSpamAction = @('MoveToJmf'),
 
         [Parameter()]
@@ -370,12 +370,12 @@ function Set-TargetResource
 
         [Parameter()]
         [ValidateSet('Default','English','French','German','Italian','Japanese','Spanish','Korean','Portuguese','Russian','ChineseSimplified','ChineseTraditional','Amharic','Arabic','Bulgarian','BengaliIndia','Catalan','Czech','Cyrillic','Danish','Greek','Estonian','Basque','Farsi','Finnish','Filipino','Galician','Gujarati','Hebrew','Hindi','Croatian','Hungarian','Indonesian','Icelandic','Kazakh','Kannada','Lithuanian','Latvian','Malayalam','Marathi','Malay','Dutch','NorwegianNynorsk','Norwegian','Oriya','Polish','PortuguesePortugal','Romanian','Slovak','Slovenian','SerbianCyrillic','Serbian','Swedish','Swahili','Tamil','Telugu','Thai','Turkish','Ukrainian','Urdu','Vietnamese')]
-        [System.String[]]
+        [System.String]
         $EndUserSpamNotificationLanguage = @('Default'),
 
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
-        [System.String[]]
+        [System.String]
         $HighConfidenceSpamAction = @('MoveToJmf'),
 
         [Parameter()]
@@ -476,7 +476,7 @@ function Set-TargetResource
 
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
-        [System.String[]]
+        [System.String]
         $PhishSpamAction = @('MoveToJmf'),
 
         [Parameter()]
@@ -494,12 +494,12 @@ function Set-TargetResource
 
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
-        [System.String[]]
+        [System.String]
         $SpamAction = @('MoveToJmf'),
 
         [Parameter()]
         [ValidateSet('None','AddXHeader','BccMessage')]
-        [System.String[]]
+        [System.String]
         $TestModeAction = @('None'),
 
         [Parameter()]
@@ -629,7 +629,7 @@ function Test-TargetResource
 
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine')]
-        [System.String[]]
+        [System.String]
         $BulkSpamAction = @('MoveToJmf'),
 
         [Parameter()]
@@ -673,12 +673,12 @@ function Test-TargetResource
 
         [Parameter()]
         [ValidateSet('Default','English','French','German','Italian','Japanese','Spanish','Korean','Portuguese','Russian','ChineseSimplified','ChineseTraditional','Amharic','Arabic','Bulgarian','BengaliIndia','Catalan','Czech','Cyrillic','Danish','Greek','Estonian','Basque','Farsi','Finnish','Filipino','Galician','Gujarati','Hebrew','Hindi','Croatian','Hungarian','Indonesian','Icelandic','Kazakh','Kannada','Lithuanian','Latvian','Malayalam','Marathi','Malay','Dutch','NorwegianNynorsk','Norwegian','Oriya','Polish','PortuguesePortugal','Romanian','Slovak','Slovenian','SerbianCyrillic','Serbian','Swedish','Swahili','Tamil','Telugu','Thai','Turkish','Ukrainian','Urdu','Vietnamese')]
-        [System.String[]]
+        [System.String]
         $EndUserSpamNotificationLanguage = @('Default'),
 
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
-        [System.String[]]
+        [System.String]
         $HighConfidenceSpamAction = @('MoveToJmf'),
 
         [Parameter()]
@@ -779,7 +779,7 @@ function Test-TargetResource
 
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
-        [System.String[]]
+        [System.String]
         $PhishSpamAction = @('MoveToJmf'),
 
         [Parameter()]
@@ -797,12 +797,12 @@ function Test-TargetResource
 
         [Parameter()]
         [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
-        [System.String[]]
+        [System.String]
         $SpamAction = @('MoveToJmf'),
 
         [Parameter()]
         [ValidateSet('None','AddXHeader','BccMessage')]
-        [System.String[]]
+        [System.String]
         $TestModeAction = @('None'),
 
         [Parameter()]

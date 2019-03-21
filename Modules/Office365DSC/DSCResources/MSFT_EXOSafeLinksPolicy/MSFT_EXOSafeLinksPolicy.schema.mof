@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("EXOSafeLinksPolicy")]
 class MSFT_EXOSafeLinksPolicy : OMI_BaseResource
 {
-    [Write, Description("The Identity parameter specifies the SafeLinks policy that you want to modify.")] String Identity;
+    [Key, Description("The Identity parameter specifies the SafeLinks policy that you want to modify.")] String Identity;
     [Write, Description("Specify if this policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("The AdminDisplayName parameter specifies a description for the policy. ")] String AdminDisplayName;
     [Write, Description("The DoNotAllowClickThrough parameter specifies whether to allow users to click through to the original URL. Valid values are: $true: The user isn't allowed to click through to the original URL. This is the default value. $false: The user is allowed to click through to the original URL.")] Boolean DoNotAllowClickThrough;
