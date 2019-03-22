@@ -23,7 +23,7 @@ in your cloud-based organization.
     Identity
       - Required: No
       - Description: The Identity parameter specifies the policy that
-        you want to modify. There's only one policy namd Default.
+        you want to modify. There's only one policy named Default.
 
     AdminDisplayName
       - Required: No
