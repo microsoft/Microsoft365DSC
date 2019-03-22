@@ -436,7 +436,6 @@ function Show-O365GUI
     $panelMenu.Controls.Add($lblFarmAccount)
 
     $txtTenantAdmin = New-Object System.Windows.Forms.Textbox
-    $txtTenantAdmin.Text = "$($env:USERDOMAIN)\$($env:USERNAME)"
     $txtTenantAdmin.Top = 5
     $txtTenantAdmin.Left = 1060
     $txtTenantAdmin.Width = 175
@@ -487,7 +486,7 @@ function Show-O365GUI
                 }
             }
 
-            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String `$txtPassword.Text -AsPlainText -Force));
+            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force));
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount -ComponentsToExtract $SelectedComponents
         }
         else

@@ -1934,123 +1934,159 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOAtpPolicyForO365"
-    Write-Information "Extracting EXOAtpPolicyForO365..."
-    $EXOAtpPolicyForO365ModulePath = Join-Path -Path $PSScriptRoot `
-                                              -ChildPath "..\DSCResources\MSFT_EXOAtpPolicyForO365\MSFT_EXOAtpPolicyForO365.psm1" `
-                                              -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOAtpPolicyForO365"))
+    {
+        Write-Information "Extracting EXOAtpPolicyForO365..."
+        $EXOAtpPolicyForO365ModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOAtpPolicyForO365\MSFT_EXOAtpPolicyForO365.psm1" `
+                                                -Resolve
 
-    $catch = Import-Module $EXOAtpPolicyForO365ModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        $catch = Import-Module $EXOAtpPolicyForO365ModulePath
+        $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    }
     #endregion
 
     #region "EXOCASMailboxPlan"
-    Write-Information "Extracting EXOCASMailboxPlan..."
-    $EXOCASMailboxPlanModulePath = Join-Path -Path $PSScriptRoot `
-                                              -ChildPath "..\DSCResources\MSFT_EXOCASMailboxPlan\MSFT_EXOCASMailboxPlan.psm1" `
-                                              -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOCASMailboxPlan"))
+    {
+        Write-Information "Extracting EXOCASMailboxPlan..."
+        $EXOCASMailboxPlanModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOCASMailboxPlan\MSFT_EXOCASMailboxPlan.psm1" `
+                                                -Resolve
 
-    $catch = Import-Module $EXOCASMailboxPlanModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        $catch = Import-Module $EXOCASMailboxPlanModulePath
+        $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    }
     #endregion
 
     #region "EXOClientAccessRule"
-    Write-Information "Extracting EXOClientAccessRule..."
-    $EXOClientAccessRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                              -ChildPath "..\DSCResources\MSFT_EXOClientAccessRule\MSFT_EXOClientAccessRule.psm1" `
-                                              -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOClientAccessRule"))
+    {
+        Write-Information "Extracting EXOClientAccessRule..."
+        $EXOClientAccessRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOClientAccessRule\MSFT_EXOClientAccessRule.psm1" `
+                                                -Resolve
 
-    $catch = Import-Module $EXOClientAccessRuleModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        $catch = Import-Module $EXOClientAccessRuleModulePath
+        $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    }
     #endregion
 
     #region "EXODkimSigningConfig"
-    Write-Information "Extracting EXODkimSigningConfig..."
-    $EXODkimSigningConfigModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXODkimSigningConfig\MSFT_EXODkimSigningConfig.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXODkimSigningConfig"))
+    {
+        Write-Information "Extracting EXODkimSigningConfig..."
+        $EXODkimSigningConfigModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXODkimSigningConfig\MSFT_EXODkimSigningConfig.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXODkimSigningConfigModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        $catch = Import-Module $EXODkimSigningConfigModulePath
+        $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    }
     #endregion
 
     #region "EXOHostedConnectionFilterPolicy"
-    Write-Information "Extracting EXOHostedConnectionFilterPolicy..."
-    $EXOHostedConnectionFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOHostedConnectionFilterPolicy\MSFT_EXOHostedConnectionFilterPolicy.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedConnectionFilterPolicy"))
+    {
+        Write-Information "Extracting EXOHostedConnectionFilterPolicy..."
+        $EXOHostedConnectionFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOHostedConnectionFilterPolicy\MSFT_EXOHostedConnectionFilterPolicy.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXOHostedConnectionFilterPolicyModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        $catch = Import-Module $EXOHostedConnectionFilterPolicyModulePath
+        $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    }
     #endregion
 
     #region "EXOHostedContentFilterPolicy"
-    Write-Information "Extracting EXOHostedContentFilterPolicy..."
-    $EXOHostedContentFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterPolicy\MSFT_EXOHostedContentFilterPolicy.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedContentFilterPolicy"))
+    {
+        Write-Information "Extracting EXOHostedContentFilterPolicy..."
+        $EXOHostedContentFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterPolicy\MSFT_EXOHostedContentFilterPolicy.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXOHostedContentFilterPolicyModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        $catch = Import-Module $EXOHostedContentFilterPolicyModulePath
+        $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    }
     #endregion
 
     #region "EXOHostedContentFilterRule"
-    Write-Information "Extracting EXOHostedContentFilterRule..."
-    $EXOHostedContentFilterRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterRule\MSFT_EXOHostedContentFilterRule.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedContentFilterRule"))
+    {
+        Write-Information "Extracting EXOHostedContentFilterRule..."
+        $EXOHostedContentFilterRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterRule\MSFT_EXOHostedContentFilterRule.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXOHostedContentFilterRuleModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        $catch = Import-Module $EXOHostedContentFilterRuleModulePath
+        $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    }
     #endregion
 
     #region "EXOHostedOutboundSpamFilterPolicy"
-    Write-Information "Extracting EXOHostedOutboundSpamFilterPolicy..."
-    $EXOHostedOutboundSpamFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOHostedOutboundSpamFilterPolicy\MSFT_EXOHostedOutboundSpamFilterPolicy.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedOutboundSpamFilterPolicy"))
+    {
+        Write-Information "Extracting EXOHostedOutboundSpamFilterPolicy..."
+        $EXOHostedOutboundSpamFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOHostedOutboundSpamFilterPolicy\MSFT_EXOHostedOutboundSpamFilterPolicy.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXOHostedOutboundSpamFilterPolicyModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        $catch = Import-Module $EXOHostedOutboundSpamFilterPolicyModulePath
+        $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    }
     #endregion
 
     #region "EXOSafeAttachmentPolicy"
-    Write-Information "Extracting EXOSafeAttachmentPolicy..."
-    $EXOSafeAttachmentPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentPolicy\MSFT_EXOSafeAttachmentPolicy.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeAttachmentPolicy"))
+    {
+        Write-Information "Extracting EXOSafeAttachmentPolicy..."
+        $EXOSafeAttachmentPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentPolicy\MSFT_EXOSafeAttachmentPolicy.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXOSafeAttachmentPolicyModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        $catch = Import-Module $EXOSafeAttachmentPolicyModulePath
+        $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    }
     #endregion
 
     #region "EXOSafeAttachmentRule"
-    Write-Information "Extracting EXOSafeAttachmentRule..."
-    $EXOSafeAttachmentRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentRule\MSFT_EXOSafeAttachmentRule.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeAttachmentRule"))
+    {
+        Write-Information "Extracting EXOSafeAttachmentRule..."
+        $EXOSafeAttachmentRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentRule\MSFT_EXOSafeAttachmentRule.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXOSafeAttachmentRuleModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        $catch = Import-Module $EXOSafeAttachmentRuleModulePath
+        $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    }
     #endregion
 
     #region "EXOSafeLinksPolicy"
-    Write-Information "Extracting EXOSafeLinksPolicy..."
-    $EXOSafeLinksPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOSafeLinksPolicy\MSFT_EXOSafeLinksPolicy.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeLinksPolicy"))
+    {
+        Write-Information "Extracting EXOSafeLinksPolicy..."
+        $EXOSafeLinksPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOSafeLinksPolicy\MSFT_EXOSafeLinksPolicy.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXOSafeLinksPolicyModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        $catch = Import-Module $EXOSafeLinksPolicyModulePath
+        $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    }
     #endregion
 
     #region "EXOSafeLinksRule"
-    Write-Information "Extracting EXOSafeLinksRule..."
-    $EXOSafeLinksRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOSafeLinksRule\MSFT_EXOSafeLinksRule.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeLinksRule"))
+    {
+        Write-Information "Extracting EXOSafeLinksRule..."
+        $EXOSafeLinksRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOSafeLinksRule\MSFT_EXOSafeLinksRule.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXOSafeLinksRuleModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        $catch = Import-Module $EXOSafeLinksRuleModulePath
+        $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    }
     #endregion
 
     #region "EXOMailboxSettings"
