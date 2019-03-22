@@ -8,72 +8,53 @@ function Get-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $AntiPhishPolicy,
-
         [Parameter()]
         [System.String]
-        $Comments,
+        $AdminDisplayName,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled = $true,
+        [Boolean]
+        $EnableSafeList = $false,
+
+        [Parameter()]
+        [System.String[]]
+        $IPAllowList = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $IPBlockList = @(),
+
+        [Parameter()]
+        [Boolean]
+        $MakeDefault = $false,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfRecipientDomainIs = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentToMemberOf = @(),
-
-        [Parameter()]
-        [uint32]
-        $Priority,
-
-        [Parameter()]
-        [System.String[]]
-        $RecipientDomainIs = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SentToMemberOf = @(),
-
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose "Get-TargetResource will attempt to retrieve AntiPhishRule $($Identity)"
+    Write-Verbose "Get-TargetResource will attempt to retrieve HostedConnectionFilterPolicy $($Identity)"
     Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*AntiPhishRule'
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*HostedConnectionFilterPolicy'
     Write-Verbose "Global ExchangeOnlineSession status:"
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     try
     {
-        $AntiPhishRules = Get-AntiPhishRule
+        $HostedConnectionFilterPolicys = Get-HostedConnectionFilterPolicy
     }
     catch
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
-    $AntiPhishRule = $AntiPhishRules | Where-Object Identity -eq $Identity
-    if (-NOT $AntiPhishRule)
+
+    $HostedConnectionFilterPolicy = $HostedConnectionFilterPolicys | Where-Object Identity -eq $Identity
+    if (-NOT $HostedConnectionFilterPolicy)
     {
-        Write-Verbose "AntiPhishRule $($Identity) does not exist."
+        Write-Verbose "HostedConnectionFilterPolicy $($Identity) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -83,12 +64,13 @@ function Get-TargetResource
         $result = @{
             Ensure = 'Present'
         }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -ne 'Ensure'}) )
+
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -inotmatch 'Ensure|MakeDefault'}) )
         {
-            if ($null -ne $AntiPhishRule.$KeyName)
+            if ($null -ne $HostedConnectionFilterPolicy.$KeyName)
             {
                 $result += @{
-                    $KeyName = $AntiPhishRule.$KeyName
+                    $KeyName = $HostedConnectionFilterPolicy.$KeyName
                 }
             }
             else
@@ -99,17 +81,21 @@ function Get-TargetResource
             }
 
         }
-        if ('Enabled' -eq $AntiPhishRule.State)
+
+        if ($AntiPhishRule.IsDefault)
         {
-            # Accounts for Get-AntiPhishRule returning 'State' instead of 'Enabled' used by New/Set
-            $result.Enabled = $true
+            $result += @{
+                MakeDefault = $true
+            }
         }
         else
         {
-            $result.Enabled = $false
+            $result += @{
+                MakeDefault = $false
+            }
         }
 
-        Write-Verbose "Found AntiPhishRule $($Identity)"
+        Write-Verbose "Found HostedConnectionFilterPolicy $($Identity)"
         Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
         return $result
     }
@@ -124,99 +110,78 @@ function Set-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $AntiPhishPolicy,
-
         [Parameter()]
         [System.String]
-        $Comments,
+        $AdminDisplayName,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled = $true,
+        [Boolean]
+        $EnableSafeList = $false,
+
+        [Parameter()]
+        [System.String[]]
+        $IPAllowList = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $IPBlockList = @(),
+
+        [Parameter()]
+        [Boolean]
+        $MakeDefault = $false,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfRecipientDomainIs = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentToMemberOf = @(),
-
-        [Parameter()]
-        [uint32]
-        $Priority,
-
-        [Parameter()]
-        [System.String[]]
-        $RecipientDomainIs = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SentToMemberOf = @(),
-
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Write-Verbose 'Entering Set-TargetResource'
-    Write-Verbose 'Retrieving information about AntiPhishRule configuration'
+    Write-Verbose 'Retrieving information about HostedConnectionFilterPolicy configuration'
     Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*AntiPhishRule'
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*HostedConnectionFilterPolicy'
     Write-Verbose "Global ExchangeOnlineSession status:"
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     try
     {
-        $AntiPhishRules = Get-AntiPhishRule
+        $HostedConnectionFilterPolicys = Get-HostedConnectionFilterPolicy
     }
     catch
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
 
-    $AntiPhishRule = $AntiPhishRules | Where-Object Identity -eq $Identity
-
-    if ( ('Present' -eq $Ensure ) -and (-NOT $AntiPhishRule) )
+    $HostedConnectionFilterPolicy = $HostedConnectionFilterPolicys | Where-Object Identity -eq $Identity
+    $HostedConnectionFilterPolicyParams = $PSBoundParameters
+    $HostedConnectionFilterPolicyParams.Remove('Ensure') | Out-Null
+    $HostedConnectionFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
+    $HostedConnectionFilterPolicyParams.Remove('MakeDefault') | Out-Null
+    if ($HostedConnectionFilterPolicyParams.RuleScope)
     {
-        try
-        {
-            New-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
+        $HostedConnectionFilterPolicyParams += @{
+            Scope = $HostedConnectionFilterPolicyParams.RuleScope
         }
-        catch
-        {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        }
+        $HostedConnectionFilterPolicyParams.Remove('RuleScope') | Out-Null
     }
 
-    if ( ('Present' -eq $Ensure ) -and ($AntiPhishRule) )
+    if ( ('Present' -eq $Ensure ) -and (-NOT $HostedConnectionFilterPolicy) )
     {
         try
         {
-            if ($PSBoundParameters.Enabled -and ('Disabled' -eq $AntiPhishRule.State) )
+            $HostedConnectionFilterPolicyParams += @{
+                Name = $HostedConnectionFilterPolicyParams.Identity
+            }
+            $HostedConnectionFilterPolicyParams.Remove('Identity') | Out-Null
+            if ($PSBoundParameters.MakeDefault)
             {
-                # New-AntiPhishRule has the Enabled parameter, Set-AntiPhishRule does not.
-                # There doesn't appear to be any way to change the Enabled state of a rule once created.
-                Write-Verbose "Removing AntiPhishRule $($Identity) in order to change Enabled state."
-                Remove-AntiPhishRule -Identity $Identity -Confirm:$false
-                New-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
+                New-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -MakeDefault -Confirm:$false
             }
             else
             {
-                Set-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
+                New-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -Confirm:$false
             }
         }
         catch
@@ -224,13 +189,30 @@ function Set-TargetResource
             Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         }
     }
-
-    if ( ('Absent' -eq $Ensure ) -and ($AntiPhishRule) )
+    elseif ( ('Present' -eq $Ensure ) -and ($HostedConnectionFilterPolicy) )
     {
-        Write-Verbose "Removing AntiPhishRule $($Identity) "
         try
         {
-            Remove-AntiPhishRule -Identity $Identity -Confirm:$false
+            if ($PSBoundParameters.MakeDefault)
+            {
+                Set-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -MakeDefault -Confirm:$false
+            }
+            else
+            {
+                Set-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -Confirm:$false
+            }
+        }
+        catch
+        {
+            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+        }
+    }
+    elseif ( ('Absent' -eq $Ensure ) -and ($HostedConnectionFilterPolicy) )
+    {
+        Write-Verbose "Removing HostedConnectionFilterPolicy $($Identity) "
+        try
+        {
+            Remove-HostedConnectionFilterPolicy -Identity $Identity -Confirm:$false
         }
         catch
         {
@@ -254,59 +236,41 @@ function Test-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $AntiPhishPolicy,
-
         [Parameter()]
         [System.String]
-        $Comments,
+        $AdminDisplayName,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled = $true,
+        [Boolean]
+        $EnableSafeList = $false,
+
+        [Parameter()]
+        [System.String[]]
+        $IPAllowList = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $IPBlockList = @(),
+
+        [Parameter()]
+        [Boolean]
+        $MakeDefault = $false,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfRecipientDomainIs = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentToMemberOf = @(),
-
-        [Parameter()]
-        [uint32]
-        $Priority,
-
-        [Parameter()]
-        [System.String[]]
-        $RecipientDomainIs = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SentTo = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SentToMemberOf = @(),
-
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message "Testing AntiPhishRule for $($Identity)"
+    Write-Verbose -Message "Testing HostedConnectionFilterPolicy for $($Identity)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
+    $ValuesToCheck.Remove('IsSingleInstance') | out-null
+    $ValuesToCheck.Remove('Verbose') | out-null
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -337,10 +301,6 @@ function Export-TargetResource
         $Identity,
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $AntiPhishPolicy,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -350,7 +310,7 @@ function Export-TargetResource
     Write-Verbose "Global ExchangeOnlineSession status: `n"
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
-    $content = "        EXOAntiPhishRule " + (New-GUID).ToString() + "`r`n"
+    $content = "        EXOHostedConnectionFilterPolicy " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"

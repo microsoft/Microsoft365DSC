@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "EXOAntiPhishRule"
+    -DscResource "EXOSafeAttachmentRule"
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -36,46 +36,46 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Mock -CommandName New-AntiPhishRule -MockWith {
+        Mock -CommandName New-SafeAttachmentRule -MockWith {
             return @{
 
             }
         }
 
-        Mock -CommandName Set-AntiPhishRule -MockWith {
+        Mock -CommandName Set-SafeAttachmentRule -MockWith {
             return @{
 
             }
         }
 
-        Mock -CommandName Remove-AntiPhishRule -MockWith {
+        Mock -CommandName Remove-SafeAttachmentRule -MockWith {
             return @{
 
             }
         }
 
-        Mock -CommandName New-EXOAntiPhishRule -MockWith {
+        Mock -CommandName New-EXOSafeAttachmentRule -MockWith {
             return @{
 
             }
         }
 
-        Mock -CommandName Set-EXOAntiPhishRule -MockWith {
+        Mock -CommandName Set-EXOSafeAttachmentRule -MockWith {
             return @{
 
             }
         }
 
         # Test contexts
-        Context -Name "AntiPhishRule creation." -Fixture {
+        Context -Name "SafeAttachmentRule creation." -Fixture {
             $testParams = @{
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
                 Identity           = 'TestRule'
-                AntiPhishPolicy    = 'TestPolicy'
+                SafeAttachmentPolicy    = 'TestPolicy'
             }
 
-            Mock -CommandName Get-AntiPhishRule -MockWith {
+            Mock -CommandName Get-SafeAttachmentRule -MockWith {
                 return @{
                     Identity = 'SomeOtherPolicy'
                 }
@@ -90,12 +90,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "AntiPhishRule update not required." -Fixture {
+        Context -Name "SafeAttachmentRule update not required." -Fixture {
             $testParams = @{
                 Ensure                    = 'Present'
                 Identity                  = 'TestRule'
                 GlobalAdminAccount        = $GlobalAdminAccount
-                AntiPhishPolicy           = 'TestPolicy'
+                SafeAttachmentPolicy           = 'TestPolicy'
                 Enabled                   = $true
                 Priority                  = 0
                 ExceptIfRecipientDomainIs = @('dev.contoso.com')
@@ -106,11 +106,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 SentToMemberOf            = @('Some Group', 'Some Other Group')
             }
 
-            Mock -CommandName Get-AntiPhishRule -MockWith {
+            Mock -CommandName Get-SafeAttachmentRule -MockWith {
                 return @{
                     Ensure                    = 'Present'
                     Identity                  = 'TestRule'
-                    AntiPhishPolicy           = 'TestPolicy'
+                    SafeAttachmentPolicy           = 'TestPolicy'
                     Priority                  = 0
                     ExceptIfRecipientDomainIs = @('dev.contoso.com')
                     ExceptIfSentTo            = @('test@contoso.com')
@@ -127,12 +127,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "AntiPhishRule update needed." -Fixture {
+        Context -Name "SafeAttachmentRule update needed." -Fixture {
             $testParams = @{
                 Ensure                    = 'Present'
                 Identity                  = 'TestRule'
                 GlobalAdminAccount        = $GlobalAdminAccount
-                AntiPhishPolicy           = 'TestPolicy'
+                SafeAttachmentPolicy           = 'TestPolicy'
                 Enabled                   = $true
                 Priority                  = 0
                 ExceptIfRecipientDomainIs = @('dev.contoso.com')
@@ -143,12 +143,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 SentToMemberOf            = @('Some Group', 'Some Other Group')
             }
 
-            Mock -CommandName Get-AntiPhishRule -MockWith {
+            Mock -CommandName Get-SafeAttachmentRule -MockWith {
                 return @{
                     Ensure                    = 'Present'
                     Identity                  = 'TestRule'
                     GlobalAdminAccount        = $GlobalAdminAccount
-                    AntiPhishPolicy           = 'TestPolicy'
+                    SafeAttachmentPolicy           = 'TestPolicy'
                     Enabled                   = $true
                     Priority                  = 0
                     ExceptIfRecipientDomainIs = @('notdev.contoso.com')
@@ -169,15 +169,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "AntiPhishRule removal." -Fixture {
+        Context -Name "SafeAttachmentRule removal." -Fixture {
             $testParams = @{
                 Ensure             = 'Absent'
                 GlobalAdminAccount = $GlobalAdminAccount
                 Identity           = 'TestRule'
-                AntiPhishPolicy    = 'TestPolicy'
+                SafeAttachmentPolicy    = 'TestPolicy'
             }
 
-            Mock -CommandName Get-AntiPhishRule -MockWith {
+            Mock -CommandName Get-SafeAttachmentRule -MockWith {
                 return @{
                     Identity = 'TestRule'
                 }

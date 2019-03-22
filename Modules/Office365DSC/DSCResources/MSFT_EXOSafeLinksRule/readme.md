@@ -1,16 +1,15 @@
-# EXOAntiPhishRule
+# EXOSafeLinksRule
 
 ## Description
 
-This resource configures an Anti-Phish Rule in Exchange Online.
-Reference: https://docs.microsoft.com/en-us/powershell/module/exchange/advanced-threat-protection/new-antiphishRule?view=exchange-ps
+This resource configures an SafeLinks Rule in Exchange Online.
 
 ## Parameters
 
-    AntiPhishPolicy
+    SafeLinksPolicy
       - Required: Yes
-      - Description: The Identity of the AntiPhish Policy to associate with
-        this AntiPhish Rule.
+      - Description: The Identity of the SafeLinks Policy to associate with
+        this SafeLinks Rule.
 
     Ensure
       - Required: No (Defaults to 'Present')
@@ -22,16 +21,16 @@ Reference: https://docs.microsoft.com/en-us/powershell/module/exchange/advanced-
 
     Identity
       - Required: Yes
-      - Description: Name of the Anti-Phish Rule
+      - Description: Name of the SafeLinks Rule
 
 ## Example
 
 ```PowerShell
-        EXOAntiPhishRule TestPhishRule {
+        EXOSafeLinksRule TestSafeLinksRule {
             Ensure = 'Present'
             Identity = 'TestRule'
             GlobalAdminAccount = $GlobalAdminAccount
-            AntiPhishPolicy = 'TestPolicy'
+            SafeLinksPolicy = 'TestSafeLinksPolicy'
             Enabled = $true
             Priority = 0
             RecipientDomainIs = @('contoso.com')

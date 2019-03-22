@@ -10,7 +10,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $AntiPhishPolicy,
+        $SafeAttachmentPolicy,
 
         [Parameter()]
         [System.String]
@@ -57,23 +57,23 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose "Get-TargetResource will attempt to retrieve AntiPhishRule $($Identity)"
+    Write-Verbose "Get-TargetResource will attempt to retrieve SafeAttachmentRule $($Identity)"
     Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*AntiPhishRule'
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*SafeAttachmentRule'
     Write-Verbose "Global ExchangeOnlineSession status:"
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     try
     {
-        $AntiPhishRules = Get-AntiPhishRule
+        $SafeAttachmentRules = Get-SafeAttachmentRule
     }
     catch
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
-    $AntiPhishRule = $AntiPhishRules | Where-Object Identity -eq $Identity
-    if (-NOT $AntiPhishRule)
+    $SafeAttachmentRule = $SafeAttachmentRules | Where-Object Identity -eq $Identity
+    if (-NOT $SafeAttachmentRule)
     {
-        Write-Verbose "AntiPhishRule $($Identity) does not exist."
+        Write-Verbose "SafeAttachmentRule $($Identity) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -85,10 +85,10 @@ function Get-TargetResource
         }
         foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -ne 'Ensure'}) )
         {
-            if ($null -ne $AntiPhishRule.$KeyName)
+            if ($null -ne $SafeAttachmentRule.$KeyName)
             {
                 $result += @{
-                    $KeyName = $AntiPhishRule.$KeyName
+                    $KeyName = $SafeAttachmentRule.$KeyName
                 }
             }
             else
@@ -99,9 +99,9 @@ function Get-TargetResource
             }
 
         }
-        if ('Enabled' -eq $AntiPhishRule.State)
+        if ('Enabled' -eq $SafeAttachmentRule.State)
         {
-            # Accounts for Get-AntiPhishRule returning 'State' instead of 'Enabled' used by New/Set
+            # Accounts for Get-SafeAttachmentRule returning 'State' instead of 'Enabled' used by New/Set
             $result.Enabled = $true
         }
         else
@@ -109,7 +109,7 @@ function Get-TargetResource
             $result.Enabled = $false
         }
 
-        Write-Verbose "Found AntiPhishRule $($Identity)"
+        Write-Verbose "Found SafeAttachmentRule $($Identity)"
         Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
         return $result
     }
@@ -126,7 +126,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $AntiPhishPolicy,
+        $SafeAttachmentPolicy,
 
         [Parameter()]
         [System.String]
@@ -174,27 +174,27 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose 'Entering Set-TargetResource'
-    Write-Verbose 'Retrieving information about AntiPhishRule configuration'
+    Write-Verbose 'Retrieving information about SafeAttachmentRule configuration'
     Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*AntiPhishRule'
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*SafeAttachmentRule'
     Write-Verbose "Global ExchangeOnlineSession status:"
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     try
     {
-        $AntiPhishRules = Get-AntiPhishRule
+        $SafeAttachmentRules = Get-SafeAttachmentRule
     }
     catch
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
 
-    $AntiPhishRule = $AntiPhishRules | Where-Object Identity -eq $Identity
+    $SafeAttachmentRule = $SafeAttachmentRules | Where-Object Identity -eq $Identity
 
-    if ( ('Present' -eq $Ensure ) -and (-NOT $AntiPhishRule) )
+    if ( ('Present' -eq $Ensure ) -and (-NOT $SafeAttachmentRule) )
     {
         try
         {
-            New-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
+            New-EXOSafeAttachmentRule -SafeAttachmentRuleParams $PSBoundParameters
         }
         catch
         {
@@ -202,21 +202,21 @@ function Set-TargetResource
         }
     }
 
-    if ( ('Present' -eq $Ensure ) -and ($AntiPhishRule) )
+    if ( ('Present' -eq $Ensure ) -and ($SafeAttachmentRule) )
     {
         try
         {
-            if ($PSBoundParameters.Enabled -and ('Disabled' -eq $AntiPhishRule.State) )
+            if ($PSBoundParameters.Enabled -and ('Disabled' -eq $SafeAttachmentRule.State) )
             {
-                # New-AntiPhishRule has the Enabled parameter, Set-AntiPhishRule does not.
+                # New-SafeAttachmentRule has the Enabled parameter, Set-SafeAttachmentRule does not.
                 # There doesn't appear to be any way to change the Enabled state of a rule once created.
-                Write-Verbose "Removing AntiPhishRule $($Identity) in order to change Enabled state."
-                Remove-AntiPhishRule -Identity $Identity -Confirm:$false
-                New-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
+                Write-Verbose "Removing SafeAttachmentRule $($Identity) in order to change Enabled state."
+                Remove-SafeAttachmentRule -Identity $Identity -Confirm:$false
+                New-EXOSafeAttachmentRule -SafeAttachmentRuleParams $PSBoundParameters
             }
             else
             {
-                Set-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
+                Set-EXOSafeAttachmentRule -SafeAttachmentRuleParams $PSBoundParameters
             }
         }
         catch
@@ -225,12 +225,12 @@ function Set-TargetResource
         }
     }
 
-    if ( ('Absent' -eq $Ensure ) -and ($AntiPhishRule) )
+    if ( ('Absent' -eq $Ensure ) -and ($SafeAttachmentRule) )
     {
-        Write-Verbose "Removing AntiPhishRule $($Identity) "
+        Write-Verbose "Removing SafeAttachmentRule $($Identity) "
         try
         {
-            Remove-AntiPhishRule -Identity $Identity -Confirm:$false
+            Remove-SafeAttachmentRule -Identity $Identity -Confirm:$false
         }
         catch
         {
@@ -256,7 +256,7 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $AntiPhishPolicy,
+        $SafeAttachmentPolicy,
 
         [Parameter()]
         [System.String]
@@ -303,7 +303,7 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message "Testing AntiPhishRule for $($Identity)"
+    Write-Verbose -Message "Testing SafeAttachmentRule for $($Identity)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
@@ -338,7 +338,7 @@ function Export-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $AntiPhishPolicy,
+        $SafeAttachmentPolicy,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -350,7 +350,7 @@ function Export-TargetResource
     Write-Verbose "Global ExchangeOnlineSession status: `n"
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
-    $content = "        EXOAntiPhishRule " + (New-GUID).ToString() + "`r`n"
+    $content = "        EXOSafeAttachmentRule " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
