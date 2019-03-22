@@ -269,7 +269,6 @@ function Get-TargetResource
                     $KeyName = $PSBoundParameters[$KeyName]
                 }
             }
-
         }
 
         if ($HostedContentFilterPolicy.IsDefault)

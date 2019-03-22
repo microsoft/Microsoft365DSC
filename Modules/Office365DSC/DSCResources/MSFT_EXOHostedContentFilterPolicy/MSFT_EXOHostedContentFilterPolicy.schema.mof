@@ -51,34 +51,3 @@ class MSFT_EXOHostedContentFilterPolicy : OMI_BaseResource
     [Write, Description("Specify if this policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
