@@ -194,7 +194,7 @@ function Set-TargetResource
     {
         try
         {
-            NewSafeLinksRule -NewSafeLinksRuleParams $PSBoundParameters
+            New-EXOSafeLinksRule -SafeLinksRuleParams $PSBoundParameters
         }
         catch
         {
@@ -212,11 +212,11 @@ function Set-TargetResource
                 # There doesn't appear to be any way to change the Enabled state of a rule once created.
                 Write-Verbose "Removing SafeLinksRule $($Identity) in order to change Enabled state."
                 Remove-SafeLinksRule -Identity $Identity -Confirm:$false
-                NewSafeLinksRule -NewSafeLinksRuleParams $PSBoundParameters
+                New-EXOSafeLinksRule -SafeLinksRuleParams $PSBoundParameters
             }
             else
             {
-                SetSafeLinksRule -SetSafeLinksRuleParams $PSBoundParameters
+                Set-EXOSafeLinksRule -SafeLinksRuleParams $PSBoundParameters
             }
         }
         catch

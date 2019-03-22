@@ -54,13 +54,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Mock -CommandName NewSafeAttachmentRule -MockWith {
+        Mock -CommandName New-EXOSafeAttachmentRule -MockWith {
             return @{
 
             }
         }
 
-        Mock -CommandName SetSafeAttachmentRule -MockWith {
+        Mock -CommandName Set-EXOSafeAttachmentRule -MockWith {
             return @{
 
             }

@@ -194,7 +194,7 @@ function Set-TargetResource
     {
         try
         {
-            NewHostedContentFilterRule -NewHostedContentFilterRuleParams $PSBoundParameters
+            New-EXOHostedContentFilterRule -HostedContentFilterRuleParams $PSBoundParameters
         }
         catch
         {
@@ -212,11 +212,11 @@ function Set-TargetResource
                 # There doesn't appear to be any way to change the Enabled state of a rule once created.
                 Write-Verbose "Removing HostedContentFilterRule $($Identity) in order to change Enabled state."
                 Remove-HostedContentFilterRule -Identity $Identity -Confirm:$false
-                NewHostedContentFilterRule -NewHostedContentFilterRuleParams $PSBoundParameters
+                New-EXOHostedContentFilterRule -HostedContentFilterRuleParams $PSBoundParameters
             }
             else
             {
-                SetHostedContentFilterRule -SetHostedContentFilterRuleParams $PSBoundParameters
+                Set-EXOHostedContentFilterRule -HostedContentFilterRuleParams $PSBoundParameters
             }
         }
         catch

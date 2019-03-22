@@ -306,9 +306,9 @@ function Set-TargetResource
     {
         try
         {
-            NewAntiPhishPolicy -NewAntiPhishPolicyParams $PSBoundParameters
+            New-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
             Start-Sleep -Seconds 1
-            SetAntiPhishPolicy -SetAntiPhishPolicyParams $PSBoundParameters
+            Set-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
         }
         catch
         {
@@ -320,7 +320,7 @@ function Set-TargetResource
     {
         try
         {
-            SetAntiPhishPolicy -SetAntiPhishPolicyParams $PSBoundParameters
+            Set-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
         }
         catch
         {

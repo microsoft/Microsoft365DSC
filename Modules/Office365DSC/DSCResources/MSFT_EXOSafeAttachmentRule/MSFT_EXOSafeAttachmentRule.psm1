@@ -194,7 +194,7 @@ function Set-TargetResource
     {
         try
         {
-            NewSafeAttachmentRule -NewSafeAttachmentRuleParams $PSBoundParameters
+            New-EXOSafeAttachmentRule -SafeAttachmentRuleParams $PSBoundParameters
         }
         catch
         {
@@ -212,11 +212,11 @@ function Set-TargetResource
                 # There doesn't appear to be any way to change the Enabled state of a rule once created.
                 Write-Verbose "Removing SafeAttachmentRule $($Identity) in order to change Enabled state."
                 Remove-SafeAttachmentRule -Identity $Identity -Confirm:$false
-                NewSafeAttachmentRule -NewSafeAttachmentRuleParams $PSBoundParameters
+                New-EXOSafeAttachmentRule -SafeAttachmentRuleParams $PSBoundParameters
             }
             else
             {
-                SetSafeAttachmentRule -SetSafeAttachmentRuleParams $PSBoundParameters
+                Set-EXOSafeAttachmentRule -SafeAttachmentRuleParams $PSBoundParameters
             }
         }
         catch

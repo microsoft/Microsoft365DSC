@@ -1248,17 +1248,17 @@ function Connect-SecurityAndComplianceCenter
 
 }
 
-function NewAntiPhishPolicy
+function New-EXOAntiPhishPolicy
 {
     param (
         [Parameter()]
         [System.Collections.Hashtable]
-        $NewAntiPhishPolicyParams
+        $AntiPhishPolicyParams
     )
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $NewAntiPhishPolicyParams -Operation 'New' )
+        $BuiltParams = (Build-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'New' )
         Write-Verbose "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-AntiPhishPolicy @BuiltParams
         $VerbosePreference = 'SilentlyContinue'
@@ -1269,17 +1269,17 @@ function NewAntiPhishPolicy
     }
 }
 
-function NewAntiPhishRule
+function New-EXOAntiPhishRule
 {
     param (
         [Parameter()]
         [System.Collections.Hashtable]
-        $NewAntiPhishRuleParams
+        $AntiPhishRuleParams
     )
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $NewAntiPhishRuleParams -Operation 'New' )
+        $BuiltParams = (Build-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'New' )
         Write-Verbose "Creating New AntiPhishRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-AntiPhishRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
@@ -1290,17 +1290,17 @@ function NewAntiPhishRule
     }
 }
 
-function NewHostedContentFilterRule
+function New-EXOHostedContentFilterRule
 {
     param (
         [Parameter()]
         [System.Collections.Hashtable]
-        $NewHostedContentFilterRuleParams
+        $HostedContentFilterRuleParams
     )
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $NewHostedContentFilterRuleParams -Operation 'New' )
+        $BuiltParams = (Build-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'New' )
         Write-Verbose "Creating New HostedContentFilterRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-HostedContentFilterRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
@@ -1311,17 +1311,17 @@ function NewHostedContentFilterRule
     }
 }
 
-function NewSafeAttachmentRule
+function New-EXOSafeAttachmentRule
 {
     param (
         [Parameter()]
         [System.Collections.Hashtable]
-        $NewSafeAttachmentRuleParams
+        $SafeAttachmentRuleParams
     )
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $NewSafeAttachmentRuleParams -Operation 'New' )
+        $BuiltParams = (Build-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'New' )
         Write-Verbose "Creating New SafeAttachmentRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-SafeAttachmentRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
@@ -1332,17 +1332,17 @@ function NewSafeAttachmentRule
     }
 }
 
-function NewSafeLinksRule
+function New-EXOSafeLinksRule
 {
     param (
         [Parameter()]
         [System.Collections.Hashtable]
-        $NewSafeLinksRuleParams
+        $SafeLinksRuleParams
     )
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $NewSafeLinksRuleParams -Operation 'New' )
+        $BuiltParams = (Build-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'New' )
         Write-Verbose "Creating New SafeLinksRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-SafeLinksRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
@@ -1353,17 +1353,17 @@ function NewSafeLinksRule
     }
 }
 
-function SetAntiPhishRule
+function Set-EXOAntiPhishRule
 {
     param (
         [Parameter()]
         [System.Collections.Hashtable]
-        $SetAntiPhishRuleParams
+        $AntiPhishRuleParams
     )
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $SetAntiPhishRuleParams -Operation 'Set' )
+        $BuiltParams = (Build-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting AntiPhishRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
@@ -1382,17 +1382,17 @@ function SetAntiPhishRule
     }
 }
 
-function SetAntiPhishPolicy
+function Set-EXOAntiPhishPolicy
 {
     param (
         [Parameter()]
         [System.Collections.Hashtable]
-        $SetAntiPhishPolicyParams
+        $AntiPhishPolicyParams
     )
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $SetAntiPhishPolicyParams -Operation 'Set' )
+        $BuiltParams = (Build-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
@@ -1411,17 +1411,17 @@ function SetAntiPhishPolicy
     }
 }
 
-function SetHostedContentFilterRule
+function Set-EXOHostedContentFilterRule
 {
     param (
         [Parameter()]
         [System.Collections.Hashtable]
-        $SetHostedContentFilterRuleParams
+        $HostedContentFilterRuleParams
     )
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $SetHostedContentFilterRuleParams -Operation 'Set' )
+        $BuiltParams = (Build-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting HostedContentFilterRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
@@ -1440,17 +1440,17 @@ function SetHostedContentFilterRule
     }
 }
 
-function SetSafeAttachmentRule
+function Set-EXOSafeAttachmentRule
 {
     param (
         [Parameter()]
         [System.Collections.Hashtable]
-        $SetSafeAttachmentRuleParams
+        $SafeAttachmentRuleParams
     )
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $SetSafeAttachmentRuleParams -Operation 'Set' )
+        $BuiltParams = (Build-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting SafeAttachmentRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
@@ -1469,17 +1469,17 @@ function SetSafeAttachmentRule
     }
 }
 
-function SetSafeLinksRule
+function Set-EXOSafeLinksRule
 {
     param (
         [Parameter()]
         [System.Collections.Hashtable]
-        $SetSafeLinksRuleParams
+        $SafeLinksRuleParams
     )
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $SetSafeLinksRuleParams -Operation 'Set' )
+        $BuiltParams = (Build-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting SafeLinksRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"

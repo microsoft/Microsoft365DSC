@@ -194,7 +194,7 @@ function Set-TargetResource
     {
         try
         {
-            NewAntiPhishRule -NewAntiPhishRuleParams $PSBoundParameters
+            New-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
         }
         catch
         {
@@ -212,11 +212,11 @@ function Set-TargetResource
                 # There doesn't appear to be any way to change the Enabled state of a rule once created.
                 Write-Verbose "Removing AntiPhishRule $($Identity) in order to change Enabled state."
                 Remove-AntiPhishRule -Identity $Identity -Confirm:$false
-                NewAntiPhishRule -NewAntiPhishRuleParams $PSBoundParameters
+                New-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
             }
             else
             {
-                SetAntiPhishRule -SetAntiPhishRuleParams $PSBoundParameters
+                Set-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
             }
         }
         catch

@@ -54,13 +54,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Mock -CommandName NewHostedContentFilterRule -MockWith {
+        Mock -CommandName New-EXOHostedContentFilterRule -MockWith {
             return @{
 
             }
         }
 
-        Mock -CommandName SetHostedContentFilterRule -MockWith {
+        Mock -CommandName Set-EXOHostedContentFilterRule -MockWith {
             return @{
 
             }
