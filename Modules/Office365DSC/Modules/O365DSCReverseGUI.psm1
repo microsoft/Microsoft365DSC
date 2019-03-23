@@ -423,7 +423,7 @@ function Show-O365GUI
     $btnClear.BackColor = [System.Drawing.Color]::IndianRed
     $btnClear.ForeColor = [System.Drawing.Color]::White
     $btnClear.Text = "Unselect All"
-    $btnClear.Add_Click({SelectComponentsForMode$pnlMain, (0)})
+    $btnClear.Add_Click({SelectComponentsForMode($pnlMain, (0)})
     $panelMenu.Controls.Add($btnClear);
 
     $lblFarmAccount = New-Object System.Windows.Forms.Label
