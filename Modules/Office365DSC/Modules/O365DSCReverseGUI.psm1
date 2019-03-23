@@ -394,7 +394,7 @@ function Show-O365GUI
     $btnLite.Height = 60
     $btnLite.Left = 220
     $btnLite.Text = "Lite"
-    $btnLite.Add_Click({SelectComponentsForMode(1)})
+    $btnLite.Add_Click({SelectComponentsForMode($pnlMain, 1)})
     $panelMenu.Controls.Add($btnLite);
 
     $btnDefault = New-Object System.Windows.Forms.Button
@@ -403,7 +403,7 @@ function Show-O365GUI
     $btnDefault.Height = 60
     $btnDefault.Left = 375
     $btnDefault.Text = "Default"
-    $btnDefault.Add_Click({SelectComponentsForMode(2)})
+    $btnDefault.Add_Click({SelectComponentsForMode($pnlMain, 2)})
     $panelMenu.Controls.Add($btnDefault);
 
     $btnFull = New-Object System.Windows.Forms.Button
@@ -412,7 +412,7 @@ function Show-O365GUI
     $btnFull.Left = 530
     $btnFull.Height = 60
     $btnFull.Text = "Full"
-    $btnFull.Add_Click({SelectComponentsForMode(3)})
+    $btnFull.Add_Click({SelectComponentsForMode($pnlMain, 3)})
     $panelMenu.Controls.Add($btnFull);
 
     $btnClear = New-Object System.Windows.Forms.Button
@@ -423,7 +423,7 @@ function Show-O365GUI
     $btnClear.BackColor = [System.Drawing.Color]::IndianRed
     $btnClear.ForeColor = [System.Drawing.Color]::White
     $btnClear.Text = "Unselect All"
-    $btnClear.Add_Click({SelectComponentsForMode(0)})
+    $btnClear.Add_Click({SelectComponentsForMode$pnlMain, (0)})
     $panelMenu.Controls.Add($btnClear);
 
     $lblFarmAccount = New-Object System.Windows.Forms.Label
@@ -482,7 +482,10 @@ function Show-O365GUI
             {
                 foreach ($checkbox in ($panel.Controls | Where-Object { $_.GetType().Name -eq "Checkbox"}))
                 {
-                    $SelectedComponents += $checkbox.Name
+                    if ($checkbox.Checked)
+                    {
+                        $SelectedComponents += $checkbox.Name
+                    }
                 }
             }
 
@@ -504,4 +507,42 @@ function Show-O365GUI
     $form.Text = "ReverseDSC for Office 365"
     $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
     $form.ShowDialog()
+}
+
+function SelectComponentsForMode($panelMain, $mode){
+    $components = $null
+    if($mode -eq 1)
+    {
+        $components = $liteComponents
+    }
+    elseif($mode -eq 2)
+    {
+        $components = $defaultComponents
+    }
+    foreach($panel in $panelMain.Controls)
+    {
+        if($panel.GetType().ToString() -eq "System.Windows.Forms.Panel")
+        {
+            foreach($control in ([System.Windows.Forms.Panel]$panel).Controls){
+                try{
+                    if($mode -ne 3)
+                    {
+                        $control.Checked = $false
+                    }
+                    else
+                    {
+                        $control.Checked = $true
+                    }
+                }
+                catch{}
+            }
+        }
+    }
+    foreach($control in $components)
+    {
+        try{
+            $control.Checked = $true
+        }
+        catch{}
+    }
 }
