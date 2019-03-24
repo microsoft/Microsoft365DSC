@@ -810,35 +810,36 @@ $TimeZones = @(
         EnglishDescription = "(GMT+13:00) Nuku’alofa"
     }
 )
-function BuildAntiPhishParams
+function Build-EXOParams
 {
+    [CmdletBinding()]
     param (
         [Parameter()]
         [System.Collections.Hashtable]
-        $BuildAntiPhishParams,
+        $InputEXOParams,
 
         [Parameter()]
         [ValidateSet('New', 'Set')]
         [System.String]
         $Operation
     )
-    $AntiPhishParams = $BuildAntiPhishParams
-    $AntiPhishParams.Remove("GlobalAdminAccount") | out-null
-    $AntiPhishParams.Remove("Ensure") | out-null
-    $AntiPhishParams.Remove("Verbose") | out-null
+    $EXOParams = $InputEXOParams
+    $EXOParams.Remove("GlobalAdminAccount") | out-null
+    $EXOParams.Remove("Ensure") | out-null
+    $EXOParams.Remove("Verbose") | out-null
     if ('New' -eq $Operation)
     {
-        $AntiPhishParams += @{
-            Name = $AntiPhishParams.Identity
+        $EXOParams += @{
+            Name = $EXOParams.Identity
         }
-        $AntiPhishParams.Remove("Identity") | out-null
-        $AntiPhishParams.Remove("MakeDefault") | out-null
-        return $AntiPhishParams
+        $EXOParams.Remove("Identity") | out-null
+        $EXOParams.Remove("MakeDefault") | out-null
+        return $EXOParams
     }
     if ('Set' -eq $Operation)
     {
-        $AntiPhishParams.Remove("Enabled") | out-null
-        return $AntiPhishParams
+        $EXOParams.Remove("Enabled") | out-null
+        return $EXOParams
     }
 }
 
@@ -961,7 +962,11 @@ function Connect-ExchangeOnline
     (
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $CommandsToImport
     )
     $VerbosePreference = 'Continue'
     $WarningPreference = "SilentlyContinue"
@@ -982,20 +987,126 @@ function Connect-ExchangeOnline
         try
         {
             Write-Verbose "Opening New ExchangeOnline Session."
+            $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+            while ($PowerShellConnections)
+            {
+                Write-Verbose "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
+                Write-Verbose "Waiting for closing connections to close..."
+                Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
+                Start-Sleep -seconds 1
+                $CheckConnectionsWithoutKillingWhileLoop = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+                if (-NOT $CheckConnectionsWithoutKillingWhileLoop) {
+                    Write-Verbose "Connections have closed.  Waiting 5 more seconds..."
+                    Start-Sleep -seconds 5
+                    $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+                }
+            }
             $VerbosePreference = 'SilentlyContinue'
-            Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
-            $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-            $ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
+            $Global:ExchangeOnlineSession = $null
+            while (-NOT $Global:ExchangeOnlineSession)
+            {
+                $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
+            }
+
+            if ($CommandsToImport)
+            {
+                $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -CommandName $CommandsToImport -AllowClobber -ErrorAction SilentlyContinue
+            }
+            else
+            {
+                $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
+            }
+
             $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global -ErrorAction SilentlyContinue
         }
         catch
         {
             $ExceptionMessage = $_.Exception
-            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
+            $Error.Clear()
             $VerbosePreference = 'Continue'
-            $WarningPreference = "Continue"
-            $Global:ExchangeOnlineSession = $null
-            Write-Error $ExceptionMessage
+            if ($ExceptionMessage -imatch 'Please wait for [0-9]* seconds' )
+            {
+                Write-Verbose "Waiting for available runspace..."
+                [regex]$WaitTimePattern = 'Please wait for [0-9]* seconds'
+                $WaitTimePatternMatch = (($WaitTimePattern.Match($ExceptionMessage)).Value | Select-String -Pattern '[0-9]*' -AllMatches )
+                $WaitTimeInSeconds = ($WaitTimePatternMatch | ForEach-Object {$_.Matches} | Where-Object Value -NotLike $null).Value
+                Write-Verbose "Waiting for requested $WaitTimeInSeconds seconds..."
+                Start-Sleep -Seconds ($WaitTimeInSeconds + 1)
+                try
+                {
+                    Write-Verbose "Opening New ExchangeOnline Session."
+                    $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+                    while ($PowerShellConnections)
+                    {
+                        Write-Verbose "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
+                        Write-Verbose "Waiting for closing connections to close..."
+                        Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
+                        Start-Sleep -seconds 1
+                        $CheckConnectionsWithoutKillingWhileLoop = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+                        if (-NOT $CheckConnectionsWithoutKillingWhileLoop) {
+                            Write-Verbose "Connections have closed.  Waiting 5 more seconds..."
+                            Start-Sleep -seconds 5
+                            $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+                        }
+                    }
+                    $VerbosePreference = 'SilentlyContinue'
+                    $Global:ExchangeOnlineSession = $null
+                    while (-NOT $Global:ExchangeOnlineSession)
+                    {
+                        $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
+                    }
+
+                    if ($CommandsToImport)
+                    {
+                        $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -CommandName $CommandsToImport -AllowClobber -ErrorAction SilentlyContinue
+                    }
+                    else
+                    {
+                        $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
+                    }
+
+                    $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global -ErrorAction SilentlyContinue
+                }
+                catch
+                {
+                    $VerbosePreference = 'Continue'
+                    $WarningPreference = "Continue"
+                    $Global:ExchangeOnlineSession = $null
+                    Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+                }
+            }
+            else
+            {
+                $VerbosePreference = 'Continue'
+                Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
+                Write-Verbose "Exchange Online connection failed."
+                Write-Verbose "Waiting 60 seconds..."
+                Start-Sleep -Seconds 60
+                try
+                {
+                    Write-Verbose "Opening New ExchangeOnline Session."
+                    $VerbosePreference = 'SilentlyContinue'
+                    Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
+                    $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
+                    if ($CommandsToImport)
+                    {
+                        $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -CommandName $CommandsToImport -AllowClobber -ErrorAction SilentlyContinue
+                    }
+                    else
+                    {
+                        $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
+                    }
+
+                    $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global -ErrorAction SilentlyContinue
+                }
+                catch
+                {
+                    $VerbosePreference = 'Continue'
+                    $WarningPreference = "Continue"
+                    $Global:ExchangeOnlineSession = $null
+                    Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+                }
+            }
         }
     }
     else
@@ -1006,6 +1117,33 @@ function Connect-ExchangeOnline
     }
 
 }
+
+function Confirm-ImportedCmdletIsAvailable {
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CmdletName
+    )
+    try
+    {
+        $CmdletIsAvailable = (Get-Command -Name $CmdletName )
+        if ($CmdletIsAvailable)
+        {
+            return $true
+        }
+        else
+        {
+            Close-SessionsAndReturnError -ExceptionMessage "Cmdlet $CmdletName is not available in this O365 Tenant."
+        }
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
 function Connect-SecurityAndComplianceCenter
 {
     [CmdletBinding()]
@@ -1029,26 +1167,76 @@ function Connect-SecurityAndComplianceCenter
         }
     }
 
-    $Global:OpenSecurityAndComplianceCenterSession = (Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Where-Object InstanceId -eq ($Global:SecurityAndComplianceCenterSession).InstanceId | Where-Object State -eq 'Opened' )
+    $Global:OpenSecurityAndComplianceCenterSession = (Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Where-Object State -eq 'Opened' )
     if (-NOT $Global:OpenSecurityAndComplianceCenterSession)
     {
+        $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+        while ($PowerShellConnections)
+        {
+            Write-Verbose "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
+            Write-Verbose "Waiting for closing connections to close..."
+            Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Remove-PSSession
+            Start-Sleep -seconds 1
+            $CheckConnectionsWithoutKillingWhileLoop = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+            if (-NOT $CheckConnectionsWithoutKillingWhileLoop) {
+                Write-Verbose "Connections have closed.  Waiting 5 more seconds..."
+                Start-Sleep -seconds 5
+                $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+            }
+        }
+
         try
         {
             Write-Verbose "Opening New SecurityAndComplianceCenter Session."
             $VerbosePreference = 'SilentlyContinue'
-            Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
-            $Global:SecurityAndComplianceCenterSession = New-PSSession -Name 'SecurityAndComplianceCenter' -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-            $SecurityAndComplianceCenterModules = Import-PSSession $Global:SecurityAndComplianceCenterSession -AllowClobber -ErrorAction SilentlyContinue
+            $Global:SecurityAndComplianceCenterSession = $null
+            while (-NOT $Global:SecurityAndComplianceCenterSession)
+            {
+                $Global:SecurityAndComplianceCenterSession = New-PSSession -Name 'SecurityAndComplianceCenter' -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
+            }
+
+            $Global:SecurityAndComplianceCenterModules = Import-PSSession $Global:SecurityAndComplianceCenterSession -AllowClobber -ErrorAction SilentlyContinue
             $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global -ErrorAction SilentlyContinue
         }
         catch
         {
             $ExceptionMessage = $_.Exception
-            $ClosedPSSessions = [void](Get-PSSession | Remove-PSSession)
-            $Global:SecurityAndComplianceCenterSession = $null
-            $VerbosePreference = 'Continue'
-            $WarningPreference = "Continue"
-            Write-Error $ExceptionMessage
+            $Error.Clear()
+            if ($ExceptionMessage -imatch 'Please wait for [0-9]* seconds' )
+            {
+                Write-Verbose "Waiting for available runspace..."
+                [regex]$WaitTimePattern = 'Please wait for [0-9]* seconds'
+                $WaitTimePatternMatch = (($WaitTimePattern.Match($ExceptionMessage)).Value | Select-String -Pattern '[0-9]*' -AllMatches )
+                $WaitTimeInSeconds = ($WaitTimePatternMatch | ForEach-Object {$_.Matches} | Where-Object Value -NotLike $null).Value
+                Start-Sleep -Seconds ($WaitTimeInSeconds + 1)
+                try
+                {
+                    Write-Verbose "Opening New SecurityAndComplianceCenter Session."
+                    $VerbosePreference = 'SilentlyContinue'
+                    $Global:SecurityAndComplianceCenterSession = $null
+                    while (-NOT $Global:SecurityAndComplianceCenterSession)
+                    {
+                        $Global:SecurityAndComplianceCenterSession = New-PSSession -Name 'SecurityAndComplianceCenter' -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
+                    }
+
+                    $Global:SecurityAndComplianceCenterModules = Import-PSSession $Global:SecurityAndComplianceCenterSession -AllowClobber -ErrorAction SilentlyContinue
+                    $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global -ErrorAction SilentlyContinue
+                }
+                catch
+                {
+                    $VerbosePreference = 'Continue'
+                    $WarningPreference = "Continue"
+                    $Global:ExchangeOnlineSession = $null
+                    Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+                }
+            }
+            else
+            {
+                $VerbosePreference = 'Continue'
+                $WarningPreference = "Continue"
+                $Global:ExchangeOnlineSession = $null
+                Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+            }
         }
     }
     else
@@ -1060,18 +1248,20 @@ function Connect-SecurityAndComplianceCenter
 
 }
 
-function NewAntiPhishPolicy
+function New-EXOAntiPhishPolicy
 {
     param (
         [Parameter()]
         [System.Collections.Hashtable]
-        $NewAntiPhishPolicyParams
+        $AntiPhishPolicyParams
     )
     try
     {
-        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $NewAntiPhishPolicyParams -Operation 'New' )
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Build-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'New' )
         Write-Verbose "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-AntiPhishPolicy @BuiltParams
+        $VerbosePreference = 'SilentlyContinue'
     }
     catch
     {
@@ -1079,18 +1269,20 @@ function NewAntiPhishPolicy
     }
 }
 
-function NewAntiPhishRule
+function New-EXOAntiPhishRule
 {
     param (
         [Parameter()]
         [System.Collections.Hashtable]
-        $NewAntiPhishRuleParams
+        $AntiPhishRuleParams
     )
     try
     {
-        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $NewAntiPhishRuleParams -Operation 'New' )
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Build-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'New' )
         Write-Verbose "Creating New AntiPhishRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-AntiPhishRule @BuiltParams -Confirm:$false
+        $VerbosePreference = 'SilentlyContinue'
     }
     catch
     {
@@ -1098,24 +1290,90 @@ function NewAntiPhishRule
     }
 }
 
-function SetAntiPhishRule
+function New-EXOHostedContentFilterRule
 {
     param (
         [Parameter()]
         [System.Collections.Hashtable]
-        $SetAntiPhishRuleParams
+        $HostedContentFilterRuleParams
     )
     try
     {
-        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $SetAntiPhishRuleParams -Operation 'Set' )
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Build-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'New' )
+        Write-Verbose "Creating New HostedContentFilterRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        New-HostedContentFilterRule @BuiltParams -Confirm:$false
+        $VerbosePreference = 'SilentlyContinue'
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function New-EXOSafeAttachmentRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SafeAttachmentRuleParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Build-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'New' )
+        Write-Verbose "Creating New SafeAttachmentRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        New-SafeAttachmentRule @BuiltParams -Confirm:$false
+        $VerbosePreference = 'SilentlyContinue'
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function New-EXOSafeLinksRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SafeLinksRuleParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Build-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'New' )
+        Write-Verbose "Creating New SafeLinksRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        New-SafeLinksRule @BuiltParams -Confirm:$false
+        $VerbosePreference = 'SilentlyContinue'
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function Set-EXOAntiPhishRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AntiPhishRuleParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Build-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting AntiPhishRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
             Set-AntiPhishRule @BuiltParams -Confirm:$false
+            $VerbosePreference = 'SilentlyContinue'
         }
         else
         {
             Write-Verbose "No more values to Set on AntiPhishRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            $VerbosePreference = 'SilentlyContinue'
         }
     }
     catch
@@ -1124,24 +1382,114 @@ function SetAntiPhishRule
     }
 }
 
-function SetAntiPhishPolicy
+function Set-EXOAntiPhishPolicy
 {
     param (
         [Parameter()]
         [System.Collections.Hashtable]
-        $SetAntiPhishPolicyParams
+        $AntiPhishPolicyParams
     )
     try
     {
-        $BuiltParams = (BuildAntiPhishParams -BuildAntiPhishParams $SetAntiPhishPolicyParams -Operation 'Set' )
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Build-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
             Set-AntiPhishPolicy @BuiltParams -Confirm:$false
+            $VerbosePreference = 'SilentlyContinue'
         }
         else
         {
             Write-Verbose "No more values to Set on AntiPhishPolicy $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            $VerbosePreference = 'SilentlyContinue'
+        }
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function Set-EXOHostedContentFilterRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $HostedContentFilterRuleParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Build-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'Set' )
+        if ($BuiltParams.keys -gt 1)
+        {
+            Write-Verbose "Setting HostedContentFilterRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Set-HostedContentFilterRule @BuiltParams -Confirm:$false
+            $VerbosePreference = 'SilentlyContinue'
+        }
+        else
+        {
+            Write-Verbose "No more values to Set on HostedContentFilterRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            $VerbosePreference = 'SilentlyContinue'
+        }
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function Set-EXOSafeAttachmentRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SafeAttachmentRuleParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Build-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'Set' )
+        if ($BuiltParams.keys -gt 1)
+        {
+            Write-Verbose "Setting SafeAttachmentRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Set-SafeAttachmentRule @BuiltParams -Confirm:$false
+            $VerbosePreference = 'SilentlyContinue'
+        }
+        else
+        {
+            Write-Verbose "No more values to Set on SafeAttachmentRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            $VerbosePreference = 'SilentlyContinue'
+        }
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function Set-EXOSafeLinksRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SafeLinksRuleParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Build-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'Set' )
+        if ($BuiltParams.keys -gt 1)
+        {
+            Write-Verbose "Setting SafeLinksRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Set-SafeLinksRule @BuiltParams -Confirm:$false
+            $VerbosePreference = 'SilentlyContinue'
+        }
+        else
+        {
+            Write-Verbose "No more values to Set on SafeLinksRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            $VerbosePreference = 'SilentlyContinue'
         }
     }
     catch
@@ -1583,6 +1931,126 @@ function Start-O365ConfigurationExtract
         Import-Module $O365AdminAuditLogConfigModulePath | Out-Null
         $DSCContent += Export-TargetResource -UnifiedAuditLogIngestionEnabled $value -GlobalAdminAccount $GlobalAdminAccount -IsSingleInstance 'Yes'
     }
+    #endregion
+
+    #region "EXOAtpPolicyForO365"
+    Write-Information "Extracting EXOAtpPolicyForO365..."
+    $EXOAtpPolicyForO365ModulePath = Join-Path -Path $PSScriptRoot `
+                                              -ChildPath "..\DSCResources\MSFT_EXOAtpPolicyForO365\MSFT_EXOAtpPolicyForO365.psm1" `
+                                              -Resolve
+
+    $catch = Import-Module $EXOAtpPolicyForO365ModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXOCASMailboxPlan"
+    Write-Information "Extracting EXOCASMailboxPlan..."
+    $EXOCASMailboxPlanModulePath = Join-Path -Path $PSScriptRoot `
+                                              -ChildPath "..\DSCResources\MSFT_EXOCASMailboxPlan\MSFT_EXOCASMailboxPlan.psm1" `
+                                              -Resolve
+
+    $catch = Import-Module $EXOCASMailboxPlanModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXOClientAccessRule"
+    Write-Information "Extracting EXOClientAccessRule..."
+    $EXOClientAccessRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                              -ChildPath "..\DSCResources\MSFT_EXOClientAccessRule\MSFT_EXOClientAccessRule.psm1" `
+                                              -Resolve
+
+    $catch = Import-Module $EXOClientAccessRuleModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXODkimSigningConfig"
+    Write-Information "Extracting EXODkimSigningConfig..."
+    $EXODkimSigningConfigModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXODkimSigningConfig\MSFT_EXODkimSigningConfig.psm1" `
+                                                -Resolve
+
+    $catch = Import-Module $EXODkimSigningConfigModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXOHostedConnectionFilterPolicy"
+    Write-Information "Extracting EXOHostedConnectionFilterPolicy..."
+    $EXOHostedConnectionFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOHostedConnectionFilterPolicy\MSFT_EXOHostedConnectionFilterPolicy.psm1" `
+                                                -Resolve
+
+    $catch = Import-Module $EXOHostedConnectionFilterPolicyModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXOHostedContentFilterPolicy"
+    Write-Information "Extracting EXOHostedContentFilterPolicy..."
+    $EXOHostedContentFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterPolicy\MSFT_EXOHostedContentFilterPolicy.psm1" `
+                                                -Resolve
+
+    $catch = Import-Module $EXOHostedContentFilterPolicyModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXOHostedContentFilterRule"
+    Write-Information "Extracting EXOHostedContentFilterRule..."
+    $EXOHostedContentFilterRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterRule\MSFT_EXOHostedContentFilterRule.psm1" `
+                                                -Resolve
+
+    $catch = Import-Module $EXOHostedContentFilterRuleModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXOHostedOutboundSpamFilterPolicy"
+    Write-Information "Extracting EXOHostedOutboundSpamFilterPolicy..."
+    $EXOHostedOutboundSpamFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOHostedOutboundSpamFilterPolicy\MSFT_EXOHostedOutboundSpamFilterPolicy.psm1" `
+                                                -Resolve
+
+    $catch = Import-Module $EXOHostedOutboundSpamFilterPolicyModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXOSafeAttachmentPolicy"
+    Write-Information "Extracting EXOSafeAttachmentPolicy..."
+    $EXOSafeAttachmentPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentPolicy\MSFT_EXOSafeAttachmentPolicy.psm1" `
+                                                -Resolve
+
+    $catch = Import-Module $EXOSafeAttachmentPolicyModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXOSafeAttachmentRule"
+    Write-Information "Extracting EXOSafeAttachmentRule..."
+    $EXOSafeAttachmentRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentRule\MSFT_EXOSafeAttachmentRule.psm1" `
+                                                -Resolve
+
+    $catch = Import-Module $EXOSafeAttachmentRuleModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXOSafeLinksPolicy"
+    Write-Information "Extracting EXOSafeLinksPolicy..."
+    $EXOSafeLinksPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOSafeLinksPolicy\MSFT_EXOSafeLinksPolicy.psm1" `
+                                                -Resolve
+
+    $catch = Import-Module $EXOSafeLinksPolicyModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+    #endregion
+
+    #region "EXOSafeLinksRule"
+    Write-Information "Extracting EXOSafeLinksRule..."
+    $EXOSafeLinksRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOSafeLinksRule\MSFT_EXOSafeLinksRule.psm1" `
+                                                -Resolve
+
+    $catch = Import-Module $EXOSafeLinksRuleModulePath
+    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
     #endregion
 
     #region "EXOMailboxSettings"

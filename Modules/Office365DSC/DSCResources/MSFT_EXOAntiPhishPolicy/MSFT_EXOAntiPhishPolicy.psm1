@@ -119,7 +119,7 @@ function Get-TargetResource
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve AntiPhishPolicy $($Identity)"
     Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*AntiPhishPolicy'
     Write-Verbose "Global ExchangeOnlineSession status:"
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     try
@@ -135,11 +135,8 @@ function Get-TargetResource
     if (-NOT $AntiPhishPolicy)
     {
         Write-Verbose "AntiPhishPolicy $($Identity) does not exist."
-        $result = @{
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
-            Identity           = $Identity
-        }
+        $result = $PSBoundParameters
+        $result.Ensure = 'Absent'
         return $result
     }
     else
@@ -291,7 +288,7 @@ function Set-TargetResource
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Retrieving information about AntiPhishPolicy configuration'
     Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*AntiPhishPolicy'
     Write-Verbose "Global ExchangeOnlineSession status:"
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     try
@@ -309,9 +306,9 @@ function Set-TargetResource
     {
         try
         {
-            NewAntiPhishPolicy -NewAntiPhishPolicyParams $PSBoundParameters
+            New-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
             Start-Sleep -Seconds 1
-            SetAntiPhishPolicy -SetAntiPhishPolicyParams $PSBoundParameters
+            Set-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
         }
         catch
         {
@@ -323,7 +320,7 @@ function Set-TargetResource
     {
         try
         {
-            SetAntiPhishPolicy -SetAntiPhishPolicyParams $PSBoundParameters
+            Set-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
         }
         catch
         {
@@ -471,17 +468,22 @@ function Test-TargetResource
     )
     Write-Verbose -Message "Testing AntiPhishPolicy for $($Identity)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $AntiPhishPolicyTestParams = $PSBoundParameters
-    $AntiPhishPolicyTestParams.Remove("GlobalAdminAccount") | out-null
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $AntiPhishPolicyTestParams.Keys
+        -ValuesToCheck $ValuesToCheck.Keys
     if ($TestResult)
     {
-        Write-Verbose "Closing Remote PowerShell Sessions"
+        Write-Verbose 'Test-TargetResource returned True'
+        Write-Verbose 'Closing Remote PowerShell Sessions'
         $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-        Write-Verbose "Global ExchangeOnlineSession status: `n"
+        Write-Verbose 'Global ExchangeOnlineSession status: '
         Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
+    }
+    else
+    {
+        Write-Verbose 'Test-TargetResource returned False'
     }
 
     return $TestResult

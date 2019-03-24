@@ -35,7 +35,7 @@ function Get-TargetResource
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve Accepted Domain configuration for $($Identity)"
     Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*AcceptedDomain'
     Write-Verbose "Global ExchangeOnlineSession status:"
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     try
@@ -149,7 +149,7 @@ function Set-TargetResource
     Write-Verbose 'Entering Set-TargetResource'
     Write-Verbose 'Retrieving information about AcceptedDomain configuration'
     Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*AcceptedDomain'
     Write-Verbose "Global ExchangeOnlineSession status:"
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $AcceptedDomainParams = @{
@@ -207,13 +207,25 @@ function Test-TargetResource
     )
     Write-Verbose -Message "Testing AcceptedDomain for $($Identity)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck = $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @ValuesToCheck
+        -ValuesToCheck $ValuesToCheck.Keys
+    if ($TestResult)
+    {
+        Write-Verbose 'Test-TargetResource returned True'
+        Write-Verbose 'Closing Remote PowerShell Sessions'
+        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
+        Write-Verbose 'Global ExchangeOnlineSession status: '
+        Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
+    }
+    else
+    {
+        Write-Verbose 'Test-TargetResource returned False'
+    }
+
+    return $TestResult
 }
 
 function Export-TargetResource
