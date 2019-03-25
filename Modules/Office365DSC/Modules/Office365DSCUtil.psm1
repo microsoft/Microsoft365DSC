@@ -1908,6 +1908,7 @@ function Start-O365ConfigurationExtract
 
     # Obtain central administration url from a User Principal Name
     $centralAdminUrl = $null
+    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $users = Get-AzureADUser
     if ($users.Count -gt 0)
     {
