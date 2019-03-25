@@ -23,7 +23,7 @@ function Show-O365GUI
 
     #region Office 365
     $imgO365 = New-Object System.Windows.Forms.PictureBox
-    $imagePath = $PSScriptRoot + "\..\..\..\Images\Office365.jpg"
+    $imagePath = $PSScriptRoot + "\..\Dependencies\Images\Office365.jpg"
     $imgO365.ImageLocation = $imagePath
     $imgO365.Left = $firstColumnLeft
     $imgO365.Top = $topBannerHeight
@@ -64,7 +64,7 @@ function Show-O365GUI
 
     #region Exchange
     $imgExo = New-Object System.Windows.Forms.PictureBox
-    $imagePath = $PSScriptRoot + "\..\..\..\Images\Exchange.jpg"
+    $imagePath = $PSScriptRoot + "\..\Dependencies\Images\Exchange.jpg"
     $imgExo.ImageLocation = $imagePath
     $imgExo.Left = $firstColumnLeft
     $imgExo.Top = 300 + $topBannerHeight
@@ -201,7 +201,7 @@ function Show-O365GUI
 
     #region SharePoint
     $imgSPO = New-Object System.Windows.Forms.PictureBox
-    $imagePath = $PSScriptRoot + "\..\..\..\Images\SharePoint.jpg"
+    $imagePath = $PSScriptRoot + "\..\Dependencies\Images\SharePoint.jpg"
     $imgSPO.ImageLocation = $imagePath
     $imgSPO.Left = $SecondColumnLeft
     $imgSPO.Top = $topBannerHeight
@@ -266,7 +266,7 @@ function Show-O365GUI
 
     #region Teams
     $imgTeams = New-Object System.Windows.Forms.PictureBox
-    $imagePath = $PSScriptRoot + "\..\..\..\Images\Teams.jpg"
+    $imagePath = $PSScriptRoot + "\..\Dependencies\Images\Teams.jpg"
     $imgTeams.ImageLocation = $imagePath
     $imgTeams.Left = $ThirdColumnLeft
     $imgTeams.Top = $topBannerHeight
@@ -340,7 +340,7 @@ function Show-O365GUI
 
     #region OneDrive
     $imgOD = New-Object System.Windows.Forms.PictureBox
-    $imagePath = $PSScriptRoot + "\..\..\..\Images\OneDrive.jpg"
+    $imagePath = $PSScriptRoot + "\..\Dependencies\Images\OneDrive.jpg"
     $imgOD.ImageLocation = $imagePath
     $imgOD.Left = $fourthColumnLeft
     $imgOD.Top = $topBannerHeight

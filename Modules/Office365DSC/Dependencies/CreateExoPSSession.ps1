@@ -298,7 +298,7 @@ function Connect-EXOPSSession
         catch
         {
             global:RemoveBrokenOrClosedPSSession
-            throw "You have exceeded the maximum number of concurrent sessions to Exchange Online. Please try again in a few minutes."
+            throw $_
         }
         Finally
         {
