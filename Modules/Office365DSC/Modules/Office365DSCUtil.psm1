@@ -954,6 +954,38 @@ function Get-TeamByGroupID
     return $true
 }
 
+
+function Get-TeamByName
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $TeamName
+    )
+
+    $loopCounter = 0
+    do
+    {
+        $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
+        if ($null -eq $team)
+        {
+            Start-Sleep 5
+        }
+        $loopCounter +=1
+        if ($loopCounter -gt 5)
+        {
+            break
+        }
+    } while ($null -eq $team)
+
+    if ($null -eq $team)
+    {
+        throw "Team with Name $TeamName doesnt exist in tenant"
+    }
+}
+
 function Connect-ExchangeOnline
 {
     [CmdletBinding()]

@@ -54,7 +54,7 @@ function Get-TargetResource
     Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
-        Title               = $SiteDesignTitle
+        Title               = $Title
         SiteScriptNames     = $SiteScriptNames
         WebTemplate         = $WebTemplate
         isDefault           = $isDefault
@@ -264,18 +264,13 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing SPOSiteDesign for $SiteDesignTitle"
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('CentralAdminUrl') | out-null
+    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
 
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("WebTemplate", `
-            "SiteScriptNames", `
-            "isDefault", `
-            "PreviewImageAltText", `
-            "PreviewImageUrl", `
-            "Description", `
-            "Title", `
-            "Ensure"
-    )
+        -ValuesToCheck  $ValuesToCheck.Keys
 }
 
 function Export-TargetResource

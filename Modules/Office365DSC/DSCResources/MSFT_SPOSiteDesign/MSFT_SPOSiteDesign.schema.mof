@@ -5,7 +5,7 @@ class MSFT_SPOSiteDesign : OMI_BaseResource
     [Write, Description("The names of the site design scripts")] string SiteScriptNames[];
     [Write, Description("Web template to which site design is applied to when invoked."), ValueMap{"CommunicationSite","TeamSite"}, Values{"CommunicationSite","TeamSite"}] string WebTemplate;
     [Write, Description("Description of site design")] string Description;
-    [Write, Description("Is site design applied by default to web templates .")] boolean isDefault;
+    [Write, Description("Is site design applied by default to web templates .")] Boolean isDefault;
     [Write, Description("Site design alt preview image text")] string PreviewImageAltText;
     [Write, Description("Site design preview image url")] string PreviewImageUrl;
     [Write, Description("Site design version number")] uint32 Version;
