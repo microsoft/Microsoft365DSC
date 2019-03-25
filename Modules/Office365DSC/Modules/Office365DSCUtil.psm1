@@ -1906,6 +1906,19 @@ function Start-O365ConfigurationExtract
     $DSCContent += "    Node localhost`r`n"
     $DSCContent += "    {`r`n"
 
+    # Obtain central administration url from a User Principal Name
+    $centralAdminUrl = $null
+    $users = Get-AzureADUser
+    if ($users.Count -gt 0)
+    {
+        $tenantParts = $users[0].UserPrincipalName.Split('@')
+        if ($tenantParts.Length -gt 0)
+        {
+            $tenantName = $tenantParts[1].Split(".")[0]
+            $centralAdminUrl = "https://" + $tenantName + "-admin.sharepoint.com"
+        }
+    }
+
     # Add the GlobalAdminAccount to the Credentials List
     Save-Credentials -UserName $GlobalAdminAccount.UserName
 
@@ -2311,18 +2324,6 @@ function Start-O365ConfigurationExtract
                                         -Resolve
 
         $catch = Import-Module $ODSettingsModulePath
-
-        # Obtain central administration url from a User Principal Name
-        $centralAdminUrl = $null
-        if ($users.Count -gt 0)
-        {
-            $tenantParts = $users[0].UserPrincipalName.Split('@')
-            if ($tenantParts.Length -gt 0)
-            {
-                $tenantName = $tenantParts[1].Split(".")[0]
-                $centralAdminUrl = "https://" + $tenantName + "-admin.sharepoint.com"
-            }
-        }
 
         if ($centralAdminUrl)
         {
