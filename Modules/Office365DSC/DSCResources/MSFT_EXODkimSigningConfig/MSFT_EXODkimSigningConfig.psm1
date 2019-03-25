@@ -42,10 +42,9 @@ function Get-TargetResource
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve DkimSigningConfig $($Identity)"
     Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*DkimSigningConfig'
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose "Global ExchangeOnlineSession status:"
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    $CmdletIsAvailable = Confirm-ImportedCmdletIsAvailable -CmdletName 'Get-DkimSigningConfig'
     try
     {
         $DkimSigningConfigs = Get-DkimSigningConfig
@@ -81,7 +80,6 @@ function Get-TargetResource
                     $KeyName = $PSBoundParameters[$KeyName]
                 }
             }
-
         }
 
         Write-Verbose "Found DkimSigningConfig $($Identity)"
@@ -132,77 +130,38 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose 'Entering Set-TargetResource'
-    Write-Verbose 'Retrieving information about DkimSigningConfig configuration'
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*DkimSigningConfig'
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    $CmdletIsAvailable = Confirm-ImportedCmdletIsAvailable -CmdletName 'New-DkimSigningConfig'
-    $CmdletIsAvailable = Confirm-ImportedCmdletIsAvailable -CmdletName 'Set-DkimSigningConfig'
-    try
-    {
-        $DkimSigningConfigs = Get-DkimSigningConfig
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    $DkimSigningConfigs = Get-DkimSigningConfig
 
     $DkimSigningConfig = $DkimSigningConfigs | Where-Object Identity -eq $Identity
 
     if ( ('Present' -eq $Ensure ) -and (-NOT $DkimSigningConfig) )
     {
-        try
-        {
-            $DkimSigningConfigParams = $PSBoundParameters
-            $DkimSigningConfigParams.Remove('Ensure') | Out-Null
-            $DkimSigningConfigParams.Remove('GlobalAdminAccount') | Out-Null
-            $DkimSigningConfigParams += @{
-                DomainName = $PSBoundParameters.Identity
-            }
-            $DkimSigningConfigParams.Remove('Identity') | Out-Null
-            Write-Verbose "Creating DkimSigningConfig $($Identity)."
-            New-DkimSigningConfig @DkimSigningConfigParams -Confirm:$false
+        $DkimSigningConfigParams = $PSBoundParameters
+        $DkimSigningConfigParams.Remove('Ensure') | Out-Null
+        $DkimSigningConfigParams.Remove('GlobalAdminAccount') | Out-Null
+        $DkimSigningConfigParams += @{
+            DomainName = $PSBoundParameters.Identity
         }
-        catch
-        {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        }
+        $DkimSigningConfigParams.Remove('Identity') | Out-Null
+        Write-Verbose "Creating DkimSigningConfig $($Identity)."
+        New-DkimSigningConfig @DkimSigningConfigParams -Confirm:$false
     }
     elseif ( ('Present' -eq $Ensure ) -and ($DkimSigningConfig) )
     {
-        try
-        {
-            $DkimSigningConfigParams = $PSBoundParameters
-            $DkimSigningConfigParams.Remove('Ensure') | Out-Null
-            $DkimSigningConfigParams.Remove('GlobalAdminAccount') | Out-Null
-            $DkimSigningConfigParams.Remove('KeySize') | Out-Null
-            Write-Verbose "Setting DkimSigningConfig $($Identity) with values: $($DkimSigningConfigParams | Out-String)"
-            Set-DkimSigningConfig @DkimSigningConfigParams -Confirm:$false
-        }
-        catch
-        {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        }
+        $DkimSigningConfigParams = $PSBoundParameters
+        $DkimSigningConfigParams.Remove('Ensure') | Out-Null
+        $DkimSigningConfigParams.Remove('GlobalAdminAccount') | Out-Null
+        $DkimSigningConfigParams.Remove('KeySize') | Out-Null
+        Write-Verbose "Setting DkimSigningConfig $($Identity) with values: $($DkimSigningConfigParams | Out-String)"
+        Set-DkimSigningConfig @DkimSigningConfigParams -Confirm:$false
     }
 
     if ( ('Absent' -eq $Ensure ) -and ($DkimSigningConfig) )
     {
         Write-Verbose "Removing DkimSigningConfig $($Identity) "
-        try
-        {
-            Remove-DkimSigningConfig -Identity $Identity -Confirm:$false
-        }
-        catch
-        {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        }
+    Remove-DkimSigningConfig -Identity $Identity -Confirm:$false
     }
-
-    Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    Write-Verbose "Global ExchangeOnlineSession status: `n"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
 }
 
 function Test-TargetResource
@@ -257,10 +216,6 @@ function Test-TargetResource
     if ($TestResult)
     {
         Write-Verbose 'Test-TargetResource returned True'
-        Write-Verbose 'Closing Remote PowerShell Sessions'
-        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-        Write-Verbose 'Global ExchangeOnlineSession status: '
-        Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     }
     else
     {
@@ -285,10 +240,6 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    Write-Verbose 'Closing Remote PowerShell Sessions'
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    Write-Verbose "Global ExchangeOnlineSession status: `n"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        EXODkimSigningConfig " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

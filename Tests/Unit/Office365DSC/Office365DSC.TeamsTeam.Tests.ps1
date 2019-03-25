@@ -24,10 +24,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Test-TeamsServiceConnection -MockWith {
         }
 
-        Mock Invoke-ExoCommand {
-            return Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $Arguments -NoNewScope
-        }
-
         # Test contexts
         Context -Name "When the Team doesnt exist" -Fixture {
             $testParams = @{

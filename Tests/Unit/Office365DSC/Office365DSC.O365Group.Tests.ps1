@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [string] 
+    [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
                                          -ChildPath "..\Stubs\Office365.psm1" `
                                          -Resolve)
@@ -19,16 +19,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
-        
+
         Mock -CommandName Test-O365ServiceConnection -MockWith {
 
         }
 
-        Mock Invoke-ExoCommand {
-            return Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $Arguments -NoNewScope
-        }
-
-        # Test contexts 
+        # Test contexts
         Context -Name "Security Group - When the group doesn't already exist" -Fixture {
             $testParams = @{
                 DisplayName = "Test Group"
@@ -39,7 +35,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-MSOLGroup -MockWith { 
+            Mock -CommandName Get-MSOLGroup -MockWith {
                 return $null
             }
 
@@ -57,14 +53,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-MSOLGroup -MockWith { 
+            Mock -CommandName Get-MSOLGroup -MockWith {
                 return @{
                     DisplayName = "Test Group"
                 }
             }
 
             It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
             It "Should return false from the Test method" {
@@ -126,9 +122,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 )
             }
-            
+
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
             It "Should return true from the Test method" {
@@ -198,7 +194,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return Present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
             It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should be $false
@@ -233,9 +229,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Should create the group from the Set method" {
                 Set-TargetResource @testParams
             }
-            
+
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
             It "Should return true from the Test method" {
@@ -275,7 +271,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Should create the group from the Set method" {
                 Set-TargetResource @testParams
             }
-            
+
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Absent"
             }

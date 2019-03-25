@@ -54,7 +54,7 @@ function Get-TargetResource
 
     Write-Verbose "Get-TargetResource will attempt to retrieve HostedOutboundSpamFilterPolicy $($Identity)"
     Write-Verbose 'Calling Connect-ExchangeOnline function:'
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*HostedOutboundSpamFilterPolicy'
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose 'Global ExchangeOnlineSession status:'
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $CmdletIsAvailable = Confirm-ImportedCmdletIsAvailable -CmdletName 'Get-HostedOutboundSpamFilterPolicy'
@@ -157,29 +157,14 @@ function Set-TargetResource
     }
 
     Write-Verbose 'Entering Set-TargetResource'
-    Write-Verbose 'Calling Connect-ExchangeOnline function:'
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*HostedOutboundSpamFilterPolicy'
-    Write-Verbose 'Global ExchangeOnlineSession status:'
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    $CmdletIsAvailable = Confirm-ImportedCmdletIsAvailable -CmdletName 'Set-HostedOutboundSpamFilterPolicy'
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     $HostedOutboundSpamFilterPolicyParams = $PSBoundParameters
     $HostedOutboundSpamFilterPolicyParams.Remove('Ensure') | out-null
     $HostedOutboundSpamFilterPolicyParams.Remove('GlobalAdminAccount') | out-null
     $HostedOutboundSpamFilterPolicyParams.Remove('IsSingleInstance') | out-null
-    try
-    {
-        Write-Verbose "Setting HostedOutboundSpamFilterPolicy $Identity with values: $($HostedOutboundSpamFilterPolicyParams | Out-String)"
-        Set-HostedOutboundSpamFilterPolicy @HostedOutboundSpamFilterPolicyParams
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
 
-    Write-Verbose 'Closing Remote PowerShell Sessions'
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    Write-Verbose 'Global ExchangeOnlineSession status: '
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
+    Write-Verbose "Setting HostedOutboundSpamFilterPolicy $Identity with values: $($HostedOutboundSpamFilterPolicyParams | Out-String)"
+    Set-HostedOutboundSpamFilterPolicy @HostedOutboundSpamFilterPolicyParams
 }
 
 function Test-TargetResource
@@ -228,7 +213,6 @@ function Test-TargetResource
     )
     Write-Verbose -Message "Testing HostedOutboundSpamFilterPolicy for $($Identity)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
     $ValuesToCheck.Remove('IsSingleInstance') | out-null
@@ -239,10 +223,6 @@ function Test-TargetResource
     if ($TestResult)
     {
         Write-Verbose 'Test-TargetResource returned True'
-        Write-Verbose 'Closing Remote PowerShell Sessions'
-        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-        Write-Verbose 'Global ExchangeOnlineSession status: '
-        Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     }
     else
     {
@@ -269,8 +249,6 @@ function Export-TargetResource
     )
     $IsSingleInstance = 'Yes'
     $result = Get-TargetResource @PSBoundParameters
-    Write-Verbose 'Closing Remote PowerShell Sessions'
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        EXOHostedOutboundSpamFilterPolicy " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

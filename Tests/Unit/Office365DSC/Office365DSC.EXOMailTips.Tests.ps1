@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [string] 
+    [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
                                          -ChildPath "..\Stubs\Office365.psm1" `
                                          -Resolve)
@@ -20,11 +20,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock Invoke-ExoCommand {
-            return Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $Arguments -NoNewScope
-        }
 
-        # Test contexts 
+        # Test contexts
         Context -Name "MailTips are Disabled and should be Enabled" -Fixture {
             $testParams = @{
                 Organization = "contoso.onmicrosoft.com"
@@ -33,7 +30,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-OrganizationConfig -MockWith { 
+            Mock -CommandName Get-OrganizationConfig -MockWith {
                 return @{
                     MailTipsAllTipsEnabled = $False
                 }
@@ -60,7 +57,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-OrganizationConfig -MockWith { 
+            Mock -CommandName Get-OrganizationConfig -MockWith {
                 return @{
                     MailTipsGroupMetricsEnabled = $False
                 }
@@ -78,7 +75,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
             }
         }
-        
+
         Context -Name "MailTipsLargeAudienceThreshold are 25 and should be 50" -Fixture {
             $testParams = @{
                 Organization = "contoso.onmicrosoft.com"
@@ -87,7 +84,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-OrganizationConfig -MockWith { 
+            Mock -CommandName Get-OrganizationConfig -MockWith {
                 return @{
                     MailTipsLargeAudienceThreshold = 25
                 }
@@ -105,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
             }
         }
-        
+
         Context -Name "MailTipsMailboxSourcedTipsEnabled are Disabled and should be Enabled" -Fixture {
             $testParams = @{
                 Organization = "contoso.onmicrosoft.com"
@@ -114,7 +111,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-OrganizationConfig -MockWith { 
+            Mock -CommandName Get-OrganizationConfig -MockWith {
                 return @{
                     MailTipsMailboxSourcedTipsEnabled = $False
                 }
@@ -132,7 +129,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
             }
         }
-        
+
         Context -Name "MailTipsExternalRecipientsTipsEnabled are Disabled and should be Enabled" -Fixture {
             $testParams = @{
                 Organization = "contoso.onmicrosoft.com"
@@ -141,7 +138,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-OrganizationConfig -MockWith { 
+            Mock -CommandName Get-OrganizationConfig -MockWith {
                 return @{
                     MailTipsExternalRecipientsTipsEnabled = $False
                 }
@@ -172,7 +169,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-OrganizationConfig -MockWith { 
+            Mock -CommandName Get-OrganizationConfig -MockWith {
                 return @{
                     MailTipsAllTipsEnabled = $True
                     MailTipsLargeAudienceThreshold = 10
@@ -199,7 +196,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-OrganizationConfig -MockWith { 
+            Mock -CommandName Get-OrganizationConfig -MockWith {
                 return $null
             }
 

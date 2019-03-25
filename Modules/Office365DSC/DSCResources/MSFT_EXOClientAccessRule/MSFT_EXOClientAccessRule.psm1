@@ -76,18 +76,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve ClientAccessRule $($Identity)"
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*ClientAccessRule'
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    try
-    {
-        $ClientAccessRules = Get-ClientAccessRule
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    $ClientAccessRules = Get-ClientAccessRule
 
     $ClientAccessRule = $ClientAccessRules | Where-Object Identity -eq $Identity
     if (-NOT $ClientAccessRule)
@@ -208,19 +198,8 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose 'Entering Set-TargetResource'
-    Write-Verbose 'Retrieving information about ClientAccessRule configuration'
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*ClientAccessRule'
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    try
-    {
-        $ClientAccessRules = Get-ClientAccessRule
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    $ClientAccessRules = Get-ClientAccessRule
 
     $ClientAccessRule = $ClientAccessRules | Where-Object Identity -eq $Identity
     $ClientAccessRuleParams = $PSBoundParameters
@@ -236,49 +215,20 @@ function Set-TargetResource
 
     if ( ('Present' -eq $Ensure ) -and (-NOT $ClientAccessRule) )
     {
-        try
-        {
-            $ClientAccessRuleParams += @{
-                Name = $ClientAccessRuleParams.Identity
-            }
-            $ClientAccessRuleParams.Remove('Identity') | Out-Null
-            Write-Verbose "Creating ClientAccessRule $($Identity)."
-            New-ClientAccessRule @ClientAccessRuleParams -Confirm:$false
-        }
-        catch
-        {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        }
+        $ClientAccessRuleParams.Remove('Identity') | Out-Null
+        Write-Verbose "Creating ClientAccessRule $($Identity)."
+        New-ClientAccessRule @ClientAccessRuleParams -Confirm:$false
     }
     elseif ( ('Present' -eq $Ensure ) -and ($ClientAccessRule) )
     {
-        try
-        {
-            Write-Verbose "Setting ClientAccessRule $($Identity) with values: $($ClientAccessRuleParams | Out-String)"
-            Set-ClientAccessRule @ClientAccessRuleParams -Confirm:$false
-        }
-        catch
-        {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        }
+        Write-Verbose "Setting ClientAccessRule $($Identity) with values: $($ClientAccessRuleParams | Out-String)"
+        Set-ClientAccessRule @ClientAccessRuleParams -Confirm:$false
     }
     elseif ( ('Absent' -eq $Ensure ) -and ($ClientAccessRule) )
     {
-        Write-Verbose "Removing ClientAccessRule $($Identity) "
-        try
-        {
-            Remove-ClientAccessRule -Identity $Identity -Confirm:$false
-        }
-        catch
-        {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        }
+        Write-Verbose "Removing ClientAccessRule $($Identity)"
+        Remove-ClientAccessRule -Identity $Identity -Confirm:$false
     }
-
-    Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    Write-Verbose "Global ExchangeOnlineSession status: `n"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
 }
 
 function Test-TargetResource
@@ -368,10 +318,6 @@ function Test-TargetResource
     if ($TestResult)
     {
         Write-Verbose 'Test-TargetResource returned True'
-        Write-Verbose 'Closing Remote PowerShell Sessions'
-        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-        Write-Verbose 'Global ExchangeOnlineSession status: '
-        Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     }
     else
     {
@@ -401,10 +347,6 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    Write-Verbose "Global ExchangeOnlineSession status: `n"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        EXOClientAccessRule " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

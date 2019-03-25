@@ -39,7 +39,7 @@ function Get-TargetResource
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve HostedConnectionFilterPolicy $($Identity)"
     Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*HostedConnectionFilterPolicy'
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose "Global ExchangeOnlineSession status:"
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     try
@@ -140,21 +140,10 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose 'Entering Set-TargetResource'
-    Write-Verbose 'Retrieving information about HostedConnectionFilterPolicy configuration'
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*HostedConnectionFilterPolicy'
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    try
-    {
-        $HostedConnectionFilterPolicys = Get-HostedConnectionFilterPolicy
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    $HostedConnectionFilterPolicys = Get-HostedConnectionFilterPolicy
 
-    $HostedConnectionFilterPolicy = $HostedConnectionFilterPolicys | Where-Object Identity -eq $Identity
+    $HostedConnectionFilterPolicy = $HostedConnectionFilterPolicys | Where-Object {$_.Identity -eq $Identity}
     $HostedConnectionFilterPolicyParams = $PSBoundParameters
     $HostedConnectionFilterPolicyParams.Remove('Ensure') | Out-Null
     $HostedConnectionFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
@@ -169,61 +158,35 @@ function Set-TargetResource
 
     if ( ('Present' -eq $Ensure ) -and (-NOT $HostedConnectionFilterPolicy) )
     {
-        try
-        {
-            $HostedConnectionFilterPolicyParams += @{
-                Name = $HostedConnectionFilterPolicyParams.Identity
-            }
-            $HostedConnectionFilterPolicyParams.Remove('Identity') | Out-Null
-            if ($PSBoundParameters.MakeDefault)
-            {
-                New-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -MakeDefault -Confirm:$false
-            }
-            else
-            {
-                New-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -Confirm:$false
-            }
+        $HostedConnectionFilterPolicyParams += @{
+            Name = $HostedConnectionFilterPolicyParams.Identity
         }
-        catch
+        $HostedConnectionFilterPolicyParams.Remove('Identity') | Out-Null
+        if ($PSBoundParameters.MakeDefault)
         {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+            New-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -MakeDefault -Confirm:$false
+        }
+        else
+        {
+            New-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -Confirm:$false
         }
     }
     elseif ( ('Present' -eq $Ensure ) -and ($HostedConnectionFilterPolicy) )
     {
-        try
+        if ($PSBoundParameters.MakeDefault)
         {
-            if ($PSBoundParameters.MakeDefault)
-            {
-                Set-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -MakeDefault -Confirm:$false
-            }
-            else
-            {
-                Set-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -Confirm:$false
-            }
+            Set-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -MakeDefault -Confirm:$false
         }
-        catch
+        else
         {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+            Set-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -Confirm:$false
         }
     }
     elseif ( ('Absent' -eq $Ensure ) -and ($HostedConnectionFilterPolicy) )
     {
         Write-Verbose "Removing HostedConnectionFilterPolicy $($Identity) "
-        try
-        {
-            Remove-HostedConnectionFilterPolicy -Identity $Identity -Confirm:$false
-        }
-        catch
-        {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        }
+        Remove-HostedConnectionFilterPolicy -Identity $Identity -Confirm:$false
     }
-
-    Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    Write-Verbose "Global ExchangeOnlineSession status: `n"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
 }
 
 function Test-TargetResource
@@ -277,10 +240,6 @@ function Test-TargetResource
     if ($TestResult)
     {
         Write-Verbose 'Test-TargetResource returned True'
-        Write-Verbose 'Closing Remote PowerShell Sessions'
-        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-        Write-Verbose 'Global ExchangeOnlineSession status: '
-        Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     }
     else
     {
@@ -305,10 +264,6 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    Write-Verbose "Global ExchangeOnlineSession status: `n"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        EXOHostedConnectionFilterPolicy " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

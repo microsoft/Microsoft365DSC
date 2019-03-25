@@ -53,21 +53,10 @@ function Get-TargetResource
     }
 
     Write-Verbose "Get-TargetResource will attempt to retrieve AtpPolicyForO365 $($Identity)"
-    Write-Verbose 'Calling Connect-ExchangeOnline function:'
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*AtpPolicyForO365'
-    Write-Verbose 'Global ExchangeOnlineSession status:'
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    $CmdletIsAvailable = Confirm-ImportedCmdletIsAvailable -CmdletName 'Get-AtpPolicyForO365'
-    try
-    {
-        $AtpPolicies = Get-AtpPolicyForO365
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    $AtpPolicies = Get-AtpPolicyForO365
 
-    $AtpPolicyForO365 = $AtpPolicies | Where-Object Identity -eq $Identity
+    $AtpPolicyForO365 = $AtpPolicies | Where-Object { $_.Identity -eq $Identity }
     if (-NOT $AtpPolicyForO365)
     {
         Write-Verbose "AtpPolicyForO365 $($Identity) does not exist."
@@ -157,29 +146,13 @@ function Set-TargetResource
     }
 
     Write-Verbose 'Entering Set-TargetResource'
-    Write-Verbose 'Calling Connect-ExchangeOnline function:'
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*AtpPolicyForO365'
-    Write-Verbose 'Global ExchangeOnlineSession status:'
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    $CmdletIsAvailable = Confirm-ImportedCmdletIsAvailable -CmdletName 'Set-AtpPolicyForO365'
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     $AtpPolicyParams = $PSBoundParameters
     $AtpPolicyParams.Remove('Ensure') | out-null
     $AtpPolicyParams.Remove('GlobalAdminAccount') | out-null
     $AtpPolicyParams.Remove('IsSingleInstance') | out-null
-    try
-    {
-        Write-Verbose "Setting AtpPolicyForO365 $Identity with values: $($AtpPolicyParams | Out-String)"
-        Set-AtpPolicyForO365 @AtpPolicyParams
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
-
-    Write-Verbose 'Closing Remote PowerShell Sessions'
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    Write-Verbose 'Global ExchangeOnlineSession status: '
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
+    Write-Verbose "Setting AtpPolicyForO365 $Identity with values: $($AtpPolicyParams | Out-String)"
+    Set-AtpPolicyForO365 @AtpPolicyParams
 }
 
 function Test-TargetResource
@@ -238,10 +211,6 @@ function Test-TargetResource
     if ($TestResult)
     {
         Write-Verbose 'Test-TargetResource returned True'
-        Write-Verbose 'Closing Remote PowerShell Sessions'
-        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-        Write-Verbose 'Global ExchangeOnlineSession status: '
-        Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     }
     else
     {
@@ -266,10 +235,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $IsSingleInstance = 'Yes'
     $result = Get-TargetResource @PSBoundParameters
-    Write-Verbose 'Closing Remote PowerShell Sessions'
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        EXOAtpPolicyForO365 " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

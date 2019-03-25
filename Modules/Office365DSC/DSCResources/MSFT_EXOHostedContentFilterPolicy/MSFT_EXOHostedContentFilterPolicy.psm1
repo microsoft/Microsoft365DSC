@@ -229,7 +229,7 @@ function Get-TargetResource
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve HostedContentFilterPolicy $($Identity)"
     Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*HostedContentFilterPolicy'
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose "Global ExchangeOnlineSession status:"
     Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     try
@@ -519,21 +519,10 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose 'Entering Set-TargetResource'
-    Write-Verbose 'Retrieving information about HostedContentFilterPolicy configuration'
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*HostedContentFilterPolicy'
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    try
-    {
-        $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
 
-    $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object Identity -eq $Identity
+    $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object { $_.Identity -eq $Identity }
     $HostedContentFilterPolicyParams = $PSBoundParameters
     $HostedContentFilterPolicyParams.Remove('Ensure') | Out-Null
     $HostedContentFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
@@ -541,56 +530,30 @@ function Set-TargetResource
 
     if ( ('Present' -eq $Ensure ) -and (-NOT $HostedContentFilterPolicy) )
     {
-        try
-        {
-            $HostedContentFilterPolicyParams += @{
-                Name = $HostedContentFilterPolicyParams.Identity
-            }
-            $HostedContentFilterPolicyParams.Remove('Identity') | Out-Null
-            Write-Verbose "Creating HostedContentFilterPolicy $($Identity)."
-            New-HostedContentFilterPolicy @HostedContentFilterPolicyParams -Confirm:$false
+        $HostedContentFilterPolicyParams += @{
+            Name = $HostedContentFilterPolicyParams.Identity
         }
-        catch
-        {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        }
+        $HostedContentFilterPolicyParams.Remove('Identity') | Out-Null
+        Write-Verbose "Creating HostedContentFilterPolicy $($Identity)."
+        New-HostedContentFilterPolicy @HostedContentFilterPolicyParams -Confirm:$false
     }
     elseif ( ('Present' -eq $Ensure ) -and ($HostedContentFilterPolicy) )
     {
-        try
+        Write-Verbose "Setting HostedContentFilterPolicy $($Identity) with values: $($HostedContentFilterPolicyParams | Out-String)."
+        if ($PSBoundParameters.MakeDefault)
         {
-            Write-Verbose "Setting HostedContentFilterPolicy $($Identity) with values: $($HostedContentFilterPolicyParams | Out-String)."
-            if ($PSBoundParameters.MakeDefault)
-            {
-                Set-HostedContentFilterPolicy @HostedContentFilterPolicyParams -MakeDefault -Confirm:$false
-            }
-            else
-            {
-                Set-HostedContentFilterPolicy @HostedContentFilterPolicyParams -Confirm:$false
-            }
+            Set-HostedContentFilterPolicy @HostedContentFilterPolicyParams -MakeDefault -Confirm:$false
         }
-        catch
+        else
         {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+            Set-HostedContentFilterPolicy @HostedContentFilterPolicyParams -Confirm:$false
         }
     }
     elseif ( ('Absent' -eq $Ensure ) -and ($HostedContentFilterPolicy) )
     {
         Write-Verbose "Removing HostedContentFilterPolicy $($Identity) "
-        try
-        {
-            Remove-HostedContentFilterPolicy -Identity $Identity -Confirm:$false
-        }
-        catch
-        {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        }
+        Remove-HostedContentFilterPolicy -Identity $Identity -Confirm:$false
     }
-
-    Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    Write-Verbose "Global ExchangeOnlineSession status: `n"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
 }
 
 function Test-TargetResource
@@ -832,10 +795,6 @@ function Test-TargetResource
     if ($TestResult)
     {
         Write-Verbose 'Test-TargetResource returned True'
-        Write-Verbose 'Closing Remote PowerShell Sessions'
-        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-        Write-Verbose 'Global ExchangeOnlineSession status: '
-        Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     }
     else
     {
@@ -860,10 +819,6 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    Write-Verbose "Global ExchangeOnlineSession status: `n"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        EXOHostedContentFilterPolicy " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

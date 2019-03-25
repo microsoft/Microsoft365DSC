@@ -16,13 +16,13 @@ function Get-TargetResource
         [System.String[]]
         $Aliases,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve information for Shared Mailbox $($DisplayName)"
@@ -33,10 +33,8 @@ function Get-TargetResource
         Ensure = "Absent"
     }
 
-    $mailboxes = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                    -ScriptBlock {
-        Get-Mailbox
-    }
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    $mailboxes = Get-Mailbox
     $mailbox = $mailboxes | Where-Object {$_.RecipientTypeDetails -eq "SharedMailbox" -and $_.Identity -eq $DisplayName}
 
     if (!$mailbox)
@@ -86,13 +84,13 @@ function Set-TargetResource
         [System.String[]]
         $Aliases,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Write-Verbose "Entering Set-TargetResource"
@@ -110,7 +108,7 @@ function Set-TargetResource
     #endregion
 
     $CurrentParameters = $PSBoundParameters
-
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     # CASE: Mailbox doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentMailbox.Ensure -eq "Absent")
     {
@@ -123,23 +121,14 @@ function Set-TargetResource
         $emails += $PrimarySMTPAddress
         $proxyAddresses = $emails -Split ','
         $CurrentParameters.Aliases = $proxyAddresses
-
-        Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                          -Arguments $CurrentParameters `
-                          -ScriptBlock {
-            New-MailBox -Name $args[0].DisplayName -PrimarySMTPAddress $args[0].PrimarySMTPAddress -Shared:$true
-            Set-Mailbox -Identity $args[0].DisplayName -EmailAddresses @{add=$args[0].Aliases}
-        }
+        New-MailBox -Name $DisplayName -PrimarySMTPAddress $PrimarySMTPAddress -Shared:$true
+        Set-Mailbox -Identity $DisplayName -EmailAddresses @{add=$Aliases}
     }
     # CASE: Mailbox exists but it shouldn't;
     elseif ($Ensure -eq "Absent" -and $currentMailbox.Ensure -eq "Present")
     {
         Write-Verbose "Shared Mailbox '$($DisplayName)' exists but it shouldn't. Deleting it."
-        Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                          -Arguments $PSBoundParameters `
-                          -ScriptBlock {
-            Remove-Mailbox -Identity $args[0].DisplayName -Confirm:$false
-        }
+        Remove-Mailbox -Identity $DisplayName -Confirm:$false
     }
     # CASE: Mailbox exists and it should, but has different values than the desired ones
     elseif ($Ensure -eq "Present" -and $currentMailbox.Ensure -eq "Present")
@@ -162,11 +151,7 @@ function Set-TargetResource
             $CurrentParameters.Aliases = $proxyAddresses
 
             Write-Verbose "Adding the following email aliases: $($emails)"
-            Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                          -Arguments $CurrentParameters `
-                          -ScriptBlock {
-                Set-Mailbox -Identity $args[0].DisplayName -EmailAddresses @{add=$args[0].Aliases}
-            }
+            Set-Mailbox -Identity $DisplayName -EmailAddresses @{add=$Aliases}
         }
     }
 }
@@ -189,13 +174,13 @@ function Test-TargetResource
         [System.String[]]
         $Aliases,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -219,8 +204,8 @@ function Export-TargetResource
         [System.String]
         $DisplayName,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
