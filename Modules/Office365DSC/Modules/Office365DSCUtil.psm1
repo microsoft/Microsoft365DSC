@@ -1008,14 +1008,11 @@ function Connect-ExchangeOnline
             while ($null -eq $Global:ExchangeOnlineSession)
             {
                 Write-Verbose "Creating new EXO Session"
-                $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
+                $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
 
                 if ($null -eq $Global:ExchangeOnlineSession)
                 {
                     Write-Verbose "Exceeded max number of connections. Waiting 60 seconds"
-                    $run = Get-RunSpace
-                    Write-Verbose $($run.RunspaceStateInfo.State)
-                    Write-Verbose "RunSpace closed"
                     Start-Sleep 60
                 }
             }

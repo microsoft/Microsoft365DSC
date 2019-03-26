@@ -122,8 +122,19 @@ function Set-TargetResource
     $CASMailboxPlanParams = $PSBoundParameters
     $CASMailboxPlanParams.Remove('Ensure') | out-null
     $CASMailboxPlanParams.Remove('GlobalAdminAccount') | out-null
-    Write-Verbose "Setting CASMailboxPlan $Identity with values: $($CASMailboxPlanParams | Out-String)"
-    Set-CASMailboxPlan @CASMailboxPlanParams
+
+    Get-CASMailboxPlan
+    $CASMailboxPlan = $CASMailboxPlans | Where-Object {$_.Identity -eq $Identity}
+
+    if ($null -new $CASMailboxPlan)
+    {
+        Write-Verbose "Setting CASMailboxPlan $Identity with values: $($CASMailboxPlanParams | Out-String)"
+        Set-CASMailboxPlan @CASMailboxPlanParams
+    }
+    else
+    {
+        throw "The specified CAS Mailbox Plan {$($Identity)} doesn't exist"
+    }
 }
 
 function Test-TargetResource
