@@ -19,6 +19,7 @@ bits of the module, you need to make sure you have PowerShellGet
 version of the PowerShellGet module simply run the following line of
 PowerShell code from a machine that has internet connectivity:
 
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 Install-Module PowerShellGet -Force
 
 You will need to close the PowerShell session and re-open a new one
