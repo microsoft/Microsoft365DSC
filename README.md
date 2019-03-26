@@ -20,7 +20,7 @@ version of the PowerShellGet module simply run the following line of
 PowerShell code from a machine that has internet connectivity:
 
 ```powershell
-Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force<br />
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 Install-Module PowerShellGet -Force
 ```
 
