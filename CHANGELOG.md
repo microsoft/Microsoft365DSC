@@ -2,4 +2,4 @@
 
 ## Unreleased
 
-* EXO Workload Major Refactor
+* Exchange Online Workload Major Refactor
