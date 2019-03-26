@@ -135,7 +135,7 @@ function Set-TargetResource
 
     $DkimSigningConfig = $DkimSigningConfigs | Where-Object Identity -eq $Identity
 
-    if ( ('Present' -eq $Ensure ) -and (-NOT $DkimSigningConfig) )
+    if ( ('Present' -eq $Ensure ) -and ($null -eq $DkimSigningConfig) )
     {
         $DkimSigningConfigParams = $PSBoundParameters
         $DkimSigningConfigParams.Remove('Ensure') | Out-Null
@@ -145,9 +145,9 @@ function Set-TargetResource
         }
         $DkimSigningConfigParams.Remove('Identity') | Out-Null
         Write-Verbose "Creating DkimSigningConfig $($Identity)."
-        New-DkimSigningConfig @DkimSigningConfigParams -Confirm:$false
+        New-DkimSigningConfig @DkimSigningConfigParams
     }
-    elseif ( ('Present' -eq $Ensure ) -and ($DkimSigningConfig) )
+    elseif ( ('Present' -eq $Ensure ) -and ($null -ne $DkimSigningConfig) )
     {
         $DkimSigningConfigParams = $PSBoundParameters
         $DkimSigningConfigParams.Remove('Ensure') | Out-Null

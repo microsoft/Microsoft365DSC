@@ -44,13 +44,11 @@ function Get-TargetResource
         Write-Verbose "AcceptedDomain configuration for $($Identity) does not exist."
 
         # Check to see if $Identity matches a verified domain in the O365 Tenant
-        try
-        {
-            Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-            $VerifiedDomains = (Get-AzureADDomain | Where-Object IsVerified)
-            $MatchingVerifiedDomain = $VerifiedDomains | Where-Object Name -eq $Identity
+        Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+        $VerifiedDomains = Get-AzureADDomain | Where-Object {$_.IsVerified}
+        $MatchingVerifiedDomain = $VerifiedDomains | Where-Object {$_.Name -eq $Identity}
 
-        if (-NOT $MatchingVerifiedDomain)
+        if ($null -ne $MatchingVerifiedDomain)
         {
             Write-Verbose "A verified domain matching $($Identity) does not exist in this O365 Tenant."
             $nullReturn = @{

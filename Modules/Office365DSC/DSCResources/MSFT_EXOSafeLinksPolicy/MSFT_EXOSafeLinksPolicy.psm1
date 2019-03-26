@@ -150,21 +150,21 @@ function Set-TargetResource
     $SafeLinksPolicyParams.Remove('Ensure') | Out-Null
     $SafeLinksPolicyParams.Remove('GlobalAdminAccount') | Out-Null
 
-    if ( ('Present' -eq $Ensure ) -and (-NOT $SafeLinksPolicy) )
+    if ( ('Present' -eq $Ensure ) -and ($null -eq $SafeLinksPolicy) )
     {
         $SafeLinksPolicyParams += @{
             Name = $SafeLinksPolicyParams.Identity
         }
         $SafeLinksPolicyParams.Remove('Identity') | Out-Null
         Write-Verbose "Creating SafeLinksPolicy $($Identity)"
-        New-SafeLinksPolicy @SafeLinksPolicyParams -Confirm:$false
+        New-SafeLinksPolicy @SafeLinksPolicyParams
     }
-    elseif ( ('Present' -eq $Ensure ) -and ($SafeLinksPolicy) )
+    elseif ( ('Present' -eq $Ensure ) -and ($null -ne $SafeLinksPolicy) )
     {
         Write-Verbose "Setting SafeLinksPolicy $($Identity) with values: $($SafeLinksPolicyParams | Out-String)"
         Set-SafeLinksPolicy @SafeLinksPolicyParams -Confirm:$false
     }
-    elseif ( ('Absent' -eq $Ensure ) -and ($SafeLinksPolicy) )
+    elseif ( ('Absent' -eq $Ensure ) -and ($null -ne $SafeLinksPolicy) )
     {
         Write-Verbose "Removing SafeLinksPolicy $($Identity) "
         Remove-SafeLinksPolicy -Identity $Identity -Confirm:$false

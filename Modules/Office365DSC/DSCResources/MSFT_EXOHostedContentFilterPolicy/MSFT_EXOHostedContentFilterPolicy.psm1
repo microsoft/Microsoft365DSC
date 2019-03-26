@@ -535,7 +535,7 @@ function Set-TargetResource
         }
         $HostedContentFilterPolicyParams.Remove('Identity') | Out-Null
         Write-Verbose "Creating HostedContentFilterPolicy $($Identity)."
-        New-HostedContentFilterPolicy @HostedContentFilterPolicyParams -Confirm:$false
+        New-HostedContentFilterPolicy @HostedContentFilterPolicyParams
     }
     elseif ( ('Present' -eq $Ensure ) -and ($HostedContentFilterPolicy) )
     {

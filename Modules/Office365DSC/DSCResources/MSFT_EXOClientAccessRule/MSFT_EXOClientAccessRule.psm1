@@ -213,19 +213,19 @@ function Set-TargetResource
         $ClientAccessRuleParams.Remove('RuleScope') | Out-Null
     }
 
-    if ( ('Present' -eq $Ensure ) -and (-NOT $ClientAccessRule) )
+    if ( ('Present' -eq $Ensure ) -and ($null -eq $ClientAccessRule) )
     {
-        $ClientAccessRuleParams.Add("Name", $ClientAccessRules.Identity)
-        $ClientAccessRuleParams.Remove('Identity') | Out-Null
         Write-Verbose "Creating ClientAccessRule $($Identity)."
-        New-ClientAccessRule @ClientAccessRuleParams -Confirm:$false
+        $ClientAccessRuleParams.Add("Name", $Identity)
+        $ClientAccessRuleParams.Remove('Identity') | Out-Null
+        New-ClientAccessRule @ClientAccessRuleParams
     }
-    elseif ( ('Present' -eq $Ensure ) -and ($ClientAccessRule) )
+    elseif ( ('Present' -eq $Ensure ) -and ($Null -ne $ClientAccessRule) )
     {
         Write-Verbose "Setting ClientAccessRule $($Identity) with values: $($ClientAccessRuleParams | Out-String)"
         Set-ClientAccessRule @ClientAccessRuleParams -Confirm:$false
     }
-    elseif ( ('Absent' -eq $Ensure ) -and ($ClientAccessRule) )
+    elseif ( ('Absent' -eq $Ensure ) -and ($null -ne $ClientAccessRule) )
     {
         Write-Verbose "Removing ClientAccessRule $($Identity)"
         Remove-ClientAccessRule -Identity $Identity -Confirm:$false

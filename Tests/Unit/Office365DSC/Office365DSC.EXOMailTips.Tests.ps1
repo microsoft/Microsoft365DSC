@@ -20,6 +20,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
+        Mock -CommandName Connect-ExchangeOnline -MockWith {
+
+        }
 
         # Test contexts
         Context -Name "MailTips are Disabled and should be Enabled" -Fixture {

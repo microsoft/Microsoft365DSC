@@ -37,10 +37,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Mock -CommandName Get-CASMailboxPlan -MockWith {
-
-        }
-
         Mock -CommandName Set-CASMailboxPlan -MockWith {
 
         }

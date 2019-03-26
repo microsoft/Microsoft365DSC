@@ -156,7 +156,7 @@ function Set-TargetResource
         $HostedConnectionFilterPolicyParams.Remove('RuleScope') | Out-Null
     }
 
-    if ( ('Present' -eq $Ensure ) -and (-NOT $HostedConnectionFilterPolicy) )
+    if ( ('Present' -eq $Ensure ) -and ($null -eq $HostedConnectionFilterPolicy) )
     {
         $HostedConnectionFilterPolicyParams += @{
             Name = $HostedConnectionFilterPolicyParams.Identity
@@ -164,11 +164,11 @@ function Set-TargetResource
         $HostedConnectionFilterPolicyParams.Remove('Identity') | Out-Null
         if ($PSBoundParameters.MakeDefault)
         {
-            New-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -MakeDefault -Confirm:$false
+            New-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -MakeDefault
         }
         else
         {
-            New-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -Confirm:$false
+            New-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams
         }
     }
     elseif ( ('Present' -eq $Ensure ) -and ($HostedConnectionFilterPolicy) )

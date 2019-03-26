@@ -24,6 +24,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Test-TeamsServiceConnection -MockWith {
         }
 
+
+        Mock -CommandName Connect-ExchangeOnline -MockWith {
+
+        }
+
         # Test contexts
         Context -Name "When the Team doesnt exist" -Fixture {
             $testParams = @{

@@ -24,6 +24,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
+        Mock -CommandName Connect-ExchangeOnline -MockWith {
+
+        }
+
         # Test contexts
         Context -Name "Security Group - When the group doesn't already exist" -Fixture {
             $testParams = @{
