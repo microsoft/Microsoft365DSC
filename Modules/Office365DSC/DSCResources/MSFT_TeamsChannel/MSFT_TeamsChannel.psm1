@@ -47,7 +47,9 @@ function Get-TargetResource
     Write-Verbose -Message "Checking for existance of team channels"
     $CurrentParameters = $PSBoundParameters
 
-    Get-TeamByName $TeamName
+    $team = Get-TeamByName $TeamName
+
+    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
     $channel = Get-TeamChannel -GroupId $team.GroupId -ErrorAction SilentlyContinue | Where-Object {($_.DisplayName -eq $DisplayName)}
 
@@ -116,7 +118,9 @@ function Set-TargetResource
 
     $CurrentParameters = $PSBoundParameters
 
-    Get-TeamByName $TeamName
+    $team = Get-TeamByName $TeamName
+
+    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
     $CurrentParameters.Remove("TeamName")
     $CurrentParameters.Add("GroupId", $team.GroupId)

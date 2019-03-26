@@ -11468,6 +11468,14 @@ function Get-TeamByGroupID{
         $GroupID
     )
 }
+function Get-TeamByName{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Title
+    )
+}
 
 function Grant-PnPSiteDesignRights
 {
@@ -11487,6 +11495,50 @@ function Grant-PnPSiteDesignRights
     )
 }
 
+function Add-PNPSiteDesign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [ValidateSet("CommunicationSite", "TeamSite")]
+        [System.String]
+        $WebTemplate,
+
+        [Parameter()]
+        [System.String[]]
+        $SiteScriptIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $isDefault,
+
+        [Parameter()]
+        [System.String]
+        $PreviewImageAltText,
+
+        [Parameter()]
+        [System.String]
+        $PreviewImageUrl,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.UInt32]
+        $Version,
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
+        $Ensure = "Present"
+    )
+}
+
 function Revoke-PnPSiteDesignRights
 {
     [CmdletBinding()]
@@ -11502,6 +11554,58 @@ function Revoke-PnPSiteDesignRights
 }
 
 function Get-PnPSiteDesign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Identity
+    )
+}
+
+function Set-PnPSiteDesign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [string]
+        $WebTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $isDefault,
+
+        [Parameter()]
+        [string]
+        $Description,
+
+        [Parameter()]
+        [string]
+        $PreviewImageAltText,
+
+        [Parameter()]
+        [string]
+        $PreviewImageUrl,
+
+        [Parameter()]
+        [string]
+        $Version,
+
+        [Parameter()]
+        [string]
+        $Title,
+
+        [Parameter()]
+        [string[]]
+        $SiteScriptIds
+    )
+}
+
+function Get-PNPSiteScript
 {
     [CmdletBinding()]
     param(

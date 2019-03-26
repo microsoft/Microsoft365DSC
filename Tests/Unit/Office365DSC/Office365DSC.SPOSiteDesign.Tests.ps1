@@ -42,12 +42,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPSiteScript -MockWith {
                 return @{
-                    SiteDesignTitle = "Cust List", "List_Views"
-                    Id              = "12345-12345-12345-12345-12345"
+                    SiteScriptIds = "12345-12345-12345-12345-12345", "22345-12345-12345-12345-12345"
                 }
             }
 
             Mock -CommandName Get-PnPSiteDesign -MockWith {
+                return $null
+            }
+
+            Mock -CommandName Add-PnPSiteDesign -MockWith {
                 return $null
             }
 
@@ -59,74 +62,65 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $false
             }
 
+            It "Adds the sige design in the Set method" {
+                Set-TargetResource @testParams
+            }
 
         }
 
         Context -Name "Check existing Site Design " -Fixture {
             $testParams = @{
                 Title               = "DSC Site Design"
-                SiteScriptNames     = "Cust List", "List_Views"
+                SiteScriptNames     = "Cust List"
                 WebTemplate         = "TeamSite"
-                isDefault           = $false
                 Description         = "Created by DSC"
                 PreviewImageAltText = "Office 365"
-                PreviewImageUrl     = ""
                 Ensure              = "Present"
                 GlobalAdminAccount  = $GlobalAdminAccount
                 CentralAdminUrl     = "https://contoso-admin.sharepoint.com"
             }
 
+
             Mock -CommandName Get-PnPSiteDesign -MockWith {
                 return @{
-                    Title = "DSC Site Design"
-                    Id              = "12345-12345-12345-12345-12345"
+                    Title               = "DSC Site Design"
+                    SiteScriptNames     = "Cust List"
+                    WebTemplate         = "TeamSite"
+                    Description         = "Updated by DSC"
+                    PreviewImageAltText = "Office"
                 }
             }
 
-            Mock -CommandName Get-PnPSiteScript -MockWith {
-                return @{
-                    SiteScriptNames = "Cust List", "List_Views"
-                }
+            Mock -CommandName Set-PnPSiteDesign -MockWith {
+                return $null
             }
-
 
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
-            It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should Be $true
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
             }
 
-            It "Updates the site design in the Set method" {
+            It "Updates the sige design in the Set method" {
                 Set-TargetResource @testParams
             }
+
         }
 
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Title               = "DSC Site Design"
-                SiteScriptNames     = "Cust List", "List_Views"
-                WebTemplate         = "TeamSite"
-                isDefault           = $false
-                Description         = "Created by DSC"
-                PreviewImageAltText = "Office 365"
-                PreviewImageUrl     = ""
-                Ensure              = "Present"
-                GlobalAdminAccount  = $GlobalAdminAccount
-                CentralAdminUrl     = "https://contoso-admin.sharepoint.com"
-            }
-
-            Mock -CommandName Get-PnPSiteScript -MockWith {
-                return @{
-                    SiteDesignTitle = "Cust List", "List_Views"
-                    SiteScriptIds             = "12345-12345-12345-12345-12345","22345-12345-12345-12345-12345"
-                }
+                Title              = "DSC Site Design"
+                GlobalAdminAccount = $GlobalAdminAccount
+                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
             }
 
             Mock -CommandName Get-PnPSiteDesign -MockWith {
-                return $null
+                return @{
+                    Title = "DSC Site Design"
+                }
             }
 
             It "Should Reverse Engineer resource from the Export method" {

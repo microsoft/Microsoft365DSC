@@ -953,11 +953,10 @@ function Get-TeamByGroupID
     }
     return $true
 }
-
-
 function Get-TeamByName
 {
     [CmdletBinding()]
+    [OutputType([System.String])]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -984,8 +983,8 @@ function Get-TeamByName
     {
         throw "Team with Name $TeamName doesnt exist in tenant"
     }
+    return $team
 }
-
 function Connect-ExchangeOnline
 {
     [CmdletBinding()]
@@ -2351,6 +2350,48 @@ function Start-O365ConfigurationExtract
         }
     }
     #endregion
+
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSiteDesign"))
+    {
+        Write-Information "Extracting SPOSiteDesign..."
+        $SPOSiteDesignModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_SPOSiteDesign\MSFT_SPOSiteDesign.psm1" `
+                                                        -Resolve
+
+        $catch = Import-Module $SPOSiteDesignModulePath
+        Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        $siteDesigns = Get-PnPSiteDesign
+
+        foreach ($siteDesign in $siteDesigns)
+        {
+            Write-Information "    Site Design {$($siteDesign.Title)}"
+            $DSCContent += Export-TargetResource -Title $siteDesign.Title `
+                                                -CentralAdminUrl $centralAdminUrl `
+                                                -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSiteDesignRights"))
+    {
+        Write-Information "Extracting SPOSiteDesignRights..."
+        $SPOSiteDesignModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_SPOSiteDesignRights\MSFT_SPOSiteDesignRights.psm1" `
+                                                        -Resolve
+
+        $catch = Import-Module $SPOSiteDesignModulePath
+        Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+
+        $siteDesigns = Get-PnPSiteDesign
+
+        foreach ($siteDesign in $siteDesigns)
+        {
+            $siteDesignRight = Get-PnPSiteDesignRights -Identity $siteDesign.Id
+            Write-Information "    Site Design Rights {$($siteDesign.Id)}"
+            $DSCContent += Export-TargetResource -Id $siteDesign.Id`
+                                                -CentralAdminUrl $centralAdminUrl `
+                                                -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
 
     #region "SPOSite"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSite"))
