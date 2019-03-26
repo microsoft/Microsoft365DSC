@@ -201,7 +201,7 @@ function Set-TargetResource
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     $ClientAccessRules = Get-ClientAccessRule
 
-    $ClientAccessRule = $ClientAccessRules | Where-Object Identity -eq $Identity
+    $ClientAccessRule = $ClientAccessRules | Where-Object {$_.Identity -eq $Identity}
     $ClientAccessRuleParams = $PSBoundParameters
     $ClientAccessRuleParams.Remove('Ensure') | Out-Null
     $ClientAccessRuleParams.Remove('GlobalAdminAccount') | Out-Null
@@ -215,6 +215,7 @@ function Set-TargetResource
 
     if ( ('Present' -eq $Ensure ) -and (-NOT $ClientAccessRule) )
     {
+        $ClientAccessRuleParams.Add("Name", $ClientAccessRules.Identity)
         $ClientAccessRuleParams.Remove('Identity') | Out-Null
         Write-Verbose "Creating ClientAccessRule $($Identity)."
         New-ClientAccessRule @ClientAccessRuleParams -Confirm:$false

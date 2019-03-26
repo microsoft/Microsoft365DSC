@@ -118,7 +118,6 @@ function Set-TargetResource
     }
 
     Write-Verbose 'Entering Set-TargetResource'
-    Write-Verbose 'Calling Connect-ExchangeOnline function:'
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     $CASMailboxPlanParams = $PSBoundParameters
     $CASMailboxPlanParams.Remove('Ensure') | out-null

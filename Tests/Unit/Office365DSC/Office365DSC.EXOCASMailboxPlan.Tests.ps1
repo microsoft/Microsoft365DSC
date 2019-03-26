@@ -28,9 +28,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Mock -CommandName Confirm-ImportedCmdletIsAvailable -MockWith {
-            return $true
-        }
 
         Mock -CommandName Get-PSSession -MockWith {
 

@@ -966,6 +966,7 @@ function Connect-ExchangeOnline
     )
     $VerbosePreference = 'Continue'
     $WarningPreference = "SilentlyContinue"
+    Write-Information Get-PSSession
     $ClosedOrBrokenSessions = Get-PSSession -ErrorAction SilentlyContinue | Where-Object { $_.State -ne 'Opened' }
     if ($ClosedOrBrokenSessions)
     {
@@ -1012,6 +1013,9 @@ function Connect-ExchangeOnline
                 if ($null -eq $Global:ExchangeOnlineSession)
                 {
                     Write-Verbose "Exceeded max number of connections. Waiting 60 seconds"
+                    $run = Get-RunSpace
+                    Write-Verbose $($run.RunspaceStateInfo.State)
+                    Write-Verbose "RunSpace closed"
                     Start-Sleep 60
                 }
             }
@@ -1107,137 +1111,6 @@ function Connect-ExchangeOnline
         $VerbosePreference = 'Continue'
         $WarningPreference = "Continue"
     }
-
-}
-
-function Confirm-ImportedCmdletIsAvailable {
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CmdletName
-    )
-    try
-    {
-        $CmdletIsAvailable = (Get-Command -Name $CmdletName )
-        if ($CmdletIsAvailable)
-        {
-            return $true
-        }
-        else
-        {
-            Close-SessionsAndReturnError -ExceptionMessage "Cmdlet $CmdletName is not available in this O365 Tenant."
-        }
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
-}
-
-function Connect-SecurityAndComplianceCenter
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    $VerbosePreference = 'Continue'
-    $WarningPreference = "SilentlyContinue"
-    $ClosedOrBrokenSessions = (Get-PSSession -ErrorAction SilentlyContinue | Where-Object State -ne 'Opened' )
-    if ($ClosedOrBrokenSessions)
-    {
-        Write-Verbose "Found Existing Unusable Session(s)."
-        foreach ($SessionToBeClosed in $ClosedOrBrokenSessions)
-        {
-            Write-Verbose "Closing Session: $(($SessionToBeClosed).InstanceId)"
-            $SessionToBeClosed | Remove-PSSession -ErrorAction SilentlyContinue
-        }
-    }
-
-    $Global:OpenSecurityAndComplianceCenterSession = (Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Where-Object State -eq 'Opened' )
-    if (-NOT $Global:OpenSecurityAndComplianceCenterSession)
-    {
-        $PowerShellConnections = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
-        while ($PowerShellConnections)
-        {
-            Write-Verbose "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
-            Write-Verbose "Waiting for closing connections to close..."
-            Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Remove-PSSession
-            Start-Sleep -seconds 1
-            $CheckConnectionsWithoutKillingWhileLoop = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
-            if (-NOT $CheckConnectionsWithoutKillingWhileLoop) {
-                Write-Verbose "Connections have closed.  Waiting 5 more seconds..."
-                Start-Sleep -seconds 5
-                $PowerShellConnections = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
-            }
-        }
-
-        try
-        {
-            Write-Verbose "Opening New SecurityAndComplianceCenter Session."
-            $VerbosePreference = 'SilentlyContinue'
-            $Global:SecurityAndComplianceCenterSession = $null
-            while (-NOT $Global:SecurityAndComplianceCenterSession)
-            {
-                $Global:SecurityAndComplianceCenterSession = New-PSSession -Name 'SecurityAndComplianceCenter' -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
-            }
-
-            $Global:SecurityAndComplianceCenterModules = Import-PSSession $Global:SecurityAndComplianceCenterSession -AllowClobber -ErrorAction SilentlyContinue
-            $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global -ErrorAction SilentlyContinue
-        }
-        catch
-        {
-            $ExceptionMessage = $_.Exception
-            $Error.Clear()
-            if ($ExceptionMessage -imatch 'Please wait for [0-9]* seconds' )
-            {
-                Write-Verbose "Waiting for available runspace..."
-                [regex]$WaitTimePattern = 'Please wait for [0-9]* seconds'
-                $WaitTimePatternMatch = (($WaitTimePattern.Match($ExceptionMessage)).Value | Select-String -Pattern '[0-9]*' -AllMatches )
-                $WaitTimeInSeconds = ($WaitTimePatternMatch | ForEach-Object {$_.Matches} | Where-Object Value -NotLike $null).Value
-                Start-Sleep -Seconds ($WaitTimeInSeconds + 1)
-                try
-                {
-                    Write-Verbose "Opening New SecurityAndComplianceCenter Session."
-                    $VerbosePreference = 'SilentlyContinue'
-                    $Global:SecurityAndComplianceCenterSession = $null
-                    while (-NOT $Global:SecurityAndComplianceCenterSession)
-                    {
-                        $Global:SecurityAndComplianceCenterSession = New-PSSession -Name 'SecurityAndComplianceCenter' -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
-                    }
-
-                    $Global:SecurityAndComplianceCenterModules = Import-PSSession $Global:SecurityAndComplianceCenterSession -AllowClobber -ErrorAction SilentlyContinue
-                    $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global -ErrorAction SilentlyContinue
-                }
-                catch
-                {
-                    $VerbosePreference = 'Continue'
-                    $WarningPreference = "Continue"
-                    $Global:ExchangeOnlineSession = $null
-                    Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-                }
-            }
-            else
-            {
-                $VerbosePreference = 'Continue'
-                $WarningPreference = "Continue"
-                $Global:ExchangeOnlineSession = $null
-                Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-            }
-        }
-    }
-    else
-    {
-        Write-Verbose "Using Existing SecurityAndComplianceCenter Session."
-        $VerbosePreference = 'Continue'
-        $WarningPreference = "Continue"
-    }
-
 }
 
 function New-EXOAntiPhishPolicy

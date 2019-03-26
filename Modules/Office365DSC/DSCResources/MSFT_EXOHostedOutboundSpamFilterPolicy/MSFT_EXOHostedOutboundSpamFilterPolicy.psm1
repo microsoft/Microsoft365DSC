@@ -53,19 +53,8 @@ function Get-TargetResource
     }
 
     Write-Verbose "Get-TargetResource will attempt to retrieve HostedOutboundSpamFilterPolicy $($Identity)"
-    Write-Verbose 'Calling Connect-ExchangeOnline function:'
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose 'Global ExchangeOnlineSession status:'
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    $CmdletIsAvailable = Confirm-ImportedCmdletIsAvailable -CmdletName 'Get-HostedOutboundSpamFilterPolicy'
-    try
-    {
-        $HostedOutboundSpamFilterPolicies = Get-HostedOutboundSpamFilterPolicy
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
+    $HostedOutboundSpamFilterPolicies = Get-HostedOutboundSpamFilterPolicy
 
     $HostedOutboundSpamFilterPolicy = $HostedOutboundSpamFilterPolicies | Where-Object Identity -eq $Identity
     if (-NOT $HostedOutboundSpamFilterPolicy)
