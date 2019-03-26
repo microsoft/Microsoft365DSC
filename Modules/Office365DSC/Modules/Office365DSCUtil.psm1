@@ -810,7 +810,7 @@ $TimeZones = @(
         EnglishDescription = "(GMT+13:00) Nuku’alofa"
     }
 )
-function Build-EXOParams
+function Format-EXOParams
 {
     [CmdletBinding()]
     param (
@@ -841,19 +841,6 @@ function Build-EXOParams
         $EXOParams.Remove("Enabled") | out-null
         return $EXOParams
     }
-}
-
-function Close-SessionsAndReturnError
-{
-    [CmdletBinding()]
-    param (
-        [Parameter()]
-        [String]
-        $ExceptionMessage
-    )
-    Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    Write-Error $ExceptionMessage
 }
 
 function Get-LocaleIDFromName
@@ -964,9 +951,8 @@ function Connect-ExchangeOnline
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $VerbosePreference = 'Continue'
-    $WarningPreference = "SilentlyContinue"
-    Write-Information Get-PSSession
+    $VerbosePreference = 'SilentlyContinue'
+    $WarningPreference = "Continue"
     $ClosedOrBrokenSessions = Get-PSSession -ErrorAction SilentlyContinue | Where-Object { $_.State -ne 'Opened' }
     if ($ClosedOrBrokenSessions)
     {
@@ -1012,7 +998,7 @@ function Connect-ExchangeOnline
 
                 if ($null -eq $Global:ExchangeOnlineSession)
                 {
-                    Write-Verbose "Exceeded max number of connections. Waiting 60 seconds"
+                    Write-Warning "Exceeded max number of connections. Waiting 60 seconds"
                     Start-Sleep 60
                 }
             }
@@ -1028,7 +1014,7 @@ function Connect-ExchangeOnline
         {
             $ExceptionMessage = $_.Exception
             $Error.Clear()
-            $VerbosePreference = 'Continue'
+            $VerbosePreference = 'SilentlyContinue'
             if ($ExceptionMessage -imatch 'Please wait for [0-9]* seconds' )
             {
                 Write-Verbose "Waiting for available runspace..."
@@ -1067,8 +1053,8 @@ function Connect-ExchangeOnline
                 }
                 catch
                 {
-                    $VerbosePreference = 'Continue'
-                    $WarningPreference = "Continue"
+                    $VerbosePreference = 'SilentlyContinue'
+                    $WarningPreference = "SilentlyContinue"
                     $Global:ExchangeOnlineSession = $null
                     Close-SessionsAndReturnError -ExceptionMessage $_.Exception
                 }
@@ -1076,7 +1062,7 @@ function Connect-ExchangeOnline
             else
             {
                 Write-Verbose $_.Exception
-                $VerbosePreference = 'Continue'
+                $VerbosePreference = 'SilentlyContinue'
                 Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
                 Write-Verbose "Exchange Online connection failed."
                 Write-Verbose "Waiting 60 seconds..."
@@ -1093,8 +1079,8 @@ function Connect-ExchangeOnline
                 }
                 catch
                 {
-                    $VerbosePreference = 'Continue'
-                    $WarningPreference = "Continue"
+                    $VerbosePreference = 'SilentlyContinue'
+                    $WarningPreference = "SilentlyContinue"
                     $Global:ExchangeOnlineSession = $null
                     Close-SessionsAndReturnError -ExceptionMessage $_.Exception
                 }
@@ -1105,8 +1091,8 @@ function Connect-ExchangeOnline
     {
         Write-Verbose "Using Existing ExchangeOnline Session."
         $Global:OpenExchangeSession = Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Where-Object { $_.State -eq 'Opened' }
-        $VerbosePreference = 'Continue'
-        $WarningPreference = "Continue"
+        $VerbosePreference = 'SilentlyContinue'
+        $WarningPreference = "SilentlyContinue"
     }
 }
 
@@ -1120,7 +1106,7 @@ function New-EXOAntiPhishPolicy
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'New' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'New' )
         Write-Verbose "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-AntiPhishPolicy @BuiltParams
         $VerbosePreference = 'SilentlyContinue'
@@ -1141,7 +1127,7 @@ function New-EXOAntiPhishRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'New' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'New' )
         Write-Verbose "Creating New AntiPhishRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-AntiPhishRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
@@ -1162,7 +1148,7 @@ function New-EXOHostedContentFilterRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'New' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'New' )
         Write-Verbose "Creating New HostedContentFilterRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-HostedContentFilterRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
@@ -1183,7 +1169,7 @@ function New-EXOSafeAttachmentRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'New' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'New' )
         Write-Verbose "Creating New SafeAttachmentRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-SafeAttachmentRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
@@ -1204,7 +1190,7 @@ function New-EXOSafeLinksRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'New' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'New' )
         Write-Verbose "Creating New SafeLinksRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-SafeLinksRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
@@ -1225,7 +1211,7 @@ function Set-EXOAntiPhishRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'Set' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting AntiPhishRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
@@ -1254,7 +1240,7 @@ function Set-EXOAntiPhishPolicy
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'Set' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
@@ -1283,7 +1269,7 @@ function Set-EXOHostedContentFilterRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'Set' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting HostedContentFilterRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
@@ -1312,7 +1298,7 @@ function Set-EXOSafeAttachmentRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'Set' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting SafeAttachmentRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
@@ -1341,7 +1327,7 @@ function Set-EXOSafeLinksRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'Set' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting SafeLinksRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
@@ -1762,7 +1748,7 @@ function Start-O365ConfigurationExtract
         Import-Module $EXOClientAccessRuleModulePath | Out-Null
         foreach ($ClientAccessRule in $ClientAccessRules)
         {
-            $DSCContent += Export-TargetResource -Identity $ClientAccessRule.Identity -GlobalAdminAccount $GlobalAdminAccount
+            $DSCContent += Export-TargetResource -Identity $ClientAccessRule.Identity -Action $ClientAccessRule.Action -GlobalAdminAccount $GlobalAdminAccount
         }
     }
     #endregion
@@ -1835,7 +1821,7 @@ function Start-O365ConfigurationExtract
         Import-Module $EXOHostedContentFilterRuleModulePath | Out-Null
         foreach ($HostedContentFilterRule in $HostedContentFilterRules)
         {
-            $DSCContent += Export-TargetResource -Identity $HostedContentFilterRule.Identity -GlobalAdminAccount $GlobalAdminAccount
+            $DSCContent += Export-TargetResource -Identity $HostedContentFilterRule.Identity -HostedContentFilterPolicy $HostedContentFilterRule.HostedContentFilterPolicy -GlobalAdminAccount $GlobalAdminAccount
         }
     }
     #endregion
@@ -1884,7 +1870,7 @@ function Start-O365ConfigurationExtract
         Import-Module $EXOSafeAttachmentRuleModulePath | Out-Null
         foreach ($SafeAttachmentRule in $SafeAttachmentRules)
         {
-            $DSCContent += Export-TargetResource -Identity $SafeAttachmentRule.Identity -GlobalAdminAccount $GlobalAdminAccount
+            $DSCContent += Export-TargetResource -Identity $SafeAttachmentRule.Identity -SafeAttachmentPolicy $SafeAttachmentRule.SafeAttachmentPolicy -GlobalAdminAccount $GlobalAdminAccount
         }
     }
     #endregion
@@ -1920,7 +1906,7 @@ function Start-O365ConfigurationExtract
         Import-Module $EXOSafeLinksRuleModulePath | Out-Null
         foreach ($SafeLinksRule in $SafeLinksRules)
         {
-            $DSCContent += Export-TargetResource -Identity $SafeLinksRule.Identity -GlobalAdminAccount $GlobalAdminAccount
+            $DSCContent += Export-TargetResource -Identity $SafeLinksRule.Identity -SafeLinksPolicy $SafeLinksRule.SafeLinksPolicy -GlobalAdminAccount $GlobalAdminAccount
         }
     }
     #endregion

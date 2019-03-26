@@ -228,21 +228,11 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve HostedContentFilterPolicy $($Identity)"
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    try
-    {
-        $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
+    $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
 
-    $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object Identity -eq $Identity
-    if (-NOT $HostedContentFilterPolicy)
+    $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object {$_.Identity -eq $Identity}
+    if ($null -eq $HostedContentFilterPolicy)
     {
         Write-Verbose "HostedContentFilterPolicy $($Identity) does not exist."
         $result = $PSBoundParameters
@@ -528,7 +518,7 @@ function Set-TargetResource
     $HostedContentFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
     $HostedContentFilterPolicyParams.Remove('MakeDefault') | Out-Null
 
-    if ( ('Present' -eq $Ensure ) -and (-NOT $HostedContentFilterPolicy) )
+    if ( ('Present' -eq $Ensure ) -and ($null -eq $HostedContentFilterPolicy) )
     {
         $HostedContentFilterPolicyParams += @{
             Name = $HostedContentFilterPolicyParams.Identity
@@ -537,7 +527,7 @@ function Set-TargetResource
         Write-Verbose "Creating HostedContentFilterPolicy $($Identity)."
         New-HostedContentFilterPolicy @HostedContentFilterPolicyParams
     }
-    elseif ( ('Present' -eq $Ensure ) -and ($HostedContentFilterPolicy) )
+    elseif ( ('Present' -eq $Ensure ) -and ($null -ne $HostedContentFilterPolicy) )
     {
         Write-Verbose "Setting HostedContentFilterPolicy $($Identity) with values: $($HostedContentFilterPolicyParams | Out-String)."
         if ($PSBoundParameters.MakeDefault)
@@ -549,7 +539,7 @@ function Set-TargetResource
             Set-HostedContentFilterPolicy @HostedContentFilterPolicyParams -Confirm:$false
         }
     }
-    elseif ( ('Absent' -eq $Ensure ) -and ($HostedContentFilterPolicy) )
+    elseif ( ('Absent' -eq $Ensure ) -and ($null -ne $HostedContentFilterPolicy) )
     {
         Write-Verbose "Removing HostedContentFilterPolicy $($Identity) "
         Remove-HostedContentFilterPolicy -Identity $Identity -Confirm:$false

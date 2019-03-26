@@ -335,13 +335,13 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
         [ValidateSet('AllowAccess', 'DenyAccess')]
         [System.String]
         $Action,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
