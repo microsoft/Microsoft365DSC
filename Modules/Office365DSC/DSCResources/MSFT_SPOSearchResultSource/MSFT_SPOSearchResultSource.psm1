@@ -131,7 +131,7 @@ function Get-TargetResource
 
     $mapping = $InfoMapping | Where-Object {$_.ProviderID -eq $source.ProviderId}
 
-    return @{
+    $returnValue = @{
         Name                = $Name
         Description         = [string] $source.Description
         Protocol            = $mapping.Protocol
@@ -139,11 +139,17 @@ function Get-TargetResource
         QueryTransform      = [string] $source.QueryTransform._QueryTemplate
         SourceURL           = [string] $source.ConnectionUrlTemplate
         UseAutoDiscover     = $SourceHasAutoDiscover
-        ShowPartialSearch   = $allowPartial.Value
         GlobalAdminAccount  = $GlobalAdminAccount
         Ensure              = "Present"
         CentralAdminUrl     = $CentralAdminUrl
     }
+
+    if ($null -ne $allowPartial)
+    {
+        $returnValue.Add("ShowPartialSearch", [System.Boolean]$allowPartial.Value.InnerText)
+    }
+
+    return $returnValue
 }
 
 function Set-TargetResource
