@@ -1003,7 +1003,7 @@ function Connect-ExchangeOnline
                 }
             }
 
-            if ($null -eq $Global:ExchangeOnoineModules)
+            if ($null -eq $Global:ExchangeOnlineModules)
             {
                 Write-Verbose "Importing all commands into the EXO Session"
                 $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber
