@@ -259,7 +259,6 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
-
     )
 
     Write-Verbose -Message "Testing SPOSiteDesign for $SiteDesignTitle"
