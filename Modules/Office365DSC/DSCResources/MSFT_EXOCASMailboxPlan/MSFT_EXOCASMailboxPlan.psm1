@@ -43,7 +43,7 @@ function Get-TargetResource
     $CASMailboxPlans = Get-CASMailboxPlan
 
     $CASMailboxPlan = $CASMailboxPlans | Where-Object {$_.Identity -eq $Identity}
-    if (-NOT $CASMailboxPlan)
+    if ($null -ne $CASMailboxPlan)
     {
         Write-Verbose "CASMailboxPlan $($Identity) does not exist."
         $result = $PSBoundParameters
@@ -126,7 +126,7 @@ function Set-TargetResource
     Get-CASMailboxPlan
     $CASMailboxPlan = $CASMailboxPlans | Where-Object {$_.Identity -eq $Identity}
 
-    if ($null -new $CASMailboxPlan)
+    if ($null -ne $CASMailboxPlan)
     {
         Write-Verbose "Setting CASMailboxPlan $Identity with values: $($CASMailboxPlanParams | Out-String)"
         Set-CASMailboxPlan @CASMailboxPlanParams
