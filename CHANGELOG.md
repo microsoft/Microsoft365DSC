@@ -2,4 +2,4 @@
 
 ## Unreleased
 
-* Exchange Online Workload Major Refactor
+* Exchange Online Workload Major Refactoring
