@@ -58,12 +58,11 @@ This resource configures Site Designs.
 ```PowerShell
         SiteDesign SiteDesignConfig {
             Title               = "DSC Site Design"
-            SiteScriptNames     = "Cust List", "List_Views"
+            SiteScriptNames     = @("Cust List", "List_Views")
             WebTemplate         = "TeamSite"
             isDefault           = $false
             Description         = "Created by DSC"
             PreviewImageAltText = "Office 365"
-            PreviewImageUrl     = ""
             Ensure              = "Present"
             Version             = 1
             CentralAdminUrl     = 'https://contoso-admin.sharepoint.com'

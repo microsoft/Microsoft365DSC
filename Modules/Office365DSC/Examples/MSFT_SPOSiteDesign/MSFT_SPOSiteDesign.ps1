@@ -12,7 +12,7 @@ Configuration SiteDesignConfig
         SPOSiteDesign SiteDesign
         {
             Title               = "DSC Site Design"
-            SiteScriptNames     = "Cust List", "List_Views"
+            SiteScriptNames     = @("Cust List", "List_Views")
             WebTemplate         = "TeamSite"
             isDefault           = $false
             Description         = "Created by DSC"

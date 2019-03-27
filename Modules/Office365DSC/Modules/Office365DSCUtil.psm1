@@ -956,7 +956,7 @@ function Get-TeamByGroupID
 function Get-TeamByName
 {
     [CmdletBinding()]
-    [OutputType([System.String])]
+    [OutputType([Hashtable])]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -981,7 +981,7 @@ function Get-TeamByName
 
     if ($null -eq $team)
     {
-        throw "Team with Name $TeamName doesnt exist in tenant"
+        throw "Team with Name $TeamName doesn't exist in tenant"
     }
     return $team
 }

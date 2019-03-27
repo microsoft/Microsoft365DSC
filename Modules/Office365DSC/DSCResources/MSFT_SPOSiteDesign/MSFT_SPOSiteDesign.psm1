@@ -19,7 +19,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $isDefault,
+        $IsDefault,
 
         [Parameter()]
         [System.String]
@@ -57,7 +57,7 @@ function Get-TargetResource
         Title               = $Title
         SiteScriptNames     = $SiteScriptNames
         WebTemplate         = $WebTemplate
-        isDefault           = $isDefault
+        IsDefault           = $IsDefault
         Description         = $Description
         PreviewImageAltText = $PreviewImageAltText
         PreviewImageUrl     = $PreviewImageUrl
@@ -82,7 +82,8 @@ function Get-TargetResource
         $siteScript = Get-PnPSiteScript -Identity $scriptId
         $scriptTitles += $siteScript.Title
     }
-    ## Todo need to see if we can get this PBP module instead of hard coded in scipt
+    ## Todo need to see if we can get this somehow from PNP module instead of hard coded in scipt
+    ## https://github.com/SharePoint/PnP-PowerShell/blob/master/Commands/Enums/SiteWebTemplate.cs
     $webtemp = $null
     if ($siteDesign.WebTemplate -eq "64")
     {
@@ -97,7 +98,7 @@ function Get-TargetResource
         Title               = $siteDesign.Title
         SiteScriptNames     = $scriptTitles
         WebTemplate         = $webtemp
-        isDefault           = $siteDesign.isDefault
+        IsDefault           = $siteDesign.IsDefault
         Description         = $siteDesign.Description
         PreviewImageAltText = $siteDesign.PreviewImageAltText
         PreviewImageUrl     = $siteDesign.PreviewImageUrl
@@ -128,7 +129,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $isDefault,
+        $IsDefault,
 
         [Parameter()]
         [System.String]
@@ -179,14 +180,13 @@ function Set-TargetResource
     $CurrentParameters.Remove("Ensure")
     $CurrentParameters.Add("SiteScriptIds", $scriptIds)
 
-    if ($curSiteDesign.Ensure -eq "Absent")
+    if ($curSiteDesign.Ensure -eq "Absent" -and "Present" -eq $Ensure )
     {
         $CurrentParameters.Remove("Version")
         Write-Verbose -Message "Adding new site design $Title"
         Add-PnPSiteDesign @CurrentParameters
     }
-    ## Found current site design needs updated
-    if ($curSiteDesign.Ensure -eq "Present" -and "Present" -eq $Ensure)
+    elseif (($curSiteDesign.Ensure -eq "Present" -and "Present" -eq $Ensure))
     {
         $siteDesign = Get-PnPSiteDesign -Identity $Title -ErrorAction SilentlyContinue
         if ($null -ne $siteDesign)
@@ -195,14 +195,13 @@ function Set-TargetResource
             Set-PnPSiteDesign  -Identity $siteDesign.Id  @CurrentParameters
         }
     }
-
-    if ($Ensure -eq "Absent")
+    elseif (($Ensure -eq "Absent"  -and $curSiteDesign.Ensure -eq "Present"))
     {
         $siteDesign = Get-PnPSiteDesign -Identity $Title -ErrorAction SilentlyContinue
         if ($null -ne $siteDesign)
         {
-            Write-Verbose -Message "Removing site design  $Title"
-            Remove-PnPSiteDesign -Identity $siteDesign.Id  -Force
+            Write-Verbose -Message "Removing site design $Title"
+            Remove-PnPSiteDesign -Identity $siteDesign.Id -Force
         }
     }
 }
