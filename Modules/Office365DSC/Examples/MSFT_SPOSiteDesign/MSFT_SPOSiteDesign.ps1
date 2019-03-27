@@ -17,7 +17,6 @@ Configuration SiteDesignConfig
             isDefault           = $false
             Description         = "Created by DSC"
             PreviewImageAltText = "Office 365"
-            PreviewImageUrl     = ""
             Ensure             = "Present"
             CentralAdminUrl    = "https://o365dsc1-admin.sharepoint.com"
             GlobalAdminAccount = $credsGlobalAdmin
