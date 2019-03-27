@@ -22,7 +22,8 @@ This resource configures Site Designs.
 
     WebTemplate
       - Required: No
-      - Description: Web template to apply site design, only validate parameters are CommunicationSite and TeamSite
+      - Description: Web template to apply site design, only validate
+        parameters are CommunicationSite and TeamSite
 
     Description
       - Required: No
@@ -43,7 +44,7 @@ This resource configures Site Designs.
     Version
       - Required: No
       - Description: Version number of site design script
-      
+
     Tenant Admin Url
       - Required: Yes
       - Description: Url to tenant admin site
