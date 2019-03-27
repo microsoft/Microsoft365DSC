@@ -6,7 +6,7 @@ It is not meant to use as a production baseline.
 Configuration SiteDesignConfig
 {
     Import-DSCResource -ModuleName Office365DSC
-    $credsGlobalAdmin = Get-Credential -UserName "derek@smaystate.onmicrosoft.com" -Message "Global Admin"
+    $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
         SPOSiteDesign SiteDesign
@@ -18,8 +18,8 @@ Configuration SiteDesignConfig
             Description         = "Created by DSC"
             PreviewImageAltText = "Office 365"
             PreviewImageUrl     = ""
-            Ensure             = "Absent"
-            CentralAdminUrl    = "https://smaystate-admin.sharepoint.com"
+            Ensure             = "Present"
+            CentralAdminUrl    = "https://o365dsc1-admin.sharepoint.com"
             GlobalAdminAccount = $credsGlobalAdmin
         }
     }

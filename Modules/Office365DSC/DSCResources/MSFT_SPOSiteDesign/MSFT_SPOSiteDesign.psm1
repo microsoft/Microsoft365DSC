@@ -82,7 +82,7 @@ function Get-TargetResource
         $siteScript = Get-PnPSiteScript -Identity $scriptId
         $scriptTitles += $siteScript.Title
     }
-
+    ## Todo need to see if we can get this PBP module instead of hard coded in scipt
     $webtemp = $null
     if ($siteDesign.WebTemplate -eq "64")
     {
@@ -185,7 +185,6 @@ function Set-TargetResource
         Write-Verbose -Message "Adding new site design $Title"
         Add-PnPSiteDesign @CurrentParameters
     }
-
     ## Found current site design needs updated
     if ($curSiteDesign.Ensure -eq "Present" -and "Present" -eq $Ensure)
     {

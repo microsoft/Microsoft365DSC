@@ -2387,7 +2387,7 @@ function Start-O365ConfigurationExtract
         {
             $siteDesignRight = Get-PnPSiteDesignRights -Identity $siteDesign.Id
             Write-Information "    Site Design Rights {$($siteDesign.Id)}"
-            $DSCContent += Export-TargetResource -Id $siteDesign.Id`
+            $DSCContent += Export-TargetResource -Title $siteDesign.Title `
                                                 -CentralAdminUrl $centralAdminUrl `
                                                 -GlobalAdminAccount $GlobalAdminAccount
         }
