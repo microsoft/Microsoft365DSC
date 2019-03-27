@@ -11514,7 +11514,7 @@ function Add-PNPSiteDesign
 
         [Parameter()]
         [System.Boolean]
-        $isDefault,
+        $IsDefault,
 
         [Parameter()]
         [System.String]
@@ -11577,7 +11577,7 @@ function Set-PnPSiteDesign
 
         [Parameter()]
         [System.Boolean]
-        $isDefault,
+        $IsDefault,
 
         [Parameter()]
         [string]
