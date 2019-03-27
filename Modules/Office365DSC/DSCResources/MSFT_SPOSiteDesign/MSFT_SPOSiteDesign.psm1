@@ -82,7 +82,7 @@ function Get-TargetResource
         $siteScript = Get-PnPSiteScript -Identity $scriptId
         $scriptTitles += $siteScript.Title
     }
-    ## Todo need to see if we can get this somehow from PNP module instead of hard coded in scipt
+    ## Todo need to see if we can get this somehow from PNP module instead of hard coded in script
     ## https://github.com/SharePoint/PnP-PowerShell/blob/master/Commands/Enums/SiteWebTemplate.cs
     $webtemp = $null
     if ($siteDesign.WebTemplate -eq "64")
