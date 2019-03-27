@@ -29,7 +29,7 @@ This resource configures Site Designs.
       - Required: No
       - Description: Description of the site design
 
-    isDefault
+    IsDefault
       - Required: No
       - Description: Determines if the site design is applied by default
 
@@ -60,7 +60,7 @@ This resource configures Site Designs.
             Title               = "DSC Site Design"
             SiteScriptNames     = @("Cust List", "List_Views")
             WebTemplate         = "TeamSite"
-            isDefault           = $false
+            IsDefault           = $false
             Description         = "Created by DSC"
             PreviewImageAltText = "Office 365"
             Ensure              = "Present"

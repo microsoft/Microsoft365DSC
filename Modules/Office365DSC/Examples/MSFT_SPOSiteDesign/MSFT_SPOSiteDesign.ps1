@@ -14,7 +14,7 @@ Configuration SiteDesignConfig
             Title               = "DSC Site Design"
             SiteScriptNames     = @("Cust List", "List_Views")
             WebTemplate         = "TeamSite"
-            isDefault           = $false
+            IsDefault           = $false
             Description         = "Created by DSC"
             PreviewImageAltText = "Office 365"
             Ensure             = "Present"

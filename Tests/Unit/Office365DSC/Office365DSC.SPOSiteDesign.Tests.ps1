@@ -30,7 +30,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Title               = "DSC Site Design"
                 SiteScriptNames     = "Cust List", "List_Views"
                 WebTemplate         = "TeamSite"
-                isDefault           = $false
+                IsDefault           = $false
                 Description         = "Created by DSC"
                 PreviewImageAltText = "Office 365"
                 PreviewImageUrl     = ""
