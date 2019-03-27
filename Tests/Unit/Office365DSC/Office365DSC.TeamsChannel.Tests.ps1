@@ -34,10 +34,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-TeamChannel -MockWith {
-                return $null
+            Mock -CommandName Get-TeamByName -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
             }
 
+            Mock -CommandName Get-TeamChannel -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
+            }
 
             Mock -CommandName Get-Team -MockWith {
                 return @{
@@ -67,6 +76,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
+
+            Mock -CommandName Get-TeamByName -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
+            }
+
 
             Mock -CommandName Get-TeamChannel -MockWith {
                 return @{
@@ -98,6 +115,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Present"
                 NewDisplayName = "Test Channel Updated"
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-TeamByName -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
             }
 
             Mock -CommandName Get-TeamChannel -MockWith {
@@ -135,6 +159,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
+            Mock -CommandName Get-TeamByName -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
+            }
+
+
             Mock -CommandName Remove-TeamChannel -MockWith {
                 return $null
             }
@@ -168,6 +200,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 TeamName           = "TestTeam"
                 DisplayName        = "Test Channel"
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-TeamByName -MockWith {
+                return @{
+                    DisplayName = "TestTeam"
+                    GroupID     = "12345-12345-12345-12345-12345"
+                }
             }
 
             Mock -CommandName Get-Team -MockWith {
