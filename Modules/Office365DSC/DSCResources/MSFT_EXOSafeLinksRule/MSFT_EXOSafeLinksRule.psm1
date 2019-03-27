@@ -58,19 +58,9 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve SafeLinksRule $($Identity)"
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*SafeLinksRule'
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    try
-    {
-        $SafeLinksRules = Get-SafeLinksRule
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
-    $SafeLinksRule = $SafeLinksRules | Where-Object Identity -eq $Identity
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    $SafeLinksRules = Get-SafeLinksRule
+    $SafeLinksRule = $SafeLinksRules | Where-Object {$_.Identity -eq $Identity}
     if (-NOT $SafeLinksRule)
     {
         Write-Verbose "SafeLinksRule $($Identity) does not exist."
@@ -174,74 +164,37 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose 'Entering Set-TargetResource'
-    Write-Verbose 'Retrieving information about SafeLinksRule configuration'
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*SafeLinksRule'
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    try
-    {
-        $SafeLinksRules = Get-SafeLinksRule
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    $SafeLinksRules = Get-SafeLinksRule
 
     $SafeLinksRule = $SafeLinksRules | Where-Object Identity -eq $Identity
 
     if ( ('Present' -eq $Ensure ) -and (-NOT $SafeLinksRule) )
     {
-        try
-        {
-            New-EXOSafeLinksRule -SafeLinksRuleParams $PSBoundParameters
-        }
-        catch
-        {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        }
+        New-EXOSafeLinksRule -SafeLinksRuleParams $PSBoundParameters
     }
 
     if ( ('Present' -eq $Ensure ) -and ($SafeLinksRule) )
     {
-        try
+        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $SafeLinksRule.State) )
         {
-            if ($PSBoundParameters.Enabled -and ('Disabled' -eq $SafeLinksRule.State) )
-            {
-                # New-SafeLinksRule has the Enabled parameter, Set-SafeLinksRule does not.
-                # There doesn't appear to be any way to change the Enabled state of a rule once created.
-                Write-Verbose "Removing SafeLinksRule $($Identity) in order to change Enabled state."
-                Remove-SafeLinksRule -Identity $Identity -Confirm:$false
-                New-EXOSafeLinksRule -SafeLinksRuleParams $PSBoundParameters
-            }
-            else
-            {
-                Set-EXOSafeLinksRule -SafeLinksRuleParams $PSBoundParameters
-            }
+            # New-SafeLinksRule has the Enabled parameter, Set-SafeLinksRule does not.
+            # There doesn't appear to be any way to change the Enabled state of a rule once created.
+            Write-Verbose "Removing SafeLinksRule $($Identity) in order to change Enabled state."
+            Remove-SafeLinksRule -Identity $Identity -Confirm:$false
+            New-EXOSafeLinksRule -SafeLinksRuleParams $PSBoundParameters
         }
-        catch
+        else
         {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+            Set-EXOSafeLinksRule -SafeLinksRuleParams $PSBoundParameters
         }
     }
 
     if ( ('Absent' -eq $Ensure ) -and ($SafeLinksRule) )
     {
-        Write-Verbose "Removing SafeLinksRule $($Identity) "
-        try
-        {
-            Remove-SafeLinksRule -Identity $Identity -Confirm:$false
-        }
-        catch
-        {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        }
+        Write-Verbose "Removing SafeLinksRule $($Identity)"
+        Remove-SafeLinksRule -Identity $Identity -Confirm:$false
     }
-
-    Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    Write-Verbose "Global ExchangeOnlineSession status: `n"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
 }
 
 function Test-TargetResource
@@ -313,10 +266,6 @@ function Test-TargetResource
     if ($TestResult)
     {
         Write-Verbose 'Test-TargetResource returned True'
-        Write-Verbose 'Closing Remote PowerShell Sessions'
-        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-        Write-Verbose 'Global ExchangeOnlineSession status: '
-        Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     }
     else
     {
@@ -345,10 +294,6 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    Write-Verbose "Global ExchangeOnlineSession status: `n"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        EXOSafeLinksRule " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

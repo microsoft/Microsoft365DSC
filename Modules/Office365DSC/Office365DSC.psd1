@@ -55,7 +55,8 @@
                       @{ModuleName = "MSOnline"; ModuleVersion = "1.1.183.17"; },
                       @{ModuleName = "Microsoft.Online.SharePoint.PowerShell"; ModuleVersion = "16.0.8316.0"; },
                       @{ModuleName = "SharePointPnPPowerShellOnline"; ModuleVersion = "3.5.1901.0"; },
-                      @{ModuleName = "MicrosoftTeams"; ModuleVersion = "0.9.6"; })
+                      @{ModuleName = "MicrosoftTeams"; ModuleVersion = "0.9.6"; },
+                      @{ModuleName = "AzureAD"; ModuleVersion = "2.0.2.4"; })
 
   # Assemblies that must be loaded prior to importing this module
   # RequiredAssemblies = @()
@@ -77,7 +78,7 @@
 
   # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
   CmdletsToExport = 'Test-SPOServiceConnection', 'Test-Office365DSCParameterState',
-                 'Test-O365ServiceConnection', 'Invoke-ExoCommand', 'Export-O365Configuration',
+                 'Test-O365ServiceConnection', 'Export-O365Configuration',
                  'Get-TimeZoneNameFromID', 'Get-TimeZoneIDFromName', 'Get-LocaleIDFromName',
                  'Get-LocaleNameFromID', 'Test-TeamsServiceConnection', 'Show-O365GUI', 'Start-O365ConfigurationExtract',
                  'Test-PnPOnlineConnection', 'Connect-ExchangeOnline', 'Connect-SecurityAndComplianceCenter'

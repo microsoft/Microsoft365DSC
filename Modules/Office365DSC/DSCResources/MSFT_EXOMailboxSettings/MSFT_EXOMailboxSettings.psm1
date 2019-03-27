@@ -16,13 +16,13 @@ function Get-TargetResource
         [System.String]
         $Locale,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve information for Mailbox $($DisplayName)"
@@ -33,11 +33,8 @@ function Get-TargetResource
         Ensure = "Absent"
     }
 
-    $mailboxSettings = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                    -Arguments $PSBoundParameters `
-                                    -ScriptBlock {
-        Get-MailboxRegionalConfiguration -Identity $args[0].DisplayName
-    }
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    $mailboxSettings = Get-MailboxRegionalConfiguration -Identity $DisplayName
 
     if ($null -eq $mailboxSettings)
     {
@@ -73,13 +70,13 @@ function Set-TargetResource
         [System.String]
         $Locale,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Write-Verbose "Entering Set-TargetResource"
@@ -100,13 +97,10 @@ function Set-TargetResource
         throw "The specified Time Zone {$($TimeZone)} is not valid."
     }
 
-    Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                    -Arguments $PSBoundParameters `
-                                    -ScriptBlock {
-        Set-MailboxRegionalConfiguration -Identity $args[0].DisplayName `
-                                         -Language $args[0].Locale `
-                                         -TimeZone $args[0].TimeZone
-    }
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Set-MailboxRegionalConfiguration -Identity $DisplayName `
+                                     -Language $Locale `
+                                     -TimeZone $TimeZone
 }
 
 function Test-TargetResource
@@ -127,13 +121,13 @@ function Test-TargetResource
         [System.String]
         $Locale,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -157,8 +151,8 @@ function Export-TargetResource
         [System.String]
         $DisplayName,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters

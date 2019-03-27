@@ -2106,7 +2106,7 @@ function New-ClientAccessRule
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        $Name,
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('AllowAccess', 'DenyAccess')]
@@ -2174,6 +2174,10 @@ function New-DkimSigningConfig
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $DomainName,
+
         [Parameter()]
         [System.String]
         $AdminDisplayName,
@@ -2212,7 +2216,7 @@ function New-HostedConnectionFilterPolicy
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        $Name,
 
         [Parameter()]
         [System.String]
@@ -2935,7 +2939,11 @@ function Remove-ClientAccessRule
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $true
     )
 }
 
@@ -2947,7 +2955,11 @@ function Remove-DkimSigningConfig
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $true
     )
 }
 
@@ -2959,7 +2971,11 @@ function Remove-HostedConnectionFilterPolicy
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $true
     )
 }
 
@@ -2971,7 +2987,11 @@ function Remove-HostedContentFilterPolicy
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
     )
 }
 
@@ -2983,7 +3003,11 @@ function Remove-HostedContentFilterRule
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
     )
 }
 
@@ -2995,7 +3019,15 @@ function Remove-SafeAttachmentPolicy
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false,
+
+        [Parameter()]
+        [Switch]
+        $Force = $true
     )
 }
 
@@ -3007,7 +3039,11 @@ function Remove-SafeAttachmentRule
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
     )
 }
 
@@ -3019,7 +3055,11 @@ function Remove-SafeLinksPolicy
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
     )
 }
 
@@ -3031,7 +3071,11 @@ function Remove-SafeLinksRule
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
     )
 }
 
@@ -3825,7 +3869,11 @@ function Set-ClientAccessRule
 
         [Parameter()]
         [System.String[]]
-        $UsernameMatchesAnyOfPatterns = @()
+        $UsernameMatchesAnyOfPatterns = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $COnfirm = $true
     )
 }
 
@@ -3865,7 +3913,11 @@ function Set-DkimSigningConfig
         [Parameter()]
         [ValidateSet(1024)]
         [uint16]
-        $KeySize = 1024
+        $KeySize = 1024,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $true
     )
 }
 
@@ -3877,7 +3929,7 @@ function Set-HostedConnectionFilterPolicy
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Name,
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -3897,7 +3949,11 @@ function Set-HostedConnectionFilterPolicy
 
         [Parameter()]
         [Boolean]
-        $MakeDefault = $false
+        $MakeDefault = $false,
+
+        [Parameter()]
+        [Boolean]
+        $Confirm = $false
     )
 }
 
@@ -4119,7 +4175,11 @@ function Set-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Boolean]
-        $ZapEnabled = $true
+        $ZapEnabled = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
     )
 }
 
@@ -4166,8 +4226,11 @@ function Set-HostedContentFilterRule {
 
         [Parameter()]
         [System.String[]]
-        $SentToMemberOf = @()
+        $SentToMemberOf = @(),
 
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
     )
 }
 
@@ -4199,7 +4262,11 @@ function Set-HostedOutboundSpamFilterPolicy
 
         [Parameter()]
         [Boolean]
-        $NotifyOutboundSpam = $true
+        $NotifyOutboundSpam = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
     )
 }
 
@@ -4236,7 +4303,11 @@ function Set-SafeAttachmentPolicy
 
         [Parameter()]
         [System.String]
-        $RedirectAddress
+        $RedirectAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
     )
 }
 
@@ -4288,7 +4359,11 @@ function Set-SafeAttachmentRule
 
         [Parameter()]
         [System.String[]]
-        $SentToMemberOf = @()
+        $SentToMemberOf = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
     )
 }
 
@@ -4328,7 +4403,11 @@ function Set-SafeLinksPolicy
 
         [Parameter()]
         [Boolean]
-        $ScanUrls = $false
+        $ScanUrls = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
     )
 }
 
@@ -4389,7 +4468,11 @@ function Set-SafeLinksRule
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
     )
 }
 

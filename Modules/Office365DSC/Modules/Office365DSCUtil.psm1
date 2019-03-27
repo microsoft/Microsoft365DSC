@@ -810,7 +810,7 @@ $TimeZones = @(
         EnglishDescription = "(GMT+13:00) Nuku’alofa"
     }
 )
-function Build-EXOParams
+function Format-EXOParams
 {
     [CmdletBinding()]
     param (
@@ -841,19 +841,6 @@ function Build-EXOParams
         $EXOParams.Remove("Enabled") | out-null
         return $EXOParams
     }
-}
-
-function Close-SessionsAndReturnError
-{
-    [CmdletBinding()]
-    param (
-        [Parameter()]
-        [String]
-        $ExceptionMessage
-    )
-    Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    Write-Error $ExceptionMessage
 }
 
 function Get-LocaleIDFromName
@@ -993,68 +980,72 @@ function Connect-ExchangeOnline
     (
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $CommandsToImport
+        $GlobalAdminAccount
     )
-    $VerbosePreference = 'Continue'
-    $WarningPreference = "SilentlyContinue"
-    $ClosedOrBrokenSessions = (Get-PSSession -ErrorAction SilentlyContinue | Where-Object State -ne 'Opened' )
+    $VerbosePreference = 'SilentlyContinue'
+    $WarningPreference = "Continue"
+    $ClosedOrBrokenSessions = Get-PSSession -ErrorAction SilentlyContinue | Where-Object { $_.State -ne 'Opened' }
     if ($ClosedOrBrokenSessions)
     {
         Write-Verbose "Found Existing Unusable Session(s)."
         foreach ($SessionToBeClosed in $ClosedOrBrokenSessions)
         {
             Write-Verbose "Closing Session: $(($SessionToBeClosed).InstanceId)"
-            $SessionToBeClosed | Remove-PSSession -ErrorAction SilentlyContinue
+            $SessionToBeClosed | Remove-PSSession
         }
     }
 
-    $Global:OpenExchangeSession = (Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Where-Object State -eq 'Opened' )
-    if (-NOT $Global:OpenExchangeSession)
+    $Global:OpenExchangeSession = Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Where-Object { $_.State -eq 'Opened' }
+    if ($null -eq $Global:OpenExchangeSession)
     {
         try
         {
-            Write-Verbose "Opening New ExchangeOnline Session."
-            $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+            $PowerShellConnections = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
+
             while ($PowerShellConnections)
             {
                 Write-Verbose "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
                 Write-Verbose "Waiting for closing connections to close..."
                 Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
                 Start-Sleep -seconds 1
-                $CheckConnectionsWithoutKillingWhileLoop = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+                $CheckConnectionsWithoutKillingWhileLoop = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
                 if (-NOT $CheckConnectionsWithoutKillingWhileLoop) {
                     Write-Verbose "Connections have closed.  Waiting 5 more seconds..."
                     Start-Sleep -seconds 5
-                    $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+                    $PowerShellConnections = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
                 }
             }
-            $VerbosePreference = 'SilentlyContinue'
-            $Global:ExchangeOnlineSession = $null
-            while (-NOT $Global:ExchangeOnlineSession)
+
+            if ($Global:ExchangeOnlineSession.State -eq "Closed")
             {
+                Remove-PSSession $Global:ExchangeOnlineSession
+                $Global:ExchangeOnlineSession = $null
+            }
+
+            while ($null -eq $Global:ExchangeOnlineSession)
+            {
+                Write-Verbose "Creating new EXO Session"
                 $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
+
+                if ($null -eq $Global:ExchangeOnlineSession)
+                {
+                    Write-Warning "Exceeded max number of connections. Waiting 60 seconds"
+                    Start-Sleep 60
+                }
             }
 
-            if ($CommandsToImport)
+            if ($null -eq $Global:ExchangeOnlineModules)
             {
-                $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -CommandName $CommandsToImport -AllowClobber -ErrorAction SilentlyContinue
+                Write-Verbose "Importing all commands into the EXO Session"
+                $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber
+                Import-Module $Global:ExchangeOnlineModules -Global | Out-Null
             }
-            else
-            {
-                $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
-            }
-
-            $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global -ErrorAction SilentlyContinue
         }
         catch
         {
             $ExceptionMessage = $_.Exception
             $Error.Clear()
-            $VerbosePreference = 'Continue'
+            $VerbosePreference = 'SilentlyContinue'
             if ($ExceptionMessage -imatch 'Please wait for [0-9]* seconds' )
             {
                 Write-Verbose "Waiting for available runspace..."
@@ -1066,18 +1057,18 @@ function Connect-ExchangeOnline
                 try
                 {
                     Write-Verbose "Opening New ExchangeOnline Session."
-                    $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+                    $PowerShellConnections = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
                     while ($PowerShellConnections)
                     {
                         Write-Verbose "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
                         Write-Verbose "Waiting for closing connections to close..."
                         Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
                         Start-Sleep -seconds 1
-                        $CheckConnectionsWithoutKillingWhileLoop = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+                        $CheckConnectionsWithoutKillingWhileLoop = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
                         if (-NOT $CheckConnectionsWithoutKillingWhileLoop) {
                             Write-Verbose "Connections have closed.  Waiting 5 more seconds..."
                             Start-Sleep -seconds 5
-                            $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
+                            $PowerShellConnections = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
                         }
                     }
                     $VerbosePreference = 'SilentlyContinue'
@@ -1087,28 +1078,22 @@ function Connect-ExchangeOnline
                         $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
                     }
 
-                    if ($CommandsToImport)
-                    {
-                        $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -CommandName $CommandsToImport -AllowClobber -ErrorAction SilentlyContinue
-                    }
-                    else
-                    {
-                        $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
-                    }
+                    $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
 
                     $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global -ErrorAction SilentlyContinue
                 }
                 catch
                 {
-                    $VerbosePreference = 'Continue'
-                    $WarningPreference = "Continue"
+                    $VerbosePreference = 'SilentlyContinue'
+                    $WarningPreference = "SilentlyContinue"
                     $Global:ExchangeOnlineSession = $null
                     Close-SessionsAndReturnError -ExceptionMessage $_.Exception
                 }
             }
             else
             {
-                $VerbosePreference = 'Continue'
+                Write-Verbose $_.Exception
+                $VerbosePreference = 'SilentlyContinue'
                 Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
                 Write-Verbose "Exchange Online connection failed."
                 Write-Verbose "Waiting 60 seconds..."
@@ -1119,21 +1104,14 @@ function Connect-ExchangeOnline
                     $VerbosePreference = 'SilentlyContinue'
                     Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
                     $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-                    if ($CommandsToImport)
-                    {
-                        $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -CommandName $CommandsToImport -AllowClobber -ErrorAction SilentlyContinue
-                    }
-                    else
-                    {
-                        $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
-                    }
+                    $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
 
                     $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global -ErrorAction SilentlyContinue
                 }
                 catch
                 {
-                    $VerbosePreference = 'Continue'
-                    $WarningPreference = "Continue"
+                    $VerbosePreference = 'SilentlyContinue'
+                    $WarningPreference = "SilentlyContinue"
                     $Global:ExchangeOnlineSession = $null
                     Close-SessionsAndReturnError -ExceptionMessage $_.Exception
                 }
@@ -1143,140 +1121,10 @@ function Connect-ExchangeOnline
     else
     {
         Write-Verbose "Using Existing ExchangeOnline Session."
-        $VerbosePreference = 'Continue'
-        $WarningPreference = "Continue"
+        $Global:OpenExchangeSession = Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Where-Object { $_.State -eq 'Opened' }
+        $VerbosePreference = 'SilentlyContinue'
+        $WarningPreference = "SilentlyContinue"
     }
-
-}
-
-function Confirm-ImportedCmdletIsAvailable {
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CmdletName
-    )
-    try
-    {
-        $CmdletIsAvailable = (Get-Command -Name $CmdletName )
-        if ($CmdletIsAvailable)
-        {
-            return $true
-        }
-        else
-        {
-            Close-SessionsAndReturnError -ExceptionMessage "Cmdlet $CmdletName is not available in this O365 Tenant."
-        }
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
-}
-
-function Connect-SecurityAndComplianceCenter
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    $VerbosePreference = 'Continue'
-    $WarningPreference = "SilentlyContinue"
-    $ClosedOrBrokenSessions = (Get-PSSession -ErrorAction SilentlyContinue | Where-Object State -ne 'Opened' )
-    if ($ClosedOrBrokenSessions)
-    {
-        Write-Verbose "Found Existing Unusable Session(s)."
-        foreach ($SessionToBeClosed in $ClosedOrBrokenSessions)
-        {
-            Write-Verbose "Closing Session: $(($SessionToBeClosed).InstanceId)"
-            $SessionToBeClosed | Remove-PSSession -ErrorAction SilentlyContinue
-        }
-    }
-
-    $Global:OpenSecurityAndComplianceCenterSession = (Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Where-Object State -eq 'Opened' )
-    if (-NOT $Global:OpenSecurityAndComplianceCenterSession)
-    {
-        $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
-        while ($PowerShellConnections)
-        {
-            Write-Verbose "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
-            Write-Verbose "Waiting for closing connections to close..."
-            Get-PSSession -Name 'SecurityAndComplianceCenter' -ErrorAction SilentlyContinue | Remove-PSSession
-            Start-Sleep -seconds 1
-            $CheckConnectionsWithoutKillingWhileLoop = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
-            if (-NOT $CheckConnectionsWithoutKillingWhileLoop) {
-                Write-Verbose "Connections have closed.  Waiting 5 more seconds..."
-                Start-Sleep -seconds 5
-                $PowerShellConnections = (Get-NetTCPConnection | Where-Object OwningProcess -match $PID | Where-Object RemotePort -eq '443' | Where-Object State -ne 'Established')
-            }
-        }
-
-        try
-        {
-            Write-Verbose "Opening New SecurityAndComplianceCenter Session."
-            $VerbosePreference = 'SilentlyContinue'
-            $Global:SecurityAndComplianceCenterSession = $null
-            while (-NOT $Global:SecurityAndComplianceCenterSession)
-            {
-                $Global:SecurityAndComplianceCenterSession = New-PSSession -Name 'SecurityAndComplianceCenter' -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
-            }
-
-            $Global:SecurityAndComplianceCenterModules = Import-PSSession $Global:SecurityAndComplianceCenterSession -AllowClobber -ErrorAction SilentlyContinue
-            $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global -ErrorAction SilentlyContinue
-        }
-        catch
-        {
-            $ExceptionMessage = $_.Exception
-            $Error.Clear()
-            if ($ExceptionMessage -imatch 'Please wait for [0-9]* seconds' )
-            {
-                Write-Verbose "Waiting for available runspace..."
-                [regex]$WaitTimePattern = 'Please wait for [0-9]* seconds'
-                $WaitTimePatternMatch = (($WaitTimePattern.Match($ExceptionMessage)).Value | Select-String -Pattern '[0-9]*' -AllMatches )
-                $WaitTimeInSeconds = ($WaitTimePatternMatch | ForEach-Object {$_.Matches} | Where-Object Value -NotLike $null).Value
-                Start-Sleep -Seconds ($WaitTimeInSeconds + 1)
-                try
-                {
-                    Write-Verbose "Opening New SecurityAndComplianceCenter Session."
-                    $VerbosePreference = 'SilentlyContinue'
-                    $Global:SecurityAndComplianceCenterSession = $null
-                    while (-NOT $Global:SecurityAndComplianceCenterSession)
-                    {
-                        $Global:SecurityAndComplianceCenterSession = New-PSSession -Name 'SecurityAndComplianceCenter' -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
-                    }
-
-                    $Global:SecurityAndComplianceCenterModules = Import-PSSession $Global:SecurityAndComplianceCenterSession -AllowClobber -ErrorAction SilentlyContinue
-                    $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global -ErrorAction SilentlyContinue
-                }
-                catch
-                {
-                    $VerbosePreference = 'Continue'
-                    $WarningPreference = "Continue"
-                    $Global:ExchangeOnlineSession = $null
-                    Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-                }
-            }
-            else
-            {
-                $VerbosePreference = 'Continue'
-                $WarningPreference = "Continue"
-                $Global:ExchangeOnlineSession = $null
-                Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-            }
-        }
-    }
-    else
-    {
-        Write-Verbose "Using Existing SecurityAndComplianceCenter Session."
-        $VerbosePreference = 'Continue'
-        $WarningPreference = "Continue"
-    }
-
 }
 
 function New-EXOAntiPhishPolicy
@@ -1289,7 +1137,7 @@ function New-EXOAntiPhishPolicy
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'New' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'New' )
         Write-Verbose "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-AntiPhishPolicy @BuiltParams
         $VerbosePreference = 'SilentlyContinue'
@@ -1310,7 +1158,7 @@ function New-EXOAntiPhishRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'New' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'New' )
         Write-Verbose "Creating New AntiPhishRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-AntiPhishRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
@@ -1331,7 +1179,7 @@ function New-EXOHostedContentFilterRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'New' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'New' )
         Write-Verbose "Creating New HostedContentFilterRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-HostedContentFilterRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
@@ -1352,7 +1200,7 @@ function New-EXOSafeAttachmentRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'New' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'New' )
         Write-Verbose "Creating New SafeAttachmentRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-SafeAttachmentRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
@@ -1373,7 +1221,7 @@ function New-EXOSafeLinksRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'New' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'New' )
         Write-Verbose "Creating New SafeLinksRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
         New-SafeLinksRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
@@ -1394,7 +1242,7 @@ function Set-EXOAntiPhishRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'Set' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting AntiPhishRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
@@ -1423,7 +1271,7 @@ function Set-EXOAntiPhishPolicy
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'Set' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
@@ -1452,7 +1300,7 @@ function Set-EXOHostedContentFilterRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'Set' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting HostedContentFilterRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
@@ -1481,7 +1329,7 @@ function Set-EXOSafeAttachmentRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'Set' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting SafeAttachmentRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
@@ -1510,7 +1358,7 @@ function Set-EXOSafeLinksRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Build-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'Set' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
             Write-Verbose "Setting SafeLinksRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
@@ -1602,96 +1450,6 @@ function Test-TeamsServiceConnection
     $catch = Connect-MicrosoftTeams -Credential $GlobalAdminAccount | Out-Null
 }
 
-function Invoke-ExoCommand
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [Object[]]
-        $Arguments,
-
-        [Parameter(Mandatory = $true)]
-        [ScriptBlock]
-        $ScriptBlock
-    )
-    $VerbosePreference = 'SilentlyContinue'
-    $WarningPreference = "SilentlyContinue"
-    $invokeArgs = @{
-        ScriptBlock = [ScriptBlock]::Create($ScriptBlock.ToString())
-    }
-    if ($null -ne $Arguments)
-    {
-        $invokeArgs.Add("ArgumentList", $Arguments)
-    }
-
-    Write-Verbose "Verifying the LCM connection state to Exchange Online"
-    $AssemblyPath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\Dependencies\Microsoft.Exchange.Management.ExoPowershellModule.dll" `
-        -Resolve
-    $AADAssemblyPath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\Dependencies\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" `
-        -Resolve
-
-    $ScriptPath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\Dependencies\CreateExoPSSession.ps1" `
-        -Resolve
-
-    $catch = Import-Module $AssemblyPath
-    $catch = [Reflection.Assembly]::LoadFile($AADAssemblyPath)
-    .$ScriptPath
-
-    # Somehow, every now and then, the first connection attempt will get an invalid Shell Id. Calling the function a second
-    # time fixes the issue.
-    try
-    {
-        if (!$Global:ExoPSSessionConnected)
-        {
-            $catch = Connect-ExoPSSession -Credential $GlobalAdminAccount -ErrorAction SilentlyContinue
-            $Global:ExoPSSessionConnected = $true
-        }
-    }
-    catch
-    {
-        # Check to see if we received a payload error, and if so, wait for the requested period of time before proceeding
-        # with the next call.
-        $stringToFind = "you have exceeded your budget to create runspace. Please wait for "
-        if ($Error)
-        {
-            $position = $Error[0].ErrorDetails.Message.IndexOf($stringToFind)
-
-            if ($position -ge 0)
-            {
-                $beginning = $position + $stringToFind.Length
-                $nextSpace = $Error[0].ErrorDetails.Message.IndexOf(" ", $beginning)
-
-                [int]$timeToWaitInSeconds = $Error[0].ErrorDetails.Message.Substring($beginning, $nextSpace - $beginning)
-
-                Write-Verbose "Detected an exceeded payload against the remote server. Waiting for $($timeToWaitInSeconds) seconds."
-                Start-Sleep -Seconds $timeToWaitInSeconds
-            }
-        }
-        $catch = Connect-ExoPSSession -Credential $GlobalAdminAccount -ErrorAction SilentlyContinue
-        $Global:ExoPSSessionConnected = $true
-    }
-
-    try
-    {
-        $result = Invoke-Command @invokeArgs -Verbose
-    }
-    catch
-    {
-        $catch = Connect-ExoPSSession -Credential $GlobalAdminAccount -ErrorAction SilentlyContinue
-        $Global:ExoPSSessionConnected = $true
-        $result = Invoke-Command @invokeArgs -Verbose
-    }
-
-    return $result
-}
 
 function Test-Office365DSCParameterState
 {
@@ -1937,6 +1695,20 @@ function Start-O365ConfigurationExtract
     $DSCContent += "    Node localhost`r`n"
     $DSCContent += "    {`r`n"
 
+    # Obtain central administration url from a User Principal Name
+    $centralAdminUrl = $null
+    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    $users = Get-AzureADUser
+    if ($users.Count -gt 0)
+    {
+        $tenantParts = $users[0].UserPrincipalName.Split('@')
+        if ($tenantParts.Length -gt 0)
+        {
+            $tenantName = $tenantParts[1].Split(".")[0]
+            $centralAdminUrl = "https://" + $tenantName + "-admin.sharepoint.com"
+        }
+    }
+
     # Add the GlobalAdminAccount to the Credentials List
     Save-Credentials -UserName $GlobalAdminAccount.UserName
 
@@ -1944,10 +1716,8 @@ function Start-O365ConfigurationExtract
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckO365AdminAuditLogConfig"))
     {
         Write-Information "Extracting O365AdminAuditLogConfig..."
-        $O365AdminAuditLogConfig = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                                    -ScriptBlock {
-            Get-AdminAuditLogConfig
-        }
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $O365AdminAuditLogConfig = Get-AdminAuditLogConfig
 
         $O365AdminAuditLogConfigModulePath = Join-Path -Path $PSScriptRoot `
                                                        -ChildPath "..\DSCResources\MSFT_O365AdminAuditLogConfig\MSFT_O365AdminAuditLogConfig.psm1" `
@@ -1965,123 +1735,211 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOAtpPolicyForO365"
-    Write-Information "Extracting EXOAtpPolicyForO365..."
-    $EXOAtpPolicyForO365ModulePath = Join-Path -Path $PSScriptRoot `
-                                              -ChildPath "..\DSCResources\MSFT_EXOAtpPolicyForO365\MSFT_EXOAtpPolicyForO365.psm1" `
-                                              -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOAtpPolicyForO365"))
+    {
+        Write-Information "Extracting EXOAtpPolicyForO365..."
+        $EXOAtpPolicyForO365ModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOAtpPolicyForO365\MSFT_EXOAtpPolicyForO365.psm1" `
+                                                -Resolve
 
-    $catch = Import-Module $EXOAtpPolicyForO365ModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        Import-Module $EXOAtpPolicyForO365ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -IsSingleInstance "Yes" -GlobalAdminAccount $GlobalAdminAccount
+    }
     #endregion
 
     #region "EXOCASMailboxPlan"
-    Write-Information "Extracting EXOCASMailboxPlan..."
-    $EXOCASMailboxPlanModulePath = Join-Path -Path $PSScriptRoot `
-                                              -ChildPath "..\DSCResources\MSFT_EXOCASMailboxPlan\MSFT_EXOCASMailboxPlan.psm1" `
-                                              -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOCASMailboxPlan"))
+    {
+        Write-Information "Extracting EXOCASMailboxPlan..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $CASMailboxPlans = Get-CASMailboxPlan
+        $EXOCASMailboxPlanModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOCASMailboxPlan\MSFT_EXOCASMailboxPlan.psm1" `
+                                                -Resolve
 
-    $catch = Import-Module $EXOCASMailboxPlanModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        Import-Module $EXOCASMailboxPlanModulePath | Out-Null
+
+        foreach ($CASMailboxPlan in $CASMailboxPlans)
+        {
+            $DSCContent += Export-TargetResource -Identity $CASMailboxPlan.Identity -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
     #endregion
 
     #region "EXOClientAccessRule"
-    Write-Information "Extracting EXOClientAccessRule..."
-    $EXOClientAccessRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                              -ChildPath "..\DSCResources\MSFT_EXOClientAccessRule\MSFT_EXOClientAccessRule.psm1" `
-                                              -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOClientAccessRule"))
+    {
+        Write-Information "Extracting EXOClientAccessRule..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $ClientAccessRules = Get-ClientAccessRule
+        $EXOClientAccessRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOClientAccessRule\MSFT_EXOClientAccessRule.psm1" `
+                                                -Resolve
 
-    $catch = Import-Module $EXOClientAccessRuleModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        Import-Module $EXOClientAccessRuleModulePath | Out-Null
+        foreach ($ClientAccessRule in $ClientAccessRules)
+        {
+            $DSCContent += Export-TargetResource -Identity $ClientAccessRule.Identity -Action $ClientAccessRule.Action -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
     #endregion
 
     #region "EXODkimSigningConfig"
-    Write-Information "Extracting EXODkimSigningConfig..."
-    $EXODkimSigningConfigModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXODkimSigningConfig\MSFT_EXODkimSigningConfig.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXODkimSigningConfig"))
+    {
+        Write-Information "Extracting EXODkimSigningConfig..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $DkimSigningConfigs = Get-DkimSigningConfig
+        $EXODkimSigningConfigModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXODkimSigningConfig\MSFT_EXODkimSigningConfig.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXODkimSigningConfigModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        Import-Module $EXODkimSigningConfigModulePath | Out-Null
+        foreach ($DkimSigningConfig in $DkimSigningConfigs)
+        {
+            Write-Verbose "    {$($DkimSigningConfig.Identity)}"
+            $DSCContent += Export-TargetResource -Identity $DkimSigningConfig.Identity -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
     #endregion
 
     #region "EXOHostedConnectionFilterPolicy"
-    Write-Information "Extracting EXOHostedConnectionFilterPolicy..."
-    $EXOHostedConnectionFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOHostedConnectionFilterPolicy\MSFT_EXOHostedConnectionFilterPolicy.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedConnectionFilterPolicy"))
+    {
+        Write-Information "Extracting EXOHostedConnectionFilterPolicy..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $HostedConnectionFilterPolicys = Get-HostedConnectionFilterPolicy
+        $EXOHostedConnectionFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOHostedConnectionFilterPolicy\MSFT_EXOHostedConnectionFilterPolicy.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXOHostedConnectionFilterPolicyModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        Import-Module $EXOHostedConnectionFilterPolicyModulePath | Out-Null
+        foreach ($HostedConnectionFilterPolicy in $HostedConnectionFilterPolicys)
+        {
+            $DSCContent += Export-TargetResource -Identity $HostedConnectionFilterPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
     #endregion
 
     #region "EXOHostedContentFilterPolicy"
-    Write-Information "Extracting EXOHostedContentFilterPolicy..."
-    $EXOHostedContentFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterPolicy\MSFT_EXOHostedContentFilterPolicy.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedContentFilterPolicy"))
+    {
+        Write-Information "Extracting EXOHostedContentFilterPolicy..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
+        $EXOHostedContentFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterPolicy\MSFT_EXOHostedContentFilterPolicy.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXOHostedContentFilterPolicyModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        Import-Module $EXOHostedContentFilterPolicyModulePath | Out-Null
+        foreach ($HostedContentFilterPolicy in $HostedContentFilterPolicies)
+        {
+            $DSCContent += Export-TargetResource -Identity $HostedContentFilterPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
     #endregion
 
     #region "EXOHostedContentFilterRule"
-    Write-Information "Extracting EXOHostedContentFilterRule..."
-    $EXOHostedContentFilterRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterRule\MSFT_EXOHostedContentFilterRule.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedContentFilterRule"))
+    {
+        Write-Information "Extracting EXOHostedContentFilterRule..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $HostedContentFilterRules = Get-HostedContentFilterRule
+        $EXOHostedContentFilterRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterRule\MSFT_EXOHostedContentFilterRule.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXOHostedContentFilterRuleModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        Import-Module $EXOHostedContentFilterRuleModulePath | Out-Null
+        foreach ($HostedContentFilterRule in $HostedContentFilterRules)
+        {
+            $DSCContent += Export-TargetResource -Identity $HostedContentFilterRule.Identity -HostedContentFilterPolicy $HostedContentFilterRule.HostedContentFilterPolicy -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
     #endregion
 
     #region "EXOHostedOutboundSpamFilterPolicy"
-    Write-Information "Extracting EXOHostedOutboundSpamFilterPolicy..."
-    $EXOHostedOutboundSpamFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOHostedOutboundSpamFilterPolicy\MSFT_EXOHostedOutboundSpamFilterPolicy.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedOutboundSpamFilterPolicy"))
+    {
+        Write-Information "Extracting EXOHostedOutboundSpamFilterPolicy..."
+        $EXOHostedOutboundSpamFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOHostedOutboundSpamFilterPolicy\MSFT_EXOHostedOutboundSpamFilterPolicy.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXOHostedOutboundSpamFilterPolicyModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        Import-Module $EXOHostedOutboundSpamFilterPolicyModulePath | Out-Null
+        $DSCContent += Export-TargetResource -IsSingleInstance "Yes" -GlobalAdminAccount $GlobalAdminAccount
+    }
     #endregion
 
     #region "EXOSafeAttachmentPolicy"
-    Write-Information "Extracting EXOSafeAttachmentPolicy..."
-    $EXOSafeAttachmentPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentPolicy\MSFT_EXOSafeAttachmentPolicy.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeAttachmentPolicy"))
+    {
+        Write-Information "Extracting EXOSafeAttachmentPolicy..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
+        $EXOSafeAttachmentPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentPolicy\MSFT_EXOSafeAttachmentPolicy.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXOSafeAttachmentPolicyModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        Import-Module $EXOSafeAttachmentPolicyModulePath | Out-Null
+        foreach ($SafeAttachmentPolicy in $SafeAttachmentPolicies)
+        {
+            $DSCContent += Export-TargetResource -Identity $SafeAttachmentPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
     #endregion
 
     #region "EXOSafeAttachmentRule"
-    Write-Information "Extracting EXOSafeAttachmentRule..."
-    $EXOSafeAttachmentRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentRule\MSFT_EXOSafeAttachmentRule.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeAttachmentRule"))
+    {
+        Write-Information "Extracting EXOSafeAttachmentRule..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $SafeAttachmentRules = Get-SafeAttachmentRule
+        $EXOSafeAttachmentRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentRule\MSFT_EXOSafeAttachmentRule.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXOSafeAttachmentRuleModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        Import-Module $EXOSafeAttachmentRuleModulePath | Out-Null
+        foreach ($SafeAttachmentRule in $SafeAttachmentRules)
+        {
+            $DSCContent += Export-TargetResource -Identity $SafeAttachmentRule.Identity -SafeAttachmentPolicy $SafeAttachmentRule.SafeAttachmentPolicy -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
     #endregion
 
     #region "EXOSafeLinksPolicy"
-    Write-Information "Extracting EXOSafeLinksPolicy..."
-    $EXOSafeLinksPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOSafeLinksPolicy\MSFT_EXOSafeLinksPolicy.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeLinksPolicy"))
+    {
+        Write-Information "Extracting EXOSafeLinksPolicy..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $SafeLinksPolicies = Get-SafeLinksPolicy
+        $EXOSafeLinksPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOSafeLinksPolicy\MSFT_EXOSafeLinksPolicy.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXOSafeLinksPolicyModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        Import-Module $EXOSafeLinksPolicyModulePath | Out-Null
+        foreach($SafeLinksPolicy in $SafeLinksPolicies)
+        {
+            $DSCContent += Export-TargetResource -Identity $SafeLinksPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
     #endregion
 
     #region "EXOSafeLinksRule"
-    Write-Information "Extracting EXOSafeLinksRule..."
-    $EXOSafeLinksRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOSafeLinksRule\MSFT_EXOSafeLinksRule.psm1" `
-                                                -Resolve
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeLinksRule"))
+    {
+        Write-Information "Extracting EXOSafeLinksRule..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $SafeLinksRules = Get-SafeLinksRule
+        $EXOSafeLinksRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOSafeLinksRule\MSFT_EXOSafeLinksRule.psm1" `
+                                                    -Resolve
 
-    $catch = Import-Module $EXOSafeLinksRuleModulePath
-    $DSCContent += Export-TargetResource -Identity $Identity -DomainType $DomainType -GlobalAdminAccount $GlobalAdminAccount
+        Import-Module $EXOSafeLinksRuleModulePath | Out-Null
+        foreach ($SafeLinksRule in $SafeLinksRules)
+        {
+            $DSCContent += Export-TargetResource -Identity $SafeLinksRule.Identity -SafeLinksPolicy $SafeLinksRule.SafeLinksPolicy -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
     #endregion
 
     #region "EXOMailboxSettings"
@@ -2093,10 +1951,8 @@ function Start-O365ConfigurationExtract
                                                   -Resolve
 
         Import-Module $EXOMailboxSettingsModulePath | Out-Null
-        $mailboxes = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                       -ScriptBlock {
-            Get-Mailbox
-        }
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $mailboxes = Get-Mailbox
 
         foreach ($mailbox in $mailboxes)
         {
@@ -2114,10 +1970,8 @@ function Start-O365ConfigurationExtract
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOMailTips"))
     {
         Write-Information "Extracting EXOMailTips..."
-        $OrgConfig = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                       -ScriptBlock {
-            Get-OrganizationConfig
-        }
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $OrgConfig = Get-OrganizationConfig
 
         $organizationName = $OrgConfig.Name
         Add-ConfigurationDataEntry -Node "localhost" `
@@ -2142,10 +1996,8 @@ function Start-O365ConfigurationExtract
                                                 -Resolve
 
         Import-Module $EXOSharedMailboxModulePath | Out-Null
-        $mailboxes = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                       -ScriptBlock {
-            Get-Mailbox
-        }
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $mailboxes = Get-Mailbox
         $mailboxes = $mailboxes | Where-Object {$_.RecipientTypeDetails -eq "SharedMailbox"}
 
         foreach ($mailbox in $mailboxes)
@@ -2189,10 +2041,9 @@ function Start-O365ConfigurationExtract
         $securityGroups = Get-AzureAdGroup | Where-Object {$_.SecurityEnabled -eq $true}
 
         # Other Groups
-        $groups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                    -ScriptBlock {
-            Get-Group
-        }
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $groups = Get-Group
+
         $groups = $groups | Where-Object { `
             $_.RecipientType -eq "MailUniversalDistributionGroup" `
             -or $_.RecipientType -eq "MailUniversalSecurityGroup" `
@@ -2228,7 +2079,7 @@ function Start-O365ConfigurationExtract
                                         -ChildPath "..\DSCResources\MSFT_O365USer\MSFT_O365USer.psm1" `
                                         -Resolve
 
-        $catch = Import-Module $O365UserModulePath
+        Import-Module $O365UserModulePath | Out-Null
         Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
         $users = Get-AzureADUser
@@ -2253,19 +2104,7 @@ function Start-O365ConfigurationExtract
                                         -ChildPath "..\DSCResources\MSFT_ODSettings\MSFT_ODSettings.psm1" `
                                         -Resolve
 
-        $catch = Import-Module $ODSettingsModulePath
-
-        # Obtain central administration url from a User Principal Name
-        $centralAdminUrl = $null
-        if ($users.Count -gt 0)
-        {
-            $tenantParts = $users[0].UserPrincipalName.Split('@')
-            if ($tenantParts.Length -gt 0)
-            {
-                $tenantName = $tenantParts[1].Split(".")[0]
-                $centralAdminUrl = "https://" + $tenantName + "-admin.sharepoint.com"
-            }
-        }
+        Import-Module $ODSettingsModulePath | Out-Null
 
         if ($centralAdminUrl)
         {
@@ -2275,55 +2114,58 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "SPOSearchResultSource"
-    $InfoMapping = @(
-    @{
-        Protocol    = "Local"
-        Type        = "SharePoint"
-        ProviderID  = "fa947043-6046-4f97-9714-40d4c113963d"
-    },
-    @{
-        Protocol    = "Remote"
-        Type        = "SharePoint"
-        ProviderID  = "1e0c8601-2e5d-4ccb-9561-53743b5dbde7"
-    },
-    @{
-        Protocol    = "Exchange"
-        Type        = "SharePoint"
-        ProviderID  = "3a17e140-1574-4093-bad6-e19cdf1c0122"
-    },
-    @{
-        Protocol    = "OpenSearch"
-        Type        = "SharePoint"
-        ProviderID  = "3a17e140-1574-4093-bad6-e19cdf1c0121"
-    },
-    @{
-        Protocol   = "Local"
-        Type       = "People"
-        ProviderID = "e4bcc058-f133-4425-8ffc-1d70596ffd33"
-    },
-    @{
-        Protocol   = "Remote"
-        Type       = "People"
-        ProviderID = "e377caaa-fcaf-4a1b-b7a1-e69a506a07aa"
-    }
-    )
-    Write-Information "Extracting SPOSearchResultSource..."
-    $SPOSearchResultSourceModulePath = Join-Path -Path $PSScriptRoot `
-                                                    -ChildPath "..\DSCResources\MSFT_SPOSearchResultSource\MSFT_SPOSearchResultSource.psm1" `
-                                                    -Resolve
-
-    $catch = Import-Module $SPOSearchResultSourceModulePath
-    Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-    $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
-    $sources =  $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
-    foreach ($source in $sources)
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSearchResultSource"))
     {
-        $mapping = $InfoMapping | Where-Object { $_.ProviderID -eq $source.ProviderId }
-        Write-Information "    Result Source {$($source.Name)}"
-        $DSCContent += Export-TargetResource -Name $source.Name `
-                                             -Protocol $mapping.Protocol `
-                                             -CentralAdminUrl $centralAdminUrl `
-                                             -GlobalAdminAccount $GlobalAdminAccount
+        $InfoMapping = @(
+        @{
+            Protocol    = "Local"
+            Type        = "SharePoint"
+            ProviderID  = "fa947043-6046-4f97-9714-40d4c113963d"
+        },
+        @{
+            Protocol    = "Remote"
+            Type        = "SharePoint"
+            ProviderID  = "1e0c8601-2e5d-4ccb-9561-53743b5dbde7"
+        },
+        @{
+            Protocol    = "Exchange"
+            Type        = "SharePoint"
+            ProviderID  = "3a17e140-1574-4093-bad6-e19cdf1c0122"
+        },
+        @{
+            Protocol    = "OpenSearch"
+            Type        = "SharePoint"
+            ProviderID  = "3a17e140-1574-4093-bad6-e19cdf1c0121"
+        },
+        @{
+            Protocol   = "Local"
+            Type       = "People"
+            ProviderID = "e4bcc058-f133-4425-8ffc-1d70596ffd33"
+        },
+        @{
+            Protocol   = "Remote"
+            Type       = "People"
+            ProviderID = "e377caaa-fcaf-4a1b-b7a1-e69a506a07aa"
+        }
+        )
+        Write-Information "Extracting SPOSearchResultSource..."
+        $SPOSearchResultSourceModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_SPOSearchResultSource\MSFT_SPOSearchResultSource.psm1" `
+                                                        -Resolve
+
+        Import-Module $SPOSearchResultSourceModulePath | Out-Null
+        Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+        $sources =  $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
+        foreach ($source in $sources)
+        {
+            $mapping = $InfoMapping | Where-Object { $_.ProviderID -eq $source.ProviderId }
+            Write-Information "    Result Source {$($source.Name)}"
+            $DSCContent += Export-TargetResource -Name $source.Name `
+                                                -Protocol $mapping.Protocol `
+                                                -CentralAdminUrl $centralAdminUrl `
+                                                -GlobalAdminAccount $GlobalAdminAccount
+        }
     }
     #endregion
 
@@ -2335,7 +2177,7 @@ function Start-O365ConfigurationExtract
                                                         -ChildPath "..\DSCResources\MSFT_SPOSearchManagedProperty\MSFT_SPOSearchManagedProperty.psm1" `
                                                         -Resolve
 
-        $catch = Import-Module $SPOSearchManagedPropertyModulePath
+        Import-Module $SPOSearchManagedPropertyModulePath | Out-Null
         Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
         $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
         $properties =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
@@ -2401,7 +2243,7 @@ function Start-O365ConfigurationExtract
                                         -ChildPath "..\DSCResources\MSFT_SPOSite\MSFT_SPOSite.psm1" `
                                         -Resolve
 
-        $catch = Import-Module $SPOSiteModulePath
+        Import-Module $SPOSiteModulePath | Out-Null
 
         Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
         $sites = Get-SPOSite
@@ -2416,6 +2258,9 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    $Teams = Get-Team
+
     #region "TeamsTeam"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsTeam"))
     {
@@ -2424,16 +2269,13 @@ function Start-O365ConfigurationExtract
                                     -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
                                     -Resolve
 
-        $catch = Import-Module $TeamsModulePath
-
-        Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-        $Teams = Get-Team
+        Import-Module $TeamsModulePath | Out-Null
 
         foreach ($team in $teams)
         {
             Write-Information "    Team {$($team.DisplayName)}"
             $DSCContent += Export-TargetResource -DisplayName $team.DisplayName `
-                                                -GlobalAdminAccount $GlobalAdminAccount
+                                                 -GlobalAdminAccount $GlobalAdminAccount
         }
     }
     #endregion
@@ -2446,18 +2288,18 @@ function Start-O365ConfigurationExtract
                                         -ChildPath "..\DSCResources\MSFT_TeamsChannel\MSFT_TeamsChannel.psm1" `
                                         -Resolve
 
-        $catch = Import-Module $TeamsChannelModulePath
+        Import-Module $TeamsChannelModulePath | Out-Null
 
-        foreach ($team in $teams)
+        foreach ($team in $Teams)
         {
             $channels = Get-TeamChannel -GroupId $team.GroupId
 
             foreach ($channel in $channels)
             {
                 Write-Information "    Team Channel {$($channel.DisplayName)}"
-                $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-                                                    -DisplayName $channel.DisplayName `
-                                                    -GlobalAdminAccount $GlobalAdminAccount
+                $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
+                                                     -DisplayName $channel.DisplayName `
+                                                     -GlobalAdminAccount $GlobalAdminAccount
             }
         }
     }
@@ -2471,13 +2313,13 @@ function Start-O365ConfigurationExtract
                                     -ChildPath "..\DSCResources\MSFT_TeamsFunSettings\MSFT_TeamsFunSettings.psm1" `
                                     -Resolve
 
-        $catch = Import-Module $TeamsModulePath
+        Import-Module $TeamsModulePath | Out-Null
 
-        foreach ($team in $teams)
+        foreach ($team in $Teams)
         {
             Write-Information "    Team Fun Settings for Team {$($team.DisplayName)}"
-            $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-                                                -GlobalAdminAccount $GlobalAdminAccount
+            $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
         }
     }
     #endregion
@@ -2490,78 +2332,79 @@ function Start-O365ConfigurationExtract
                                         -ChildPath "..\DSCResources\MSFT_TeamsUser\MSFT_TeamsUser.psm1" `
                                         -Resolve
 
-        $catch = Import-Module $TeamsModulePath
+        Import-Module $TeamsModulePath | Out-Null
 
-        foreach ($team in $teams)
+        foreach ($team in $Teams)
         {
             $users = Get-TeamUser -GroupId $team.GroupId
             foreach ($user in $users)
             {
                 Write-Information "    Teams User {$($user.User)}"
-                $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-                                                    -User $user.User `
-                                                    -Role $user.Role `
-                                                    -GlobalAdminAccount $GlobalAdminAccount
+                $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
+                                                     -User $user.User `
+                                                     -Role $user.Role `
+                                                     -GlobalAdminAccount $GlobalAdminAccount
             }
         }
     }
     #endregion
-    Write-Information "Extracting TeamsMemberSettings..."
-    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                 -ChildPath "..\DSCResources\MSFT_TeamsMemberSettings\MSFT_TeamsMemberSettings.psm1" `
-                                 -Resolve
 
-    $catch = Import-Module $TeamsModulePath
-
-    foreach ($team in $teams)
+    #region TeamsMemberSettings
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamMemberSettings"))
     {
-        $teamMemberSettings = Get-TeamMemberSettings -GroupId $team.GroupId
-        Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
-        $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-                                             -AllowCreateUpdateChannels $teamMemberSettings.AllowCreateUpdateChannels `
-                                             -AllowDeleteChannels $teamMemberSettings.AllowDeleteChannels `
-                                             -AllowAddRemoveApps $teamMemberSettings.AllowAddRemoveApps `
-                                             -AllowCreateUpdateRemoveTabs $teamMemberSettings.AllowCreateUpdateRemoveTabs `
-                                             -AllowCreateUpdateRemoveConnectors $teamMemberSettings.AllowCreateUpdateRemoveConnectors `
-                                             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Information "Extracting TeamsMemberSettings..."
+        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_TeamsMemberSettings\MSFT_TeamsMemberSettings.psm1" `
+                                    -Resolve
+
+        Import-Module $TeamsModulePath | Out-Null
+
+        foreach ($team in $Teams)
+        {
+            Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
+            $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+        }
     }
+    #endregion
 
-    Write-Information "Extracting TeamsMessageSettings..."
-    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                 -ChildPath "..\DSCResources\MSFT_TeamsMessageSettings\MSFT_TeamsMessageSettings.psm1" `
-                                 -Resolve
-
-    $catch = Import-Module $TeamsModulePath
-
-    foreach ($team in $teams)
+    #region TeamsMessageSettings
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSearchManagedProperty"))
     {
-        $teamMessageSettings = Get-TeamMemberSettings -GroupId $team.GroupId
-        Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
-        $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-                                             -AllowUserEditMessages $teamMessageSettings.AllowUserEditMessages `
-                                             -AllowUserDeleteMessages $teamMessageSettings.AllowUserDeleteMessages `
-                                             -AllowOwnerDeleteMessages $teamMessageSettings.AllowOwnerDeleteMessages `
-                                             -AllowTeamMentions $teamMessageSettings.AllowTeamMentions `
-                                             -AllowChannelMentions $teamMessageSettings.AllowChannelMentions `
-                                             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Information "Extracting TeamsMessageSettings..."
+        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_TeamsMessageSettings\MSFT_TeamsMessageSettings.psm1" `
+                                    -Resolve
+
+        Import-Module $TeamsModulePath | Out-Null
+
+        foreach ($team in $Teams)
+        {
+            Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
+            $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+        }
     }
+    #endregion
 
-    Write-Information "Extracting TeamsGuestSettings..."
-    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                 -ChildPath "..\DSCResources\MSFT_TeamsGuestSettings\MSFT_TeamsGuestSettings.psm1" `
-                                 -Resolve
-
-    $catch = Import-Module $TeamsModulePath
-
-    foreach ($team in $teams)
+    #region TeamsGuestSettings
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsGuestSettings"))
     {
-        $teamGuestSettings = Get-TeamGuestSettings -GroupId $team.GroupId
-        Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
-        $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-                                             -AllowCreateUpdateChannels $teamGuestSettings.AllowCreateUpdateChannels `
-                                             -AllowDeleteChannels $teamGuestSettings.AllowDeleteChannels `
-                                             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Information "Extracting TeamsGuestSettings..."
+        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_TeamsGuestSettings\MSFT_TeamsGuestSettings.psm1" `
+                                    -Resolve
+
+        Import-Module $TeamsModulePath | Out-Null
+
+        foreach ($team in $Teams)
+        {
+            Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
+            $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+        }
     }
+    #endregion
 
     # Close the Node and Configuration declarations
     $DSCContent += "    }`r`n"

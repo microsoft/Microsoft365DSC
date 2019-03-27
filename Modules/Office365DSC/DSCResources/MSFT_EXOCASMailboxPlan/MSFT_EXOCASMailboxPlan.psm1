@@ -39,22 +39,11 @@ function Get-TargetResource
     }
 
     Write-Verbose "Get-TargetResource will attempt to retrieve CASMailboxPlan $($Identity)"
-    Write-Verbose 'Calling Connect-ExchangeOnline function:'
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*CASMailboxPlan'
-    Write-Verbose 'Global ExchangeOnlineSession status:'
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    $CmdletIsAvailable = Confirm-ImportedCmdletIsAvailable -CmdletName 'Get-CASMailboxPlan'
-    try
-    {
-        $CASMailboxPlans = Get-CASMailboxPlan
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    $CASMailboxPlans = Get-CASMailboxPlan
 
-    $CASMailboxPlan = $CASMailboxPlans | Where-Object Identity -eq $Identity
-    if (-NOT $CASMailboxPlan)
+    $CASMailboxPlan = $CASMailboxPlans | Where-Object {$_.Identity -eq $Identity}
+    if ($null -eq $CASMailboxPlan)
     {
         Write-Verbose "CASMailboxPlan $($Identity) does not exist."
         $result = $PSBoundParameters
@@ -129,28 +118,23 @@ function Set-TargetResource
     }
 
     Write-Verbose 'Entering Set-TargetResource'
-    Write-Verbose 'Calling Connect-ExchangeOnline function:'
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount -CommandsToImport '*CASMailboxPlan'
-    Write-Verbose 'Global ExchangeOnlineSession status:'
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    $CmdletIsAvailable = Confirm-ImportedCmdletIsAvailable -CmdletName 'Set-CASMailboxPlan'
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     $CASMailboxPlanParams = $PSBoundParameters
     $CASMailboxPlanParams.Remove('Ensure') | out-null
     $CASMailboxPlanParams.Remove('GlobalAdminAccount') | out-null
-    try
+
+    $CASMailboxPlans = Get-CASMailboxPlan
+    $CASMailboxPlan = $CASMailboxPlans | Where-Object {$_.Identity -eq $Identity}
+
+    if ($null -ne $CASMailboxPlan)
     {
         Write-Verbose "Setting CASMailboxPlan $Identity with values: $($CASMailboxPlanParams | Out-String)"
         Set-CASMailboxPlan @CASMailboxPlanParams
     }
-    catch
+    else
     {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+        throw "The specified CAS Mailbox Plan {$($Identity)} doesn't exist"
     }
-
-    Write-Verbose 'Closing Remote PowerShell Sessions'
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    Write-Verbose 'Global ExchangeOnlineSession status: '
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
 }
 
 function Test-TargetResource
@@ -198,10 +182,6 @@ function Test-TargetResource
     if ($TestResult)
     {
         Write-Verbose 'Test-TargetResource returned True'
-        Write-Verbose 'Closing Remote PowerShell Sessions'
-        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-        Write-Verbose 'Global ExchangeOnlineSession status: '
-        Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     }
     else
     {
@@ -226,8 +206,6 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    Write-Verbose 'Closing Remote PowerShell Sessions'
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        EXOCASMailboxPlan " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
