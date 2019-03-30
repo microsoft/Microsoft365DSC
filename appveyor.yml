@@ -15,12 +15,6 @@ install:
         Install-Module SharePointPnPPowerShellOnline -MinimumVersion 3.5.1901.0 -Force
         Install-Module AzureAD -MinimumVersion 2.0.2.4 -Force
 
-        $webClient = new-object System.Net.WebClient
-        $url = "https://github.com/Microsoft/Office365DSC/blob/Dev/Modules/Office365DSC/Dependencies/SharePointOnlineManagementShell_8525-1200_x64_en-us.msi?raw=true"
-        $path = $PSScriptRoot + "\SharePointOnlineManagementShell.msi"
-        $webClient.DownloadFile($url, $path)
-        msiexec /i $path /quiet /qn /norestart
-
         Install-Module Microsoft.Online.SharePoint.PowerShell -RequiredVersion 16.0.8316.0 -Force
         Import-Module Microsoft.Online.SharePoint.PowerShell -Force
         Import-Module SharePointPnpPowerShellOnline
