@@ -97,7 +97,7 @@ function Set-TargetResource
 
     $team = Get-TeamByName $TeamName
 
-    Write-Verbose -Message "Retrieve team by GroupId: $($team.GroupId)"
+    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("TeamName")
