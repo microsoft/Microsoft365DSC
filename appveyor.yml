@@ -9,6 +9,7 @@ install:
         $moduleName = 'Office365DSC'
         $mainModuleFolder = "Modules\$moduleName"
         Install-Module ReverseDSC -MinimumVersion 1.9.2.13 -Force
+        Install-Module AzureAD -Force
         Install-Module MSOnline -MinimumVersion 1.1.183.17 -Force
         Install-Module MicrosoftTeams -MinimumVersion 0.9.6 -Force
         Install-Module SharePointPnPPowerShellOnline -MinimumVersion 3.5.1901.0 -Force
