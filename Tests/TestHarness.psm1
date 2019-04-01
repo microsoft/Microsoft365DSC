@@ -38,7 +38,7 @@ function Invoke-TestHarness
         $testResultSettings.Add('OutputFormat', 'NUnitXml' )
         $testResultSettings.Add('OutputFile', $TestResultsFile)
     }
-    Import-Module -Name "$repoDir\modules\Office365DSC\Office365DSC.psd1"
+    #Import-Module -Name "$repoDir\modules\Office365DSC\Office365DSC.psd1"
     $testsToRun = @()
 
     # Run Unit Tests
