@@ -1,4 +1,4 @@
-function Show-O365GUI
+﻿function Show-O365GUI
 {
     try
     {
@@ -558,3 +558,4 @@ function SelectComponentsForMode($panelMain, $mode){
         catch{}
     }
 }
+Show-O365GUI

@@ -1685,6 +1685,8 @@ function Start-O365ConfigurationExtract
         [System.String[]]
         $ComponentsToExtract
     )
+    $filesToDownload = @() # List of files to download in the destination folder;
+
     $InformationPreference = "Continue"
     $VerbosePreference = "SilentlyContinue"
     $WarningPreference = "SilentlyContinue"
@@ -2113,6 +2115,32 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region SPOApp
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOApp"))
+    {
+        Write-Information "Extracting SPOApp..."
+        $SPOAppModulePath = Join-Path -Path $PSScriptRoot `
+                                                     -ChildPath "..\DSCResources\MSFT_SPOApp\MSFT_SPOApp.psm1" `
+                                                     -Resolve
+
+        Import-Module $SPOAppModulePath | Out-Null
+        Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        $allApps = Get-PnPApp
+        $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
+        $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "").Replace($tenantAppCatalogUrl.Split('/')[0], "")
+        foreach ($app in $allApps)
+        {
+            Write-Information "    - App {$($app.Title)}"
+            $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $app.title + ".app"
+            $filesToDownload += @{Url = $appInstanceUrl; Site = $tenantAppCatalogUrl}
+            $DSCContent += Export-TargetResource -Title $app.Title `
+                                                -Path "Bogus" `
+                                                -CentralAdminUrl $centralAdminUrl `
+                                                -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
     #region "SPOSearchResultSource"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSearchResultSource"))
     {
@@ -2455,6 +2483,25 @@ function Start-O365ConfigurationExtract
     {
         $OutputDSCPath += "\"
     }
+
+    #region Download all identified files
+    foreach ($file in $filesToDownload)
+    {
+        $fileName = $file.Url.Split('/')[$file.Url.Split('/').Length -1]
+        Write-Information "Connecting via PnP to site  {$($file.Site)}"
+        try
+        {
+            Connect-PnpOnline -Url $($file.Site) -CurrentCredentials:$false -Credentials $GlobalAdminAccount
+        }
+        catch
+        {
+            Write-Error -Message $_
+        }
+
+        Write-Information "Downloading {$($file.Url)} into {$($OutPutDSCPath + $fileName)}"
+        Get-PnPFile -Url $file.Url -Path $OutputDSCPath -Filename $fileName -AsFile
+    }
+    #endregion
 
     $outputDSCFile = $OutputDSCPath + "Office365TenantConfig.ps1"
     $DSCContent | Out-File $outputDSCFile
