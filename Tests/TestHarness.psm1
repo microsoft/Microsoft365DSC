@@ -15,7 +15,7 @@ function Invoke-TestHarness
         [Switch]
         $IgnoreCodeCoverage
     )
-    
+
 
     Write-Verbose -Message 'Commencing all Office365DSC tests'
 
@@ -25,7 +25,7 @@ function Invoke-TestHarness
     if ($IgnoreCodeCoverage.IsPresent -eq $false)
     {
         Get-ChildItem -Path "$repoDir\modules\Office365DSC\DSCResources\**\*.psm1" -Recurse | ForEach-Object {
-            if ($_.FullName -notlike '*\DSCResource.Tests\*') 
+            if ($_.FullName -notlike '*\DSCResource.Tests\*')
             {
                 $testCoverageFiles += $_.FullName
             }
@@ -33,7 +33,7 @@ function Invoke-TestHarness
     }
 
     $testResultSettings = @{}
-    if ([String]::IsNullOrEmpty($TestResultsFile) -eq $false) 
+    if ([String]::IsNullOrEmpty($TestResultsFile) -eq $false)
     {
         $testResultSettings.Add('OutputFormat', 'NUnitXml' )
         $testResultSettings.Add('OutputFile', $TestResultsFile)
