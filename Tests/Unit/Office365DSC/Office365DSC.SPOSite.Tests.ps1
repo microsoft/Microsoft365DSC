@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [string] 
+    [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
                                          -ChildPath "..\Stubs\Office365.psm1" `
                                          -Resolve)
@@ -24,27 +24,47 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        # Test contexts 
+        # Test contexts
         Context -Name "When the site doesn't already exist" -Fixture {
             $testParams = @{
-                Url = "https://contoso.com/sites/TestSite"
-                Owner = "testuser@contoso.com"
-                StorageQuota = 1000
-                CentralAdminUrl = "https://contoso-admin.sharepoint.com"
-                GlobalAdminAccount = $GlobalAdminAccount
-                Ensure= "Present"
+                Url                                         = "https://contoso.com/sites/TestSite"
+                Owner                                       = "testuser@contoso.com"
+                StorageQuota                                = 1000
+                CentralAdminUrl                             = "https://contoso-admin.sharepoint.com"
+                GlobalAdminAccount                          = $GlobalAdminAccount
+                Ensure                                      = "Present"
+                LocaleId                                    = 1033
+                Template                                    = "STS#3"
+                CompatibilityLevel                          = 15
+                Title                                       = "TestSite"
+                DenyAddAndCustomizePages                    = $false
+                StorageQuotaWarningLevel                    = 25574400
+                LockState                                   = "Unlock"
+                SharingCapability                           = "Disabled"
+                CommentsOnSitePagesDisabled                 = $false
+                SocialBarOnSitePagesDisabled                = $false
+                DisableAppViews                             = "NotDisabled"
+                DisableCompanyWideSharingLinks              = "NotDisabled"
+                DisableFlows                                = "NotDisabled"
+                RestrictedToGeo                             = "BlockMoveOnly"
+                SharingDomainRestrictionMode                = "None"
+                SharingAllowedDomainList                    = ""
+                SharingBlockedDomainList                    = ""
+                ShowPeoplePickerSuggestionsForGuestUsers    = $false
+                DefaultSharingLinkType                      = "None"
+                DefaultLinkPermission                       = "None"
             }
 
-            Mock -CommandName New-SPOSite -MockWith { 
+            Mock -CommandName New-SPOSite -MockWith {
                 return @{Url = $null}
             }
 
-            Mock -CommandName Get-SPOSite -MockWith { 
+            Mock -CommandName Get-SPOSite -MockWith {
                 return $null
             }
-            
+
             It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
             }
 
             It "Should return false from the Test method" {
@@ -58,22 +78,64 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "The site already exists" -Fixture {
             $testParams = @{
-                Url = "https://contoso.com/sites/TestSite"
-                Owner = "testuser@contoso.com"
-                StorageQuota = 1000
-                CentralAdminUrl = "https://contoso-admin.sharepoint.com"
-                GlobalAdminAccount = $GlobalAdminAccount
+                Url                                         = "https://contoso.com/sites/TestSite"
+                Owner                                       = "testuser@contoso.com"
+                StorageQuota                                = 1000
+                CentralAdminUrl                             = "https://contoso-admin.sharepoint.com"
+                GlobalAdminAccount                          = $GlobalAdminAccount
+                LocaleId                                    = 1033
+                Template                                    = "STS#3"
+                CompatibilityLevel                          = 15
+                Title                                       = "TestSite"
+                DenyAddAndCustomizePages                    = $false
+                StorageQuotaWarningLevel                    = 25574400
+                LockState                                   = "Unlock"
+                SharingCapability                           = "Disabled"
+                CommentsOnSitePagesDisabled                 = $false
+                SocialBarOnSitePagesDisabled                = $false
+                DisableAppViews                             = "NotDisabled"
+                DisableCompanyWideSharingLinks              = "NotDisabled"
+                DisableFlows                                = "NotDisabled"
+                RestrictedToGeo                             = "BlockMoveOnly"
+                SharingDomainRestrictionMode                = "None"
+                SharingAllowedDomainList                    = ""
+                SharingBlockedDomainList                    = ""
+                ShowPeoplePickerSuggestionsForGuestUsers    = $false
+                DefaultSharingLinkType                      = "None"
+                DefaultLinkPermission                       = "None"
             }
 
-            Mock -CommandName Get-SPOSite -MockWith { 
+            Mock -CommandName Get-SPOSite -MockWith {
                 return @{
-                    Url = "https://contoso.com/sites/TestSite"
-                    Ensure = "Present"
+                    Url                                         = "https://contoso.com/sites/TestSite"
+                    Owner                                       = "testuser@contoso.com"
+                    StorageQuota                                = 1000
+                    Ensure                                      = "Present"
+                    LocaleId                                    = 1033
+                    Template                                    = "STS#3"
+                    CompatibilityLevel                          = 15
+                    Title                                       = "TestSite"
+                    DenyAddAndCustomizePages                    = $false
+                    StorageQuotaWarningLevel                    = 25574400
+                    LockState                                   = "Unlock"
+                    SharingCapability                           = "Disabled"
+                    CommentsOnSitePagesDisabled                 = $false
+                    SocialBarOnSitePagesDisabled                = $false
+                    DisableAppViews                             = "NotDisabled"
+                    DisableCompanyWideSharingLinks              = "NotDisabled"
+                    DisableFlows                                = "NotDisabled"
+                    RestrictedToGeo                             = "BlockMoveOnly"
+                    SharingDomainRestrictionMode                = "None"
+                    SharingAllowedDomainList                    = ""
+                    SharingBlockedDomainList                    = ""
+                    ShowPeoplePickerSuggestionsForGuestUsers    = $false
+                    DefaultSharingLinkType                      = "None"
+                    DefaultLinkPermission                       = "None"
                 }
             }
-            
+
             It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
             It "Should return true from the Test method" {
@@ -88,10 +150,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-SPOSite -MockWith { 
+            Mock -CommandName Get-SPOSite -MockWith {
                 return @{
-                    Url = "https://contoso.com/sites/TestSite"
-                    Ensure = "Present"
+                    Url                                         = "https://contoso.com/sites/TestSite"
+                    Owner                                       = "testuser@contoso.com"
+                    StorageQuota                                = 1000
+                    Ensure                                      = "Present"
+                    LocaleId                                    = 1033
+                    Template                                    = "STS#3"
+                    CompatibilityLevel                          = 15
+                    Title                                       = "TestSite"
+                    DenyAddAndCustomizePages                    = $false
+                    StorageQuotaWarningLevel                    = 25574400
+                    LockState                                   = "Unlock"
+                    SharingCapability                           = "Disabled"
+                    CommentsOnSitePagesDisabled                 = $false
+                    SocialBarOnSitePagesDisabled                = $false
+                    DisableAppViews                             = "NotDisabled"
+                    DisableCompanyWideSharingLinks              = "NotDisabled"
+                    DisableFlows                                = "NotDisabled"
+                    RestrictedToGeo                             = "BlockMoveOnly"
+                    SharingDomainRestrictionMode                = "None"
+                    SharingAllowedDomainList                    = ""
+                    SharingBlockedDomainList                    = ""
+                    ShowPeoplePickerSuggestionsForGuestUsers    = $false
+                    DefaultSharingLinkType                      = "None"
+                    DefaultLinkPermission                       = "None"
                 }
             }
 

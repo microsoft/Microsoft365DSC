@@ -83,7 +83,7 @@ function Get-TargetResource
         [System.String]
         [ValidateSet("Unknown", "Disabled","NotDisabled")]
         $DisableCompanyWideSharingLinks,
-        
+
         [Parameter()]
         [System.String]
         [ValidateSet("Unknown", "Disabled","NotDisabled")]
@@ -91,12 +91,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled","NotDisabled")]
-        $DisabledWebpartIds,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("BlockMoveOnly", "BlockFull","Unknown")]
+        [ValidateSet("BlockMoveOnly", "BlockFull")]
         $RestrictedToGeo,
 
         [Parameter()]
@@ -126,17 +121,17 @@ function Get-TargetResource
         [ValidateSet("None", "View","Edit")]
         $DefaultLinkPermission,
 
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -163,7 +158,6 @@ function Get-TargetResource
         DisableAppViews                             = $null
         DisableCompanyWideSharingLinks              = $null
         DisableFlows                                = $null
-        DisabledWebpartIds                          = $null
         RestrictedToGeo                             = $null
         SharingAllowedDomainList                    = $null
         SharingBlockedDomainList                    = $null
@@ -205,7 +199,6 @@ function Get-TargetResource
             DisableAppViews                             = $site.DisableAppViews
             DisableCompanyWideSharingLinks              = $site.DisableCompanyWideSharingLinks
             DisableFlows                                = $site.DisableFlows
-            DisabledWebpartIds                          = $site.DisabledWebpartIds
             RestrictedToGeo                             = $site.RestrictedToGeo
             SharingAllowedDomainList                    = $site.SharingAllowedDomainList
             SharingBlockedDomainList                    = $site.SharingBlockedDomainList
@@ -264,7 +257,7 @@ function Set-TargetResource
         [Parameter()]
         [System.UInt32]
         $TimeZoneId,
-        
+
         [Parameter()]
         [System.Boolean]
         $AllowSelfServiceUpgrade,
@@ -308,7 +301,7 @@ function Set-TargetResource
         [System.String]
         [ValidateSet("Unknown", "Disabled","NotDisabled")]
         $DisableCompanyWideSharingLinks,
-        
+
         [Parameter()]
         [System.String]
         [ValidateSet("Unknown", "Disabled","NotDisabled")]
@@ -316,12 +309,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled","NotDisabled")]
-        $DisabledWebpartIds,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("BlockMoveOnly", "BlockFull","Unknown")]
+        [ValidateSet("BlockMoveOnly", "BlockFull")]
         $RestrictedToGeo,
 
         [Parameter()]
@@ -351,17 +339,17 @@ function Set-TargetResource
         [ValidateSet("None", "View","Edit")]
         $DefaultLinkPermission,
 
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -377,11 +365,11 @@ function Set-TargetResource
             Write-Verbose "Restoring Delete SPOSite $($Url)"
             Restore-SPODeletedSite $deletedSite
         }
-        else 
+        else
         {
-            try 
+            try
             {
-                $siteExists = get-SPOSite $Url
+                $siteExists = Get-SPOSite $Url
             }
             catch
             {
@@ -405,7 +393,6 @@ function Set-TargetResource
                 $CurrentParameters.Remove("DisableAppViews")
                 $CurrentParameters.Remove("DisableCompanyWideSharingLinks")
                 $CurrentParameters.Remove("DisableFlows")
-                $CurrentParameters.Remove("DisabledWebpartIds")
                 $CurrentParameters.Remove("RestrictedToGeo")
                 $CurrentParameters.Remove("SharingAllowedDomainList")
                 $CurrentParameters.Remove("SharingBlockedDomainList")
@@ -417,7 +404,7 @@ function Set-TargetResource
             }
             else
             {
-                Write-Verbose "Configuring site collection $Url"
+                Write-Verbose -Message "Configuring site collection $Url"
                 if($siteExists.LockState -eq "NoAccess")
                 {
                     $CurrentParameters = $PSBoundParameters
@@ -435,7 +422,6 @@ function Set-TargetResource
                     $CurrentParameters.Remove("DisableAppViews")
                     $CurrentParameters.Remove("DisableCompanyWideSharingLinks")
                     $CurrentParameters.Remove("DisableFlows")
-                    $CurrentParameters.Remove("DisabledWebpartIds")
                     $CurrentParameters.Remove("RestrictedToGeo")
                     $CurrentParameters.Remove("SharingAllowedDomainList")
                     $CurrentParameters.Remove("SharingBlockedDomainList")
@@ -457,7 +443,58 @@ function Set-TargetResource
                 else
                 {
                     $CurrentParameters = $PSBoundParameters
-                    $CurrentParameters = $PSBoundParameters
+                    if($CurrentParameters.SharingCapability -and $CurrentParameters.DenyAddAndCustomizePages)
+                    {
+                        Write-Warning -Message "Setting the DenyAddAndCustomizePages and the SharingCapability property via Set-SPOSite at the same time might cause the DenyAddAndCustomizePages property not to be configured as desired."
+                    }
+                    if($CurrentParameters.StorageQuotaWarningLevel)
+                    {
+                        Write-Warning -Message "StorageQuotaWarningLevel can not be configured via Set-SPOSite"
+                    }
+                    if($SharingDomainRestrictionMode -eq "")
+                    {
+                        Write-Verbose -Message "SharingDomainRestrictionMode is empty. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
+                        $CurrentParameters.Remove("SharingAllowedDomainList")
+                        $CurrentParameters.Remove("SharingBlockedDomainList")
+                    }
+                    if($SharingDomainRestrictionMode -eq "None")
+                    {
+                        Write-Verbose -Message "SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
+                        $CurrentParameters.Remove("SharingAllowedDomainList")
+                        $CurrentParameters.Remove("SharingBlockedDomainList")
+                    }
+                    elseif ($SharingDomainRestrictionMode -eq "AllowList")
+                    {
+                        Write-Verbose -Message "SharingDomainRestrictionMode is set to AllowList. For that SharingBlockedDomainList cannot be configured"
+                        $CurrentParameters.Remove("SharingBlockedDomainList")
+                        if($SharingAllowedDomainList -eq "")
+                        {
+                            Write-Verbose -Message "No bllowed domains specified. Not taking any action"
+                            $CurrentParameters.Remove("SharingAllowedDomainList")
+                            $CurrentParameters.Remove("SharingDomainRestrictionMode")
+                        }
+                    }
+                    elseif($SharingDomainRestrictionMode -eq "BlockList")
+                    {
+                        Write-Verbose -Message "SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured"
+                        $CurrentParameters.Remove("SharingAllowedDomainList")
+                        if($SharingBlockedDomainList -eq "")
+                        {
+                            Write-Verbose -Message "No blocked domains specified. Not taking any action"
+                            $CurrentParameters.Remove("SharingBlockedDomainList")
+                            $CurrentParameters.Remove("SharingDomainRestrictionMode")
+                        }
+                    }
+                    if(($siteExists.SharingCapability -ne "ExternalUserAndGuestSharing") -or ((Get-SPOTenant).SharingCapability -ne "ExternalUserAndGuestSharing") -and ($DefaultSharingLinkType -eq "AnonymousAccess"))
+                    {
+                        write-verbose -Message "Anonymous sharing has to be enabled in the SharingCapability on site and tenant level first before DefaultSharingLinkType can be set to Anonymous Access"
+                        $CurrentParameters.Remove("DefaultSharingLinkType")
+                    }
+                    if((get-spotenant).showPeoplePickerSuggestionsForGuestUsers -eq $false)
+                    {
+                        Write-Verbose -Message "ShowPeoplePickerSuggestionsForGuestUsers for this site cannot be set since it is set to false on tenant level"
+                        $CurrentParameters.Remove("showPeoplePickerSuggestionsForGuestUsers")
+                    }
                     $CurrentParameters.Remove("CentralAdminUrl")
                     $CurrentParameters.Remove("GlobalAdminAccount")
                     $CurrentParameters.Remove("Ensure")
@@ -467,9 +504,7 @@ function Set-TargetResource
                     $CurrentParameters.Remove("LocaleId")
                     Set-SPOSite -Identity $Url @CurrentParameters -NoWait
                 }
-                
             }
-            
         }
     }
 }
@@ -515,7 +550,7 @@ function Test-TargetResource
         [Parameter()]
         [System.UInt32]
         $TimeZoneId,
-        
+
         [Parameter()]
         [System.Boolean]
         $AllowSelfServiceUpgrade,
@@ -535,7 +570,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly","ExternalUserSharingOnly","ExternalUserAndGuestSharing")]
+        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
         $SharingCapability,
 
         [Parameter()]
@@ -552,27 +587,22 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled","NotDisabled")]
+        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
         $DisableAppViews,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled","NotDisabled")]
+        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
         $DisableCompanyWideSharingLinks,
-        
+
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled","NotDisabled")]
+        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
         $DisableFlows,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled","NotDisabled")]
-        $DisabledWebpartIds,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("BlockMoveOnly", "BlockFull","Unknown")]
+        [ValidateSet("BlockMoveOnly", "BlockFull")]
         $RestrictedToGeo,
 
         [Parameter()]
@@ -585,7 +615,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "AllowList","BlockList")]
+        [ValidateSet("None", "AllowList", "BlockList")]
         $SharingDomainRestrictionMode,
 
         [Parameter()]
@@ -594,25 +624,25 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "AnonymousAccess","Internal","Direct")]
+        [ValidateSet("None", "AnonymousAccess", "Internal", "Direct")]
         $DefaultSharingLinkType,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "View","Edit")]
+        [ValidateSet("None", "View", "Edit")]
         $DefaultLinkPermission,
 
-        [Parameter()] 
-        [ValidateSet("Present", "Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -621,34 +651,33 @@ function Test-TargetResource
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("Ensure", `
-                        "Url", `
-                        "Title", `
-                        "Owner", `
-                        "StorageQuota", `
-                        "CompatibilityLevel", `
-                        "LocaleId", `
-                        "ResourceQuota", `
-                        "Template", `
-                        "TimeZoneId", `
-                        "AllowSelfServiceUpgrade", `
-                        "DenyAddAndCustomizePages", `
-                        "LockState", `
-                        "ResourceQuotaWarningLevel", `
-                        "SharingCapability", `
-                        "StorageQuotaWarningLevel", `
-                        "CommentsOnSitePagesDisabled", `
-                        "SocialBarOnSitePagesDisabled", `
-                        "DisableAppViews", `
-                        "DisableCompanyWideSharingLinks", `
-                        "DisableFlows", `
-                        "DisabledWebpartIds", `
-                        "RestrictedToGeo", `
-                        "SharingAllowedDomainList", `
-                        "SharingBlockedDomainList", `
-                        "SharingDomainRestrictionMode", `
-                        "ShowPeoplePickerSuggestionsForGuestUsers", `
-                        "DefaultSharingLinkType", `
-                        "DefaultLinkPermission"
+            "Url", `
+            "Title", `
+            "Owner", `
+            "StorageQuota", `
+            "CompatibilityLevel", `
+            "LocaleId", `
+            "ResourceQuota", `
+            "Template", `
+            "TimeZoneId", `
+            "AllowSelfServiceUpgrade", `
+            "DenyAddAndCustomizePages", `
+            "LockState", `
+            "ResourceQuotaWarningLevel", `
+            "SharingCapability", `
+            "StorageQuotaWarningLevel", `
+            "CommentsOnSitePagesDisabled", `
+            "SocialBarOnSitePagesDisabled", `
+            "DisableAppViews", `
+            "DisableCompanyWideSharingLinks", `
+            "DisableFlows", `
+            "RestrictedToGeo", `
+            "SharingAllowedDomainList", `
+            "SharingBlockedDomainList", `
+            "SharingDomainRestrictionMode", `
+            "ShowPeoplePickerSuggestionsForGuestUsers", `
+            "DefaultSharingLinkType", `
+            "DefaultLinkPermission"
     )
 }
 
@@ -666,8 +695,8 @@ function Export-TargetResource
         [System.String]
         $CentralAdminUrl,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
