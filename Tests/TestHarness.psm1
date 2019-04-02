@@ -16,6 +16,7 @@ function Invoke-TestHarness
         $IgnoreCodeCoverage
     )
 
+
     Write-Verbose -Message 'Commencing all Office365DSC tests'
 
     $repoDir = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
