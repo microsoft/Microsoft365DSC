@@ -34,51 +34,33 @@ function Get-TargetResource
         UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabled
     }
 
-    try
+    Write-Verbose -Message 'Getting O365AdminAuditLogConfig'
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    $GetResults = Get-AdminAuditLogConfig
+    if (-NOT $GetResults)
     {
-        Write-Verbose -Message 'Getting O365AdminAuditLogConfig'
-        Write-Verbose "Calling Connect-ExchangeOnline function:"
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-        Write-Verbose "Global ExchangeOnlineSession status:"
-        Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-        Write-Verbose "Calling Connect-SecurityAndComplianceCenter function:"
-        Connect-SecurityAndComplianceCenter -GlobalAdminAccount $GlobalAdminAccount
-        Write-Verbose "Global SecurityAndComplianceCenterSession status:"
-        Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'SecurityAndComplianceCenter' | Out-String)"
-        $GetResults = Get-AdminAuditLogConfig
-        if (-NOT $GetResults)
+        Write-Warning 'Unable to determine Unified Audit Log Ingestion State.'
+        Write-Verbose "Returning Get-TargetResource NULL Result"
+        return $nullReturn
+    }
+    else
+    {
+        if ($GetResults.UnifiedAuditLogIngestionEnabled)
         {
-            Write-Warning 'Unable to determine Unified Audit Log Ingestion State.'
-            Write-Verbose "Returning Get-TargetResource NULL Result"
-            return $nullReturn
+            $UnifiedAuditLogIngestionEnabledReturnValue = 'Enabled'
         }
         else
         {
-            if ($GetResults.UnifiedAuditLogIngestionEnabled)
-            {
-                $UnifiedAuditLogIngestionEnabledReturnValue = 'Enabled'
-            }
-            else
-            {
-                $UnifiedAuditLogIngestionEnabledReturnValue = 'Disabled'
-            }
-
-            $Result = @{
-                IsSingleInstance                = $IsSingleInstance
-                Ensure                          = 'Present'
-                GlobalAdminAccount              = $GlobalAdminAccount
-                UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
-            }
-            Write-Verbose "Returning Get-TargetResource Result"
-            return $Result
+            $UnifiedAuditLogIngestionEnabledReturnValue = 'Disabled'
         }
 
-    }
-    catch
-    {
-        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-        $ExceptionMessage = $_.Exception
-        throw $ExceptionMessage
+        $Result = @{
+            IsSingleInstance                = $IsSingleInstance
+            Ensure                          = 'Present'
+            GlobalAdminAccount              = $GlobalAdminAccount
+            UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
+        }
+        return $Result
     }
 }
 
@@ -106,19 +88,12 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose -Message 'Setting O365AdminAuditLogConfig'
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    Write-Verbose "Calling Connect-SecurityAndComplianceCenter function:"
-    Connect-SecurityAndComplianceCenter -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Global SecurityAndComplianceCenterSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'SecurityAndComplianceCenter' | Out-String)"
     if ('Absent' -eq $Ensure)
     {
         throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
     }
 
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
     {
         Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $true
@@ -127,9 +102,6 @@ function Set-TargetResource
     {
         Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $false
     }
-
-    Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
 }
 
 function Test-TargetResource
@@ -156,26 +128,12 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message 'Testing O365AdminAuditLogConfig'
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    Write-Verbose "Calling Connect-SecurityAndComplianceCenter function:"
-    Connect-SecurityAndComplianceCenter -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Global SecurityAndComplianceCenterSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'SecurityAndComplianceCenter' | Out-String)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
     Write-Verbose "Test-TargetResource CurrentValues: "
     Write-Verbose "$($CurrentValues | Out-String)"
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @('UnifiedAuditLogIngestionEnabled')
-    if ($TestResult)
-    {
-        Write-Verbose "Closing Remote PowerShell Sessions"
-        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    }
 
     return $TestResult
 
@@ -205,18 +163,8 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $IsSingleInstance = 'Yes'
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    Write-Verbose "Calling Connect-SecurityAndComplianceCenter function:"
-    Connect-SecurityAndComplianceCenter -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Global SecurityAndComplianceCenterSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'SecurityAndComplianceCenter' | Out-String)"
     $result = Get-TargetResource @PSBoundParameters
-    Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
+
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        O365AdminAuditLogConfig " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

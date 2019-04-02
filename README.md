@@ -19,7 +19,10 @@ bits of the module, you need to make sure you have PowerShellGet
 version of the PowerShellGet module simply run the following line of
 PowerShell code from a machine that has internet connectivity:
 
+```powershell
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 Install-Module PowerShellGet -Force
+```
 
 You will need to close the PowerShell session and re-open a new one
 after installing the latest PowerShellGet version in order to be
@@ -27,4 +30,6 @@ allowed to acquire Alpha releases of the Office365DSC module. Once
 done, run the following line of PowerShell to acquire the latest
 Office365DSC module's alpha release from the PowerShell Gallery:
 
+```powershell
 Install-Module -Name Office365DSC -AllowPrerelease -Force
+```

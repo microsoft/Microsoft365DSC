@@ -34,7 +34,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
 
-            Mock -CommandName Get-Team -MockWith {
+            Mock -CommandName Get-TeamByName -MockWith {
                 return @{
                     DisplayName = "TestTeam"
                     GroupID     = "12345-12345-12345-12345-12345"
@@ -79,7 +79,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-Team -MockWith {
+            Mock -CommandName Get-TeamByName -MockWith {
                 return @{
                     DisplayName = "TestTeam"
                     GroupID     = "12345-12345-12345-12345-12345"
@@ -118,7 +118,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-Team -MockWith {
+           Mock -CommandName Get-TeamByName -MockWith {
                 return @{
                     DisplayName = "TestTeam"
                     GroupID     = "12345-12345-12345-12345-12345"
@@ -149,7 +149,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-Team -MockWith {
+            Mock -CommandName Get-TeamByName -MockWith {
                 return @{
                     DisplayName = "TestTeam"
                     GroupID     = "12345-12345-12345-12345-12345"
@@ -186,7 +186,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-Team -MockWith {
+            Mock -CommandName Get-TeamByName -MockWith {
                 return @{
                     DisplayName = "TestTeam"
                     GroupID     = "12345-12345-12345-12345-12345"
@@ -214,7 +214,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-Team -MockWith {
+            Mock -CommandName Get-TeamByName -MockWith {
                 return @{
                     DisplayName = "TestTeam"
                     GroupID     = "12345-12345-12345-12345-12345"

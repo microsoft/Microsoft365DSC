@@ -1,6 +1,5 @@
 version: 1.0.0.{build}
 
-
 install:
     - git clone https://github.com/PowerShell/DscResource.Tests
 
@@ -10,12 +9,13 @@ install:
         $moduleName = 'Office365DSC'
         $mainModuleFolder = "Modules\$moduleName"
         Install-Module ReverseDSC -MinimumVersion 1.9.2.13 -Force
+        Install-Module AzureAD -Force
         Install-Module MSOnline -MinimumVersion 1.1.183.17 -Force
         Install-Module MicrosoftTeams -MinimumVersion 0.9.6 -Force
         Install-Module SharePointPnPPowerShellOnline -MinimumVersion 3.5.1901.0 -Force
 
         $webClient = new-object System.Net.WebClient
-        $url = "https://github.com/Microsoft/Office365DSC/blob/Dev/Modules/Office365DSC/Dependencies/SharePointOnlineManagementShell_8525-1200_x64_en-us.msi?raw=true"
+        $url = "https://github.com/Microsoft/Office365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_8615-1200_x64_en-us.msi?raw=true"
         $path = $PSScriptRoot + "\SharePointOnlineManagementShell.msi"
         $webClient.DownloadFile($url, $path)
         msiexec /i $path /quiet /qn /norestart
