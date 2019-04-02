@@ -14,8 +14,7 @@ Reference: https://docs.microsoft.com/en-us/powershell/module/exchange/advanced-
 
     Ensure
       - Required: No (Defaults to 'Present')
-      - Description: `Present` is the only value accepted.
-          Configurations using `Ensure = 'Absent'` will throw an Error!
+      - Description: Specifies if the configuration should be `Present` or `Absent`
 
     GlobalAdminAccount
       - Required: Yes
@@ -23,7 +22,7 @@ Reference: https://docs.microsoft.com/en-us/powershell/module/exchange/advanced-
 
     Identity
       - Required: Yes
-      - Description: Domain name of the AcceptedDomain
+      - Description: Name of the Anti-Phish Rule
 
 ## Example
 

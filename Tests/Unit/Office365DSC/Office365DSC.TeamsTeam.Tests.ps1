@@ -24,8 +24,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Test-TeamsServiceConnection -MockWith {
         }
 
-        Mock Invoke-ExoCommand {
-            return Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $Arguments -NoNewScope
+
+        Mock -CommandName Connect-ExchangeOnline -MockWith {
+
         }
 
         # Test contexts

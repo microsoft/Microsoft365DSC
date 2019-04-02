@@ -74,11 +74,8 @@ function Get-TargetResource
     if (-NOT $AntiPhishRule)
     {
         Write-Verbose "AntiPhishRule $($Identity) does not exist."
-        $result = @{
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
-            Identity           = $Identity
-        }
+        $result = $PSBoundParameters
+        $result.Ensure = 'Absent'
         return $result
     }
     else
@@ -177,74 +174,37 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose 'Entering Set-TargetResource'
-    Write-Verbose 'Retrieving information about AntiPhishRule configuration'
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    try
-    {
-        $AntiPhishRules = Get-AntiPhishRule
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
+    $AntiPhishRules = Get-AntiPhishRule
 
     $AntiPhishRule = $AntiPhishRules | Where-Object Identity -eq $Identity
 
     if ( ('Present' -eq $Ensure ) -and (-NOT $AntiPhishRule) )
     {
-        try
-        {
-            NewAntiPhishRule -NewAntiPhishRuleParams $PSBoundParameters
-        }
-        catch
-        {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        }
+        New-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
     }
 
     if ( ('Present' -eq $Ensure ) -and ($AntiPhishRule) )
     {
-        try
+        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $AntiPhishRule.State) )
         {
-            if ($PSBoundParameters.Enabled -and ('Disabled' -eq $AntiPhishRule.State) )
-            {
-                # New-AntiPhishRule has the Enabled parameter, Set-AntiPhishRule does not.
-                # There doesn't appear to be any way to change the Enabled state of a rule once created.
-                Write-Verbose "Removing AntiPhishRule $($Identity) in order to change Enabled state."
-                Remove-AntiPhishRule -Identity $Identity -Confirm:$false
-                NewAntiPhishRule -NewAntiPhishRuleParams $PSBoundParameters
-            }
-            else
-            {
-                SetAntiPhishRule -SetAntiPhishRuleParams $PSBoundParameters
-            }
+            # New-AntiPhishRule has the Enabled parameter, Set-AntiPhishRule does not.
+            # There doesn't appear to be any way to change the Enabled state of a rule once created.
+            Write-Verbose "Removing AntiPhishRule $($Identity) in order to change Enabled state."
+            Remove-AntiPhishRule -Identity $Identity -Confirm:$false
+            New-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
         }
-        catch
+        else
         {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+            Set-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
         }
     }
 
     if ( ('Absent' -eq $Ensure ) -and ($AntiPhishRule) )
     {
         Write-Verbose "Removing AntiPhishRule $($Identity) "
-        try
-        {
-            Remove-AntiPhishRule -Identity $Identity -Confirm:$false
-        }
-        catch
-        {
-            Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        }
+        Remove-AntiPhishRule -Identity $Identity -Confirm:$false
     }
-
-    Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    Write-Verbose "Global ExchangeOnlineSession status: `n"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
 }
 
 function Test-TargetResource
@@ -308,17 +268,18 @@ function Test-TargetResource
     )
     Write-Verbose -Message "Testing AntiPhishRule for $($Identity)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $AntiPhishRuleTestParams = $PSBoundParameters
-    $AntiPhishRuleTestParams.Remove("GlobalAdminAccount") | out-null
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $AntiPhishRuleTestParams.Keys
+        -ValuesToCheck $ValuesToCheck.Keys
     if ($TestResult)
     {
-        Write-Verbose "Closing Remote PowerShell Sessions"
-        $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-        Write-Verbose "Global ExchangeOnlineSession status: `n"
-        Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
+        Write-Verbose 'Test-TargetResource returned True'
+    }
+    else
+    {
+        Write-Verbose 'Test-TargetResource returned False'
     }
 
     return $TestResult
@@ -343,10 +304,6 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    Write-Verbose "Closing Remote PowerShell Sessions"
-    $ClosedPSSessions = (Get-PSSession | Remove-PSSession)
-    Write-Verbose "Global ExchangeOnlineSession status: `n"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        EXOAntiPhishRule " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
