@@ -2127,7 +2127,8 @@ function Start-O365ConfigurationExtract
         Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
         $allApps = Get-PnPApp
         $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
-        $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "").Replace($tenantAppCatalogUrl.Split('/')[0], "")
+        $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
+        $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
         foreach ($app in $allApps)
         {
             Write-Information "    - App {$($app.Title)}"
@@ -2491,7 +2492,7 @@ function Start-O365ConfigurationExtract
         Write-Information "Connecting via PnP to site  {$($file.Site)}"
         try
         {
-            Connect-PnpOnline -Url $($file.Site) -CurrentCredentials:$false -Credentials $GlobalAdminAccount
+            Connect-PnpOnline -Url $($file.Site)
         }
         catch
         {
