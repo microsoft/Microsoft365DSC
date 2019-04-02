@@ -143,6 +143,112 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name "Deleted site exists" -Fixture {
+            $testParams = @{
+                Url                                      = "https://contoso.com/sites/TestSite"
+                Owner                                    = "testuser@contoso.com"
+                StorageQuota                             = 1000
+                CentralAdminUrl                          = "https://contoso-admin.sharepoint.com"
+                GlobalAdminAccount                       = $GlobalAdminAccount
+                Ensure                                   = "Present"
+                LocaleId                                 = 1033
+                Template                                 = "STS#3"
+                CompatibilityLevel                       = 15
+                Title                                    = "TestSite"
+                DenyAddAndCustomizePages                 = $false
+                StorageQuotaWarningLevel                 = 25574400
+                LockState                                = "Unlock"
+                SharingCapability                        = "Disabled"
+                CommentsOnSitePagesDisabled              = $false
+                SocialBarOnSitePagesDisabled             = $false
+                DisableAppViews                          = "NotDisabled"
+                DisableCompanyWideSharingLinks           = "NotDisabled"
+                DisableFlows                             = "NotDisabled"
+                RestrictedToGeo                          = "BlockMoveOnly"
+                SharingDomainRestrictionMode             = "None"
+                SharingAllowedDomainList                 = ""
+                SharingBlockedDomainList                 = ""
+                ShowPeoplePickerSuggestionsForGuestUsers = $false
+                DefaultSharingLinkType                   = "None"
+                DefaultLinkPermission                    = "None"
+            }
+            
+            Mock -CommandName Get-SPODeletedSite -MockWith {
+                return @{
+                    Url = "https://contoso.com/sites/TestSite"
+                }
+            }
+            Mock -CommandName Restore-SPODeletedSite -MockWith {
+                return "site restored successfully"
+            }
+            It "should restore the deleted site from the recycle bin" {
+               Set-TargetResource @testParams | Should Be "site restored successfully"
+            }
+        }
+
+        Context -Name "Site is in locked state" -Fixture {
+            $testParams = @{
+                Url                                      = "https://contoso.com/sites/TestSite"
+                Owner                                    = "testuser@contoso.com"
+                StorageQuota                             = 1000
+                CentralAdminUrl                          = "https://contoso-admin.sharepoint.com"
+                GlobalAdminAccount                       = $GlobalAdminAccount
+                Ensure                                   = "Present"
+                LocaleId                                 = 1033
+                Template                                 = "STS#3"
+                CompatibilityLevel                       = 15
+                Title                                    = "TestSite"
+                DenyAddAndCustomizePages                 = $false
+                StorageQuotaWarningLevel                 = 25574400
+                LockState                                = "NoAccess"
+                SharingCapability                        = "Disabled"
+                CommentsOnSitePagesDisabled              = $false
+                SocialBarOnSitePagesDisabled             = $false
+                DisableAppViews                          = "NotDisabled"
+                DisableCompanyWideSharingLinks           = "NotDisabled"
+                DisableFlows                             = "NotDisabled"
+                RestrictedToGeo                          = "BlockMoveOnly"
+                SharingDomainRestrictionMode             = "None"
+                SharingAllowedDomainList                 = ""
+                SharingBlockedDomainList                 = ""
+                ShowPeoplePickerSuggestionsForGuestUsers = $false
+                DefaultSharingLinkType                   = "None"
+                DefaultLinkPermission                    = "None"
+            }
+            
+            Mock -CommandName Get-SPOSite -MockWith {
+                return @{
+                    Url                                      = "https://contoso.com/sites/TestSite"
+                    Owner                                    = "testuser@contoso.com"
+                    StorageQuota                             = 1000
+                    Ensure                                   = "Present"
+                    LocaleId                                 = 1033
+                    Template                                 = "STS#3"
+                    CompatibilityLevel                       = 15
+                    Title                                    = "TestSite"
+                    DenyAddAndCustomizePages                 = $false
+                    StorageQuotaWarningLevel                 = 25574400
+                    LockState                                = "NoAccess"
+                    SharingCapability                        = "Disabled"
+                    CommentsOnSitePagesDisabled              = $false
+                    SocialBarOnSitePagesDisabled             = $false
+                    DisableAppViews                          = "NotDisabled"
+                    DisableCompanyWideSharingLinks           = "NotDisabled"
+                    DisableFlows                             = "NotDisabled"
+                    RestrictedToGeo                          = "BlockMoveOnly"
+                    SharingDomainRestrictionMode             = "None"
+                    SharingAllowedDomainList                 = ""
+                    SharingBlockedDomainList                 = ""
+                    ShowPeoplePickerSuggestionsForGuestUsers = $false
+                    DefaultSharingLinkType                   = "None"
+                    DefaultLinkPermission                    = "None"
+                }
+            }
+            It "Should not update any properties" {
+                Set-TargetResource @testParams | Should Be "Access to this Web site has been blocked"
+            }
+        }
+
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 Url = "https://contoso.com/sites/TestSite"
