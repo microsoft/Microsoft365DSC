@@ -175,7 +175,7 @@ function Get-TargetResource
         $site = Get-SPOSite $Url
         if ($null -eq $site)
         {
-            Write-Verbose "The specified Site Collection doesn't already exist."
+            Write-Verbose "The specified Site Collection doesn't exist."
             return $nullReturn
         }
         return @{
@@ -212,7 +212,7 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose "The specified Site Collection doesn't already exist."
+        Write-Verbose "The specified Site Collection doesn't exist."
         return $nullReturn
     }
 }
@@ -363,7 +363,28 @@ function Set-TargetResource
     elseif($Ensure -eq "Absent")
     {
         Write-Verbose -Message "Removing site $($Url)"
-        Remove-SPOSite -Identity $Url -Confirm:$false
+        try
+        {
+            Remove-SPOSite -Identity $Url -Confirm:$false
+        }
+        catch
+        {
+            if($Error[0].Exception.Message -eq "File Not Found")
+            {
+                try
+                {
+                    $siteAlreadyDeleted = Get-SPODeletedSite -Identity $Url
+                    if($null -ne $siteAlreadyDeleted)
+                    {
+                        Write-Verbose -Message "The site $($Url) already exists in the deleted sites."
+                    }
+                }
+                catch
+                {
+                    Write-Verbose -Message "The site $($Url) does not exist in the deleted sites."
+                }
+            }
+        }
     }
 }
 

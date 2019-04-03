@@ -192,7 +192,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 StorageQuota                             = 1000
                 CentralAdminUrl                          = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                       = $GlobalAdminAccount
-                Ensure                                   = "Absent"
+                Ensure                                   = "Present"
                 LocaleId                                 = 1033
                 Template                                 = "STS#3"
                 CompatibilityLevel                       = 15
