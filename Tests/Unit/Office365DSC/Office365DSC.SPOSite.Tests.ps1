@@ -23,7 +23,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Test-SPOServiceConnection -MockWith {
 
         }
-
         # Test contexts
         Context -Name "When the site doesn't already exist" -Fixture {
             $testParams = @{
@@ -172,7 +171,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DefaultSharingLinkType                   = "None"
                 DefaultLinkPermission                    = "None"
             }
-            
+
             Mock -CommandName Get-SPODeletedSite -MockWith {
                 return @{
                     Url = "https://contoso.com/sites/TestSite"
@@ -186,21 +185,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Site is in locked state" -Fixture {
+        Context -Name "Testing site removal" -Fixture {
             $testParams = @{
                 Url                                      = "https://contoso.com/sites/TestSite"
                 Owner                                    = "testuser@contoso.com"
                 StorageQuota                             = 1000
                 CentralAdminUrl                          = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                       = $GlobalAdminAccount
-                Ensure                                   = "Present"
+                Ensure                                   = "Absent"
                 LocaleId                                 = 1033
                 Template                                 = "STS#3"
                 CompatibilityLevel                       = 15
                 Title                                    = "TestSite"
                 DenyAddAndCustomizePages                 = $false
                 StorageQuotaWarningLevel                 = 25574400
-                LockState                                = "NoAccess"
+                LockState                                = "Unlock"
                 SharingCapability                        = "Disabled"
                 CommentsOnSitePagesDisabled              = $false
                 SocialBarOnSitePagesDisabled             = $false
@@ -215,37 +214,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DefaultSharingLinkType                   = "None"
                 DefaultLinkPermission                    = "None"
             }
-            
             Mock -CommandName Get-SPOSite -MockWith {
                 return @{
-                    Url                                      = "https://contoso.com/sites/TestSite"
-                    Owner                                    = "testuser@contoso.com"
-                    StorageQuota                             = 1000
-                    Ensure                                   = "Present"
-                    LocaleId                                 = 1033
-                    Template                                 = "STS#3"
-                    CompatibilityLevel                       = 15
-                    Title                                    = "TestSite"
-                    DenyAddAndCustomizePages                 = $false
-                    StorageQuotaWarningLevel                 = 25574400
-                    LockState                                = "NoAccess"
-                    SharingCapability                        = "Disabled"
-                    CommentsOnSitePagesDisabled              = $false
-                    SocialBarOnSitePagesDisabled             = $false
-                    DisableAppViews                          = "NotDisabled"
-                    DisableCompanyWideSharingLinks           = "NotDisabled"
-                    DisableFlows                             = "NotDisabled"
-                    RestrictedToGeo                          = "BlockMoveOnly"
-                    SharingDomainRestrictionMode             = "None"
-                    SharingAllowedDomainList                 = ""
-                    SharingBlockedDomainList                 = ""
-                    ShowPeoplePickerSuggestionsForGuestUsers = $false
-                    DefaultSharingLinkType                   = "None"
-                    DefaultLinkPermission                    = "None"
+                    Url = "https://contoso.com/sites/TestSite"
                 }
             }
-            It "Should not update any properties" {
-                Set-TargetResource @testParams | Should Be "Access to this Web site has been blocked"
+
+            Mock -CommandName Remove-SPOSite -MockWith {
+                return "Site has been successfully removed"
+            }
+
+            It "Should remove the site successfully" {
+                Remove-SPOSite -Identity $testParams.Url -Confirm:$false | Should Be  "Site has been successfully removed"
             }
         }
 
