@@ -80,13 +80,13 @@ function Show-O365GUI
         $pnlExo.Width = 300
         $pnlExo.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
-        $chckEXOAtpPolicyForO365 = New-Object System.Windows.Forms.CheckBox
+        <#$chckEXOAtpPolicyForO365 = New-Object System.Windows.Forms.CheckBox
         $chckEXOAtpPolicyForO365.Top = 0
         $chckEXOAtpPolicyForO365.AutoSize = $true;
         $chckEXOAtpPolicyForO365.Name = "chckEXOAtpPolicyForO365"
         $chckEXOAtpPolicyForO365.Checked = $true
         $chckEXOAtpPolicyForO365.Text = "Advanced Threat Protection Policies"
-        $pnlExo.Controls.Add($chckEXOAtpPolicyForO365)
+        $pnlExo.Controls.Add($chckEXOAtpPolicyForO365)#>
 
         $chckEXOClientAccessRule = New-Object System.Windows.Forms.CheckBox
         $chckEXOClientAccessRule.Top = 20
@@ -160,7 +160,7 @@ function Show-O365GUI
         $chckEXOOutboundSpamFilterPolicy.Text = "Outbound Spam Filter Policy"
         $pnlExo.Controls.Add($chckEXOOutboundSpamFilterPolicy)
 
-        $chckEXOSafeAttachmentPolicy = New-Object System.Windows.Forms.CheckBox
+        <#$chckEXOSafeAttachmentPolicy = New-Object System.Windows.Forms.CheckBox
         $chckEXOSafeAttachmentPolicy.Top = 200
         $chckEXOSafeAttachmentPolicy.AutoSize = $true;
         $chckEXOSafeAttachmentPolicy.Name = "chckEXOSafeAttachmentPolicy"
@@ -190,7 +190,7 @@ function Show-O365GUI
         $chckEXOSafeLinksRule.Name = "chckEXOSafeLinksRule"
         $chckEXOSafeLinksRule.Checked = $true
         $chckEXOSafeLinksRule.Text = "Safe Links Rule"
-        $pnlExo.Controls.Add($chckEXOSafeLinksRule)
+        $pnlExo.Controls.Add($chckEXOSafeLinksRule)#>
 
         $chckEXOSharedMailbox = New-Object System.Windows.Forms.CheckBox
         $chckEXOSharedMailbox.Top = 280
@@ -558,3 +558,4 @@ function SelectComponentsForMode($panelMain, $mode){
         catch{}
     }
 }
+Show-O365GUI

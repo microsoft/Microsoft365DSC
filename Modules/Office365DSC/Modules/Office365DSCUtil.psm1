@@ -1319,6 +1319,33 @@ function Set-EXOHostedContentFilterRule
     }
 }
 
+function Confirm-ImportedCmdletIsAvailable
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CmdletName
+    )
+    try
+    {
+        $CmdletIsAvailable = (Get-Command -Name $CmdletName -ErrorAction SilentlyContinue)
+        if ($CmdletIsAvailable)
+        {
+            return $true
+        }
+        else
+        {
+            return $false
+        }
+    }
+    catch
+    {
+        return $false
+    }
+}
+
 function Set-EXOSafeAttachmentRule
 {
     param (
@@ -1430,7 +1457,7 @@ function Test-O365ServiceConnection
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     Write-Verbose "Verifying the LCM connection state to Microsoft Azure Active Directory Services"
-    $catch = Connect-AzureAD -Credential $GlobalAdminAccount
+    Connect-AzureAD -Credential $GlobalAdminAccount
 }
 
 function Test-TeamsServiceConnection
@@ -1697,6 +1724,10 @@ function Start-O365ConfigurationExtract
     $DSCContent += "    Node localhost`r`n"
     $DSCContent += "    {`r`n"
 
+    Add-ConfigurationDataEntry -Node "localhost" `
+                                   -Key "ServerNumber" `
+                                   -Value "0" `
+                                   -Description "Default Valus Used to Ensure a Configuration Data File is Generated"
     # Obtain central administration url from a User Principal Name
     $centralAdminUrl = $null
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
@@ -1739,13 +1770,20 @@ function Start-O365ConfigurationExtract
     #region "EXOAtpPolicyForO365"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOAtpPolicyForO365"))
     {
-        Write-Information "Extracting EXOAtpPolicyForO365..."
-        $EXOAtpPolicyForO365ModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOAtpPolicyForO365\MSFT_EXOAtpPolicyForO365.psm1" `
-                                                -Resolve
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-AtpPolicyForO365)
+        {
+            Write-Information "Extracting EXOAtpPolicyForO365..."
+            $EXOAtpPolicyForO365ModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOAtpPolicyForO365\MSFT_EXOAtpPolicyForO365.psm1" `
+                                                    -Resolve
 
-        Import-Module $EXOAtpPolicyForO365ModulePath | Out-Null
-        $DSCContent += Export-TargetResource -IsSingleInstance "Yes" -GlobalAdminAccount $GlobalAdminAccount
+            Import-Module $EXOAtpPolicyForO365ModulePath | Out-Null
+            $DSCContent += Export-TargetResource -IsSingleInstance "Yes" -GlobalAdminAccount $GlobalAdminAccount
+        }
+        else
+        {
+            Write-Information "The specified Tenant is not registered for ATP, and therefore can't extract policies"
+        }
     }
     #endregion
 
@@ -1875,17 +1913,24 @@ function Start-O365ConfigurationExtract
     #region "EXOSafeAttachmentPolicy"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeAttachmentPolicy"))
     {
-        Write-Information "Extracting EXOSafeAttachmentPolicy..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-        $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
-        $EXOSafeAttachmentPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                    -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentPolicy\MSFT_EXOSafeAttachmentPolicy.psm1" `
-                                                    -Resolve
-
-        Import-Module $EXOSafeAttachmentPolicyModulePath | Out-Null
-        foreach ($SafeAttachmentPolicy in $SafeAttachmentPolicies)
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName GetSafeAttachmentPolicy)
         {
-            $DSCContent += Export-TargetResource -Identity $SafeAttachmentPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+            Write-Information "Extracting EXOSafeAttachmentPolicy..."
+            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
+            $EXOSafeAttachmentPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentPolicy\MSFT_EXOSafeAttachmentPolicy.psm1" `
+                                                        -Resolve
+
+            Import-Module $EXOSafeAttachmentPolicyModulePath | Out-Null
+            foreach ($SafeAttachmentPolicy in $SafeAttachmentPolicies)
+            {
+                $DSCContent += Export-TargetResource -Identity $SafeAttachmentPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        else
+        {
+            Write-Information "The current tenant doesn't have access to Safe Attachment Policy APIs."
         }
     }
     #endregion
@@ -1893,17 +1938,24 @@ function Start-O365ConfigurationExtract
     #region "EXOSafeAttachmentRule"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeAttachmentRule"))
     {
-        Write-Information "Extracting EXOSafeAttachmentRule..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-        $SafeAttachmentRules = Get-SafeAttachmentRule
-        $EXOSafeAttachmentRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                                    -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentRule\MSFT_EXOSafeAttachmentRule.psm1" `
-                                                    -Resolve
-
-        Import-Module $EXOSafeAttachmentRuleModulePath | Out-Null
-        foreach ($SafeAttachmentRule in $SafeAttachmentRules)
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
         {
-            $DSCContent += Export-TargetResource -Identity $SafeAttachmentRule.Identity -SafeAttachmentPolicy $SafeAttachmentRule.SafeAttachmentPolicy -GlobalAdminAccount $GlobalAdminAccount
+            Write-Information "Extracting EXOSafeAttachmentRule..."
+            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            $SafeAttachmentRules = Get-SafeAttachmentRule
+            $EXOSafeAttachmentRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentRule\MSFT_EXOSafeAttachmentRule.psm1" `
+                                                        -Resolve
+
+            Import-Module $EXOSafeAttachmentRuleModulePath | Out-Null
+            foreach ($SafeAttachmentRule in $SafeAttachmentRules)
+            {
+                $DSCContent += Export-TargetResource -Identity $SafeAttachmentRule.Identity -SafeAttachmentPolicy $SafeAttachmentRule.SafeAttachmentPolicy -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        else
+        {
+            Write-Information "The current tenant doesn't have access to the Safe Attachment Rule API"
         }
     }
     #endregion
@@ -1911,17 +1963,24 @@ function Start-O365ConfigurationExtract
     #region "EXOSafeLinksPolicy"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeLinksPolicy"))
     {
-        Write-Information "Extracting EXOSafeLinksPolicy..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-        $SafeLinksPolicies = Get-SafeLinksPolicy
-        $EXOSafeLinksPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                    -ChildPath "..\DSCResources\MSFT_EXOSafeLinksPolicy\MSFT_EXOSafeLinksPolicy.psm1" `
-                                                    -Resolve
-
-        Import-Module $EXOSafeLinksPolicyModulePath | Out-Null
-        foreach($SafeLinksPolicy in $SafeLinksPolicies)
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
         {
-            $DSCContent += Export-TargetResource -Identity $SafeLinksPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+            Write-Information "Extracting EXOSafeLinksPolicy..."
+            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            $SafeLinksPolicies = Get-SafeLinksPolicy
+            $EXOSafeLinksPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXOSafeLinksPolicy\MSFT_EXOSafeLinksPolicy.psm1" `
+                                                        -Resolve
+
+            Import-Module $EXOSafeLinksPolicyModulePath | Out-Null
+            foreach($SafeLinksPolicy in $SafeLinksPolicies)
+            {
+                $DSCContent += Export-TargetResource -Identity $SafeLinksPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        else
+        {
+            Write-Information "The current tenant is not registered to allow for Safe Attachment Rules."
         }
     }
     #endregion
@@ -1929,17 +1988,24 @@ function Start-O365ConfigurationExtract
     #region "EXOSafeLinksRule"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeLinksRule"))
     {
-        Write-Information "Extracting EXOSafeLinksRule..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-        $SafeLinksRules = Get-SafeLinksRule
-        $EXOSafeLinksRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                                    -ChildPath "..\DSCResources\MSFT_EXOSafeLinksRule\MSFT_EXOSafeLinksRule.psm1" `
-                                                    -Resolve
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
+            {
+            Write-Information "Extracting EXOSafeLinksRule..."
+            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            $SafeLinksRules = Get-SafeLinksRule
+            $EXOSafeLinksRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXOSafeLinksRule\MSFT_EXOSafeLinksRule.psm1" `
+                                                        -Resolve
 
-        Import-Module $EXOSafeLinksRuleModulePath | Out-Null
-        foreach ($SafeLinksRule in $SafeLinksRules)
+            Import-Module $EXOSafeLinksRuleModulePath | Out-Null
+            foreach ($SafeLinksRule in $SafeLinksRules)
+            {
+                $DSCContent += Export-TargetResource -Identity $SafeLinksRule.Identity -SafeLinksPolicy $SafeLinksRule.SafeLinksPolicy -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        else
         {
-            $DSCContent += Export-TargetResource -Identity $SafeLinksRule.Identity -SafeLinksPolicy $SafeLinksRule.SafeLinksPolicy -GlobalAdminAccount $GlobalAdminAccount
+            Write-Information "The current tenant is not registered to allow for Safe Links Rules."
         }
     }
     #endregion
@@ -2082,9 +2148,9 @@ function Start-O365ConfigurationExtract
                                         -Resolve
 
         Import-Module $O365UserModulePath | Out-Null
-        Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+        Connect-MsolService -Credential $GlobalAdminAccount
 
-        $users = Get-AzureADUser
+        $users = Get-MsolUser
 
         foreach ($user in $users)
         {
@@ -2222,6 +2288,7 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region SPOSiteDesign
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSiteDesign"))
     {
         Write-Information "Extracting SPOSiteDesign..."
@@ -2237,11 +2304,13 @@ function Start-O365ConfigurationExtract
         {
             Write-Information "    Site Design {$($siteDesign.Title)}"
             $DSCContent += Export-TargetResource -Title $siteDesign.Title `
-                                                -CentralAdminUrl $centralAdminUrl `
-                                                -GlobalAdminAccount $GlobalAdminAccount
+                                                 -CentralAdminUrl $centralAdminUrl `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
         }
     }
+    #endregion
 
+    #region SPOSiteDesignRights
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSiteDesignRights"))
     {
         Write-Information "Extracting SPOSiteDesignRights..."
@@ -2256,13 +2325,13 @@ function Start-O365ConfigurationExtract
 
         foreach ($siteDesign in $siteDesigns)
         {
-            $siteDesignRight = Get-PnPSiteDesignRights -Identity $siteDesign.Id
-            Write-Information "    Site Design Rights {$($siteDesign.Id)}"
+            Write-Information "    Site Design Rights {$($siteDesign.Title)}"
             $DSCContent += Export-TargetResource -SiteDesignTitle $siteDesign.Title `
-                                                -CentralAdminUrl $centralAdminUrl `
-                                                -GlobalAdminAccount $GlobalAdminAccount
+                                                 -CentralAdminUrl $centralAdminUrl `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
         }
     }
+    #endregion
 
     #region "SPOSite"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSite"))
@@ -2365,14 +2434,20 @@ function Start-O365ConfigurationExtract
 
         foreach ($team in $Teams)
         {
-            $users = Get-TeamUser -GroupId $team.GroupId
-            foreach ($user in $users)
+            try
             {
-                Write-Information "    Teams User {$($user.User)}"
-                $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
-                                                     -User $user.User `
-                                                     -Role $user.Role `
-                                                     -GlobalAdminAccount $GlobalAdminAccount
+                $users = Get-TeamUser -GroupId $team.GroupId
+                foreach ($user in $users)
+                {
+                    Write-Information "    Teams User {$($user.User)}"
+                    $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
+                                                        -User $user.User `
+                                                        -Role $user.Role `
+                                                        -GlobalAdminAccount $GlobalAdminAccount
+                }
+            }
+            catch {
+                Write-Information "The current User doesn't have the required permissions to extract Users for Team {$($team.DisplayName)}."
             }
         }
     }
@@ -2486,21 +2561,30 @@ function Start-O365ConfigurationExtract
     }
 
     #region Download all identified files
+    $capture = $null
     foreach ($file in $filesToDownload)
     {
         $fileName = $file.Url.Split('/')[$file.Url.Split('/').Length -1]
         Write-Information "Connecting via PnP to site  {$($file.Site)}"
-        try
+        if ($null -eq $capture)
         {
-            Connect-PnpOnline -Url $($file.Site)
-        }
-        catch
-        {
-            Write-Error -Message $_
+            $capture = Read-Host "Due to an authentication challenge with the PnP module you will be prompted to re-enter your credentials for each app package to be downloaded. Continue (y/n)?"
         }
 
-        Write-Information "Downloading {$($file.Url)} into {$($OutPutDSCPath + $fileName)}"
-        Get-PnPFile -Url $file.Url -Path $OutputDSCPath -Filename $fileName -AsFile
+        if ($capture.ToLower() -eq "y")
+        {
+            try
+            {
+                Connect-PnpOnline -Url $($file.Site)
+            }
+            catch
+            {
+                Write-Error -Message $_
+            }
+
+            Write-Information "Downloading {$($file.Url)} into {$($OutPutDSCPath + $fileName)}"
+            Get-PnPFile -Url $file.Url -Path $OutputDSCPath -Filename $fileName -AsFile
+        }
     }
     #endregion
 
