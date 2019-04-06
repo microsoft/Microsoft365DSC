@@ -12,15 +12,15 @@ This resource configures Storage Entity.
           Absent will remove site design
           Present will add site design
 
-    Title
+    Key
       - Required: Yes
       - Description: Title of the Site Design
 
-    SiteScriptNames
+    Value
       - Required: No
       - Description: List of names of site scripts to include in site design
 
-    WebTemplate
+    Scope
       - Required: No
       - Description: Web template to apply site design, only validate
         parameters are CommunicationSite and TeamSite
@@ -29,23 +29,11 @@ This resource configures Storage Entity.
       - Required: No
       - Description: Description of the site design
 
-    IsDefault
+    Comment
       - Required: No
       - Description: Determines if the site design is applied by default
 
-    PreviewImageAltText
-      - Required: No
-      - Description: Preview text for the alt image of site design
-
-    PreviewImageUrl
-      - Required: No
-      - Description: Url of image preview of site design
-
-    Version
-      - Required: No
-      - Description: Version number of site design script
-
-    Tenant Admin Url
+    SiteUrl
       - Required: Yes
       - Description: Url to tenant admin site
 
