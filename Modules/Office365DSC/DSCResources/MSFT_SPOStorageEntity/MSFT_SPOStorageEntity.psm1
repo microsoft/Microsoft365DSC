@@ -122,9 +122,7 @@ function Set-TargetResource
     )
 
     Test-PnPOnlineConnection -SiteUrl $SiteUrl -GlobalAdminAccount $GlobalAdminAccount
-
     $curStorageEntry = Get-TargetResource @PSBoundParameters
-
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("SiteUrl")
@@ -138,10 +136,8 @@ function Set-TargetResource
     }
     elseif (($Ensure -eq "Absent" -and $curStorageEntry.Ensure -eq "Present"))
     {
-
         Write-Verbose -Message "Removing storage entity $Key"
         Remove-PnPStorageEntity -Key $Key
-
     }
 }
 
@@ -218,7 +214,7 @@ function Export-TargetResource
     Test-PnPOnlineConnection -SiteUrl $SiteUrl -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
-    $content = "        SPOStorageEntry " + (New-Guid).ToString() + "`r`n"
+    $content = "        SPOStorageEntity " + (New-Guid).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
