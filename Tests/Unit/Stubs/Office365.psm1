@@ -45,7 +45,7 @@ function Test-PnPOnlineConnection{
 
         [Parameter()]
         [System.String]
-        $SPOCentralAdminUrl
+        $SiteUrl
     )
 }
 

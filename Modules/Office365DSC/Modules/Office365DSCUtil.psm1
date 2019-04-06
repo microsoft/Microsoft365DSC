@@ -1405,7 +1405,7 @@ function Test-PnPOnlineConnection
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $SPOCentralAdminUrl,
+        $SiteUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -1414,7 +1414,7 @@ function Test-PnPOnlineConnection
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     Write-Verbose "Verifying the LCM connection state to SharePoint Online with PnP"
-    $catch = Connect-PnPOnline -Url $SPOCentralAdminUrl -Credentials $GlobalAdminAccount
+    $catch = Connect-PnPOnline -Url $SiteUrl -Credentials $GlobalAdminAccount
 }
 
 function Test-O365ServiceConnection
@@ -2154,7 +2154,7 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSearchResultSourceModulePath | Out-Null
-        Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
         $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
         $sources =  $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
         foreach ($source in $sources)
@@ -2178,7 +2178,7 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSearchManagedPropertyModulePath | Out-Null
-        Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
         $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
         $properties =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
 
@@ -2201,7 +2201,7 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         $catch = Import-Module $SPOSiteDesignModulePath
-        Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
         $siteDesigns = Get-PnPSiteDesign
 
         foreach ($siteDesign in $siteDesigns)
@@ -2221,7 +2221,7 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         $catch = Import-Module $SPOSiteDesignModulePath
-        Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
         $siteDesigns = Get-PnPSiteDesign
 
