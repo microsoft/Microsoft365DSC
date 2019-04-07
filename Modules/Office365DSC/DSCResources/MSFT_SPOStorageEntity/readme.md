@@ -14,45 +14,43 @@ This resource configures Storage Entity.
 
     Key
       - Required: Yes
-      - Description: Title of the Site Design
+      - Description: Key of the value to set
 
     Value
       - Required: No
-      - Description: List of names of site scripts to include in site design
+      - Description: Value to store
 
     Scope
       - Required: No
-      - Description: Web template to apply site design, only validate
-        parameters are CommunicationSite and TeamSite
+      - Description: Scope of the storage entity either Tenant or site
 
     Description
       - Required: No
-      - Description: Description of the site design
+      - Description: Desecription of the storage entity
 
     Comment
       - Required: No
-      - Description: Determines if the site design is applied by default
+      - Description: Comment to set
 
     SiteUrl
       - Required: Yes
-      - Description: Url to tenant admin site
+      - Description: Url to tenant or site collection
 
     GlobalAdminAccount
       - Required: Yes
-      - Description: Credentials of the Office365 Tenant Admin
+      - Description: Credentials of the Office365 Tenant or site
 
 ## Example
 
 ```PowerShell
-        SiteDesign SiteDesignConfig {
-            Title               = "DSC Site Design"
-            SiteScriptNames     = @("Cust List", "List_Views")
-            WebTemplate         = "TeamSite"
-            IsDefault           = $false
-            Description         = "Created by DSC"
-            PreviewImageAltText = "Office 365"
+        SPOStorageEntity StorageEnitytConfig
+        {
+            Key                 = "DSCKey"
+            Value               = "Test storage entity"
+            Scope               = "Site"
+            Description         = "Description created by DSC"
+            Comment             = "Comment from DSC"
             Ensure              = "Present"
-            Version             = 1
             CentralAdminUrl     = 'https://contoso-admin.sharepoint.com'
             GlobalAdminAccount  = $GlobalAdminAccount
         }
