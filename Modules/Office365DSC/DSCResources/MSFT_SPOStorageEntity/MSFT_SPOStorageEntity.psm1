@@ -15,7 +15,7 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet("Tenant", "Site")]
         [System.String]
-        $Scope,
+        $EntityScope,
 
         [Parameter()]
         [System.String]
@@ -44,7 +44,7 @@ function Get-TargetResource
     $nullReturn = @{
         Key                = $Key
         Value              = $Value
-        Scope              = $Scope
+        EntityScope        = $EntityScope
         Description        = $Description
         Comment            = $Comment
         Ensure             = "Absent"
@@ -54,27 +54,19 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting storage entity $Key"
 
-    $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("Value")
-    $CurrentParameters.Remove("Description")
-    $CurrentParameters.Remove("Comment")
-    $CurrentParameters.Remove("Ensure")
-    $CurrentParameters.Remove("SiteUrl")
-    $CurrentParameters.Remove("GlobalAdminAccount")
-
-    $storageEntry = Get-PnPStorageEntity @CurrentParameters -ErrorAction SilentlyContinue
-    if ($null -eq $storageEntry)
+    $storageEntity = Get-PnPStorageEntity -Key $Key -ErrorAction SilentlyContinue
+    if ($null -eq $storageEntity)
     {
         Write-Verbose -Message "No storage entity found for $Key"
         return $nullReturn
     }
 
     return @{
-        Key                = $storageEntry.Key
-        Value              = $storageEntry.Value
-        Scope              = $storageEntry.Scope
-        Description        = $storageEntry.Description
-        Comment            = $storageEntry.Comment
+        Key                = $storageEntity.Key
+        Value              = $storageEntity.Value
+        EntityScope        = $EntityScope
+        Description        = $storageEntity.Description
+        Comment            = $storageEntity.Comment
         Ensure             = "Present"
         SiteUrl            = $SiteUrl
         GlobalAdminAccount = $GlobalAdminAccount
@@ -97,7 +89,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet("Tenant", "Site")]
         [System.String]
-        $Scope,
+        $EntityScope,
 
         [Parameter()]
         [System.String]
@@ -128,16 +120,18 @@ function Set-TargetResource
     $CurrentParameters.Remove("SiteUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
+    $CurrentParameters.Remove("EntityScope")
+    $CurrentParameters.Add("Scope",$EntityScope)
 
-    if ($curStorageEntry.Ensure -eq "Absent" -and "Present" -eq $Ensure )
-    {
-        Write-Verbose -Message "Adding new storage entity $Key"
-        Set-PnPStorageEntity @CurrentParameters
-    }
-    elseif (($Ensure -eq "Absent" -and $curStorageEntry.Ensure -eq "Present"))
+    if (($Ensure -eq "Absent" -and $curStorageEntry.Ensure -eq "Present"))
     {
         Write-Verbose -Message "Removing storage entity $Key"
         Remove-PnPStorageEntity -Key $Key
+    }
+    else
+    {
+        Write-Verbose -Message "Adding new storage entity $Key"
+        Set-PnPStorageEntity @CurrentParameters
     }
 }
 
@@ -158,7 +152,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet("Tenant", "Site")]
         [System.String]
-        $Scope,
+        $EntityScope,
 
         [Parameter()]
         [System.String]
@@ -184,13 +178,15 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing SPOStorageEntity for $Key"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('SiteUrl') | Out-Null
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck  $ValuesToCheck.Keys
+    -DesiredValues $PSBoundParameters `
+    -ValuesToCheck @("Key", `
+        "Value", `
+        "Comment", `
+        "Description", `
+        "Ensure"
+    )
 }
 
 function Export-TargetResource

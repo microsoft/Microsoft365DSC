@@ -11707,3 +11707,13 @@ function Get-PnPSiteDesignRights
         $Identity
     )
 }
+
+function Get-PnPStorageEntity
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Key
+    )
+}

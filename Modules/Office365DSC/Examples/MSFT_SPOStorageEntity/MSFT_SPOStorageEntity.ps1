@@ -13,10 +13,10 @@ Configuration StorageEntityConfig
         {
             Key                = "DSCKey"
             Value              = "Test storage entity"
-            Scope              = "Site"
+            EntityScope        = "Tenant"
             Description        = "Description created by DSC"
             Comment            = "Comment from DSC"
-            Ensure             = "Present"
+            Ensure             = "Absent"
             SiteUrl            = "https://smaystate.sharepoint.com/sites/devops"
             GlobalAdminAccount = $credsGlobalAdmin
         }
