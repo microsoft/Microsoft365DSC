@@ -44,7 +44,7 @@ function Get-TargetResource
     $nullReturn = @{
         Key                = $Key
         Value              = $Value
-        EntityScope        = $EntityScope
+        EntityScope        = $null
         Description        = $Description
         Comment            = $Comment
         Ensure             = "Absent"
@@ -54,19 +54,22 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting storage entity $Key"
 
-    $storageEntity = Get-PnPStorageEntity -Key $Key -ErrorAction SilentlyContinue
-    if ($null -eq $storageEntity)
+    $Entity = Get-PnPStorageEntity -Key $Key -ErrorAction SilentlyContinue
+    ## Get-PnPStorageEntity seems to not return $null when not found
+    if ($null -eq $Entity.Key)
     {
         Write-Verbose -Message "No storage entity found for $Key"
         return $nullReturn
     }
 
+    Write-Verbose -Message "Found storage entity $($Entity.Key)"
+
     return @{
-        Key                = $storageEntity.Key
-        Value              = $storageEntity.Value
+        Key                = $Entity.Key
+        Value              = $Entity.Value
         EntityScope        = $EntityScope
-        Description        = $storageEntity.Description
-        Comment            = $storageEntity.Comment
+        Description        = $Entity.Description
+        Comment            = $Entity.Comment
         Ensure             = "Present"
         SiteUrl            = $SiteUrl
         GlobalAdminAccount = $GlobalAdminAccount
@@ -121,7 +124,7 @@ function Set-TargetResource
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
     $CurrentParameters.Remove("EntityScope")
-    $CurrentParameters.Add("Scope",$EntityScope)
+    $CurrentParameters.Add("Scope", $EntityScope)
 
     if (($Ensure -eq "Absent" -and $curStorageEntry.Ensure -eq "Present"))
     {
@@ -179,13 +182,16 @@ function Test-TargetResource
     Write-Verbose -Message "Testing SPOStorageEntity for $Key"
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
+    Write-Verbose -Message "Current value: $($CurrentValues.Ensure)"
+
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-    -DesiredValues $PSBoundParameters `
-    -ValuesToCheck @("Key", `
-        "Value", `
-        "Comment", `
-        "Description", `
-        "Ensure"
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("Key", `
+            "Value", `
+            "Key", `
+            "Comment", `
+            "Description", `
+            "Ensure"
     )
 }
 
