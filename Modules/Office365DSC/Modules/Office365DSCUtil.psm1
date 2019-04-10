@@ -2198,10 +2198,15 @@ function Start-O365ConfigurationExtract
         foreach ($app in $allApps)
         {
             Write-Information "    - App {$($app.Title)}"
-            $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $app.title + ".app"
+            $extension = ".sppkg"
+            if (-not $app.IsClientSideSolution)
+            {
+                $extension = ".app"
+            }
+            $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $app.title + $extension
             $filesToDownload += @{Url = $appInstanceUrl; Site = $tenantAppCatalogUrl}
             $DSCContent += Export-TargetResource -Title $app.Title `
-                                                -Path "Bogus" `
+                                                -Path "ReverseDSC" `
                                                 -CentralAdminUrl $centralAdminUrl `
                                                 -GlobalAdminAccount $GlobalAdminAccount
         }
@@ -2561,29 +2566,26 @@ function Start-O365ConfigurationExtract
     }
 
     #region Download all identified files
-    $capture = $null
+    Write-Information "Connecting AppCatalog {$($tenantAppCatalogUrl)} by $($GlobalAdminAccount.UserName) to download Apps..."
+    try {
+        Connect-PnpOnline -Url $tenantAppCatalogUrl -Credentials $GlobalAdminAccount
+    }
+    catch {
+        Write-Information $_
+    }
+
     foreach ($file in $filesToDownload)
     {
         $fileName = $file.Url.Split('/')[$file.Url.Split('/').Length -1]
-        Write-Information "Connecting via PnP to site  {$($file.Site)}"
-        if ($null -eq $capture)
-        {
-            $capture = Read-Host "Due to an authentication challenge with the PnP module you will be prompted to re-enter your credentials for each app package to be downloaded. Continue (y/n)?"
-        }
 
-        if ($capture.ToLower() -eq "y")
+        try
         {
-            try
-            {
-                Connect-PnpOnline -Url $($file.Site)
-            }
-            catch
-            {
-                Write-Error -Message $_
-            }
-
             Write-Information "Downloading {$($file.Url)} into {$($OutPutDSCPath + $fileName)}"
             Get-PnPFile -Url $file.Url -Path $OutputDSCPath -Filename $fileName -AsFile
+        }
+        catch
+        {
+            Write-Error -Message $_
         }
     }
     #endregion

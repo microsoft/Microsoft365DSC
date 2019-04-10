@@ -225,13 +225,13 @@ function Show-O365GUI
         $chckSPOAccessControlSettings.Text = "Access Control Settings"
         $pnlSPO.Controls.Add($chckSPOAccessControlSettings)
 
-        <#$chckSPOApp = New-Object System.Windows.Forms.CheckBox
+        $chckSPOApp = New-Object System.Windows.Forms.CheckBox
         $chckSPOApp.Top = 20
         $chckSPOApp.AutoSize = $true;
         $chckSPOApp.Name = "chckSPOApp"
         $chckSPOApp.Checked = $true
         $chckSPOApp.Text = "Apps"
-        $pnlSPO.Controls.Add($chckSPOApp)#>
+        $pnlSPO.Controls.Add($chckSPOApp)
 
         $chckSPOSearchManagedProperty = New-Object System.Windows.Forms.CheckBox
         $chckSPOSearchManagedProperty.Top = 40
