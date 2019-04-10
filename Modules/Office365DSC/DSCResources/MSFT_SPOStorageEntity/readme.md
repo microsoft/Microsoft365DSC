@@ -20,13 +20,13 @@ This resource configures Storage Entity.
       - Required: No
       - Description: Value to store
 
-    Scope
+    EntityScope
       - Required: No
       - Description: Scope of the storage entity either Tenant or site
 
     Description
       - Required: No
-      - Description: Desecription of the storage entity
+      - Description: Description of the storage entity
 
     Comment
       - Required: No
@@ -47,11 +47,11 @@ This resource configures Storage Entity.
         {
             Key                 = "DSCKey"
             Value               = "Test storage entity"
-            Scope               = "Site"
+            EntityScope         = "Tenant"
             Description         = "Description created by DSC"
             Comment             = "Comment from DSC"
             Ensure              = "Present"
-            CentralAdminUrl     = 'https://contoso-admin.sharepoint.com'
+            SiteUrl             = 'https://contoso-admin.sharepoint.com'
             GlobalAdminAccount  = $GlobalAdminAccount
         }
 ```

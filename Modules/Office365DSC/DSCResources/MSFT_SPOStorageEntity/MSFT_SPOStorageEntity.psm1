@@ -56,6 +56,7 @@ function Get-TargetResource
 
     $Entity = Get-PnPStorageEntity -Key $Key -ErrorAction SilentlyContinue
     ## Get-PnPStorageEntity seems to not return $null when not found
+    ## so checking key
     if ($null -eq $Entity.Key)
     {
         Write-Verbose -Message "No storage entity found for $Key"
@@ -181,8 +182,6 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing SPOStorageEntity for $Key"
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    Write-Verbose -Message "Current value: $($CurrentValues.Ensure)"
 
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `

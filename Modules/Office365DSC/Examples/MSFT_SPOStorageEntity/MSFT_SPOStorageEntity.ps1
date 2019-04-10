@@ -6,7 +6,7 @@ It is not meant to use as a production baseline.
 Configuration StorageEntityConfig
 {
     Import-DSCResource -ModuleName Office365DSC
-    $credsGlobalAdmin = Get-Credential -UserName "derek@smaystate.onmicrosoft.com" -Message "Global Admin"
+    $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
     Node localhost
     {
         SPOStorageEntity MyStorageEntity
@@ -16,8 +16,8 @@ Configuration StorageEntityConfig
             EntityScope        = "Tenant"
             Description        = "Description created by DSC"
             Comment            = "Comment from DSC"
-            Ensure             = "Absent"
-            SiteUrl            = "https://smaystate.sharepoint.com/sites/devops"
+            Ensure             = "Present"
+            SiteUrl            = "https://o365dsc1-admin.sharepoint.com"
             GlobalAdminAccount = $credsGlobalAdmin
         }
     }
