@@ -66,6 +66,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPStorageEntity -MockWith {
                 return @{
+                    Key         = "DSCKey"
                     Value       = "Test storage entity"
                     EntityScope = "Site"
                     Description = "Description created by DSC"
@@ -82,7 +83,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Adding new user Storage Entity" -Fixture {
+        Context -Name "Adding storage entity" -Fixture {
             $testParams = @{
                 Key                = "DSCKey"
                 Value              = "Test storage entity"
@@ -96,7 +97,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPStorageEntity -MockWith {
                 return @{
-                    Value       = "Test storage entity"
+                    Key         = "DSCKey"
+                    Value       = "Updated test storage entity"
                     EntityScope = "Site"
                     Description = "Description created by DSC"
                     Comment     = "Comment from DSC"
@@ -140,6 +142,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPStorageEntity -MockWith {
                 return @{
+                    Key         = "DSCKey"
                     Value       = "Test storage entity"
                     EntityScope = "Site"
                     Description = "Description created by DSC"

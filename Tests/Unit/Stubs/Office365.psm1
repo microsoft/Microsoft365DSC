@@ -11714,6 +11714,23 @@ function Get-PnPStorageEntity
     param(
         [Parameter()]
         [string]
-        $Key
+        $Key,
+
+        [Parameter()]
+        [string]
+        $Value,
+
+        [Parameter()]
+        [string]
+        $Comment,
+
+        [Parameter()]
+        [string]
+        $Description,
+
+        [Parameter()]
+        [string]
+        $EntityScope
+
     )
 }
