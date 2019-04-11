@@ -26,7 +26,7 @@ This resource configures Storage Entity for SharePoint Online.
 
     Description
       - Required: No
-      - Description: Description of the storage entity
+      - Description: Description of the storage entity.
 
     Comment
       - Required: No
