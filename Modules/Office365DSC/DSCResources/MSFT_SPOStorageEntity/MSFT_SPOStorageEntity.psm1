@@ -44,7 +44,7 @@ function Get-TargetResource
     $nullReturn = @{
         Key                = $Key
         Value              = $Value
-        EntityScope        = $null
+        EntityScope        = $EntityScope
         Description        = $Description
         Comment            = $Comment
         Ensure             = "Absent"
@@ -53,8 +53,12 @@ function Get-TargetResource
     }
 
     Write-Verbose -Message "Getting storage entity $Key"
+    $CurrentParameters = $PSBoundParameters
+    $CurrentParameters.Clear()
+    $CurrentParameters.Add("Key", $Key)
+    $CurrentParameters.Add("Scope", $EntityScope)
 
-    $Entity = Get-PnPStorageEntity -Key $Key -ErrorAction SilentlyContinue
+    $Entity = Get-PnPStorageEntity @CurrentParameters -ErrorAction SilentlyContinue
     ## Get-PnPStorageEntity seems to not return $null when not found
     ## so checking key
     if ($null -eq $Entity.Key)
@@ -132,7 +136,7 @@ function Set-TargetResource
         Write-Verbose -Message "Removing storage entity $Key"
         Remove-PnPStorageEntity -Key $Key
     }
-    else
+    elseif ($Ensure -eq "Present")
     {
         Write-Verbose -Message "Adding new storage entity $Key"
         Set-PnPStorageEntity @CurrentParameters
@@ -190,6 +194,7 @@ function Test-TargetResource
             "Key", `
             "Comment", `
             "Description", `
+            "EntityScope", `
             "Ensure"
     )
 }

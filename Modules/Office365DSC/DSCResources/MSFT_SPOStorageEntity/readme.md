@@ -2,15 +2,15 @@
 
 ## Description
 
-This resource configures Storage Entity.
+This resource configures Storage Entity for SharePoint Online.
 
 ## Parameters
 
     Ensure
       - Required: No (Defaults to 'Present')
       - Description: `Present` or `Absent` are the only value accepted.
-          Absent will remove site design
-          Present will add site design
+          Absent will remove storage entity
+          Present will add storage entity
 
     Key
       - Required: Yes
