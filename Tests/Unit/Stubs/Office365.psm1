@@ -11730,7 +11730,7 @@ function Get-PnPStorageEntity
 
         [Parameter()]
         [string]
-        $EntityScope
+        $Scope
 
     )
 }
