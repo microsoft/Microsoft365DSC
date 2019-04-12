@@ -38,11 +38,9 @@ function Get-TargetResource
     }
 
     Write-Verbose -Message "Checking for existance of Team User $User"
-    $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName} -ErrorAction SilentlyContinue
-    if ($null -eq $team)
-    {
-        throw "Team with Name $TeamName doesnt exist in tenant"
-    }
+    $team = Get-TeamByName $TeamName
+    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
+
 
     try
     {
@@ -109,11 +107,9 @@ function Set-TargetResource
 
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
-    $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
-    if ($null -eq $team)
-    {
-        throw "Team with Name $TeamName doesnt exist in tenant"
-    }
+    $team = Get-TeamByName $TeamName
+
+    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("TeamName")
