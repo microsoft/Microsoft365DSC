@@ -12,20 +12,20 @@ Configuration Apps
         SPOApp ee4a977d-4d7d-4968-9238-2a1702aa699c
         {
             Identity           = "DemoApp"
-	    Path               = "C:\Demo\DemoApp.sppkg"
+        Path               = "C:\Demo\DemoApp.sppkg"
             Publish            = $true
-            CentralAdminUrl    = "https://Office365DSC-admin.sharepoint.com"            
-            GlobalAdminAccount = $credsGlobalAdmin            
+            CentralAdminUrl    = "https://Office365DSC-admin.sharepoint.com"
+            GlobalAdminAccount = $credsGlobalAdmin
             Ensure             = "Present"
         }
 
         SPOApp ee4a977d-4eee-4968-9238-2a1702aa1234
         {
             Identity           = "DemoApp2"
-	    Path               = "C:\Demo\DemoApp2.app"
+        Path               = "C:\Demo\DemoApp2.app"
             Publish            = $true
-            CentralAdminUrl    = "https://Office365DSC-admin.sharepoint.com"            
-            GlobalAdminAccount = $credsGlobalAdmin            
+            CentralAdminUrl    = "https://Office365DSC-admin.sharepoint.com"
+            GlobalAdminAccount = $credsGlobalAdmin
             Ensure             = "Present"
         }
     }
