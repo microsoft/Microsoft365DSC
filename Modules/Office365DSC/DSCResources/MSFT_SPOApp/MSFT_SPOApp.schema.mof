@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("SPOApp")]
 class MSFT_SPOApp : OMI_BaseResource
 {
-    [Key, Description("The name of the App.)] string Title;
+    [Key, Description("The name of the App.)] string Identity;
     [Required, Description("The path the the app package on disk.")] string Path;
     [Write, Description("This will deploy/trust an app into the app catalog.")] boolean Publish;
     [Write, Description("Overwrites the existing app package if it already exists.")] boolean Overwrite;

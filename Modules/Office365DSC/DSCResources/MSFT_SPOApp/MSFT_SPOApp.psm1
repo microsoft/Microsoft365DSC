@@ -6,7 +6,7 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Title,
+        $Identity,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -76,7 +76,7 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Title,
+        $Identity,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -116,7 +116,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq "Absent" -and $currentApp.Ensure -eq "Present")
     {
-        Remove-PnpApp -Identity $Title
+        Remove-PnpApp -Identity $Identity
     }
 }
 
@@ -128,7 +128,7 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Title,
+        $Identity,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -161,8 +161,6 @@ function Test-TargetResource
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                            -DesiredValues $PSBoundParameters `
                                            -ValuesToCheck @("Ensure", `
-                                                            "Publish",
-                                                            "Overwrite", `
                                                             "Title")
 }
 
@@ -174,7 +172,7 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Title,
+        $Identity,
 
         [Parameter(Mandatory = $true)]
         [System.String]

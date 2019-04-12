@@ -2190,25 +2190,31 @@ function Start-O365ConfigurationExtract
                                                      -Resolve
 
         Import-Module $SPOAppModulePath | Out-Null
-        Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-        $allApps = Get-PnPApp
+        Test-PnPOnlineConnection -SPOCentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
         $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
+        Test-PnPOnlineConnection -SPOCentralAdminUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
+
+        $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
+        $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+        $allFiles = $spfxFiles + $appFiles
         $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
         $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
-        foreach ($app in $allApps)
+        foreach ($file in $allFiles)
         {
-            Write-Information "    - App {$($app.Title)}"
-            $extension = ".sppkg"
-            if (-not $app.IsClientSideSolution)
-            {
-                $extension = ".app"
-            }
-            $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $app.title + $extension
-            $filesToDownload += @{Url = $appInstanceUrl; Site = $tenantAppCatalogUrl}
-            $DSCContent += Export-TargetResource -Title $app.Title `
-                                                -Path "ReverseDSC" `
-                                                -CentralAdminUrl $centralAdminUrl `
-                                                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Information "    - File {$($file.Name)}"
+            $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl}
+            $DSCContent += Export-TargetResource -Identity $file.Name `
+                                                 -Path "ReverseDSC" `
+                                                 -CentralAdminUrl $centralAdminUrl `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+        }
+
+        Test-PnPOnlineConnection -SPOCentralAdminUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
+        foreach ($file in $allFiles)
+        {
+            $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
+            $fileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length -1]
+            Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $fileName -AsFile | Out-Null
         }
     }
     #endregion
@@ -2301,7 +2307,7 @@ function Start-O365ConfigurationExtract
                                                         -ChildPath "..\DSCResources\MSFT_SPOSiteDesign\MSFT_SPOSiteDesign.psm1" `
                                                         -Resolve
 
-        $catch = Import-Module $SPOSiteDesignModulePath
+        Import-Module $SPOSiteDesignModulePath | Out-Null
         Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
         $siteDesigns = Get-PnPSiteDesign
 
@@ -2323,7 +2329,7 @@ function Start-O365ConfigurationExtract
                                                         -ChildPath "..\DSCResources\MSFT_SPOSiteDesignRights\MSFT_SPOSiteDesignRights.psm1" `
                                                         -Resolve
 
-        $catch = Import-Module $SPOSiteDesignModulePath
+        Import-Module $SPOSiteDesignModulePath | Out-Null
         Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
         $siteDesigns = Get-PnPSiteDesign
@@ -2564,29 +2570,14 @@ function Start-O365ConfigurationExtract
     {
         $OutputDSCPath += "\"
     }
+    #endregion
 
-    #region Download all identified files
-    Write-Information "Connecting AppCatalog {$($tenantAppCatalogUrl)} by $($GlobalAdminAccount.UserName) to download Apps..."
-    try {
-        Connect-PnpOnline -Url $tenantAppCatalogUrl -Credentials $GlobalAdminAccount
-    }
-    catch {
-        Write-Information $_
-    }
-
-    foreach ($file in $filesToDownload)
+    #region Copy Downloaded files back into output folder
+    foreach ($fileToCopy in $filesToDownload)
     {
-        $fileName = $file.Url.Split('/')[$file.Url.Split('/').Length -1]
-
-        try
-        {
-            Write-Information "Downloading {$($file.Url)} into {$($OutPutDSCPath + $fileName)}"
-            Get-PnPFile -Url $file.Url -Path $OutputDSCPath -Filename $fileName -AsFile
-        }
-        catch
-        {
-            Write-Error -Message $_
-        }
+        $filePath = Join-Path $env:Temp $fileToCopy.Name -Resolve
+        $destPath = Join-Path $OutputDSCPath $fileToCopy.Name
+        Copy-Item -Path $filePath -Destination $destPath
     }
     #endregion
 
@@ -2598,6 +2589,5 @@ function Start-O365ConfigurationExtract
         $outputConfigurationData = $OutputDSCPath + "ConfigurationData.psd1"
         New-ConfigurationDataDocument -Path $outputConfigurationData
     }
-    #endregion
     Invoke-Item -Path $OutputDSCPath
 }

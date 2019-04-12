@@ -1,3 +1,4 @@
 # Description
 
-This resource allows users to create and monitor SharePoint Online Site Collections.
+This resource allows users to deploy App instances in the
+App Catalog.
