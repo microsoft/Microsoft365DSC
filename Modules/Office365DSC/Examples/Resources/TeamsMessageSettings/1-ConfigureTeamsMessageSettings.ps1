@@ -3,11 +3,16 @@ This example is used to test new resources and showcase the usage of new resourc
 It is not meant to use as a production baseline.
 #>
 
-Configuration TeamsMessageSettingsConfig
+Configuration Example
 {
-    Import-DSCResource -ModuleName Office365DSC
-    $credsGlobalAdmin = Get-Credential -UserName "derek@smaystate.onmicrosoft.com" -Message "Global Admin"
-    Node localhost
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Office365DSC
+
+    node localhost
     {
         TeamsMessageSettings MyTeamMessageSettings
         {
@@ -22,15 +27,3 @@ Configuration TeamsMessageSettingsConfig
         }
     }
 }
-
-$configData = @{
-    AllNodes = @(
-        @{
-            NodeName                    = "localhost"
-            PSDscAllowPlainTextPassword = $true
-            PSDscAllowDomainUser        = $true
-        }
-    )
-}
-
-TeamsMessageSettingsConfig -ConfigurationData $configData

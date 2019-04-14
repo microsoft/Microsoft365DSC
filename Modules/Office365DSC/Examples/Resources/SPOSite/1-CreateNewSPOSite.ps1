@@ -3,11 +3,16 @@ This example is used to test new resources and showcase the usage of new resourc
 It is not meant to use as a production baseline.
 #>
 
-Configuration Site
+Configuration Example
 {
-    Import-DSCResource -ModuleName Office365DSC
-    $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
-    Node localhost
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Office365DSC
+
+    node localhost
     {
         SPOSite ee4a977d-4d7d-4968-9238-2a1702aa699c
         {
@@ -25,15 +30,3 @@ Configuration Site
         }
     }
 }
-
-$configData = @{
-    AllNodes = @(
-        @{
-            NodeName                    = "localhost"
-            PSDscAllowPlainTextPassword = $true;
-            PSDscAllowDomainUser        = $true;
-        }
-    )
-}
-
-Site -ConfigurationData $configData
