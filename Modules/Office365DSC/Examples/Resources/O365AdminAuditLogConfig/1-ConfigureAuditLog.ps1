@@ -17,7 +17,7 @@ Configuration Example
         O365AdminAuditLogConfig Settings
         {
             IsSingleInstance                = "Yes"
-            UnifiedAuditLogIngestionEnabled = $true
+            UnifiedAuditLogIngestionEnabled = "Enabled"
             Ensure                          = "Present"
             GlobalAdminAccount              = $credsGlobalAdmin
         }

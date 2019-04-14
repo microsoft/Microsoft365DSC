@@ -57,11 +57,16 @@ function Get-TargetResource
         [System.String]
         $CentralAdminUrl,
 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    
+
     Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -169,6 +174,11 @@ function Set-TargetResource
         [System.String]
         $CentralAdminUrl,
 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
@@ -247,6 +257,11 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
+
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
+        $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

@@ -19,7 +19,7 @@ Configuration Example
             Name               = "MyResultSource"
             Description        = "Description of item"
             Protocol           = "Local"
-            Type               = "SharePoint
+            Type               = "SharePoint"
             GlobalAdminAccount = $credsGlobalAdmin
             Ensure             = "Present"
             CentralAdminUrl    = "https://Office365DSC-admin.sharepoint.com"
