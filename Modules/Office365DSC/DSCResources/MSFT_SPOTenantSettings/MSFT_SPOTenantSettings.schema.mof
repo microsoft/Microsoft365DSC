@@ -20,6 +20,6 @@ class MSFT_SPOTenantSettings : OMI_BaseResource
     [Write, Description("")] boolean FilePickerExternalImageSearchEnabled;
     [Write, Description("Defines if the default themes are visible or hidden")] boolean HideDefaultThemes;
     [Required, Description("The Url of the SharePoint Online Central Administration")] string CentralAdminUrl;
-        [Write, Description("Only accepted value is 'Present'."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Only accepted value is 'Present'."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };

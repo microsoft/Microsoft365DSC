@@ -99,11 +99,16 @@ function Get-TargetResource
         [System.String]
         $CentralAdminUrl,
 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    
+
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -131,7 +136,7 @@ function Get-TargetResource
         CentralAdminUrl                            = $null
         GlobalAdminAccount                         = $null
     }
-    
+
     try
     {
         $SPOSharingSettings = Get-SPOTenant
@@ -272,11 +277,16 @@ function Set-TargetResource
         [System.String]
         $CentralAdminUrl,
 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    
+
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $CurrentParameters = $PSBoundParameters
@@ -321,7 +331,7 @@ function Set-TargetResource
     {
         Write-verbose -Message "Configuring Tenant with: $value"
     }
-    $tenant = Set-SPOTenant @CurrentParameters
+    Set-SPOTenant @CurrentParameters | Out-Null
 }
 function Test-TargetResource
 {
@@ -415,7 +425,7 @@ function Test-TargetResource
         [System.String]
         [ValidateSet("View", "Edit")]
         $DefaultLinkPermission,
-        
+
         [Parameter()]
         [System.boolean]
         $RequireAcceptingAccountMatchInvitedAccount,
@@ -423,6 +433,11 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
+
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
+        $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
