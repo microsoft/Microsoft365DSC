@@ -12,8 +12,7 @@ Configuration Example
     )
     Import-DSCResource -ModuleName Office365DSC
 
-    Node localhost
-    {
+    node localhost{
         EXOMailboxSettings OttawaTeam
         {
             DisplayName        = "Ottawa Employees"
