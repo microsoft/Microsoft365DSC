@@ -1,6 +1,6 @@
 <#
-.EXAMPLE
-    This example shows how to deploy Access Services 2013 to the local SharePoint farm.
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
 #>
 
 Configuration Example
@@ -12,7 +12,8 @@ Configuration Example
     )
     Import-DscResource -ModuleName Office365DSC
 
-    node localhost {
+    node localhost
+    {
         EXOMailboxSettings OttawaTeam
         {
             DisplayName        = "Ottawa Employees"

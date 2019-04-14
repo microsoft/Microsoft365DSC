@@ -11,6 +11,7 @@ Configuration Example
         $credsGlobalAdmin
     )
     Import-DscResource -ModuleName Office365DSC
+
     node localhost
     {
         EXOMailTips OrgWide
@@ -21,6 +22,7 @@ Configuration Example
             MailTipsLargeAudienceThreshold        = 100
             MailTipsMailboxSourcedTipsEnabled     = $True
             MailTipsExternalRecipientsTipsEnabled = $True
+            Ensure                                = "Present"
             GlobalAdminAccount                    = $credsGlobalAdmin
         }
     }
