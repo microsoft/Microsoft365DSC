@@ -174,7 +174,7 @@ function Get-TargetResource
     {
         $fixedSortable = "Yes"
     }
-
+    Write-Verbose "Retrieved Property"
     return @{
         Name = [string] $property.Value.Name
         Type = [string] $property.Value.ManagedType
