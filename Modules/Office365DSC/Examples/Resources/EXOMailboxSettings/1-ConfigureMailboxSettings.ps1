@@ -2,7 +2,14 @@
 This example is used to test new resources and showcase the usage of new resources being worked on.
 It is not meant to use as a production baseline.
 #>
-
+$ConfigurationData = @{
+    AllNodes = @(
+        @{
+            NodeName = 'localhost'
+            PSDscAllowPlainTextPassword = $true
+        }
+    )
+}
 Configuration Example
 {
     param(
