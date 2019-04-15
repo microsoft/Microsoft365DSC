@@ -53,12 +53,12 @@ function Get-TargetResource
     }
 
     Write-Verbose -Message "Getting storage entity $Key"
-    $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Clear()
-    $CurrentParameters.Add("Key", $Key)
-    $CurrentParameters.Add("Scope", $EntityScope)
 
-    $Entity = Get-PnPStorageEntity @CurrentParameters -ErrorAction SilentlyContinue
+    $entityStorageParms = @{}
+    $entityStorageParms.Add("Key", $Key)
+    $entityStorageParms.Add("Scope", $EntityScope)
+
+    $Entity = Get-PnPStorageEntity @entityStorageParms -ErrorAction SilentlyContinue
     ## Get-PnPStorageEntity seems to not return $null when not found
     ## so checking key
     if ($null -eq $Entity.Key)
