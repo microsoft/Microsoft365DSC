@@ -3,6 +3,14 @@ This example is used to test new resources and showcase the usage of new resourc
 It is not meant to use as a production baseline.
 #>
 
+
+$ConfigurationData = @{
+    AllNodes = @(
+        @{
+            NodeName = "localhost"
+        }
+    )
+}
 Configuration Example
 {
     param(
@@ -24,13 +32,3 @@ Configuration Example
         }
     }
 }
-
-$ConfigurationData = @{
-    AllNodes = @(
-        @{
-            NodeName = "localhost"
-        }
-    )
-}
-
-Example -ConfigurationData $ConfigurationData
