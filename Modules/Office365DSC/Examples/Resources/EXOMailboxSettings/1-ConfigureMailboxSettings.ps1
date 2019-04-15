@@ -25,3 +25,12 @@ Configuration Example
     }
 }
 
+$ConfigurationData = @{
+    AllNodes = @(
+        @{
+            NodeName = "localhost"
+        }
+    )
+}
+
+Example -ConfigurationData $ConfigurationData
