@@ -102,7 +102,7 @@ function Get-TargetResource
         throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
     }
 
-    Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
         Name                        = $Name
@@ -303,7 +303,7 @@ function Set-TargetResource
         throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
     }
 
-    Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     $SearchConfigTemplatePath =  Join-Path -Path $PSScriptRoot `
                                            -ChildPath "..\..\Dependencies\SearchConfigurationSettings.xml" `
                                            -Resolve
