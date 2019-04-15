@@ -14,4 +14,4 @@ steps:
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
-    script: 'Invoke-TestHarness
+    script: 'Invoke-TestHarness'
