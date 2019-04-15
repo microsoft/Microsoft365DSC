@@ -45,7 +45,7 @@ function Test-PnPOnlineConnection{
 
         [Parameter()]
         [System.String]
-        $SPOCentralAdminUrl
+        $SiteUrl
     )
 }
 
@@ -11741,5 +11741,32 @@ function Get-PnPSiteDesignRights
         [Parameter()]
         [string]
         $Identity
+    )
+}
+
+function Get-PnPStorageEntity
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Key,
+
+        [Parameter()]
+        [string]
+        $Value,
+
+        [Parameter()]
+        [string]
+        $Comment,
+
+        [Parameter()]
+        [string]
+        $Description,
+
+        [Parameter()]
+        [string]
+        $Scope
+
     )
 }
