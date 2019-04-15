@@ -5477,6 +5477,42 @@ param(
 
  }
 
+ #region SPOApp
+function Get-PnPApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity
+    )
+}
+
+function Add-PnPApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Path,
+
+        [Parameter()]
+        [boolean]
+        $Overwrite
+    )
+}
+
+function Remove-PnPApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity
+    )
+}
+ #endregion
+
 
 function Add-MsolGroupMember {
  [CmdletBinding(DefaultParameterSetName='AddGroupMembers__0')]
