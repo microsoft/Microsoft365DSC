@@ -14,4 +14,4 @@ steps:
   displayName: "Import TestHarness Module"
   inputs:
     targetType: 'inline'
-    script: Install-Module ReverseDSC -Force;Import-Module '$(build.artifactstagingdirectory)\BuildFiles\Tests\TestHarness.psm1' -Force;Invoke-TestHarness
+    script: Install-Module MSOnline -Force;Install-Module ReverseDSC -Force;Import-Module '$(build.artifactstagingdirectory)\BuildFiles\Tests\TestHarness.psm1' -Force;Invoke-TestHarness
