@@ -38,7 +38,7 @@ function Get-TargetResource
 
     if ($null -eq $mailboxSettings)
     {
-        Write-Verbose "The specified Mailbox doesn't already exist."
+        Write-Verbose "The specified Mailbox doesn't already exist"
         return $nullReturn
     }
 
