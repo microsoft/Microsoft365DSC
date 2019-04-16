@@ -6,13 +6,17 @@ pool:
 
 steps:
 - task: CopyFiles@2
+  displayName: "Obtain Files from GitHub"
   inputs:
     SourceFolder: '.'
     TargetFolder: '$(build.artifactstagingdirectory)/BuildFiles'
 - task: PowerShell@2
+  displayName: "Import TestHarness Module"
   inputs:
-    targetType: Import-Module '$(build.artifactstagingdirectory)/Tests/TestHarness.psm1'
+    targetType: 'inline'
+    script: Import-Module '$(build.artifactstagingdirectory)/Tests/TestHarness.psm1'
 - task: PowerShell@2
+  displayName: "Invoke-TestHarness"
   inputs:
     targetType: 'inline'
     script: 'Invoke-TestHarness'
