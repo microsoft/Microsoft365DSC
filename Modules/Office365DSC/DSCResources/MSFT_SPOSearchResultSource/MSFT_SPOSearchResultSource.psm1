@@ -90,7 +90,7 @@ function Get-TargetResource
         throw "This resource cannot delete Result Sources. Please make sure you set its Ensure value to Present."
     }
 
-    Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
         Name                = $Name
@@ -210,7 +210,7 @@ function Set-TargetResource
         throw "This resource cannot delete Result Sources. Please make sure you set its Ensure value to Present."
     }
 
-    Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose "Reading SearchConfigurationSettings XML file"
     $SearchConfigTemplatePath =  Join-Path -Path $PSScriptRoot `
                                            -ChildPath "..\..\Dependencies\SearchConfigurationSettings.xml" `

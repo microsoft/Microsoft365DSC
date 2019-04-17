@@ -61,8 +61,8 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    
-    Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+
+    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
         IsSingleInstance             = 'Yes'
@@ -174,7 +174,7 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("CentralAdminUrl")
@@ -252,7 +252,7 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     Write-Verbose -Message "Testing SPO Tenant"
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -294,7 +294,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-PnPOnlineConnection -GlobalAdminAccount $GlobalAdminAccount -SPOCentralAdminUrl $CentralAdminUrl
+    Test-PnPOnlineConnection -GlobalAdminAccount $GlobalAdminAccount -SiteUrl $CentralAdminUrl
 
     $result = Get-TargetResource @PSBoundParameters
     $content = "SPOAccessControlSettings " + (New-GUID).ToString() + "`r`n"

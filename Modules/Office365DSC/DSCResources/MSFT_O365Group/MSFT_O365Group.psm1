@@ -54,7 +54,7 @@ function Get-TargetResource
 
     if ($GroupType -eq "Security")
     {
-        Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+        Connect-MsolService -Credential $GlobalAdminAccount
         Write-Verbose -Message "Getting Security Group $($DisplayName)"
         $group = Get-MSOLGroup | Where-Object {$_.DisplayName -eq $DisplayName}
 
@@ -119,7 +119,7 @@ function Get-TargetResource
                     GroupType = $GroupType
                     Members = $groupMembers
                     ManagedBy = $group.ManagedBy
-                    Description = $group.Notes
+                    Description = $group.Notes.ToString()
                     GlobalAdminAccount = $GlobalAdminAccount
                     Ensure = "Present"
                 }

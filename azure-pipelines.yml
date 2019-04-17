@@ -1,0 +1,17 @@
+trigger:
+- dev
+
+pool:
+  vmImage: 'windows-2019'
+
+steps:
+- task: CopyFiles@2
+  displayName: "Obtain Files from GitHub"
+  inputs:
+    SourceFolder: '.'
+    TargetFolder: '$(build.artifactstagingdirectory)/BuildFiles'
+- task: PowerShell@2
+  displayName: "Import TestHarness Module"
+  inputs:
+    targetType: 'inline'
+    script: Install-Module AzureAD -Force; Install-Module MicrosoftTeams -Force;Install-Module SharePointPnPPowerShellOnline -Force;Install-Module MSOnline -Force;Install-Module ReverseDSC -Force;Import-Module '$(build.artifactstagingdirectory)\BuildFiles\Tests\TestHarness.psm1' -Force;Invoke-TestHarness

@@ -38,19 +38,25 @@ function Get-TargetResource
     }
 
     Write-Verbose -Message "Checking for existance of Team User $User"
-    $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
-    if ($null -eq $team)
-    {
-        throw "Team with Name $TeamName doesnt exist in tenant"
-    }
+    $team = Get-TeamByName $TeamName
+    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
-    if ($null -eq $Role)
+
+    try
     {
-        $allMembers = Get-TeamUser -GroupId $team.GroupId -ErrorAction SilentlyContinue
+        if ($null -eq $Role)
+        {
+            $allMembers = Get-TeamUser -GroupId $team.GroupId -ErrorAction SilentlyContinue
+        }
+        else
+        {
+            $allMembers = Get-TeamUser -GroupId $team.GroupId -Role $Role -ErrorAction SilentlyContinue
+        }
     }
-    else
+    catch
     {
-        $allMembers = Get-TeamUser -GroupId $team.GroupId -Role $Role -ErrorAction SilentlyContinue
+        Write-Warning "The current user doesn't have the rights to access the list of members for Team {$($TeamName)}."
+        return $nullReturn
     }
 
     if ($null -eq $allMembers)
@@ -101,11 +107,9 @@ function Set-TargetResource
 
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
-    $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
-    if ($null -eq $team)
-    {
-        throw "Team with Name $TeamName doesnt exist in tenant"
-    }
+    $team = Get-TeamByName $TeamName
+
+    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("TeamName")
