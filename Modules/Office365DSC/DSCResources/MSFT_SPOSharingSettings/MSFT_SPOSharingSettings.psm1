@@ -103,7 +103,7 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    
+
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -131,7 +131,7 @@ function Get-TargetResource
         CentralAdminUrl                            = $null
         GlobalAdminAccount                         = $null
     }
-    
+
     try
     {
         $SPOSharingSettings = Get-SPOTenant
@@ -276,7 +276,7 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    
+
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $CurrentParameters = $PSBoundParameters
@@ -415,7 +415,7 @@ function Test-TargetResource
         [System.String]
         [ValidateSet("View", "Edit")]
         $DefaultLinkPermission,
-        
+
         [Parameter()]
         [System.boolean]
         $RequireAcceptingAccountMatchInvitedAccount,
@@ -564,6 +564,7 @@ function Export-TargetResource
     )
     Test-SPOServiceConnection -GlobalAdminAccount $GlobalAdminAccount -SPOCentralAdminUrl $CentralAdminUrl
     $result = Get-TargetResource @PSBoundParameters
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "SPOSharingSettings " + (New-GUID).ToString() + "`r`n"
     $content += "{`r`n"
     $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

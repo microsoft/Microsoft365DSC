@@ -35,7 +35,7 @@ function Get-TargetResource
     )
 
     $nullReturn = @{
-        Identity           = $Title
+        Identity        = $Title
         Path            = $null
         Publish         = $Publish
         Overwrite       = $Overwrite
@@ -54,7 +54,7 @@ function Get-TargetResource
             return $nullReturn
         }
         return @{
-            Identity           = $app.Title
+            Identity        = $app.Title
             Path            = $Path
             Publish         = $app.Deployed
             Overwrite       = $Overwrite
@@ -187,7 +187,7 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        SPOApp " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

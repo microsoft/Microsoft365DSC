@@ -297,6 +297,7 @@ function Export-TargetResource
     Test-PnPOnlineConnection -GlobalAdminAccount $GlobalAdminAccount -SiteUrl $CentralAdminUrl
 
     $result = Get-TargetResource @PSBoundParameters
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "SPOAccessControlSettings " + (New-GUID).ToString() + "`r`n"
     $content += "{`r`n"
     $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
