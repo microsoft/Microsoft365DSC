@@ -499,8 +499,15 @@ function Show-O365GUI
                     }
                 }
 
-                $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force));
-                Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount -ComponentsToExtract $SelectedComponents
+                try
+                {
+                    $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force));
+                    Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount -ComponentsToExtract $SelectedComponents
+                }
+                catch
+                {
+                    Write-Information $_
+                }
             }
             else
             {

@@ -471,7 +471,7 @@ function Start-O365ConfigurationExtract
         Connect-MsolService -Credential $GlobalAdminAccount
 
         $users = Get-MsolUser
-
+        $partialContent = ""
         foreach ($user in $users)
         {
             Write-Information "    User {$($user.UserPrincipalName)}"
@@ -499,7 +499,7 @@ function Start-O365ConfigurationExtract
                                         -Resolve
 
         Import-Module $ODSettingsModulePath | Out-Null
-
+        $partialContent = ""
         if ($centralAdminUrl)
         {
             $partialContent = Export-TargetResource -CentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
@@ -530,6 +530,8 @@ function Start-O365ConfigurationExtract
         $allFiles = $spfxFiles + $appFiles
         $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
         $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
+
+        $partialContent = ""
         foreach ($file in $allFiles)
         {
             Write-Information "    - File {$($file.Name)}"
@@ -617,6 +619,8 @@ function Start-O365ConfigurationExtract
         Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
         $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
         $sources =  $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
+
+        $partialContent = ""
         foreach ($source in $sources)
         {
             $mapping = $InfoMapping | Where-Object { $_.ProviderID -eq $source.ProviderId }
@@ -648,6 +652,7 @@ function Start-O365ConfigurationExtract
         $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
         $properties =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
 
+        $partialContent = ""
         foreach ($property in $properties)
         {
             Write-Information "    Managed Property {$($property.Value.Name)}"
@@ -678,6 +683,7 @@ function Start-O365ConfigurationExtract
 
         $siteDesigns = Get-PnPSiteDesign
 
+        $partialContent = ""
         foreach ($siteDesign in $siteDesigns)
         {
             Write-Information "    Site Design {$($siteDesign.Title)}"
@@ -707,6 +713,7 @@ function Start-O365ConfigurationExtract
 
         $siteDesigns = Get-PnPSiteDesign
 
+        $partialContent = ""
         foreach ($siteDesign in $siteDesigns)
         {
             Write-Information "    Site Design Rights {$($siteDesign.Title)}"
@@ -736,6 +743,7 @@ function Start-O365ConfigurationExtract
         Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
         $sites = Get-SPOSite
 
+        $partialContent = ""
         foreach ($site in $sites)
         {
             Write-Information "    Site Collection {$($site.Url)}"
