@@ -11,7 +11,7 @@ executed from an agent's Local Configuration Manager (LCM) (machine
 or container) which can communicate back remotely to Office 365 via
 remote API calls (therefore requires internet connectivity)
 
-# How to Install
+## How to Install
 
 At this current point int time, the Office365DSC module is only
 available in Alpha Release. In order to acquire the latest Alpha
