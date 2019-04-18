@@ -35,7 +35,7 @@ function Get-TargetResource
     )
 
     $nullReturn = @{
-        Title           = $Title
+        Identity           = $Title
         Path            = $null
         Publish         = $Publish
         Overwrite       = $Overwrite
@@ -54,7 +54,7 @@ function Get-TargetResource
             return $nullReturn
         }
         return @{
-            Title           = $app.Title
+            Identity           = $app.Title
             Path            = $Path
             Publish         = $app.Deployed
             Overwrite       = $Overwrite

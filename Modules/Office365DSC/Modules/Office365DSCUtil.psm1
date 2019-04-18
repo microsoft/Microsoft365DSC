@@ -1712,6 +1712,17 @@ function Start-O365ConfigurationExtract
         [System.String[]]
         $ComponentsToExtract
     )
+
+    $organization = ""
+    if ($GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+        Add-ConfigurationDataEntry -Node "NonNodeData" `
+                                   -Key "OrganizationName" `
+                                   -Value $organization `
+                                   -Description "Name of the Organization"
+    }
+
     $filesToDownload = @() # List of files to download in the destination folder;
 
     $InformationPreference = "Continue"
@@ -1739,6 +1750,10 @@ function Start-O365ConfigurationExtract
         {
             $tenantName = $tenantParts[1].Split(".")[0]
             $centralAdminUrl = "https://" + $tenantName + "-admin.sharepoint.com"
+            Add-ConfigurationDataEntry -Node "NonNodeData" `
+                                     -Key "CentralAdminUrl" `
+                                     -Value $centralAdminUrl `
+                                     -Description "Url of the SharePoint Central Adminsitration"
         }
     }
 
@@ -2040,19 +2055,19 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting EXOMailTips..."
         Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
         $OrgConfig = Get-OrganizationConfig
-
         $organizationName = $OrgConfig.Name
-        Add-ConfigurationDataEntry -Node "localhost" `
-                                   -Key "OrganizationName" `
-                                   -Value $organizationName `
-                                   -Description "Name of the Organization"
 
         $EXOMailTipsModulePath = Join-Path -Path $PSScriptRoot `
                                            -ChildPath "..\DSCResources\MSFT_EXOMailTips\MSFT_EXOMailTips.psm1" `
                                            -Resolve
 
         Import-Module $EXOMailTipsModulePath | Out-Null
-        $DSCContent += Export-TargetResource -Organization $organizationName -GlobalAdminAccount $GlobalAdminAccount
+        $partialContent = Export-TargetResource -Organization $organizationName -GlobalAdminAccount $GlobalAdminAccount
+        if ($partialContent.ToLower().IndexOf($organization) -gt 0)
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $organization + "`""), "`$ConfigurationData.NonNodeData.OrganizationName"
+        }
+        $DSCContent += $partialContent
     }
     #endregion
 
@@ -2158,7 +2173,12 @@ function Start-O365ConfigurationExtract
             $userUPN = $user.UserPrincipalName
             if ($userUPN)
             {
-                $DSCContent += Export-TargetResource -UserPrincipalName $userUPN -GlobalAdminAccount $GlobalAdminAccount
+                $partialContent = Export-TargetResource -UserPrincipalName $userUPN -GlobalAdminAccount $GlobalAdminAccount
+                if ($partialContent.ToLower().IndexOf($organization) -gt 0)
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
+                }
+                $DSCContent += $partialContent
             }
         }
     }
@@ -2176,7 +2196,12 @@ function Start-O365ConfigurationExtract
 
         if ($centralAdminUrl)
         {
-            $DSCContent += Export-TargetResource -CentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+            $partialContent = Export-TargetResource -CentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+            if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+            }
+            $DSCContent += $partialContent
         }
     }
     #endregion
@@ -2190,9 +2215,9 @@ function Start-O365ConfigurationExtract
                                                      -Resolve
 
         Import-Module $SPOAppModulePath | Out-Null
-        Test-PnPOnlineConnection -SPOCentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-PnPOnlineConnection -SiteUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
         $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
-        Test-PnPOnlineConnection -SPOCentralAdminUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-PnPOnlineConnection -SiteUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
 
         $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
         $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
@@ -2203,13 +2228,19 @@ function Start-O365ConfigurationExtract
         {
             Write-Information "    - File {$($file.Name)}"
             $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl}
-            $DSCContent += Export-TargetResource -Identity $file.Name `
-                                                 -Path "ReverseDSC" `
-                                                 -CentralAdminUrl $centralAdminUrl `
-                                                 -GlobalAdminAccount $GlobalAdminAccount
+            $partialContent = Export-TargetResource -Identity $file.Name `
+                                                    -Path "ReverseDSC" `
+                                                    -CentralAdminUrl $centralAdminUrl `
+                                                    -GlobalAdminAccount $GlobalAdminAccount
+
+            if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+            }
+            $DSCContent += $partialContent
         }
 
-        Test-PnPOnlineConnection -SPOCentralAdminUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-PnPOnlineConnection -SiteUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
         foreach ($file in $allFiles)
         {
             $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
@@ -2267,10 +2298,16 @@ function Start-O365ConfigurationExtract
         {
             $mapping = $InfoMapping | Where-Object { $_.ProviderID -eq $source.ProviderId }
             Write-Information "    Result Source {$($source.Name)}"
-            $DSCContent += Export-TargetResource -Name $source.Name `
-                                                -Protocol $mapping.Protocol `
-                                                -CentralAdminUrl $centralAdminUrl `
-                                                -GlobalAdminAccount $GlobalAdminAccount
+            $partialContent = Export-TargetResource -Name $source.Name `
+                                                    -Protocol $mapping.Protocol `
+                                                    -CentralAdminUrl $centralAdminUrl `
+                                                    -GlobalAdminAccount $GlobalAdminAccount
+
+            if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+            }
+            $DSCContent += $partialContent
         }
     }
     #endregion
@@ -2291,10 +2328,16 @@ function Start-O365ConfigurationExtract
         foreach ($property in $properties)
         {
             Write-Information "    Managed Property {$($property.Value.Name)}"
-            $DSCContent += Export-TargetResource -Name $property.Value.Name `
-                                                -Type $property.Value.ManagedType `
-                                                -CentralAdminUrl $centralAdminUrl `
-                                                -GlobalAdminAccount $GlobalAdminAccount
+            $partialContent = Export-TargetResource -Name $property.Value.Name `
+                                                    -Type $property.Value.ManagedType `
+                                                    -CentralAdminUrl $centralAdminUrl `
+                                                    -GlobalAdminAccount $GlobalAdminAccount
+
+            if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+            }
+            $DSCContent += $partialContent
         }
     }
     #endregion
@@ -2308,16 +2351,22 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSiteDesignModulePath | Out-Null
-        Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
         $siteDesigns = Get-PnPSiteDesign
 
         foreach ($siteDesign in $siteDesigns)
         {
             Write-Information "    Site Design {$($siteDesign.Title)}"
-            $DSCContent += Export-TargetResource -Title $siteDesign.Title `
-                                                 -CentralAdminUrl $centralAdminUrl `
-                                                 -GlobalAdminAccount $GlobalAdminAccount
+            $partialContent = Export-TargetResource -Title $siteDesign.Title `
+                                                    -CentralAdminUrl $centralAdminUrl `
+                                                    -GlobalAdminAccount $GlobalAdminAccount
+
+            if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+            }
+            $DSCContent += $partialContent
         }
     }
     #endregion
@@ -2331,16 +2380,22 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSiteDesignModulePath | Out-Null
-        Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
         $siteDesigns = Get-PnPSiteDesign
 
         foreach ($siteDesign in $siteDesigns)
         {
             Write-Information "    Site Design Rights {$($siteDesign.Title)}"
-            $DSCContent += Export-TargetResource -SiteDesignTitle $siteDesign.Title `
+            $partialContent += Export-TargetResource -SiteDesignTitle $siteDesign.Title `
                                                  -CentralAdminUrl $centralAdminUrl `
                                                  -GlobalAdminAccount $GlobalAdminAccount
+
+            if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+            }
+            $DSCContent += $partialContent
         }
     }
     #endregion
@@ -2361,9 +2416,15 @@ function Start-O365ConfigurationExtract
         foreach ($site in $sites)
         {
             Write-Information "    Site Collection {$($site.Url)}"
-            $DSCContent += Export-TargetResource -Url $site.Url `
-                                                -CentralAdminUrl $centralAdminUrl `
-                                                -GlobalAdminAccount $GlobalAdminAccount
+            $partialContent = Export-TargetResource -Url $site.Url `
+                                                    -CentralAdminUrl $centralAdminUrl `
+                                                    -GlobalAdminAccount $GlobalAdminAccount
+
+            if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+            }
+            $DSCContent += $partialContent
         }
     }
     #endregion
