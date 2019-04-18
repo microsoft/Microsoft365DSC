@@ -94,8 +94,8 @@ function Start-O365ConfigurationExtract
         {
             Write-Information "Extracting EXOAtpPolicyForO365..."
             $EXOAtpPolicyForO365ModulePath = Join-Path -Path $PSScriptRoot `
-                                                    -ChildPath "..\DSCResources\MSFT_EXOAtpPolicyForO365\MSFT_EXOAtpPolicyForO365.psm1" `
-                                                    -Resolve
+                                                       -ChildPath "..\DSCResources\MSFT_EXOAtpPolicyForO365\MSFT_EXOAtpPolicyForO365.psm1" `
+                                                       -Resolve
 
             Import-Module $EXOAtpPolicyForO365ModulePath | Out-Null
             $DSCContent += Export-TargetResource -IsSingleInstance "Yes" -GlobalAdminAccount $GlobalAdminAccount
