@@ -236,12 +236,16 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
-    $content = "        EXOAtpPolicyForO365 " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
-    $content += "        }`r`n"
+    $content = ""
+    if ($result.Ensure -eq "Present")
+    {
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content = "        EXOAtpPolicyForO365 " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
+        $content += "        }`r`n"
+    }
     return $content
 }
 

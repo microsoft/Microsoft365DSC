@@ -1699,6 +1699,7 @@ function Export-O365Configuration
 {
     Show-O365GUI
 }
+
 function Start-O365ConfigurationExtract
 {
     [CmdletBinding()]

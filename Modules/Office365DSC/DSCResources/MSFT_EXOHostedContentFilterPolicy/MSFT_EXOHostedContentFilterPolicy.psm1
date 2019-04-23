@@ -809,7 +809,7 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        EXOHostedContentFilterPolicy " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
