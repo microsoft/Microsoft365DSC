@@ -525,6 +525,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
+    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose -Message "Testing site collection $Url"
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
