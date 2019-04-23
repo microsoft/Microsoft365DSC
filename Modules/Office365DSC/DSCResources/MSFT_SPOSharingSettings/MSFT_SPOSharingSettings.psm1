@@ -579,6 +579,7 @@ function Export-TargetResource
     )
     Test-SPOServiceConnection -GlobalAdminAccount $GlobalAdminAccount -SPOCentralAdminUrl $CentralAdminUrl
     $result = Get-TargetResource @PSBoundParameters
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "SPOSharingSettings " + (New-GUID).ToString() + "`r`n"
     $content += "{`r`n"
     $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

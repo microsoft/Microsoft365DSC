@@ -481,8 +481,8 @@ function Export-TargetResource
     $content = ""
     if ($null -ne $result.UserPrincipalName)
     {
-        $result.Password = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+        $result.Password = Resolve-Credentials -UserName "globaladmin"
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $modulePath = $PSScriptRoot + "\MSFT_O365User.psm1"
         $content = "        O365User " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
