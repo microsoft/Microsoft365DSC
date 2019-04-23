@@ -17,7 +17,7 @@ function Invoke-TestHarness
     )
 
 
-    Write-Verbose -Message 'Commencing all Office365DSC tests'
+    Write-Verbose -Message 'Starting all Office365DSC tests'
 
     $repoDir = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
 
@@ -45,7 +45,6 @@ function Invoke-TestHarness
     $versionsPath = Join-Path -Path $repoDir -ChildPath "\Tests\Unit\Stubs\"
     $versionsToTest = (Get-ChildItem -Path $versionsPath).Name
     # Import the first stub found so that there is a base module loaded before the tests start
-    $firstVersion = $versionsToTest | Select-Object -First 1
     $firstStub = Join-Path -Path $repoDir `
         -ChildPath "\Tests\Unit\Stubs\Office365.psm1"
     Import-Module $firstStub -WarningAction SilentlyContinue

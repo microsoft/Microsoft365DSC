@@ -50,7 +50,7 @@
   # ProcessorArchitecture = ''
 
   # Modules that must be imported into the global environment prior to importing this module
-  RequiredModules = @(@{ModuleName = "ReverseDSC"; ModuleVersion = "1.9.4.1"; },
+  RequiredModules = @(@{ModuleName = "ReverseDSC"; ModuleVersion = "1.9.4.2"; },
                       @{ModuleName = "MSOnline"; ModuleVersion = "1.1.183.17"; },
                       @{ModuleName = "SharePointPnPPowerShellOnline"; ModuleVersion = "3.5.1901.0"; },
                       @{ModuleName = "MicrosoftTeams"; ModuleVersion = "0.9.6"; },

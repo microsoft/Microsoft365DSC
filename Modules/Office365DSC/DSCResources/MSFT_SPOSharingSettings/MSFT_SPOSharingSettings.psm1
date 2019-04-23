@@ -99,6 +99,11 @@ function Get-TargetResource
         [System.String]
         $CentralAdminUrl,
 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
@@ -272,6 +277,11 @@ function Set-TargetResource
         [System.String]
         $CentralAdminUrl,
 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
@@ -321,7 +331,7 @@ function Set-TargetResource
     {
         Write-verbose -Message "Configuring Tenant with: $value"
     }
-    $tenant = Set-SPOTenant @CurrentParameters
+    Set-SPOTenant @CurrentParameters | Out-Null
 }
 function Test-TargetResource
 {
@@ -423,6 +433,11 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $CentralAdminUrl,
+
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
+        $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

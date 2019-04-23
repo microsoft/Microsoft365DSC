@@ -403,6 +403,7 @@ function Test-TargetResource
     )
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    Write-Verbose "Testing Result Source Instance"
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                            -DesiredValues $PSBoundParameters `
                                            -ValuesToCheck @("Ensure", `

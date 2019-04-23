@@ -90,7 +90,7 @@ function Set-TargetResource
     }
 
     $AllowedTimeZones = (Get-ChildItem "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Time zones" | `
-        foreach {Get-ItemProperty $_.PSPath}).PSChildName
+        ForEach-Object {Get-ItemProperty $_.PSPath}).PSChildName
 
     if ($AllowedTimeZones.Contains($TimeZone) -eq $false)
     {
