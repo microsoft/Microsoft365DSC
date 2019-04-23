@@ -1,4 +1,3 @@
-
 # Office365DSC
 
 ![DSC Resources Flow](https://github.com/Microsoft/Office365DSC/blob/master/Images/Logo.png?raw=true)
