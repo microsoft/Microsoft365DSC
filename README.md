@@ -2,7 +2,6 @@
 
 [![Build Status](https://dev.azure.com/Office365DSC/Release/_apis/build/status/Microsoft.Office365DSC?branchName=Dev)](https://dev.azure.com/Office365DSC/Release/_build/latest?definitionId=2&branchName=Dev)
 
-
 ![DSC Resources Flow](https://github.com/Microsoft/Office365DSC/blob/master/Images/Logo.png?raw=true)
 
 This module allows organizations to automate the deployment,
@@ -11,7 +10,6 @@ Desired State Configuration. The compiled configuration needs to be
 executed from an agent's Local Configuration Manager (LCM) (machine
 or container) which can communicate back remotely to Office 365 via
 remote API calls (therefore requires internet connectivity)
-
 
 ## Branches
 
