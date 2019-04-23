@@ -2688,7 +2688,7 @@ function Set-SPOSiteConfiguration
                 $CurrentParameters.Remove("SharingBlockedDomainList")
                 if($SharingAllowedDomainList -eq "")
                 {
-                    Write-Verbose -Message "No bllowed domains specified. Not taking any action"
+                    Write-Verbose -Message "No allowed domains specified. Not taking any action"
                     $CurrentParameters.Remove("SharingAllowedDomainList")
                     $CurrentParameters.Remove("SharingDomainRestrictionMode")
                 }

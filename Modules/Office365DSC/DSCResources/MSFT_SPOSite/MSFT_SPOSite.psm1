@@ -376,12 +376,12 @@ function Set-TargetResource
                     $siteAlreadyDeleted = Get-SPODeletedSite -Identity $Url
                     if($null -ne $siteAlreadyDeleted)
                     {
-                        Write-Verbose -Message "The site $($Url) already exists in the deleted sites."
+                        Write-Error -Message "The site $($Url) already exists in the deleted sites."
                     }
                 }
                 catch
                 {
-                    Write-Verbose -Message "The site $($Url) does not exist in the deleted sites."
+                    Write-Error -Message "The site $($Url) does not exist in the deleted sites."
                 }
             }
         }

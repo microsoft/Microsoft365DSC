@@ -23,9 +23,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Test-SPOServiceConnection -MockWith {
 
         }
+
         Mock -CommandName Connect-SPOService -MockWith {
             
         }
+
         # Test contexts
         Context -Name "When the site doesn't exist" -Fixture {
             $testParams = @{
