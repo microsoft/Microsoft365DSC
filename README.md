@@ -1,5 +1,3 @@
-
-[![Build Status](https://dev.azure.com/Office365DSC/Release/_apis/build/status/Microsoft.Office365DSC?branchName=Dev)](https://dev.azure.com/Office365DSC/Release/_build/latest?definitionId=2&branchName=Dev)
 # Office365DSC
 
 ![DSC Resources Flow](https://github.com/Microsoft/Office365DSC/blob/master/Images/Logo.png?raw=true)
