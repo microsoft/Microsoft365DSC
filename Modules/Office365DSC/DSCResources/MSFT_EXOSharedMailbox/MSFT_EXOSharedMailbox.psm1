@@ -209,7 +209,7 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $modulePath = $PSScriptRoot + "\MSFT_EXOSharedMailbox.psm1"
     $content = "        EXOSharedMailbox " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

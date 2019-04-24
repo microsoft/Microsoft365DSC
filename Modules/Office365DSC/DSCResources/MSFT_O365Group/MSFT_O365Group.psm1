@@ -54,7 +54,7 @@ function Get-TargetResource
 
     if ($GroupType -eq "Security")
     {
-        Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+        Connect-MsolService -Credential $GlobalAdminAccount
         Write-Verbose -Message "Getting Security Group $($DisplayName)"
         $group = Get-MSOLGroup | Where-Object {$_.DisplayName -eq $DisplayName}
 
@@ -119,7 +119,7 @@ function Get-TargetResource
                     GroupType = $GroupType
                     Members = $groupMembers
                     ManagedBy = $group.ManagedBy
-                    Description = $group.Notes
+                    Description = $group.Notes.ToString()
                     GlobalAdminAccount = $GlobalAdminAccount
                     Ensure = "Present"
                 }
@@ -368,7 +368,7 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        O365Group " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

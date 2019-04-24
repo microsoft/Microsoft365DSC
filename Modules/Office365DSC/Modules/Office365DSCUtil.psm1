@@ -1319,6 +1319,33 @@ function Set-EXOHostedContentFilterRule
     }
 }
 
+function Confirm-ImportedCmdletIsAvailable
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CmdletName
+    )
+    try
+    {
+        $CmdletIsAvailable = (Get-Command -Name $CmdletName -ErrorAction SilentlyContinue)
+        if ($CmdletIsAvailable)
+        {
+            return $true
+        }
+        else
+        {
+            return $false
+        }
+    }
+    catch
+    {
+        return $false
+    }
+}
+
 function Set-EXOSafeAttachmentRule
 {
     param (
@@ -1405,7 +1432,7 @@ function Test-PnPOnlineConnection
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $SPOCentralAdminUrl,
+        $SiteUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -1414,7 +1441,7 @@ function Test-PnPOnlineConnection
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     Write-Verbose "Verifying the LCM connection state to SharePoint Online with PnP"
-    $catch = Connect-PnPOnline -Url $SPOCentralAdminUrl -Credentials $GlobalAdminAccount
+    $catch = Connect-PnPOnline -Url $SiteUrl -Credentials $GlobalAdminAccount
 }
 
 function Test-O365ServiceConnection
@@ -1430,7 +1457,7 @@ function Test-O365ServiceConnection
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     Write-Verbose "Verifying the LCM connection state to Microsoft Azure Active Directory Services"
-    $catch = Connect-AzureAD -Credential $GlobalAdminAccount
+    Connect-AzureAD -Credential $GlobalAdminAccount
 }
 
 function Test-TeamsServiceConnection
@@ -1672,6 +1699,7 @@ function Export-O365Configuration
 {
     Show-O365GUI
 }
+
 function Start-O365ConfigurationExtract
 {
     [CmdletBinding()]
@@ -1685,6 +1713,8 @@ function Start-O365ConfigurationExtract
         [System.String[]]
         $ComponentsToExtract
     )
+    $filesToDownload = @() # List of files to download in the destination folder;
+
     $InformationPreference = "Continue"
     $VerbosePreference = "SilentlyContinue"
     $WarningPreference = "SilentlyContinue"
@@ -1695,6 +1725,10 @@ function Start-O365ConfigurationExtract
     $DSCContent += "    Node localhost`r`n"
     $DSCContent += "    {`r`n"
 
+    Add-ConfigurationDataEntry -Node "localhost" `
+                                   -Key "ServerNumber" `
+                                   -Value "0" `
+                                   -Description "Default Valus Used to Ensure a Configuration Data File is Generated"
     # Obtain central administration url from a User Principal Name
     $centralAdminUrl = $null
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
@@ -1737,13 +1771,20 @@ function Start-O365ConfigurationExtract
     #region "EXOAtpPolicyForO365"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOAtpPolicyForO365"))
     {
-        Write-Information "Extracting EXOAtpPolicyForO365..."
-        $EXOAtpPolicyForO365ModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOAtpPolicyForO365\MSFT_EXOAtpPolicyForO365.psm1" `
-                                                -Resolve
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-AtpPolicyForO365)
+        {
+            Write-Information "Extracting EXOAtpPolicyForO365..."
+            $EXOAtpPolicyForO365ModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOAtpPolicyForO365\MSFT_EXOAtpPolicyForO365.psm1" `
+                                                    -Resolve
 
-        Import-Module $EXOAtpPolicyForO365ModulePath | Out-Null
-        $DSCContent += Export-TargetResource -IsSingleInstance "Yes" -GlobalAdminAccount $GlobalAdminAccount
+            Import-Module $EXOAtpPolicyForO365ModulePath | Out-Null
+            $DSCContent += Export-TargetResource -IsSingleInstance "Yes" -GlobalAdminAccount $GlobalAdminAccount
+        }
+        else
+        {
+            Write-Information "The specified Tenant is not registered for ATP, and therefore can't extract policies"
+        }
     }
     #endregion
 
@@ -1873,17 +1914,24 @@ function Start-O365ConfigurationExtract
     #region "EXOSafeAttachmentPolicy"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeAttachmentPolicy"))
     {
-        Write-Information "Extracting EXOSafeAttachmentPolicy..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-        $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
-        $EXOSafeAttachmentPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                    -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentPolicy\MSFT_EXOSafeAttachmentPolicy.psm1" `
-                                                    -Resolve
-
-        Import-Module $EXOSafeAttachmentPolicyModulePath | Out-Null
-        foreach ($SafeAttachmentPolicy in $SafeAttachmentPolicies)
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName GetSafeAttachmentPolicy)
         {
-            $DSCContent += Export-TargetResource -Identity $SafeAttachmentPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+            Write-Information "Extracting EXOSafeAttachmentPolicy..."
+            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
+            $EXOSafeAttachmentPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentPolicy\MSFT_EXOSafeAttachmentPolicy.psm1" `
+                                                        -Resolve
+
+            Import-Module $EXOSafeAttachmentPolicyModulePath | Out-Null
+            foreach ($SafeAttachmentPolicy in $SafeAttachmentPolicies)
+            {
+                $DSCContent += Export-TargetResource -Identity $SafeAttachmentPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        else
+        {
+            Write-Information "The current tenant doesn't have access to Safe Attachment Policy APIs."
         }
     }
     #endregion
@@ -1891,17 +1939,24 @@ function Start-O365ConfigurationExtract
     #region "EXOSafeAttachmentRule"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeAttachmentRule"))
     {
-        Write-Information "Extracting EXOSafeAttachmentRule..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-        $SafeAttachmentRules = Get-SafeAttachmentRule
-        $EXOSafeAttachmentRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                                    -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentRule\MSFT_EXOSafeAttachmentRule.psm1" `
-                                                    -Resolve
-
-        Import-Module $EXOSafeAttachmentRuleModulePath | Out-Null
-        foreach ($SafeAttachmentRule in $SafeAttachmentRules)
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
         {
-            $DSCContent += Export-TargetResource -Identity $SafeAttachmentRule.Identity -SafeAttachmentPolicy $SafeAttachmentRule.SafeAttachmentPolicy -GlobalAdminAccount $GlobalAdminAccount
+            Write-Information "Extracting EXOSafeAttachmentRule..."
+            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            $SafeAttachmentRules = Get-SafeAttachmentRule
+            $EXOSafeAttachmentRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentRule\MSFT_EXOSafeAttachmentRule.psm1" `
+                                                        -Resolve
+
+            Import-Module $EXOSafeAttachmentRuleModulePath | Out-Null
+            foreach ($SafeAttachmentRule in $SafeAttachmentRules)
+            {
+                $DSCContent += Export-TargetResource -Identity $SafeAttachmentRule.Identity -SafeAttachmentPolicy $SafeAttachmentRule.SafeAttachmentPolicy -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        else
+        {
+            Write-Information "The current tenant doesn't have access to the Safe Attachment Rule API"
         }
     }
     #endregion
@@ -1909,17 +1964,24 @@ function Start-O365ConfigurationExtract
     #region "EXOSafeLinksPolicy"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeLinksPolicy"))
     {
-        Write-Information "Extracting EXOSafeLinksPolicy..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-        $SafeLinksPolicies = Get-SafeLinksPolicy
-        $EXOSafeLinksPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                    -ChildPath "..\DSCResources\MSFT_EXOSafeLinksPolicy\MSFT_EXOSafeLinksPolicy.psm1" `
-                                                    -Resolve
-
-        Import-Module $EXOSafeLinksPolicyModulePath | Out-Null
-        foreach($SafeLinksPolicy in $SafeLinksPolicies)
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
         {
-            $DSCContent += Export-TargetResource -Identity $SafeLinksPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+            Write-Information "Extracting EXOSafeLinksPolicy..."
+            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            $SafeLinksPolicies = Get-SafeLinksPolicy
+            $EXOSafeLinksPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXOSafeLinksPolicy\MSFT_EXOSafeLinksPolicy.psm1" `
+                                                        -Resolve
+
+            Import-Module $EXOSafeLinksPolicyModulePath | Out-Null
+            foreach($SafeLinksPolicy in $SafeLinksPolicies)
+            {
+                $DSCContent += Export-TargetResource -Identity $SafeLinksPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        else
+        {
+            Write-Information "The current tenant is not registered to allow for Safe Attachment Rules."
         }
     }
     #endregion
@@ -1927,17 +1989,24 @@ function Start-O365ConfigurationExtract
     #region "EXOSafeLinksRule"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeLinksRule"))
     {
-        Write-Information "Extracting EXOSafeLinksRule..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-        $SafeLinksRules = Get-SafeLinksRule
-        $EXOSafeLinksRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                                    -ChildPath "..\DSCResources\MSFT_EXOSafeLinksRule\MSFT_EXOSafeLinksRule.psm1" `
-                                                    -Resolve
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
+            {
+            Write-Information "Extracting EXOSafeLinksRule..."
+            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            $SafeLinksRules = Get-SafeLinksRule
+            $EXOSafeLinksRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXOSafeLinksRule\MSFT_EXOSafeLinksRule.psm1" `
+                                                        -Resolve
 
-        Import-Module $EXOSafeLinksRuleModulePath | Out-Null
-        foreach ($SafeLinksRule in $SafeLinksRules)
+            Import-Module $EXOSafeLinksRuleModulePath | Out-Null
+            foreach ($SafeLinksRule in $SafeLinksRules)
+            {
+                $DSCContent += Export-TargetResource -Identity $SafeLinksRule.Identity -SafeLinksPolicy $SafeLinksRule.SafeLinksPolicy -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        else
         {
-            $DSCContent += Export-TargetResource -Identity $SafeLinksRule.Identity -SafeLinksPolicy $SafeLinksRule.SafeLinksPolicy -GlobalAdminAccount $GlobalAdminAccount
+            Write-Information "The current tenant is not registered to allow for Safe Links Rules."
         }
     }
     #endregion
@@ -2080,9 +2149,9 @@ function Start-O365ConfigurationExtract
                                         -Resolve
 
         Import-Module $O365UserModulePath | Out-Null
-        Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+        Connect-MsolService -Credential $GlobalAdminAccount
 
-        $users = Get-AzureADUser
+        $users = Get-MsolUser
 
         foreach ($user in $users)
         {
@@ -2109,6 +2178,44 @@ function Start-O365ConfigurationExtract
         if ($centralAdminUrl)
         {
             $DSCContent += Export-TargetResource -CentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
+    #region SPOApp
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOApp"))
+    {
+        Write-Information "Extracting SPOApp..."
+        $SPOAppModulePath = Join-Path -Path $PSScriptRoot `
+                                                     -ChildPath "..\DSCResources\MSFT_SPOApp\MSFT_SPOApp.psm1" `
+                                                     -Resolve
+
+        Import-Module $SPOAppModulePath | Out-Null
+        Test-PnPOnlineConnection -SPOCentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
+        Test-PnPOnlineConnection -SPOCentralAdminUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
+
+        $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
+        $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+        $allFiles = $spfxFiles + $appFiles
+        $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
+        $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
+        foreach ($file in $allFiles)
+        {
+            Write-Information "    - File {$($file.Name)}"
+            $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl}
+            $DSCContent += Export-TargetResource -Identity $file.Name `
+                                                 -Path "ReverseDSC" `
+                                                 -CentralAdminUrl $centralAdminUrl `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+        }
+
+        Test-PnPOnlineConnection -SPOCentralAdminUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
+        foreach ($file in $allFiles)
+        {
+            $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
+            $fileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length -1]
+            Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $fileName -AsFile | Out-Null
         }
     }
     #endregion
@@ -2154,7 +2261,7 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSearchResultSourceModulePath | Out-Null
-        Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
         $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
         $sources =  $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
         foreach ($source in $sources)
@@ -2178,7 +2285,7 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSearchManagedPropertyModulePath | Out-Null
-        Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
         $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
         $properties =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
 
@@ -2193,6 +2300,7 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region SPOSiteDesign
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSiteDesign"))
     {
         Write-Information "Extracting SPOSiteDesign..."
@@ -2200,19 +2308,22 @@ function Start-O365ConfigurationExtract
                                                         -ChildPath "..\DSCResources\MSFT_SPOSiteDesign\MSFT_SPOSiteDesign.psm1" `
                                                         -Resolve
 
-        $catch = Import-Module $SPOSiteDesignModulePath
+        Import-Module $SPOSiteDesignModulePath | Out-Null
         Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+
         $siteDesigns = Get-PnPSiteDesign
 
         foreach ($siteDesign in $siteDesigns)
         {
             Write-Information "    Site Design {$($siteDesign.Title)}"
             $DSCContent += Export-TargetResource -Title $siteDesign.Title `
-                                                -CentralAdminUrl $centralAdminUrl `
-                                                -GlobalAdminAccount $GlobalAdminAccount
+                                                 -CentralAdminUrl $centralAdminUrl `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
         }
     }
+    #endregion
 
+    #region SPOSiteDesignRights
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSiteDesignRights"))
     {
         Write-Information "Extracting SPOSiteDesignRights..."
@@ -2220,20 +2331,20 @@ function Start-O365ConfigurationExtract
                                                         -ChildPath "..\DSCResources\MSFT_SPOSiteDesignRights\MSFT_SPOSiteDesignRights.psm1" `
                                                         -Resolve
 
-        $catch = Import-Module $SPOSiteDesignModulePath
+        Import-Module $SPOSiteDesignModulePath | Out-Null
         Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
         $siteDesigns = Get-PnPSiteDesign
 
         foreach ($siteDesign in $siteDesigns)
         {
-            $siteDesignRight = Get-PnPSiteDesignRights -Identity $siteDesign.Id
-            Write-Information "    Site Design Rights {$($siteDesign.Id)}"
-            $DSCContent += Export-TargetResource -Title $siteDesign.Title `
-                                                -CentralAdminUrl $centralAdminUrl `
-                                                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Information "    Site Design Rights {$($siteDesign.Title)}"
+            $DSCContent += Export-TargetResource -SiteDesignTitle $siteDesign.Title `
+                                                 -CentralAdminUrl $centralAdminUrl `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
         }
     }
+    #endregion
 
     #region "SPOSite"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSite"))
@@ -2336,14 +2447,20 @@ function Start-O365ConfigurationExtract
 
         foreach ($team in $Teams)
         {
-            $users = Get-TeamUser -GroupId $team.GroupId
-            foreach ($user in $users)
+            try
             {
-                Write-Information "    Teams User {$($user.User)}"
-                $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
-                                                     -User $user.User `
-                                                     -Role $user.Role `
-                                                     -GlobalAdminAccount $GlobalAdminAccount
+                $users = Get-TeamUser -GroupId $team.GroupId
+                foreach ($user in $users)
+                {
+                    Write-Information "    Teams User {$($user.User)}"
+                    $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
+                                                        -User $user.User `
+                                                        -Role $user.Role `
+                                                        -GlobalAdminAccount $GlobalAdminAccount
+                }
+            }
+            catch {
+                Write-Information "The current User doesn't have the required permissions to extract Users for Team {$($team.DisplayName)}."
             }
         }
     }
@@ -2405,6 +2522,27 @@ function Start-O365ConfigurationExtract
         }
     }
     #endregion
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOStorageEntity"))
+    {
+        Write-Information "Extracting SPOStorageEntity..."
+        $SPOModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_SPOStorageEntity\MSFT_SPOStorageEntity.psm1" `
+                                    -Resolve
+
+        Import-Module $SPOModulePath | Out-Null
+
+        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+
+        $storageEntities = Get-PnPStorageEntity
+
+        foreach ($storageEntity in $storageEntities)
+        {
+            Write-Information "    Storage Entity {$($storageEntity.Key)}"
+            $DSCContent += Export-TargetResource -Key $storageEntity.Key `
+                                                -CentralAdminUrl $centralAdminUrl `
+                                                -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
 
     # Close the Node and Configuration declarations
     $DSCContent += "    }`r`n"
@@ -2455,6 +2593,16 @@ function Start-O365ConfigurationExtract
     {
         $OutputDSCPath += "\"
     }
+    #endregion
+
+    #region Copy Downloaded files back into output folder
+    foreach ($fileToCopy in $filesToDownload)
+    {
+        $filePath = Join-Path $env:Temp $fileToCopy.Name -Resolve
+        $destPath = Join-Path $OutputDSCPath $fileToCopy.Name
+        Copy-Item -Path $filePath -Destination $destPath
+    }
+    #endregion
 
     $outputDSCFile = $OutputDSCPath + "Office365TenantConfig.ps1"
     $DSCContent | Out-File $outputDSCFile
@@ -2464,6 +2612,279 @@ function Start-O365ConfigurationExtract
         $outputConfigurationData = $OutputDSCPath + "ConfigurationData.psd1"
         New-ConfigurationDataDocument -Path $outputConfigurationData
     }
-    #endregion
     Invoke-Item -Path $OutputDSCPath
+}
+
+function Set-SPOSiteConfiguration
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.UInt32]
+        $StorageQuota,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.UInt32]
+        $CompatibilityLevel,
+
+        [Parameter()]
+        [System.UInt32]
+        $LocaleId,
+
+        [Parameter()]
+        [System.UInt32]
+        $ResourceQuota,
+
+        [Parameter()]
+        [System.String]
+        $Template,
+
+        [Parameter()]
+        [System.UInt32]
+        $TimeZoneId,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSelfServiceUpgrade,
+
+        [Parameter()]
+        [System.Boolean]
+        $DenyAddAndCustomizePages,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("NoAccess", "Unlock")]
+        $LockState,
+
+        [Parameter()]
+        [System.UInt32]
+        $ResourceQuotaWarningLevel,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly","ExternalUserSharingOnly","ExternalUserAndGuestSharing")]
+        $SharingCapability,
+
+        [Parameter()]
+        [System.UInt32]
+        $StorageQuotaWarningLevel,
+
+        [Parameter()]
+        [System.boolean]
+        $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.boolean]
+        $SocialBarOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Unknown", "Disabled","NotDisabled")]
+        $DisableAppViews,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Unknown", "Disabled","NotDisabled")]
+        $DisableCompanyWideSharingLinks,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Unknown", "Disabled","NotDisabled")]
+        $DisableFlows,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("BlockMoveOnly", "BlockFull")]
+        $RestrictedToGeo,
+
+        [Parameter()]
+        [System.String]
+        $SharingAllowedDomainList,
+
+        [Parameter()]
+        [System.String]
+        $SharingBlockedDomainList,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("None", "AllowList","BlockList")]
+        $SharingDomainRestrictionMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShowPeoplePickerSuggestionsForGuestUsers,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("None", "AnonymousAccess","Internal","Direct")]
+        $DefaultSharingLinkType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("None", "View","Edit")]
+        $DefaultLinkPermission,
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
+        $Ensure = "Present",
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CentralAdminUrl,
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+
+    $deletedSite = Get-SPODeletedSite | Where-Object { $_.Url -eq $Url }
+    if($deletedSite)
+    {
+        Write-Verbose "A site with URL $($URL) was found in the Recycle Bin."
+        Write-Verbose "Restoring deleted SPOSite $($Url)"
+        Restore-SPODeletedSite $deletedSite
+        Start-Sleep -Seconds 5
+    }
+    try
+    {
+        $siteExists = Get-SPOSite $Url
+    }
+    catch
+    {
+        Write-Verbose "Site does not exist. Creating it"
+    }
+    if($null -ne $siteExists)
+    {
+        Write-Verbose -Message "Configuring site collection $Url"
+        if($siteExists.LockState -eq "NoAccess")
+        {
+            $CurrentParameters = $PSBoundParameters
+            Write-Debug "The site $url currenlty is in Lockstate NoAccess and for that cannot be changed"
+            $CurrentParameters.Remove("CentralAdminUrl")
+            $CurrentParameters.Remove("GlobalAdminAccount")
+            $CurrentParameters.Remove("Ensure")
+            $CurrentParameters.Remove("AllowSelfServiceUpgrade")
+            $CurrentParameters.Remove("DenyAddAndCustomizePages")
+            $CurrentParameters.Remove("ResourceQuotaWarningLevel")
+            $CurrentParameters.Remove("SharingCapability")
+            $CurrentParameters.Remove("StorageQuotaWarningLevel")
+            $CurrentParameters.Remove("CommentsOnSitePagesDisabled")
+            $CurrentParameters.Remove("SocialBarOnSitePagesDisabled")
+            $CurrentParameters.Remove("DisableAppViews")
+            $CurrentParameters.Remove("DisableCompanyWideSharingLinks")
+            $CurrentParameters.Remove("DisableFlows")
+            $CurrentParameters.Remove("RestrictedToGeo")
+            $CurrentParameters.Remove("SharingAllowedDomainList")
+            $CurrentParameters.Remove("SharingBlockedDomainList")
+            $CurrentParameters.Remove("SharingDomainRestrictionMode")
+            $CurrentParameters.Remove("ShowPeoplePickerSuggestionsForGuestUsers")
+            $CurrentParameters.Remove("DefaultSharingLinkType")
+            $CurrentParameters.Remove("DefaultLinkPermission")
+            $CurrentParameters.Remove("CompatibilityLevel")
+            $CurrentParameters.Remove("Template")
+            $CurrentParameters.Remove("LocaleId")
+            $CurrentParameters.Remove("Url")
+            $CurrentParameters.Remove("Owner")
+            $CurrentParameters.Remove("StorageQuota")
+            $CurrentParameters.Remove("Title")
+            $CurrentParameters.Remove("ResourceQuota")
+            $CurrentParameters.Remove("TimeZoneId")
+            Set-SPOSite -Identity $Url @CurrentParameters -NoWait
+        }
+        else
+        {
+            $CurrentParameters = $PSBoundParameters
+            if($CurrentParameters.SharingCapability -and $CurrentParameters.DenyAddAndCustomizePages)
+            {
+                Write-Warning -Message "Setting the DenyAddAndCustomizePages and the SharingCapability property via Set-SPOSite at the same time might cause the DenyAddAndCustomizePages property not to be configured as desired."
+            }
+            if($CurrentParameters.StorageQuotaWarningLevel)
+            {
+                Write-Warning -Message "StorageQuotaWarningLevel can not be configured via Set-SPOSite"
+            }
+            if($SharingDomainRestrictionMode -eq "")
+            {
+                Write-Verbose -Message "SharingDomainRestrictionMode is empty. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
+                $CurrentParameters.Remove("SharingAllowedDomainList")
+                $CurrentParameters.Remove("SharingBlockedDomainList")
+            }
+            if($SharingDomainRestrictionMode -eq "None")
+            {
+                Write-Verbose -Message "SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
+                $CurrentParameters.Remove("SharingAllowedDomainList")
+                $CurrentParameters.Remove("SharingBlockedDomainList")
+            }
+            elseif ($SharingDomainRestrictionMode -eq "AllowList")
+            {
+                Write-Verbose -Message "SharingDomainRestrictionMode is set to AllowList. For that SharingBlockedDomainList cannot be configured"
+                $CurrentParameters.Remove("SharingBlockedDomainList")
+                if($SharingAllowedDomainList -eq "")
+                {
+                    Write-Verbose -Message "No allowed domains specified. Not taking any action"
+                    $CurrentParameters.Remove("SharingAllowedDomainList")
+                    $CurrentParameters.Remove("SharingDomainRestrictionMode")
+                }
+            }
+            elseif($SharingDomainRestrictionMode -eq "BlockList")
+            {
+                Write-Verbose -Message "SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured"
+                $CurrentParameters.Remove("SharingAllowedDomainList")
+                if($SharingBlockedDomainList -eq "")
+                {
+                    Write-Verbose -Message "No blocked domains specified. Not taking any action"
+                    $CurrentParameters.Remove("SharingBlockedDomainList")
+                    $CurrentParameters.Remove("SharingDomainRestrictionMode")
+                }
+            }
+            if(($siteExists.SharingCapability -ne "ExternalUserAndGuestSharing") -or ((Get-SPOTenant).SharingCapability -ne "ExternalUserAndGuestSharing") -and ($DefaultSharingLinkType -eq "AnonymousAccess"))
+            {
+                Write-Verbose -Message "Anonymous sharing has to be enabled in the SharingCapability on site and tenant level first before DefaultSharingLinkType can be set to Anonymous Access"
+                $CurrentParameters.Remove("DefaultSharingLinkType")
+            }
+            if((Get-SPOTenant).showPeoplePickerSuggestionsForGuestUsers -eq $false)
+            {
+                Write-Verbose -Message "ShowPeoplePickerSuggestionsForGuestUsers for this site cannot be set since it is set to false on tenant level"
+                $CurrentParameters.Remove("showPeoplePickerSuggestionsForGuestUsers")
+            }
+            $CurrentParameters.Remove("CentralAdminUrl")
+            $CurrentParameters.Remove("GlobalAdminAccount")
+            $CurrentParameters.Remove("Ensure")
+            $CurrentParameters.Remove("Url")
+            $CurrentParameters.Remove("CompatibilityLevel")
+            $CurrentParameters.Remove("Template")
+            $CurrentParameters.Remove("LocaleId")
+            Set-SPOSite -Identity $Url @CurrentParameters -NoWait
+        }
+    }
+    elseif($null -eq $siteExists)
+    {
+        Write-Verbose -Message "Creating site collection $Url"
+        $siteCreation = @{
+            Url = $Url
+            Owner = $Owner
+            StorageQuota = $StorageQuota
+            Title = $Title
+            CompatibilityLevel = $CompatibilityLevel
+            LocaleId = $LocaleId
+            Template = $Template
+        }
+        New-SPOSite @siteCreation
+        $CurrentParameters4Config = $PSBoundParameters
+        Set-SPOSiteConfiguration @CurrentParameters4Config
+    }
 }

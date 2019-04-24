@@ -225,8 +225,16 @@ function Show-O365GUI
         $chckSPOAccessControlSettings.Text = "Access Control Settings"
         $pnlSPO.Controls.Add($chckSPOAccessControlSettings)
 
+        $chckSPOApp = New-Object System.Windows.Forms.CheckBox
+        $chckSPOApp.Top = 20
+        $chckSPOApp.AutoSize = $true;
+        $chckSPOApp.Name = "chckSPOApp"
+        $chckSPOApp.Checked = $true
+        $chckSPOApp.Text = "Apps"
+        $pnlSPO.Controls.Add($chckSPOApp)
+
         $chckSPOSearchManagedProperty = New-Object System.Windows.Forms.CheckBox
-        $chckSPOSearchManagedProperty.Top = 20
+        $chckSPOSearchManagedProperty.Top = 40
         $chckSPOSearchManagedProperty.AutoSize = $true;
         $chckSPOSearchManagedProperty.Name = "chckSPOSearchManagedProperty"
         $chckSPOSearchManagedProperty.Checked = $true
@@ -234,7 +242,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOSearchManagedProperty)
 
         $chckSPOSearchResultSource = New-Object System.Windows.Forms.CheckBox
-        $chckSPOSearchResultSource.Top = 40
+        $chckSPOSearchResultSource.Top = 60
         $chckSPOSearchResultSource.AutoSize = $true;
         $chckSPOSearchResultSource.Name = "chckSPOSearchResultSource"
         $chckSPOSearchResultSource.Checked = $true
@@ -242,7 +250,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOSearchResultSource)
 
         $chckSPOSharingSettings = New-Object System.Windows.Forms.CheckBox
-        $chckSPOSharingSettings.Top = 60
+        $chckSPOSharingSettings.Top = 80
         $chckSPOSharingSettings.AutoSize = $true;
         $chckSPOSharingSettings.Name = "chckSPOSharingSettings"
         $chckSPOSharingSettings.Checked = $true
@@ -250,7 +258,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOSharingSettings)
 
         $chckSPOSite = New-Object System.Windows.Forms.CheckBox
-        $chckSPOSite.Top = 80
+        $chckSPOSite.Top = 100
         $chckSPOSite.AutoSize = $true;
         $chckSPOSite.Name = "chckSPOSite"
         $chckSPOSite.Checked = $true
@@ -258,7 +266,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOSite)
 
         $chckSPOSiteDesignRights = New-Object System.Windows.Forms.CheckBox
-        $chckSPOSiteDesignRights.Top = 100
+        $chckSPOSiteDesignRights.Top = 120
         $chckSPOSiteDesignRights.AutoSize = $true;
         $chckSPOSiteDesignRights.Name = "chckSPOSiteDesignRights"
         $chckSPOSiteDesignRights.Checked = $true
@@ -382,7 +390,7 @@ function Show-O365GUI
         $panelMenu.Width = $form.Width
         $panelMenu.BackColor = [System.Drawing.Color]::Silver
 
-        $lblMode = New-Object System.Windows.Forms.Label
+        <#$lblMode = New-Object System.Windows.Forms.Label
         $lblMode.Top = 25
         $lblMode.Text = "Extraction Modes:"
         $lblMode.AutoSize = $true
@@ -415,7 +423,7 @@ function Show-O365GUI
         $btnFull.Height = 60
         $btnFull.Text = "Full"
         $btnFull.Add_Click({SelectComponentsForMode($pnlMain, 3)})
-        $panelMenu.Controls.Add($btnFull);
+        $panelMenu.Controls.Add($btnFull);#>
 
         $btnClear = New-Object System.Windows.Forms.Button
         $btnClear.Width = 150
@@ -491,8 +499,15 @@ function Show-O365GUI
                     }
                 }
 
-                $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force));
-                Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount -ComponentsToExtract $SelectedComponents
+                try
+                {
+                    $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force));
+                    Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount -ComponentsToExtract $SelectedComponents
+                }
+                catch
+                {
+                    Write-Information $_
+                }
             }
             else
             {

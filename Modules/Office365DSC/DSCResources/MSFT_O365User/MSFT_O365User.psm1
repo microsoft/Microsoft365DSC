@@ -103,8 +103,6 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-
     $nullReturn = @{
         UserPrincipalName = $null
         DisplayName = $null
@@ -120,6 +118,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
+        Connect-MsolService -Credential $GlobalAdminAccount
         $user = Get-MSOLUser -UserPrincipalName $UserPrincipalName -ErrorAction SilentlyContinue
         if (!$user)
         {
@@ -139,7 +138,7 @@ function Get-TargetResource
         {
             $passwordNeverExpires = $true
         }
-        return @{
+        $results = @{
             UserPrincipalName = $user.UserPrincipalName
             DisplayName = $user.DisplayName
             FirstName = $user.FirstName
@@ -165,12 +164,14 @@ function Get-TargetResource
             GlobalAdminAccount = $GlobalAdminAccount
             Ensure = "Present"
         }
+        return [System.Collections.Hashtable] $results
     }
     catch
     {
         Write-Verbose "The specified User doesn't already exist."
         return $nullReturn
     }
+    return $nullReturn
 }
 
 function Set-TargetResource
@@ -475,16 +476,18 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $PSBoundParameters.Add("Password", $GlobalAdminAccount)
     $result = Get-TargetResource @PSBoundParameters
     $content = ""
     if ($null -ne $result.UserPrincipalName)
     {
-        $result.Password = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+        $result.Password = Resolve-Credentials -UserName "globaladmin"
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $modulePath = $PSScriptRoot + "\MSFT_O365User.psm1"
         $content = "        O365User " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath -UseGetTargetResource
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath
+        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Password"
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
     }

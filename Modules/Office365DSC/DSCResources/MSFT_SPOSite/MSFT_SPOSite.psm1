@@ -175,7 +175,7 @@ function Get-TargetResource
         $site = Get-SPOSite $Url
         if ($null -eq $site)
         {
-            Write-Verbose "The specified Site Collection doesn't already exist."
+            Write-Verbose "The specified Site Collection doesn't exist."
             return $nullReturn
         }
         return @{
@@ -212,7 +212,7 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose "The specified Site Collection doesn't already exist."
+        Write-Verbose "The specified Site Collection doesn't exist."
         return $nullReturn
     }
 }
@@ -357,152 +357,31 @@ function Set-TargetResource
 
     if($Ensure -eq "Present")
     {
-        $deletedSite = Get-SPODeletedSite | Where-Object { $_.Url -eq $Url }
-
-        if($deletedSite)
+        $CurrentParameters = $PSBoundParameters
+        Set-SPOSiteConfiguration @CurrentParameters
+    }
+    elseif($Ensure -eq "Absent")
+    {
+        Write-Verbose -Message "Removing site $($Url)"
+        try
         {
-            Write-Verbose "A site with URL $($URL) was found in the Recycle Bin."
-            Write-Verbose "Restoring Delete SPOSite $($Url)"
-            Restore-SPODeletedSite $deletedSite
+            Remove-SPOSite -Identity $Url -Confirm:$false
         }
-        else
+        catch
         {
-            try
+            if($Error[0].Exception.Message -eq "File Not Found")
             {
-                $siteExists = Get-SPOSite $Url
-            }
-            catch
-            {
-                Write-Verbose "Site does not exist. Creating it"
-            }
-            if($null -eq $siteExists)
-            {
-                Write-Verbose -Message "Creating site collection $Url"
-                $CurrentParameters = $PSBoundParameters
-                $CurrentParameters.Remove("CentralAdminUrl")
-                $CurrentParameters.Remove("GlobalAdminAccount")
-                $CurrentParameters.Remove("Ensure")
-                $CurrentParameters.Remove("AllowSelfServiceUpgrade")
-                $CurrentParameters.Remove("DenyAddAndCustomizePages")
-                $CurrentParameters.Remove("LockState")
-                $CurrentParameters.Remove("ResourceQuotaWarningLevel")
-                $CurrentParameters.Remove("SharingCapability")
-                $CurrentParameters.Remove("StorageQuotaWarningLevel")
-                $CurrentParameters.Remove("CommentsOnSitePagesDisabled")
-                $CurrentParameters.Remove("SocialBarOnSitePagesDisabled")
-                $CurrentParameters.Remove("DisableAppViews")
-                $CurrentParameters.Remove("DisableCompanyWideSharingLinks")
-                $CurrentParameters.Remove("DisableFlows")
-                $CurrentParameters.Remove("RestrictedToGeo")
-                $CurrentParameters.Remove("SharingAllowedDomainList")
-                $CurrentParameters.Remove("SharingBlockedDomainList")
-                $CurrentParameters.Remove("SharingDomainRestrictionMode")
-                $CurrentParameters.Remove("ShowPeoplePickerSuggestionsForGuestUsers")
-                $CurrentParameters.Remove("DefaultSharingLinkType")
-                $CurrentParameters.Remove("DefaultLinkPermission")
-                New-SPOSite @CurrentParameters
-            }
-            else
-            {
-                Write-Verbose -Message "Configuring site collection $Url"
-                if($siteExists.LockState -eq "NoAccess")
+                try
                 {
-                    $CurrentParameters = $PSBoundParameters
-                    Write-Debug "The site $url currenlty is in Lockstate NoAccess and for that cannot be changed"
-                    $CurrentParameters.Remove("CentralAdminUrl")
-                    $CurrentParameters.Remove("GlobalAdminAccount")
-                    $CurrentParameters.Remove("Ensure")
-                    $CurrentParameters.Remove("AllowSelfServiceUpgrade")
-                    $CurrentParameters.Remove("DenyAddAndCustomizePages")
-                    $CurrentParameters.Remove("ResourceQuotaWarningLevel")
-                    $CurrentParameters.Remove("SharingCapability")
-                    $CurrentParameters.Remove("StorageQuotaWarningLevel")
-                    $CurrentParameters.Remove("CommentsOnSitePagesDisabled")
-                    $CurrentParameters.Remove("SocialBarOnSitePagesDisabled")
-                    $CurrentParameters.Remove("DisableAppViews")
-                    $CurrentParameters.Remove("DisableCompanyWideSharingLinks")
-                    $CurrentParameters.Remove("DisableFlows")
-                    $CurrentParameters.Remove("RestrictedToGeo")
-                    $CurrentParameters.Remove("SharingAllowedDomainList")
-                    $CurrentParameters.Remove("SharingBlockedDomainList")
-                    $CurrentParameters.Remove("SharingDomainRestrictionMode")
-                    $CurrentParameters.Remove("ShowPeoplePickerSuggestionsForGuestUsers")
-                    $CurrentParameters.Remove("DefaultSharingLinkType")
-                    $CurrentParameters.Remove("DefaultLinkPermission")
-                    $CurrentParameters.Remove("CompatibilityLevel")
-                    $CurrentParameters.Remove("Template")
-                    $CurrentParameters.Remove("LocaleId")
-                    $CurrentParameters.Remove("Url")
-                    $CurrentParameters.Remove("Owner")
-                    $CurrentParameters.Remove("StorageQuota")
-                    $CurrentParameters.Remove("Title")
-                    $CurrentParameters.Remove("ResourceQuota")
-                    $CurrentParameters.Remove("TimeZoneId")
-                    Set-SPOSite -Identity $Url @CurrentParameters -NoWait
+                    $siteAlreadyDeleted = Get-SPODeletedSite -Identity $Url
+                    if($null -ne $siteAlreadyDeleted)
+                    {
+                        Write-Error -Message "The site $($Url) already exists in the deleted sites."
+                    }
                 }
-                else
+                catch
                 {
-                    $CurrentParameters = $PSBoundParameters
-                    if($CurrentParameters.SharingCapability -and $CurrentParameters.DenyAddAndCustomizePages)
-                    {
-                        Write-Warning -Message "Setting the DenyAddAndCustomizePages and the SharingCapability property via Set-SPOSite at the same time might cause the DenyAddAndCustomizePages property not to be configured as desired."
-                    }
-                    if($CurrentParameters.StorageQuotaWarningLevel)
-                    {
-                        Write-Warning -Message "StorageQuotaWarningLevel can not be configured via Set-SPOSite"
-                    }
-                    if($SharingDomainRestrictionMode -eq "")
-                    {
-                        Write-Verbose -Message "SharingDomainRestrictionMode is empty. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
-                        $CurrentParameters.Remove("SharingAllowedDomainList")
-                        $CurrentParameters.Remove("SharingBlockedDomainList")
-                    }
-                    if($SharingDomainRestrictionMode -eq "None")
-                    {
-                        Write-Verbose -Message "SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
-                        $CurrentParameters.Remove("SharingAllowedDomainList")
-                        $CurrentParameters.Remove("SharingBlockedDomainList")
-                    }
-                    elseif ($SharingDomainRestrictionMode -eq "AllowList")
-                    {
-                        Write-Verbose -Message "SharingDomainRestrictionMode is set to AllowList. For that SharingBlockedDomainList cannot be configured"
-                        $CurrentParameters.Remove("SharingBlockedDomainList")
-                        if($SharingAllowedDomainList -eq "")
-                        {
-                            Write-Verbose -Message "No bllowed domains specified. Not taking any action"
-                            $CurrentParameters.Remove("SharingAllowedDomainList")
-                            $CurrentParameters.Remove("SharingDomainRestrictionMode")
-                        }
-                    }
-                    elseif($SharingDomainRestrictionMode -eq "BlockList")
-                    {
-                        Write-Verbose -Message "SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured"
-                        $CurrentParameters.Remove("SharingAllowedDomainList")
-                        if($SharingBlockedDomainList -eq "")
-                        {
-                            Write-Verbose -Message "No blocked domains specified. Not taking any action"
-                            $CurrentParameters.Remove("SharingBlockedDomainList")
-                            $CurrentParameters.Remove("SharingDomainRestrictionMode")
-                        }
-                    }
-                    if(($siteExists.SharingCapability -ne "ExternalUserAndGuestSharing") -or ((Get-SPOTenant).SharingCapability -ne "ExternalUserAndGuestSharing") -and ($DefaultSharingLinkType -eq "AnonymousAccess"))
-                    {
-                        write-verbose -Message "Anonymous sharing has to be enabled in the SharingCapability on site and tenant level first before DefaultSharingLinkType can be set to Anonymous Access"
-                        $CurrentParameters.Remove("DefaultSharingLinkType")
-                    }
-                    if((get-spotenant).showPeoplePickerSuggestionsForGuestUsers -eq $false)
-                    {
-                        Write-Verbose -Message "ShowPeoplePickerSuggestionsForGuestUsers for this site cannot be set since it is set to false on tenant level"
-                        $CurrentParameters.Remove("showPeoplePickerSuggestionsForGuestUsers")
-                    }
-                    $CurrentParameters.Remove("CentralAdminUrl")
-                    $CurrentParameters.Remove("GlobalAdminAccount")
-                    $CurrentParameters.Remove("Ensure")
-                    $CurrentParameters.Remove("Url")
-                    $CurrentParameters.Remove("CompatibilityLevel")
-                    $CurrentParameters.Remove("Template")
-                    $CurrentParameters.Remove("LocaleId")
-                    Set-SPOSite -Identity $Url @CurrentParameters -NoWait
+                    Write-Error -Message "The site $($Url) does not exist in the deleted sites."
                 }
             }
         }
@@ -646,6 +525,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
+    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose -Message "Testing site collection $Url"
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
@@ -700,7 +580,7 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        SPOSite " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

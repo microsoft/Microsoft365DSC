@@ -24,8 +24,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
+        Mock -CommandName Connect-SPOService -MockWith {
+            
+        }
+
         # Test contexts
-        Context -Name "When the site doesn't already exist" -Fixture {
+        Context -Name "When the site doesn't exist" -Fixture {
             $testParams = @{
                 Url                                         = "https://contoso.com/sites/TestSite"
                 Owner                                       = "testuser@contoso.com"
@@ -62,7 +66,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-SPOSite -MockWith {
                 return $null
             }
-
+            Mock -CommandName Set-SPOSiteConfiguration -MockWith {
+                return $null
+            }
             It "Should return absent from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Absent"
             }
@@ -70,8 +76,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should Be $false
             }
-
             It "Creates the site collection in the Set method" {
+                #Assert-MockCalled Test-SPOServiceConnection -Exactly 5
                 Set-TargetResource @testParams
             }
         }
@@ -172,21 +178,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DefaultSharingLinkType                   = "None"
                 DefaultLinkPermission                    = "None"
             }
-            
+
             Mock -CommandName Get-SPODeletedSite -MockWith {
                 return @{
                     Url = "https://contoso.com/sites/TestSite"
                 }
             }
-            Mock -CommandName Restore-SPODeletedSite -MockWith {
+
+            Mock -CommandName Set-SPOSiteConfiguration -MockWith {
                 return "site restored successfully"
+            }
+            It "should find the deleted site" {
+                (Get-SPODeletedSite).url | Should Be "https://contoso.com/sites/TestSite"
             }
             It "should restore the deleted site from the recycle bin" {
                Set-TargetResource @testParams | Should Be "site restored successfully"
             }
         }
 
-        Context -Name "Site is in locked state" -Fixture {
+        Context -Name "Testing site removal" -Fixture {
             $testParams = @{
                 Url                                      = "https://contoso.com/sites/TestSite"
                 Owner                                    = "testuser@contoso.com"
@@ -200,7 +210,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Title                                    = "TestSite"
                 DenyAddAndCustomizePages                 = $false
                 StorageQuotaWarningLevel                 = 25574400
-                LockState                                = "NoAccess"
+                LockState                                = "Unlock"
                 SharingCapability                        = "Disabled"
                 CommentsOnSitePagesDisabled              = $false
                 SocialBarOnSitePagesDisabled             = $false
@@ -215,37 +225,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DefaultSharingLinkType                   = "None"
                 DefaultLinkPermission                    = "None"
             }
-            
+
             Mock -CommandName Get-SPOSite -MockWith {
                 return @{
-                    Url                                      = "https://contoso.com/sites/TestSite"
-                    Owner                                    = "testuser@contoso.com"
-                    StorageQuota                             = 1000
-                    Ensure                                   = "Present"
-                    LocaleId                                 = 1033
-                    Template                                 = "STS#3"
-                    CompatibilityLevel                       = 15
-                    Title                                    = "TestSite"
-                    DenyAddAndCustomizePages                 = $false
-                    StorageQuotaWarningLevel                 = 25574400
-                    LockState                                = "NoAccess"
-                    SharingCapability                        = "Disabled"
-                    CommentsOnSitePagesDisabled              = $false
-                    SocialBarOnSitePagesDisabled             = $false
-                    DisableAppViews                          = "NotDisabled"
-                    DisableCompanyWideSharingLinks           = "NotDisabled"
-                    DisableFlows                             = "NotDisabled"
-                    RestrictedToGeo                          = "BlockMoveOnly"
-                    SharingDomainRestrictionMode             = "None"
-                    SharingAllowedDomainList                 = ""
-                    SharingBlockedDomainList                 = ""
-                    ShowPeoplePickerSuggestionsForGuestUsers = $false
-                    DefaultSharingLinkType                   = "None"
-                    DefaultLinkPermission                    = "None"
+                    Url = "https://contoso.com/sites/TestSite"
                 }
             }
-            It "Should not update any properties" {
-                Set-TargetResource @testParams | Should Be "Access to this Web site has been blocked"
+
+            Mock -CommandName Remove-SPOSite -MockWith {
+                return "Site has been successfully removed"
+            }
+
+            It "Should remove the site successfully" {
+                Remove-SPOSite -Identity $testParams.Url -Confirm:$false | Should Be  "Site has been successfully removed"
             }
         }
 
@@ -291,5 +283,5 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
     }
 }
- 
+
 Invoke-Command -ScriptBlock $Global:DscHelper.CleanupScript -NoNewScope
