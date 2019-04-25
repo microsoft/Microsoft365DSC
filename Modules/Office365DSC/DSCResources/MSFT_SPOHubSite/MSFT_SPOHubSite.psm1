@@ -59,6 +59,7 @@ function Get-TargetResource
         SiteDesignId         = $null
         Ensure               = "Absent"
         CentralAdminUrl      = $CentralAdminUrl
+        GlobalAdminAccount   = $GlobalAdminAccount
     }
 
     try
@@ -116,6 +117,7 @@ function Get-TargetResource
                 SiteDesignId         = $hubSite.SiteDesignId
                 Ensure               = "Present"
                 CentralAdminUrl      = $CentralAdminUrl
+                GlobalAdminAccount   = $GlobalAdminAccount
             }
         }
     }
