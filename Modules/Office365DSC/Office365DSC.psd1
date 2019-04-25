@@ -88,13 +88,13 @@
   AliasesToExport = @()
 
 # DSC resources to export from this module
-  DscResourcesToExport = 'MSFT_O365User', 'MSFT_O365Group', 'MSFT_SPOSite',
-                        'MSFT_EXOSharedMailbox', 'MSFT_O365AdminAuditLogConfig','MSFT_EXOAcceptedDomain','MSFT_EXOAntiPhishPolicy',
-                        'MSFT_EXOAntiPhishRule', 'MSFT_EXOAtpPolicyForO365', 'MSFT_EXOCASMailboxPlan', 'MSFT_EXOClientAccessRule',
-                        'MSFT_EXODkimSigningConfig', 'MSFT_EXOHostedConnectionFilterPolicy', 'MSFT_EXOHostedContentFilterPolicy',
-                        'MSFT_EXOHostedContentFilterRule', 'MSFT_EXOHostedOutboundSpamFilterPolicy', 'MSFT_EXOSafeAttachmentPolicy',
-                        'MSFT_EXOSafeAttachmentRule', 'MSFT_EXOSafeLinksPolicy', 'MSFT_EXOSafeLinksRule', 'MSFT_TeamsFunSettings',
-                        'MSFT_SPOApp'
+  # DscResourcesToExport = 'MSFT_O365User', 'MSFT_O365Group', 'MSFT_SPOSite', 'MSFT_SPOHubSite',
+  #                       'MSFT_EXOSharedMailbox', 'MSFT_O365AdminAuditLogConfig','MSFT_EXOAcceptedDomain','MSFT_EXOAntiPhishPolicy',
+  #                       'MSFT_EXOAntiPhishRule', 'MSFT_EXOAtpPolicyForO365', 'MSFT_EXOCASMailboxPlan', 'MSFT_EXOClientAccessRule',
+  #                       'MSFT_EXODkimSigningConfig', 'MSFT_EXOHostedConnectionFilterPolicy', 'MSFT_EXOHostedContentFilterPolicy',
+  #                       'MSFT_EXOHostedContentFilterRule', 'MSFT_EXOHostedOutboundSpamFilterPolicy', 'MSFT_EXOSafeAttachmentPolicy',
+  #                       'MSFT_EXOSafeAttachmentRule', 'MSFT_EXOSafeLinksPolicy', 'MSFT_EXOSafeLinksRule', 'MSFT_TeamsFunSettings',
+  #                       'MSFT_SPOApp'
 
   # List of all modules packaged with this module
   # ModuleList = @()
