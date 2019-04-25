@@ -81,6 +81,11 @@ function Get-TargetResource
         [System.String]
         $CentralAdminUrl,
 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
@@ -230,6 +235,11 @@ function Set-TargetResource
         [System.String]
         $CentralAdminUrl,
 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
@@ -333,6 +343,11 @@ function Test-TargetResource
         [System.String]
         $CentralAdminUrl,
 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
+        $Ensure = "Present",
+
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
@@ -387,6 +402,7 @@ function Export-TargetResource
     Test-PnPOnlineConnection -GlobalAdminAccount $GlobalAdminAccount -SiteUrl $CentralAdminUrl
 
     $result = Get-TargetResource @PSBoundParameters
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "SPOTenantSettings " + (New-GUID).ToString() + "`r`n"
     $content += "{`r`n"
     $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

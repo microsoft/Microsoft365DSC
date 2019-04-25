@@ -17,7 +17,7 @@ function Invoke-TestHarness
     )
 
 
-    Write-Verbose -Message 'Commencing all Office365DSC tests'
+    Write-Verbose -Message 'Starting all Office365DSC tests'
 
     $repoDir = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
 
@@ -32,7 +32,7 @@ function Invoke-TestHarness
         }
     }
 
-    $testResultSettings = @{}
+    $testResultSettings = @{ }
     if ([String]::IsNullOrEmpty($TestResultsFile) -eq $false)
     {
         $testResultSettings.Add('OutputFormat', 'NUnitXml' )
@@ -45,29 +45,28 @@ function Invoke-TestHarness
     $versionsPath = Join-Path -Path $repoDir -ChildPath "\Tests\Unit\Stubs\"
     $versionsToTest = (Get-ChildItem -Path $versionsPath).Name
     # Import the first stub found so that there is a base module loaded before the tests start
-    $firstVersion = $versionsToTest | Select-Object -First 1
     $firstStub = Join-Path -Path $repoDir `
-                           -ChildPath "\Tests\Unit\Stubs\Office365.psm1"
+        -ChildPath "\Tests\Unit\Stubs\Office365.psm1"
     Import-Module $firstStub -WarningAction SilentlyContinue
 
     $versionsToTest | ForEach-Object -Process {
         $stubPath = Join-Path -Path $repoDir `
-                              -ChildPath "\Tests\Unit\Stubs\Office365.psm1"
+            -ChildPath "\Tests\Unit\Stubs\Office365.psm1"
         $testsToRun += @(@{
-            'Path' = (Join-Path -Path $repoDir -ChildPath "\Tests\Unit")
-            'Parameters' = @{
-                'CmdletModule' = $stubPath
-            }
-        })
+                'Path'       = (Join-Path -Path $repoDir -ChildPath "\Tests\Unit")
+                'Parameters' = @{
+                    'CmdletModule' = $stubPath
+                }
+            })
     }
 
     # DSC Common Tests
     if ($PSBoundParameters.ContainsKey('DscTestsPath') -eq $true)
     {
         $getChildItemParameters = @{
-            Path = $DscTestsPath
+            Path    = $DscTestsPath
             Recurse = $true
-            Filter = '*.Tests.ps1'
+            Filter  = '*.Tests.ps1'
         }
 
         # Get all tests '*.Tests.ps1'.

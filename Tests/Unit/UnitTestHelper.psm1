@@ -27,7 +27,6 @@ function New-O365DscUnitTestHelper
     $moduleRoot = Join-Path -Path $repoRoot -ChildPath "Modules\Office365Dsc"
 
     $mainModule = Join-Path -Path $moduleRoot -ChildPath "Office365DSC.psd1"
-    Import-Module -Name "Microsoft.Online.SharePoint.PowerShell" -Force -ErrorAction SilentlyContinue
     Import-Module -Name "MSOnline" -Force -ErrorAction SilentlyContinue
     Remove-Module -Name "AzureAD" -Force -ErrorAction SilentlyContinue
     Import-Module -Name $mainModule -Global
