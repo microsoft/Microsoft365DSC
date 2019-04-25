@@ -5,11 +5,16 @@ It is not meant to use as a production baseline.
 
 Configuration Example
 {
-    Import-DSCResource -ModuleName Office365DSC
-    $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
-    Node localhost
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Office365DSC
+
+    node localhost
     {
-        SPOHubSite ff4a977d-4d7d-4968-9238-2a1702aa699c
+        SPOHubSite "ff4a977d-4d7d-4968-9238-2a1702aa699c"
         {
             Url                  = "https://office365dsc.sharepoint.com/sites/Marketing"
             Title                = "Marketing Hub"
