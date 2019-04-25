@@ -3,7 +3,7 @@ This example is used to test new resources and showcase the usage of new resourc
 It is not meant to use as a production baseline.
 #>
 
-Configuration Site
+Configuration Example
 {
     Import-DSCResource -ModuleName Office365DSC
     $credsGlobalAdmin = Get-Credential -UserName "TenantAdmin@O365DSC1.onmicrosoft.com" -Message "Global Admin"
