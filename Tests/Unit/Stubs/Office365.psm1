@@ -45,7 +45,7 @@ function Test-PnPOnlineConnection{
 
         [Parameter()]
         [System.String]
-        $SPOCentralAdminUrl
+        $SiteUrl
     )
 }
 
@@ -5476,6 +5476,42 @@ param(
 
 
  }
+
+ #region SPOApp
+function Get-PnPApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity
+    )
+}
+
+function Add-PnPApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Path,
+
+        [Parameter()]
+        [boolean]
+        $Overwrite
+    )
+}
+
+function Remove-PnPApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity
+    )
+}
+ #endregion
 
 
 function Add-MsolGroupMember {
@@ -11705,5 +11741,32 @@ function Get-PnPSiteDesignRights
         [Parameter()]
         [string]
         $Identity
+    )
+}
+
+function Get-PnPStorageEntity
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Key,
+
+        [Parameter()]
+        [string]
+        $Value,
+
+        [Parameter()]
+        [string]
+        $Comment,
+
+        [Parameter()]
+        [string]
+        $Description,
+
+        [Parameter()]
+        [string]
+        $Scope
+
     )
 }
