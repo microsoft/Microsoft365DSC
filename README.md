@@ -1,7 +1,5 @@
 # Office365DSC
 
-[![Build Status](https://dev.azure.com/Office365DSC/Release/_apis/build/status/Microsoft.Office365DSC?branchName=Dev)](https://dev.azure.com/Office365DSC/Release/_build/latest?definitionId=2&branchName=Dev)
-
 ![DSC Resources Flow](https://github.com/Microsoft/Office365DSC/blob/master/Images/Logo.png?raw=true)
 
 This module allows organizations to automate the deployment,
@@ -15,16 +13,16 @@ remote API calls (therefore requires internet connectivity)
 
 ### master
 
-[![Build status](https://ci.appveyor.com/api/projects/status/5a7f2ao7d1mnoqrb/branch/master?svg=true)](https://ci.appveyor.com/project/NikCharlebois/office365dsc/branch/master)
-[![codecov](https://codecov.io/gh/PowerShell/SqlServerDsc/branch/master/graph/badge.svg)](https://codecov.io/gh/PowerShell/SqlServerDsc/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/5a7f2ao7d1mnoqrb/branch/master?svg=true)](https://ci.appveyor.com/project/Microsoft/office365dsc/branch/master)
+[![codecov](https://codecov.io/gh/Microsoft/office365dsc/branch/master/graph/badge.svg)](https://codecov.io/gh/Microsoft/office365dsc)
 
 This is the branch containing the latest release -
 no contributions should be made directly to this branch.
 
 ### dev
 
-[![Build status](https://ci.appveyor.com/api/projects/status/5a7f2ao7d1mnoqrb?svg=true)](https://ci.appveyor.com/project/NikCharlebois/office365dsc)
-[![codecov](https://codecov.io/gh/PowerShell/SqlServerDsc/branch/dev/graph/badge.svg)](https://codecov.io/gh/PowerShell/SqlServerDsc/branch/dev)
+[![Build status](https://ci.appveyor.com/api/projects/status/5a7f2ao7d1mnoqrb?svg=true)](https://ci.appveyor.com/project/Microsoft/office365dsc)
+[![codecov](https://codecov.io/gh/Microsoft/office365dsc/branch/dev/graph/badge.svg)](https://codecov.io/gh/Microsoft/office365dsc/branch/dev)
 
 This is the development branch
 to which contributions should be proposed by contributors as pull requests.
