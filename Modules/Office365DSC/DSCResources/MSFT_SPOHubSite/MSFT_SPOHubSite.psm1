@@ -107,7 +107,7 @@ function Get-TargetResource
                 $configuredLogo = ([System.Uri]$hubSite.LogoUrl).AbsolutePath
             }
 
-            return @{
+            $result = @{
                 Url                  = $Url
                 Title                = $hubSite.Title
                 Description          = $hubSite.Description
@@ -119,6 +119,7 @@ function Get-TargetResource
                 CentralAdminUrl      = $CentralAdminUrl
                 GlobalAdminAccount   = $GlobalAdminAccount
             }
+            return $result
         }
     }
     catch
@@ -384,10 +385,10 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $result[1].GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
     $content = "        SPOHubSite " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $currentDSCBlock = Get-DSCBlock -Params $result[1] -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
     $content += "        }`r`n"
     return $content
