@@ -11,10 +11,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $Group,
-
-        [Parameter()]
-        [System.String]
         $GroupID,
 
         [Parameter()]
@@ -24,7 +20,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $Alias,
+        $MailNickName,
 
         [Parameter()]
         [System.String]
@@ -37,7 +33,72 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("Public", "Private")]
-        $AccessType,
+        $Visibility,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAddRemoveApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGiphy,
+
+        [Parameter()]
+        [ValidateSet("Strict", "Moderate")]
+        [System.String]
+        $GiphyContentRating,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowStickersAndMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCustomMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserEditMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOwnerDeleteMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCreateUpdateRemoveConnectors,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCreateUpdateRemoveTabs,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDeleteChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTeamMentions,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowChannelMentions,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestDeleteChannels,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -50,24 +111,34 @@ function Get-TargetResource
     )
 
     $CurrentParameters = $PSBoundParameters
-    if ($CurrentParameters.ContainsKey("Group"))
-    {
-        Write-Verbose -Message "When Group is passed all other parameters will be ignored."
-    }
-
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
-        DisplayName        = $DisplayName
-        Group              = $Group
-        GroupId            = $GroupID
-        Description        = $Description
-        Owner              = $Owner
-        Classification     = $null
-        Alias              = $Alias
-        AccessType         = $AccessType
-        Ensure             = "Absent"
-        GlobalAdminAccount = $GlobalAdminAccount
+        DisplayName                       = $DisplayName
+        GroupId                           = $GroupID
+        Description                       = $Description
+        Owner                             = $Owner
+        Classification                    = $Classification
+        MailNickName                      = $MailNickName
+        Visibility                        = $Visibility
+        Ensure                            = "Absent"
+        AllowAddRemoveApps                = $AllowAddRemoveApps
+        AllowGiphy                        = $AllowGiphy
+        GiphyContentRating                = $GiphyContentRating
+        AllowStickersAndMemes             = $AllowStickersAndMemes
+        AllowCustomMemes                  = $AllowCustomMemes
+        AllowUserEditMessages             = $AllowUserEditMessages
+        AllowUserDeleteMessages           = $AllowUserDeleteMessages
+        AllowOwnerDeleteMessages          = $AllowOwnerDeleteMessages
+        AllowCreateUpdateRemoveConnectors = $AllowCreateUpdateRemoveConnectors
+        AllowCreateUpdateRemoveTabs       = $AllowCreateUpdateRemoveTabs
+        AllowCreateUpdateChannels         = $AllowCreateUpdateChannels
+        AllowDeleteChannels               = $AllowDeleteChannels
+        AllowTeamMentions                 = $AllowTeamMentions
+        AllowChannelMentions              = $AllowChannelMentions
+        AllowGuestCreateUpdateChannels    = $AllowGuestCreateUpdateChannels
+        AllowGuestDeleteChannels          = $AllowGuestDeleteChannels
+        GlobalAdminAccount                = $GlobalAdminAccount
     }
 
     Write-Verbose -Message "Checking for existance of Team $DisplayName"
@@ -75,7 +146,7 @@ function Get-TargetResource
     $CurrentParameters = $PSBoundParameters
     if ($CurrentParameters.ContainsKey("GroupID"))
     {
-        $team = Get-Team  |  Where-Object {($_.GroupId -eq $GroupID)}
+        $team = Get-Team -GroupId $GroupID
         if ($null -eq $team)
         {
             Write-Verbose "Teams with GroupId $($GroupID) doesn't exist"
@@ -84,7 +155,7 @@ function Get-TargetResource
     }
     else
     {
-        $team = Get-Team |  Where-Object {($_.DisplayName -eq $DisplayName)}
+        $team = Get-Team -DisplayName $DisplayName
         if ($null -eq $team)
         {
             Write-Verbose "Teams with displayname $DisplayName doesn't exist"
@@ -95,35 +166,36 @@ function Get-TargetResource
             throw "Duplicate Teams name $DisplayName exist in tenant"
         }
     }
-    Write-Verbose -Message "Found Team $($team.DisplayName) and groupid of $($team.GroupID)"
 
+    Write-Verbose -Message "Found Team $($team.DisplayName) and groupid of $($team.GroupID)"
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
 
-    $allGroups = Get-UnifiedGroup
-
-    if ($CurrentParameters.ContainsKey("GroupID"))
-    {
-        $teamGroup = $allGroups | Where-Object {$_.ExternalDirectoryObjectId -eq $GroupID}
-    }  ##### Else using display name for lookup for set operation
-    else
-    {
-        $teamGroup = $allGroups | Where-Object {$_.DisplayName -eq $DisplayName}
-    }
-
-    Write-Verbose -Message "Found O365 group $teamGroup"
-    Write-Verbose -Message "Alias = $($teamGroup.Alias) and team accesstype = $($teamGroup.AccessType)"
-
     return @{
-        DisplayName        = $team.DisplayName
-        Group              = $Group
-        GroupID            = $team.GroupId
-        Description        = $team.Description
-        Owner              = $null
-        Classification     = $null
-        Alias              = $teamGroup.Alias
-        AccessType         = $teamGroup.AccessType
-        Ensure             = "Present"
-        GlobalAdminAccount = $GlobalAdminAccount
+        DisplayName                       = $team.DisplayName
+        GroupID                           = $team.GroupId
+        Description                       = $team.Description
+        Owner                             = $Owner
+        Classification                    = $team.Description
+        MailNickName                      = $team.MailNickName
+        Visibility                        = $team.Visibility
+        AllowAddRemoveApps                = $team.AllowAddRemoveApps
+        AllowGiphy                        = $team.AllowGiphy
+        GiphyContentRating                = $team.GiphyContentRating
+        AllowStickersAndMemes             = $team.AllowStickersAndMemes
+        AllowCustomMemes                  = $team.AllowCustomMemes
+        AllowUserEditMessages             = $team.AllowUserEditMessages
+        AllowUserDeleteMessages           = $team.AllowUserDeleteMessages
+        AllowOwnerDeleteMessages          = $team.AllowOwnerDeleteMessages
+        AllowCreateUpdateRemoveConnectors = $team.AllowCreateUpdateRemoveConnectors
+        AllowCreateUpdateRemoveTabs       = $team.AllowCreateUpdateRemoveTabs
+        AllowTeamMentions                 = $team.AllowTeamMentions
+        AllowChannelMentions              = $team.AllowChannelMentions
+        AllowGuestCreateUpdateChannels    = $team.AllowGuestCreateUpdateChannels
+        AllowGuestDeleteChannels          = $team.AllowGuestDeleteChannels
+        AllowCreateUpdateChannels         = $team.AllowCreateUpdateChannels
+        AllowDeleteChannels               = $team.AllowDeleteChannels
+        Ensure                            = "Present"
+        GlobalAdminAccount                = $GlobalAdminAccount
     }
 }
 
@@ -139,10 +211,6 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $Group,
-
-        [Parameter()]
-        [System.String]
         $GroupID,
 
         [Parameter()]
@@ -152,7 +220,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $Alias,
+        $MailNickName,
 
         [Parameter()]
         [System.String]
@@ -165,7 +233,72 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("Public", "Private")]
-        $AccessType,
+        $Visibility,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAddRemoveApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGiphy,
+
+        [Parameter()]
+        [ValidateSet("Strict", "Moderate")]
+        [System.String]
+        $GiphyContentRating,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowStickersAndMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCustomMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserEditMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOwnerDeleteMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCreateUpdateRemoveConnectors,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCreateUpdateRemoveTabs,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDeleteChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTeamMentions,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowChannelMentions,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestDeleteChannels,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -195,17 +328,7 @@ function Set-TargetResource
             {
                 $CurrentParameters.Remove("Owner")
             }
-            if ($CurrentParameters.ContainsKey("AccessType"))
-            {
-                ### Parameter name is different from New-Team vs Set-Team
-                $CurrentParameters.Remove("AccessType")
-                Set-Team @CurrentParameters -Visibility $AccessType
-            }
-            else
-            {
-                Set-Team @CurrentParameters
-            }
-
+            Set-Team @CurrentParameters
             Write-Verbose -Message "Updating team group id $($GroupID)"
         }
         else
@@ -215,18 +338,8 @@ function Set-TargetResource
             {
                 $CurrentParameters.Remove("GroupID")
             }
-            #IF Group passed as parameter the New_team cmdlet only accepts this parameter
-            if ($CurrentParameters.ContainsKey("Group"))
-            {
-                Write-Verbose -Message "Discarding all parameters since group $Group was passed to resources"
-                New-Team  -Group $Group
-            }
-            #Create new team with parameters
-            else
-            {
-                Write-Verbose -Message "Creating team $DisplayName"
-                New-Team @CurrentParameters
-            }
+            Write-Verbose -Message "Creating team $DisplayName"
+            New-Team @CurrentParameters
         }
     }
     else
@@ -253,10 +366,6 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $Group,
-
-        [Parameter()]
-        [System.String]
         $GroupID,
 
         [Parameter()]
@@ -266,7 +375,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $Alias,
+        $MailNickName,
 
         [Parameter()]
         [System.String]
@@ -282,6 +391,71 @@ function Test-TargetResource
         $AccessType,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowAddRemoveApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGiphy,
+
+        [Parameter()]
+        [ValidateSet("Strict", "Moderate")]
+        [System.String]
+        $GiphyContentRating,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowStickersAndMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCustomMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserEditMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOwnerDeleteMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCreateUpdateRemoveConnectors,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCreateUpdateRemoveTabs,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDeleteChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTeamMentions,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowChannelMentions,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestDeleteChannels,
+
+        [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
@@ -293,9 +467,13 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing creation of new Team"
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
+
     $result = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure")
+        -ValuesToCheck $ValuesToCheck.Keys
+
     if (!$result)
     {
         Write-Verbose "Team $DisplayName is not in its Desired State"

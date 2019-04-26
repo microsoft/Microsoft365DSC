@@ -933,7 +933,7 @@ function Get-TeamByGroupID
         $GroupId
     )
 
-    $team = Get-Team  |  Where-Object {($_.GroupId -eq $GroupId)}
+    $team = Get-Team -GroupId $GroupId
     if ($null -eq $team)
     {
         return $false
@@ -954,7 +954,7 @@ function Get-TeamByName
     $loopCounter = 0
     do
     {
-        $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
+        $team = Get-Team -DisplayName $TeamName
         if ($null -eq $team)
         {
             Start-Sleep 5

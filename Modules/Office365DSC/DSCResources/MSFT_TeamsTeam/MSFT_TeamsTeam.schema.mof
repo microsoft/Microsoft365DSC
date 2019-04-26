@@ -2,13 +2,28 @@
 class MSFT_TeamsTeam : OMI_BaseResource
 {
     [Key, Description("Display Name of the Team")] string DisplayName;
-    [Write, Description("Converts current O365 group to a Team, all other parameters ignore when this is passed into resource.")] string Group;
-    [Write, Description("Description of Team")] string Description;
+    [Write, Description("Description of Team.")] string Description;
     [Write, Description("Team group ID, only used to update existing Team ")] string GroupID;
-    [Write, Description("Alias of O365 Group associated with Team")] string Alias;
+    [Write, Description("MailNickName of O365 Group associated with Team")] string MailNickName;
     [Write, Description("Owner of the Team")] string Owner;
     [Write, Description("Classification of the Team ")] string Classification;
-    [Write, Description("AccessType of the Team"),ValueMap{"Public","Private"},Values{"Public","Private"}] String AccessType;
+    [Write, Description("Visibility of the Team"),ValueMap{"Public","Private"},Values{"Public","Private"}] String Visibility;
+    [Write, Description("Allow add or remove apps from the Team.")] Boolean AllowAddRemoveApps;
+    [Write, Description("Allow giphy in Team.")] Boolean  AllowGiphy;
+    [Write, Description("Giphy content rating of the Team."),ValueMap{"Strict","Moderate"}, Values{"Strict","Moderate"}] string GiphyContentRating;
+    [Write, Description("Allow stickers and mimes in the Team.")] Boolean AllowStickersAndMemes;
+    [Write, Description("Allow custom memes in Team.")] boolean AllowCustomMemes;
+    [Write, Description("Allow members to edit messages within Team.")] Boolean AllowUserEditMessages;
+    [Write, Description("Allow members to delete messages within Team.")] Boolean AllowUserDeleteMessages;
+    [Write, Description("Allow owners to delete messages within Team.")] Boolean AllowOwnerDeleteMessages;
+    [Write, Description("Allow members to delete channels within team.")] Boolean AllowDeleteChannels;
+    [Write, Description("Allow members to manage connectors within Team.")] Boolean AllowCreateUpdateRemoveConnectors;
+    [Write, Description("Allow members to manage tabs within Team.")] Boolean AllowCreateUpdateRemoveTabs;
+    [Write, Description("Allow mentions in Team.")] Boolean AllowTeamMentions;
+    [Write, Description("Allow channel mention in Team.")] Boolean AllowChannelMentions;
+    [Write, Description("Allow guests to create and update channels in Team.")] Boolean AllowGuestCreateUpdateChannels;
+    [Write, Description("Allow guests to delete channel in Team.")] Boolean AllowGuestDeleteChannels;
+    [Write, Description("Allow members to create and update channels within team.")] Boolean AllowCreateUpdateChannels;
     [Write, Description("Present ensures the Team exists, absent ensures it is removed"), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };
