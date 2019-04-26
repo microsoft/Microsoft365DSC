@@ -575,6 +575,35 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "SPOHubSite"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOHubSite"))
+    {
+        Write-Information "Extracting SPOHubSite..."
+        $SPOHubSiteModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_SPOHubSite\MSFT_SPOHubSite.psm1" `
+                                        -Resolve
+
+        Import-Module $SPOHubSiteModulePath | Out-Null
+        $partialContent = ""
+        if ($centralAdminUrl)
+        {
+            Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+            $hubSites = Get-SPOHubSite
+
+            foreach ($hub in $hubSites)
+            {
+                Write-Information "    - $($hub.SiteUrl)"
+                $partialContent = Export-TargetResource -Url $hub.SiteUrl -CentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+                if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+                }
+                $DSCContent += $partialContent
+            }
+        }
+    }
+    #endregion
+
     #region "SPOSearchResultSource"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSearchResultSource"))
     {
