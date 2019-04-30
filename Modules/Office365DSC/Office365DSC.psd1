@@ -53,7 +53,7 @@
   RequiredModules = @(@{ModuleName = "ReverseDSC"; ModuleVersion = "1.9.4.2"; },
                       @{ModuleName = "MSOnline"; ModuleVersion = "1.1.183.17"; },
                       @{ModuleName = "SharePointPnPPowerShellOnline"; ModuleVersion = "3.5.1901.0"; },
-                      @{ModuleName = "MicrosoftTeams"; ModuleVersion = "0.9.6"; },
+                      @{ModuleName = "MicrosoftTeams"; ModuleVersion = "1.0.0"; },
                       @{ModuleName = "AzureAD"; ModuleVersion = "2.0.2.4"; })
 
   # Assemblies that must be loaded prior to importing this module
