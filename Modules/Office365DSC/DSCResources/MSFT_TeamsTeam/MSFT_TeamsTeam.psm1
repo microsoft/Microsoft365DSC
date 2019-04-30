@@ -28,10 +28,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $Classification,
-
-        [Parameter()]
-        [System.String]
         [ValidateSet("Public", "Private")]
         $Visibility,
 
@@ -110,15 +106,11 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    $CurrentParameters = $PSBoundParameters
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-
     $nullReturn = @{
         DisplayName                       = $DisplayName
         GroupId                           = $GroupID
         Description                       = $Description
         Owner                             = $Owner
-        Classification                    = $Classification
         MailNickName                      = $MailNickName
         Visibility                        = $Visibility
         Ensure                            = "Absent"
@@ -142,40 +134,23 @@ function Get-TargetResource
     }
 
     Write-Verbose -Message "Checking for existance of Team $DisplayName"
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
-    $CurrentParameters = $PSBoundParameters
-    if ($CurrentParameters.ContainsKey("GroupID"))
+    $team = Get-Team -DisplayName $DisplayName
+    if ($null -eq $team)
     {
-        $team = Get-Team -GroupId $GroupID
-        if ($null -eq $team)
-        {
-            Write-Verbose "Teams with GroupId $($GroupID) doesn't exist"
-            return $nullReturn
-        }
-    }
-    else
-    {
-        $team = Get-Team -DisplayName $DisplayName
-        if ($null -eq $team)
-        {
-            Write-Verbose "Teams with displayname $DisplayName doesn't exist"
-            return $nullReturn
-        }
-        if ($team.Count -gt 1)
-        {
-            throw "Duplicate Teams name $DisplayName exist in tenant"
-        }
+        Write-Verbose "Teams with displayname $DisplayName doesn't exist"
+        return $nullReturn
     }
 
-    Write-Verbose -Message "Found Team $($team.DisplayName) and groupid of $($team.GroupID)"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
+    Write-Verbose -Message "Found Team $($team.DisplayName)."
 
     return @{
         DisplayName                       = $team.DisplayName
         GroupID                           = $team.GroupId
         Description                       = $team.Description
         Owner                             = $Owner
-        Classification                    = $team.Description
         MailNickName                      = $team.MailNickName
         Visibility                        = $team.Visibility
         AllowAddRemoveApps                = $team.AllowAddRemoveApps
@@ -225,10 +200,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Owner,
-
-        [Parameter()]
-        [System.String]
-        $Classification,
 
         [Parameter()]
         [System.String]
@@ -319,38 +290,46 @@ function Set-TargetResource
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
 
-    if ($Ensure -eq "Present")
+    if ($Ensure -eq "Present" -and ($team.Ensure -eq "Present"))
     {
-        if ($team.GroupID)
+        ## Can't pass Owner parm into set opertaion
+        if ($CurrentParameters.ContainsKey("Owner"))
         {
-            ## Can't pass Owner parm into set opertaion and accesstype is called visibility on set
-            if ($CurrentParameters.ContainsKey("Owner"))
-            {
-                $CurrentParameters.Remove("Owner")
-            }
-            Set-Team @CurrentParameters
-            Write-Verbose -Message "Updating team group id $($GroupID)"
+            $CurrentParameters.Remove("Owner")
+        }
+        ## if GroupID not passed add from Get-Resource operation
+        if ($null -eq $CurrentParameters.ContainsKey("GroupID"))
+        {
+            $CurrentParameters.Add("GroupID", $team.GroupID)
+        }
+        Set-Team @CurrentParameters
+        Write-Verbose -Message "Updating team group id $($team.GroupID)"
+    }
+    elseif ($Ensure -eq "Present" -and ($team.Ensure -eq "Absent"))
+    {
+        ## If group id passed then it will convert existig O365 Group to Team
+        ## Several of the existing group properties need removed from cmdlet
+        ## https://docs.microsoft.com/en-us/powershell/module/teams/new-team?view=teams-ps
+        if ($CurrentParameters.ContainsKey("GroupID"))
+        {
+            $CurrentParameters.Remove("Visibilty")
+            $CurrentParameters.Remove("MailNickName")
+            $CurrentParameters.Remove("Description")
+            $CurrentParameters.Remove("DisplayName")
+            Write-Verbose -Message "Creating team from existing group id $GroupId"
+            New-Team @CurrentParameters
         }
         else
         {
-            ## Remove GroupId for New-Team cmdlet creation
-            if ($CurrentParameters.ContainsKey("GroupID"))
-            {
-                $CurrentParameters.Remove("GroupID")
-            }
             Write-Verbose -Message "Creating team $DisplayName"
             New-Team @CurrentParameters
         }
     }
-    else
+    elseif ($Ensure -eq "Absent" -and ($team.Ensure -eq "Present"))
     {
-        if ($team.GroupId)
-        {
-            Write-Verbose -Message "Removing team $DisplayName"
-            Remove-team -GroupId $team.GroupId
-        }
+        Write-Verbose -Message "Removing team $DisplayName"
+        Remove-team -GroupId $team.GroupId
     }
-
 }
 
 function Test-TargetResource
@@ -388,7 +367,7 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("Public", "Private")]
-        $AccessType,
+        $Visibility,
 
         [Parameter()]
         [System.Boolean]
@@ -469,10 +448,33 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
+    $ValuesToCheck.Remove('GroupID') | out-null
 
     $result = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+        -ValuesToCheck @("Ensure", `
+            "AllowCreateUpdateRemoveTabs", `
+            "Description", `
+            "MailNickName", `
+            "Classification", `
+            "Visibility", `
+            "AddAllowRemoveApps", `
+            "AllowGiphy", `
+            "GiphyContent", `
+            "AllowStickersandMemes", `
+            "AllowCustomMemes", `
+            "AllowUserEditMessage", `
+            "AllowUserDeleteMessages", `
+            "AllowOwnerDeleteMessages", `
+            "AllowDeleteChannels", `
+            "AllowCreateUpdateRemoveConnectors", `
+            "AllowCreateUpdateRemoveTabs", `
+            "AllowTeamMentions", `
+            "AllowChannelMentions", `
+            "AllowGuestCreateUpdateChannels", `
+            "AllowGuestDeleteChannels", `
+            "AllowCreateUpdateChannels", `
+            "DisplayName")
 
     if (!$result)
     {

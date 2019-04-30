@@ -24,17 +24,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Test-TeamsServiceConnection -MockWith {
         }
 
-
-        Mock -CommandName Connect-ExchangeOnline -MockWith {
-
-        }
-
         # Test contexts
         Context -Name "When the Team doesnt exist" -Fixture {
             $testParams = @{
-                DisplayName        = "TestTeam"
-                Ensure             = "Present"
-                GlobalAdminAccount = $GlobalAdminAccount
+                DisplayName                       = "TestTeam"
+                Ensure                            = "Present"
+                Description                       = "Test Team"
+                Visibility                        = "Private"
+                MailNickName                      = "teamposh"
+                AllowUserEditMessages             = $true
+                AllowUserDeleteMessages           = $false
+                AllowOwnerDeleteMessages          = $false
+                AllowTeamMentions                 = $false
+                AllowChannelMentions              = $false
+                AllowCreateUpdateChannels         = $false
+                AllowDeleteChannels               = $false
+                AllowAddRemoveApps                = $false
+                AllowCreateUpdateRemoveTabs       = $false
+                AllowCreateUpdateRemoveConnectors = $false
+                AllowGiphy                        = $True
+                GiphyContentRating                = "Moderate"
+                AllowStickersAndMemes             = $True
+                AllowCustomMemes                  = $True
+                AllowGuestCreateUpdateChannels    = $false
+                AllowGuestDeleteChannels          = $false
+                Owner                             = "JohnDoe@contoso.com"
+                GlobalAdminAccount                = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-Team -MockWith {
@@ -42,7 +57,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-Team -MockWith {
-                return @{DisplayName = "TestTeam"}
+                return @{DisplayName = "TestTeam" }
             }
 
             It "Should return absent from the Get method" {
@@ -62,12 +77,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 DisplayName        = "TestTeam"
                 Ensure             = "Present"
+                GroupID            = "1234-1234-1234-1234"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-UnifiedGroup -MockWith {
-                return $null
-            }
             Mock -CommandName Get-Team -MockWith {
                 return @{
                     DisplayName = "TestTeam"
@@ -85,32 +98,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Update existing team access type" -Fixture {
             $testParams = @{
-                DisplayName        = "TestTeam"
-                GroupID            = "12345-12345-12345-12345-12345"
+                DisplayName        = "Test Team"
                 Ensure             = "Present"
-                AccessType         = "Public"
-                Owner              = "JohnDoe@contoso.com"
+                Description        = "Test Team"
+                Visibility         = "Private"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-UnifiedGroup -MockWith {
-                return $null
-            }
-
             Mock -CommandName Set-Team -MockWith {
-                return $null
+                return @{
+                    DisplayName = "Test Team"
+                }
             }
 
             Mock -CommandName Get-Team -MockWith {
                 return @{
                     DisplayName = "TestTeam"
-                    GroupID     = "12345-12345-12345-12345-12345"
-                    Owner       = "JohnDoe@contoso.com"
                 }
             }
 
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            }
+
+            It "Should return false from the test method" {
+                (Test-TargetResource @testParams) | Should Be "False"
             }
 
             It "Should set access type in set command" {
@@ -118,135 +130,87 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Failed to get Team when passing in GroupID" -Fixture {
+        Context -Name "Update team visibility" -Fixture {
             $testParams = @{
-                DisplayName        = "TestTeam"
-                GroupID            = "12345-12345-12345-12345-12345"
+                DisplayName        = "Test Team"
                 Ensure             = "Present"
+                MailNickName       = "testteam"
+                Visibility         = "Public"
+                Description        = "Update description"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
-            Mock -CommandName Get-UnifiedGroup -MockWith {
-                return $null
+
+            Mock -CommandName Get-Team -MockWith {
+                return @{
+                    DisplayName = "Test Team"
+                    Visibility  = "Private"
+                }
             }
+
+            Mock -CommandName Set-Team -MockWith {
+                return @{
+                    DisplayName = "Test Team"
+                }
+            }
+
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            }
+
+            It "Should update display name and description in set method" {
+                Set-TargetResource @testParams
+            }
+        }
+
+        Context -Name "Convert existing O365 group to a Team" -Fixture {
+            $testParams = @{
+                GroupID                  = "12345-12345-12345-12345-12345"
+                DisplayName              = "Test Team"
+                Ensure                   = "Present"
+                AllowUserEditMessages    = $true
+                AllowUserDeleteMessages  = $false
+                AllowOwnerDeleteMessages = $false
+                AllowTeamMentions        = $false
+                AllowChannelMentions     = $false
+                GlobalAdminAccount       = $GlobalAdminAccount
+            }
+
+
             Mock -CommandName Get-Team -MockWith {
                 return $null
             }
-            It "Should return present from the Get method" {
+
+            Mock -CommandName New-Team -MockWith {
+                return @{GroupID = "12345-12345-12345-12345-12345" }
+            }
+
+            It "Should return absent from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Absent"
             }
+
             It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should Be $false
             }
-        }
 
-        Context -Name "Update team display name" -Fixture {
-            $testParams = @{
-                GroupID            = "12345-12345-12345-12345-12345"
-                DisplayName        = "Test Team"
-                Ensure             = "Present"
-                Alias              = "testteam"
-                Description        = "Update description"
-                GlobalAdminAccount = $GlobalAdminAccount
-            }
-
-            Mock -CommandName Get-UnifiedGroup -MockWith {
-                return $null
-            }
-
-
-            Mock -CommandName Get-Team -MockWith {
-                return @{
-                    DisplayName = "Test Team"
-                    GroupID     = "12345-12345-12345-12345-12345"
-                }
-            }
-
-
-            It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present"
-            }
-
-            It "Should update display name and description in set method" {
+            It "Convert O365 group to Team in the Set method" {
                 Set-TargetResource @testParams
-            }
-        }
-
-        Context -Name "Update team visibility" -Fixture {
-            $testParams = @{
-                GroupID            = "12345-12345-12345-12345-12345"
-                DisplayName        = "Test Team"
-                Ensure             = "Present"
-                Alias              = "testteam"
-                AccessType         = "Public"
-                Description        = "Update description"
-                GlobalAdminAccount = $GlobalAdminAccount
-            }
-
-            Mock -CommandName Get-UnifiedGroup -MockWith {
-                return $null
-            }
-
-
-            Mock -CommandName Get-Team -MockWith {
-                return @{
-                    DisplayName = "Test Team"
-                    GroupID     = "12345-12345-12345-12345-12345"
-                    AccessType = "Private"
-                }
-            }
-
-
-            It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present"
-            }
-
-            It "Should update display name and description in set method" {
-                Set-TargetResource @testParams
-            }
-        }
-
-        Context -Name "Cannot only specify group only parameter" -Fixture {
-            $testParams = @{
-                Group              = "12345-12345-12345-12345-12345"
-                DisplayName        = "Test Team"
-                Ensure             = "Present"
-                GlobalAdminAccount = $GlobalAdminAccount
-            }
-
-            Mock -CommandName Get-UnifiedGroup -MockWith {
-                return $null
-            }
-
-
-            Mock -CommandName Get-Team -MockWith {
-                return @{
-                    DisplayName = "Test Team"
-                    Group       = "12345-12345-12345-12345-12345"
-                }
             }
         }
 
         Context -Name "Remove the Team" -Fixture {
             $testParams = @{
-                GroupID            = "12345-12345-12345-12345-12345"
                 DisplayName        = "Test Team"
                 Ensure             = "Absent"
                 GlobalAdminAccount = $GlobalAdminAccount
-            }
-
-            Mock -CommandName Get-UnifiedGroup -MockWith {
-                return $null
             }
 
             Mock -CommandName Remove-Team -MockWith {
                 return $null
             }
 
-
             Mock -CommandName Get-Team -MockWith {
                 return @{
                     DisplayName = "Test Team"
-                    GroupID     = "12345-12345-12345-12345-12345"
                 }
             }
 

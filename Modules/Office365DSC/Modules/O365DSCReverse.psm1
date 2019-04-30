@@ -807,26 +807,6 @@ function Start-O365ConfigurationExtract
         }
     }
     #endregion
-
-    #region "TeamsFunSettings"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsFunSettings"))
-    {
-        Write-Information "Extracting TeamsFunSettings..."
-        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_TeamsFunSettings\MSFT_TeamsFunSettings.psm1" `
-                                    -Resolve
-
-        Import-Module $TeamsModulePath | Out-Null
-
-        foreach ($team in $Teams)
-        {
-            Write-Information "    Team Fun Settings for Team {$($team.DisplayName)}"
-            $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
-                                                 -GlobalAdminAccount $GlobalAdminAccount
-        }
-    }
-    #endregion
-
     #region "TeamsUser"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsUser"))
     {
@@ -858,62 +838,6 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
-    #region TeamsMemberSettings
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamMemberSettings"))
-    {
-        Write-Information "Extracting TeamsMemberSettings..."
-        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_TeamsMemberSettings\MSFT_TeamsMemberSettings.psm1" `
-                                    -Resolve
-
-        Import-Module $TeamsModulePath | Out-Null
-
-        foreach ($team in $Teams)
-        {
-            Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
-            $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
-                                                 -GlobalAdminAccount $GlobalAdminAccount
-        }
-    }
-    #endregion
-
-    #region TeamsMessageSettings
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSearchManagedProperty"))
-    {
-        Write-Information "Extracting TeamsMessageSettings..."
-        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_TeamsMessageSettings\MSFT_TeamsMessageSettings.psm1" `
-                                    -Resolve
-
-        Import-Module $TeamsModulePath | Out-Null
-
-        foreach ($team in $Teams)
-        {
-            Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
-            $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
-                                                 -GlobalAdminAccount $GlobalAdminAccount
-        }
-    }
-    #endregion
-
-    #region TeamsGuestSettings
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsGuestSettings"))
-    {
-        Write-Information "Extracting TeamsGuestSettings..."
-        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_TeamsGuestSettings\MSFT_TeamsGuestSettings.psm1" `
-                                    -Resolve
-
-        Import-Module $TeamsModulePath | Out-Null
-
-        foreach ($team in $Teams)
-        {
-            Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
-            $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
-                                                 -GlobalAdminAccount $GlobalAdminAccount
-        }
-    }
-    #endregion
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOStorageEntity"))
     {
         Write-Information "Extracting SPOStorageEntity..."

@@ -6,13 +6,12 @@ class MSFT_TeamsTeam : OMI_BaseResource
     [Write, Description("Team group ID, only used to update existing Team ")] string GroupID;
     [Write, Description("MailNickName of O365 Group associated with Team")] string MailNickName;
     [Write, Description("Owner of the Team")] string Owner;
-    [Write, Description("Classification of the Team ")] string Classification;
     [Write, Description("Visibility of the Team"),ValueMap{"Public","Private"},Values{"Public","Private"}] String Visibility;
     [Write, Description("Allow add or remove apps from the Team.")] Boolean AllowAddRemoveApps;
-    [Write, Description("Allow giphy in Team.")] Boolean  AllowGiphy;
+    [Write, Description("Allow giphy in Team.")] Boolean AllowGiphy;
     [Write, Description("Giphy content rating of the Team."),ValueMap{"Strict","Moderate"}, Values{"Strict","Moderate"}] string GiphyContentRating;
     [Write, Description("Allow stickers and mimes in the Team.")] Boolean AllowStickersAndMemes;
-    [Write, Description("Allow custom memes in Team.")] boolean AllowCustomMemes;
+    [Write, Description("Allow custom memes in Team.")] Boolean AllowCustomMemes;
     [Write, Description("Allow members to edit messages within Team.")] Boolean AllowUserEditMessages;
     [Write, Description("Allow members to delete messages within Team.")] Boolean AllowUserDeleteMessages;
     [Write, Description("Allow owners to delete messages within Team.")] Boolean AllowOwnerDeleteMessages;
