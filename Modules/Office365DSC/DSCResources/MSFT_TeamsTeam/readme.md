@@ -156,4 +156,3 @@ This resource configugures or creates a new Team.
             GlobalAdminAccount                =  $GlobalAdminAccount
         }
 ```
-

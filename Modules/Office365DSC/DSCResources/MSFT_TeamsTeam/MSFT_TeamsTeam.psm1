@@ -362,10 +362,6 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $Classification,
-
-        [Parameter()]
-        [System.String]
         [ValidateSet("Public", "Private")]
         $Visibility,
 
@@ -456,7 +452,6 @@ function Test-TargetResource
             "AllowCreateUpdateRemoveTabs", `
             "Description", `
             "MailNickName", `
-            "Classification", `
             "Visibility", `
             "AddAllowRemoveApps", `
             "AllowGiphy", `
