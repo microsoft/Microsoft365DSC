@@ -103,8 +103,6 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-
     $nullReturn = @{
         UserPrincipalName = $null
         DisplayName = $null
@@ -120,7 +118,8 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-        $user = Get-AzureADUser | Where-Object {$_.UserPrincipalName -eq $UserPrincipalName}
+        Connect-MsolService -Credential $GlobalAdminAccount
+        $user = Get-MSOLUser -UserPrincipalName $UserPrincipalName -ErrorAction SilentlyContinue
         if (!$user)
         {
             Write-Verbose "The specified User doesn't already exist."
@@ -129,21 +128,21 @@ function Get-TargetResource
 
         Write-Verbose "Found User $($UserPrincipalName)"
         $currentLicenseAssignment = @()
-        foreach($license in ($user | Get-AzureADUserLicenseDetail))
+        foreach($license in $user.Licenses)
         {
-            [array]$currentLicenseAssignment += $license.SkuPartNumber.ToString()
+            $currentLicenseAssignment += $license.AccountSkuID.ToString()
         }
 
-        $passwordNeverExpires = $user.PasswordPolicies
-        if ($null -eq $passwordNeverExpires -or $passwordNeverExpires -eq "None")
+        $passwordNeverExpires = $user.PasswordNeverExpires
+        if ($null -eq $passwordNeverExpires)
         {
             $passwordNeverExpires = $true
         }
-        return @{
+        $results = @{
             UserPrincipalName = $user.UserPrincipalName
             DisplayName = $user.DisplayName
-            GivenName = $user.GivenName
-            Surname = $user.Surname
+            FirstName = $user.FirstName
+            LastName = $user.LastName
             UsageLocation = $user.UsageLocation
             LicenseAssignment = $currentLicenseAssignment
             Password = $Password
@@ -151,26 +150,28 @@ function Get-TargetResource
             Country = $user.Country
             Department = $user.Department
             Fax = $user.Fax
-            Mobile = $user.Mobile
+            MobilePhone = $user.MobilePhone
             Office = $user.Office
             PasswordNeverExpires = $passwordNeverExpires
-            TelephoneNumber = $user.TelephoneNumber
+            PhoneNumber = $user.PhoneNumber
             PostalCode = $user.PostalCode
             PreferredDataLocation = $user.PreferredDataLocation
             PreferredLanguage = $user.PreferredLanguage
             State = $user.State
             StreetAddress = $user.StreetAddress
-            JobTitle = $user.JobTitle
+            Title = $user.Title
             UserType = $user.UserType
             GlobalAdminAccount = $GlobalAdminAccount
             Ensure = "Present"
         }
+        return [System.Collections.Hashtable] $results
     }
     catch
     {
         Write-Verbose "The specified User doesn't already exist."
         return $nullReturn
     }
+    return $nullReturn
 }
 
 function Set-TargetResource
@@ -475,16 +476,18 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $PSBoundParameters.Add("Password", $GlobalAdminAccount)
     $result = Get-TargetResource @PSBoundParameters
     $content = ""
     if ($null -ne $result.UserPrincipalName)
     {
-        $result.Password = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+        $result.Password = Resolve-Credentials -UserName "globaladmin"
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $modulePath = $PSScriptRoot + "\MSFT_O365User.psm1"
         $content = "        O365User " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath -UseGetTargetResource
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath
+        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Password"
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
     }

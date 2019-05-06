@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [string] 
+    [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
                                          -ChildPath "..\Stubs\Office365.psm1" `
                                          -Resolve)
@@ -20,11 +20,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock Invoke-ExoCommand {
-            return Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $Arguments -NoNewScope
+        Mock -CommandName Connect-ExchangeOnline -MockWith {
+
         }
 
-        # Test contexts 
+        # Test contexts
         Context -Name "Mailbox doesn't exist and it should" -Fixture {
             $testParams = @{
                 DisplayName = "Test Shared Mailbox"
@@ -33,7 +33,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-Mailbox -MockWith { 
+            Mock -CommandName Get-Mailbox -MockWith {
                 return $null
             }
 
@@ -62,7 +62,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-Mailbox -MockWith { 
+            Mock -CommandName Get-Mailbox -MockWith {
                 return @{
                     Identity = "Test Shared Mailbox"
                     RecipientTypeDetails = "SharedMailbox"
@@ -103,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-Mailbox -MockWith { 
+            Mock -CommandName Get-Mailbox -MockWith {
                 return @{
                     Identity = "Test Shared Mailbox"
                     RecipientTypeDetails = "SharedMailbox"
@@ -131,7 +131,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-Mailbox -MockWith { 
+            Mock -CommandName Get-Mailbox -MockWith {
                 return @{
                     Identity = "Test Shared Mailbox"
                     RecipientTypeDetails = "SharedMailbox"

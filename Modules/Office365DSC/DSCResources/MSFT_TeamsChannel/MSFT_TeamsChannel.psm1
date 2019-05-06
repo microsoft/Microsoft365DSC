@@ -47,11 +47,9 @@ function Get-TargetResource
     Write-Verbose -Message "Checking for existance of team channels"
     $CurrentParameters = $PSBoundParameters
 
-    $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
-    if ($null -eq $team)
-    {
-        throw "Team with Name $TeamName doesnt exist in tenant"
-    }
+    $team = Get-TeamByName $TeamName
+
+    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
     $channel = Get-TeamChannel -GroupId $team.GroupId -ErrorAction SilentlyContinue | Where-Object {($_.DisplayName -eq $DisplayName)}
 
@@ -120,11 +118,10 @@ function Set-TargetResource
 
     $CurrentParameters = $PSBoundParameters
 
-    $team = Get-Team |  Where-Object {($_.DisplayName -eq $TeamName)}
-    if ($null -eq $team)
-    {
-        throw "Team with Name $TeamName doesn't exist in tenant"
-    }
+    $team = Get-TeamByName $TeamName
+
+    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
+
     $CurrentParameters.Remove("TeamName")
     $CurrentParameters.Add("GroupId", $team.GroupId)
     $CurrentParameters.Remove("GlobalAdminAccount")
@@ -224,7 +221,7 @@ function Export-TargetResource
     )
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        TeamsChannel " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

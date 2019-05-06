@@ -97,10 +97,9 @@ function Get-TargetResource
     }
     Write-Verbose -Message "Found Team $($team.DisplayName) and groupid of $($team.GroupID)"
 
-    $allGroups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-        -ScriptBlock {
-        Get-UnifiedGroup
-    }
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
+    $allGroups = Get-UnifiedGroup
 
     if ($CurrentParameters.ContainsKey("GroupID"))
     {
@@ -321,7 +320,7 @@ function Export-TargetResource
     )
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        TeamsTeam " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

@@ -1,9 +1,22 @@
-﻿function Open-SecurityAndComplianceCenterConnection{
+﻿function Close-SessionsAndReturnError
+{
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [String]
+        $ExceptionMessage
+    )
+
+}
+function Get-PSSession{
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.String]
-        $GlobalAdminAccount
+    )
+}
+
+function Remove-PSSession{
+    [CmdletBinding()]
+    param(
     )
 }
 
@@ -32,7 +45,7 @@ function Test-PnPOnlineConnection{
 
         [Parameter()]
         [System.String]
-        $SPOCentralAdminUrl
+        $SiteUrl
     )
 }
 
@@ -683,6 +696,30 @@ param(
 
  }
 
+ function Global:Connect-ExchangeOnline
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+}
+function Global:Connect-SecurityAndComplianceCenter
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+}
 
 function Connect-SPOService {
  [CmdletBinding()]
@@ -903,6 +940,171 @@ param(
 
  }
 
+ function Get-AcceptedDomain
+ {
+     [CmdletBinding()]
+     param
+     (
+        [Parameter()]
+        [ValidateSet('Authoritative')]
+        [System.String]
+        $DomainType = 'Authoritative',
+
+        [Parameter()]
+        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [ValidateScript( {$false -eq $_})]
+        [System.Boolean]
+        $MatchSubDomains = $false,
+
+        [Parameter()]
+        [ValidateScript( {$false -eq $_})]
+        [System.Boolean]
+        $OutboundOnly = $false
+     )
+ }
+
+function Get-AntiPhishRule {
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Get-AntiPhishPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Get-AtpPolicyForO365
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Get-CASMailboxPlan
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Get-ClientAccessRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Get-DkimSigningConfig
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Get-HostedConnectionFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Get-HostedContentFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Get-HostedContentFilterRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Get-HostedOutboundSpamFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Get-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Get-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Get-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Get-SafeLinksRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
 
 function Get-SPOAppErrors {
  [CmdletBinding()]
@@ -1735,6 +1937,768 @@ param(
 
  }
 
+ function New-AntiPhishPolicy
+ {
+     [CmdletBinding()]
+     [OutputType([System.Collections.Hashtable])]
+     param
+     (
+         [Parameter()]
+         [System.String]
+         $AdminDisplayName,
+
+         [Parameter()]
+         [ValidateSet('MoveToJmf', 'Quarantine')]
+         [System.String]
+         $AuthenticationFailAction = 'MoveToJmf',
+
+         [Parameter()]
+         [System.Boolean]
+         $Enabled = $true,
+
+         [Parameter()]
+         [System.Boolean]
+         $EnableAntispoofEnforcement = $true,
+
+         [Parameter()]
+         [System.Boolean]
+         $EnableAuthenticationSafetyTip = $true,
+
+         [Parameter()]
+         [System.Boolean]
+         $EnableAuthenticationSoftPassSafetyTip = $false,
+
+         [Parameter()]
+         [System.Boolean]
+         $EnableMailboxIntelligence = $true,
+
+         [Parameter()]
+         [System.Boolean]
+         $EnableOrganizationDomainsProtection = $false,
+
+         [Parameter()]
+         [System.Boolean]
+         $EnableSimilarDomainsSafetyTips = $false,
+
+         [Parameter()]
+         [System.Boolean]
+         $EnableSimilarUsersSafetyTips = $false,
+
+         [Parameter()]
+         [System.Boolean]
+         $EnableTargetedDomainsProtection = $false,
+
+         [Parameter()]
+         [System.Boolean]
+         $EnableTargetedUserProtection = $false,
+
+         [Parameter()]
+         [System.Boolean]
+         $EnableUnusualCharactersSafetyTips = $false,
+
+         [Parameter()]
+         [System.String[]]
+         $ExcludedDomains = @(),
+
+         [Parameter()]
+         [System.String[]]
+         $ExcludedSenders = @(),
+
+         [Parameter()]
+         [System.String]
+         $Name,
+
+         [Parameter()]
+         [ValidateSet('1', '2', '3', '4')]
+         [System.String]
+         $PhishThresholdLevel = '1',
+
+         [Parameter()]
+         [System.String[]]
+         $TargetedDomainActionRecipients = @(),
+
+         [Parameter()]
+         [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+         [System.String]
+         $TargetedDomainProtectionAction = 'NoAction',
+
+         [Parameter()]
+         [System.String[]]
+         $TargetedDomainsToProtect = @(),
+
+         [Parameter()]
+         [System.String[]]
+         $TargetedUserActionRecipients = @(),
+
+         [Parameter()]
+         [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+         [System.String]
+         $TargetedUserProtectionAction = 'NoAction',
+
+         [Parameter()]
+         [System.String[]]
+         $TargetedUsersToProtect = @(),
+
+         [Parameter()]
+         [System.Boolean]
+         $TreatSoftPassAsAuthenticated = $true
+     )
+
+ }
+
+ function New-AntiPhishRule {
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $AntiPhishPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @()
+
+    )
+}
+
+function New-ClientAccessRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('AllowAccess', 'DenyAccess')]
+        [System.String]
+        $Action,
+
+        [Parameter()]
+        [ValidateSet('AdfsAuthentication', 'BasicAuthentication', 'CertificateBasedAuthentication', 'NonBasicAuthentication', 'OAuthAuthentication')]
+        [System.String[]]
+        $AnyOfAuthenticationTypes = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfClientIPAddressesOrRanges = @(),
+
+        [Parameter()]
+        [ValidateSet('ExchangeActiveSync','ExchangeAdminCenter','ExchangeWebServices','IMAP4','OfflineAddressBook','OutlookAnywhere','OutlookWebApp','POP3','PowerShellWebServices','RemotePowerShell','REST','UniversalOutlook')]
+        [System.String[]]
+        $AnyOfProtocols = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [ValidateSet('AdfsAuthentication', 'BasicAuthentication', 'CertificateBasedAuthentication', 'NonBasicAuthentication', 'OAuthAuthentication')]
+        [System.String[]]
+        $ExceptAnyOfAuthenticationTypes = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptAnyOfClientIPAddressesOrRanges = @(),
+
+        [Parameter()]
+        [ValidateSet('ExchangeActiveSync','ExchangeAdminCenter','ExchangeWebServices','IMAP4','OfflineAddressBook','OutlookAnywhere','OutlookWebApp','POP3','PowerShellWebServices','RemotePowerShell','REST','UniversalOutlook')]
+        [System.String[]]
+        $ExceptAnyOfProtocols = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptUsernameMatchesAnyOfPatterns = @(),
+
+        [Parameter()]
+        [uint32]
+        $Priority,
+
+        [Parameter()]
+        [ValidateSet('All', 'Users')]
+        [System.String]
+        $Scope,
+
+        [Parameter()]
+        [System.String[]]
+        $UserRecipientFilter,
+
+        [Parameter()]
+        [System.String[]]
+        $UsernameMatchesAnyOfPatterns = @()
+    )
+}
+
+function New-DkimSigningConfig
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $DomainName,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [ValidateSet('Simple', 'Relaxed')]
+        [System.String]
+        $BodyCanonicalization = 'Relaxed',
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [ValidateSet('Simple', 'Relaxed')]
+        [System.String]
+        $HeaderCanonicalization = 'Relaxed',
+
+        [Parameter()]
+        [ValidateSet(1024)]
+        [uint16]
+        $KeySize = 1024
+    )
+}
+
+function New-HostedConnectionFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [Boolean]
+        $EnableSafeList = $false,
+
+        [Parameter()]
+        [System.String[]]
+        $IPAllowList = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $IPBlockList = @(),
+
+        [Parameter()]
+        [Boolean]
+        $MakeDefault = $false
+    )
+}
+
+function New-HostedContentFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $AddXHeaderValue,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowedSenderDomains = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AllowedSenders = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $BlockedSenderDomains = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $BlockedSenders = @(),
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine')]
+        [System.String]
+        $BulkSpamAction = 'MoveToJmf',
+
+        [Parameter()]
+        [ValidateRange(1,9)]
+        [uint32]
+        $BulkThreshold = 7,
+
+        [Parameter()]
+        [System.Boolean]
+        $DownloadLink = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableEndUserSpamNotifications = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableLanguageBlockList = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableRegionBlockList = $false,
+
+        [Parameter()]
+        [ValidatePattern("^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")]
+        [System.String]
+        $EndUserSpamNotificationCustomFromAddress,
+
+        [Parameter()]
+        [System.String]
+        $EndUserSpamNotificationCustomFromName,
+
+        [Parameter()]
+        [System.String]
+        $EndUserSpamNotificationCustomSubject,
+
+        [Parameter()]
+        [ValidateRange(1,15)]
+        [uint32]
+        $EndUserSpamNotificationFrequency = 3,
+
+        [Parameter()]
+        [ValidateSet('Default','English','French','German','Italian','Japanese','Spanish','Korean','Portuguese','Russian','ChineseSimplified','ChineseTraditional','Amharic','Arabic','Bulgarian','BengaliIndia','Catalan','Czech','Cyrillic','Danish','Greek','Estonian','Basque','Farsi','Finnish','Filipino','Galician','Gujarati','Hebrew','Hindi','Croatian','Hungarian','Indonesian','Icelandic','Kazakh','Kannada','Lithuanian','Latvian','Malayalam','Marathi','Malay','Dutch','NorwegianNynorsk','Norwegian','Oriya','Polish','PortuguesePortugal','Romanian','Slovak','Slovenian','SerbianCyrillic','Serbian','Swedish','Swahili','Tamil','Telugu','Thai','Turkish','Ukrainian','Urdu','Vietnamese')]
+        [System.String]
+        $EndUserSpamNotificationLanguage = 'Default',
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [System.String]
+        $HighConfidenceSpamAction = 'MoveToJmf',
+
+        [Parameter()]
+        [System.Boolean]
+        $InlineSafetyTipsEnabled = $true,
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $IncreaseScoreWithBizOrInfoUrls = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $IncreaseScoreWithImageLinks = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $IncreaseScoreWithNumericIps = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $IncreaseScoreWithRedirectToOtherPort ='Off',
+
+        [Parameter()]
+        [System.String[]]
+        $LanguageBlockList = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $MakeDefault = $false,
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamBulkMail = 'On',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamEmbedTagsInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamEmptyMessages = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamFormTagsInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamFramesInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamFromAddressAuthFail = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamJavaScriptInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamNdrBackscatter = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamObjectTagsInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamSensitiveWordList = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamSpfRecordHardFail = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamWebBugsInHtml = 'Off',
+
+        [Parameter()]
+        [System.String]
+        $ModifySubjectValue,
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [System.String]
+        $PhishSpamAction = 'MoveToJmf',
+
+        [Parameter()]
+        [ValidateRange(1,15)]
+        [uint32]
+        $QuarantineRetentionPeriod = 15,
+
+        [Parameter()]
+        [System.String[]]
+        $RedirectToRecipients = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $RegionBlockList = @(),
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [System.String]
+        $SpamAction = 'MoveToJmf',
+
+        [Parameter()]
+        [ValidateSet('None','AddXHeader','BccMessage')]
+        [System.String]
+        $TestModeAction = 'None',
+
+        [Parameter()]
+        [System.String[]]
+        $TestModeBccToRecipients = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $ZapEnabled = $true
+    )
+}
+
+function New-HostedContentFilterRule {
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $HostedContentFilterPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @()
+
+    )
+}
+
+function New-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [ValidateSet('Block', 'Replace', 'Allow', 'DynamicDelivery')]
+        [System.String]
+        $Action = 'Block',
+
+        [Parameter()]
+        [Boolean]
+        $ActionOnError = $false,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [Boolean]
+        $Enable = $false,
+
+        [Parameter()]
+        [Boolean]
+        $Redirect = $false,
+
+        [Parameter()]
+        [System.String]
+        $RedirectAddress
+    )
+}
+
+function New-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SafeAttachmentPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter()]
+        [uint32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @()
+    )
+}
+
+function New-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [Boolean]
+        $DoNotAllowClickThrough = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $DoNotRewriteUrls = @(),
+
+        [Parameter()]
+        [Boolean]
+        $DoNotTrackUserClicks = $true,
+
+        [Parameter()]
+        [Boolean]
+        $EnableForInternalSenders,
+
+        [Parameter()]
+        [Boolean]
+        $IsEnabled,
+
+        [Parameter()]
+        [Boolean]
+        $ScanUrls = $false
+    )
+}
+
+function New-SafeLinksRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SafeLinksPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter()]
+        [uint32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @()
+    )
+}
 
 function New-SPOMigrationEncryptionParameters {
  [CmdletBinding()]
@@ -1931,6 +2895,189 @@ param(
 
  }
 
+function Remove-AntiPhishPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter()]
+        $Confirm = $false,
+
+        [Parameter()]
+        [switch]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+
+}
+
+function Remove-AntiPhishRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter()]
+        $Confirm = $false,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+
+}
+
+function Remove-ClientAccessRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $true
+    )
+}
+
+function Remove-DkimSigningConfig
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $true
+    )
+}
+
+function Remove-HostedConnectionFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $true
+    )
+}
+
+function Remove-HostedContentFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
+    )
+}
+
+function Remove-HostedContentFilterRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
+    )
+}
+
+function Remove-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false,
+
+        [Parameter()]
+        [Switch]
+        $Force = $true
+    )
+}
+
+function Remove-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
+    )
+}
+
+function Remove-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
+    )
+}
+
+function Remove-SafeLinksRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
+    )
+}
 
 function Remove-SPODeletedSite {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
@@ -2403,6 +3550,931 @@ param(
 
  }
 
+
+ function Set-AcceptedDomain
+ {
+     [CmdletBinding()]
+     param
+     (
+        [Parameter()]
+        [ValidateSet('Authoritative')]
+        [System.String]
+        $DomainType = 'Authoritative',
+
+        [Parameter()]
+        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [ValidateScript( {$false -eq $_})]
+        [System.Boolean]
+        $MatchSubDomains = $false,
+
+        [Parameter()]
+        [ValidateScript( {$false -eq $_})]
+        [System.Boolean]
+        $OutboundOnly = $false
+     )
+
+ }
+
+ function Set-AntiPhishPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
+        [System.String]
+        $AuthenticationFailAction = 'MoveToJmf',
+
+        [Parameter()]
+        $Confirm = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAntispoofEnforcement = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAuthenticationSafetyTip = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAuthenticationSoftPassSafetyTip = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligence = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationDomainsProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarDomainsSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarUsersSafetyTips = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedDomainsProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedUserProtection = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnusualCharactersSafetyTips = $false,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedDomains = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedSenders = @(),
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $MakeDefault = $false,
+
+        [Parameter()]
+        [ValidateSet('1', '2', '3', '4')]
+        [System.String]
+        $PhishThresholdLevel = '1',
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedDomainActionRecipients = @(),
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $TargetedDomainProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedDomainsToProtect = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedUserActionRecipients = @(),
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $TargetedUserProtectionAction = 'NoAction',
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedUsersToProtect = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $TreatSoftPassAsAuthenticated = $true
+    )
+
+}
+
+function Set-AntiPhishRule {
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $AntiPhishPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @()
+
+    )
+}
+
+function Set-AtpPolicyForO365
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Identity = 'Default',
+
+        [Parameter()]
+        [Boolean]
+        $AllowClickThrough = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $BlockUrls = @(),
+
+        [Parameter()]
+        [Boolean]
+        $EnableATPForSPOTeamsODB = $false,
+
+        [Parameter()]
+        [Boolean]
+        $EnableSafeLinksForClients = $false,
+
+        [Parameter()]
+        [Boolean]
+        $TrackClicks = $true
+    )
+}
+
+function Set-CASMailboxPlan
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        ${Identity},
+
+        [Parameter()]
+        [Boolean]
+        ${ActiveSyncEnabled} = $true,
+
+        [Parameter()]
+        [Boolean]
+        ${ImapEnabled} = $false,
+
+        [Parameter()]
+        [System.String]
+        ${OwaMailboxPolicy} = 'OwaMailboxPolicy-Default',
+
+        [Parameter()]
+        [Boolean]
+        ${PopEnabled} = $true
+    )
+}
+
+function Set-ClientAccessRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('AllowAccess', 'DenyAccess')]
+        [System.String]
+        $Action,
+
+        [Parameter()]
+        [ValidateSet('AdfsAuthentication', 'BasicAuthentication', 'CertificateBasedAuthentication', 'NonBasicAuthentication', 'OAuthAuthentication')]
+        [System.String[]]
+        $AnyOfAuthenticationTypes = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AnyOfClientIPAddressesOrRanges = @(),
+
+        [Parameter()]
+        [ValidateSet('ExchangeActiveSync','ExchangeAdminCenter','ExchangeWebServices','IMAP4','OfflineAddressBook','OutlookAnywhere','OutlookWebApp','POP3','PowerShellWebServices','RemotePowerShell','REST','UniversalOutlook')]
+        [System.String[]]
+        $AnyOfProtocols = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [ValidateSet('AdfsAuthentication', 'BasicAuthentication', 'CertificateBasedAuthentication', 'NonBasicAuthentication', 'OAuthAuthentication')]
+        [System.String[]]
+        $ExceptAnyOfAuthenticationTypes = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptAnyOfClientIPAddressesOrRanges = @(),
+
+        [Parameter()]
+        [ValidateSet('ExchangeActiveSync','ExchangeAdminCenter','ExchangeWebServices','IMAP4','OfflineAddressBook','OutlookAnywhere','OutlookWebApp','POP3','PowerShellWebServices','RemotePowerShell','REST','UniversalOutlook')]
+        [System.String[]]
+        $ExceptAnyOfProtocols = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptUsernameMatchesAnyOfPatterns = @(),
+
+        [Parameter()]
+        [uint32]
+        $Priority,
+
+        [Parameter()]
+        [ValidateSet('All', 'Users')]
+        [System.String]
+        $Scope,
+
+        [Parameter()]
+        [System.String[]]
+        $UserRecipientFilter,
+
+        [Parameter()]
+        [System.String[]]
+        $UsernameMatchesAnyOfPatterns = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $COnfirm = $true
+    )
+}
+
+function Set-DkimSigningConfig
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [ValidateSet('Simple', 'Relaxed')]
+        [System.String]
+        $BodyCanonicalization = 'Relaxed',
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [ValidateSet('Simple', 'Relaxed')]
+        [System.String]
+        $HeaderCanonicalization = 'Relaxed',
+
+        [Parameter()]
+        [ValidateSet(1024)]
+        [uint16]
+        $KeySize = 1024,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $true
+    )
+}
+
+function Set-HostedConnectionFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [Boolean]
+        $EnableSafeList = $false,
+
+        [Parameter()]
+        [System.String[]]
+        $IPAllowList = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $IPBlockList = @(),
+
+        [Parameter()]
+        [Boolean]
+        $MakeDefault = $false,
+
+        [Parameter()]
+        [Boolean]
+        $Confirm = $false
+    )
+}
+
+function Set-HostedContentFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $AddXHeaderValue,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowedSenderDomains = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $AllowedSenders = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $BlockedSenderDomains = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $BlockedSenders = @(),
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine')]
+        [System.String]
+        $BulkSpamAction = 'MoveToJmf',
+
+        [Parameter()]
+        [ValidateRange(1,9)]
+        [uint32]
+        $BulkThreshold = 7,
+
+        [Parameter()]
+        [System.Boolean]
+        $DownloadLink = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableEndUserSpamNotifications = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableLanguageBlockList = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableRegionBlockList = $false,
+
+        [Parameter()]
+        [ValidatePattern("^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")]
+        [System.String]
+        $EndUserSpamNotificationCustomFromAddress,
+
+        [Parameter()]
+        [System.String]
+        $EndUserSpamNotificationCustomFromName,
+
+        [Parameter()]
+        [System.String]
+        $EndUserSpamNotificationCustomSubject,
+
+        [Parameter()]
+        [ValidateRange(1,15)]
+        [uint32]
+        $EndUserSpamNotificationFrequency = 3,
+
+        [Parameter()]
+        [ValidateSet('Default','English','French','German','Italian','Japanese','Spanish','Korean','Portuguese','Russian','ChineseSimplified','ChineseTraditional','Amharic','Arabic','Bulgarian','BengaliIndia','Catalan','Czech','Cyrillic','Danish','Greek','Estonian','Basque','Farsi','Finnish','Filipino','Galician','Gujarati','Hebrew','Hindi','Croatian','Hungarian','Indonesian','Icelandic','Kazakh','Kannada','Lithuanian','Latvian','Malayalam','Marathi','Malay','Dutch','NorwegianNynorsk','Norwegian','Oriya','Polish','PortuguesePortugal','Romanian','Slovak','Slovenian','SerbianCyrillic','Serbian','Swedish','Swahili','Tamil','Telugu','Thai','Turkish','Ukrainian','Urdu','Vietnamese')]
+        [System.String]
+        $EndUserSpamNotificationLanguage = 'Default',
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [System.String]
+        $HighConfidenceSpamAction = 'MoveToJmf',
+
+        [Parameter()]
+        [System.Boolean]
+        $InlineSafetyTipsEnabled = $true,
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $IncreaseScoreWithBizOrInfoUrls = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $IncreaseScoreWithImageLinks = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $IncreaseScoreWithNumericIps = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $IncreaseScoreWithRedirectToOtherPort ='Off',
+
+        [Parameter()]
+        [System.String[]]
+        $LanguageBlockList = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $MakeDefault = $false,
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamBulkMail = 'On',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamEmbedTagsInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamEmptyMessages = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamFormTagsInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamFramesInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamFromAddressAuthFail = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamJavaScriptInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamNdrBackscatter = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamObjectTagsInHtml = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamSensitiveWordList = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamSpfRecordHardFail = 'Off',
+
+        [Parameter()]
+        [ValidateSet('Off', 'On', 'Test')]
+        [System.String]
+        $MarkAsSpamWebBugsInHtml = 'Off',
+
+        [Parameter()]
+        [System.String]
+        $ModifySubjectValue,
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [System.String]
+        $PhishSpamAction = 'MoveToJmf',
+
+        [Parameter()]
+        [ValidateRange(1,15)]
+        [uint32]
+        $QuarantineRetentionPeriod = 15,
+
+        [Parameter()]
+        [System.String[]]
+        $RedirectToRecipients = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $RegionBlockList = @(),
+
+        [Parameter()]
+        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [System.String]
+        $SpamAction = 'MoveToJmf',
+
+        [Parameter()]
+        [ValidateSet('None','AddXHeader','BccMessage')]
+        [System.String[]]
+        $TestModeAction = 'None',
+
+        [Parameter()]
+        [System.String[]]
+        $TestModeBccToRecipients = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $ZapEnabled = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
+    )
+}
+
+function Set-HostedContentFilterRule {
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $HostedContentFilterPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
+    )
+}
+
+function Set-HostedOutboundSpamFilterPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Identity = 'Default',
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $BccSuspiciousOutboundAdditionalRecipients = @(),
+
+        [Parameter()]
+        [Boolean]
+        $BccSuspiciousOutboundMail = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $NotifyOutboundSpamRecipients = @(),
+
+        [Parameter()]
+        [Boolean]
+        $NotifyOutboundSpam = $true,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
+    )
+}
+
+function Set-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [ValidateSet('Block', 'Replace', 'Allow', 'DynamicDelivery')]
+        [System.String]
+        $Action = 'Block',
+
+        [Parameter()]
+        [Boolean]
+        $ActionOnError = $false,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [Boolean]
+        $Enable = $false,
+
+        [Parameter()]
+        [Boolean]
+        $Redirect = $false,
+
+        [Parameter()]
+        [System.String]
+        $RedirectAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
+    )
+}
+
+function Set-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SafeAttachmentPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter()]
+        [uint32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
+    )
+}
+
+function Set-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [Boolean]
+        $DoNotAllowClickThrough = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $DoNotRewriteUrls = @(),
+
+        [Parameter()]
+        [Boolean]
+        $DoNotTrackUserClicks = $true,
+
+        [Parameter()]
+        [Boolean]
+        $EnableForInternalSenders,
+
+        [Parameter()]
+        [Boolean]
+        $IsEnabled,
+
+        [Parameter()]
+        [Boolean]
+        $ScanUrls = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
+    )
+}
+
+function Set-SafeLinksRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SafeLinksPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter()]
+        [uint32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @(),
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
+    )
+}
 
 function Set-SPOBrowserIdleSignOut {
  [CmdletBinding()]
@@ -3404,6 +5476,42 @@ param(
 
 
  }
+
+ #region SPOApp
+function Get-PnPApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity
+    )
+}
+
+function Add-PnPApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Path,
+
+        [Parameter()]
+        [boolean]
+        $Overwrite
+    )
+}
+
+function Remove-PnPApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Identity
+    )
+}
+ #endregion
 
 
 function Add-MsolGroupMember {
@@ -9477,5 +11585,188 @@ function Get-TeamByGroupID{
         [Parameter()]
         [string]
         $GroupID
+    )
+}
+function Get-TeamByName{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Title
+    )
+}
+
+function Grant-PnPSiteDesignRights
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [string[]]
+        $Principals,
+
+        [Parameter()]
+        [string]
+        $Rights
+    )
+}
+
+function Add-PNPSiteDesign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [ValidateSet("CommunicationSite", "TeamSite")]
+        [System.String]
+        $WebTemplate,
+
+        [Parameter()]
+        [System.String[]]
+        $SiteScriptIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsDefault,
+
+        [Parameter()]
+        [System.String]
+        $PreviewImageAltText,
+
+        [Parameter()]
+        [System.String]
+        $PreviewImageUrl,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.UInt32]
+        $Version,
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
+        $Ensure = "Present"
+    )
+}
+
+function Revoke-PnPSiteDesignRights
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [string[]]
+        $Principals
+    )
+}
+
+function Get-PnPSiteDesign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Identity
+    )
+}
+
+function Set-PnPSiteDesign
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Identity,
+
+        [Parameter()]
+        [string]
+        $WebTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsDefault,
+
+        [Parameter()]
+        [string]
+        $Description,
+
+        [Parameter()]
+        [string]
+        $PreviewImageAltText,
+
+        [Parameter()]
+        [string]
+        $PreviewImageUrl,
+
+        [Parameter()]
+        [string]
+        $Version,
+
+        [Parameter()]
+        [string]
+        $Title,
+
+        [Parameter()]
+        [string[]]
+        $SiteScriptIds
+    )
+}
+
+function Get-PNPSiteScript
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Identity
+    )
+}
+
+function Get-PnPSiteDesignRights
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Identity
+    )
+}
+
+function Get-PnPStorageEntity
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]
+        $Key,
+
+        [Parameter()]
+        [string]
+        $Value,
+
+        [Parameter()]
+        [string]
+        $Comment,
+
+        [Parameter()]
+        [string]
+        $Description,
+
+        [Parameter()]
+        [string]
+        $Scope
+
     )
 }

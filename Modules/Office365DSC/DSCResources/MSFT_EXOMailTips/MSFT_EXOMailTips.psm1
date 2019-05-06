@@ -28,13 +28,13 @@ function Get-TargetResource
         [System.Boolean]
         $MailTipsExternalRecipientsTipsEnabled,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve information for Shared Mailbox $($Organization)"
@@ -48,10 +48,9 @@ function Get-TargetResource
         Ensure = "Absent"
         GlobalAdminAccount = $null
     }
-    $OrgConfig = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                    -ScriptBlock {
-        Get-OrganizationConfig
-    }
+
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    $OrgConfig = Get-OrganizationConfig
 
     if (!$OrgConfig)
     {
@@ -107,63 +106,45 @@ function Set-TargetResource
         [System.String]
         $Ensure,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Write-Verbose "Entering Set-TargetResource"
     Write-Verbose "Retrieving information about Mailtips Configuration"
     $OrgConfig = Get-TargetResource @PSBoundParameters
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
 
     # CASE : MailTipsAllTipsEnabled is used
+
     if ($PSBoundParameters.ContainsKey('MailTipsAllTipsEnabled'))
     {
-        Write-Verbose "Setting Mailtips for $($Organization) to $($args[0].MailTipsAllTipsEnabled)"
-        Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                          -Arguments $PSBoundParameters `
-                          -ScriptBlock {
-            Set-OrganizationConfig -MailTipsAllTipsEnabled $args[0].MailTipsAllTipsEnabled
-        }
+        Write-Verbose "Setting Mailtips for $($Organization) to $($MailTipsAllTipsEnabled)"
+        Set-OrganizationConfig -MailTipsAllTipsEnabled $MailTipsAllTipsEnabled
     }
     # CASE : MailTipsGroupMetricsEnabled is used
     if ($PSBoundParameters.ContainsKey('MailTipsGroupMetricsEnabled'))
     {
-        Write-Verbose "Setting Mailtips for Group Metrics of $($Organization) to $($args[0].MailTipsGroupMetricsEnabled)"
-        Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                          -Arguments $PSBoundParameters `
-                          -ScriptBlock {
-            Set-OrganizationConfig -MailTipsGroupMetricsEnabled $args[0].MailTipsGroupMetricsEnabled
-        }
+        Write-Verbose "Setting Mailtips for Group Metrics of $($Organization) to $($MailTipsGroupMetricsEnabled)"
+        Set-OrganizationConfig -MailTipsGroupMetricsEnabled $MailTipsGroupMetricsEnabled
     }
     # CASE : MailTipsLargeAudienceThreshold is used
     if ($PSBoundParameters.ContainsKey('MailTipsLargeAudienceThreshold'))
     {
-        Write-Verbose "Setting Mailtips for Large Audience of $($Organization) to $($args[0].MailTipsLargeAudienceThreshold)"
-        Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                          -Arguments $PSBoundParameters `
-                          -ScriptBlock {
-            Set-OrganizationConfig -MailTipsLargeAudienceThreshold $args[0].MailTipsLargeAudienceThreshold
-        }
+        Write-Verbose "Setting Mailtips for Large Audience of $($Organization) to $($MailTipsLargeAudienceThreshold)"
+        Set-OrganizationConfig -MailTipsLargeAudienceThreshold $MailTipsLargeAudienceThreshold
     }
     # CASE : MailTipsMailboxSourcedTipsEnabled is used
     if ($PSBoundParameters.ContainsKey('MailTipsMailboxSourcedTipsEnabled'))
     {
-        Write-Verbose "Setting Mailtips for Mailbox Data (OOF/Mailbox Full) of $($Organization) to $($args[0].MailTipsMailboxSourcedTipsEnabled)"
-        Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                          -Arguments $PSBoundParameters `
-                          -ScriptBlock {
-            Set-OrganizationConfig -MailTipsMailboxSourcedTipsEnabled $args[0].MailTipsMailboxSourcedTipsEnabled
-        }
+        Write-Verbose "Setting Mailtips for Mailbox Data (OOF/Mailbox Full) of $($Organization) to $($MailTipsMailboxSourcedTipsEnabled)"
+        Set-OrganizationConfig -MailTipsMailboxSourcedTipsEnabled $MailTipsMailboxSourcedTipsEnabled
     }
     # CASE : MailTipsExternalRecipientsTipsEnabled is used
     if ($PSBoundParameters.ContainsKey('MailTipsExternalRecipientsTipsEnabled'))
     {
-        Write-Verbose "Setting Mailtips for External Users of $($Organization) to $($args[0].MailTipsExternalRecipientsTipsEnabled)"
-        Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                          -Arguments $PSBoundParameters `
-                          -ScriptBlock {
-            Set-OrganizationConfig -MailTipsExternalRecipientsTipsEnabled $args[0].MailTipsExternalRecipientsTipsEnabled
-        }
+        Write-Verbose "Setting Mailtips for External Users of $($Organization) to $($MailTipsExternalRecipientsTipsEnabled)"
+        Set-OrganizationConfig -MailTipsExternalRecipientsTipsEnabled $MailTipsExternalRecipientsTipsEnabled
     }
 }
 
@@ -203,8 +184,8 @@ function Test-TargetResource
         [System.String]
         $Ensure,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -231,12 +212,12 @@ function Export-TargetResource
         [System.String]
         $Organization,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        EXOMailTips " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

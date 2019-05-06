@@ -53,11 +53,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting Team member settings for $TeamName"
 
-    $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
-    if ($null -eq $team)
-    {
-        throw "Team with Name $TeamName doesn't exist in tenant"
-    }
+    $team = Get-TeamByName $TeamName
+
+    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
     $teamMemberSettings = Get-TeamMemberSettings -GroupId $team.GroupId -ErrorAction SilentlyContinue
     if ($null -eq $teamMemberSettings)
@@ -130,11 +128,9 @@ function Set-TargetResource
 
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
-    $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
-    if ($null -eq $team)
-    {
-        throw "Team with Name $TeamName doesn't exist in tenant"
-    }
+    $team = Get-TeamByName $TeamName
+
+    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("TeamName")
@@ -215,7 +211,7 @@ function Export-TargetResource
     )
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        TeamsMemberSettings " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

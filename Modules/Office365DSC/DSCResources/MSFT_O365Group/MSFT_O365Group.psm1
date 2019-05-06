@@ -33,13 +33,13 @@ function Get-TargetResource
         [System.String]
         $PrimarySMTPAddress,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Write-Verbose "Get-TargetResource will attempt to retrieve information for group $($DisplayName)"
@@ -54,9 +54,9 @@ function Get-TargetResource
 
     if ($GroupType -eq "Security")
     {
-        Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+        Connect-MsolService -Credential $GlobalAdminAccount
         Write-Verbose -Message "Getting Security Group $($DisplayName)"
-        $group = Get-AzureADMSGroup | Where-Object {$_.DisplayName -eq $DisplayName}
+        $group = Get-MSOLGroup | Where-Object {$_.DisplayName -eq $DisplayName}
 
         if(!$group)
         {
@@ -71,7 +71,7 @@ function Get-TargetResource
             Ensure = "Present"
         }
     }
-    else 
+    else
     {
         $RecipientTypeDetails = "GroupMailbox"
         switch($GroupType)
@@ -81,11 +81,8 @@ function Get-TargetResource
             "MailEnabledSecurity" { $RecipientTypeDetails = "MailUniversalSecurityGroup" }
         }
 
-        $allGroups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                   -Arguments $CurrentParameters `
-                                   -ScriptBlock{
-            Get-Group
-        }
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $allGroups = Get-Group
         $group = $allGroups | Where-Object {$_.DisplayName -eq $DisplayName -and $_.RecipientTypeDetails -eq $RecipientTypeDetails}
 
         if (!$group)
@@ -99,11 +96,8 @@ function Get-TargetResource
             "Office365"
             {
                 Write-Verbose "Found Office365 Group $($group.DisplayName)"
-                $groupLinks = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                    -Arguments $PSBoundParameters `
-                    -ScriptBlock {
-                    Get-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType "Members"
-                }
+                Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+                $groupLinks = Get-UnifiedGroupLinks -Identity $DisplayName -LinkType "Members"
 
                 $groupMembers = ""
                 foreach ($link in $groupLinks.Name)
@@ -125,7 +119,7 @@ function Get-TargetResource
                     GroupType = $GroupType
                     Members = $groupMembers
                     ManagedBy = $group.ManagedBy
-                    Description = $group.Notes
+                    Description = $group.Notes.ToString()
                     GlobalAdminAccount = $GlobalAdminAccount
                     Ensure = "Present"
                 }
@@ -190,13 +184,13 @@ function Set-TargetResource
         [System.String]
         $PrimarySMTPAddress,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     Write-Verbose "Entering Set-TargetResource"
@@ -213,7 +207,7 @@ function Set-TargetResource
         {
             Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
             Write-Verbose -Message "Creating Security Group $DisplayName"
-            New-AzureADMSGroup @CurrentParameters
+            New-MsolGroup @CurrentParameters
         }
         else
         {
@@ -224,18 +218,12 @@ function Set-TargetResource
                     if ($currentGroup.Ensure -eq "Absent")
                     {
                         Write-Verbose -Message "Creating Office 365 Group $DisplayName"
-                        Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                            -Arguments $CurrentParameters `
-                            -ScriptBlock {
-                            New-UnifiedGroup -DisplayName $args[0].DisplayName -Notes $args[0].Description -Owner $args[0].ManagedBy
-                        }
+                        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+                        New-UnifiedGroup -DisplayName $DisplayName -Notes $Description -Owner $ManagedBy
                     }
 
-                    $groupLinks = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                        -Arguments $PSBoundParameters `
-                        -ScriptBlock {
-                        Get-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType "Members"
-                    }
+                    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+                    $groupLinks = Get-UnifiedGroupLinks -Identity $DisplayName -LinkType "Members"
                     $curMembers = @()
                     foreach ($link in $groupLinks)
                     {
@@ -267,21 +255,15 @@ function Set-TargetResource
                         if ($membersToAdd.Count -gt 0)
                         {
                             $CurrentParameters.Members = $membersToAdd
-                            Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                -Arguments $CurrentParameters `
-                                -ScriptBlock {
-                                    Add-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType Members -Links $args[0].Members
-                            }
+                            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+                            Add-UnifiedGroupLinks -Identity $DisplayName -LinkType Members -Links $Members
                         }
 
                         if ($membersToRemove.Count -gt 0)
                         {
                             $CurrentParameters.Members = $membersToRemove
-                            Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                -Arguments $CurrentParameters `
-                                -ScriptBlock {
-                                    Remove-UnifiedGroupLinks -Identity $args[0].DisplayName -LinkType Members -Links $args[0].Members
-                            }
+                            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+                            Remove-UnifiedGroupLinks -Identity $DisplayName -LinkType Members -Links $Members
                         }
                         $CurrentParameters.Members = $members
                     }
@@ -289,24 +271,18 @@ function Set-TargetResource
                 "DistributionList"
                 {
                     Write-Verbose -Message "Creating Distribution List $DisplayName"
-                    Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                        -Arguments $CurrentParameters `
-                        -ScriptBlock {
-                        New-DistributionGroup -DisplayName $args[0].DisplayName -Notes $args[0].Description `
-                                              -Name $args[0].DisplayName
-                    }
+                    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+                    New-DistributionGroup -DisplayName $DisplayName -Notes $Description `
+                                          -Name $DisplayName
                 }
                 "MailEnabledSecurity"
                 {
                     Write-Verbose -Message "Creating Mail-Enabled Security Group $DisplayName"
-                    Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                        -Arguments $CurrentParameters `
-                        -ScriptBlock {
-                            New-DistributionGroup -Name $args[0].DisplayName `
-                                                  -Alias $args[0].Alias `
-                                                  -Type "Security" `
-                                                  -PrimarySMTPAddress $args[0].PrimarySMTPAddress
-                    }
+                    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+                    New-DistributionGroup -Name $DisplayName `
+                                          -Alias $Alias `
+                                          -Type "Security" `
+                                          -PrimarySMTPAddress $PrimarySMTPAddress
                 }
                 Default
                 {
@@ -352,13 +328,13 @@ function Test-TargetResource
         [System.String]
         $PrimarySMTPAddress,
 
-        [Parameter()] 
-        [ValidateSet("Present","Absent")] 
-        [System.String] 
+        [Parameter()]
+        [ValidateSet("Present","Absent")]
+        [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
@@ -387,12 +363,12 @@ function Export-TargetResource
         [System.String]
         $GroupType,
 
-        [Parameter(Mandatory = $true)] 
-        [System.Management.Automation.PSCredential] 
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        O365Group " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

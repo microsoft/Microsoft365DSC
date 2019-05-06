@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [string] 
+    [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
                                          -ChildPath "..\Stubs\Office365.psm1" `
                                          -Resolve)
@@ -20,11 +20,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock Invoke-ExoCommand {
-            return Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $Arguments -NoNewScope
+        Mock -CommandName Connect-ExchangeOnline -MockWith {
+
         }
 
-        # Test contexts 
+        # Test contexts
         Context -Name "Specified Mailbox doesn't exist" -Fixture {
             $testParams = @{
                 DisplayName = "NonExisting@contoso.com"
@@ -32,7 +32,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-MailboxRegionalConfiguration -MockWith { 
+            Mock -CommandName Get-MailboxRegionalConfiguration -MockWith {
                 return $null
             }
 
@@ -57,7 +57,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-MailboxRegionalConfiguration -MockWith { 
+            Mock -CommandName Get-MailboxRegionalConfiguration -MockWith {
                 return @{
                     TimeZone = "Eastern Standard Time"
                 }
@@ -89,7 +89,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-MailboxRegionalConfiguration -MockWith { 
+            Mock -CommandName Get-MailboxRegionalConfiguration -MockWith {
                 return @{
                     TimeZone = "Eastern Standard Time"
                     Language = @{

@@ -1,815 +1,847 @@
 $Locales = @(
     @{
         EnglishName = "Arabic (Algeria)"
-        ID = "5121"
+        ID          = "5121"
     },
     @{
         EnglishName = "Arabic (Bahrain)"
-        ID = "15361"
+        ID          = "15361"
     },
     @{
         EnglishName = "Arabic (Egypt)"
-        ID = "3073"
+        ID          = "3073"
     },
     @{
         EnglishName = "Arabic (Iraq)"
-        ID = "2049"
+        ID          = "2049"
     },
     @{
         EnglishName = "Arabic (Jordan)"
-        ID = "11265"
+        ID          = "11265"
     },
     @{
         EnglishName = "Arabic (Kuwait)"
-        ID = "13313"
+        ID          = "13313"
     },
     @{
         EnglishName = "Arabic (Lebanon)"
-        ID = "12289"
+        ID          = "12289"
     },
     @{
         EnglishName = "Arabic (Libya)"
-        ID = "4097"
+        ID          = "4097"
     },
     @{
         EnglishName = "Arabic (Morocco)"
-        ID = "6145"
+        ID          = "6145"
     },
     @{
         EnglishName = "Arabic (Oman)"
-        ID = "8193"
+        ID          = "8193"
     },
     @{
         EnglishName = "Arabic (Qatar)"
-        ID = "16385"
+        ID          = "16385"
     },
     @{
         EnglishName = "Arabic (Saudi Arabia)"
-        ID = "1025"
+        ID          = "1025"
     },
     @{
         EnglishName = "Arabic (Syria)"
-        ID = "10241"
+        ID          = "10241"
     },
     @{
         EnglishName = "Arabic (Tunisia)"
-        ID = "7169"
+        ID          = "7169"
     },
     @{
         EnglishName = "Arabic (U.A.E.)"
-        ID = "14337"
+        ID          = "14337"
     },
     @{
         EnglishName = "Arabic (Yemen)"
-        ID = "9217"
+        ID          = "9217"
     },
     @{
         EnglishName = "Basque"
-        ID = "1069"
+        ID          = "1069"
     },
     @{
         EnglishName = "Bulgarian"
-        ID = "1026"
+        ID          = "1026"
     },
     @{
         EnglishName = "Catalan"
-        ID = "1027"
+        ID          = "1027"
     },
     @{
         EnglishName = "Chinese (Hong Kong S.A.R)"
-        ID = "3076"
+        ID          = "3076"
     },
     @{
         EnglishName = "Chinese (Macau S.A.R)"
-        ID = "5124"
+        ID          = "5124"
     },
     @{
         EnglishName = "Chinese (People's Republic of China)"
-        ID = "2052"
+        ID          = "2052"
     },
     @{
         EnglishName = "Chinese (Singapore)"
-        ID = "4100"
+        ID          = "4100"
     },
     @{
         EnglishName = "Chinese (Taiwan)"
-        ID = "1028"
+        ID          = "1028"
     },
     @{
         EnglishName = "Croatian"
-        ID = "1050"
+        ID          = "1050"
     },
     @{
         EnglishName = "Czech"
-        ID = "1029"
+        ID          = "1029"
     },
     @{
         EnglishName = "Danish"
-        ID = "1030"
+        ID          = "1030"
     },
     @{
         EnglishName = "Dutch (Belgium)"
-        ID = "2067"
+        ID          = "2067"
     },
     @{
         EnglishName = "Dutch (Netherlands)"
-        ID = "1043"
+        ID          = "1043"
     },
     @{
         EnglishName = "English (Australia)"
-        ID = "3081"
+        ID          = "3081"
     },
     @{
         EnglishName = "English (Belize)"
-        ID = "10249"
+        ID          = "10249"
     },
     @{
         EnglishName = "English (Canada)"
-        ID = "4105"
+        ID          = "4105"
     },
     @{
         EnglishName = "English (Caribbean)"
-        ID = "9225"
+        ID          = "9225"
     },
     @{
         EnglishName = "English (Ireland)"
-        ID = "6153"
+        ID          = "6153"
     },
     @{
         EnglishName = "English (Jamaica)"
-        ID = "8201"
+        ID          = "8201"
     },
     @{
         EnglishName = "English (New Zealand)"
-        ID = "5129"
+        ID          = "5129"
     },
     @{
         EnglishName = "English (Republic of the Philippines)"
-        ID = "13321"
+        ID          = "13321"
     },
     @{
         EnglishName = "English (South Africa)"
-        ID = "7177"
+        ID          = "7177"
     },
     @{
         EnglishName = "English (Trinidad)"
-        ID = "11273"
+        ID          = "11273"
     },
     @{
         EnglishName = "English (United Kingdom)"
-        ID = "2057"
+        ID          = "2057"
     },
     @{
         EnglishName = "English (United States)"
-        ID = "1033"
+        ID          = "1033"
     },
     @{
         EnglishName = "English (Zimbabwe)"
-        ID = "12297"
+        ID          = "12297"
     },
     @{
         EnglishName = "Estonian"
-        ID = "1061"
+        ID          = "1061"
     },
     @{
         EnglishName = "Filipino (Philippines)"
-        ID = "1124"
+        ID          = "1124"
     },
     @{
         EnglishName = "Finnish"
-        ID = "1035"
+        ID          = "1035"
     },
     @{
         EnglishName = "French (Belgium)"
-        ID = "2060"
+        ID          = "2060"
     },
     @{
         EnglishName = "French (Canada)"
-        ID = "3084"
+        ID          = "3084"
     },
     @{
         EnglishName = "French (France)"
-        ID = "1036"
+        ID          = "1036"
     },
     @{
         EnglishName = "French (Luxembourg)"
-        ID = "5132"
+        ID          = "5132"
     },
     @{
         EnglishName = "French (Principality of Monaco)"
-        ID = "6156"
+        ID          = "6156"
     },
     @{
         EnglishName = "French (Switzerland)"
-        ID = "4108"
+        ID          = "4108"
     },
     @{
         EnglishName = "German (Austria)"
-        ID = "3079"
+        ID          = "3079"
     },
     @{
         EnglishName = "German (Germany)"
-        ID = "1031"
+        ID          = "1031"
     },
     @{
         EnglishName = "German (Liechtenstein)"
-        ID = "5127"
+        ID          = "5127"
     },
     @{
         EnglishName = "German (Luxembourg)"
-        ID = "4103"
+        ID          = "4103"
     },
     @{
         EnglishName = "German (Switzerland)"
-        ID = "2055"
+        ID          = "2055"
     },
     @{
         EnglishName = "Greek"
-        ID = "1032"
+        ID          = "1032"
     },
     @{
         EnglishName = "Hebrew"
-        ID = "1037"
+        ID          = "1037"
     },
     @{
         EnglishName = "Hindi"
-        ID = "1081"
+        ID          = "1081"
     },
     @{
         EnglishName = "Hungarian"
-        ID = "1038"
+        ID          = "1038"
     },
     @{
         EnglishName = "Icelandic"
-        ID = "1039"
+        ID          = "1039"
     },
     @{
         EnglishName = "Indonesian"
-        ID = "1057"
+        ID          = "1057"
     },
     @{
         EnglishName = "Italian (Italy)"
-        ID = "1040"
+        ID          = "1040"
     },
     @{
         EnglishName = "Italian (Switzerland)"
-        ID = "2064"
+        ID          = "2064"
     },
     @{
         EnglishName = "Japanese"
-        ID = "1041"
+        ID          = "1041"
     },
     @{
         EnglishName = "Kazakh"
-        ID = "1087"
+        ID          = "1087"
     },
     @{
         EnglishName = "Korean"
-        ID = "1042"
+        ID          = "1042"
     },
     @{
         EnglishName = "Latvian"
-        ID = "1062"
+        ID          = "1062"
     },
     @{
         EnglishName = "Lithuanian"
-        ID = "1063"
+        ID          = "1063"
     },
     @{
         EnglishName = "Malay"
-        ID = "1086"
+        ID          = "1086"
     },
     @{
         EnglishName = "Norwegian (Bokmal)"
-        ID = "1044"
+        ID          = "1044"
     },
     @{
         EnglishName = "Persian"
-        ID = "1065"
+        ID          = "1065"
     },
     @{
         EnglishName = "Polish"
-        ID = "1045"
+        ID          = "1045"
     },
     @{
         EnglishName = "Portuguese (Brazil)"
-        ID = "1046"
+        ID          = "1046"
     },
     @{
         EnglishName = "Portuguese (Portugal)"
-        ID = "2070"
+        ID          = "2070"
     },
     @{
         EnglishName = "Romanian"
-        ID = "1048"
+        ID          = "1048"
     },
     @{
         EnglishName = "Russian"
-        ID = "1049"
+        ID          = "1049"
     },
     @{
         EnglishName = "Serbian (Cyrillic)"
-        ID = "3098"
+        ID          = "3098"
     },
     @{
         EnglishName = "Serbian (Latin)"
-        ID = "2074"
+        ID          = "2074"
     },
     @{
         EnglishName = "Slovak"
-        ID = "1051"
+        ID          = "1051"
     },
     @{
         EnglishName = "Slovenian"
-        ID = "1060"
+        ID          = "1060"
     },
     @{
         EnglishName = "Spanish (Argentina)"
-        ID = "11274"
+        ID          = "11274"
     },
     @{
         EnglishName = "Spanish (Bolivia)"
-        ID = "16394"
+        ID          = "16394"
     },
     @{
         EnglishName = "Spanish (Chile)"
-        ID = "13322"
+        ID          = "13322"
     },
     @{
         EnglishName = "Spanish (Colombia)"
-        ID = "9226"
+        ID          = "9226"
     },
     @{
         EnglishName = "Spanish (Costa Rica)"
-        ID = "5130"
+        ID          = "5130"
     },
     @{
         EnglishName = "Spanish (Dominican Republic)"
-        ID = "7178"
+        ID          = "7178"
     },
     @{
         EnglishName = "Spanish (Ecuador)"
-        ID = "12298"
+        ID          = "12298"
     },
     @{
         EnglishName = "Spanish (El Salvador)"
-        ID = "17418"
+        ID          = "17418"
     },
     @{
         EnglishName = "Spanish (Guatemala)"
-        ID = "4106"
+        ID          = "4106"
     },
     @{
         EnglishName = "Spanish (Honduras)"
-        ID = "18442"
+        ID          = "18442"
     },
     @{
         EnglishName = "Spanish (Mexico)"
-        ID = "2058"
+        ID          = "2058"
     },
     @{
         EnglishName = "Spanish (Nicaragua)"
-        ID = "19466"
+        ID          = "19466"
     },
     @{
         EnglishName = "Spanish (Panama)"
-        ID = "6154"
+        ID          = "6154"
     },
     @{
         EnglishName = "Spanish (Paraguay)"
-        ID = "15370"
+        ID          = "15370"
     },
     @{
         EnglishName = "Spanish (Peru)"
-        ID = "10250"
+        ID          = "10250"
     },
     @{
         EnglishName = "Spanish (Puerto Rico)"
-        ID = "20490"
+        ID          = "20490"
     },
     @{
         EnglishName = "Spanish (International Sort)"
-        ID = "3082"
+        ID          = "3082"
     },
     @{
         EnglishName = "Spanish (Traditional Sort)"
-        ID = "1034"
+        ID          = "1034"
     },
     @{
         EnglishName = "Spanish (Uruguay)"
-        ID = "14346"
+        ID          = "14346"
     },
     @{
         EnglishName = "Spanish (Venezuela)"
-        ID = "8202"
+        ID          = "8202"
     },
     @{
         EnglishName = "Swedish (Finland)"
-        ID = "2077"
+        ID          = "2077"
     },
     @{
         EnglishName = "Swedish (Sweden)"
-        ID = "1053"
+        ID          = "1053"
     },
     @{
         EnglishName = "Thai"
-        ID = "1054"
+        ID          = "1054"
     },
     @{
         EnglishName = "Turkish"
-        ID = "1055"
+        ID          = "1055"
     },
     @{
         EnglishName = "Ukrainian"
-        ID = "1058"
+        ID          = "1058"
     },
     @{
         EnglishName = "Urdu"
-        ID = "1056"
+        ID          = "1056"
     },
     @{
         EnglishName = "Vietnamese"
-        ID = "1066"
+        ID          = "1066"
     }
 )
 
 $TimeZones = @(
     @{
-        ID = "000"
-        EnglishName = "Dateline Standard Time"
+        ID                 = "000"
+        EnglishName        = "Dateline Standard Time"
         EnglishDescription = "(GMT-12:00) International Date Line West"
     },
     @{
-        ID = "001"
-        EnglishName = "Samoa Standard Time"
+        ID                 = "001"
+        EnglishName        = "Samoa Standard Time"
         EnglishDescription = "(GMT-11:00) Midway Island, Samoa"
     },
     @{
-        ID = "002"
-        EnglishName = "Hawaiian Standard Time"
+        ID                 = "002"
+        EnglishName        = "Hawaiian Standard Time"
         EnglishDescription = "(GMT-10:00) Hawaii"
     },
     @{
-        ID = "003"
-        EnglishName = "Alaskan Standard Time"
+        ID                 = "003"
+        EnglishName        = "Alaskan Standard Time"
         EnglishDescription = "(GMT-09:00) Alaska"
     },
     @{
-        ID = "004"
-        EnglishName = "Pacific Standard Time"
+        ID                 = "004"
+        EnglishName        = "Pacific Standard Time"
         EnglishDescription = "(GMT-08:00) Pacific Time (US and Canada); Tijuana"
     },
     @{
-        ID = "010"
-        EnglishName = "Mountain Standard Time"
+        ID                 = "010"
+        EnglishName        = "Mountain Standard Time"
         EnglishDescription = "(GMT-07:00) Mountain Time (US and Canada)"
     },
     @{
-        ID = "013"
-        EnglishName = "Mexico Standard Time 2"
+        ID                 = "013"
+        EnglishName        = "Mexico Standard Time 2"
         EnglishDescription = "(GMT-07:00) Chihuahua, La Paz, Mazatlan"
     },
     @{
-        ID = "015"
-        EnglishName = "U.S. Mountain Standard Time"
+        ID                 = "015"
+        EnglishName        = "U.S. Mountain Standard Time"
         EnglishDescription = "(GMT-07:00) Arizona"
     },
     @{
-        ID = "020"
-        EnglishName = "Central Standard Time"
+        ID                 = "020"
+        EnglishName        = "Central Standard Time"
         EnglishDescription = "(GMT-06:00) Central Time (US and Canada"
     },
     @{
-        ID = "025"
-        EnglishName = "Canada Central Standard Time"
+        ID                 = "025"
+        EnglishName        = "Canada Central Standard Time"
         EnglishDescription = "(GMT-06:00) Saskatchewan"
     },
     @{
-        ID = "030"
-        EnglishName = "Mexico Standard Time"
+        ID                 = "030"
+        EnglishName        = "Mexico Standard Time"
         EnglishDescription = "(GMT-06:00) Guadalajara, Mexico City, Monterrey"
     },
     @{
-        ID = "033"
-        EnglishName = "Central America Standard Time"
+        ID                 = "033"
+        EnglishName        = "Central America Standard Time"
         EnglishDescription = "(GMT-06:00) Central America"
     },
     @{
-        ID = "035"
-        EnglishName = "Eastern Standard Time"
+        ID                 = "035"
+        EnglishName        = "Eastern Standard Time"
         EnglishDescription = "(GMT-05:00) Eastern Time (US and Canada)"
     },
     @{
-        ID = "040"
-        EnglishName = "U.S. Eastern Standard Time"
+        ID                 = "040"
+        EnglishName        = "U.S. Eastern Standard Time"
         EnglishDescription = "(GMT-05:00) Indiana (East)"
     },
     @{
-        ID = "045"
-        EnglishName = "S.A. Pacific Standard Time"
+        ID                 = "045"
+        EnglishName        = "S.A. Pacific Standard Time"
         EnglishDescription = "(GMT-05:00) Bogota, Lima, Quito"
     },
     @{
-        ID = "050"
-        EnglishName = "Atlantic Standard Time"
+        ID                 = "050"
+        EnglishName        = "Atlantic Standard Time"
         EnglishDescription = "(GMT-04:00) Atlantic Time (Canada)"
     },
     @{
-        ID = "055"
-        EnglishName = "S.A. Western Standard Time"
+        ID                 = "055"
+        EnglishName        = "S.A. Western Standard Time"
         EnglishDescription = "(GMT-04:00) Caracas, La Paz"
     },
     @{
-        ID = "056"
-        EnglishName = "Pacific S.A. Standard Time"
+        ID                 = "056"
+        EnglishName        = "Pacific S.A. Standard Time"
         EnglishDescription = "(GMT-04:00) Santiago"
     },
     @{
-        ID = "060"
-        EnglishName = "Newfoundland and Labrador Standard Time"
+        ID                 = "060"
+        EnglishName        = "Newfoundland and Labrador Standard Time"
         EnglishDescription = "(GMT-03:30) Newfoundland and Labrador"
     },
     @{
-        ID = "065"
-        EnglishName = "E. South America Standard Time"
+        ID                 = "065"
+        EnglishName        = "E. South America Standard Time"
         EnglishDescription = "(GMT-03:00) Brasilia"
     },
     @{
-        ID = "070"
-        EnglishName = "S.A. Eastern Standard Time"
+        ID                 = "070"
+        EnglishName        = "S.A. Eastern Standard Time"
         EnglishDescription = "(GMT-03:00) Buenos Aires, Georgetown"
     },
     @{
-        ID = "073"
-        EnglishName = "Greenland Standard Time"
+        ID                 = "073"
+        EnglishName        = "Greenland Standard Time"
         EnglishDescription = "(GMT-03:00) Greenland"
     },
     @{
-        ID = "075"
-        EnglishName = "Mid-Atlantic Standard Time"
+        ID                 = "075"
+        EnglishName        = "Mid-Atlantic Standard Time"
         EnglishDescription = "(GMT-02:00) Mid-Atlantic"
     },
     @{
-        ID = "080"
-        EnglishName = "Azores Standard Time"
+        ID                 = "080"
+        EnglishName        = "Azores Standard Time"
         EnglishDescription = "(GMT-01:00) Azores"
     },
     @{
-        ID = "083"
-        EnglishName = "Cape Verde Standard Time"
+        ID                 = "083"
+        EnglishName        = "Cape Verde Standard Time"
         EnglishDescription = "(GMT-01:00) Cape Verde Islands"
     },
     @{
-        ID = "085"
-        EnglishName = "GMT Standard Time"
+        ID                 = "085"
+        EnglishName        = "GMT Standard Time"
         EnglishDescription = "(GMT) Greenwich Mean Time: Dublin, Edinburgh, Lisbon, London"
     },
     @{
-        ID = "090"
-        EnglishName = "Greenwich Standard Time"
+        ID                 = "090"
+        EnglishName        = "Greenwich Standard Time"
         EnglishDescription = "(GMT) Casablanca, Monrovia"
     },
     @{
-        ID = "095"
-        EnglishName = "Central Europe Standard Time"
+        ID                 = "095"
+        EnglishName        = "Central Europe Standard Time"
         EnglishDescription = "(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague"
     },
     @{
-        ID = "100"
-        EnglishName = "Central European Standard Time"
+        ID                 = "100"
+        EnglishName        = "Central European Standard Time"
         EnglishDescription = "(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb"
     },
     @{
-        ID = "105"
-        EnglishName = "Romance Standard Time"
+        ID                 = "105"
+        EnglishName        = "Romance Standard Time"
         EnglishDescription = "(GMT+01:00) Brussels, Copenhagen, Madrid, Paris"
     },
     @{
-        ID = "110"
-        EnglishName = "W. Europe Standard Time"
+        ID                 = "110"
+        EnglishName        = "W. Europe Standard Time"
         EnglishDescription = "(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna"
     },
     @{
-        ID = "113"
-        EnglishName = "W. Central Africa Standard Time"
+        ID                 = "113"
+        EnglishName        = "W. Central Africa Standard Time"
         EnglishDescription = "(GMT+01:00) West Central Africa"
     },
     @{
-        ID = "115"
-        EnglishName = "E. Europe Standard Time"
+        ID                 = "115"
+        EnglishName        = "E. Europe Standard Time"
         EnglishDescription = "(GMT+02:00) Bucharest"
     },
     @{
-        ID = "120"
-        EnglishName = "Egypt Standard Time"
+        ID                 = "120"
+        EnglishName        = "Egypt Standard Time"
         EnglishDescription = "(GMT+02:00) Cairo"
     },
     @{
-        ID = "125"
-        EnglishName = "FLE Standard Time"
+        ID                 = "125"
+        EnglishName        = "FLE Standard Time"
         EnglishDescription = "(GMT+02:00) Helsinki, Kiev, Riga, Sofia, Tallinn, Vilnius"
     },
     @{
-        ID = "130"
-        EnglishName = "GTB Standard Time"
+        ID                 = "130"
+        EnglishName        = "GTB Standard Time"
         EnglishDescription = "(GMT+02:00) Athens, Istanbul, Minsk"
     },
     @{
-        ID = "135"
-        EnglishName = "Israel Standard Time"
+        ID                 = "135"
+        EnglishName        = "Israel Standard Time"
         EnglishDescription = "(GMT+02:00) Jerusalem"
     },
     @{
-        ID = "140"
-        EnglishName = "South Africa Standard Time"
+        ID                 = "140"
+        EnglishName        = "South Africa Standard Time"
         EnglishDescription = "(GMT+02:00) Harare, Pretoria"
     },
     @{
-        ID = "145"
-        EnglishName = "Russian Standard Time"
+        ID                 = "145"
+        EnglishName        = "Russian Standard Time"
         EnglishDescription = "(GMT+03:00) Moscow, St. Petersburg, Volgograd"
     },
     @{
-        ID = "150"
-        EnglishName = "Arab Standard Time"
+        ID                 = "150"
+        EnglishName        = "Arab Standard Time"
         EnglishDescription = "(GMT+03:00) Kuwait, Riyadh"
     },
     @{
-        ID = "155"
-        EnglishName = "E. Africa Standard Time"
+        ID                 = "155"
+        EnglishName        = "E. Africa Standard Time"
         EnglishDescription = "(GMT+03:00) Nairobi"
     },
     @{
-        ID = "158"
-        EnglishName = "Arabic Standard Time"
+        ID                 = "158"
+        EnglishName        = "Arabic Standard Time"
         EnglishDescription = "(GMT+03:00) Baghdad"
     },
     @{
-        ID = "160"
-        EnglishName = "Iran Standard Time"
+        ID                 = "160"
+        EnglishName        = "Iran Standard Time"
         EnglishDescription = "(GMT+03:30) Tehran"
     },
     @{
-        ID = "165"
-        EnglishName = "Arabian Standard Time"
+        ID                 = "165"
+        EnglishName        = "Arabian Standard Time"
         EnglishDescription = "(GMT+04:00) Abu Dhabi, Muscat"
     },
     @{
-        ID = "170"
-        EnglishName = "Caucasus Standard Time"
+        ID                 = "170"
+        EnglishName        = "Caucasus Standard Time"
         EnglishDescription = "(GMT+04:00) Baku, Tbilisi, Yerevan"
     },
     @{
-        ID = "175"
-        EnglishName = "Transitional Islamic State of Afghanistan Standard Time"
+        ID                 = "175"
+        EnglishName        = "Transitional Islamic State of Afghanistan Standard Time"
         EnglishDescription = "(GMT+04:30) Kabul"
     },
     @{
-        ID = "180"
-        EnglishName = "Ekaterinburg Standard Time"
+        ID                 = "180"
+        EnglishName        = "Ekaterinburg Standard Time"
         EnglishDescription = "(GMT+05:00) Ekaterinburg"
     },
     @{
-        ID = "185"
-        EnglishName = "West Asia Standard Time"
+        ID                 = "185"
+        EnglishName        = "West Asia Standard Time"
         EnglishDescription = "(GMT+05:00) Islamabad, Karachi, Tashkent"
     },
     @{
-        ID = "190"
-        EnglishName = "India Standard Time"
+        ID                 = "190"
+        EnglishName        = "India Standard Time"
         EnglishDescription = "(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi"
     },
     @{
-        ID = "193"
-        EnglishName = "Nepal Standard Time"
+        ID                 = "193"
+        EnglishName        = "Nepal Standard Time"
         EnglishDescription = "(GMT+05:45) Kathmandu"
     },
     @{
-        ID = "195"
-        EnglishName = "Central Asia Standard Time"
+        ID                 = "195"
+        EnglishName        = "Central Asia Standard Time"
         EnglishDescription = "(GMT+06:00) Astana, Dhaka"
     },
     @{
-        ID = "200"
-        EnglishName = "Sri Lanka Standard Time"
+        ID                 = "200"
+        EnglishName        = "Sri Lanka Standard Time"
         EnglishDescription = "(GMT+06:00) Sri Jayawardenepura"
     },
     @{
-        ID = "201"
-        EnglishName = "N. Central Asia Standard Time"
+        ID                 = "201"
+        EnglishName        = "N. Central Asia Standard Time"
         EnglishDescription = "(GMT+06:00) Almaty, Novosibirsk"
     },
     @{
-        ID = "203"
-        EnglishName = "Myanmar Standard Time"
+        ID                 = "203"
+        EnglishName        = "Myanmar Standard Time"
         EnglishDescription = "(GMT+06:30) Yangon Rangoon"
     },
     @{
-        ID = "205"
-        EnglishName = "S.E. Asia Standard Time"
+        ID                 = "205"
+        EnglishName        = "S.E. Asia Standard Time"
         EnglishDescription = "(GMT+07:00) Bangkok, Hanoi, Jakarta"
     },
     @{
-        ID = "207"
-        EnglishName = "North Asia Standard Time"
+        ID                 = "207"
+        EnglishName        = "North Asia Standard Time"
         EnglishDescription = "(GMT+07:00) Krasnoyarsk"
     },
     @{
-        ID = "210"
-        EnglishName = "China Standard Time"
+        ID                 = "210"
+        EnglishName        = "China Standard Time"
         EnglishDescription = "(GMT+08:00) Beijing, Chongqing, Hong Kong SAR, Urumqi"
     },
     @{
-        ID = "215"
-        EnglishName = "Singapore Standard Time"
+        ID                 = "215"
+        EnglishName        = "Singapore Standard Time"
         EnglishDescription = "(GMT+08:00) Kuala Lumpur, Singapore"
     },
     @{
-        ID = "220"
-        EnglishName = "Taipei Standard Time"
+        ID                 = "220"
+        EnglishName        = "Taipei Standard Time"
         EnglishDescription = "(GMT+08:00) Taipei"
     },
     @{
-        ID = "225"
-        EnglishName = "W. Australia Standard Time"
+        ID                 = "225"
+        EnglishName        = "W. Australia Standard Time"
         EnglishDescription = "(GMT+08:00) Perth"
     },
     @{
-        ID = "227"
-        EnglishName = "North Asia East Standard Time"
+        ID                 = "227"
+        EnglishName        = "North Asia East Standard Time"
         EnglishDescription = "(GMT+08:00) Irkutsk, Ulaanbaatar"
     },
     @{
-        ID = "230"
-        EnglishName = "Korea Standard Time"
+        ID                 = "230"
+        EnglishName        = "Korea Standard Time"
         EnglishDescription = "(GMT+09:00) Seoul"
     },
     @{
-        ID = "235"
-        EnglishName = "Tokyo Standard Time"
+        ID                 = "235"
+        EnglishName        = "Tokyo Standard Time"
         EnglishDescription = "(GMT+09:00) Osaka, Sapporo, Tokyo"
     },
     @{
-        ID = "240"
-        EnglishName = "Yakutsk Standard Time"
+        ID                 = "240"
+        EnglishName        = "Yakutsk Standard Time"
         EnglishDescription = "(GMT+09:00) Yakutsk"
     },
     @{
-        ID = "245"
-        EnglishName = "A.U.S. Central Standard Time"
+        ID                 = "245"
+        EnglishName        = "A.U.S. Central Standard Time"
         EnglishDescription = "(GMT+09:30) Darwin"
     },
     @{
-        ID = "250"
-        EnglishName = "Cen. Australia Standard Time"
+        ID                 = "250"
+        EnglishName        = "Cen. Australia Standard Time"
         EnglishDescription = "(GMT+09:30) Adelaide"
     },
     @{
-        ID = "255"
-        EnglishName = "A.U.S. Eastern Standard Time"
+        ID                 = "255"
+        EnglishName        = "A.U.S. Eastern Standard Time"
         EnglishDescription = "(GMT+10:00) Canberra, Melbourne, Sydney"
     },
     @{
-        ID = "260"
-        EnglishName = "E. Australia Standard Time"
+        ID                 = "260"
+        EnglishName        = "E. Australia Standard Time"
         EnglishDescription = "(GMT+10:00) Brisbane"
     },
     @{
-        ID = "265"
-        EnglishName = "Tasmania Standard Time"
+        ID                 = "265"
+        EnglishName        = "Tasmania Standard Time"
         EnglishDescription = "(GMT+10:00) Hobart"
     },
     @{
-        ID = "270"
-        EnglishName = "Vladivostok Standard Time"
+        ID                 = "270"
+        EnglishName        = "Vladivostok Standard Time"
         EnglishDescription = "(GMT+10:00) Vladivostok"
     },
     @{
-        ID = "275"
-        EnglishName = "West Pacific Standard Time"
+        ID                 = "275"
+        EnglishName        = "West Pacific Standard Time"
         EnglishDescription = "(GMT+10:00) Guam, Port Moresby"
     },
     @{
-        ID = "280"
-        EnglishName = "Central Pacific Standard Time"
+        ID                 = "280"
+        EnglishName        = "Central Pacific Standard Time"
         EnglishDescription = "(GMT+11:00) Magadan, Solomon Islands, New Caledonia"
     },
     @{
-        ID = "285"
-        EnglishName = "Fiji Islands Standard Time"
+        ID                 = "285"
+        EnglishName        = "Fiji Islands Standard Time"
         EnglishDescription = "(GMT+12:00) Fiji Islands, Kamchatka, Marshall Islands"
     },
     @{
-        ID = "290"
-        EnglishName = "New Zealand Standard Time"
+        ID                 = "290"
+        EnglishName        = "New Zealand Standard Time"
         EnglishDescription = "(GMT+12:00) Auckland, Wellington"
     },
     @{
-        ID = "300"
-        EnglishName = "Tonga Standard Time"
+        ID                 = "300"
+        EnglishName        = "Tonga Standard Time"
         EnglishDescription = "(GMT+13:00) Nuku’alofa"
     }
 )
+function Format-EXOParams
+{
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $InputEXOParams,
+
+        [Parameter()]
+        [ValidateSet('New', 'Set')]
+        [System.String]
+        $Operation
+    )
+    $EXOParams = $InputEXOParams
+    $EXOParams.Remove("GlobalAdminAccount") | out-null
+    $EXOParams.Remove("Ensure") | out-null
+    $EXOParams.Remove("Verbose") | out-null
+    if ('New' -eq $Operation)
+    {
+        $EXOParams += @{
+            Name = $EXOParams.Identity
+        }
+        $EXOParams.Remove("Identity") | out-null
+        $EXOParams.Remove("MakeDefault") | out-null
+        return $EXOParams
+    }
+    if ('Set' -eq $Operation)
+    {
+        $EXOParams.Remove("Enabled") | out-null
+        return $EXOParams
+    }
+}
 
 function Get-LocaleIDFromName
 {
@@ -908,8 +940,39 @@ function Get-TeamByGroupID
     }
     return $true
 }
+function Get-TeamByName
+{
+    [CmdletBinding()]
+    [OutputType([Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $TeamName
+    )
 
-function Open-SecurityAndComplianceCenterConnection
+    $loopCounter = 0
+    do
+    {
+        $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
+        if ($null -eq $team)
+        {
+            Start-Sleep 5
+        }
+        $loopCounter +=1
+        if ($loopCounter -gt 5)
+        {
+            break
+        }
+    } while ($null -eq $team)
+
+    if ($null -eq $team)
+    {
+        throw "Team with Name $TeamName doesn't exist in tenant"
+    }
+    return $team
+}
+function Connect-ExchangeOnline
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -920,13 +983,425 @@ function Open-SecurityAndComplianceCenterConnection
         $GlobalAdminAccount
     )
     $VerbosePreference = 'SilentlyContinue'
-    $WarningPreference = "SilentlyContinue"
-    $ExchangeOnlineSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-    $ExchangeOnlineModules = Import-PSSession $ExchangeOnlineSession -AllowClobber
-    $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global
-    $SecurityAndComplianceCenterSession = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-    $SecurityAndComplianceCenterModules = Import-PSSession $SecurityAndComplianceCenterSession -AllowClobber
-    $SecurityAndComplianceCenterModuleImport = Import-Module $SecurityAndComplianceCenterModules -Global
+    $WarningPreference = "Continue"
+    $ClosedOrBrokenSessions = Get-PSSession -ErrorAction SilentlyContinue | Where-Object { $_.State -ne 'Opened' }
+    if ($ClosedOrBrokenSessions)
+    {
+        Write-Verbose "Found Existing Unusable Session(s)."
+        foreach ($SessionToBeClosed in $ClosedOrBrokenSessions)
+        {
+            Write-Verbose "Closing Session: $(($SessionToBeClosed).InstanceId)"
+            $SessionToBeClosed | Remove-PSSession
+        }
+    }
+
+    $Global:OpenExchangeSession = Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Where-Object { $_.State -eq 'Opened' }
+    if ($null -eq $Global:OpenExchangeSession)
+    {
+        try
+        {
+            $PowerShellConnections = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
+
+            while ($PowerShellConnections)
+            {
+                Write-Verbose "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
+                Write-Verbose "Waiting for closing connections to close..."
+                Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
+                Start-Sleep -seconds 1
+                $CheckConnectionsWithoutKillingWhileLoop = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
+                if (-NOT $CheckConnectionsWithoutKillingWhileLoop) {
+                    Write-Verbose "Connections have closed.  Waiting 5 more seconds..."
+                    Start-Sleep -seconds 5
+                    $PowerShellConnections = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
+                }
+            }
+
+            if ($Global:ExchangeOnlineSession.State -eq "Closed")
+            {
+                Remove-PSSession $Global:ExchangeOnlineSession
+                $Global:ExchangeOnlineSession = $null
+            }
+
+            while ($null -eq $Global:ExchangeOnlineSession)
+            {
+                Write-Verbose "Creating new EXO Session"
+                $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
+
+                if ($null -eq $Global:ExchangeOnlineSession)
+                {
+                    Write-Warning "Exceeded max number of connections. Waiting 60 seconds"
+                    Start-Sleep 60
+                }
+            }
+
+            if ($null -eq $Global:ExchangeOnlineModules)
+            {
+                Write-Verbose "Importing all commands into the EXO Session"
+                $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber
+                Import-Module $Global:ExchangeOnlineModules -Global | Out-Null
+            }
+        }
+        catch
+        {
+            $ExceptionMessage = $_.Exception
+            $Error.Clear()
+            $VerbosePreference = 'SilentlyContinue'
+            if ($ExceptionMessage -imatch 'Please wait for [0-9]* seconds' )
+            {
+                Write-Verbose "Waiting for available runspace..."
+                [regex]$WaitTimePattern = 'Please wait for [0-9]* seconds'
+                $WaitTimePatternMatch = (($WaitTimePattern.Match($ExceptionMessage)).Value | Select-String -Pattern '[0-9]*' -AllMatches )
+                $WaitTimeInSeconds = ($WaitTimePatternMatch | ForEach-Object {$_.Matches} | Where-Object Value -NotLike $null).Value
+                Write-Verbose "Waiting for requested $WaitTimeInSeconds seconds..."
+                Start-Sleep -Seconds ($WaitTimeInSeconds + 1)
+                try
+                {
+                    Write-Verbose "Opening New ExchangeOnline Session."
+                    $PowerShellConnections = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
+                    while ($PowerShellConnections)
+                    {
+                        Write-Verbose "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
+                        Write-Verbose "Waiting for closing connections to close..."
+                        Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
+                        Start-Sleep -seconds 1
+                        $CheckConnectionsWithoutKillingWhileLoop = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
+                        if (-NOT $CheckConnectionsWithoutKillingWhileLoop) {
+                            Write-Verbose "Connections have closed.  Waiting 5 more seconds..."
+                            Start-Sleep -seconds 5
+                            $PowerShellConnections = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
+                        }
+                    }
+                    $VerbosePreference = 'SilentlyContinue'
+                    $Global:ExchangeOnlineSession = $null
+                    while (-NOT $Global:ExchangeOnlineSession)
+                    {
+                        $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
+                    }
+
+                    $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
+
+                    $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global -ErrorAction SilentlyContinue
+                }
+                catch
+                {
+                    $VerbosePreference = 'SilentlyContinue'
+                    $WarningPreference = "SilentlyContinue"
+                    $Global:ExchangeOnlineSession = $null
+                    Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+                }
+            }
+            else
+            {
+                Write-Verbose $_.Exception
+                $VerbosePreference = 'SilentlyContinue'
+                Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
+                Write-Verbose "Exchange Online connection failed."
+                Write-Verbose "Waiting 60 seconds..."
+                Start-Sleep -Seconds 60
+                try
+                {
+                    Write-Verbose "Opening New ExchangeOnline Session."
+                    $VerbosePreference = 'SilentlyContinue'
+                    Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
+                    $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
+                    $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
+
+                    $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global -ErrorAction SilentlyContinue
+                }
+                catch
+                {
+                    $VerbosePreference = 'SilentlyContinue'
+                    $WarningPreference = "SilentlyContinue"
+                    $Global:ExchangeOnlineSession = $null
+                    Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+                }
+            }
+        }
+    }
+    else
+    {
+        Write-Verbose "Using Existing ExchangeOnline Session."
+        $Global:OpenExchangeSession = Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Where-Object { $_.State -eq 'Opened' }
+        $VerbosePreference = 'SilentlyContinue'
+        $WarningPreference = "SilentlyContinue"
+    }
+}
+
+function New-EXOAntiPhishPolicy
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AntiPhishPolicyParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'New' )
+        Write-Verbose "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        New-AntiPhishPolicy @BuiltParams
+        $VerbosePreference = 'SilentlyContinue'
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function New-EXOAntiPhishRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AntiPhishRuleParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'New' )
+        Write-Verbose "Creating New AntiPhishRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        New-AntiPhishRule @BuiltParams -Confirm:$false
+        $VerbosePreference = 'SilentlyContinue'
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function New-EXOHostedContentFilterRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $HostedContentFilterRuleParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Format-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'New' )
+        Write-Verbose "Creating New HostedContentFilterRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        New-HostedContentFilterRule @BuiltParams -Confirm:$false
+        $VerbosePreference = 'SilentlyContinue'
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function New-EXOSafeAttachmentRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SafeAttachmentRuleParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Format-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'New' )
+        Write-Verbose "Creating New SafeAttachmentRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        New-SafeAttachmentRule @BuiltParams -Confirm:$false
+        $VerbosePreference = 'SilentlyContinue'
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function New-EXOSafeLinksRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SafeLinksRuleParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Format-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'New' )
+        Write-Verbose "Creating New SafeLinksRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        New-SafeLinksRule @BuiltParams -Confirm:$false
+        $VerbosePreference = 'SilentlyContinue'
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function Set-EXOAntiPhishRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AntiPhishRuleParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'Set' )
+        if ($BuiltParams.keys -gt 1)
+        {
+            Write-Verbose "Setting AntiPhishRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Set-AntiPhishRule @BuiltParams -Confirm:$false
+            $VerbosePreference = 'SilentlyContinue'
+        }
+        else
+        {
+            Write-Verbose "No more values to Set on AntiPhishRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            $VerbosePreference = 'SilentlyContinue'
+        }
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function Set-EXOAntiPhishPolicy
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AntiPhishPolicyParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'Set' )
+        if ($BuiltParams.keys -gt 1)
+        {
+            Write-Verbose "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Set-AntiPhishPolicy @BuiltParams -Confirm:$false
+            $VerbosePreference = 'SilentlyContinue'
+        }
+        else
+        {
+            Write-Verbose "No more values to Set on AntiPhishPolicy $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            $VerbosePreference = 'SilentlyContinue'
+        }
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function Set-EXOHostedContentFilterRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $HostedContentFilterRuleParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Format-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'Set' )
+        if ($BuiltParams.keys -gt 1)
+        {
+            Write-Verbose "Setting HostedContentFilterRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Set-HostedContentFilterRule @BuiltParams -Confirm:$false
+            $VerbosePreference = 'SilentlyContinue'
+        }
+        else
+        {
+            Write-Verbose "No more values to Set on HostedContentFilterRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            $VerbosePreference = 'SilentlyContinue'
+        }
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function Confirm-ImportedCmdletIsAvailable
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CmdletName
+    )
+    try
+    {
+        $CmdletIsAvailable = (Get-Command -Name $CmdletName -ErrorAction SilentlyContinue)
+        if ($CmdletIsAvailable)
+        {
+            return $true
+        }
+        else
+        {
+            return $false
+        }
+    }
+    catch
+    {
+        return $false
+    }
+}
+
+function Set-EXOSafeAttachmentRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SafeAttachmentRuleParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Format-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'Set' )
+        if ($BuiltParams.keys -gt 1)
+        {
+            Write-Verbose "Setting SafeAttachmentRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Set-SafeAttachmentRule @BuiltParams -Confirm:$false
+            $VerbosePreference = 'SilentlyContinue'
+        }
+        else
+        {
+            Write-Verbose "No more values to Set on SafeAttachmentRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            $VerbosePreference = 'SilentlyContinue'
+        }
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
+}
+
+function Set-EXOSafeLinksRule
+{
+    param (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $SafeLinksRuleParams
+    )
+    try
+    {
+        $VerbosePreference = 'Continue'
+        $BuiltParams = (Format-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'Set' )
+        if ($BuiltParams.keys -gt 1)
+        {
+            Write-Verbose "Setting SafeLinksRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Set-SafeLinksRule @BuiltParams -Confirm:$false
+            $VerbosePreference = 'SilentlyContinue'
+        }
+        else
+        {
+            Write-Verbose "No more values to Set on SafeLinksRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            $VerbosePreference = 'SilentlyContinue'
+        }
+    }
+    catch
+    {
+        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+    }
 }
 
 function Test-SPOServiceConnection
@@ -940,13 +1415,33 @@ function Test-SPOServiceConnection
         $SPOCentralAdminUrl,
 
         [Parameter(Mandatory = $false)] 
-        [System.Management.Automation.PSCredential] 
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     Write-Verbose "Verifying the LCM connection state to SharePoint Online"
     Test-MSCloudLogin -Platform SharePointOnline
+}
+
+function Test-PnPOnlineConnection
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $false)] 
+        [System.String]
+        $SiteUrl,
+
+        [Parameter(Mandatory = $false)] 
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+    $VerbosePreference = 'SilentlyContinue'
+    $WarningPreference = "SilentlyContinue"
+    Write-Verbose "Verifying the LCM connection state to SharePoint Online with PnP"
+    Test-MSCloudLogin -Platform PnP 
 }
 
 function Test-O365ServiceConnection
@@ -956,7 +1451,7 @@ function Test-O365ServiceConnection
     param
     (
         [Parameter(Mandatory = $false)] 
-        [System.Management.Automation.PSCredential] 
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     $VerbosePreference = 'SilentlyContinue'
@@ -965,6 +1460,7 @@ function Test-O365ServiceConnection
     Test-MSCloudLogin -Platform AzureAD 
     Test-MSCloudLogin -Platform MSOnline
 }
+
 function Test-TeamsServiceConnection
 {
     [CmdletBinding()]
@@ -972,121 +1468,19 @@ function Test-TeamsServiceConnection
     param
     (
         [Parameter(Mandatory = $false)] 
-        [System.Management.Automation.PSCredential] 
+        [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
+    Import-Module MicrosoftTeams -Force
     Write-Verbose "Verifying the LCM connection state to Microsoft Teams"
     Test-MSCloudLogin -Platform MicrosoftTeams 
 }
-function Test-PnPOnlineConnection
+
+
+function Test-Office365DSCParameterState
 {
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $false)] 
-        [System.Management.Automation.PSCredential] 
-        $GlobalAdminAccount,
-        [Parameter(Mandatory = $false)] 
-        [string] 
-        $SPOCentralAdminUrl
-    )
-    $VerbosePreference = 'SilentlyContinue'
-    $WarningPreference = "SilentlyContinue"
-    Write-Verbose "Verifying the LCM connection state to SharePoint Online PnP"
-    Test-MSCloudLogin -Platform PnP 
-}
-
-function Invoke-ExoCommand
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [Object[]]
-        $Arguments,
-
-        [Parameter(Mandatory = $true)]
-        [ScriptBlock]
-        $ScriptBlock
-    )
-    $VerbosePreference = 'SilentlyContinue'
-    $WarningPreference = "SilentlyContinue"
-    $invokeArgs = @{
-        ScriptBlock = [ScriptBlock]::Create($ScriptBlock.ToString())
-    }
-    if ($null -ne $Arguments) {
-        $invokeArgs.Add("ArgumentList", $Arguments)
-    }
-
-    Write-Verbose "Verifying the LCM connection state to Exchange Online"
-    $AssemblyPath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\Dependencies\Microsoft.Exchange.Management.ExoPowershellModule.dll" `
-        -Resolve
-    $AADAssemblyPath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\Dependencies\Microsoft.IdentityModel.Clients.ActiveDirectory.dll" `
-        -Resolve
-
-    $ScriptPath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\Dependencies\CreateExoPSSession.ps1" `
-        -Resolve
-
-    $catch = Import-Module $AssemblyPath
-    $catch = [Reflection.Assembly]::LoadFile($AADAssemblyPath)
-    .$ScriptPath
-
-    # Somehow, every now and then, the first connection attempt will get an invalid Shell Id. Calling the function a second
-    # time fixes the issue.
-    try
-    {
-        if (!$Global:ExoPSSessionConnected)
-        {
-            $catch = Connect-ExoPSSession -Credential $GlobalAdminAccount -ErrorAction SilentlyContinue
-            $Global:ExoPSSessionConnected = $true
-        }
-    }
-    catch {
-        # Check to see if we received a payload error, and if so, wait for the requested period of time before proceeding
-        # with the next call.
-        $stringToFind = "you have exceeded your budget to create runspace. Please wait for "
-        if ($Error) {
-            $position = $Error[0].ErrorDetails.Message.IndexOf($stringToFind)
-
-            if ($position -ge 0) {
-                $beginning = $position + $stringToFind.Length
-                $nextSpace = $Error[0].ErrorDetails.Message.IndexOf(" ", $beginning)
-
-                [int]$timeToWaitInSeconds = $Error[0].ErrorDetails.Message.Substring($beginning, $nextSpace - $beginning)
-
-                Write-Verbose "Detected an exceeded payload against the remote server. Waiting for $($timeToWaitInSeconds) seconds."
-                Start-Sleep -Seconds $timeToWaitInSeconds
-            }
-        }
-        $catch = Connect-ExoPSSession -Credential $GlobalAdminAccount -ErrorAction SilentlyContinue
-        $Global:ExoPSSessionConnected = $true
-    }
-
-    try
-    {
-        $result = Invoke-Command @invokeArgs -Verbose
-    }
-    catch
-    {
-        $catch = Connect-ExoPSSession -Credential $GlobalAdminAccount -ErrorAction SilentlyContinue
-        $Global:ExoPSSessionConnected = $true
-        $result = Invoke-Command @invokeArgs -Verbose
-    }
-
-    return $result
-}
-
-function Test-Office365DSCParameterState {
     [CmdletBinding()]
     param
     (
@@ -1108,42 +1502,53 @@ function Test-Office365DSCParameterState {
 
     if (($DesiredValues.GetType().Name -ne "HashTable") `
             -and ($DesiredValues.GetType().Name -ne "CimInstance") `
-            -and ($DesiredValues.GetType().Name -ne "PSBoundParametersDictionary")) {
+            -and ($DesiredValues.GetType().Name -ne "PSBoundParametersDictionary"))
+    {
         throw ("Property 'DesiredValues' in Test-SPDscParameterState must be either a " + `
                 "Hashtable or CimInstance. Type detected was $($DesiredValues.GetType().Name)")
     }
 
-    if (($DesiredValues.GetType().Name -eq "CimInstance") -and ($null -eq $ValuesToCheck)) {
+    if (($DesiredValues.GetType().Name -eq "CimInstance") -and ($null -eq $ValuesToCheck))
+    {
         throw ("If 'DesiredValues' is a CimInstance then property 'ValuesToCheck' must contain " + `
                 "a value")
     }
 
-    if (($null -eq $ValuesToCheck) -or ($ValuesToCheck.Count -lt 1)) {
+    if (($null -eq $ValuesToCheck) -or ($ValuesToCheck.Count -lt 1))
+    {
         $KeyList = $DesiredValues.Keys
     }
-    else {
+    else
+    {
         $KeyList = $ValuesToCheck
     }
 
     $KeyList | ForEach-Object -Process {
-        if (($_ -ne "Verbose") -and ($_ -ne "InstallAccount")) {
+        if (($_ -ne "Verbose") -and ($_ -ne "InstallAccount"))
+        {
             if (($CurrentValues.ContainsKey($_) -eq $false) `
                     -or ($CurrentValues.$_ -ne $DesiredValues.$_) `
-                    -or (($DesiredValues.ContainsKey($_) -eq $true) -and ($null -ne $DesiredValues.$_ -and $DesiredValues.$_.GetType().IsArray))) {
+                    -or (($DesiredValues.ContainsKey($_) -eq $true) -and ($null -ne $DesiredValues.$_ -and $DesiredValues.$_.GetType().IsArray)))
+            {
                 if ($DesiredValues.GetType().Name -eq "HashTable" -or `
-                        $DesiredValues.GetType().Name -eq "PSBoundParametersDictionary") {
+                        $DesiredValues.GetType().Name -eq "PSBoundParametersDictionary")
+                {
                     $CheckDesiredValue = $DesiredValues.ContainsKey($_)
                 }
-                else {
+                else
+                {
                     $CheckDesiredValue = Test-SPDSCObjectHasProperty -Object $DesiredValues -PropertyName $_
                 }
 
-                if ($CheckDesiredValue) {
+                if ($CheckDesiredValue)
+                {
                     $desiredType = $DesiredValues.$_.GetType()
                     $fieldName = $_
-                    if ($desiredType.IsArray -eq $true) {
+                    if ($desiredType.IsArray -eq $true)
+                    {
                         if (($CurrentValues.ContainsKey($fieldName) -eq $false) `
-                                -or ($null -eq $CurrentValues.$fieldName)) {
+                                -or ($null -eq $CurrentValues.$fieldName))
+                        {
                             Write-Verbose -Message ("Expected to find an array value for " + `
                                     "property $fieldName in the current " + `
                                     "values, but it was either not present or " + `
@@ -1151,10 +1556,12 @@ function Test-Office365DSCParameterState {
                                     "to return false.")
                             $returnValue = $false
                         }
-                        else {
+                        else
+                        {
                             $arrayCompare = Compare-Object -ReferenceObject $CurrentValues.$fieldName `
                                 -DifferenceObject $DesiredValues.$fieldName
-                            if ($null -ne $arrayCompare) {
+                            if ($null -ne $arrayCompare)
+                            {
                                 Write-Verbose -Message ("Found an array for property $fieldName " + `
                                         "in the current values, but this array " + `
                                         "does not match the desired state. " + `
@@ -1166,13 +1573,18 @@ function Test-Office365DSCParameterState {
                             }
                         }
                     }
-                    else {
-                        switch ($desiredType.Name) {
-                            "String" {
+                    else
+                    {
+                        switch ($desiredType.Name)
+                        {
+                            "String"
+                            {
                                 if ([string]::IsNullOrEmpty($CurrentValues.$fieldName) `
                                         -and [string]::IsNullOrEmpty($DesiredValues.$fieldName))
-                                {}
-                                else {
+                                {
+                                }
+                                else
+                                {
                                     Write-Verbose -Message ("String value for property " + `
                                             "$fieldName does not match. " + `
                                             "Current state is " + `
@@ -1182,11 +1594,14 @@ function Test-Office365DSCParameterState {
                                     $returnValue = $false
                                 }
                             }
-                            "Int32" {
+                            "Int32"
+                            {
                                 if (($DesiredValues.$fieldName -eq 0) `
                                         -and ($null -eq $CurrentValues.$fieldName))
-                                {}
-                                else {
+                                {
+                                }
+                                else
+                                {
                                     Write-Verbose -Message ("Int32 value for property " + `
                                             "$fieldName does not match. " + `
                                             "Current state is " + `
@@ -1196,11 +1611,14 @@ function Test-Office365DSCParameterState {
                                     $returnValue = $false
                                 }
                             }
-                            "Int16" {
+                            "Int16"
+                            {
                                 if (($DesiredValues.$fieldName -eq 0) `
                                         -and ($null -eq $CurrentValues.$fieldName))
-                                {}
-                                else {
+                                {
+                                }
+                                else
+                                {
                                     Write-Verbose -Message ("Int16 value for property " + `
                                             "$fieldName does not match. " + `
                                             "Current state is " + `
@@ -1210,8 +1628,10 @@ function Test-Office365DSCParameterState {
                                     $returnValue = $false
                                 }
                             }
-                            "Boolean" {
-                                if ($CurrentValues.$fieldName -ne $DesiredValues.$fieldName) {
+                            "Boolean"
+                            {
+                                if ($CurrentValues.$fieldName -ne $DesiredValues.$fieldName)
+                                {
                                     Write-Verbose -Message ("Boolean value for property " + `
                                             "$fieldName does not match. " + `
                                             "Current state is " + `
@@ -1221,11 +1641,14 @@ function Test-Office365DSCParameterState {
                                     $returnValue = $false
                                 }
                             }
-                            "Single" {
+                            "Single"
+                            {
                                 if (($DesiredValues.$fieldName -eq 0) `
                                         -and ($null -eq $CurrentValues.$fieldName))
-                                {}
-                                else {
+                                {
+                                }
+                                else
+                                {
                                     Write-Verbose -Message ("Single value for property " + `
                                             "$fieldName does not match. " + `
                                             "Current state is " + `
@@ -1235,7 +1658,8 @@ function Test-Office365DSCParameterState {
                                     $returnValue = $false
                                 }
                             }
-                            default {
+                            default
+                            {
                                 Write-Verbose -Message ("Unable to compare property $fieldName " + `
                                         "as the type ($($desiredType.Name)) is " + `
                                         "not handled by the " + `
@@ -1251,7 +1675,8 @@ function Test-Office365DSCParameterState {
     return $returnValue
 }
 
-function Get-UsersLicenses {
+function Get-UsersLicenses
+{
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param(
@@ -1260,7 +1685,7 @@ function Get-UsersLicenses {
         $GlobalAdminAccount
     )
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Store all users licences information in Global Variable for future usage."
+    Write-Verbose "Store all users licenses information in Global Variable for future usage."
     #Store information to be able to check later if the users is correctly licences for features.
     if ($null -eq $Global:UsersLicenses)
     {
@@ -1290,18 +1715,27 @@ function Get-UsersLicenses {
    Office 365 Tenant. #>
 function Export-O365Configuration
 {
+    Show-O365GUI
+}
+
+function Start-O365ConfigurationExtract
+{
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param(
-        [Parameter(Mandatory = $false)] 
-        [System.Management.Automation.PSCredential] 
-        $GlobalAdminAccount
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String[]]
+        $ComponentsToExtract
     )
-    if ($null -eq $GlobalAdminAccount)
-    {
-        $GlobalAdminAccount = Get-O365Credentials -Username $env:USERNAME
-    }
-    $VerbosePreference = 'Continue'
+    $filesToDownload = @() # List of files to download in the destination folder;
+
+    $InformationPreference = "Continue"
+    $VerbosePreference = "SilentlyContinue"
+    $WarningPreference = "SilentlyContinue"
     $AzureAutomation = $false
     $DSCContent = "Configuration O365TenantConfig `r`n{`r`n"
     $DSCContent += "    Import-DSCResource -ModuleName Office365DSC`r`n`r`n"
@@ -1309,186 +1743,14 @@ function Export-O365Configuration
     $DSCContent += "    Node localhost`r`n"
     $DSCContent += "    {`r`n"
 
-    # Add the GlobalAdminAccount to the Credentials List
-    Save-Credentials -UserName $GlobalAdminAccount.UserName
-
-    #region "O365AdminAuditLogConfig"
-    Write-Information "Extracting O365AdminAuditLogConfig..."
-    $O365AdminAuditLogConfig = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                                -ScriptBlock {
-        Get-AdminAuditLogConfig
-    }
-
-    $O365AdminAuditLogConfigModulePath = Join-Path -Path $PSScriptRoot `
-                                       -ChildPath "..\DSCResources\MSFT_O365AdminAuditLogConfig\MSFT_O365AdminAuditLogConfig.psm1" `
-                                       -Resolve
-
-    $value = "Disabled"
-    if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
-    {
-        $value = "Enabled"
-    }
-
-    $catch = Import-Module $O365AdminAuditLogConfigModulePath
-    $DSCContent += Export-TargetResource -UnifiedAuditLogIngestionEnabled $value -GlobalAdminAccount $GlobalAdminAccount -IsSingleInstance 'Yes'
-    #endregion
-
-    #region "EXOMailboxSettings"
-    Write-Information "Extracting EXOMailboxSettings..."
-    $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `
-                                              -ChildPath "..\DSCResources\MSFT_EXOMailboxSettings\MSFT_EXOMailboxSettings.psm1" `
-                                              -Resolve
-
-    $catch = Import-Module $EXOMailboxSettingsModulePath
-    $mailboxes = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                   -ScriptBlock {
-        Get-Mailbox
-    }
-
-    foreach ($mailbox in $mailboxes)
-    {
-        Write-Information "    Settings for Mailbox {$($mailbox.Name)}"
-        $mailboxName = $mailbox.Name
-        if ($mailboxName)
-        {
-            $DSCContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
-        }
-    }
-    #endregion
-
-    #region "EXOMailTips"
-    Write-Information "Extracting EXOMailTips..."
-    $OrgConfig = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                    -ScriptBlock {
-        Get-OrganizationConfig
-    }
-
-    $organizationName = $OrgConfig.Name
     Add-ConfigurationDataEntry -Node "localhost" `
-                               -Key "OrganizationName" `
-                               -Value $organizationName `
-                               -Description "Name of the Organization"
-
-    $EXOMailTipsModulePath = Join-Path -Path $PSScriptRoot `
-                                       -ChildPath "..\DSCResources\MSFT_EXOMailTips\MSFT_EXOMailTips.psm1" `
-                                       -Resolve
-
-    $catch = Import-Module $EXOMailTipsModulePath
-    $DSCContent += Export-TargetResource -Organization $organizationName -GlobalAdminAccount $GlobalAdminAccount
-    #endregion
-
-    #region "EXOSharedMailbox"
-    $EXOSharedMailboxModulePath = Join-Path -Path $PSScriptRoot `
-                                            -ChildPath "..\DSCResources\MSFT_EXOSharedMailbox\MSFT_EXOSharedMailbox.psm1" `
-                                            -Resolve
-
-    $catch = Import-Module $EXOSharedMailboxModulePath
-    $mailboxes = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                   -ScriptBlock {
-        Get-Mailbox
-    }
-    $mailboxes = $mailboxes | Where-Object {$_.RecipientTypeDetails -eq "SharedMailbox"}
-
-    foreach ($mailbox in $mailboxes)
-    {
-        Write-Information "    MailTips for mailbox {$($mailbox.Name)}"
-        $mailboxName = $mailbox.Name
-        if ($mailboxName)
-        {
-            $DSCContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
-        }
-    }
-    #endregion
-
-    #region "O365Group"
-    Write-Information "Extracting O365Group..."
-    $O365GroupModulePath = Join-Path -Path $PSScriptRoot `
-                                     -ChildPath "..\DSCResources\MSFT_O365Group\MSFT_O365Group.psm1" `
-                                     -Resolve
-
-    $catch = Import-Module $O365GroupModulePath
-
-    # Security Groups
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    $securityGroups = Get-AzureADMSGroup | Where-Object {$_.SecurityEnabled -eq $true}
-
-    foreach ($securityGroup in $securityGroups)
-    {
-        Write-Information "    Security Group {$($securityGroup.DisplayName)}"
-        $securityGroupDisplayName = $securityGroup.DisplayName
-        if ($securityGroupDisplayName)
-        {
-            $DSCContent += Export-TargetResource -DisplayName $securityGroupDisplayName `
-                                                 -GroupType "Security" `
-                                                 -GlobalAdminAccount $GlobalAdminAccount
-        }
-    }
-
-    $securityGroups = Get-AzureADMSGroup | Where-Object {$_.SecurityEnabled -eq $true}
-
-    # Other Groups
-    $groups = Invoke-ExoCommand -GlobalAdminAccount $GlobalAdminAccount `
-                                -ScriptBlock {
-        Get-Group
-    }
-    $groups = $groups | Where-Object { `
-        $_.RecipientType -eq "MailUniversalDistributionGroup" `
-        -or $_.RecipientType -eq "MailUniversalSecurityGroup" `
-    }
-    foreach ($group in $groups)
-    {
-        $groupName = $group.DisplayName
-        if ($groupName)
-        {
-            $groupType = "DistributionList"
-            if ($group.RecipientTypeDetails -eq "GroupMailbox")
-            {
-                $groupType = "Office365"
-            }
-            elseif ($group.RecipientTypeDetails -eq "MailUniversalSecurityGroup")
-            {
-                $groupType = "MailEnabledSecurity"
-            }
-            Write-Information "    $($groupType) Group {$($groupName)}"
-            $DSCContent += Export-TargetResource -DisplayName $groupName `
-                                                 -GroupType $groupType `
-                                                 -GlobalAdminAccount $GlobalAdminAccount
-        }
-    }
-    #endregion
-
-    #region "O365User"
-    Write-Information "Extracting O365User..."
-    $O365UserModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_O365USer\MSFT_O365USer.psm1" `
-                                    -Resolve
-
-    $catch = Import-Module $O365UserModulePath
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-
-    $users = Get-AzureADUser
-
-    foreach ($user in $users)
-    {
-        Write-Information "    User {$($user.UserPrincipalName)}"
-        $userUPN = $user.UserPrincipalName
-        if ($userUPN)
-        {
-            $DSCContent += Export-TargetResource -UserPrincipalName $userUPN -GlobalAdminAccount $GlobalAdminAccount
-        }
-    }
-    #endregion
-
-    #region "ODSettings"
-    Write-Information "Extracting ODSettings..."
-    $ODSettingsModulePath = Join-Path -Path $PSScriptRoot `
-                                      -ChildPath "..\DSCResources\MSFT_ODSettings\MSFT_ODSettings.psm1" `
-                                      -Resolve
-
-    $catch = Import-Module $ODSettingsModulePath
-
+                                   -Key "ServerNumber" `
+                                   -Value "0" `
+                                   -Description "Default Valus Used to Ensure a Configuration Data File is Generated"
     # Obtain central administration url from a User Principal Name
     $centralAdminUrl = $null
+    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    $users = Get-AzureADUser
     if ($users.Count -gt 0)
     {
         $tenantParts = $users[0].UserPrincipalName.Split('@')
@@ -1499,186 +1761,805 @@ function Export-O365Configuration
         }
     }
 
-    if ($centralAdminUrl)
+    # Add the GlobalAdminAccount to the Credentials List
+    Save-Credentials -UserName $GlobalAdminAccount.UserName
+
+    #region "O365AdminAuditLogConfig"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckO365AdminAuditLogConfig"))
     {
-        $DSCContent += Export-TargetResource -CentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Write-Information "Extracting O365AdminAuditLogConfig..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $O365AdminAuditLogConfig = Get-AdminAuditLogConfig
+
+        $O365AdminAuditLogConfigModulePath = Join-Path -Path $PSScriptRoot `
+                                                       -ChildPath "..\DSCResources\MSFT_O365AdminAuditLogConfig\MSFT_O365AdminAuditLogConfig.psm1" `
+                                                       -Resolve
+
+        $value = "Disabled"
+        if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
+        {
+            $value = "Enabled"
+        }
+
+        Import-Module $O365AdminAuditLogConfigModulePath | Out-Null
+        $DSCContent += Export-TargetResource -UnifiedAuditLogIngestionEnabled $value -GlobalAdminAccount $GlobalAdminAccount -IsSingleInstance 'Yes'
+    }
+    #endregion
+
+    #region "EXOAtpPolicyForO365"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOAtpPolicyForO365"))
+    {
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-AtpPolicyForO365)
+        {
+            Write-Information "Extracting EXOAtpPolicyForO365..."
+            $EXOAtpPolicyForO365ModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOAtpPolicyForO365\MSFT_EXOAtpPolicyForO365.psm1" `
+                                                    -Resolve
+
+            Import-Module $EXOAtpPolicyForO365ModulePath | Out-Null
+            $DSCContent += Export-TargetResource -IsSingleInstance "Yes" -GlobalAdminAccount $GlobalAdminAccount
+        }
+        else
+        {
+            Write-Information "The specified Tenant is not registered for ATP, and therefore can't extract policies"
+        }
+    }
+    #endregion
+
+    #region "EXOCASMailboxPlan"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOCASMailboxPlan"))
+    {
+        Write-Information "Extracting EXOCASMailboxPlan..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $CASMailboxPlans = Get-CASMailboxPlan
+        $EXOCASMailboxPlanModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOCASMailboxPlan\MSFT_EXOCASMailboxPlan.psm1" `
+                                                -Resolve
+
+        Import-Module $EXOCASMailboxPlanModulePath | Out-Null
+
+        foreach ($CASMailboxPlan in $CASMailboxPlans)
+        {
+            $DSCContent += Export-TargetResource -Identity $CASMailboxPlan.Identity -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
+    #region "EXOClientAccessRule"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOClientAccessRule"))
+    {
+        Write-Information "Extracting EXOClientAccessRule..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $ClientAccessRules = Get-ClientAccessRule
+        $EXOClientAccessRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOClientAccessRule\MSFT_EXOClientAccessRule.psm1" `
+                                                -Resolve
+
+        Import-Module $EXOClientAccessRuleModulePath | Out-Null
+        foreach ($ClientAccessRule in $ClientAccessRules)
+        {
+            $DSCContent += Export-TargetResource -Identity $ClientAccessRule.Identity -Action $ClientAccessRule.Action -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
+    #region "EXODkimSigningConfig"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXODkimSigningConfig"))
+    {
+        Write-Information "Extracting EXODkimSigningConfig..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $DkimSigningConfigs = Get-DkimSigningConfig
+        $EXODkimSigningConfigModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXODkimSigningConfig\MSFT_EXODkimSigningConfig.psm1" `
+                                                    -Resolve
+
+        Import-Module $EXODkimSigningConfigModulePath | Out-Null
+        foreach ($DkimSigningConfig in $DkimSigningConfigs)
+        {
+            Write-Verbose "    {$($DkimSigningConfig.Identity)}"
+            $DSCContent += Export-TargetResource -Identity $DkimSigningConfig.Identity -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
+    #region "EXOHostedConnectionFilterPolicy"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedConnectionFilterPolicy"))
+    {
+        Write-Information "Extracting EXOHostedConnectionFilterPolicy..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $HostedConnectionFilterPolicys = Get-HostedConnectionFilterPolicy
+        $EXOHostedConnectionFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOHostedConnectionFilterPolicy\MSFT_EXOHostedConnectionFilterPolicy.psm1" `
+                                                    -Resolve
+
+        Import-Module $EXOHostedConnectionFilterPolicyModulePath | Out-Null
+        foreach ($HostedConnectionFilterPolicy in $HostedConnectionFilterPolicys)
+        {
+            $DSCContent += Export-TargetResource -Identity $HostedConnectionFilterPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
+    #region "EXOHostedContentFilterPolicy"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedContentFilterPolicy"))
+    {
+        Write-Information "Extracting EXOHostedContentFilterPolicy..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
+        $EXOHostedContentFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterPolicy\MSFT_EXOHostedContentFilterPolicy.psm1" `
+                                                    -Resolve
+
+        Import-Module $EXOHostedContentFilterPolicyModulePath | Out-Null
+        foreach ($HostedContentFilterPolicy in $HostedContentFilterPolicies)
+        {
+            $DSCContent += Export-TargetResource -Identity $HostedContentFilterPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
+    #region "EXOHostedContentFilterRule"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedContentFilterRule"))
+    {
+        Write-Information "Extracting EXOHostedContentFilterRule..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $HostedContentFilterRules = Get-HostedContentFilterRule
+        $EXOHostedContentFilterRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterRule\MSFT_EXOHostedContentFilterRule.psm1" `
+                                                    -Resolve
+
+        Import-Module $EXOHostedContentFilterRuleModulePath | Out-Null
+        foreach ($HostedContentFilterRule in $HostedContentFilterRules)
+        {
+            $DSCContent += Export-TargetResource -Identity $HostedContentFilterRule.Identity -HostedContentFilterPolicy $HostedContentFilterRule.HostedContentFilterPolicy -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
+    #region "EXOHostedOutboundSpamFilterPolicy"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedOutboundSpamFilterPolicy"))
+    {
+        Write-Information "Extracting EXOHostedOutboundSpamFilterPolicy..."
+        $EXOHostedOutboundSpamFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOHostedOutboundSpamFilterPolicy\MSFT_EXOHostedOutboundSpamFilterPolicy.psm1" `
+                                                    -Resolve
+
+        Import-Module $EXOHostedOutboundSpamFilterPolicyModulePath | Out-Null
+        $DSCContent += Export-TargetResource -IsSingleInstance "Yes" -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "EXOSafeAttachmentPolicy"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeAttachmentPolicy"))
+    {
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName GetSafeAttachmentPolicy)
+        {
+            Write-Information "Extracting EXOSafeAttachmentPolicy..."
+            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
+            $EXOSafeAttachmentPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentPolicy\MSFT_EXOSafeAttachmentPolicy.psm1" `
+                                                        -Resolve
+
+            Import-Module $EXOSafeAttachmentPolicyModulePath | Out-Null
+            foreach ($SafeAttachmentPolicy in $SafeAttachmentPolicies)
+            {
+                $DSCContent += Export-TargetResource -Identity $SafeAttachmentPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        else
+        {
+            Write-Information "The current tenant doesn't have access to Safe Attachment Policy APIs."
+        }
+    }
+    #endregion
+
+    #region "EXOSafeAttachmentRule"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeAttachmentRule"))
+    {
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
+        {
+            Write-Information "Extracting EXOSafeAttachmentRule..."
+            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            $SafeAttachmentRules = Get-SafeAttachmentRule
+            $EXOSafeAttachmentRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentRule\MSFT_EXOSafeAttachmentRule.psm1" `
+                                                        -Resolve
+
+            Import-Module $EXOSafeAttachmentRuleModulePath | Out-Null
+            foreach ($SafeAttachmentRule in $SafeAttachmentRules)
+            {
+                $DSCContent += Export-TargetResource -Identity $SafeAttachmentRule.Identity -SafeAttachmentPolicy $SafeAttachmentRule.SafeAttachmentPolicy -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        else
+        {
+            Write-Information "The current tenant doesn't have access to the Safe Attachment Rule API"
+        }
+    }
+    #endregion
+
+    #region "EXOSafeLinksPolicy"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeLinksPolicy"))
+    {
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
+        {
+            Write-Information "Extracting EXOSafeLinksPolicy..."
+            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            $SafeLinksPolicies = Get-SafeLinksPolicy
+            $EXOSafeLinksPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXOSafeLinksPolicy\MSFT_EXOSafeLinksPolicy.psm1" `
+                                                        -Resolve
+
+            Import-Module $EXOSafeLinksPolicyModulePath | Out-Null
+            foreach($SafeLinksPolicy in $SafeLinksPolicies)
+            {
+                $DSCContent += Export-TargetResource -Identity $SafeLinksPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        else
+        {
+            Write-Information "The current tenant is not registered to allow for Safe Attachment Rules."
+        }
+    }
+    #endregion
+
+    #region "EXOSafeLinksRule"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeLinksRule"))
+    {
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
+            {
+            Write-Information "Extracting EXOSafeLinksRule..."
+            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            $SafeLinksRules = Get-SafeLinksRule
+            $EXOSafeLinksRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXOSafeLinksRule\MSFT_EXOSafeLinksRule.psm1" `
+                                                        -Resolve
+
+            Import-Module $EXOSafeLinksRuleModulePath | Out-Null
+            foreach ($SafeLinksRule in $SafeLinksRules)
+            {
+                $DSCContent += Export-TargetResource -Identity $SafeLinksRule.Identity -SafeLinksPolicy $SafeLinksRule.SafeLinksPolicy -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        else
+        {
+            Write-Information "The current tenant is not registered to allow for Safe Links Rules."
+        }
+    }
+    #endregion
+
+    #region "EXOMailboxSettings"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOMailboxSettings"))
+    {
+        Write-Information "Extracting EXOMailboxSettings..."
+        $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `
+                                                  -ChildPath "..\DSCResources\MSFT_EXOMailboxSettings\MSFT_EXOMailboxSettings.psm1" `
+                                                  -Resolve
+
+        Import-Module $EXOMailboxSettingsModulePath | Out-Null
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $mailboxes = Get-Mailbox
+
+        foreach ($mailbox in $mailboxes)
+        {
+            Write-Information "    Settings for Mailbox {$($mailbox.Name)}"
+            $mailboxName = $mailbox.Name
+            if ($mailboxName)
+            {
+                $DSCContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+    }
+    #endregion
+
+    #region "EXOMailTips"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOMailTips"))
+    {
+        Write-Information "Extracting EXOMailTips..."
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $OrgConfig = Get-OrganizationConfig
+
+        $organizationName = $OrgConfig.Name
+        Add-ConfigurationDataEntry -Node "localhost" `
+                                   -Key "OrganizationName" `
+                                   -Value $organizationName `
+                                   -Description "Name of the Organization"
+
+        $EXOMailTipsModulePath = Join-Path -Path $PSScriptRoot `
+                                           -ChildPath "..\DSCResources\MSFT_EXOMailTips\MSFT_EXOMailTips.psm1" `
+                                           -Resolve
+
+        Import-Module $EXOMailTipsModulePath | Out-Null
+        $DSCContent += Export-TargetResource -Organization $organizationName -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "EXOSharedMailbox"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSharedMailbox"))
+    {
+        $EXOSharedMailboxModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_EXOSharedMailbox\MSFT_EXOSharedMailbox.psm1" `
+                                                -Resolve
+
+        Import-Module $EXOSharedMailboxModulePath | Out-Null
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $mailboxes = Get-Mailbox
+        $mailboxes = $mailboxes | Where-Object {$_.RecipientTypeDetails -eq "SharedMailbox"}
+
+        foreach ($mailbox in $mailboxes)
+        {
+            Write-Information "    MailTips for mailbox {$($mailbox.Name)}"
+            $mailboxName = $mailbox.Name
+            if ($mailboxName)
+            {
+                $DSCContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+    }
+    #endregion
+
+    #region "O365Group"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckO365Group"))
+    {
+        Write-Information "Extracting O365Group..."
+        $O365GroupModulePath = Join-Path -Path $PSScriptRoot `
+                                         -ChildPath "..\DSCResources\MSFT_O365Group\MSFT_O365Group.psm1" `
+                                         -Resolve
+
+        Import-Module $O365GroupModulePath | Out-Null
+
+        # Security Groups
+        Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+        $securityGroups = Get-AzureAdGroup | Where-Object {$_.SecurityEnabled -eq $true}
+
+        foreach ($securityGroup in $securityGroups)
+        {
+            Write-Information "    Security Group {$($securityGroup.DisplayName)}"
+            $securityGroupDisplayName = $securityGroup.DisplayName
+            if ($securityGroupDisplayName)
+            {
+                $DSCContent += Export-TargetResource -DisplayName $securityGroupDisplayName `
+                                                    -GroupType "Security" `
+                                                    -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+
+        $securityGroups = Get-AzureAdGroup | Where-Object {$_.SecurityEnabled -eq $true}
+
+        # Other Groups
+        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        $groups = Get-Group
+
+        $groups = $groups | Where-Object { `
+            $_.RecipientType -eq "MailUniversalDistributionGroup" `
+            -or $_.RecipientType -eq "MailUniversalSecurityGroup" `
+        }
+        foreach ($group in $groups)
+        {
+            $groupName = $group.DisplayName
+            if ($groupName)
+            {
+                $groupType = "DistributionList"
+                if ($group.RecipientTypeDetails -eq "GroupMailbox")
+                {
+                    $groupType = "Office365"
+                }
+                elseif ($group.RecipientTypeDetails -eq "MailUniversalSecurityGroup")
+                {
+                    $groupType = "MailEnabledSecurity"
+                }
+                Write-Information "    $($groupType) Group {$($groupName)}"
+                $DSCContent += Export-TargetResource -DisplayName $groupName `
+                                                    -GroupType $groupType `
+                                                    -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+    }
+    #endregion
+
+    #region "O365User"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckO365User"))
+    {
+        Write-Information "Extracting O365User..."
+        $O365UserModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_O365USer\MSFT_O365USer.psm1" `
+                                        -Resolve
+
+        Import-Module $O365UserModulePath | Out-Null
+    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+
+    $users = Get-AzureADUser
+
+        foreach ($user in $users)
+        {
+            Write-Information "    User {$($user.UserPrincipalName)}"
+            $userUPN = $user.UserPrincipalName
+            if ($userUPN)
+            {
+                $DSCContent += Export-TargetResource -UserPrincipalName $userUPN -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+    }
+    #endregion
+
+    #region "ODSettings"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckODSettings"))
+    {
+        Write-Information "Extracting ODSettings..."
+        $ODSettingsModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_ODSettings\MSFT_ODSettings.psm1" `
+                                        -Resolve
+
+        Import-Module $ODSettingsModulePath | Out-Null
+
+        if ($centralAdminUrl)
+        {
+            $DSCContent += Export-TargetResource -CentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
+    #region SPOApp
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOApp"))
+    {
+        Write-Information "Extracting SPOApp..."
+        $SPOAppModulePath = Join-Path -Path $PSScriptRoot `
+                                                     -ChildPath "..\DSCResources\MSFT_SPOApp\MSFT_SPOApp.psm1" `
+                                                     -Resolve
+
+        Import-Module $SPOAppModulePath | Out-Null
+        Test-PnPOnlineConnection -SPOCentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
+        Test-PnPOnlineConnection -SPOCentralAdminUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
+
+        $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
+        $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+        $allFiles = $spfxFiles + $appFiles
+        $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
+        $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
+        foreach ($file in $allFiles)
+        {
+            Write-Information "    - File {$($file.Name)}"
+            $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl}
+            $DSCContent += Export-TargetResource -Identity $file.Name `
+                                                 -Path "ReverseDSC" `
+                                                 -CentralAdminUrl $centralAdminUrl `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+        }
+
+        Test-PnPOnlineConnection -SPOCentralAdminUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
+        foreach ($file in $allFiles)
+        {
+            $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
+            $fileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length -1]
+            Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $fileName -AsFile | Out-Null
+        }
+    }
+    #endregion
+
+    #region "SPOSearchResultSource"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSearchResultSource"))
+    {
+        $InfoMapping = @(
+        @{
+            Protocol    = "Local"
+            Type        = "SharePoint"
+            ProviderID  = "fa947043-6046-4f97-9714-40d4c113963d"
+        },
+        @{
+            Protocol    = "Remote"
+            Type        = "SharePoint"
+            ProviderID  = "1e0c8601-2e5d-4ccb-9561-53743b5dbde7"
+        },
+        @{
+            Protocol    = "Exchange"
+            Type        = "SharePoint"
+            ProviderID  = "3a17e140-1574-4093-bad6-e19cdf1c0122"
+        },
+        @{
+            Protocol    = "OpenSearch"
+            Type        = "SharePoint"
+            ProviderID  = "3a17e140-1574-4093-bad6-e19cdf1c0121"
+        },
+        @{
+            Protocol   = "Local"
+            Type       = "People"
+            ProviderID = "e4bcc058-f133-4425-8ffc-1d70596ffd33"
+        },
+        @{
+            Protocol   = "Remote"
+            Type       = "People"
+            ProviderID = "e377caaa-fcaf-4a1b-b7a1-e69a506a07aa"
+        }
+        )
+        Write-Information "Extracting SPOSearchResultSource..."
+        $SPOSearchResultSourceModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_SPOSearchResultSource\MSFT_SPOSearchResultSource.psm1" `
+                                                        -Resolve
+
+        Import-Module $SPOSearchResultSourceModulePath | Out-Null
+        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+        $sources =  $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
+        foreach ($source in $sources)
+        {
+            $mapping = $InfoMapping | Where-Object { $_.ProviderID -eq $source.ProviderId }
+            Write-Information "    Result Source {$($source.Name)}"
+            $DSCContent += Export-TargetResource -Name $source.Name `
+                                                -Protocol $mapping.Protocol `
+                                                -CentralAdminUrl $centralAdminUrl `
+                                                -GlobalAdminAccount $GlobalAdminAccount
+        }
     }
     #endregion
 
     #region "SPOSearchManagedProperty"
-    Write-Information "Extracting SPOSearchManagedProperty..."
-    $SPOSearchManagedPropertyModulePath = Join-Path -Path $PSScriptRoot `
-                                                    -ChildPath "..\DSCResources\MSFT_SPOSearchManagedProperty\MSFT_SPOSearchManagedProperty.psm1" `
-                                                    -Resolve
-
-    $catch = Import-Module $SPOSearchManagedPropertyModulePath
-    Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-    $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
-    $properties =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
-
-    foreach ($property in $properties)
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSearchManagedProperty"))
     {
-        Write-Information "    Managed Property {$($property.Value.Name)}"
-        $DSCContent += Export-TargetResource -Name $property.Value.Name `
-                                             -Type $property.Value.ManagedType `
-                                             -CentralAdminUrl $centralAdminUrl `
-                                             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Information "Extracting SPOSearchManagedProperty..."
+        $SPOSearchManagedPropertyModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_SPOSearchManagedProperty\MSFT_SPOSearchManagedProperty.psm1" `
+                                                        -Resolve
+
+        Import-Module $SPOSearchManagedPropertyModulePath | Out-Null
+        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+        $properties =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
+
+        foreach ($property in $properties)
+        {
+            Write-Information "    Managed Property {$($property.Value.Name)}"
+            $DSCContent += Export-TargetResource -Name $property.Value.Name `
+                                                -Type $property.Value.ManagedType `
+                                                -CentralAdminUrl $centralAdminUrl `
+                                                -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
+    #region SPOSiteDesign
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSiteDesign"))
+    {
+        Write-Information "Extracting SPOSiteDesign..."
+        $SPOSiteDesignModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_SPOSiteDesign\MSFT_SPOSiteDesign.psm1" `
+                                                        -Resolve
+
+        Import-Module $SPOSiteDesignModulePath | Out-Null
+        Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+
+        $siteDesigns = Get-PnPSiteDesign
+
+        foreach ($siteDesign in $siteDesigns)
+        {
+            Write-Information "    Site Design {$($siteDesign.Title)}"
+            $DSCContent += Export-TargetResource -Title $siteDesign.Title `
+                                                 -CentralAdminUrl $centralAdminUrl `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
+    #region SPOSiteDesignRights
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSiteDesignRights"))
+    {
+        Write-Information "Extracting SPOSiteDesignRights..."
+        $SPOSiteDesignModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_SPOSiteDesignRights\MSFT_SPOSiteDesignRights.psm1" `
+                                                        -Resolve
+
+        Import-Module $SPOSiteDesignModulePath | Out-Null
+        Test-PnPOnlineConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+
+        $siteDesigns = Get-PnPSiteDesign
+
+        foreach ($siteDesign in $siteDesigns)
+        {
+            Write-Information "    Site Design Rights {$($siteDesign.Title)}"
+            $DSCContent += Export-TargetResource -SiteDesignTitle $siteDesign.Title `
+                                                 -CentralAdminUrl $centralAdminUrl `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+        }
     }
     #endregion
 
     #region "SPOSite"
-    Write-Information "Extracting SPOSite..."
-    $SPOSiteModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_SPOSite\MSFT_SPOSite.psm1" `
-                                    -Resolve
-
-    $catch = Import-Module $SPOSiteModulePath
-
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-    $sites = Get-SPOSite
-
-    foreach ($site in $sites)
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSite"))
     {
-        Write-Information "    Site Collection {$($site.Url)}"
-        $DSCContent += Export-TargetResource -Url $site.Url `
-                                             -CentralAdminUrl $centralAdminUrl `
-                                             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Information "Extracting SPOSite..."
+        $SPOSiteModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_SPOSite\MSFT_SPOSite.psm1" `
+                                        -Resolve
+
+        Import-Module $SPOSiteModulePath | Out-Null
+
+        Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        $sites = Get-SPOSite
+
+        foreach ($site in $sites)
+        {
+            Write-Information "    Site Collection {$($site.Url)}"
+            $DSCContent += Export-TargetResource -Url $site.Url `
+                                                -CentralAdminUrl $centralAdminUrl `
+                                                -GlobalAdminAccount $GlobalAdminAccount
+        }
     }
     #endregion
-
-    #region "TeamsTeam"
-    Write-Information "Extracting TeamsChannel..."
-    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                 -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
-                                 -Resolve
-
-    $catch = Import-Module $TeamsModulePath
 
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $Teams = Get-Team
 
-    foreach ($team in $teams)
+    #region "TeamsTeam"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsTeam"))
     {
-        Write-Information "    Team {$($team.DisplayName)}"
-        $DSCContent += Export-TargetResource -DisplayName $team.DisplayName `
-                                             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Information "Extracting TeamsTeam..."
+        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
+                                    -Resolve
+
+        Import-Module $TeamsModulePath | Out-Null
+
+        foreach ($team in $teams)
+        {
+            Write-Information "    Team {$($team.DisplayName)}"
+            $DSCContent += Export-TargetResource -DisplayName $team.DisplayName `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+        }
     }
     #endregion
 
     #region "TeamsChannel"
-    Write-Information "Extracting TeamsChannel..."
-    $TeamsChannelModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_TeamsChannel\MSFT_TeamsChannel.psm1" `
-                                    -Resolve
-
-    $catch = Import-Module $TeamsChannelModulePath
-
-    foreach ($team in $teams)
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsChannel"))
     {
-        $channels = Get-TeamChannel -GroupId $team.GroupId
+        Write-Information "Extracting TeamsChannel..."
+        $TeamsChannelModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_TeamsChannel\MSFT_TeamsChannel.psm1" `
+                                        -Resolve
 
-        foreach ($channel in $channels)
+        Import-Module $TeamsChannelModulePath | Out-Null
+
+        foreach ($team in $Teams)
         {
-            Write-Information "    Team Channel {$($channel.DisplayName)}"
-            $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-                                                 -DisplayName $channel.DisplayName `
-                                                 -GlobalAdminAccount $GlobalAdminAccount
+            $channels = Get-TeamChannel -GroupId $team.GroupId
+
+            foreach ($channel in $channels)
+            {
+                Write-Information "    Team Channel {$($channel.DisplayName)}"
+                $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
+                                                     -DisplayName $channel.DisplayName `
+                                                     -GlobalAdminAccount $GlobalAdminAccount
+            }
         }
     }
     #endregion
 
     #region "TeamsFunSettings"
-    Write-Information "Extracting TeamsFunSettings..."
-    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                 -ChildPath "..\DSCResources\MSFT_TeamsFunSettings\MSFT_TeamsFunSettings.psm1" `
-                                 -Resolve
-
-    $catch = Import-Module $TeamsModulePath
-
-    foreach ($team in $teams)
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsFunSettings"))
     {
-        Write-Information "    Team Fun Settings for Team {$($team.DisplayName)}"
-        $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-                                             -GlobalAdminAccount $GlobalAdminAccount
-    }
-    #endregion
-
-    #region "TeamsUser"
-    Write-Information "Extracting TeamsUser..."
-    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_TeamsUser\MSFT_TeamsUser.psm1" `
+        Write-Information "Extracting TeamsFunSettings..."
+        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_TeamsFunSettings\MSFT_TeamsFunSettings.psm1" `
                                     -Resolve
 
-    $catch = Import-Module $TeamsModulePath
+        Import-Module $TeamsModulePath | Out-Null
 
-    foreach ($team in $teams)
-    {
-        $users = Get-TeamUser -GroupId $team.GroupId
-        foreach ($user in $users)
+        foreach ($team in $Teams)
         {
-            Write-Information "    Teams User {$($user.User)}"
-            $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-                                                 -User $user.User `
-                                                 -Role $user.Role `
+            Write-Information "    Team Fun Settings for Team {$($team.DisplayName)}"
+            $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
                                                  -GlobalAdminAccount $GlobalAdminAccount
         }
     }
     #endregion
-    Write-Information "Extracting TeamsMemberSettings..."
-    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                 -ChildPath "..\DSCResources\MSFT_TeamsMemberSettings\MSFT_TeamsMemberSettings.psm1" `
-                                 -Resolve
 
-    $catch = Import-Module $TeamsModulePath
-
-    foreach ($team in $teams)
+    #region "TeamsUser"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsUser"))
     {
-        $teamMemberSettings = Get-TeamMemberSettings -GroupId $team.GroupId
-        Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
-        $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-                                             -AllowCreateUpdateChannels $teamMemberSettings.AllowCreateUpdateChannels `
-                                             -AllowDeleteChannels $teamMemberSettings.AllowDeleteChannels `
-                                             -AllowAddRemoveApps $teamMemberSettings.AllowAddRemoveApps `
-                                             -AllowCreateUpdateRemoveTabs $teamMemberSettings.AllowCreateUpdateRemoveTabs `
-                                             -AllowCreateUpdateRemoveConnectors $teamMemberSettings.AllowCreateUpdateRemoveConnectors `
-                                             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Information "Extracting TeamsUser..."
+        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_TeamsUser\MSFT_TeamsUser.psm1" `
+                                        -Resolve
+
+        Import-Module $TeamsModulePath | Out-Null
+
+        foreach ($team in $Teams)
+        {
+            try
+            {
+                $users = Get-TeamUser -GroupId $team.GroupId
+                foreach ($user in $users)
+                {
+                    Write-Information "    Teams User {$($user.User)}"
+                    $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
+                                                        -User $user.User `
+                                                        -Role $user.Role `
+                                                        -GlobalAdminAccount $GlobalAdminAccount
+                }
+            }
+            catch {
+                Write-Information "The current User doesn't have the required permissions to extract Users for Team {$($team.DisplayName)}."
+            }
+        }
     }
+    #endregion
 
-    Write-Information "Extracting TeamsMessageSettings..."
-    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                 -ChildPath "..\DSCResources\MSFT_TeamsMessageSettings\MSFT_TeamsMessageSettings.psm1" `
-                                 -Resolve
-
-    $catch = Import-Module $TeamsModulePath
-
-    foreach ($team in $teams)
+    #region TeamsMemberSettings
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamMemberSettings"))
     {
-        $teamMessageSettings = Get-TeamMemberSettings -GroupId $team.GroupId
-        Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
-        $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-                                             -AllowUserEditMessages $teamMessageSettings.AllowUserEditMessages `
-                                             -AllowUserDeleteMessages $teamMessageSettings.AllowUserDeleteMessages `
-                                             -AllowOwnerDeleteMessages $teamMessageSettings.AllowOwnerDeleteMessages `
-                                             -AllowTeamMentions $teamMessageSettings.AllowTeamMentions `
-                                             -AllowChannelMentions $teamMessageSettings.AllowChannelMentions `
-                                             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Information "Extracting TeamsMemberSettings..."
+        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_TeamsMemberSettings\MSFT_TeamsMemberSettings.psm1" `
+                                    -Resolve
+
+        Import-Module $TeamsModulePath | Out-Null
+
+        foreach ($team in $Teams)
+        {
+            Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
+            $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+        }
     }
+    #endregion
 
-    Write-Information "Extracting TeamsGuestSettings..."
-    $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                 -ChildPath "..\DSCResources\MSFT_TeamsGuestSettings\MSFT_TeamsGuestSettings.psm1" `
-                                 -Resolve
-
-    $catch = Import-Module $TeamsModulePath
-
-    foreach ($team in $teams)
+    #region TeamsMessageSettings
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSearchManagedProperty"))
     {
-        $teamGuestSettings = Get-TeamGuestSettings -GroupId $team.GroupId
-        Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
-        $DSCContent += Export-TargetResource -GroupId $team.GroupId `
-                                             -AllowCreateUpdateChannels $teamGuestSettings.AllowCreateUpdateChannels `
-                                             -AllowDeleteChannels $teamGuestSettings.AllowDeleteChannels `
-                                             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Information "Extracting TeamsMessageSettings..."
+        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_TeamsMessageSettings\MSFT_TeamsMessageSettings.psm1" `
+                                    -Resolve
+
+        Import-Module $TeamsModulePath | Out-Null
+
+        foreach ($team in $Teams)
+        {
+            Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
+            $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+
+    #region TeamsGuestSettings
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsGuestSettings"))
+    {
+        Write-Information "Extracting TeamsGuestSettings..."
+        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_TeamsGuestSettings\MSFT_TeamsGuestSettings.psm1" `
+                                    -Resolve
+
+        Import-Module $TeamsModulePath | Out-Null
+
+        foreach ($team in $Teams)
+        {
+            Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
+            $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+        }
+    }
+    #endregion
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOStorageEntity"))
+    {
+        Write-Information "Extracting SPOStorageEntity..."
+        $SPOModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_SPOStorageEntity\MSFT_SPOStorageEntity.psm1" `
+                                    -Resolve
+
+        Import-Module $SPOModulePath | Out-Null
+
+        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+
+        $storageEntities = Get-PnPStorageEntity
+
+        foreach ($storageEntity in $storageEntities)
+        {
+            Write-Information "    Storage Entity {$($storageEntity.Key)}"
+            $DSCContent += Export-TargetResource -Key $storageEntity.Key `
+                                                -CentralAdminUrl $centralAdminUrl `
+                                                -GlobalAdminAccount $GlobalAdminAccount
+        }
     }
 
     # Close the Node and Configuration declarations
@@ -1723,13 +2604,23 @@ function Export-O365Configuration
             Write-Warning "$($_.Exception.Message)"
             Write-Warning "Could not create folder $OutputDSCPath!"
         }
-        $OutputDSCPath = Read-Host "Please Enter Output Folder for DSC Configuration (Will be Created as Necessary)"
+        $OutputDSCPath = Read-Host "Please Provide Output Folder for DSC Configuration (Will be Created as Necessary)"
     }
     <## Ensures the path we specify ends with a Slash, in order to make sure the resulting file path is properly structured. #>
     if (!$OutputDSCPath.EndsWith("\") -and !$OutputDSCPath.EndsWith("/"))
     {
         $OutputDSCPath += "\"
     }
+    #endregion
+
+    #region Copy Downloaded files back into output folder
+    foreach ($fileToCopy in $filesToDownload)
+    {
+        $filePath = Join-Path $env:Temp $fileToCopy.Name -Resolve
+        $destPath = Join-Path $OutputDSCPath $fileToCopy.Name
+        Copy-Item -Path $filePath -Destination $destPath
+    }
+    #endregion
 
     $outputDSCFile = $OutputDSCPath + "Office365TenantConfig.ps1"
     $DSCContent | Out-File $outputDSCFile
@@ -1739,6 +2630,279 @@ function Export-O365Configuration
         $outputConfigurationData = $OutputDSCPath + "ConfigurationData.psd1"
         New-ConfigurationDataDocument -Path $outputConfigurationData
     }
-    #endregion
     Invoke-Item -Path $OutputDSCPath
+}
+
+function Set-SPOSiteConfiguration
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.UInt32]
+        $StorageQuota,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.UInt32]
+        $CompatibilityLevel,
+
+        [Parameter()]
+        [System.UInt32]
+        $LocaleId,
+
+        [Parameter()]
+        [System.UInt32]
+        $ResourceQuota,
+
+        [Parameter()]
+        [System.String]
+        $Template,
+
+        [Parameter()]
+        [System.UInt32]
+        $TimeZoneId,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSelfServiceUpgrade,
+
+        [Parameter()]
+        [System.Boolean]
+        $DenyAddAndCustomizePages,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("NoAccess", "Unlock")]
+        $LockState,
+
+        [Parameter()]
+        [System.UInt32]
+        $ResourceQuotaWarningLevel,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly","ExternalUserSharingOnly","ExternalUserAndGuestSharing")]
+        $SharingCapability,
+
+        [Parameter()]
+        [System.UInt32]
+        $StorageQuotaWarningLevel,
+
+        [Parameter()]
+        [System.boolean]
+        $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.boolean]
+        $SocialBarOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Unknown", "Disabled","NotDisabled")]
+        $DisableAppViews,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Unknown", "Disabled","NotDisabled")]
+        $DisableCompanyWideSharingLinks,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Unknown", "Disabled","NotDisabled")]
+        $DisableFlows,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("BlockMoveOnly", "BlockFull")]
+        $RestrictedToGeo,
+
+        [Parameter()]
+        [System.String]
+        $SharingAllowedDomainList,
+
+        [Parameter()]
+        [System.String]
+        $SharingBlockedDomainList,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("None", "AllowList","BlockList")]
+        $SharingDomainRestrictionMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShowPeoplePickerSuggestionsForGuestUsers,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("None", "AnonymousAccess","Internal","Direct")]
+        $DefaultSharingLinkType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("None", "View","Edit")]
+        $DefaultLinkPermission,
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
+        $Ensure = "Present",
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CentralAdminUrl,
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+
+    $deletedSite = Get-SPODeletedSite | Where-Object { $_.Url -eq $Url }
+    if($deletedSite)
+    {
+        Write-Verbose "A site with URL $($URL) was found in the Recycle Bin."
+        Write-Verbose "Restoring deleted SPOSite $($Url)"
+        Restore-SPODeletedSite $deletedSite
+        Start-Sleep -Seconds 5
+    }
+    try
+    {
+        $siteExists = Get-SPOSite $Url
+    }
+    catch
+    {
+        Write-Verbose "Site does not exist. Creating it"
+    }
+    if($null -ne $siteExists)
+    {
+        Write-Verbose -Message "Configuring site collection $Url"
+        if($siteExists.LockState -eq "NoAccess")
+        {
+            $CurrentParameters = $PSBoundParameters
+            Write-Debug "The site $url currenlty is in Lockstate NoAccess and for that cannot be changed"
+            $CurrentParameters.Remove("CentralAdminUrl")
+            $CurrentParameters.Remove("GlobalAdminAccount")
+            $CurrentParameters.Remove("Ensure")
+            $CurrentParameters.Remove("AllowSelfServiceUpgrade")
+            $CurrentParameters.Remove("DenyAddAndCustomizePages")
+            $CurrentParameters.Remove("ResourceQuotaWarningLevel")
+            $CurrentParameters.Remove("SharingCapability")
+            $CurrentParameters.Remove("StorageQuotaWarningLevel")
+            $CurrentParameters.Remove("CommentsOnSitePagesDisabled")
+            $CurrentParameters.Remove("SocialBarOnSitePagesDisabled")
+            $CurrentParameters.Remove("DisableAppViews")
+            $CurrentParameters.Remove("DisableCompanyWideSharingLinks")
+            $CurrentParameters.Remove("DisableFlows")
+            $CurrentParameters.Remove("RestrictedToGeo")
+            $CurrentParameters.Remove("SharingAllowedDomainList")
+            $CurrentParameters.Remove("SharingBlockedDomainList")
+            $CurrentParameters.Remove("SharingDomainRestrictionMode")
+            $CurrentParameters.Remove("ShowPeoplePickerSuggestionsForGuestUsers")
+            $CurrentParameters.Remove("DefaultSharingLinkType")
+            $CurrentParameters.Remove("DefaultLinkPermission")
+            $CurrentParameters.Remove("CompatibilityLevel")
+            $CurrentParameters.Remove("Template")
+            $CurrentParameters.Remove("LocaleId")
+            $CurrentParameters.Remove("Url")
+            $CurrentParameters.Remove("Owner")
+            $CurrentParameters.Remove("StorageQuota")
+            $CurrentParameters.Remove("Title")
+            $CurrentParameters.Remove("ResourceQuota")
+            $CurrentParameters.Remove("TimeZoneId")
+            Set-SPOSite -Identity $Url @CurrentParameters -NoWait
+        }
+        else
+        {
+            $CurrentParameters = $PSBoundParameters
+            if($CurrentParameters.SharingCapability -and $CurrentParameters.DenyAddAndCustomizePages)
+            {
+                Write-Warning -Message "Setting the DenyAddAndCustomizePages and the SharingCapability property via Set-SPOSite at the same time might cause the DenyAddAndCustomizePages property not to be configured as desired."
+            }
+            if($CurrentParameters.StorageQuotaWarningLevel)
+            {
+                Write-Warning -Message "StorageQuotaWarningLevel can not be configured via Set-SPOSite"
+            }
+            if($SharingDomainRestrictionMode -eq "")
+            {
+                Write-Verbose -Message "SharingDomainRestrictionMode is empty. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
+                $CurrentParameters.Remove("SharingAllowedDomainList")
+                $CurrentParameters.Remove("SharingBlockedDomainList")
+            }
+            if($SharingDomainRestrictionMode -eq "None")
+            {
+                Write-Verbose -Message "SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
+                $CurrentParameters.Remove("SharingAllowedDomainList")
+                $CurrentParameters.Remove("SharingBlockedDomainList")
+            }
+            elseif ($SharingDomainRestrictionMode -eq "AllowList")
+            {
+                Write-Verbose -Message "SharingDomainRestrictionMode is set to AllowList. For that SharingBlockedDomainList cannot be configured"
+                $CurrentParameters.Remove("SharingBlockedDomainList")
+                if($SharingAllowedDomainList -eq "")
+                {
+                    Write-Verbose -Message "No allowed domains specified. Not taking any action"
+                    $CurrentParameters.Remove("SharingAllowedDomainList")
+                    $CurrentParameters.Remove("SharingDomainRestrictionMode")
+                }
+            }
+            elseif($SharingDomainRestrictionMode -eq "BlockList")
+            {
+                Write-Verbose -Message "SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured"
+                $CurrentParameters.Remove("SharingAllowedDomainList")
+                if($SharingBlockedDomainList -eq "")
+                {
+                    Write-Verbose -Message "No blocked domains specified. Not taking any action"
+                    $CurrentParameters.Remove("SharingBlockedDomainList")
+                    $CurrentParameters.Remove("SharingDomainRestrictionMode")
+                }
+            }
+            if(($siteExists.SharingCapability -ne "ExternalUserAndGuestSharing") -or ((Get-SPOTenant).SharingCapability -ne "ExternalUserAndGuestSharing") -and ($DefaultSharingLinkType -eq "AnonymousAccess"))
+            {
+                Write-Verbose -Message "Anonymous sharing has to be enabled in the SharingCapability on site and tenant level first before DefaultSharingLinkType can be set to Anonymous Access"
+                $CurrentParameters.Remove("DefaultSharingLinkType")
+            }
+            if((Get-SPOTenant).showPeoplePickerSuggestionsForGuestUsers -eq $false)
+            {
+                Write-Verbose -Message "ShowPeoplePickerSuggestionsForGuestUsers for this site cannot be set since it is set to false on tenant level"
+                $CurrentParameters.Remove("showPeoplePickerSuggestionsForGuestUsers")
+            }
+            $CurrentParameters.Remove("CentralAdminUrl")
+            $CurrentParameters.Remove("GlobalAdminAccount")
+            $CurrentParameters.Remove("Ensure")
+            $CurrentParameters.Remove("Url")
+            $CurrentParameters.Remove("CompatibilityLevel")
+            $CurrentParameters.Remove("Template")
+            $CurrentParameters.Remove("LocaleId")
+            Set-SPOSite -Identity $Url @CurrentParameters -NoWait
+        }
+    }
+    elseif($null -eq $siteExists)
+    {
+        Write-Verbose -Message "Creating site collection $Url"
+        $siteCreation = @{
+            Url = $Url
+            Owner = $Owner
+            StorageQuota = $StorageQuota
+            Title = $Title
+            CompatibilityLevel = $CompatibilityLevel
+            LocaleId = $LocaleId
+            Template = $Template
+        }
+        New-SPOSite @siteCreation
+        $CurrentParameters4Config = $PSBoundParameters
+        Set-SPOSiteConfiguration @CurrentParameters4Config
+    }
 }
