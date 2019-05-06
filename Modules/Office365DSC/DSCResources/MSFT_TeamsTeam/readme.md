@@ -12,7 +12,7 @@ This resource configugures or creates a new Team.
           Configurations using `Ensure = 'Absent'` will throw an Error!
 
     DisplayName
-      - Required: Yes
+      - Required: No
       - Description: Name of the Team
 
     Description

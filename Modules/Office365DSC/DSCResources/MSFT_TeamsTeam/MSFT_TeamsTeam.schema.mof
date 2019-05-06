@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("TeamsTeam")]
 class MSFT_TeamsTeam : OMI_BaseResource
 {
-    [Key, Description("Display Name of the Team")] string DisplayName;
+    [Write, Description("Display Name of the Team")] string DisplayName;
     [Write, Description("Description of Team.")] string Description;
     [Write, Description("Team group ID, only used to update existing Team ")] string GroupID;
     [Write, Description("MailNickName of O365 Group associated with Team")] string MailNickName;

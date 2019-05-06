@@ -4,7 +4,7 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateLength(1, 256)]
         $DisplayName,
@@ -136,6 +136,11 @@ function Get-TargetResource
     Write-Verbose -Message "Checking for existance of Team $DisplayName"
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
+    if ($null -eq $DisplayName -and $null -eq $GroupID)
+    {
+        throw "You must specificy either a team display name or an existing group id"
+    }
+
     $team = Get-Team -DisplayName $DisplayName
     if ($null -eq $team)
     {
@@ -179,7 +184,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateLength(1, 256)]
         $DisplayName,
@@ -284,6 +289,12 @@ function Set-TargetResource
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose  -Message "Entering Set-TargetResource"
     Write-Verbose  -Message "Retrieving information about team $($DisplayName) to see if it already exists"
+
+    if ($null -eq $DisplayName -and $null -eq $GroupID)
+    {
+        throw "You must specificy either a team display name or an existing group id"
+    }
+
     $team = Get-TargetResource @PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
@@ -338,7 +349,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateLength(1, 256)]
         $DisplayName,
@@ -484,7 +495,7 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateLength(1, 256)]
         $DisplayName,
