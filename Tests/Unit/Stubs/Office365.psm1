@@ -11325,7 +11325,7 @@ param(
 function New-Team{
     [CmdletBinding()]
     param(
-        [Parameter()]
+        [Parameter(Mandatory=$true)]
         [System.String]
         [ValidateLength(1, 256)]
         $DisplayName,
