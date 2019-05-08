@@ -1410,18 +1410,18 @@ function Test-SPOServiceConnection
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $SPOCentralAdminUrl,
 
-        [Parameter(Mandatory = $false)] 
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     Write-Verbose "Verifying the LCM connection state to SharePoint Online"
-    Test-MSCloudLogin -Platform SharePointOnline
+    Test-MSCloudLogin -Platform SharePointOnline -o365Credential $GlobalAdminAccount
 }
 
 function Test-PnPOnlineConnection
@@ -1430,18 +1430,18 @@ function Test-PnPOnlineConnection
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $false)] 
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $SiteUrl,
+        $SPOCentralAdminUrl,
 
-        [Parameter(Mandatory = $false)] 
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     Write-Verbose "Verifying the LCM connection state to SharePoint Online with PnP"
-    Test-MSCloudLogin -Platform PnP 
+    Test-MSCloudLogin -Platform PnP -o365Credential $GlobalAdminAccount
 }
 
 function Test-O365ServiceConnection
@@ -1450,15 +1450,15 @@ function Test-O365ServiceConnection
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $false)] 
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     Write-Verbose "Verifying the LCM connection state to Microsoft Azure Active Directory Services"
-    Test-MSCloudLogin -Platform AzureAD 
-    Test-MSCloudLogin -Platform MSOnline
+    Test-MSCloudLogin -Platform AzureAD -o365Credential $GlobalAdminAccount
+    Test-MSCloudLogin -Platform MSOnline -o365Credential $GlobalAdminAccount
 }
 
 function Test-TeamsServiceConnection
@@ -1467,7 +1467,7 @@ function Test-TeamsServiceConnection
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $false)] 
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -1475,7 +1475,7 @@ function Test-TeamsServiceConnection
     $WarningPreference = "SilentlyContinue"
     Import-Module MicrosoftTeams -Force
     Write-Verbose "Verifying the LCM connection state to Microsoft Teams"
-    Test-MSCloudLogin -Platform MicrosoftTeams 
+    Test-MSCloudLogin -Platform MicrosoftTeams -o365Credential $GlobalAdminAccount
 }
 
 
@@ -2606,7 +2606,7 @@ function Start-O365ConfigurationExtract
         }
         $OutputDSCPath = Read-Host "Please Provide Output Folder for DSC Configuration (Will be Created as Necessary)"
     }
-    <## Ensures the path we specify ends with a Slash, in order to make sure the resulting file path is properly structured. #>
+    # Ensures the path we specify ends with a Slash, in order to make sure the resulting file path is properly structured.
     if (!$OutputDSCPath.EndsWith("\") -and !$OutputDSCPath.EndsWith("/"))
     {
         $OutputDSCPath += "\"

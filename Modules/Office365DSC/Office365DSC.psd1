@@ -52,11 +52,11 @@
   # Modules that must be imported into the global environment prior to importing this module
   RequiredModules = @(@{ModuleName = "ReverseDSC"; ModuleVersion = "1.9.4.2"; },
                       @{ModuleName = "MSOnline"; ModuleVersion = "1.1.183.17"; },
-                      @{ModuleName = "SharePointPnPPowerShellOnline"; ModuleVersion = "3.5.1901.0"; },
-                      @{ModuleName = 'Microsoft.Online.SharePoint.PowerShell'; ModuleVersion = '16.0.8414.0'; },
-                      @{ModuleName = "MicrosoftTeams"; ModuleVersion = "0.9.6"; },
-		      @{ModuleName = 'MSCloudLoginAssistant'; ModuleVersion = '0.4.0'; },
-                      @{ModuleName = "AzureAD"; ModuleVersion = "2.0.2.4"; })
+                      @{ModuleName = "SharePointPnPPowerShellOnline"; ModuleVersion = "3.8.1904.0"; },
+                      @{ModuleName = 'Microsoft.Online.SharePoint.PowerShell'; ModuleVersion = '16.0.8812.1200'; },
+                      @{ModuleName = "MicrosoftTeams"; ModuleVersion = "1.0.0"; },
+                      @{ModuleName = 'MSCloudLoginAssistant'; ModuleVersion = '0.4.0'; },
+                      @{ModuleName = "AzureAD"; ModuleVersion = "2.0.2.16"; })
 
   # Assemblies that must be loaded prior to importing this module
   # RequiredAssemblies = @()
@@ -78,10 +78,10 @@
 
   # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
   CmdletsToExport = 'Test-SPOServiceConnection', 'Test-Office365DSCParameterState',
-                 'Test-O365ServiceConnection', 'Export-O365Configuration',
-                 'Get-TimeZoneNameFromID', 'Get-TimeZoneIDFromName', 'Get-LocaleIDFromName',
-                 'Get-LocaleNameFromID', 'Test-TeamsServiceConnection', 'Show-O365GUI', 'Start-O365ConfigurationExtract',
-                 'Test-PnPOnlineConnection', 'Connect-ExchangeOnline', 'Connect-SecurityAndComplianceCenter'
+                    'Test-O365ServiceConnection', 'Export-O365Configuration',
+                    'Get-TimeZoneNameFromID', 'Get-TimeZoneIDFromName', 'Get-LocaleIDFromName',
+                    'Get-LocaleNameFromID', 'Test-TeamsServiceConnection', 'Show-O365GUI', 'Start-O365ConfigurationExtract',
+                    'Test-PnPOnlineConnection', 'Connect-ExchangeOnline', 'Connect-SecurityAndComplianceCenter'
 
   # Variables to export from this module
   # VariablesToExport = @()

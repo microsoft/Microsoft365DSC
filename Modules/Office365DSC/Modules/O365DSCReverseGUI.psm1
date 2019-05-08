@@ -447,7 +447,7 @@ function Show-O365GUI
         $lblFarmAccount = New-Object System.Windows.Forms.Label
         $lblFarmAccount.Text = "Tenant Admin:"
         $lblFarmAccount.Top = 10
-        $lblFarmAccount.Left = 900
+        $lblFarmAccount.Left = 940
         $lblFarmAccount.AutoSize = $true
         $lblFarmAccount.TextAlign = [System.Drawing.ContentAlignment]::TopRight
         $lblFarmAccount.Font = [System.Drawing.Font]::new($lblFarmAccount.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
@@ -458,6 +458,15 @@ function Show-O365GUI
         $txtTenantAdmin.Left = 1060
         $txtTenantAdmin.Width = 175
         $txtTenantAdmin.Font = [System.Drawing.Font]::new($txtTenantAdmin.Font.Name, 10)
+        # Pre-populate the tenant admin box with the global admin username, if we already know it (e.g. from a recent attempt), otherwise try to guess it from the current user's UPN
+        if ($null -ne $GlobalAdminAccount.UserName)
+        {
+            $txtTenantAdmin.Text = $GlobalAdminAccount.UserName
+        }
+        else
+        {
+            $txtTenantAdmin.Text = ([ADSI]"LDAP://<SID=$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)>").UserPrincipalName
+        }
         $panelMenu.Controls.Add($txtTenantAdmin)
 
         $lblPassword = New-Object System.Windows.Forms.Label
@@ -509,7 +518,7 @@ function Show-O365GUI
 
                 try
                 {
-                    $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force));
+                    $global:GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force));
                     Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount -ComponentsToExtract $SelectedComponents
                 }
                 catch
