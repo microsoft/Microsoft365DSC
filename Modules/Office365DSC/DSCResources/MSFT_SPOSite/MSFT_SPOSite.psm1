@@ -91,7 +91,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("BlockMoveOnly", "BlockFull")]
+        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
         $RestrictedToGeo,
 
         [Parameter()]
@@ -178,6 +178,13 @@ function Get-TargetResource
             Write-Verbose "The specified Site Collection doesn't exist."
             return $nullReturn
         }
+
+        $DenyAddAndCustomizePagesValue = $false
+        if ($site.DenyAddAndCustomizePages -eq "Enabled")
+        {
+            $DenyAddAndCustomizePagesValue = $true
+        }
+
         return @{
             Url                                         = $site.Url
             Owner                                       = $site.Owner
@@ -189,7 +196,7 @@ function Get-TargetResource
             CompatibilityLevel                          = $site.CompatibilityLevel
             Title                                       = $site.Title
             AllowSelfServiceUpgrade                     = $site.AllowSelfServiceUpgrade
-            DenyAddAndCustomizePages                    = $site.DenyAddAndCustomizePages
+            DenyAddAndCustomizePages                    = $DenyAddAndCustomizePagesValue
             LockState                                   = $site.LockState
             ResourceQuotaWarningLevel                   = $site.ResourceQuotaWarningLevel
             SharingCapability                           = $site.SharingCapability
@@ -309,7 +316,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("BlockMoveOnly", "BlockFull")]
+        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
         $RestrictedToGeo,
 
         [Parameter()]
@@ -481,7 +488,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("BlockMoveOnly", "BlockFull")]
+        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
         $RestrictedToGeo,
 
         [Parameter()]

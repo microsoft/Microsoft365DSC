@@ -294,7 +294,7 @@ function Show-O365GUI
         $pnlTeams = New-Object System.Windows.Forms.Panel
         $pnlTeams.Top = 88 + $topBannerHeight
         $pnlTeams.Left = $ThirdColumnLeft
-        $pnlTeams.Height = 140
+        $pnlTeams.Height = 60
         $pnlTeams.Width = 300
         $pnlTeams.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -306,40 +306,8 @@ function Show-O365GUI
         $chckTeamsChannel.Text = "Channels"
         $pnlTeams.Controls.Add($chckTeamsChannel)
 
-        $chckTeamsFunSettings = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsFunSettings.Top = 20
-        $chckTeamsFunSettings.AutoSize = $true;
-        $chckTeamsFunSettings.Name = "chckTeamsFunSettings"
-        $chckTeamsFunSettings.Checked = $true
-        $chckTeamsFunSettings.Text = "Fun Settings"
-        $pnlTeams.Controls.Add($chckTeamsFunSettings)
-
-        $chckTeamsGuestSettings = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsGuestSettings.Top = 40
-        $chckTeamsGuestSettings.AutoSize = $true;
-        $chckTeamsGuestSettings.Name = "chckTeamsGuestSettings"
-        $chckTeamsGuestSettings.Checked = $true
-        $chckTeamsGuestSettings.Text = "Guest Settings"
-        $pnlTeams.Controls.Add($chckTeamsGuestSettings)
-
-        $chckTeamsMemberSettings = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsMemberSettings.Top = 60
-        $chckTeamsMemberSettings.AutoSize = $true;
-        $chckTeamsMemberSettings.Name = "chckTeamsMemberSettings"
-        $chckTeamsMemberSettings.Checked = $true
-        $chckTeamsMemberSettings.Text = "Member Settings"
-        $pnlTeams.Controls.Add($chckTeamsMemberSettings)
-
-        $chckTeamsMessageSettings = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsMessageSettings.Top = 80
-        $chckTeamsMessageSettings.AutoSize = $true;
-        $chckTeamsMessageSettings.Name = "chckTeamsMessageSettings"
-        $chckTeamsMessageSettings.Checked = $true
-        $chckTeamsMessageSettings.Text = "Message Settings"
-        $pnlTeams.Controls.Add($chckTeamsMessageSettings)
-
         $chckTeamsTeam = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsTeam.Top = 100
+        $chckTeamsTeam.Top = 20
         $chckTeamsTeam.AutoSize = $true;
         $chckTeamsTeam.Name = "chckTeamsTeam"
         $chckTeamsTeam.Checked = $true
@@ -347,7 +315,7 @@ function Show-O365GUI
         $pnlTeams.Controls.Add($chckTeamsTeam)
 
         $chckTeamsUser = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsUser.Top = 120
+        $chckTeamsUser.Top = 40
         $chckTeamsUser.AutoSize = $true;
         $chckTeamsUser.Name = "chckTeamsUser"
         $chckTeamsUser.Checked = $true
@@ -397,41 +365,6 @@ function Show-O365GUI
         $panelMenu.Height = $topBannerHeight
         $panelMenu.Width = $form.Width
         $panelMenu.BackColor = [System.Drawing.Color]::Silver
-
-        <#$lblMode = New-Object System.Windows.Forms.Label
-        $lblMode.Top = 25
-        $lblMode.Text = "Extraction Modes:"
-        $lblMode.AutoSize = $true
-        $lblMode.Left = 10
-        $lblMode.Font = [System.Drawing.Font]::new($lblMode.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
-        $panelMenu.Controls.Add($lblMode)
-
-        $btnLite = New-Object System.Windows.Forms.Button
-        $btnLite.Width = 150
-        $btnLite.Top = 5
-        $btnLite.Height = 60
-        $btnLite.Left = 220
-        $btnLite.Text = "Lite"
-        $btnLite.Add_Click({SelectComponentsForMode($pnlMain, 1)})
-        $panelMenu.Controls.Add($btnLite);
-
-        $btnDefault = New-Object System.Windows.Forms.Button
-        $btnDefault.Width = 150
-        $btnDefault.Top = 5
-        $btnDefault.Height = 60
-        $btnDefault.Left = 375
-        $btnDefault.Text = "Default"
-        $btnDefault.Add_Click({SelectComponentsForMode($pnlMain, 2)})
-        $panelMenu.Controls.Add($btnDefault);
-
-        $btnFull = New-Object System.Windows.Forms.Button
-        $btnFull.Width = 150
-        $btnFull.Top = 5
-        $btnFull.Left = 530
-        $btnFull.Height = 60
-        $btnFull.Text = "Full"
-        $btnFull.Add_Click({SelectComponentsForMode($pnlMain, 3)})
-        $panelMenu.Controls.Add($btnFull);#>
 
         $btnClear = New-Object System.Windows.Forms.Button
         $btnClear.Width = 150
@@ -494,8 +427,8 @@ function Show-O365GUI
         $btnExtract.Add_Click({
             if($txtPassword.Text.Length -gt 0)
             {
-                $form.Hide();
-                $SelectedComponents = @();
+                $form.Hide()
+                $SelectedComponents = @()
                 foreach ($panel in ($form.Controls[0].Controls | Where-Object { $_.GetType().Name -eq "Panel"}))
                 {
                     foreach ($checkbox in ($panel.Controls | Where-Object { $_.GetType().Name -eq "Checkbox"}))
@@ -509,7 +442,7 @@ function Show-O365GUI
 
                 try
                 {
-                    $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force));
+                    $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force))
                     Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount -ComponentsToExtract $SelectedComponents
                 }
                 catch
@@ -531,7 +464,7 @@ function Show-O365GUI
         $form.Controls.Add($pnlMain)
         $form.Text = "ReverseDSC for Office 365"
         $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
-        $form.ShowDialog()
+        $return = $form.ShowDialog()
     }
     catch {}
 }

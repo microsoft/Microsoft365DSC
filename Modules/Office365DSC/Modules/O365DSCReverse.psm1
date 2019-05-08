@@ -522,55 +522,62 @@ function Start-O365ConfigurationExtract
 
         Import-Module $SPOAppModulePath | Out-Null
         Test-PnPOnlineConnection -SiteUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-        $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
-        Test-PnPOnlineConnection -SiteUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
-
-        $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
-        $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
-        $allFiles = $spfxFiles + $appFiles
-        $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
-        $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
-
-        $partialContent = ""
-        foreach ($file in $allFiles)
+        try
         {
-            Write-Information "    - File {$($file.Name)}"
-            $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl}
+            $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
+            Test-PnPOnlineConnection -SiteUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
 
-            $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
-            $app = Get-PnpApp -Identity $identity -ErrorAction SilentlyContinue
+            $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
+            $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+            $allFiles = $spfxFiles + $appFiles
+            $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
+            $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
 
-            if ($null -ne $app)
+            $partialContent = ""
+            foreach ($file in $allFiles)
             {
-                $partialContent = Export-TargetResource -Identity $identity `
-                                                        -Path ("`$(`$ConfigurationData.NonNodeData.AppsLocation)" + $file.Name) `
-                                                        -CentralAdminUrl $centralAdminUrl `
-                                                        -GlobalAdminAccount $GlobalAdminAccount
-            }
-            else
-            {
-                # Case - Where file name doesn't match the App's Title in the catalog
-                $app = Get-PnpApp -Identity $file.Title -ErrorAction SilentlyContinue
+                Write-Information "    - File {$($file.Name)}"
+                $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl}
 
-                $partialContent = Export-TargetResource -Identity $app.Title `
-                                                        -Path ("`$(`$ConfigurationData.NonNodeData.AppsLocation)" + $file.Name) `
-                                                        -CentralAdminUrl $centralAdminUrl `
-                                                        -GlobalAdminAccount $GlobalAdminAccount
+                $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
+                $app = Get-PnpApp -Identity $identity -ErrorAction SilentlyContinue
+
+                if ($null -ne $app)
+                {
+                    $partialContent = Export-TargetResource -Identity $identity `
+                                                            -Path ("`$(`$ConfigurationData.NonNodeData.AppsLocation)" + $file.Name) `
+                                                            -CentralAdminUrl $centralAdminUrl `
+                                                            -GlobalAdminAccount $GlobalAdminAccount
+                }
+                else
+                {
+                    # Case - Where file name doesn't match the App's Title in the catalog
+                    $app = Get-PnpApp -Identity $file.Title -ErrorAction SilentlyContinue
+
+                    $partialContent = Export-TargetResource -Identity $app.Title `
+                                                            -Path ("`$(`$ConfigurationData.NonNodeData.AppsLocation)" + $file.Name) `
+                                                            -CentralAdminUrl $centralAdminUrl `
+                                                            -GlobalAdminAccount $GlobalAdminAccount
+                }
+
+                if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+                }
+                $DSCContent += $partialContent
             }
 
-            if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
+            Test-PnPOnlineConnection -SiteUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
+            foreach ($file in $allFiles)
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+                $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
+                $fileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length -1]
+                Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $fileName -AsFile | Out-Null
             }
-            $DSCContent += $partialContent
         }
-
-        Test-PnPOnlineConnection -SiteUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
-        foreach ($file in $allFiles)
+        catch
         {
-            $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
-            $fileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length -1]
-            Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $fileName -AsFile | Out-Null
+            Write-Information "* App Catalog is not configured on tenant. Cannot extract information about SharePoint apps."
         }
     }
     #endregion
@@ -837,25 +844,6 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
-    #region "TeamsFunSettings"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsFunSettings"))
-    {
-        Write-Information "Extracting TeamsFunSettings..."
-        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_TeamsFunSettings\MSFT_TeamsFunSettings.psm1" `
-                                    -Resolve
-
-        Import-Module $TeamsModulePath | Out-Null
-
-        foreach ($team in $Teams)
-        {
-            Write-Information "    Team Fun Settings for Team {$($team.DisplayName)}"
-            $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
-                                                 -GlobalAdminAccount $GlobalAdminAccount
-        }
-    }
-    #endregion
-
     #region "TeamsUser"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsUser"))
     {
@@ -887,62 +875,6 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
-    #region TeamsMemberSettings
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamMemberSettings"))
-    {
-        Write-Information "Extracting TeamsMemberSettings..."
-        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_TeamsMemberSettings\MSFT_TeamsMemberSettings.psm1" `
-                                    -Resolve
-
-        Import-Module $TeamsModulePath | Out-Null
-
-        foreach ($team in $Teams)
-        {
-            Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
-            $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
-                                                 -GlobalAdminAccount $GlobalAdminAccount
-        }
-    }
-    #endregion
-
-    #region TeamsMessageSettings
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSearchManagedProperty"))
-    {
-        Write-Information "Extracting TeamsMessageSettings..."
-        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_TeamsMessageSettings\MSFT_TeamsMessageSettings.psm1" `
-                                    -Resolve
-
-        Import-Module $TeamsModulePath | Out-Null
-
-        foreach ($team in $Teams)
-        {
-            Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
-            $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
-                                                 -GlobalAdminAccount $GlobalAdminAccount
-        }
-    }
-    #endregion
-
-    #region TeamsGuestSettings
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsGuestSettings"))
-    {
-        Write-Information "Extracting TeamsGuestSettings..."
-        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_TeamsGuestSettings\MSFT_TeamsGuestSettings.psm1" `
-                                    -Resolve
-
-        Import-Module $TeamsModulePath | Out-Null
-
-        foreach ($team in $Teams)
-        {
-            Write-Information "    Team Member Settings for Team {$($team.DisplayName)}"
-            $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
-                                                 -GlobalAdminAccount $GlobalAdminAccount
-        }
-    }
-    #endregion
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOStorageEntity"))
     {
         Write-Information "Extracting SPOStorageEntity..."
