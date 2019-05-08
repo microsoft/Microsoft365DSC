@@ -143,13 +143,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-Team -MockWith {
                 return @{
                     DisplayName = "Test Team"
-                    Visibility  = "Private"
                 }
             }
 
             Mock -CommandName Set-Team -MockWith {
                 return @{
                     DisplayName = "Test Team"
+                    Visibility  = "Private"
                 }
             }
 
@@ -162,40 +162,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Convert existing O365 group to a Team" -Fixture {
-            $testParams = @{
-                GroupID                  = "12345-12345-12345-12345-12345"
-                DisplayName              = "Test Team"
-                Ensure                   = "Present"
-                AllowUserEditMessages    = $true
-                AllowUserDeleteMessages  = $false
-                AllowOwnerDeleteMessages = $false
-                AllowTeamMentions        = $false
-                AllowChannelMentions     = $false
-                GlobalAdminAccount       = $GlobalAdminAccount
-            }
-
-
-            Mock -CommandName Get-Team -MockWith {
-                return $null
-            }
-
-            Mock -CommandName New-Team -MockWith {
-                return @{GroupID = "12345-12345-12345-12345-12345" }
-            }
-
-            It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
-            }
-
-            It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $false
-            }
-
-            It "Convert O365 group to Team in the Set method" {
-                Set-TargetResource @testParams
-            }
-        }
 
         Context -Name "Remove the Team" -Fixture {
             $testParams = @{

@@ -27,8 +27,8 @@ This resource configugures or creates a new Team.
     AllowChannelMentions
       - Required: No
       - Description: Boolean value that determines whether or not channels
-          in the team can be @ mentioned so that all users who follow the channel
-          are notified.
+          in the team can be @ mentioned so that all users who follow the
+          channel are notified.
 
     AllowCreateUpdateChannels
       - Required: No
@@ -77,8 +77,8 @@ This resource configugures or creates a new Team.
 
     AllowStickersAndMemes
       - Required: No
-      - Description: Setting that determines whether stickers and memes usage is
-        allowed in the team.
+      - Description: Setting that determines whether stickers and memes usage
+        is allowed in the team.
 
     AllowTeamMentions
       - Required: No
@@ -104,9 +104,10 @@ This resource configugures or creates a new Team.
     MailNickName
       - Required: No
       - Description: The MailNickName parameter specifies the alias for the
-        associated Office 365 Group. This value will be used for the mail enabled
-        object and will be used as PrimarySmtpAddress for this Office 365 Group.
-        The value of the MailNickName parameter has to be unique across your tenant.
+        associated Office 365 Group. This value will be used for the mail
+        enabled object and will be used as PrimarySmtpAddress for this
+        Office 365 Group. The value of the MailNickName parameter has
+        to be unique across your tenant.
 
     Owner
       - Required: No
@@ -120,9 +121,9 @@ This resource configugures or creates a new Team.
 
     GroupId
       - Required: No
-      - Description: Specify a GroupId to convert to a Team. If specified,
-        you cannot provide the other values that are already specified by the
-        existing group, namely: Visibility, Alias, Description, or DisplayName.
+      - Description: There can be duplicate DisplayName for Teams so if
+        if duplicate Teams exist you can pass in GroupID to filter and
+        retreive unique team.
 
     GlobalAdminAccount
       - Required: Yes

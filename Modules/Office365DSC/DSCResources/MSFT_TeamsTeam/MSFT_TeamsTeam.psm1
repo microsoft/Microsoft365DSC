@@ -4,7 +4,7 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateLength(1, 256)]
         $DisplayName,
@@ -136,18 +136,31 @@ function Get-TargetResource
     Write-Verbose -Message "Checking for existance of Team $DisplayName"
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
-    if ($null -eq $DisplayName -and $null -eq $GroupID)
+    $CurrentParameters = $PSBoundParameters
+    ## will only return 1 instance
+    if ($CurrentParameters.ContainsKey("GroupID"))
     {
-        throw "You must specificy either a team display name or an existing group id"
+        $team = Get-Team -GroupId $GroupID
+        if ($null -eq $team)
+        {
+            Write-Verbose "Teams with GroupId $($GroupID) doesn't exist"
+            return $nullReturn
+        }
     }
-
-    $team = Get-Team -DisplayName $DisplayName
-    if ($null -eq $team)
+    else
     {
-        Write-Verbose "Teams with displayname $DisplayName doesn't exist"
-        return $nullReturn
+        ## Can retreive multiple Teams since displayname is not unique
+        $team = Get-Team -DisplayName $DisplayName
+        if ($null -eq $team)
+        {
+            Write-Verbose "Teams with displayname $DisplayName doesn't exist"
+            return $nullReturn
+        }
+        if ($team.Count -gt 1)
+        {
+            throw "Duplicate Teams name $DisplayName exist in tenant"
+        }
     }
-
 
     Write-Verbose -Message "Found Team $($team.DisplayName)."
 
@@ -184,7 +197,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateLength(1, 256)]
         $DisplayName,
@@ -290,13 +303,7 @@ function Set-TargetResource
     Write-Verbose  -Message "Entering Set-TargetResource"
     Write-Verbose  -Message "Retrieving information about team $($DisplayName) to see if it already exists"
 
-    if ($null -eq $DisplayName -and $null -eq $GroupID)
-    {
-        throw "You must specificy either a team display name or an existing group id"
-    }
-
     $team = Get-TargetResource @PSBoundParameters
-
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
@@ -308,33 +315,22 @@ function Set-TargetResource
         {
             $CurrentParameters.Remove("Owner")
         }
-        ## if GroupID not passed add from Get-Resource operation
         if ($null -eq $CurrentParameters.ContainsKey("GroupID"))
         {
             $CurrentParameters.Add("GroupID", $team.GroupID)
         }
         Set-Team @CurrentParameters
-        Write-Verbose -Message "Updating team group id $($team.GroupID)"
+        Write-Verbose -Message "Updating team $DisplayName"
     }
     elseif ($Ensure -eq "Present" -and ($team.Ensure -eq "Absent"))
     {
-        ## If group id passed then it will convert existig O365 Group to Team
-        ## Several of the existing group properties need removed from cmdlet
-        ## https://docs.microsoft.com/en-us/powershell/module/teams/new-team?view=teams-ps
+        ## GroupID not used on New-Team cmdlet
         if ($CurrentParameters.ContainsKey("GroupID"))
         {
-            $CurrentParameters.Remove("Visibilty")
-            $CurrentParameters.Remove("MailNickName")
-            $CurrentParameters.Remove("Description")
-            $CurrentParameters.Remove("DisplayName")
-            Write-Verbose -Message "Creating team from existing group id $GroupId"
-            New-Team @CurrentParameters
+            $CurrentParameters.Remove("GroupID")
         }
-        else
-        {
-            Write-Verbose -Message "Creating team $DisplayName"
-            New-Team @CurrentParameters
-        }
+        Write-Verbose -Message "Creating team $DisplayName"
+        New-Team @CurrentParameters
     }
     elseif ($Ensure -eq "Absent" -and ($team.Ensure -eq "Present"))
     {
@@ -349,7 +345,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateLength(1, 256)]
         $DisplayName,
@@ -495,7 +491,7 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateLength(1, 256)]
         $DisplayName,
