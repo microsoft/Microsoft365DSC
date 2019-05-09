@@ -8,8 +8,8 @@ on the properties of the connection.
 
 Note: Not all authentication types are supported for all protocols.
 
-     The supported authentication types per protocol can be found here:
-     https://docs.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/client-access-rules/client-access-rules
+The supported authentication types per protocol can be found here:
+https://docs.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/client-access-rules/client-access-rules
 
 ## Parameters
 
@@ -136,7 +136,7 @@ ExceptUsernameMatchesAnyOfPatterns
 - Required: No
 - Description: The ExceptUsernameMatchesAnyOfPatterns parameter
   specifies an exception for the client access rule that's based on the
-  user's account name in the format <Domain>\<UserName>
+  user's account name in the format [Domain]\[UserName]
   (for example, contoso.com\jeff).
   This parameter accepts text and the wildcard character (*)
   (for example, *jeff*, but not jeff*).
