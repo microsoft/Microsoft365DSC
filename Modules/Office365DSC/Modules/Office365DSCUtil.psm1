@@ -933,7 +933,7 @@ function Get-TeamByGroupID
         $GroupId
     )
 
-    $team = Get-Team  |  Where-Object {($_.GroupId -eq $GroupId)}
+    $team = Get-Team -GroupId $GroupId
     if ($null -eq $team)
     {
         return $false
@@ -954,7 +954,7 @@ function Get-TeamByName
     $loopCounter = 0
     do
     {
-        $team = Get-Team |  Where-Object {$_.DisplayName -eq $TeamName}
+        $team = Get-Team -DisplayName $TeamName
         if ($null -eq $team)
         {
             Start-Sleep 5
@@ -1689,7 +1689,7 @@ function Get-UsersLicenses
     #Store information to be able to check later if the users is correctly licences for features.
     if ($null -eq $Global:UsersLicenses)
     {
-        $Global:UsersLicenses = @()
+<#         $Global:UsersLicenses = @()
         $users = Get-AzureADUser
         foreach ($user in $users)
         {
@@ -1707,6 +1707,7 @@ function Get-UsersLicenses
             $userLicenseInfo
             $Global:UsersLicenses += $userLicenseInfo
         }
+ #>        $Global:UsersLicences = Get-MsolUser -All | Select-Object UserPrincipalName, isLicensed, Licenses
     }
     Return $Global:UsersLicenses
 }
@@ -2169,7 +2170,7 @@ function Start-O365ConfigurationExtract
         Import-Module $O365UserModulePath | Out-Null
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
-    $users = Get-AzureADUser
+        $users = Get-AzureADUser
 
         foreach ($user in $users)
         {
@@ -2416,23 +2417,11 @@ function Start-O365ConfigurationExtract
         $TeamsChannelModulePath = Join-Path -Path $PSScriptRoot `
                                         -ChildPath "..\DSCResources\MSFT_TeamsChannel\MSFT_TeamsChannel.psm1" `
                                         -Resolve
-
-        Import-Module $TeamsChannelModulePath | Out-Null
-
-        foreach ($team in $Teams)
-        {
-            $channels = Get-TeamChannel -GroupId $team.GroupId
-
-            foreach ($channel in $channels)
-            {
                 Write-Information "    Team Channel {$($channel.DisplayName)}"
                 $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
                                                      -DisplayName $channel.DisplayName `
                                                      -GlobalAdminAccount $GlobalAdminAccount
-            }
-        }
     }
-    #endregion
 
     #region "TeamsFunSettings"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsFunSettings"))
