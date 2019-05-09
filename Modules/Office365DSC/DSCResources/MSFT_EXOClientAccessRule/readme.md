@@ -13,153 +13,168 @@ Note: Not all authentication types are supported for all protocols.
 
 ## Parameters
 
-    Ensure
-      - Required: No (Defaults to 'Present')
-      - Description: Specifies whether the configured Client Access Rule
-       should be Present or Absent.
+Ensure
 
-    GlobalAdminAccount
-      - Required: Yes
-      - Description: Credentials of the Office 365 Global Admin
+- Required: No (Defaults to 'Present')
+- Description: Specifies whether the configured Client Access Rule
+  should be Present or Absent.
 
-    Identity
-      - Required: Yes
-      - Description: The Identity parameter specifies the Client Access Rule
-         that you want to modify.
-         You can use any value that uniquely identifies the Client Access Rule.
+GlobalAdminAccount
 
-    Action
-      - Required: Yes
-      - Description: The Action parameter specifies the action for the
-         client access rule.
-         Valid values for this parameter are AllowAccess and DenyAccess.
+- Required: Yes
+- Description: Credentials of the Office 365 Global Admin
 
-    AnyOfAuthenticationTypes
-      -  Required: No
-      -  Description: The AnyOfAuthenticationTypes parameter specifies a
-         condition for the client access rule that's based on the client's
-         authentication type.
-         Valid values for this parameter are:
-             AdfsAuthentication
-             BasicAuthentication
-             CertificateBasedAuthentication
-             NonBasicAuthentication
-             OAuthAuthentication
+Identity
 
-    AnyOfClientIPAddressesOrRanges
-      -  Required: No
-      -  Description: The AnyOfClientIPAddressesOrRanges parameter specifies a
-         condition for the client access rule that's based on the
-         client's IP address.
-         Valid values for this parameter are:
-             A single IP address: For example, 192.168.1.1
-             An IP address range: For example, 192.168.0.1-192.168.0.254
-             Classless Inter-Domain Routing (CIDR) IP: e.g 192.168.3.1/24
+- Required: Yes
+- Description: The Identity parameter specifies the Client Access Rule
+  that you want to modify.
+  You can use any value that uniquely identifies the Client Access Rule.
 
-    AnyOfProtocols
-      -  Required: No
-      -  Description: The AnyOfProtocols parameter specifies a condition for
-         the client access rule that's based on the client's protocol.
-         Valid values for this parameter are:
-             ExchangeActiveSync
-             ExchangeAdminCenter
-             ExchangeWebServices
-             IMAP4
-             OfflineAddressBook
-             OutlookAnywhere
-             OutlookWebApp
-             POP3
-             PowerShellWebServices
-             RemotePowerShell
-             REST
-             UniversalOutlook
+Action
 
-    Enabled
-      - Required: No
-      - Description: The Enabled parameter specifies whether the client access
-        rule is enabled or disabled.
-        Valid values for this parameter are $true or $false. Default is $true
+- Required: Yes
+- Description: The Action parameter specifies the action for the
+  client access rule.
+  Valid values for this parameter are AllowAccess and DenyAccess.
 
-    ExceptAnyOfAuthenticationTypes
-      -  Required: No
-      -  Description: The ExceptAnyOfAuthenticationTypes parameter specifies
-         an exception for the client access rule that's based on the client's
-         authentication type.
-         Valid values for this parameter are:
-             AdfsAuthentication
-             BasicAuthentication
-             CertificateBasedAuthentication
-             NonBasicAuthentication
-             OAuthAuthentication
+AnyOfAuthenticationTypes
 
-    ExceptAnyOfClientIPAddressesOrRanges
-      -  Required: No
-      -  Description: The ExceptAnyOfClientIPAddressesOrRanges parameter
-         specifies an exception for the client access rule that's based on the
-         client's IP address.
-         Valid values for this parameter are:
-             A single IP address: For example, 192.168.1.1
-             An IP address range: For example, 192.168.0.1-192.168.0.254
-             Classless Inter-Domain Routing (CIDR) IP: e.g. 192.168.3.1/24
+- Required: No
+- Description: The AnyOfAuthenticationTypes parameter specifies a
+  condition for the client access rule that's based on the client's
+  authentication type.
+  Valid values for this parameter are:
+      AdfsAuthentication
+      BasicAuthentication
+      CertificateBasedAuthentication
+      NonBasicAuthentication
+      OAuthAuthentication
 
-    ExceptAnyOfProtocols
-      -  Required: No
-      -  Description: The ExceptAnyOfProtocols parameter specifies an exception
-         for the client access rule that's based on the client's protocol.
-         Valid values for this parameter are:
-             ExchangeActiveSync
-             ExchangeAdminCenter
-             ExchangeWebServices
-             IMAP4
-             OfflineAddressBook
-             OutlookAnywhere
-             OutlookWebApp
-             POP3
-             PowerShellWebServices
-             RemotePowerShell
-             REST
-             UniversalOutlook
+AnyOfClientIPAddressesOrRanges
 
-    ExceptUsernameMatchesAnyOfPatterns
-      -  Required: No
-      -  Description: The ExceptUsernameMatchesAnyOfPatterns parameter
-         specifies an exception for the client access rule that's based on the
-         user's account name in the format <Domain>\<UserName>
-         (for example, contoso.com\jeff).
-         This parameter accepts text and the wildcard character (*)
-         (for example, *jeff*, but not jeff*).
+- Required: No
+- Description: The AnyOfClientIPAddressesOrRanges parameter specifies a
+  condition for the client access rule that's based on the
+  client's IP address.
+  Valid values for this parameter are:
+      A single IP address: For example, 192.168.1.1
+      An IP address range: For example, 192.168.0.1-192.168.0.254
+      Classless Inter-Domain Routing (CIDR) IP: e.g 192.168.3.1/24
 
-    Priority
-      -  Required: No
-      -  Description: The Priority parameter specifies a priority value for
-         the client access rule. A lower integer value indicates a higher
-         priority, and a higher priority rule is evaluated before a lower
-         priority rule. The default value is 1.
+AnyOfProtocols
 
-    RuleScope
-      -  Required: No
-      -  Description: The RuleScope parameter specifies the scope of the
-         client access rule.
-         Valid values are:
-             All: The rule applies to all connections
-             (end-users and middle-tier apps).
-             Users: The rule only applies to end-user connections.
+- Required: No
+- Description: The AnyOfProtocols parameter specifies a condition for
+  the client access rule that's based on the client's protocol.
+  Valid values for this parameter are:
+      ExchangeActiveSync
+      ExchangeAdminCenter
+      ExchangeWebServices
+      IMAP4
+      OfflineAddressBook
+      OutlookAnywhere
+      OutlookWebApp
+      POP3
+      PowerShellWebServices
+      RemotePowerShell
+      REST
+      UniversalOutlook
 
-    UserRecipientFilter
-      -  Required: No
-      -  Description: The UserRecipientFilter parameter specifies a condition
-         for the client access rule that uses OPath filter syntax to identify
-         the user. For example, {City -eq "Redmond"}.
-         The filterable attributes that you can use with this parameter are:
-             City
-             Company
-             CountryOrRegion
-             CustomAttribute1 to CustomAttribute15
-             Department
-             Office
-             PostalCode
-             StateOrProvince
-             StreetAddress
+Enabled
+
+- Required: No
+- Description: The Enabled parameter specifies whether the client access
+  rule is enabled or disabled.
+  Valid values for this parameter are $true or $false. Default is $true
+
+ExceptAnyOfAuthenticationTypes
+
+- Required: No
+- Description: The ExceptAnyOfAuthenticationTypes parameter specifies
+  an exception for the client access rule that's based on the client's
+  authentication type.
+  Valid values for this parameter are:
+      AdfsAuthentication
+      BasicAuthentication
+      CertificateBasedAuthentication
+      NonBasicAuthentication
+      OAuthAuthentication
+
+ExceptAnyOfClientIPAddressesOrRanges
+
+- Required: No
+- Description: The ExceptAnyOfClientIPAddressesOrRanges parameter
+  specifies an exception for the client access rule that's based on the
+  client's IP address.
+  Valid values for this parameter are:
+      A single IP address: For example, 192.168.1.1
+      An IP address range: For example, 192.168.0.1-192.168.0.254
+      Classless Inter-Domain Routing (CIDR) IP: e.g. 192.168.3.1/24
+
+ExceptAnyOfProtocols
+
+- Required: No
+- Description: The ExceptAnyOfProtocols parameter specifies an exception
+  for the client access rule that's based on the client's protocol.
+  Valid values for this parameter are:
+      ExchangeActiveSync
+      ExchangeAdminCenter
+      ExchangeWebServices
+      IMAP4
+      OfflineAddressBook
+      OutlookAnywhere
+      OutlookWebApp
+      POP3
+      PowerShellWebServices
+      RemotePowerShell
+      REST
+      UniversalOutlook
+
+ExceptUsernameMatchesAnyOfPatterns
+
+- Required: No
+- Description: The ExceptUsernameMatchesAnyOfPatterns parameter
+  specifies an exception for the client access rule that's based on the
+  user's account name in the format <Domain>\<UserName>
+  (for example, contoso.com\jeff).
+  This parameter accepts text and the wildcard character (*)
+  (for example, *jeff*, but not jeff*).
+
+Priority
+
+- Required: No
+- Description: The Priority parameter specifies a priority value for
+  the client access rule. A lower integer value indicates a higher
+  priority, and a higher priority rule is evaluated before a lower
+  priority rule. The default value is 1.
+
+RuleScope
+
+- Required: No
+- Description: The RuleScope parameter specifies the scope of the
+  client access rule.
+  Valid values are:
+      All: The rule applies to all connections
+      (end-users and middle-tier apps).
+      Users: The rule only applies to end-user connections.
+
+UserRecipientFilter
+
+- Required: No
+- Description: The UserRecipientFilter parameter specifies a condition
+  for the client access rule that uses OPath filter syntax to identify
+  the user. For example, {City -eq "Redmond"}.
+  The filterable attributes that you can use with this parameter are:
+      City
+      Company
+      CountryOrRegion
+      CustomAttribute1 to CustomAttribute15
+      Department
+      Office
+      PostalCode
+      StateOrProvince
+      StreetAddress
 
 ## Example
 

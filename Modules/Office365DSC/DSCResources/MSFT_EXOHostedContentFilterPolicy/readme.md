@@ -7,23 +7,27 @@ in your cloud-based organization.
 
 ## Parameters
 
-    Ensure
-      - Required: No (Defaults to 'Present')
-      - Description: `Present` is the only value accepted.
-          Configurations using `Ensure = 'Absent'` will throw an Error!
+Ensure
 
-    GlobalAdminAccount
-      - Required: Yes
-      - Description: Credentials of an Office365 Global Admin
+- Required: No (Defaults to 'Present')
+- Description: `Present` is the only value accepted.
+  Configurations using `Ensure = 'Absent'` will throw an Error!
 
-    Identity
-      - Required: Yes
-      - Description: Name of the HostedContentFilterPolicy
+GlobalAdminAccount
 
-    AdminDisplayName
-      - Required: No
-      - Description: The AdminDisplayName parameter specifies a
-         description for the policy.
+- Required: Yes
+- Description: Credentials of an Office365 Global Admin
+
+Identity
+
+- Required: Yes
+- Description: Name of the HostedContentFilterPolicy
+
+AdminDisplayName
+
+- Required: No
+- Description: The AdminDisplayName parameter specifies a
+  description for the policy.
 
 ## Example
 

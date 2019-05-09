@@ -7,17 +7,20 @@ Reference: https://docs.microsoft.com/en-us/powershell/module/exchange/advanced-
 
 ## Parameters
 
-    Ensure
-      - Required: No (Defaults to 'Present')
-      - Description: Specifies if the configuration should be `Present` or `Absent`
+Ensure
 
-    GlobalAdminAccount
-      - Required: Yes
-      - Description: Credentials of an Office365 Global Admin
+- Required: No (Defaults to 'Present')
+- Description: Specifies if the configuration should be `Present` or `Absent`
 
-    Identity
-      - Required: Yes
-      - Description: Name of the Anti-Phish Policy
+GlobalAdminAccount
+
+- Required: Yes
+- Description: Credentials of an Office365 Global Admin
+
+Identity
+
+- Required: Yes
+- Description: Name of the Anti-Phish Policy
 
 ## Example
 
