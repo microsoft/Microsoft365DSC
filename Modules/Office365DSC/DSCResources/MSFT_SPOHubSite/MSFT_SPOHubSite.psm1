@@ -89,7 +89,10 @@ function Get-TargetResource
                 {
                     # Group permissions
                     $group = Get-MsolGroup -ObjectId $result[2]
-                    $principals += $group.EmailAddress
+                    if ($null -ne $group.EmailAddress)
+                    {
+                        $principals += $group.EmailAddress
+                    }
                 }
                 else
                 {
@@ -175,7 +178,6 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
@@ -350,11 +352,12 @@ function Test-TargetResource
     Write-Verbose -Message "Testing hub site collection $Url"
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    foreach ($value in $CurrentValues.GetEnumerator())
+    Write-Verbose "Current Values for Hub Site are:"
+    foreach ($value in $CurrentValues[1].GetEnumerator())
     {
         Write-Verbose "$($value.Key) = $($value.Value)"
     }
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+    return Test-Office365DSCParameterState -CurrentValues $CurrentValues[1] `
                                            -DesiredValues $PSBoundParameters `
                                            -ValuesToCheck @("Ensure", `
                                                             "Url", `
@@ -385,7 +388,7 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    $result[1].GlobalAdminAccount = Resolve-Credentials -UserName $GlobalAdminAccount.UserName
+    $result[1].GlobalAdminAccount = "`$Credsglobaladmin"
     $content = "        SPOHubSite " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result[1] -ModulePath $PSScriptRoot

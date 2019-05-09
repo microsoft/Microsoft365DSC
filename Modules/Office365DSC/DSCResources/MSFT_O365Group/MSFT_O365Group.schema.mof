@@ -2,6 +2,7 @@
 class MSFT_O365Group : OMI_BaseResource
 {
     [Key, Description("The display name for the group")] string DisplayName;
+    [Key, Description("The group's Internal Name. Can be left as an empty string for new groups.")] string Name;
     [Required, Description("The group's type"), ValueMap{"Office365", "Security", "DistributionList", "MailEnabledSecurity"}, Values{"Office365", "Security", "DistributionList", "MailEnabledSecurity"}] string GroupType;
     [Write, Description("The group's description")] string Description;
     [Write, Description("The group's owner user principal")] string ManagedBy[];

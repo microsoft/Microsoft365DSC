@@ -43,7 +43,7 @@ function Show-O365GUI
         $chckO365AdminAuditLogConfig.Top = 0
         $chckO365AdminAuditLogConfig.AutoSize = $true;
         $chckO365AdminAuditLogConfig.Name = "chckO365AdminAuditLogConfig"
-        $chckO365AdminAuditLogConfig.Checked = $true
+        $chckO365AdminAuditLogConfig.Checked = $false
         $chckO365AdminAuditLogConfig.Text = "Admin Audit Log Config"
         $pnlO365.Controls.Add($chckO365AdminAuditLogConfig)
 
@@ -51,7 +51,7 @@ function Show-O365GUI
         $chckO365Group.Top = 20
         $chckO365Group.AutoSize = $true;
         $chckO365Group.Name = "chckO365Group"
-        $chckO365Group.Checked = $true
+        $chckO365Group.Checked = $false
         $chckO365Group.Text = "Groups"
         $pnlO365.Controls.Add($chckO365Group);
 
@@ -84,7 +84,7 @@ function Show-O365GUI
         $chckEXOAtpPolicyForO365.Top = 0
         $chckEXOAtpPolicyForO365.AutoSize = $true;
         $chckEXOAtpPolicyForO365.Name = "chckEXOAtpPolicyForO365"
-        $chckEXOAtpPolicyForO365.Checked = $true
+        $chckEXOAtpPolicyForO365.Checked = $false
         $chckEXOAtpPolicyForO365.Text = "Advanced Threat Protection Policies"
         $pnlExo.Controls.Add($chckEXOAtpPolicyForO365)
 
@@ -92,7 +92,7 @@ function Show-O365GUI
         $chckEXOClientAccessRule.Top = 20
         $chckEXOClientAccessRule.AutoSize = $true;
         $chckEXOClientAccessRule.Name = "chckEXOClientAccessRule"
-        $chckEXOClientAccessRule.Checked = $true
+        $chckEXOClientAccessRule.Checked = $false
         $chckEXOClientAccessRule.Text = "Client Access Rule"
         $pnlExo.Controls.Add($chckEXOClientAccessRule)
 
@@ -100,7 +100,7 @@ function Show-O365GUI
         $chckEXOCASMailboxPlan.Top = 40
         $chckEXOCASMailboxPlan.AutoSize = $true;
         $chckEXOCASMailboxPlan.Name = "chckEXOCASMailboxPlan"
-        $chckEXOCASMailboxPlan.Checked = $true
+        $chckEXOCASMailboxPlan.Checked = $false
         $chckEXOCASMailboxPlan.Text = "Client Access Service Mailbox Plan"
         $pnlExo.Controls.Add($chckEXOCASMailboxPlan)
 
@@ -108,7 +108,7 @@ function Show-O365GUI
         $chckEXODkimSigningConfig.Top = 60
         $chckEXODkimSigningConfig.AutoSize = $true;
         $chckEXODkimSigningConfig.Name = "chckEXODkimSigningConfig"
-        $chckEXODkimSigningConfig.Checked = $true
+        $chckEXODkimSigningConfig.Checked = $false
         $chckEXODkimSigningConfig.Text = "DKIM Signing Configuration"
         $pnlExo.Controls.Add($chckEXODkimSigningConfig)
 
@@ -116,7 +116,7 @@ function Show-O365GUI
         $chckEXOHostedConnectionFilterPolicy.Top = 80
         $chckEXOHostedConnectionFilterPolicy.AutoSize = $true;
         $chckEXOHostedConnectionFilterPolicy.Name = "chckEXOHostedConnectionFilterPolicy"
-        $chckEXOHostedConnectionFilterPolicy.Checked = $true
+        $chckEXOHostedConnectionFilterPolicy.Checked = $false
         $chckEXOHostedConnectionFilterPolicy.Text = "Hosted Connection Filter Policy"
         $pnlExo.Controls.Add($chckEXOHostedConnectionFilterPolicy)
 
@@ -124,7 +124,7 @@ function Show-O365GUI
         $chckEXOHostedContentFilterPolicy.Top = 100
         $chckEXOHostedContentFilterPolicy.AutoSize = $true;
         $chckEXOHostedContentFilterPolicy.Name = "chckEXOHostedContentFilterPolicy"
-        $chckEXOHostedContentFilterPolicy.Checked = $true
+        $chckEXOHostedContentFilterPolicy.Checked = $false
         $chckEXOHostedContentFilterPolicy.Text = "Hosted Content Filter Policy"
         $pnlExo.Controls.Add($chckEXOHostedContentFilterPolicy)
 
@@ -132,7 +132,7 @@ function Show-O365GUI
         $chckEXOHostedContentFilterRule.Top = 120
         $chckEXOHostedContentFilterRule.AutoSize = $true;
         $chckEXOHostedContentFilterRule.Name = "chckEXOHostedContentFilterRule"
-        $chckEXOHostedContentFilterRule.Checked = $true
+        $chckEXOHostedContentFilterRule.Checked = $false
         $chckEXOHostedContentFilterRule.Text = "Hosted Content Filter Rule"
         $pnlExo.Controls.Add($chckEXOHostedContentFilterRule)
 
@@ -140,7 +140,7 @@ function Show-O365GUI
         $chckEXOMailboxSettings.Top = 140
         $chckEXOMailboxSettings.AutoSize = $true;
         $chckEXOMailboxSettings.Name = "chckEXOMailboxSettings"
-        $chckEXOMailboxSettings.Checked = $true
+        $chckEXOMailboxSettings.Checked = $false
         $chckEXOMailboxSettings.Text = "Mailbox Settings"
         $pnlExo.Controls.Add($chckEXOMailboxSettings)
 
@@ -148,7 +148,7 @@ function Show-O365GUI
         $chckEXOMailTips.Top = 160
         $chckEXOMailTips.AutoSize = $true;
         $chckEXOMailTips.Name = "chckEXOMailTips"
-        $chckEXOMailTips.Checked = $true
+        $chckEXOMailTips.Checked = $false
         $chckEXOMailTips.Text = "Mail Tips"
         $pnlExo.Controls.Add($chckEXOMailTips);
 
@@ -156,7 +156,7 @@ function Show-O365GUI
         $chckEXOOutboundSpamFilterPolicy.Top = 180
         $chckEXOOutboundSpamFilterPolicy.AutoSize = $true;
         $chckEXOOutboundSpamFilterPolicy.Name = "chckEXOOutboundSpamFilterPolicy"
-        $chckEXOOutboundSpamFilterPolicy.Checked = $true
+        $chckEXOOutboundSpamFilterPolicy.Checked = $false
         $chckEXOOutboundSpamFilterPolicy.Text = "Outbound Spam Filter Policy"
         $pnlExo.Controls.Add($chckEXOOutboundSpamFilterPolicy)
 
@@ -164,7 +164,7 @@ function Show-O365GUI
         $chckEXOSafeAttachmentPolicy.Top = 200
         $chckEXOSafeAttachmentPolicy.AutoSize = $true;
         $chckEXOSafeAttachmentPolicy.Name = "chckEXOSafeAttachmentPolicy"
-        $chckEXOSafeAttachmentPolicy.Checked = $true
+        $chckEXOSafeAttachmentPolicy.Checked = $false
         $chckEXOSafeAttachmentPolicy.Text = "Safe Attachment Policy"
         $pnlExo.Controls.Add($chckEXOSafeAttachmentPolicy)
 
@@ -172,7 +172,7 @@ function Show-O365GUI
         $chckEXOSafeAttachmentRule.Top = 220
         $chckEXOSafeAttachmentRule.AutoSize = $true;
         $chckEXOSafeAttachmentRule.Name = "chckEXOSafeAttachmentRule"
-        $chckEXOSafeAttachmentRule.Checked = $true
+        $chckEXOSafeAttachmentRule.Checked = $false
         $chckEXOSafeAttachmentRule.Text = "Safe Attachment Rule"
         $pnlExo.Controls.Add($chckEXOSafeAttachmentRule)
 
@@ -180,7 +180,7 @@ function Show-O365GUI
         $chckEXOSafeLinksPolicy.Top = 240
         $chckEXOSafeLinksPolicy.AutoSize = $true;
         $chckEXOSafeLinksPolicy.Name = "chckEXOSafeLinksPolicy"
-        $chckEXOSafeLinksPolicy.Checked = $true
+        $chckEXOSafeLinksPolicy.Checked = $false
         $chckEXOSafeLinksPolicy.Text = "Safe Links Policy"
         $pnlExo.Controls.Add($chckEXOSafeLinksPolicy)
 
@@ -188,7 +188,7 @@ function Show-O365GUI
         $chckEXOSafeLinksRule.Top = 260
         $chckEXOSafeLinksRule.AutoSize = $true;
         $chckEXOSafeLinksRule.Name = "chckEXOSafeLinksRule"
-        $chckEXOSafeLinksRule.Checked = $true
+        $chckEXOSafeLinksRule.Checked = $false
         $chckEXOSafeLinksRule.Text = "Safe Links Rule"
         $pnlExo.Controls.Add($chckEXOSafeLinksRule)
 
@@ -237,7 +237,7 @@ function Show-O365GUI
         $chckSPOHubSite.Top = 40
         $chckSPOHubSite.AutoSize = $true;
         $chckSPOHubSite.Name = "chckSPOHubSite"
-        $chckSPOHubSite.Checked = $true
+        $chckSPOHubSite.Checked = $false
         $chckSPOHubSite.Text = "Hub Sites"
         $pnlSPO.Controls.Add($chckSPOHubSite)
 
@@ -245,7 +245,7 @@ function Show-O365GUI
         $chckSPOSearchManagedProperty.Top = 60
         $chckSPOSearchManagedProperty.AutoSize = $true;
         $chckSPOSearchManagedProperty.Name = "chckSPOSearchManagedProperty"
-        $chckSPOSearchManagedProperty.Checked = $true
+        $chckSPOSearchManagedProperty.Checked = $false
         $chckSPOSearchManagedProperty.Text = "Search Managed Properties"
         $pnlSPO.Controls.Add($chckSPOSearchManagedProperty)
 
@@ -344,7 +344,7 @@ function Show-O365GUI
         $chckODSettings.Top = 0
         $chckODSettings.AutoSize = $true;
         $chckODSettings.Name = "chckODSettings"
-        $chckODSettings.Checked = $true
+        $chckODSettings.Checked = $false
         $chckODSettings.Text = "OneDrive Settings"
         $pnlOD.Controls.Add($chckODSettings)
         #endregion

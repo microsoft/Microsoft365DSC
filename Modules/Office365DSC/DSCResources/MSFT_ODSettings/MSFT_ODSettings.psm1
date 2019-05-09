@@ -90,7 +90,7 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message "Getting OneDrive quoata size for tenant"
+        Write-Verbose -Message "Getting OneDrive quota size for tenant"
         $tenant = Get-SPOTenant
 
         if (!$tenant)
@@ -99,7 +99,7 @@ function Get-TargetResource
             return $nullReturn
         }
 
-        Write-Verbose -Message "Getting OneDrive quoata size for tenant $($tenant.OneDriveStorageQuota)"
+        Write-Verbose -Message "Getting OneDrive quota size for tenant $($tenant.OneDriveStorageQuota)"
         Write-Verbose -Message "Getting tenant client sync setting"
         $tenantRestrictions = Get-SPOTenantSyncClientRestriction
 
@@ -243,7 +243,7 @@ function Set-TargetResource
     if ($CurrentParameters.ContainsKey("OneDriveStorageQuota"))
     {
         Set-SPOTenant -OneDriveStorageQuota $OneDriveStorageQuota
-        Write-Verbose -Message "Setting OneDrive storage quoata to $OneDriveStorageQuota"
+        Write-Verbose -Message "Setting OneDrive storage quota to $OneDriveStorageQuota"
     }
 
     if ($CurrentParameters.ContainsKey("OrphanedPersonalSitesRetentionPeriod"))

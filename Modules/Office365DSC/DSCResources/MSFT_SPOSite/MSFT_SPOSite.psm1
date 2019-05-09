@@ -588,6 +588,11 @@ function Export-TargetResource
     )
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    if ($result.RestrictedToGeo -eq "Unknown")
+    {
+        $result.Remove("RestrictedToGeo")
+    }
+
     $content = "        SPOSite " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

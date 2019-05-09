@@ -1475,7 +1475,7 @@ function Test-TeamsServiceConnection
     $WarningPreference = "SilentlyContinue"
     Import-Module MicrosoftTeams -Force
     Write-Verbose "Verifying the LCM connection state to Teams"
-    $catch = Connect-MicrosoftTeams -Credential $GlobalAdminAccount | Out-Null
+    Connect-MicrosoftTeams -Credential $GlobalAdminAccount | Out-Null
 }
 
 
@@ -2708,7 +2708,7 @@ function Set-SPOSiteConfiguration
 
         [Parameter()]
         [System.String]
-        [ValidateSet("BlockMoveOnly", "BlockFull")]
+        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
         $RestrictedToGeo,
 
         [Parameter()]
@@ -2886,6 +2886,6 @@ function Set-SPOSiteConfiguration
         }
         New-SPOSite @siteCreation
         $CurrentParameters4Config = $PSBoundParameters
-        Set-SPOSiteConfiguration @CurrentParameters4Config
+        #Set-SPOSiteConfiguration @CurrentParameters4Config
     }
 }
