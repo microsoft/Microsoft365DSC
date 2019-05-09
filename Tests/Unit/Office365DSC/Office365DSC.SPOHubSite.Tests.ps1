@@ -112,9 +112,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-MsolGroup -MockWith {
-                return @{
-                    EmailAddress = "group@contoso.onmicrosoft.com"
-                }
+                return @(
+                    @{
+                        EmailAddress = "group@contoso.onmicrosoft.com"
+                    }
+                )
             }
 
             Mock -CommandName Unregister-SPOHubSite -MockWith { }
@@ -261,7 +263,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Description          = "Hub for the Marketing division"
                 LogoUrl              = "https://contoso.sharepoint.com/sites/Marketing/SiteAssets/hublogo.png"
                 RequiresJoinApproval = $true
-                AllowedToJoin        = @("admin@contoso.onmicrosoft.com","group@contoso.onmicrosoft.com")
+                AllowedToJoin        = @("admin@contoso.onmicrosoft.com","group@contoso.onmicrosoft.com","SecurityGroup")
                 SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
                 CentralAdminUrl      = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount   = $GlobalAdminAccount
@@ -271,6 +273,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-SPOSite -MockWith {
                 return @{
                     IsHubSite = $false
+                }
+            }
+
+            Mock -CommandName Get-MsolGroup -MockWith {
+                return @{
+                    DisplayName = "SecurityGroup"
                 }
             }
 
@@ -291,29 +299,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Assert-MockCalled Set-SPOHubSite
             }
         }
-<#
-        Context -Name "The site already exists" -Fixture {
+
+        Context -Name "When specified AllowedToJoin group doesn't exist" -Fixture {
             $testParams = @{
-                Url = "https://contoso.com/sites/TestSite"
-                Owner = "testuser@contoso.com"
-                StorageQuota = 1000
-                CentralAdminUrl = "https://contoso-admin.sharepoint.com"
-                GlobalAdminAccount = $GlobalAdminAccount
+                Url                  = "https://contoso.sharepoint.com/sites/Marketing"
+                Title                = "Marketing Hub"
+                Description          = "Hub for the Marketing division"
+                LogoUrl              = "https://contoso.sharepoint.com/sites/Marketing/SiteAssets/hublogo.png"
+                RequiresJoinApproval = $true
+                AllowedToJoin        = @("admin@contoso.onmicrosoft.com","group@contoso.onmicrosoft.com","SecurityGroup")
+                SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
+                CentralAdminUrl      = "https://contoso-admin.sharepoint.com"
+                GlobalAdminAccount   = $GlobalAdminAccount
+                Ensure               = "Present"
             }
 
             Mock -CommandName Get-SPOSite -MockWith {
                 return @{
-                    Url = "https://contoso.com/sites/TestSite"
-                    Ensure = "Present"
+                    IsHubSite = $false
                 }
             }
 
-            It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present"
-            }
+            Mock -CommandName Register-SPOHubSite -MockWith { }
+            Mock -CommandName Set-SPOHubSite -MockWith { }
 
-            It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should Be $true
+            It "Should throw exception the Set method" {
+                { Set-TargetResource @testParams } | Should Throw "Error for principal"
             }
         }
 
@@ -335,7 +346,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Export-TargetResource @testParams
             }
         }
-#>
     }
 }
 

@@ -4714,7 +4714,7 @@ param(
     ${EnablePWA},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${SharingCapability},
 
     [Parameter(ParameterSetName='ParamSet1')]
@@ -4726,7 +4726,7 @@ param(
     ${StorageQuotaReset},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${SandboxedCodeActivationCapability},
 
     [Parameter(ParameterSetName='ParamSet3')]
@@ -4738,11 +4738,11 @@ param(
     ${NewUrl},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${DisableCompanyWideSharingLinks},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${SharingDomainRestrictionMode},
 
     [Parameter(ParameterSetName='ParamSet1')]
@@ -4774,15 +4774,15 @@ param(
     ${SensitivityLabel},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${DisableAppViews},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${DisableFlows},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${RestrictedToGeo},
 
     [Parameter(ParameterSetName='ParamSet1')]
@@ -4802,11 +4802,11 @@ param(
     ${HubSiteId},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${DefaultSharingLinkType},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${DefaultLinkPermission})
 
 
@@ -6140,8 +6140,11 @@ param(
     [Parameter(ParameterSetName='ListGroups__0')]
     [Parameter(ParameterSetName='All__0')]
     [string]
-    ${UserPrincipalName})
+    ${UserPrincipalName},
 
+    [Parameter()]
+    [Switch]
+    ${All})
 
  }
 
