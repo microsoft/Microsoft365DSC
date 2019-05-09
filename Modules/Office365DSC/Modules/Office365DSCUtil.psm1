@@ -2168,7 +2168,7 @@ function Start-O365ConfigurationExtract
                                         -Resolve
 
         Import-Module $O365UserModulePath | Out-Null
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+        Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
         $users = Get-AzureADUser
 
@@ -2417,11 +2417,23 @@ function Start-O365ConfigurationExtract
         $TeamsChannelModulePath = Join-Path -Path $PSScriptRoot `
                                         -ChildPath "..\DSCResources\MSFT_TeamsChannel\MSFT_TeamsChannel.psm1" `
                                         -Resolve
+
+        Import-Module $TeamsChannelModulePath | Out-Null
+
+        foreach ($team in $Teams)
+        {
+            $channels = Get-TeamChannel -GroupId $team.GroupId
+
+            foreach ($channel in $channels)
+            {
                 Write-Information "    Team Channel {$($channel.DisplayName)}"
                 $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
                                                      -DisplayName $channel.DisplayName `
                                                      -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
     }
+    #endregion
 
     #region "TeamsFunSettings"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsFunSettings"))
@@ -2595,7 +2607,7 @@ function Start-O365ConfigurationExtract
         }
         $OutputDSCPath = Read-Host "Please Provide Output Folder for DSC Configuration (Will be Created as Necessary)"
     }
-    # Ensures the path we specify ends with a Slash, in order to make sure the resulting file path is properly structured.
+    <## Ensures the path we specify ends with a Slash, in order to make sure the resulting file path is properly structured. #>
     if (!$OutputDSCPath.EndsWith("\") -and !$OutputDSCPath.EndsWith("/"))
     {
         $OutputDSCPath += "\"
