@@ -171,6 +171,7 @@ function Get-TargetResource
         DefaultLinkPermission                       = $null
         HubUrl                                      = $null
         Ensure                                      = "Absent"
+        GlobalAdminAccount                          = $GlobalAdminAccount
         CentralAdminUrl                             = $CentralAdminUrl
     }
 
@@ -237,6 +238,7 @@ function Get-TargetResource
             DefaultSharingLinkType                      = $site.DefaultSharingLinkType
             DefaultLinkPermission                       = $site.DefaultLinkPermission
             HubUrl                                      = $hubUrl
+            GlobalAdminAccount                          = $GlobalAdminAccount
             CentralAdminUrl                             = $CentralAdminUrl
             Ensure                                      = "Present"
         }
