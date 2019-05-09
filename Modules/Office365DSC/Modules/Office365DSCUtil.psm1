@@ -1457,8 +1457,8 @@ function Test-O365ServiceConnection
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     Write-Verbose "Verifying the LCM connection state to Microsoft Azure Active Directory Services"
-    Connect-MsolService -Credential $GlobalAdminAccount
-    Connect-AzureAD -Credential $GlobalAdminAccount
+    $catch = Connect-MsolService -Credential $GlobalAdminAccount
+    $catch = Connect-AzureAD -Credential $GlobalAdminAccount
 }
 
 function Test-TeamsServiceConnection
