@@ -4,5 +4,8 @@
         "style": "ordered"
     },
     "MD034": false,
+    "MD046": {
+        "style": "fenced"
+    },
     "no-hard-tabs": true
 }

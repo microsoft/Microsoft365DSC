@@ -199,6 +199,15 @@ function Get-TargetResource
             }
         }
 
+        if ($site.DenyAddAndCustomizePages -eq "Enabled")
+        {
+            $denyAddAndCustomizePages = $true
+        }
+        else
+        {
+            $denyAddAndCustomizePages = $false
+        }
+
         return @{
             Url                                         = $site.Url
             Owner                                       = $site.Owner
@@ -210,7 +219,7 @@ function Get-TargetResource
             CompatibilityLevel                          = $site.CompatibilityLevel
             Title                                       = $site.Title
             AllowSelfServiceUpgrade                     = $site.AllowSelfServiceUpgrade
-            DenyAddAndCustomizePages                    = $site.DenyAddAndCustomizePages
+            DenyAddAndCustomizePages                    = $denyAddAndCustomizePages
             LockState                                   = $site.LockState
             ResourceQuotaWarningLevel                   = $site.ResourceQuotaWarningLevel
             SharingCapability                           = $site.SharingCapability
