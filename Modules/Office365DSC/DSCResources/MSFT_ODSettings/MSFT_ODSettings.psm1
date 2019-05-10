@@ -30,12 +30,12 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On","Off","Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On","Off","Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         $ODBAccessRequests,
 
         [Parameter()]
@@ -56,11 +56,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("OptOut","HardOptIn","SoftOptIn")]
+        [ValidateSet("OptOut", "HardOptIn", "SoftOptIn")]
         $GrooveBlockOption,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -195,12 +195,12 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On","Off","Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On","Off","Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         $ODBAccessRequests,
 
         [Parameter()]
@@ -221,11 +221,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("OptOut","HardOptIn","SoftOptIn")]
+        [ValidateSet("OptOut", "HardOptIn", "SoftOptIn")]
         $GrooveBlockOption,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -236,73 +236,51 @@ function Set-TargetResource
 
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
+     ## Configure OneDrive settings
+
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
 
-    if ($CurrentParameters.ContainsKey("OneDriveStorageQuota"))
+    if ($CurrentParameters.ContainsKey("BlockMacSync"))
     {
-        Set-SPOTenant -OneDriveStorageQuota $OneDriveStorageQuota
-        Write-Verbose -Message "Setting OneDrive storage quoata to $OneDriveStorageQuota"
+        $CurrentParameters.Remove("BlockMacSync")
+    }
+    if ($CurrentParameters.ContainsKey("DomainGuids"))
+    {
+        $CurrentParameters.Remove("DomainGuids")
+    }
+    if ($CurrentParameters.ContainsKey("DisableReportProblemDialog"))
+    {
+        $CurrentParameters.Remove("DisableReportProblemDialog")
+    }
+    if ($CurrentParameters.ContainsKey("ExcludedFileExtensions"))
+    {
+        $CurrentParameters.Remove("ExcludedFileExtensions")
+    }
+    if ($CurrentParameters.ContainsKey("GrooveBlockOption"))
+    {
+        $CurrentParameters.Remove("GrooveBlockOption")
     }
 
-    if ($CurrentParameters.ContainsKey("OrphanedPersonalSitesRetentionPeriod"))
-    {
-        Set-SPOTenant -OrphanedPersonalSitesRetentionPeriod $OrphanedPersonalSitesRetentionPeriod
-        Write-Verbose -Message "Setting OneDrive retention period $OrphanedPersonalSitesRetentionPeriod"
-    }
+    Write-Verbose -Message "Configuring OneDrive settings."
+    Set-SPOTenant @CurrentParameters
 
-    if ($CurrentParameters.ContainsKey("OneDriveForGuestsEnabled"))
-    {
-        Set-SPOTenant -OneDriveForGuestsEnabled $OneDriveForGuestsEnabled
-        Write-Verbose -Message "Setting OneDrive for guest access $OneDriveForGuestsEnabled"
-    }
+    ## Configure Sync Client restrictions
 
-    if ($CurrentParameters.ContainsKey("NotifyOwnersWhenInvitationsAccepted"))
+    if (!$CurrentParameters.ContainsKey("DomainGuids") -and ($BlockMacSync -ne $null))
     {
-        Set-SPOTenant -NotifyOwnersWhenInvitationsAccepted $NotifyOwnersWhenInvitationsAccepted
-        Write-Verbose -Message "Setting OneDrive notify owner when guest access accepted $NotifyOwnersWhenInvitationsAccepted"
+        Write-Verbose "Cannot block Mac Clients without specifiing an allowed domain !"
     }
-
-    if ($CurrentParameters.ContainsKey("NotificationsInOneDriveForBusinessEnabled"))
-    {
-        Set-SPOTenant -NotificationsInOneDriveForBusinessEnabled $NotificationsInOneDriveForBusinessEnabled
-        Write-Verbose -Message "Setting OneDrive notify enabled to  $NotificationsInOneDriveForBusinessEnabled"
-    }
-
-    if ($CurrentParameters.ContainsKey("ODBAccessRequests"))
-    {
-        Set-SPOTenant -ODBAccessRequests $ODBAccessRequests
-        Write-Verbose -Message "Setting OneDrive access requests $ODBAccessRequests"
-    }
-
-    if ($CurrentParameters.ContainsKey("ODBMembersCanShare"))
-    {
-        Set-SPOTenant -ODBMembersCanShare $ODBMembersCanShare
-        Write-Verbose -Message "Setting OneDrive member share requets $ODBMembersCanShare"
-    }
-    ## Sync client settings
 
     if ($CurrentParameters.ContainsKey("BlockMacSync") -and $CurrentParameters.ContainsKey("DomainGuids"))
     {
-        if ($BlockMacSync -eq $true)
-        {
-            Set-SPOTenantSyncClientRestriction -BlockMacSync:$BlockMacSync -DomainGuids $DomainGuids -Enable
-        }
-        elseif ($BlockMacSync -eq $false)
-        {
-            Set-SPOTenantSyncClientRestriction -BlockMacSync:$BlockMacSync -DomainGuids $DomainGuids -Enable
-        }
+        Set-SPOTenantSyncClientRestriction -BlockMacSync:$BlockMacSync -DomainGuids $DomainGuids -Enable
     }
 
     if ($CurrentParameters.ContainsKey("DomainGuids") -and ($BlockMacSync -eq $null))
     {
         Set-SPOTenantSyncClientRestriction -DomainGuids $DomainGuids -Enable
-    }
-
-    if (!$CurrentParameters.ContainsKey("DomainGuids") -and ($BlockMacSync -ne $null))
-    {
-        Write-Verbose "Cannot block Mac Clients without specifiing an allowed domain !"
     }
 
     if ($CurrentParameters.ContainsKey("ExcludedFileExtensions"))
@@ -359,12 +337,12 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On","Off","Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On","Off","Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         $ODBAccessRequests,
 
         [Parameter()]
@@ -385,11 +363,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("OptOut","HardOptIn","SoftOptIn")]
+        [ValidateSet("OptOut", "HardOptIn", "SoftOptIn")]
         $GrooveBlockOption,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -414,7 +392,7 @@ function Test-TargetResource
             "ODBMembersCanShare", `
             "NotifyOwnersWhenInvitationsAccepted", `
             "NotificationsInOneDriveForBusinessEnabled",
-            "Ensure"
+        "Ensure"
     )
 }
 
