@@ -3,7 +3,7 @@ This example is used to test new resources and showcase the usage of new resourc
 It is not meant to use as a production baseline.
 #>
 
-Configuration MSFT_SPOTheme
+Configuration Example
 {
     param(
         [Parameter(Mandatory = $true)]
