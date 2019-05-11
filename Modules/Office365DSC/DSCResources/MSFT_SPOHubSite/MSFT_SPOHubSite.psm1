@@ -89,10 +89,16 @@ function Get-TargetResource
                 {
                     # Group permissions
                     $group = Get-MsolGroup -ObjectId $result[2]
-                    if ($null -ne $group.EmailAddress)
+
+                    if ($null -eq $group.EmailAddress)
                     {
-                        $principals += $group.EmailAddress
+                        $principal = $group.DisplayName
                     }
+                    else
+                    {
+                        $principal = $group.EmailAddress
+                    }
+                    $principals += $principal
                 }
                 else
                 {
@@ -231,6 +237,30 @@ function Set-TargetResource
             Write-Verbose "Updating Hub Site properties"
             Set-SPOHubSite @params | Out-Null
         }
+
+        if ($PSBoundParameters.ContainsKey("AllowedToJoin") -eq $true)
+        {
+            $groups = Get-MsolGroup -All
+            $regex = "^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+
+            Write-Verbose -Message "Validating AllowedToJoin principals"
+            foreach ($principal in $AllowedToJoin)
+            {
+                Write-Verbose -Message "Processing $principal"
+                if ($principal -notmatch $regex)
+                {
+                    $group = $groups | Where-Object -FilterScript {
+                                           $_.DisplayName -eq $principal
+                                       }
+
+                    if ($group.Count -ne 1)
+                    {
+                        throw "Error for principal $principal. Number of occurences: $($group.Count)"
+                    }
+                }
+            }
+            Grant-SPOHubSiteRights -Identity $site -Principals $AllowedToJoin -Rights Join | Out-Null
+        }
     }
     elseif ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Present")
     {
@@ -275,21 +305,50 @@ function Set-TargetResource
             Set-SPOHubSite @params | Out-Null
         }
 
-        $differences = Compare-Object -ReferenceObject $AllowedToJoin -DifferenceObject $currentValues.AllowedToJoin
-        if ($null -ne $differences)
+        if ($PSBoundParameters.ContainsKey("AllowedToJoin") -eq $true)
         {
-            Write-Verbose "Updating Hub Site permissions"
-            foreach ($item in $differences)
+            if ($null -eq $currentValues.AllowedToJoin)
             {
-                if ($item.SideIndicator -eq "<=")
+                $differences = Compare-Object -ReferenceObject $AllowedToJoin -DifferenceObject @()
+            }
+            else
+            {
+                $differences = Compare-Object -ReferenceObject $AllowedToJoin -DifferenceObject $currentValues.AllowedToJoin
+            }
+
+            if ($null -ne $differences)
+            {
+                $groups = Get-MsolGroup -All
+                $regex = "^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+
+                Write-Verbose "Updating Hub Site permissions"
+                foreach ($item in $differences)
                 {
-                    # Add item to principals
-                    Grant-SPOHubSiteRights -Identity $site -Principals $item.InputObject -Rights Join | Out-Null
-                }
-                else
-                {
-                    # Remove item from principals
-                    Revoke-SPOHubSiteRights -Identity $site -Principals $item.InputObject | Out-Null
+                    if ($item.SideIndicator -eq "<=")
+                    {
+                        Write-Verbose -Message "Validating AllowedToJoin principals"
+                        foreach ($principal in $AllowedToJoin)
+                        {
+                            Write-Verbose -Message "Processing $principal"
+                            if ($principal -notmatch $regex)
+                            {
+                                $group = $groups | Where-Object -FilterScript {
+                                                    $_.DisplayName -eq $principal
+                                                }
+
+                                if ($group.Count -ne 1)
+                                {
+                                    throw "Error for principal $principal. Number of occurences: $($group.Count)"
+                                }
+                            }
+                        }
+                        Grant-SPOHubSiteRights -Identity $site -Principals $item.InputObject -Rights Join | Out-Null
+                    }
+                    else
+                    {
+                        # Remove item from principals
+                        Revoke-SPOHubSiteRights -Identity $site -Principals $item.InputObject | Out-Null
+                    }
                 }
             }
         }
@@ -388,10 +447,11 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    $result[1].GlobalAdminAccount = "`$Credsglobaladmin"
+    $result.GlobalAdminAccount = "`$Credsglobaladmin"
+
     $content = "        SPOHubSite " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result[1] -ModulePath $PSScriptRoot
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
     $content += "        }`r`n"
     return $content

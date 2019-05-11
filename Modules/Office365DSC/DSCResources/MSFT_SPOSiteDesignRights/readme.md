@@ -6,31 +6,37 @@ This resource configures rights on Site Designs.
 
 ## Parameters
 
-    Ensure
-      - Required: No (Defaults to 'Present')
-      - Description: `Present` or `Absent` are the only value accepted.
-          Absent will remove user principals from site design rights
-          Present will add user principals to site design rights
+Ensure
 
-    SiteDesignTitle
-      - Required: Yes
-      - Description: Title of the Site Design
+- Required: No (Defaults to 'Present')
+- Description: `Present` or `Absent` are the only value accepted.
+    Absent will remove user principals from site design rights
+    Present will add user principals to site design rights
 
-    UserPrincipals
-      - Required: Yes
-      - Description: List of users with permissions to Site Design.
+SiteDesignTitle
 
-    Rights
-      - Required: Yes
-      - Description: Values can be view or none
+- Required: Yes
+- Description: Title of the Site Design
 
-    Tenant Admin Url
-      - Required: Yes
-      - Description: Url to tenant admin site
+UserPrincipals
 
-    GlobalAdminAccount
-      - Required: Yes
-      - Description: Credentials of the Office365 Tenant Admin
+- Required: Yes
+- Description: List of users with permissions to Site Design.
+
+Rights
+
+- Required: Yes
+- Description: Values can be view or none
+
+Tenant Admin Url
+
+- Required: Yes
+- Description: Url to tenant admin site
+
+GlobalAdminAccount
+
+- Required: Yes
+- Description: Credentials of the Office365 Tenant Admin
 
 ## Example
 
