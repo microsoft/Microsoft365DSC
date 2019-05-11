@@ -147,7 +147,7 @@ function Set-TargetResource
         Write-Verbose -Message "Removing theme $($Name)"
         try
         {
-            Remove-SPOTheme -Name $Name -Confirm:$false
+            Remove-SPOTheme -Identity $Name -Confirm:$false
         }
         catch
         {

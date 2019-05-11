@@ -3338,8 +3338,9 @@ function Remove-SPOTheme {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
+    [Alias('Name')]
     [object]
-    ${Name})
+    ${Identity})
 
 
  }
