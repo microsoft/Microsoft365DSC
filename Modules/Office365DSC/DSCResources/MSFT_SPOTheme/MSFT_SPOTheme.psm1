@@ -8,11 +8,11 @@ function Get-TargetResource
         [System.String]
         $Name,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [System.Boolean]
         $IsInverted,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [System.String]
         $Palette,
 
@@ -63,7 +63,6 @@ function Get-TargetResource
         return $nullReturn
     }
 }
-
 function Set-TargetResource
 {
     [CmdletBinding()]
@@ -73,11 +72,11 @@ function Set-TargetResource
         [System.String]
         $Name,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [System.Boolean]
         $IsInverted,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [System.String]
         $Palette,
 
@@ -167,11 +166,11 @@ function Test-TargetResource
         [System.String]
         $Name,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [System.Boolean]
         $IsInverted,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [System.String]
         $Palette,
 
