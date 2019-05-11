@@ -6,39 +6,47 @@ This resource configures Storage Entity for SharePoint Online.
 
 ## Parameters
 
-    Ensure
-      - Required: No (Defaults to 'Present')
-      - Description: `Present` or `Absent` are the only value accepted.
-          Absent will remove storage entity
-          Present will add storage entity
+Ensure
 
-    Key
-      - Required: Yes
-      - Description: Key of the value to set
+- Required: No (Defaults to 'Present')
+- Description: `Present` or `Absent` are the only value accepted.
+    Absent will remove storage entity
+    Present will add storage entity
 
-    Value
-      - Required: No
-      - Description: Value to store
+Key
 
-    EntityScope
-      - Required: No
-      - Description: Scope of the storage entity either Tenant or site
+- Required: Yes
+- Description: Key of the value to set
 
-    Description
-      - Required: No
-      - Description: Description of the storage entity.
+Value
 
-    Comment
-      - Required: No
-      - Description: Comment to set
+- Required: No
+- Description: Value to store
 
-    SiteUrl
-      - Required: Yes
-      - Description: Url to tenant or site collection
+EntityScope
 
-    GlobalAdminAccount
-      - Required: Yes
-      - Description: Credentials of the Office365 Tenant or site
+- Required: No
+- Description: Scope of the storage entity either Tenant or site
+
+Description
+
+- Required: No
+- Description: Description of the storage entity.
+
+Comment
+
+- Required: No
+- Description: Comment to set
+
+SiteUrl
+
+- Required: Yes
+- Description: Url to tenant or site collection
+
+GlobalAdminAccount
+
+- Required: Yes
+- Description: Credentials of the Office365 Tenant or site
 
 ## Example
 
