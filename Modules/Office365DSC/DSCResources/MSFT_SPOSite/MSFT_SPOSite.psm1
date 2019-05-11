@@ -537,35 +537,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "Url", `
-            "Title", `
-            "Owner", `
-            "StorageQuota", `
-            "CompatibilityLevel", `
-            "LocaleId", `
-            "ResourceQuota", `
-            "Template", `
-            "TimeZoneId", `
-            "AllowSelfServiceUpgrade", `
-            "DenyAddAndCustomizePages", `
-            "LockState", `
-            "ResourceQuotaWarningLevel", `
-            "SharingCapability", `
-            "StorageQuotaWarningLevel", `
-            "CommentsOnSitePagesDisabled", `
-            "SocialBarOnSitePagesDisabled", `
-            "DisableAppViews", `
-            "DisableCompanyWideSharingLinks", `
-            "DisableFlows", `
-            "RestrictedToGeo", `
-            "SharingAllowedDomainList", `
-            "SharingBlockedDomainList", `
-            "SharingDomainRestrictionMode", `
-            "ShowPeoplePickerSuggestionsForGuestUsers", `
-            "DefaultSharingLinkType", `
-            "DefaultLinkPermission"
-    )
+        -ValuesToCheck @("Ensure")
 }
 
 function Export-TargetResource

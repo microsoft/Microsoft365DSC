@@ -453,28 +453,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $result = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                            -DesiredValues $PSBoundParameters `
-                                           -ValuesToCheck @("Ensure", `
-                                                            "UserPrincipalName", `
-                                                            "LicenseAssignment", `
-                                                            "UsageLocation", `
-                                                            "FirstName", `
-                                                            "LastName", `
-                                                            "DisplayName", `
-                                                            "City", `
-                                                            "Country", `
-                                                            "Department", `
-                                                            "Fax", `
-                                                            "MobilePhone", `
-                                                            "Office", `
-                                                            "PasswordNeverExpires", `
-                                                            "PhoneNumber", `
-                                                            "PostalCode", `
-                                                            "PreferredDataLocation", `
-                                                            "PreferredLanguage", `
-                                                            "State", `
-                                                            "StreetAddress", `
-                                                            "Title", `
-                                                            "UserType")
+                                           -ValuesToCheck @("Ensure")
     Write-Verbose "Testing User $UserPrincipalName result was $result"
     return $result
 }

@@ -610,7 +610,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            Write-Information "* App Catalog is not configured on tenant. Cannot extract information about SharePoint apps."
+            Write-Information "    * App Catalog is not configured on tenant. Cannot extract information about SharePoint apps."
         }
     }
     #endregion

@@ -510,6 +510,7 @@ function Export-TargetResource
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    $result.Remove("GroupID")
     if ("" -eq $result.Owner)
     {
         $result.Remove("Owner")
