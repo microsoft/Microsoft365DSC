@@ -16,11 +16,11 @@ Configuration MSFT_SPOTheme
     {
         SPOTheme MySPOTheme
         {
-            GlobalAdminAccount                              = $credsGlobalAdmin
-            CentralAdminUrl = "https://o365spoapp-admin.sharepoint.com"
-            Name       = "PSTheme1"
-            IsInverted = $false
-            Palette    = '{
+            GlobalAdminAccount = $credsGlobalAdmin
+            CentralAdminUrl    = "https://o365spoapp-admin.sharepoint.com"
+            Name               = "PSTheme1"
+            IsInverted         = $false
+            Palette            = '{
                 "themePrimary": "#0078d4",
                 "themeLighterAlt": "#eff6fc",
                 "themeLighter": "#deecf9",
@@ -46,7 +46,7 @@ Configuration MSFT_SPOTheme
                 "bodyBackground": "#0078d4",
                 "bodyText": "#fff"
               }'
-            Ensure     = "Present"
+            Ensure             = "Present"
         }
     }
 }
