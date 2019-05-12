@@ -7,52 +7,61 @@ in Office 365.  Tenant must be subscribed to ATP.
 
 ## Parameters
 
-    Ensure
-      - Required: No (Defaults to 'Present')
-      - Description: `Present` is the only value accepted.
-          Configurations using `Ensure = 'Absent'` will throw an Error!
+Ensure
 
-    IsSingleInstance
-      - Required: Yes
-      - Description: Single instance resource, the value must be 'Yes'
+- Required: No (Defaults to 'Present')
+- Description: `Present` is the only value accepted.
+  Configurations using `Ensure = 'Absent'` will throw an Error!
 
-    GlobalAdminAccount
-      - Required: Yes
-      - Description: Credentials of the Office 365 Global Admin
+IsSingleInstance
 
-    Identity
-      - Required: No
-      - Description: The Identity parameter specifies the ATP policy that you
-        want to modify. There's only one policy namd Default.
+- Required: Yes
+- Description: Single instance resource, the value must be 'Yes'
 
-    AllowClickThrough
-      - Required: No
-      - Description: The AllowClickThrough parameter specifies whether to allow
-         users to click through to the original blocked URL in
-         Office 365 ProPlus. The default value is $true
+GlobalAdminAccount
 
-    BlockUrls
-      -  Required: No
-      -  Description: The BlockUrls parameter specifies the URLs that are
-         always blocked by Safe Links scanning.
-         You can specify multiple values separated by commas.
+- Required: Yes
+- Description: Credentials of the Office 365 Global Admin
 
-    EnableATPForSPOTeamsODB
-      -  Required: No
-      -  Description: The EnableATPForSPOTeamsODB parameter specifies whether
-         ATP is enabled for SharePoint Online, OneDrive for Business and
-         Microsoft Teams. The default value is $false
+Identity
 
-    EnableSafeLinksForClients
-      -  Required: No
-      -  Description: The EnableSafeLinksForClients parameter specifies whether
-         Safe Links is enabled for Office 365 ProPlus clients.
-         The default value is $false
+- Required: No
+- Description: The Identity parameter specifies the ATP policy that you
+  want to modify. There's only one policy namd Default.
 
-    TrackClicks
-      -  Required: No
-      -  Description: The TrackClicks parameter specifies whether to track user
-         clicks related to blocked URLs. The default value is $false
+AllowClickThrough
+
+- Required: No
+- Description: The AllowClickThrough parameter specifies whether to allow
+  users to click through to the original blocked URL in
+  Office 365 ProPlus. The default value is $true
+
+BlockUrls
+
+- Required: No
+- Description: The BlockUrls parameter specifies the URLs that are
+  always blocked by Safe Links scanning.
+  You can specify multiple values separated by commas.
+
+EnableATPForSPOTeamsODB
+
+- Required: No
+- Description: The EnableATPForSPOTeamsODB parameter specifies whether
+  ATP is enabled for SharePoint Online, OneDrive for Business and
+  Microsoft Teams. The default value is $false
+
+EnableSafeLinksForClients
+
+- Required: No
+- Description: The EnableSafeLinksForClients parameter specifies whether
+   Safe Links is enabled for Office 365 ProPlus clients.
+   The default value is $false
+
+TrackClicks
+
+- Required: No
+- Description: The TrackClicks parameter specifies whether to track user
+  clicks related to blocked URLs. The default value is $false
 
 ## Example
 
