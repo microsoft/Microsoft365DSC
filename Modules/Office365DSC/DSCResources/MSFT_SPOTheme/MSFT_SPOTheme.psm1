@@ -110,7 +110,7 @@ function Set-TargetResource
         $CurrentParameters.Remove("Ensure")
         $CurrentParameters.Remove("CentralAdminURL")
         $CurrentParameters.Remove("GlobalAdminAccount")
-        $CurrentParameters.Add("Palette",$PaletteHash)
+        $CurrentParameters.Add("Palette", $PaletteHash)
 
         try
         {
