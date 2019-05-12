@@ -7,23 +7,27 @@ Reference: https://docs.microsoft.com/en-us/powershell/module/exchange/advanced-
 
 ## Parameters
 
-    HostedContentFilterPolicy
-      - Required: Yes
-      - Description: The Identity of the HostedContentFilter Policy to
-        associate with this HostedContentFilter Rule.
+HostedContentFilterPolicy
 
-    Ensure
-      - Required: No (Defaults to 'Present')
-      - Description: `Present` is the only value accepted.
-          Configurations using `Ensure = 'Absent'` will throw an Error!
+- Required: Yes
+- Description: The Identity of the HostedContentFilter Policy to
+  associate with this HostedContentFilter Rule.
 
-    GlobalAdminAccount
-      - Required: Yes
-      - Description: Credentials of an Office365 Global Admin
+Ensure
 
-    Identity
-      - Required: Yes
-      - Description: Domain name of the AcceptedDomain
+- Required: No (Defaults to 'Present')
+- Description: `Present` is the only value accepted.
+    Configurations using `Ensure = 'Absent'` will throw an Error!
+
+GlobalAdminAccount
+
+- Required: Yes
+- Description: Credentials of an Office365 Global Admin
+
+Identity
+
+- Required: Yes
+- Description: Domain name of the AcceptedDomain
 
 ## Example
 

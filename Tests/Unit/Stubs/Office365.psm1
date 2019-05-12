@@ -4714,7 +4714,7 @@ param(
     ${EnablePWA},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${SharingCapability},
 
     [Parameter(ParameterSetName='ParamSet1')]
@@ -4726,7 +4726,7 @@ param(
     ${StorageQuotaReset},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${SandboxedCodeActivationCapability},
 
     [Parameter(ParameterSetName='ParamSet3')]
@@ -4738,11 +4738,11 @@ param(
     ${NewUrl},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${DisableCompanyWideSharingLinks},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${SharingDomainRestrictionMode},
 
     [Parameter(ParameterSetName='ParamSet1')]
@@ -4774,15 +4774,15 @@ param(
     ${SensitivityLabel},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${DisableAppViews},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${DisableFlows},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${RestrictedToGeo},
 
     [Parameter(ParameterSetName='ParamSet1')]
@@ -4802,11 +4802,11 @@ param(
     ${HubSiteId},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${DefaultSharingLinkType},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable[object]]
+    #[System.Nullable[object]]
     ${DefaultLinkPermission})
 
 
@@ -6140,8 +6140,11 @@ param(
     [Parameter(ParameterSetName='ListGroups__0')]
     [Parameter(ParameterSetName='All__0')]
     [string]
-    ${UserPrincipalName})
+    ${UserPrincipalName},
 
+    [Parameter()]
+    [Switch]
+    ${All})
 
  }
 
@@ -11314,76 +11317,219 @@ param(
     param(
         [Parameter()]
         [string]
-        $DisplayName
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $GroupID
     )
 }
 
 function New-Team{
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
-        [string]
+        [Parameter()]
+        [System.String]
+        [ValidateLength(1, 256)]
         $DisplayName,
 
         [Parameter()]
-        [string]
+        [System.String]
+        $GroupID,
+
+        [Parameter()]
+        [System.String]
+        [ValidateLength(1, 1024)]
         $Description,
 
         [Parameter()]
-        [string]
-        $Group,
-
-
-        [Parameter()]
-        [string]
-        $Alias,
+        [System.String]
+        $MailNickName,
 
         [Parameter()]
-        [string]
+        [System.String]
         $Owner,
 
         [Parameter()]
-        [string]
+        [System.String]
         $Classification,
 
         [Parameter()]
-        [string]
-        $AccessType
+        [System.String]
+        [ValidateSet("Public", "Private")]
+        $Visibility,
 
+        [Parameter()]
+        [System.Boolean]
+        $AllowAddRemoveApps,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGiphy,
+
+        [Parameter()]
+        [ValidateSet("Strict", "Moderate")]
+        [System.String]
+        $GiphyContentRating,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowStickersAndMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCustomMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserEditMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOwnerDeleteMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCreateUpdateRemoveConnectors,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCreateUpdateRemoveTabs,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDeleteChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTeamMentions,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowChannelMentions,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestDeleteChannels,
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
+        $Ensure = "Present"
     )
 }
 function Set-Team{
     [CmdletBinding()]
     param(
 
-        [Parameter(Mandatory=$true)]
-        [string]
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateLength(1, 256)]
         $DisplayName,
 
         [Parameter()]
-        [string]
+        [System.String]
+        $GroupID,
+
+        [Parameter()]
+        [System.String]
+        [ValidateLength(1, 1024)]
         $Description,
 
         [Parameter()]
-        [string]
-        $Alias,
-
+        [System.String]
+        $MailNickName,
 
         [Parameter()]
-        [string]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Public", "Private")]
         $Visibility,
 
         [Parameter()]
-        [string]
-        $Owner,
+        [System.Boolean]
+        $AllowAddRemoveApps,
 
         [Parameter()]
-        [string]
-        $GroupId,
+        [System.Boolean]
+        $AllowGiphy,
 
         [Parameter()]
-        [string]
-        $AccessType
+        [ValidateSet("Strict", "Moderate")]
+        [System.String]
+        $GiphyContentRating,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowStickersAndMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCustomMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserEditMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOwnerDeleteMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCreateUpdateRemoveConnectors,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCreateUpdateRemoveTabs,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDeleteChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTeamMentions,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowChannelMentions,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestCreateUpdateChannels,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestDeleteChannels,
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
+        $Ensure = "Present"
 
     )
 }
