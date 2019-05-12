@@ -1,0 +1,10 @@
+[ClassVersion("1.0.0.0"), FriendlyName("SPOTheme")]
+class MSFT_SPOTheme : OMI_BaseResource
+{
+    [Key, Description("Specifies the name of the SPOTheme")] String Name;
+    [Write, Description("Specifies if the theme is inverted")] boolean IsInverted;
+    [Write, Description("Specifies if the theme is inverted")] String Palette;
+    [Write, Description("Only accepted value is 'Present'."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Required, Description("The Url of the SharePoint Online Central Administration")] string CentralAdminUrl;
+    [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+};
