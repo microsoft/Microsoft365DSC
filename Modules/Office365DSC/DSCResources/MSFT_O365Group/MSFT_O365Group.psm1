@@ -6,16 +6,11 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
+        $MailNickName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
         $DisplayName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name = "",
-
-        [Parameter(Mandatory = $true)]
-        [ValidateSet("Office365", "Security", "DistributionList", "MailEnabledSecurity")]
-        [System.String]
-        $GroupType,
 
         [Parameter()]
         [System.String]
@@ -28,14 +23,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $Members,
-
-        [Parameter()]
-        [System.String]
-        $Alias,
-
-        [Parameter()]
-        [System.String]
-        $PrimarySMTPAddress,
 
         [Parameter()]
         [ValidateSet("Present","Absent")]
@@ -49,140 +36,38 @@ function Get-TargetResource
     Write-Verbose "Get-TargetResource will attempt to retrieve information for group $($DisplayName)"
     $nullReturn = @{
         DisplayName = $DisplayName
-        Name = $Name
-        GroupType = $GroupType
+        MailNickName = $Name
         Description = $null
         ManagedBy = $null
         GlobalAdminAccount = $null
         Ensure = "Absent"
     }
 
-    if ($GroupType -eq "Security")
+    Write-Verbose "Found Office365 Group $($group.DisplayName)"
+    Connect-AzureAD -Credential $GlobalAdminAccount
+
+    $ADGroup = Get-AzureADGroup -SearchString $MailNickName -ErrorAction SilentlyContinue
+    if ($null -eq $ADGroup)
     {
-        Connect-MsolService -Credential $GlobalAdminAccount
-        Write-Verbose -Message "Getting Security Group $($DisplayName)"
-
-        if ($null -ne $Name)
+        $ADGroup = Get-AzureADGroup -SearchString $DisplayName -ErrorAction SilentlyContinue
+        if ($null -eq $ADGroup)
         {
-            $group = Get-MSOLGroup | Where-Object {$_.Name -eq $Name}
-        }
-        else
-        {
-            $group = Get-MSOLGroup | Where-Object {$_.DisplayName -eq $DisplayName}
-        }
-
-        if ($null -eq $Name -and $group.Length -gt 1)
-        {
-            throw "Multiple instance of group named {$DisplayName} were found. " + `
-                  "Please use property Name instead of DisplayName to retrieve a specific instance."
-        }
-
-        if(!$group)
-        {
-            Write-Verbose "The specified Group doesn't already exist."
+            Write-Verbose "Office 365 Group {$($group.DisplayName)} was not found."
             return $nullReturn
-        }
-        return @{
-            DisplayName = $group.DisplayName
-            GroupType = $GroupType
-            Description = $group.Description
-            GlobalAdminAccount = $GlobalAdminAccount
-            Ensure = "Present"
         }
     }
-    else
-    {
-        $RecipientTypeDetails = "GroupMailbox"
-        switch($GroupType)
-        {
-            "Office365" { $RecipientTypeDetails = "GroupMailbox" }
-            "DistributionList" { $RecipientTypeDetails = "MailUniversalDistributionGroup" }
-            "MailEnabledSecurity" { $RecipientTypeDetails = "MailUniversalSecurityGroup" }
-        }
 
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-        $allGroups = Get-Group
+    $members = Get-AzureADGroupMember -ObjectId $ADGroup.ObjectId
+    $owners = Get-AzureADGroupOwner -ObjectId $ADGroup.ObjectId
 
-        if ($null -ne $Name)
-        {
-            $group = $allGroups | Where-Object {$_.Name -eq $Name -and $_.RecipientTypeDetails -eq $RecipientTypeDetails}
-        }
-        else
-        {
-            $group = $allGroups | Where-Object {$_.DisplayName -eq $DisplayName -and $_.RecipientTypeDetails -eq $RecipientTypeDetails}
-        }
-
-        if ($null -eq $Name -and $group.Length -gt 1)
-        {
-            throw "Multiple instance of group named {$DisplayName} were found. " + `
-                  "Please use property Name instead of DisplayName to retrieve a specific instance."
-        }
-
-        if (!$group)
-        {
-            Write-Verbose "The specified Group doesn't already exist."
-            return $nullReturn
-        }
-
-        switch ($GroupType)
-        {
-            "Office365"
-            {
-                Write-Verbose "Found Office365 Group $($group.DisplayName)"
-                Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-                $groupLinks = Get-UnifiedGroupLinks -Identity $DisplayName -LinkType "Members"
-
-                $groupMembers = ""
-                foreach ($link in $groupLinks.Name)
-                {
-                    $groupMembers += $link.ToString() + ","
-                }
-                if ($groupMembers -ne "")
-                {
-                    # Remove the trailing comma
-                    $groupMembers = $groupMembers.Remove($groupMembers.Length -1, 1)
-                    $groupMembers = $groupMembers.Split(',')
-                }
-                else
-                {
-                    $groupMembers = @()
-                }
-                return @{
-                    DisplayName = $group.DisplayName
-                    Name = $Name
-                    GroupType = $GroupType
-                    Members = $groupMembers
-                    ManagedBy = $group.ManagedBy
-                    Description = $group.Notes.ToString()
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    Ensure = "Present"
-                }
-            }
-            "DistributionList"
-            {
-                Write-Verbose "Found Distribution List $($group.DisplayName)"
-                return @{
-                    DisplayName = $group.DisplayName
-                    Name = $Name
-                    GroupType = $GroupType
-                    Description = $group.Notes
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    Ensure = "Present"
-                }
-            }
-            "MailEnabledSecurity"
-            {
-                Write-Verbose "Found Mail-Enabled Security Group $($group.DisplayName)"
-                return @{
-                    DisplayName = $group.DisplayName
-                    Name = $Name
-                    GroupType = $GroupType
-                    Description = $group.Notes
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    Ensure = "Present"
-                }
-            }
-        }
+    return @{
+        DisplayName = $ADGroup.DisplayName
+        MailNickName = $ADGroup.MailNickName
+        Members = $members.UserPrincipalName
+        ManagedBy = $owners.UserPrincipalName
+        Description = $ADGroup.Description.ToString()
+        GlobalAdminAccount = $GlobalAdminAccount
+        Ensure = "Present"
     }
 }
 
@@ -193,16 +78,11 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
+        $MailNickName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
         $DisplayName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name = "",
-
-        [Parameter(Mandatory = $true)]
-        [ValidateSet("Office365", "Security", "DistributionList", "MailEnabledSecurity")]
-        [System.String]
-        $GroupType,
 
         [Parameter()]
         [System.String]
@@ -217,14 +97,6 @@ function Set-TargetResource
         $Members,
 
         [Parameter()]
-        [System.String]
-        $Alias,
-
-        [Parameter()]
-        [System.String]
-        $PrimarySMTPAddress,
-
-        [Parameter()]
         [ValidateSet("Present","Absent")]
         [System.String]
         $Ensure = "Present",
@@ -236,150 +108,112 @@ function Set-TargetResource
     Write-Verbose "Entering Set-TargetResource"
     Write-Verbose "Retrieving information about group $($DisplayName) to see if it already exists"
     $currentGroup = Get-TargetResource @PSBoundParameters
+
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     if ($Ensure -eq "Present")
     {
         $CurrentParameters = $PSBoundParameters
         $CurrentParameters.Remove("Ensure")
         $CurrentParameters.Remove("GlobalAdminAccount")
-        $CurrentParameters.Remove("GroupType")
 
-        if ($GroupType -eq "Security")
+        if ($currentGroup.Ensure -eq "Absent")
         {
-            Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-            Write-Verbose -Message "Creating Security Group $DisplayName"
-            New-MsolGroup @CurrentParameters
-        }
-        else
-        {
-            switch ($GroupType)
+            Write-Verbose -Message "Creating Office 365 Group {$DisplayName}"
+            $groupParams = @{
+                DisplayName = $DisplayName
+                Notes       = $Description
+                Owner       = $ManagedBy
+            }
+
+            $groupParams.Owner = $ManagedBy[0]
+            if ("" -ne $Name)
             {
-                "Office365"
+                $groupParams.Add("Name", $Name)
+            }
+            Write-Verbose "Initiating Group Creation"
+            Write-Verbose "Owner = $($groupParams.Owner)"
+            New-UnifiedGroup @groupParams
+            Write-Verbose "Group Created"
+            if ($ManagedBy.Length -gt 1)
+            {
+                for ($i = 1; $i -lt $ManagedBy.Length; $i++)
                 {
-                    if ($currentGroup.Ensure -eq "Absent")
-                    {
-                        Write-Verbose -Message "Creating Office 365 Group {$DisplayName}"
-                        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-                        $groupParams = @{
-                            DisplayName = $DisplayName
-                            Notes       = $Description
-                            Owner       = $ManagedBy
-                        }
-
-                        $groupParams.Owner = $ManagedBy[0]
-                        if ("" -ne $Name)
-                        {
-                            $groupParams.Add("Name", $Name)
-                        }
-                        Write-Verbose "Initiating Group Creation"
-                        Write-Verbose "Owner = $($groupParams.Owner)"
-                        New-UnifiedGroup @groupParams
-                        Write-Verbose "Group Created"
-                        if ($ManagedBy.Length -gt 1)
-                        {
-                            for ($i = 1; $i -lt $ManagedBy.Length; $i++)
-                            {
-                                Write-Verbose "Adding additional owner {$($ManagedBy[$i])} to group."
-                                if ("" -ne $Name)
-                                {
-                                    Add-UnifiedGroupLinks -Identity $Name -LinkType Owner -Links $ManagedBy[$i]
-                                }
-                                else
-                                {
-                                    Add-UnifiedGroupLinks -Identity $DisplayName -LinkType Owner -Links $ManagedBy[$i]
-                                }
-                            }
-                        }
-                    }
-
-                    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+                    Write-Verbose "Adding additional owner {$($ManagedBy[$i])} to group."
                     if ("" -ne $Name)
                     {
-                        $groupLinks = Get-UnifiedGroupLinks -Identity $Name -LinkType "Members"
+                        Add-UnifiedGroupLinks -Identity $Name -LinkType Owner -Links $ManagedBy[$i]
                     }
                     else
                     {
-                        $groupLinks = Get-UnifiedGroupLinks -Identity $DisplayName -LinkType "Members"
+                        Add-UnifiedGroupLinks -Identity $DisplayName -LinkType Owner -Links $ManagedBy[$i]
                     }
-                    $curMembers = @()
-                    foreach ($link in $groupLinks)
+                }
+            }
+        }
+
+        if ("" -ne $MailNickName)
+        {
+            $groupLinks = Get-UnifiedGroupLinks -Identity $MailNickName -LinkType "Members"
+        }
+        else
+        {
+            $groupLinks = Get-UnifiedGroupLinks -Identity $DisplayName -LinkType "Members"
+        }
+        $curMembers = @()
+        foreach ($link in $groupLinks)
+        {
+            if ($link.Name -and $link.Name -ne $currentGroup.ManagedBy)
+            {
+                $curMembers += $link.Name
+            }
+        }
+
+        if ($null -ne $CurrentParameters.Members)
+        {
+            $difference = Compare-Object -ReferenceObject $curMembers -DifferenceObject $CurrentParameters.Members
+
+            if ($difference.InputObject)
+            {
+                Write-Verbose "Detected a difference in the current list of members and the desired one"
+                $membersToRemove = @()
+                $membersToAdd = @()
+                foreach ($diff in $difference)
+                {
+                    if (-not $ManagedBy.Contains($diff.InputObject))
                     {
-                        if ($link.Name -and $link.Name -ne $currentGroup.ManagedBy)
+                        if ($diff.SideIndicator -eq "<=" -and $diff.InputObject -ne $ManagedBy.Split('@')[0])
                         {
-                            $curMembers += $link.Name
+                            $membersToRemove += $diff.InputObject
+                        }
+                        elseif ($diff.SideIndicator -eq "=>")
+                        {
+                            $membersToAdd += $diff.InputObject
                         }
                     }
+                }
 
-                    $difference = Compare-Object -ReferenceObject $curMembers -DifferenceObject $CurrentParameters.Members
-
-                    if ($difference.InputObject)
+                if ($membersToAdd.Count -gt 0)
+                {
+                    if ("" -ne $MailNickName)
                     {
-                        Write-Verbose "Detected a difference in the current list of members and the desired one"
-                        $membersToRemove = @()
-                        $membersToAdd = @()
-                        foreach ($diff in $difference)
-                        {
-                            if (-not $ManagedBy.Contains($diff.InputObject))
-                            {
-                                if ($diff.SideIndicator -eq "<=" -and $diff.InputObject -ne $ManagedBy.Split('@')[0])
-                                {
-                                    $membersToRemove += $diff.InputObject
-                                }
-                                elseif ($diff.SideIndicator -eq "=>")
-                                {
-                                    $membersToAdd += $diff.InputObject
-                                }
-                            }
-                        }
-
-                        if ($membersToAdd.Count -gt 0)
-                        {
-                            $CurrentParameters.Members = $membersToAdd
-                            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-
-                            if ("" -ne $name)
-                            {
-                                Add-UnifiedGroupLinks -Identity $Name -LinkType Members -Links $membersToAdd
-                            }
-                            else
-                            {
-                                Add-UnifiedGroupLinks -Identity $DisplayName -LinkType Members -Links $membersToAdd
-                            }
-                        }
-
-                        if ($membersToRemove.Count -gt 0)
-                        {
-                            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-                            if ("" -ne $name)
-                            {
-                                Remove-UnifiedGroupLinks -Identity $Name -LinkType Members -Links $membersToRemove
-                            }
-                            else
-                            {
-                                Remove-UnifiedGroupLinks -Identity $DisplayName -LinkType Members -Links $membersToRemove
-                            }
-                        }
-                        $CurrentParameters.Members = $members
+                        Add-UnifiedGroupLinks -Identity $MailNickName -LinkType Members -Links $membersToAdd
+                    }
+                    else
+                    {
+                        Add-UnifiedGroupLinks -Identity $DisplayName -LinkType Members -Links $membersToAdd
                     }
                 }
-                "DistributionList"
+
+                if ($membersToRemove.Count -gt 0)
                 {
-                    Write-Verbose -Message "Creating Distribution List $DisplayName"
-                    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-                    New-DistributionGroup -DisplayName $DisplayName -Notes $Description `
-                                          -Name $DisplayName
-                }
-                "MailEnabledSecurity"
-                {
-                    Write-Verbose -Message "Creating Mail-Enabled Security Group $DisplayName"
-                    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-                    New-DistributionGroup -Name $DisplayName `
-                                          -Alias $Alias `
-                                          -Type "Security" `
-                                          -PrimarySMTPAddress $PrimarySMTPAddress
-                }
-                Default
-                {
-                    throw "The specified GroupType is not valid"
+                    if ("" -ne $name)
+                    {
+                        Remove-UnifiedGroupLinks -Identity $Name -LinkType Members -Links $membersToRemove
+                    }
+                    else
+                    {
+                        Remove-UnifiedGroupLinks -Identity $DisplayName -LinkType Members -Links $membersToRemove
+                    }
                 }
             }
         }
@@ -394,16 +228,11 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
+        $MailNickName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
         $DisplayName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name = "",
-
-        [Parameter(Mandatory = $true)]
-        [ValidateSet("Office365", "Security", "DistributionList", "MailEnabledSecurity")]
-        [System.String]
-        $GroupType,
 
         [Parameter()]
         [System.String]
@@ -416,14 +245,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $Members,
-
-        [Parameter()]
-        [System.String]
-        $Alias,
-
-        [Parameter()]
-        [System.String]
-        $PrimarySMTPAddress,
 
         [Parameter()]
         [ValidateSet("Present","Absent")]
@@ -441,6 +262,7 @@ function Test-TargetResource
                                            -DesiredValues $PSBoundParameters `
                                            -ValuesToCheck @("Ensure", `
                                                             "DisplayName", `
+                                                            "MailNickName", `
                                                             "Description", `
                                                             "Members")
 }
@@ -453,16 +275,11 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
+        $MailNickName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
         $DisplayName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name,
-
-        [Parameter(Mandatory = $true)]
-        [ValidateSet("Office365", "Security", "DistributionList", "MailEnabledSecurity")]
-        [System.String]
-        $GroupType,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

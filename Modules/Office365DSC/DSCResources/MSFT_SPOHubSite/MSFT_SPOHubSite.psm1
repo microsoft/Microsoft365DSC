@@ -412,11 +412,11 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose "Current Values for Hub Site are:"
-    foreach ($value in $CurrentValues[1].GetEnumerator())
+    foreach ($value in $CurrentValues.GetEnumerator())
     {
         Write-Verbose "$($value.Key) = $($value.Value)"
     }
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues[1] `
+    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                            -DesiredValues $PSBoundParameters `
                                            -ValuesToCheck @("Ensure", `
                                                             "Url", `
