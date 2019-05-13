@@ -267,20 +267,22 @@ function Set-TargetResource
     Write-Verbose -Message "Configuring OneDrive settings."
     Set-SPOTenant @CurrentParameters
 
+    $clientSyncParameters =  $PSBoundParameters
+
     ## Configure Sync Client restrictions
     ## Set-SPOTenantSyncClientRestriction has different parameter sets and they cannot be combined see article:
     ## https://docs.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps
 
-    if ($CurrentParameters.ContainsKey("BlockMacSync") -and $CurrentParameters.ContainsKey("DomainGuids"))
+    if ($clientSyncParameters.ContainsKey("BlockMacSync") -and $clientSyncParameters.ContainsKey("DomainGuids"))
     {
         Set-SPOTenantSyncClientRestriction -BlockMacSync:$BlockMacSync -DomainGuids $DomainGuids -Enable
     }
-    elseif ($CurrentParameters.ContainsKey("DomainGuids") -and (!$CurrentParameters.ContainsKey("BlockMacSync")))
+    elseif ($clientSyncParameters.ContainsKey("DomainGuids") -and (!$clientSyncParameters.ContainsKey("BlockMacSync")))
     {
         Set-SPOTenantSyncClientRestriction -DomainGuids $DomainGuids -Enable
     }
 
-    if ($CurrentParameters.ContainsKey("ExcludedFileExtensions"))
+    if ($clientSyncParameters.ContainsKey("ExcludedFileExtensions"))
     {
         $BlockedFileTypes = ""
         foreach ($fileTypes in $ExcludedFileExtensions)
@@ -290,12 +292,12 @@ function Set-TargetResource
 
         Set-SPOTenantSyncClientRestriction -ExcludedFileExtensions $BlockedFileTypes
     }
-    if ($CurrentParameters.ContainsKey("DisableReportProblemDialog"))
+    if ($clientSyncParameters.ContainsKey("DisableReportProblemDialog"))
     {
         Set-SPOTenantSyncClientRestriction -DisableReportProblemDialog $DisableReportProblemDialog
     }
 
-    if ($CurrentParameters.ContainsKey("GrooveBlockOption"))
+    if ($clientSyncParameters.ContainsKey("GrooveBlockOption"))
     {
         Set-SPOTenantSyncClientRestriction -GrooveBlockOption $GrooveBlockOption
     }
