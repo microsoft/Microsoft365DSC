@@ -437,59 +437,17 @@ function Start-O365ConfigurationExtract
 
         Import-Module $O365GroupModulePath | Out-Null
 
-        # Security Groups
-        Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-        $securityGroups = Get-AzureAdGroup | Where-Object {$_.SecurityEnabled -eq $true}
-
-        Write-Information "    > Security Groups"
-        $i = 1
-        foreach ($securityGroup in $securityGroups)
-        {
-            Write-Information "        - [$i/$($securityGroups.Length)] $($securityGroup.DisplayName)"
-            $securityGroupDisplayName = $securityGroup.DisplayName
-            if ($securityGroupDisplayName)
-            {
-                $DSCContent += Export-TargetResource -DisplayName $securityGroupDisplayName `
-                                                     -Name "Empty" `
-                                                     -GroupType "Security" `
-                                                     -GlobalAdminAccount $GlobalAdminAccount
-            }
-            $i++
-        }
-
-        $securityGroups = Get-AzureAdGroup | Where-Object {$_.SecurityEnabled -eq $true}
-
         # Other Groups
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-        $groups = Get-Group
+        Connect-AzureAD -Credential $GlobalAdminAccount
+        $groups = Get-AzureADGroup | Where-Object {$_.MailNickName -ne "00000000-0000-0000-0000-000000000000"}
 
-        $groups = $groups | Where-Object { `
-            $_.RecipientType -eq "MailUniversalDistributionGroup" `
-            -or $_.RecipientType -eq "MailUniversalSecurityGroup" `
-        }
-
-        Write-Information "    > Office 365 Groups"
         $i = 1
         foreach ($group in $groups)
         {
-            $groupName = $group.DisplayName
-            if ($groupName)
-            {
-                $groupType = "DistributionList"
-                if ($group.RecipientTypeDetails -eq "GroupMailbox")
-                {
-                    $groupType = "Office365"
-                }
-                elseif ($group.RecipientTypeDetails -eq "MailUniversalSecurityGroup")
-                {
-                    $groupType = "MailEnabledSecurity"
-                }
-                Write-Information "        - [$i/$($groups.Length)] $groupName {$groupType}"
-                $DSCContent += Export-TargetResource -DisplayName $groupName `
-                                                     -Name $group.Name `
-                                                     -GroupType $groupType `
-                                                     -GlobalAdminAccount $GlobalAdminAccount
-            }
+            Write-Information "    - [$i/$($groups.Length)] $($group.DisplayName)"
+            $DSCContent += Export-TargetResource -DisplayName $group.DisplayName `
+                                                 -MailNickName $group.MailNickName `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
             $i++
         }
     }

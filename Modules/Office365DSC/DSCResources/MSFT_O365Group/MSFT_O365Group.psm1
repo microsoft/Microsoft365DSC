@@ -44,7 +44,7 @@ function Get-TargetResource
     }
 
     Write-Verbose "Found Office365 Group $($group.DisplayName)"
-    Connect-AzureAD -Credential $GlobalAdminAccount
+    $catch = Connect-AzureAD -Credential $GlobalAdminAccount
 
     $ADGroup = Get-AzureADGroup -SearchString $MailNickName -ErrorAction SilentlyContinue
     if ($null -eq $ADGroup)
@@ -56,19 +56,28 @@ function Get-TargetResource
             return $nullReturn
         }
     }
+    Write-Verbose "Found Existing Instance of Group {$($ADGroup.DisplayName)}"
 
-    $members = Get-AzureADGroupMember -ObjectId $ADGroup.ObjectId
+    $membersList = Get-AzureADGroupMember -ObjectId $ADGroup.ObjectId
     $owners = Get-AzureADGroupOwner -ObjectId $ADGroup.ObjectId
 
-    return @{
+    $returnValue = @{
         DisplayName = $ADGroup.DisplayName
         MailNickName = $ADGroup.MailNickName
-        Members = $members.UserPrincipalName
+        Members = $membersList.UserPrincipalName
         ManagedBy = $owners.UserPrincipalName
         Description = $ADGroup.Description.ToString()
         GlobalAdminAccount = $GlobalAdminAccount
         Ensure = "Present"
     }
+
+    Write-Verbose "Retrieved the following instance of the Group:"
+    foreach ($value in $returnValue.GetEnumerator())
+    {
+        Write-Verbose "$($value.Key) = $($value.Value)"
+    }
+
+    return $returnValue
 }
 
 function Set-TargetResource
@@ -286,7 +295,7 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    $result.GlobalAdminAccount = "`$Credsglobaladmin"
     $content = "        O365Group " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
