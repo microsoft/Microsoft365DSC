@@ -236,8 +236,9 @@ function Set-TargetResource
 
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
-     ## Configure OneDrive settings
-
+    ## Configure OneDrive settings
+    ## Parameters below are remove for the Set-SPOTenant cmdlet
+    ## they are used in the Set-SPOTenantSyncClientRestriction cmdlet
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
@@ -267,18 +268,14 @@ function Set-TargetResource
     Set-SPOTenant @CurrentParameters
 
     ## Configure Sync Client restrictions
-
-    if (!$CurrentParameters.ContainsKey("DomainGuids") -and ($BlockMacSync -ne $null))
-    {
-        Write-Verbose "Cannot block Mac Clients without specifiing an allowed domain !"
-    }
+    ## Set-SPOTenantSyncClientRestriction has different parameter sets and they cannot be combined see article:
+    ## https://docs.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps
 
     if ($CurrentParameters.ContainsKey("BlockMacSync") -and $CurrentParameters.ContainsKey("DomainGuids"))
     {
         Set-SPOTenantSyncClientRestriction -BlockMacSync:$BlockMacSync -DomainGuids $DomainGuids -Enable
     }
-
-    if ($CurrentParameters.ContainsKey("DomainGuids") -and ($BlockMacSync -eq $null))
+    elseif ($CurrentParameters.ContainsKey("DomainGuids") -and (!$CurrentParameters.ContainsKey("BlockMacSync")))
     {
         Set-SPOTenantSyncClientRestriction -DomainGuids $DomainGuids -Enable
     }
