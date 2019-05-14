@@ -25,7 +25,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         Mock -CommandName Connect-SPOService -MockWith {
-            
+
         }
 
         # Test contexts
@@ -153,7 +153,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
                     GlobalAdminAccount = $GlobalAdminAccount
                     Ensure             = "Present"
-                    
+
                 }
             }
 
@@ -256,7 +256,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
                     GlobalAdminAccount = $GlobalAdminAccount
                     Ensure             = "Present"
-                    
+
                 }
             }
 
