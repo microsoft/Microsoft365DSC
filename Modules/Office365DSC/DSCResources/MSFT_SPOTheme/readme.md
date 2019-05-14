@@ -11,5 +11,3 @@ You can use the SPO Theme builder under: [https://aka.ms/spthemebuilder](https:/
 Once you are satisfied with the color of your theme you can copy the JSON Output and put it directly into your configuration.
 
 More details on the theme schema can be found [here](https://docs.microsoft.com/en-us/sharepoint/dev/declarative-customization/site-theming/sharepoint-site-theming-json-schema)
-
-
