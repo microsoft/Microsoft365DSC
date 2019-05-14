@@ -2615,3 +2615,49 @@ function Start-O365ConfigurationExtract
     }
     Invoke-Item -Path $OutputDSCPath
 }
+
+
+function Compare-SPOTheme
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object]
+        $existingThemePalette,
+        [Parameter(Mandatory = $true)]
+        [System.Object]
+        $configThemePalette
+    )
+
+    $existingThemePalette = $existingThemePalette.GetEnumerator() | Sort-Object -Property Name
+    $configThemePalette = $configThemePalette.GetEnumerator() | Sort-Object -Property Name
+
+    $existingThemePaletteCount = 0
+    $configThemePaletteCount = 0
+
+    foreach($val in $existingThemePalette.Value)
+    {
+        if($configThemePalette.Value.Contains($val))
+        {
+            $configThemePaletteCount++
+        }
+    }
+
+    foreach($val in $configThemePalette.Value)
+    {
+        if($existingThemePalette.value.Contains($val))
+        {
+            $existingThemePaletteCount++
+        }
+    }
+
+    if(($existingThemePalette.Count -eq $configThemePaletteCount) -and ($configThemePalette.Count -eq $existingThemePaletteCount))
+    {
+        return "Themes are identical"
+    }
+    else
+    {
+        return "Themes are not identical"
+    }
+}
