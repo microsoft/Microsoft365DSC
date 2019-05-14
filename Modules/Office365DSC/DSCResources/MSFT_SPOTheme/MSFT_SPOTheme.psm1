@@ -8,11 +8,11 @@ function Get-TargetResource
         [System.String]
         $Name,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter]
         [System.Boolean]
         $IsInverted,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter]
         [System.String]
         $Palette,
 
@@ -38,6 +38,7 @@ function Get-TargetResource
         Palette             = $null
         Ensure              = "Absent"
         CentralAdminUrl     = $CentralAdminUrl
+        GlobalAdminAccount  = $GlobalAdminAccount
     }
 
     try
@@ -54,6 +55,7 @@ function Get-TargetResource
             IsInverted          = $theme.IsInverted
             Palette             = $theme.Palette
             CentralAdminUrl     = $CentralAdminUrl
+            GlobalAdminAccount  = $GlobalAdminAccount
             Ensure              = "Present"
         }
     }
@@ -63,6 +65,7 @@ function Get-TargetResource
         return $nullReturn
     }
 }
+
 function Set-TargetResource
 {
     [CmdletBinding()]
@@ -72,11 +75,11 @@ function Set-TargetResource
         [System.String]
         $Name,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter]
         [System.Boolean]
         $IsInverted,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter]
         [System.String]
         $Palette,
 
@@ -98,7 +101,6 @@ function Set-TargetResource
 
     if($Ensure -eq "Present")
     {
-        Write-Verbose -Message "Starting Theme creation"
         $PaletteHash = @{ }
         $PaletteObj = $Palette | ConvertFrom-Json
         foreach($entry in $PaletteObj.Psobject.Properties)
@@ -165,11 +167,11 @@ function Test-TargetResource
         [System.String]
         $Name,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter]
         [System.Boolean]
         $IsInverted,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter]
         [System.String]
         $Palette,
 
