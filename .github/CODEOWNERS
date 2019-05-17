@@ -2,9 +2,19 @@
 # the repo. Unless a later match takes precedence,
 # @global-owner1 and @global-owner2 will be requested for
 # review when someone opens a pull request.
-*       @NikCharlebois
+*       @nikcharlebois
 
+/Modules/Office365DSC/DSCResources/MSFT_ODSettings @desmay
 
+/Modules/Office365DSC/DSCResources/MSFT_SPOApp/ @nikcharlebois
+/Modules/Office365DSC/DSCResources/MSFT_SPOSearchManagedProperty/ @nikcharlebois
+/Modules/Office365DSC/DSCResources/MSFT_SPOSearchResultSource/ @nikcharlebois
 /Modules/Office365DSC/DSCResources/MSFT_SPOSite/ @thorstenloeschmann
+/Modules/Office365DSC/DSCResources/MSFT_SPOTheme/ @thorstenloeschmann
 
-/Modules/Office365DSC/Modules/  @NikCharlebois
+
+/Modules/Office365DSC/DSCResources/MSFT_TeamsTeam/ @desmay
+/Modules/Office365DSC/DSCResources/MSFT_TeamsChannel/ @desmay
+/Modules/Office365DSC/DSCResources/MSFT_TeamsUser/ @desmay
+
+/Modules/Office365DSC/Modules/  @nikcharlebois
