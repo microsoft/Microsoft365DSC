@@ -7,6 +7,7 @@
 /Modules/Office365DSC/DSCResources/MSFT_ODSettings @desmay
 
 /Modules/Office365DSC/DSCResources/MSFT_SPOApp/ @nikcharlebois
+/Modules/Office365DSC/DSCResources/MSFT_SPOHubSite/ @ykuijs
 /Modules/Office365DSC/DSCResources/MSFT_SPOSearchManagedProperty/ @nikcharlebois
 /Modules/Office365DSC/DSCResources/MSFT_SPOSearchResultSource/ @nikcharlebois
 /Modules/Office365DSC/DSCResources/MSFT_SPOSite/ @thorstenloeschmann
