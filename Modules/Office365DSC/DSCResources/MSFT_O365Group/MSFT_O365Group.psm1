@@ -52,7 +52,7 @@ function Get-TargetResource
         $ADGroup = Get-AzureADGroup -SearchString $DisplayName -ErrorAction SilentlyContinue
         if ($null -eq $ADGroup)
         {
-            Write-Verbose "Office 365 Group {$($group.DisplayName)} was not found."
+            Write-Verbose "Office 365 Group {$DisplayName} was not found."
             return $nullReturn
         }
     }
@@ -135,9 +135,9 @@ function Set-TargetResource
             }
 
             $groupParams.Owner = $ManagedBy[0]
-            if ("" -ne $Name)
+            if ("" -ne $MailNickName)
             {
-                $groupParams.Add("Name", $Name)
+                $groupParams.Add("Name", $MailNickName)
             }
             Write-Verbose "Initiating Group Creation"
             Write-Verbose "Owner = $($groupParams.Owner)"
@@ -217,7 +217,7 @@ function Set-TargetResource
                 {
                     if ("" -ne $name)
                     {
-                        Remove-UnifiedGroupLinks -Identity $Name -LinkType Members -Links $membersToRemove
+                        Remove-UnifiedGroupLinks -Identity $MailNickName -LinkType Members -Links $membersToRemove
                     }
                     else
                     {

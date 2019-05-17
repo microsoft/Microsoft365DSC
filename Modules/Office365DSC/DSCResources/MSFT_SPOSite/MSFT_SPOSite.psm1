@@ -632,6 +632,7 @@ function Export-TargetResource
     {
         $result.Remove("RestrictedToGeo")
     }
+    $result.Remove("HubUrl")
 
     $content = "        SPOSite " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
