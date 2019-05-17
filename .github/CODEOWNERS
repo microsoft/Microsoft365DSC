@@ -5,6 +5,6 @@
 *       @NikCharlebois
 
 
-Modules/Office365DSC/DSCResources/MSFT_SPOSite/ @thorstenloeschmann
+/Modules/Office365DSC/DSCResources/MSFT_SPOSite/ @thorstenloeschmann
 
-Modules/Office365DSC/Modules/  @NikCharlebois
+/Modules/Office365DSC/Modules/  @NikCharlebois
