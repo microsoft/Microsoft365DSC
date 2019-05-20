@@ -248,7 +248,7 @@ function Get-TargetResource
             Ensure = 'Present'
         }
 
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -inotmatch 'Ensure|MakeDefault' }) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -inotmatch 'Ensure|MakeDefault' }))
         {
             if ($null -ne $HostedContentFilterPolicy.$KeyName)
             {
@@ -524,7 +524,7 @@ function Set-TargetResource
     $HostedContentFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
     $HostedContentFilterPolicyParams.Remove('MakeDefault') | Out-Null
 
-    if ( ('Present' -eq $Ensure ) -and ($null -eq $HostedContentFilterPolicy) )
+    if (('Present' -eq $Ensure ) -and ($null -eq $HostedContentFilterPolicy))
     {
         $HostedContentFilterPolicyParams += @{
             Name = $HostedContentFilterPolicyParams.Identity
@@ -533,7 +533,7 @@ function Set-TargetResource
         Write-Verbose -Message "Creating HostedContentFilterPolicy $($Identity)."
         New-HostedContentFilterPolicy @HostedContentFilterPolicyParams
     }
-    elseif ( ('Present' -eq $Ensure ) -and ($null -ne $HostedContentFilterPolicy) )
+    elseif (('Present' -eq $Ensure ) -and ($null -ne $HostedContentFilterPolicy))
     {
         Write-Verbose -Message "Setting HostedContentFilterPolicy $($Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $HostedContentFilterPolicyParams)."
         if ($PSBoundParameters.MakeDefault)
@@ -545,7 +545,7 @@ function Set-TargetResource
             Set-HostedContentFilterPolicy @HostedContentFilterPolicyParams -Confirm:$false
         }
     }
-    elseif ( ('Absent' -eq $Ensure ) -and ($null -ne $HostedContentFilterPolicy) )
+    elseif (('Absent' -eq $Ensure ) -and ($null -ne $HostedContentFilterPolicy))
     {
         Write-Verbose -Message "Removing HostedContentFilterPolicy $($Identity) "
         Remove-HostedContentFilterPolicy -Identity $Identity -Confirm:$false

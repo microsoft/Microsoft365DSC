@@ -74,7 +74,7 @@ function Get-TargetResource
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
     $AntiPhishRule = $AntiPhishRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    if (-not $AntiPhishRule)
+    if ($null -eq $AntiPhishRule)
     {
         Write-Verbose -Message "AntiPhishRule $($Identity) does not exist."
         $result = $PSBoundParameters
@@ -86,7 +86,7 @@ function Get-TargetResource
         $result = @{
             Ensure = 'Present'
         }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
         {
             if ($null -ne $AntiPhishRule.$KeyName)
             {
@@ -184,14 +184,14 @@ function Set-TargetResource
 
     $AntiPhishRule = $AntiPhishRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
-    if ( ('Present' -eq $Ensure ) -and (-not $AntiPhishRule) )
+    if (('Present' -eq $Ensure ) -and (-not $AntiPhishRule))
     {
         New-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
     }
 
-    if ( ('Present' -eq $Ensure ) -and ($AntiPhishRule) )
+    if (('Present' -eq $Ensure ) -and ($AntiPhishRule))
     {
-        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $AntiPhishRule.State) )
+        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $AntiPhishRule.State))
         {
             # New-AntiPhishRule has the Enabled parameter, Set-AntiPhishRule does not.
             # There doesn't appear to be any way to change the Enabled state of a rule once created.
@@ -205,7 +205,7 @@ function Set-TargetResource
         }
     }
 
-    if ( ('Absent' -eq $Ensure ) -and ($AntiPhishRule) )
+    if (('Absent' -eq $Ensure ) -and ($AntiPhishRule))
     {
         Write-Verbose -Message "Removing AntiPhishRule $($Identity) "
         Remove-AntiPhishRule -Identity $Identity -Confirm:$false

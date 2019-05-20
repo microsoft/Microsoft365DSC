@@ -184,7 +184,7 @@ function Set-TargetResource
         {
             $difference = Compare-Object -ReferenceObject $curMembers -DifferenceObject $CurrentParameters.Members
 
-            if ($difference.InputObject)
+            if ($null -ne $difference.InputObject)
             {
                 Write-Verbose -Message "Detected a difference in the current list of members and the desired one"
                 $membersToRemove = @()

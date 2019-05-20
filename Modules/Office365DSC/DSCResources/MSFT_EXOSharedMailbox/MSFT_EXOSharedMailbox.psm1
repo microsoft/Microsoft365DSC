@@ -52,7 +52,7 @@ function Get-TargetResource
     #region Email Aliases
     $CurrentAliases = @()
 
-    foreach($email in $mailbox.EmailAddresses)
+    foreach ($email in $mailbox.EmailAddresses)
     {
         $emailValue = $email.Split(":")[1]
         if ($emailValue -and $emailValue -ne $mailbox.PrimarySMTPAddress)
@@ -123,7 +123,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Shared Mailbox '$($DisplayName)' does not exist but it should. Creating it."
         $emails = ""
-        foreach($alias in $Aliases)
+        foreach ($alias in $Aliases)
         {
             $emails += $alias + ","
         }
@@ -151,7 +151,7 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Updating the list of Aliases for the Shared Mailbox '$($DisplayName)'"
             $emails = ""
-            foreach($alias in $Aliases)
+            foreach ($alias in $Aliases)
             {
                 $emails += $alias + ","
             }

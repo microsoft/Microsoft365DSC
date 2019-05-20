@@ -124,7 +124,7 @@ function Get-TargetResource
     $AntiPhishPolicies = Get-AntiPhishPolicy
 
     $AntiPhishPolicy = $AntiPhishPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    if (-not $AntiPhishPolicy)
+    if ($null -eq $AntiPhishPolicy)
     {
         Write-Verbose -Message "AntiPhishPolicy $($Identity) does not exist."
         $result = $PSBoundParameters
@@ -137,7 +137,7 @@ function Get-TargetResource
             Ensure = 'Present'
         }
 
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
         {
             if ($null -ne $AntiPhishPolicy.$KeyName)
             {
@@ -285,19 +285,19 @@ function Set-TargetResource
 
     $AntiPhishPolicy = $AntiPhishPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
-    if ( ('Present' -eq $Ensure ) -and (-not $AntiPhishPolicy) )
+    if (('Present' -eq $Ensure ) -and (-not $AntiPhishPolicy))
     {
         New-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
         Start-Sleep -Seconds 1
         Set-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
     }
 
-    if ( ('Present' -eq $Ensure ) -and ($AntiPhishPolicy) )
+    if (('Present' -eq $Ensure ) -and ($AntiPhishPolicy))
     {
         Set-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
     }
 
-    if ( ('Absent' -eq $Ensure ) -and ($AntiPhishPolicy) )
+    if (('Absent' -eq $Ensure ) -and ($AntiPhishPolicy))
     {
         Write-Verbose -Message "Removing AntiPhishPolicy $($Identity)"
         Remove-AntiPhishPolicy -Identity $Identity -Confirm:$false -Force

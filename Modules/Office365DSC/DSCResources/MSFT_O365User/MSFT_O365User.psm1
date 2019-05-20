@@ -130,7 +130,7 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found User $($UserPrincipalName)"
         $currentLicenseAssignment = @()
-        foreach($license in $user.Licenses)
+        foreach ($license in $user.Licenses)
         {
             $currentLicenseAssignment += $license.AccountSkuID.ToString()
         }
@@ -140,6 +140,7 @@ function Get-TargetResource
         {
             $passwordNeverExpires = $true
         }
+
         $results = @{
             UserPrincipalName = $user.UserPrincipalName
             DisplayName = $user.DisplayName
@@ -295,19 +296,19 @@ function Set-TargetResource
         Write-Verbose -Message "Comparing License Assignment for user $UserPrincipalName"
         $diff = Compare-Object -ReferenceObject $user.LicenseAssignment -DifferenceObject $newLicenseAssignment
         $CurrentParameters.Remove("LicenseAssignment")
-        if($Password)
+        if ($Password)
         {
             $CurrentParameters.Remove("Password")
         }
-        $CurrentParameters.Remove("LicenseAssignment")
-        if ($diff.InputObject)
+
+        if ($null -ne $diff)
         {
             Write-Verbose -Message "Detected a change in license assignment for user $UserPrincipalName"
             Write-Verbose -Message "Current License Assignment is $($user.LicenseAssignment)"
             Write-Verbose -Message "New License Assignment is $($newLicenseAssignment)"
             $licensesToRemove = @()
             $licensesToAdd = @()
-            foreach($difference in $diff)
+            foreach ($difference in $diff)
             {
                 if ($difference.SideIndicator -eq "<=")
                 {

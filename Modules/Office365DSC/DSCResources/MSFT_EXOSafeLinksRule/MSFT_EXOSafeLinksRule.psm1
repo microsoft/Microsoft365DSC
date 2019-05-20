@@ -77,7 +77,7 @@ function Get-TargetResource
         $result = @{
             Ensure = 'Present'
         }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
         {
             if ($null -ne $SafeLinksRule.$KeyName)
             {
@@ -176,14 +176,14 @@ function Set-TargetResource
 
     $SafeLinksRule = $SafeLinksRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
-    if ( ('Present' -eq $Ensure ) -and (-not $SafeLinksRule) )
+    if (('Present' -eq $Ensure ) -and (-not $SafeLinksRule))
     {
         New-EXOSafeLinksRule -SafeLinksRuleParams $PSBoundParameters
     }
 
-    if ( ('Present' -eq $Ensure ) -and ($SafeLinksRule) )
+    if (('Present' -eq $Ensure ) -and ($SafeLinksRule))
     {
-        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $SafeLinksRule.State) )
+        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $SafeLinksRule.State))
         {
             # New-SafeLinksRule has the Enabled parameter, Set-SafeLinksRule does not.
             # There doesn't appear to be any way to change the Enabled state of a rule once created.
@@ -197,7 +197,7 @@ function Set-TargetResource
         }
     }
 
-    if ( ('Absent' -eq $Ensure ) -and ($SafeLinksRule) )
+    if (('Absent' -eq $Ensure ) -and ($SafeLinksRule))
     {
         Write-Verbose -Message "Removing SafeLinksRule $($Identity)"
         Remove-SafeLinksRule -Identity $Identity -Confirm:$false

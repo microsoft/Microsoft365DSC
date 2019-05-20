@@ -77,7 +77,7 @@ function Get-TargetResource
             Ensure = 'Present'
         }
 
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -inotmatch 'Ensure' }) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -inotmatch 'Ensure' }))
         {
             if ($null -ne $SafeLinksPolicy.$KeyName)
             {
@@ -157,7 +157,7 @@ function Set-TargetResource
     $SafeLinksPolicyParams.Remove('Ensure') | Out-Null
     $SafeLinksPolicyParams.Remove('GlobalAdminAccount') | Out-Null
 
-    if ( ('Present' -eq $Ensure ) -and ($null -eq $SafeLinksPolicy) )
+    if (('Present' -eq $Ensure ) -and ($null -eq $SafeLinksPolicy))
     {
         $SafeLinksPolicyParams += @{
             Name = $SafeLinksPolicyParams.Identity
@@ -166,12 +166,12 @@ function Set-TargetResource
         Write-Verbose -Message "Creating SafeLinksPolicy $($Identity)"
         New-SafeLinksPolicy @SafeLinksPolicyParams
     }
-    elseif ( ('Present' -eq $Ensure ) -and ($null -ne $SafeLinksPolicy) )
+    elseif (('Present' -eq $Ensure ) -and ($null -ne $SafeLinksPolicy))
     {
         Write-Verbose -Message "Setting SafeLinksPolicy $($Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $SafeLinksPolicyParams)"
         Set-SafeLinksPolicy @SafeLinksPolicyParams -Confirm:$false
     }
-    elseif ( ('Absent' -eq $Ensure ) -and ($null -ne $SafeLinksPolicy) )
+    elseif (('Absent' -eq $Ensure ) -and ($null -ne $SafeLinksPolicy))
     {
         Write-Verbose -Message "Removing SafeLinksPolicy $($Identity) "
         Remove-SafeLinksPolicy -Identity $Identity -Confirm:$false

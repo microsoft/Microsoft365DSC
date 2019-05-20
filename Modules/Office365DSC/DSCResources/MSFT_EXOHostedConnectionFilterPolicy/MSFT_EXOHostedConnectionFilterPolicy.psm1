@@ -69,7 +69,7 @@ function Get-TargetResource
             Ensure = 'Present'
         }
 
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -inotmatch 'Ensure|MakeDefault' }) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -inotmatch 'Ensure|MakeDefault' }))
         {
             if ($null -ne $HostedConnectionFilterPolicy.$KeyName)
             {
@@ -165,7 +165,7 @@ function Set-TargetResource
         $HostedConnectionFilterPolicyParams.Remove('RuleScope') | Out-Null
     }
 
-    if ( ('Present' -eq $Ensure ) -and ($null -eq $HostedConnectionFilterPolicy) )
+    if (('Present' -eq $Ensure ) -and ($null -eq $HostedConnectionFilterPolicy))
     {
         $HostedConnectionFilterPolicyParams += @{
             Name = $HostedConnectionFilterPolicyParams.Identity
@@ -180,7 +180,7 @@ function Set-TargetResource
             New-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams
         }
     }
-    elseif ( ('Present' -eq $Ensure ) -and ($HostedConnectionFilterPolicy) )
+    elseif (('Present' -eq $Ensure ) -and ($HostedConnectionFilterPolicy))
     {
         if ($PSBoundParameters.MakeDefault)
         {
@@ -191,7 +191,7 @@ function Set-TargetResource
             Set-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -Confirm:$false
         }
     }
-    elseif ( ('Absent' -eq $Ensure ) -and ($HostedConnectionFilterPolicy) )
+    elseif (('Absent' -eq $Ensure ) -and ($HostedConnectionFilterPolicy))
     {
         Write-Verbose -Message "Removing HostedConnectionFilterPolicy $($Identity) "
         Remove-HostedConnectionFilterPolicy -Identity $Identity -Confirm:$false

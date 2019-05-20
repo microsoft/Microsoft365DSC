@@ -87,7 +87,7 @@ function Get-TargetResource
         $result = @{
             Ensure = 'Present'
         }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
         {
             if ($null -ne $HostedContentFilterRule.$KeyName)
             {
@@ -188,14 +188,14 @@ function Set-TargetResource
     $HostedContentFilterRules = Get-HostedContentFilterRule
     $HostedContentFilterRule = $HostedContentFilterRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
-    if ( ('Present' -eq $Ensure ) -and (-not $HostedContentFilterRule) )
+    if (('Present' -eq $Ensure ) -and (-not $HostedContentFilterRule))
     {
         New-EXOHostedContentFilterRule -HostedContentFilterRuleParams $PSBoundParameters
     }
 
-    if ( ('Present' -eq $Ensure ) -and ($HostedContentFilterRule) )
+    if (('Present' -eq $Ensure ) -and ($HostedContentFilterRule))
     {
-        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $HostedContentFilterRule.State) )
+        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $HostedContentFilterRule.State))
         {
              # New-HostedContentFilterRule has the Enabled parameter, Set-HostedContentFilterRule does not.
             # There doesn't appear to be any way to change the Enabled state of a rule once created.
@@ -209,7 +209,7 @@ function Set-TargetResource
         }
     }
 
-    if ( ('Absent' -eq $Ensure ) -and ($HostedContentFilterRule) )
+    if (('Absent' -eq $Ensure ) -and ($HostedContentFilterRule))
     {
         Write-Verbose -Message "Removing HostedContentFilterRule $($Identity) "
         Remove-HostedContentFilterRule -Identity $Identity -Confirm:$false

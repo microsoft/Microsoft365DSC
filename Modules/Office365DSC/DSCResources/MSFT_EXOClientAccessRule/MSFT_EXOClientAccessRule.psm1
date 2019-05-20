@@ -100,7 +100,7 @@ function Get-TargetResource
             Scope = $RuleScope
         }
 
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
         {
             if ($null -ne $ClientAccessRule.$KeyName)
             {
@@ -219,19 +219,19 @@ function Set-TargetResource
         $ClientAccessRuleParams.Remove('RuleScope') | Out-Null
     }
 
-    if ( ('Present' -eq $Ensure ) -and ($null -eq $ClientAccessRule) )
+    if (('Present' -eq $Ensure ) -and ($null -eq $ClientAccessRule))
     {
         Write-Verbose -Message "Creating ClientAccessRule $($Identity)."
         $ClientAccessRuleParams.Add("Name", $Identity)
         $ClientAccessRuleParams.Remove('Identity') | Out-Null
         New-ClientAccessRule @ClientAccessRuleParams
     }
-    elseif ( ('Present' -eq $Ensure ) -and ($Null -ne $ClientAccessRule) )
+    elseif (('Present' -eq $Ensure ) -and ($Null -ne $ClientAccessRule))
     {
         Write-Verbose -Message "Setting ClientAccessRule $($Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $ClientAccessRuleParams)"
         Set-ClientAccessRule @ClientAccessRuleParams -Confirm:$false
     }
-    elseif ( ('Absent' -eq $Ensure ) -and ($null -ne $ClientAccessRule) )
+    elseif (('Absent' -eq $Ensure ) -and ($null -ne $ClientAccessRule))
     {
         Write-Verbose -Message "Removing ClientAccessRule $($Identity)"
         Remove-ClientAccessRule -Identity $Identity -Confirm:$false

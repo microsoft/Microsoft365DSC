@@ -87,7 +87,7 @@ function Get-TargetResource
         $result = @{
             Ensure = 'Present'
         }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript {$_ -ne 'Ensure'}) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript {$_ -ne 'Ensure'}))
         {
             if ($null -ne $SafeAttachmentRule.$KeyName)
             {
@@ -186,14 +186,14 @@ function Set-TargetResource
 
     $SafeAttachmentRule = $SafeAttachmentRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
-    if ( ('Present' -eq $Ensure ) -and (-not $SafeAttachmentRule) )
+    if (('Present' -eq $Ensure ) -and (-not $SafeAttachmentRule))
     {
         New-EXOSafeAttachmentRule -SafeAttachmentRuleParams $PSBoundParameters
     }
 
-    if ( ('Present' -eq $Ensure ) -and ($SafeAttachmentRule) )
+    if (('Present' -eq $Ensure ) -and ($SafeAttachmentRule))
     {
-        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $SafeAttachmentRule.State) )
+        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $SafeAttachmentRule.State))
         {
             # New-SafeAttachmentRule has the Enabled parameter, Set-SafeAttachmentRule does not.
             # There doesn't appear to be any way to change the Enabled state of a rule once created.
@@ -207,7 +207,7 @@ function Set-TargetResource
         }
     }
 
-    if ( ('Absent' -eq $Ensure ) -and ($SafeAttachmentRule) )
+    if (('Absent' -eq $Ensure ) -and ($SafeAttachmentRule))
     {
         Write-Verbose -Message "Removing SafeAttachmentRule $($Identity) "
         Remove-SafeAttachmentRule -Identity $Identity -Confirm:$false

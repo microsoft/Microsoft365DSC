@@ -70,7 +70,7 @@ function Get-TargetResource
         $result = @{
             Ensure = 'Present'
         }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
         {
             if ($null -ne $DkimSigningConfig.$KeyName)
             {
@@ -142,7 +142,7 @@ function Set-TargetResource
 
     $DkimSigningConfig = $DkimSigningConfigs | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
-    if ( ('Present' -eq $Ensure ) -and ($null -eq $DkimSigningConfig) )
+    if (('Present' -eq $Ensure ) -and ($null -eq $DkimSigningConfig))
     {
         $DkimSigningConfigParams = $PSBoundParameters
         $DkimSigningConfigParams.Remove('Ensure') | Out-Null
@@ -154,7 +154,7 @@ function Set-TargetResource
         Write-Verbose -Message "Creating DkimSigningConfig $($Identity)."
         New-DkimSigningConfig @DkimSigningConfigParams
     }
-    elseif ( ('Present' -eq $Ensure ) -and ($null -ne $DkimSigningConfig) )
+    elseif (('Present' -eq $Ensure ) -and ($null -ne $DkimSigningConfig))
     {
         $DkimSigningConfigParams = $PSBoundParameters
         $DkimSigningConfigParams.Remove('Ensure') | Out-Null
@@ -164,7 +164,7 @@ function Set-TargetResource
         Set-DkimSigningConfig @DkimSigningConfigParams -Confirm:$false
     }
 
-    if ( ('Absent' -eq $Ensure ) -and ($DkimSigningConfig) )
+    if (('Absent' -eq $Ensure ) -and ($DkimSigningConfig))
     {
         Write-Verbose -Message "Removing DkimSigningConfig $($Identity) "
     Remove-DkimSigningConfig -Identity $Identity -Confirm:$false
