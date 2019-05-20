@@ -57,11 +57,14 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose "Get-TargetResource will attempt to retrieve AntiPhishRule $($Identity)"
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
+
+    Write-Verbose -Message "Getting configuration of AntiPhishRule for $Identity"
+
+    Write-Verbose -Message "Calling Connect-ExchangeOnline function:"
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
+    Write-Verbose -Message "Global ExchangeOnlineSession status:"
+    Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
+
     try
     {
         $AntiPhishRules = Get-AntiPhishRule
@@ -70,10 +73,10 @@ function Get-TargetResource
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
-    $AntiPhishRule = $AntiPhishRules | Where-Object Identity -eq $Identity
-    if (-NOT $AntiPhishRule)
+    $AntiPhishRule = $AntiPhishRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    if ($null -eq $AntiPhishRule)
     {
-        Write-Verbose "AntiPhishRule $($Identity) does not exist."
+        Write-Verbose -Message "AntiPhishRule $($Identity) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -83,7 +86,7 @@ function Get-TargetResource
         $result = @{
             Ensure = 'Present'
         }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -ne 'Ensure'}) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
         {
             if ($null -ne $AntiPhishRule.$KeyName)
             {
@@ -109,8 +112,8 @@ function Get-TargetResource
             $result.Enabled = $false
         }
 
-        Write-Verbose "Found AntiPhishRule $($Identity)"
-        Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
+        Write-Verbose -Message "Found AntiPhishRule $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
 }
@@ -173,24 +176,26 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose 'Entering Set-TargetResource'
+
+    Write-Verbose -Message "Setting configuration of AntiPhishRule for $Identity"
+
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     $AntiPhishRules = Get-AntiPhishRule
 
-    $AntiPhishRule = $AntiPhishRules | Where-Object Identity -eq $Identity
+    $AntiPhishRule = $AntiPhishRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
-    if ( ('Present' -eq $Ensure ) -and (-NOT $AntiPhishRule) )
+    if (('Present' -eq $Ensure) -and (-not $AntiPhishRule))
     {
         New-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
     }
 
-    if ( ('Present' -eq $Ensure ) -and ($AntiPhishRule) )
+    if (('Present' -eq $Ensure) -and ($AntiPhishRule))
     {
-        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $AntiPhishRule.State) )
+        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $AntiPhishRule.State))
         {
             # New-AntiPhishRule has the Enabled parameter, Set-AntiPhishRule does not.
             # There doesn't appear to be any way to change the Enabled state of a rule once created.
-            Write-Verbose "Removing AntiPhishRule $($Identity) in order to change Enabled state."
+            Write-Verbose -Message "Removing AntiPhishRule $($Identity) in order to change Enabled state."
             Remove-AntiPhishRule -Identity $Identity -Confirm:$false
             New-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
         }
@@ -200,9 +205,9 @@ function Set-TargetResource
         }
     }
 
-    if ( ('Absent' -eq $Ensure ) -and ($AntiPhishRule) )
+    if (('Absent' -eq $Ensure) -and ($AntiPhishRule))
     {
-        Write-Verbose "Removing AntiPhishRule $($Identity) "
+        Write-Verbose -Message "Removing AntiPhishRule $($Identity) "
         Remove-AntiPhishRule -Identity $Identity -Confirm:$false
     }
 }
@@ -266,21 +271,22 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message "Testing AntiPhishRule for $($Identity)"
+
+    Write-Verbose -Message "Testing configuration of AntiPhishRule for $Identity"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-    if ($TestResult)
-    {
-        Write-Verbose 'Test-TargetResource returned True'
-    }
-    else
-    {
-        Write-Verbose 'Test-TargetResource returned False'
-    }
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck $ValuesToCheck.Keys
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

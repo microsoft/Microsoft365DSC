@@ -22,6 +22,9 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    Write-Verbose -Message "Getting configuration for Office 365 Audit Log"
+
     if ('Absent' -eq $Ensure)
     {
         throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
@@ -34,13 +37,13 @@ function Get-TargetResource
         UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabled
     }
 
-    Write-Verbose -Message 'Getting O365AdminAuditLogConfig'
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
     $GetResults = Get-AdminAuditLogConfig
-    if (-NOT $GetResults)
+    if (-not $GetResults)
     {
         Write-Warning 'Unable to determine Unified Audit Log Ingestion State.'
-        Write-Verbose "Returning Get-TargetResource NULL Result"
+        Write-Verbose -Message "Returning Get-TargetResource NULL Result"
         return $nullReturn
     }
     else
@@ -87,13 +90,16 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message 'Setting O365AdminAuditLogConfig'
+
+    Write-Verbose -Message "Setting configuration for Office 365 Audit Log"
+
     if ('Absent' -eq $Ensure)
     {
         throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
     }
 
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
     {
         try
@@ -142,15 +148,21 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    Write-Verbose -Message "Testing configuration for Office 365 Audit Log"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    Write-Verbose "Test-TargetResource CurrentValues: "
-    Write-Verbose "$($CurrentValues | Out-String)"
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @('UnifiedAuditLogIngestionEnabled')
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @('UnifiedAuditLogIngestionEnabled')
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
-
 }
 
 function Export-TargetResource

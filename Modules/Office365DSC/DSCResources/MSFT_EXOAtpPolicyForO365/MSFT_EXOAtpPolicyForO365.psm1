@@ -42,6 +42,9 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    Write-Verbose -Message "Getting configuration of AtpPolicyForO365 for $Identity"
+
     if ('Absent' -eq $Ensure)
     {
         throw "EXOAtpPolicyForO365 configurations MUST specify Ensure value of 'Present'"
@@ -52,14 +55,13 @@ function Get-TargetResource
         throw "EXOAtpPolicyForO365 configurations MUST specify Identity value of 'Default'"
     }
 
-    Write-Verbose "Get-TargetResource will attempt to retrieve AtpPolicyForO365 $($Identity)"
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     $AtpPolicies = Get-AtpPolicyForO365
 
-    $AtpPolicyForO365 = $AtpPolicies | Where-Object { $_.Identity -eq $Identity }
-    if (-NOT $AtpPolicyForO365)
+    $AtpPolicyForO365 = $AtpPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    if (-not $AtpPolicyForO365)
     {
-        Write-Verbose "AtpPolicyForO365 $($Identity) does not exist."
+        Write-Verbose -Message "AtpPolicyForO365 $($Identity) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -70,7 +72,7 @@ function Get-TargetResource
             Ensure = 'Present'
         }
 
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -ne 'Ensure'}) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
         {
             if ($null -ne $AtpPolicyForO365.$KeyName)
             {
@@ -86,8 +88,8 @@ function Get-TargetResource
             }
         }
 
-        Write-Verbose "Found AtpPolicyForO365 $($Identity)"
-        Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
+        Write-Verbose -Message "Found AtpPolicyForO365 $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
 }
@@ -135,6 +137,9 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    Write-Verbose -Message "Setting configuration of AtpPolicyForO365 for $Identity"
+
     if ('Absent' -eq $Ensure)
     {
         throw "EXOAtpPolicyForO365 configurations MUST specify Ensure value of 'Present'"
@@ -145,13 +150,12 @@ function Set-TargetResource
         throw "EXOAtpPolicyForO365 configurations MUST specify Identity value of 'Default'"
     }
 
-    Write-Verbose 'Entering Set-TargetResource'
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     $AtpPolicyParams = $PSBoundParameters
-    $AtpPolicyParams.Remove('Ensure') | out-null
-    $AtpPolicyParams.Remove('GlobalAdminAccount') | out-null
-    $AtpPolicyParams.Remove('IsSingleInstance') | out-null
-    Write-Verbose "Setting AtpPolicyForO365 $Identity with values: $($AtpPolicyParams | Out-String)"
+    $AtpPolicyParams.Remove('Ensure') | Out-Null
+    $AtpPolicyParams.Remove('GlobalAdminAccount') | Out-Null
+    $AtpPolicyParams.Remove('IsSingleInstance') | Out-Null
+    Write-Verbose -Message "Setting AtpPolicyForO365 $Identity with values: $(Convert-O365DscHashtableToString -Hashtable $AtpPolicyParams)"
     Set-AtpPolicyForO365 @AtpPolicyParams
 }
 
@@ -199,23 +203,24 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message "Testing AtpPolicyForO365 for $($Identity)"
+
+    Write-Verbose -Message "Testing configuration of AtpPolicyForO365 for $Identity"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
-    $ValuesToCheck.Remove('IsSingleInstance') | out-null
-    $ValuesToCheck.Remove('Verbose') | out-null
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
+    $ValuesToCheck.Remove('Verbose') | Out-Null
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-    if ($TestResult)
-    {
-        Write-Verbose 'Test-TargetResource returned True'
-    }
-    else
-    {
-        Write-Verbose 'Test-TargetResource returned False'
-    }
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck $ValuesToCheck.Keys
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

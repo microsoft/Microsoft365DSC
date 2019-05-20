@@ -37,11 +37,15 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose "Get-TargetResource will attempt to retrieve HostedConnectionFilterPolicy $($Identity)"
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
+
+    Write-Verbose -Message "Setting configuration of HostedConnectionFilterPolicy for $Identity"
+
+    Write-Verbose -Message "Calling Connect-ExchangeOnline function:"
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
+
+    Write-Verbose -Message "Global ExchangeOnlineSession status:"
+    Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
+
     try
     {
         $HostedConnectionFilterPolicys = Get-HostedConnectionFilterPolicy
@@ -51,10 +55,10 @@ function Get-TargetResource
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
 
-    $HostedConnectionFilterPolicy = $HostedConnectionFilterPolicys | Where-Object Identity -eq $Identity
-    if (-NOT $HostedConnectionFilterPolicy)
+    $HostedConnectionFilterPolicy = $HostedConnectionFilterPolicys | Where-Object -FilterScript { $_. Identity -eq $Identity }
+    if (-not $HostedConnectionFilterPolicy)
     {
-        Write-Verbose "HostedConnectionFilterPolicy $($Identity) does not exist."
+        Write-Verbose -Message "HostedConnectionFilterPolicy $($Identity) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -65,7 +69,7 @@ function Get-TargetResource
             Ensure = 'Present'
         }
 
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -inotmatch 'Ensure|MakeDefault'}) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -inotmatch 'Ensure|MakeDefault' }))
         {
             if ($null -ne $HostedConnectionFilterPolicy.$KeyName)
             {
@@ -95,8 +99,8 @@ function Get-TargetResource
             }
         }
 
-        Write-Verbose "Found HostedConnectionFilterPolicy $($Identity)"
-        Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
+        Write-Verbose -Message "Found HostedConnectionFilterPolicy $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
 }
@@ -139,15 +143,20 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose 'Entering Set-TargetResource'
+
+    Write-Verbose -Message "Setting configuration of HostedConnectionFilterPolicy for $Identity"
+
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
     $HostedConnectionFilterPolicys = Get-HostedConnectionFilterPolicy
 
-    $HostedConnectionFilterPolicy = $HostedConnectionFilterPolicys | Where-Object {$_.Identity -eq $Identity}
+    $HostedConnectionFilterPolicy = $HostedConnectionFilterPolicys | Where-Object -FilterScript { $_.Identity -eq $Identity }
+
     $HostedConnectionFilterPolicyParams = $PSBoundParameters
     $HostedConnectionFilterPolicyParams.Remove('Ensure') | Out-Null
     $HostedConnectionFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
     $HostedConnectionFilterPolicyParams.Remove('MakeDefault') | Out-Null
+
     if ($HostedConnectionFilterPolicyParams.RuleScope)
     {
         $HostedConnectionFilterPolicyParams += @{
@@ -156,7 +165,7 @@ function Set-TargetResource
         $HostedConnectionFilterPolicyParams.Remove('RuleScope') | Out-Null
     }
 
-    if ( ('Present' -eq $Ensure ) -and ($null -eq $HostedConnectionFilterPolicy) )
+    if (('Present' -eq $Ensure ) -and ($null -eq $HostedConnectionFilterPolicy))
     {
         $HostedConnectionFilterPolicyParams += @{
             Name = $HostedConnectionFilterPolicyParams.Identity
@@ -171,7 +180,7 @@ function Set-TargetResource
             New-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams
         }
     }
-    elseif ( ('Present' -eq $Ensure ) -and ($HostedConnectionFilterPolicy) )
+    elseif (('Present' -eq $Ensure ) -and ($HostedConnectionFilterPolicy))
     {
         if ($PSBoundParameters.MakeDefault)
         {
@@ -182,9 +191,9 @@ function Set-TargetResource
             Set-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -Confirm:$false
         }
     }
-    elseif ( ('Absent' -eq $Ensure ) -and ($HostedConnectionFilterPolicy) )
+    elseif (('Absent' -eq $Ensure ) -and ($HostedConnectionFilterPolicy))
     {
-        Write-Verbose "Removing HostedConnectionFilterPolicy $($Identity) "
+        Write-Verbose -Message "Removing HostedConnectionFilterPolicy $($Identity) "
         Remove-HostedConnectionFilterPolicy -Identity $Identity -Confirm:$false
     }
 }
@@ -228,23 +237,24 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message "Testing HostedConnectionFilterPolicy for $($Identity)"
+
+    Write-Verbose -Message "Testing configuration of HostedConnectionFilterPolicy for $Identity"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
-    $ValuesToCheck.Remove('IsSingleInstance') | out-null
-    $ValuesToCheck.Remove('Verbose') | out-null
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
+    $ValuesToCheck.Remove('Verbose') | Out-Null
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-    if ($TestResult)
-    {
-        Write-Verbose 'Test-TargetResource returned True'
-    }
-    else
-    {
-        Write-Verbose 'Test-TargetResource returned False'
-    }
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck $ValuesToCheck.Keys
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

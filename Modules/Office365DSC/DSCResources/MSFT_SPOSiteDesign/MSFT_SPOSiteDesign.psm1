@@ -51,6 +51,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Getting configuration for SPO SiteDesign for $Title"
+
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -161,6 +163,8 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration for SPO SiteDesign for $Title"
+
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $curSiteDesign = Get-TargetResource @PSBoundParameters
@@ -169,7 +173,7 @@ function Set-TargetResource
     $scriptIds = @()
     foreach ($siteScriptName in $SiteScriptNames)
     {
-        $siteScript = Get-PnPSiteScript | Where-Object {$_.Title -eq $siteScriptName}
+        $siteScript = Get-PnPSiteScript | Where-Object -FilterScript { $_.Title -eq $siteScriptName }
         $scriptIds += $siteScript.Id
     }
 
@@ -259,15 +263,24 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing SPOSiteDesign for $SiteDesignTitle"
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('CentralAdminUrl') | out-null
-    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
+    Write-Verbose -Message "Testing configuration for SPO SiteDesign for $Title"
 
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck  $ValuesToCheck.Keys
+    $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('CentralAdminUrl') | Out-Null
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck $ValuesToCheck.Keys
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource

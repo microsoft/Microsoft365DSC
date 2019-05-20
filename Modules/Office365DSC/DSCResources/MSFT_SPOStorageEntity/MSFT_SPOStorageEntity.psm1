@@ -39,6 +39,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Getting configuration for SPO Storage Entity for $Key"
+
     Test-PnPOnlineConnection -SiteUrl $SiteUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -121,7 +123,10 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration for SPO Storage Entity for $Key"
+
     Test-PnPOnlineConnection -SiteUrl $SiteUrl -GlobalAdminAccount $GlobalAdminAccount
+
     $curStorageEntry = Get-TargetResource @PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
@@ -184,19 +189,26 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing SPOStorageEntity for $Key"
+    Write-Verbose -Message "Testing configuration for SPO Storage Entity for $Key"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Key", `
-            "Value", `
-            "Key", `
-            "Comment", `
-            "Description", `
-            "EntityScope", `
-            "Ensure"
-    )
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @("Key", `
+                                                                   "Value", `
+                                                                   "Key", `
+                                                                   "Comment", `
+                                                                   "Description", `
+                                                                   "EntityScope", `
+                                                                   "Ensure")
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource

@@ -25,7 +25,9 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose "Get-TargetResource will attempt to retrieve information for Mailbox $($DisplayName)"
+
+    Write-Verbose -Message "Getting configuration of Office 365 Mailbox Settings for $DisplayName"
+
     $nullReturn = @{
         DisplayName = $DisplayName
         TimeZone = $null
@@ -34,11 +36,12 @@ function Get-TargetResource
     }
 
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
     $mailboxSettings = Get-MailboxRegionalConfiguration -Identity $DisplayName
 
     if ($null -eq $mailboxSettings)
     {
-        Write-Verbose "The specified Mailbox doesn't already exist."
+        Write-Verbose -Message "The specified Mailbox doesn't already exist."
         return $nullReturn
     }
 
@@ -49,7 +52,7 @@ function Get-TargetResource
         Ensure = "Present"
         GlobalAdminAccount = $GlobalAdminAccount
     }
-    Write-Verbose "Found an existing instance of Mailbox '$($DisplayName)'"
+    Write-Verbose -Message "Found an existing instance of Mailbox '$($DisplayName)'"
     return $result
 }
 
@@ -79,8 +82,9 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose "Entering Set-TargetResource"
-    Write-Verbose "Retrieving information about Mailbox '$($DisplayName)' to see if it exists"
+
+    Write-Verbose -Message "Setting configuration of Office 365 Mailbox Settings for $DisplayName"
+
     $currentMailbox = Get-TargetResource @PSBoundParameters
 
     # CASE: Mailbox doesn't exist but should;
@@ -131,14 +135,23 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing Office 365 Mailbox Settings for $DisplayName"
+    Write-Verbose -Message "Testing configuration of Office 365 Mailbox Settings for $DisplayName"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                           -DesiredValues $PSBoundParameters `
-                                           -ValuesToCheck @("Ensure", `
-                                                            "DisplayName", `
-                                                            "TimeZone",
-                                                            "Locale")
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @("Ensure", `
+                                                                   "DisplayName", `
+                                                                   "TimeZone", `
+                                                                   "Locale")
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource

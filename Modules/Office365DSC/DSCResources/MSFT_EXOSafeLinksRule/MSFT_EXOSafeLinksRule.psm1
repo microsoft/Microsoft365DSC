@@ -57,13 +57,17 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose "Get-TargetResource will attempt to retrieve SafeLinksRule $($Identity)"
+
+    Write-Verbose -Message "Setting configuration of SafeLinksRule for $Identity"
+
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
     $SafeLinksRules = Get-SafeLinksRule
-    $SafeLinksRule = $SafeLinksRules | Where-Object {$_.Identity -eq $Identity}
-    if (-NOT $SafeLinksRule)
+    $SafeLinksRule = $SafeLinksRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
+
+    if (-not $SafeLinksRule)
     {
-        Write-Verbose "SafeLinksRule $($Identity) does not exist."
+        Write-Verbose -Message "SafeLinksRule $($Identity) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -73,7 +77,7 @@ function Get-TargetResource
         $result = @{
             Ensure = 'Present'
         }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -ne 'Ensure'}) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
         {
             if ($null -ne $SafeLinksRule.$KeyName)
             {
@@ -99,8 +103,8 @@ function Get-TargetResource
             $result.Enabled = $false
         }
 
-        Write-Verbose "Found SafeLinksRule $($Identity)"
-        Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
+        Write-Verbose -Message "Found SafeLinksRule $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
 }
@@ -163,24 +167,27 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose 'Entering Set-TargetResource'
+
+    Write-Verbose -Message "Setting configuration of SafeLinksRule for $Identity"
+
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
     $SafeLinksRules = Get-SafeLinksRule
 
-    $SafeLinksRule = $SafeLinksRules | Where-Object Identity -eq $Identity
+    $SafeLinksRule = $SafeLinksRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
-    if ( ('Present' -eq $Ensure ) -and (-NOT $SafeLinksRule) )
+    if (('Present' -eq $Ensure ) -and (-not $SafeLinksRule))
     {
         New-EXOSafeLinksRule -SafeLinksRuleParams $PSBoundParameters
     }
 
-    if ( ('Present' -eq $Ensure ) -and ($SafeLinksRule) )
+    if (('Present' -eq $Ensure ) -and ($SafeLinksRule))
     {
-        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $SafeLinksRule.State) )
+        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $SafeLinksRule.State))
         {
             # New-SafeLinksRule has the Enabled parameter, Set-SafeLinksRule does not.
             # There doesn't appear to be any way to change the Enabled state of a rule once created.
-            Write-Verbose "Removing SafeLinksRule $($Identity) in order to change Enabled state."
+            Write-Verbose -Message "Removing SafeLinksRule $($Identity) in order to change Enabled state."
             Remove-SafeLinksRule -Identity $Identity -Confirm:$false
             New-EXOSafeLinksRule -SafeLinksRuleParams $PSBoundParameters
         }
@@ -190,9 +197,9 @@ function Set-TargetResource
         }
     }
 
-    if ( ('Absent' -eq $Ensure ) -and ($SafeLinksRule) )
+    if (('Absent' -eq $Ensure ) -and ($SafeLinksRule))
     {
-        Write-Verbose "Removing SafeLinksRule $($Identity)"
+        Write-Verbose -Message "Removing SafeLinksRule $($Identity)"
         Remove-SafeLinksRule -Identity $Identity -Confirm:$false
     }
 }
@@ -256,21 +263,22 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message "Testing SafeLinksRule for $($Identity)"
+
+    Write-Verbose -Message "Testing configuration of SafeLinksRule for $Identity"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-    if ($TestResult)
-    {
-        Write-Verbose 'Test-TargetResource returned True'
-    }
-    else
-    {
-        Write-Verbose 'Test-TargetResource returned False'
-    }
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck $ValuesToCheck.Keys
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

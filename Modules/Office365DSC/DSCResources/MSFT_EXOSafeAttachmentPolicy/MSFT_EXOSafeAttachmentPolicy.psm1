@@ -42,14 +42,17 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose "Get-TargetResource will attempt to retrieve SafeAttachmentPolicy $($Identity)"
+
+    Write-Verbose -Message "Getting configuration of SafeAttachmentPolicy for $Identity"
+
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
     $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
 
-    $SafeAttachmentPolicy = $SafeAttachmentPolicies | Where-Object Identity -eq $Identity
-    if (-NOT $SafeAttachmentPolicy)
+    $SafeAttachmentPolicy = $SafeAttachmentPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    if (-not $SafeAttachmentPolicy)
     {
-        Write-Verbose "SafeAttachmentPolicy $($Identity) does not exist."
+        Write-Verbose -Message "SafeAttachmentPolicy $($Identity) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -60,7 +63,7 @@ function Get-TargetResource
             Ensure = 'Present'
         }
 
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -ne 'Ensure'}) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
         {
             if ($null -ne $SafeAttachmentPolicy.$KeyName)
             {
@@ -76,8 +79,8 @@ function Get-TargetResource
             }
         }
 
-        Write-Verbose "Found SafeAttachmentPolicy $($Identity)"
-        Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
+        Write-Verbose -Message "Found SafeAttachmentPolicy $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
 }
@@ -125,35 +128,38 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose 'Entering Set-TargetResource'
+
+    Write-Verbose -Message "Setting configuration of SafeAttachmentPolicy for $Identity"
+
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
     $SafeAttachmentPolicyParams = $PSBoundParameters
-    $SafeAttachmentPolicyParams.Remove('Ensure') | out-null
-    $SafeAttachmentPolicyParams.Remove('GlobalAdminAccount') | out-null
+    $SafeAttachmentPolicyParams.Remove('Ensure') | Out-Null
+    $SafeAttachmentPolicyParams.Remove('GlobalAdminAccount') | Out-Null
     $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
 
-    $SafeAttachmentPolicy = $SafeAttachmentPolicies | Where-Object Identity -eq $Identity
+    $SafeAttachmentPolicy = $SafeAttachmentPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
     if ('Present' -eq $Ensure )
     {
-        if (-NOT $SafeAttachmentPolicy)
+        if (-not $SafeAttachmentPolicy)
         {
-            Write-Verbose "Creating SafeAttachmentPolicy $($Identity)."
+            Write-Verbose -Message "Creating SafeAttachmentPolicy $($Identity)."
             $SafeAttachmentPolicyParams += @{
                 Name = $SafeAttachmentPolicyParams.Identity
             }
 
-            $SafeAttachmentPolicyParams.Remove('Identity') | out-null
+            $SafeAttachmentPolicyParams.Remove('Identity') | Out-Null
             New-SafeAttachmentPolicy @SafeAttachmentPolicyParams
         }
         else
         {
-            Write-Verbose "Setting SafeAttachmentPolicy $Identity with values: $($SafeAttachmentPolicyParams | Out-String)"
+            Write-Verbose -Message "Setting SafeAttachmentPolicy $Identity with values: $(Convert-O365DscHashtableToString -Hashtable $SafeAttachmentPolicyParams)"
             Set-SafeAttachmentPolicy @SafeAttachmentPolicyParams
         }
     }
     elseif (('Absent' -eq $Ensure) -and ($SafeAttachmentPolicy))
     {
-        Write-Verbose "Removing SafeAttachmentPolicy $($Identity) "
+        Write-Verbose -Message "Removing SafeAttachmentPolicy $($Identity) "
         Remove-SafeAttachmentPolicy -Identity $Identity -Confirm:$false -Force
     }
 }
@@ -202,21 +208,22 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message "Testing SafeAttachmentPolicy for $($Identity)"
+
+    Write-Verbose -Message "Testing configuration of SafeAttachmentPolicy for $Identity"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-    if ($TestResult)
-    {
-        Write-Verbose 'Test-TargetResource returned True'
-    }
-    else
-    {
-        Write-Verbose 'Test-TargetResource returned False'
-    }
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck $ValuesToCheck.Keys
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }
