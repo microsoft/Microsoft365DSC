@@ -43,7 +43,7 @@ function Get-TargetResource
                                 $_.Identity -eq $DisplayName
                             }
 
-    if ($mailbox -eq $false)
+    if ($null -eq $mailbox)
     {
         Write-Verbose -Message "The specified Shared Mailbox doesn't already exist."
         return $nullReturn
