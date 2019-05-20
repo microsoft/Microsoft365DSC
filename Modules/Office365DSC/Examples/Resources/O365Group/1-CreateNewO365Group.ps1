@@ -17,9 +17,9 @@ Configuration Example
         O365Group OttawaTeam
         {
             DisplayName        = "Ottawa Employees"
+            MailNickName       = "OttawaEmployees"
             Description        = "This is only for employees of the Ottawa Office"
-            GroupType          = "Office365"
-            ManagedBy          = "TenantAdmin@O365DSC1.onmicrosoft.com"
+            ManagedBy          = "TenantAdmin@contoso.onmicrosoft.com"
             Members            = @("Bob.Houle", "John.Smith")
             Ensure             = "Present"
             GlobalAdminAccount = $credsGlobalAdmin

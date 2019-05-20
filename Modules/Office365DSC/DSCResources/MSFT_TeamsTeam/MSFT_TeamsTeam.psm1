@@ -137,58 +137,65 @@ function Get-TargetResource
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $CurrentParameters = $PSBoundParameters
-    ## will only return 1 instance
-    if ($CurrentParameters.ContainsKey("GroupID"))
+    try
     {
-        $team = Get-Team -GroupId $GroupID
-        if ($null -eq $team)
+        ## will only return 1 instance
+        if ($CurrentParameters.ContainsKey("GroupID"))
         {
-            Write-Verbose "Teams with GroupId $($GroupID) doesn't exist"
-            return $nullReturn
+            $team = Get-Team -GroupId $GroupID
+            if ($null -eq $team)
+            {
+                Write-Verbose "Teams with GroupId $($GroupID) doesn't exist"
+                return $nullReturn
+            }
+        }
+        else
+        {
+            ## Can retreive multiple Teams since displayname is not unique
+            $team = Get-Team -DisplayName $DisplayName
+            if ($null -eq $team)
+            {
+                Write-Verbose "Teams with displayname $DisplayName doesn't exist"
+                return $nullReturn
+            }
+            if ($team.Count -gt 1)
+            {
+                throw "Duplicate Teams name $DisplayName exist in tenant"
+            }
+        }
+
+        Write-Verbose -Message "Found Team $($team.DisplayName)."
+
+        return @{
+            DisplayName                       = $team.DisplayName
+            GroupID                           = $team.GroupId
+            Description                       = $team.Description
+            Owner                             = $Owner
+            MailNickName                      = $team.MailNickName
+            Visibility                        = $team.Visibility
+            AllowAddRemoveApps                = $team.AllowAddRemoveApps
+            AllowGiphy                        = $team.AllowGiphy
+            GiphyContentRating                = $team.GiphyContentRating
+            AllowStickersAndMemes             = $team.AllowStickersAndMemes
+            AllowCustomMemes                  = $team.AllowCustomMemes
+            AllowUserEditMessages             = $team.AllowUserEditMessages
+            AllowUserDeleteMessages           = $team.AllowUserDeleteMessages
+            AllowOwnerDeleteMessages          = $team.AllowOwnerDeleteMessages
+            AllowCreateUpdateRemoveConnectors = $team.AllowCreateUpdateRemoveConnectors
+            AllowCreateUpdateRemoveTabs       = $team.AllowCreateUpdateRemoveTabs
+            AllowTeamMentions                 = $team.AllowTeamMentions
+            AllowChannelMentions              = $team.AllowChannelMentions
+            AllowGuestCreateUpdateChannels    = $team.AllowGuestCreateUpdateChannels
+            AllowGuestDeleteChannels          = $team.AllowGuestDeleteChannels
+            AllowCreateUpdateChannels         = $team.AllowCreateUpdateChannels
+            AllowDeleteChannels               = $team.AllowDeleteChannels
+            Ensure                            = "Present"
+            GlobalAdminAccount                = $GlobalAdminAccount
         }
     }
-    else
+    catch
     {
-        ## Can retreive multiple Teams since displayname is not unique
-        $team = Get-Team -DisplayName $DisplayName
-        if ($null -eq $team)
-        {
-            Write-Verbose "Teams with displayname $DisplayName doesn't exist"
-            return $nullReturn
-        }
-        if ($team.Count -gt 1)
-        {
-            throw "Duplicate Teams name $DisplayName exist in tenant"
-        }
-    }
-
-    Write-Verbose -Message "Found Team $($team.DisplayName)."
-
-    return @{
-        DisplayName                       = $team.DisplayName
-        GroupID                           = $team.GroupId
-        Description                       = $team.Description
-        Owner                             = $Owner
-        MailNickName                      = $team.MailNickName
-        Visibility                        = $team.Visibility
-        AllowAddRemoveApps                = $team.AllowAddRemoveApps
-        AllowGiphy                        = $team.AllowGiphy
-        GiphyContentRating                = $team.GiphyContentRating
-        AllowStickersAndMemes             = $team.AllowStickersAndMemes
-        AllowCustomMemes                  = $team.AllowCustomMemes
-        AllowUserEditMessages             = $team.AllowUserEditMessages
-        AllowUserDeleteMessages           = $team.AllowUserDeleteMessages
-        AllowOwnerDeleteMessages          = $team.AllowOwnerDeleteMessages
-        AllowCreateUpdateRemoveConnectors = $team.AllowCreateUpdateRemoveConnectors
-        AllowCreateUpdateRemoveTabs       = $team.AllowCreateUpdateRemoveTabs
-        AllowTeamMentions                 = $team.AllowTeamMentions
-        AllowChannelMentions              = $team.AllowChannelMentions
-        AllowGuestCreateUpdateChannels    = $team.AllowGuestCreateUpdateChannels
-        AllowGuestDeleteChannels          = $team.AllowGuestDeleteChannels
-        AllowCreateUpdateChannels         = $team.AllowCreateUpdateChannels
-        AllowDeleteChannels               = $team.AllowDeleteChannels
-        Ensure                            = "Present"
-        GlobalAdminAccount                = $GlobalAdminAccount
+        return $nullReturn
     }
 }
 
@@ -503,6 +510,11 @@ function Export-TargetResource
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    $result.Remove("GroupID")
+    if ("" -eq $result.Owner)
+    {
+        $result.Remove("Owner")
+    }
     $content = "        TeamsTeam " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

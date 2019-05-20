@@ -96,11 +96,25 @@ function Set-TargetResource
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
     {
-        Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $true
+        try
+        {
+            Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $true -EA SilentlyContinue
+        }
+        catch
+        {
+            Write-Verbose -Message "Couldn't set the Audit Log Ingestion. Please run Enable-OrganizationCustomization first."
+        }
     }
     else
     {
-        Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $false
+        try
+        {
+            Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $false -EA SilentlyContinue
+        }
+        catch
+        {
+            Write-Verbose -Message "Couldn't set the Audit Log Ingestion. Please run Enable-OrganizationCustomization first."
+        }
     }
 }
 
