@@ -190,16 +190,24 @@ function Test-TargetResource
     )
 
     Write-Verbose -Message "Testing Mailtips for $($Organization)"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                           -DesiredValues $PSBoundParameters `
-                                           -ValuesToCheck @("MailTipsAllTipsEnabled",
-                                                            "MailTipsGroupMetricsEnabled",
-                                                            "MailTipsLargeAudienceThreshold",
-                                                            "MailTipsMailboxSourcedTipsEnabled",
-                                                            "MailTipsExternalRecipientsTipsEnabled",
-                                                            "Ensure"
-                                           )
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @("MailTipsAllTipsEnabled",
+                                                                   "MailTipsGroupMetricsEnabled",
+                                                                   "MailTipsLargeAudienceThreshold",
+                                                                   "MailTipsMailboxSourcedTipsEnabled",
+                                                                   "MailTipsExternalRecipientsTipsEnabled",
+                                                                   "Ensure")
+
+    Write-Verbose "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource

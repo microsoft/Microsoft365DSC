@@ -106,6 +106,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Getting configuration of Team $DisplayName"
+
     $nullReturn = @{
         DisplayName                       = $DisplayName
         GroupId                           = $GroupID
@@ -299,6 +301,8 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration of Team $DisplayName"
+
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose  -Message "Entering Set-TargetResource"
     Write-Verbose  -Message "Retrieving information about team $($DisplayName) to see if it already exists"
@@ -447,42 +451,45 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing creation of new Team"
+    Write-Verbose -Message "Testing configuration of Team $DisplayName"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
-    $ValuesToCheck.Remove('GroupID') | out-null
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('GroupID') | Out-Null
 
-    $result = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "AllowCreateUpdateRemoveTabs", `
-            "Description", `
-            "MailNickName", `
-            "Visibility", `
-            "AddAllowRemoveApps", `
-            "AllowGiphy", `
-            "GiphyContent", `
-            "AllowStickersandMemes", `
-            "AllowCustomMemes", `
-            "AllowUserEditMessage", `
-            "AllowUserDeleteMessages", `
-            "AllowOwnerDeleteMessages", `
-            "AllowDeleteChannels", `
-            "AllowCreateUpdateRemoveConnectors", `
-            "AllowCreateUpdateRemoveTabs", `
-            "AllowTeamMentions", `
-            "AllowChannelMentions", `
-            "AllowGuestCreateUpdateChannels", `
-            "AllowGuestDeleteChannels", `
-            "AllowCreateUpdateChannels", `
-            "DisplayName")
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @("Ensure", `
+                                                                   "AllowCreateUpdateRemoveTabs", `
+                                                                   "Description", `
+                                                                   "MailNickName", `
+                                                                   "Visibility", `
+                                                                   "AddAllowRemoveApps", `
+                                                                   "AllowGiphy", `
+                                                                   "GiphyContent", `
+                                                                   "AllowStickersandMemes", `
+                                                                   "AllowCustomMemes", `
+                                                                   "AllowUserEditMessage", `
+                                                                   "AllowUserDeleteMessages", `
+                                                                   "AllowOwnerDeleteMessages", `
+                                                                   "AllowDeleteChannels", `
+                                                                   "AllowCreateUpdateRemoveConnectors", `
+                                                                   "AllowCreateUpdateRemoveTabs", `
+                                                                   "AllowTeamMentions", `
+                                                                   "AllowChannelMentions", `
+                                                                   "AllowGuestCreateUpdateChannels", `
+                                                                   "AllowGuestDeleteChannels", `
+                                                                   "AllowCreateUpdateChannels", `
+                                                                   "DisplayName")
 
-    if (!$result)
-    {
-        Write-Verbose "Team $DisplayName is not in its Desired State"
-    }
-    return $result
+    Write-Verbose "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource

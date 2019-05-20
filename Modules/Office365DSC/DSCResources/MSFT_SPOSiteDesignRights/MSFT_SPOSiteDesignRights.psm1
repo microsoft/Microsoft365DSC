@@ -204,14 +204,21 @@ function Test-TargetResource
     )
 
     Write-Verbose -Message "Testing SPOSiteDesignRights for $SiteDesignTitle"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("UserPrincipals", `
-            "Rights", `
-            "Ensure"
-    )
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @("UserPrincipals", `
+                                                                   "Rights", `
+                                                                   "Ensure")
+
+    Write-Verbose "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource

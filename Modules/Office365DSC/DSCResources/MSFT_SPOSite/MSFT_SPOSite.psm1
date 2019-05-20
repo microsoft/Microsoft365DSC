@@ -566,41 +566,50 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose -Message "Testing site collection $Url"
+
+    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                           -DesiredValues $PSBoundParameters `
-                                           -ValuesToCheck @("Ensure", `
-                                               "Url", `
-                                               "Title", `
-                                               "Owner", `
-                                               "StorageQuota", `
-                                               "CompatibilityLevel", `
-                                               "LocaleId", `
-                                               "ResourceQuota", `
-                                               "Template", `
-                                               "TimeZoneId", `
-                                               "AllowSelfServiceUpgrade", `
-                                               "DenyAddAndCustomizePages", `
-                                               "LockState", `
-                                               "ResourceQuotaWarningLevel", `
-                                               "SharingCapability", `
-                                               "StorageQuotaWarningLevel", `
-                                               "CommentsOnSitePagesDisabled", `
-                                               "SocialBarOnSitePagesDisabled", `
-                                               "DisableAppViews", `
-                                               "DisableCompanyWideSharingLinks", `
-                                               "DisableFlows", `
-                                               "RestrictedToGeo", `
-                                               "SharingAllowedDomainList", `
-                                               "SharingBlockedDomainList", `
-                                               "SharingDomainRestrictionMode", `
-                                               "ShowPeoplePickerSuggestionsForGuestUsers", `
-                                               "DefaultSharingLinkType", `
-                                               "DefaultLinkPermission",
-                                               "HubUrl"
-                                           )
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @("Ensure", `
+                                                                   "Url", `
+                                                                   "Title", `
+                                                                   "Owner", `
+                                                                   "StorageQuota", `
+                                                                   "CompatibilityLevel", `
+                                                                   "LocaleId", `
+                                                                   "ResourceQuota", `
+                                                                   "Template", `
+                                                                   "TimeZoneId", `
+                                                                   "AllowSelfServiceUpgrade", `
+                                                                   "DenyAddAndCustomizePages", `
+                                                                   "LockState", `
+                                                                   "ResourceQuotaWarningLevel", `
+                                                                   "SharingCapability", `
+                                                                   "StorageQuotaWarningLevel", `
+                                                                   "CommentsOnSitePagesDisabled", `
+                                                                   "SocialBarOnSitePagesDisabled", `
+                                                                   "DisableAppViews", `
+                                                                   "DisableCompanyWideSharingLinks", `
+                                                                   "DisableFlows", `
+                                                                   "RestrictedToGeo", `
+                                                                   "SharingAllowedDomainList", `
+                                                                   "SharingBlockedDomainList", `
+                                                                   "SharingDomainRestrictionMode", `
+                                                                   "ShowPeoplePickerSuggestionsForGuestUsers", `
+                                                                   "DefaultSharingLinkType", `
+                                                                   "DefaultLinkPermission",
+                                                                   "HubUrl")
+
+    Write-Verbose "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource

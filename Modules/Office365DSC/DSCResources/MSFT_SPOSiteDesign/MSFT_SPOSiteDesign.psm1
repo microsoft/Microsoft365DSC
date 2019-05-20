@@ -260,14 +260,23 @@ function Test-TargetResource
     )
 
     Write-Verbose -Message "Testing SPOSiteDesign for $SiteDesignTitle"
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('CentralAdminUrl') | out-null
-    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
 
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck  $ValuesToCheck.Keys
+    $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('CentralAdminUrl') | Out-Null
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck $ValuesToCheck.Keys
+
+    Write-Verbose "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource

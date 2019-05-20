@@ -409,22 +409,26 @@ function Test-TargetResource
     )
 
     Write-Verbose -Message "Testing hub site collection $Url"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    foreach ($value in $CurrentValues.GetEnumerator())
-    {
-        Write-Verbose "$($value.Key) = $($value.Value)"
-    }
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                           -DesiredValues $PSBoundParameters `
-                                           -ValuesToCheck @("Ensure", `
-                                                            "Url", `
-                                                            "Title", `
-                                                            "Description", `
-                                                            "LogoUrl", `
-                                                            "RequiresJoinApproval", `
-                                                            "AllowedToJoin", `
-                                                            "SiteDesignId")
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @("Ensure", `
+                                                                   "Url", `
+                                                                   "Title", `
+                                                                   "Description", `
+                                                                   "LogoUrl", `
+                                                                   "RequiresJoinApproval", `
+                                                                   "AllowedToJoin", `
+                                                                   "SiteDesignId")
+
+    Write-Verbose "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource

@@ -433,33 +433,40 @@ function Test-TargetResource
     )
 
     Write-Verbose -Message "Testing Office 365 User $UserPrincipalName"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $result = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                           -DesiredValues $PSBoundParameters `
-                                           -ValuesToCheck @("Ensure", `
-                                                            "UserPrincipalName", `
-                                                            "LicenseAssignment", `
-                                                            "UsageLocation", `
-                                                            "FirstName", `
-                                                            "LastName", `
-                                                            "DisplayName", `
-                                                            "City", `
-                                                            "Country", `
-                                                            "Department", `
-                                                            "Fax", `
-                                                            "MobilePhone", `
-                                                            "Office", `
-                                                            "PasswordNeverExpires", `
-                                                            "PhoneNumber", `
-                                                            "PostalCode", `
-                                                            "PreferredDataLocation", `
-                                                            "PreferredLanguage", `
-                                                            "State", `
-                                                            "StreetAddress", `
-                                                            "Title", `
-                                                            "UserType")
-    Write-Verbose "Testing User $UserPrincipalName result was $result"
-    return $result
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @("Ensure", `
+                                                                   "UserPrincipalName", `
+                                                                   "LicenseAssignment", `
+                                                                   "UsageLocation", `
+                                                                   "FirstName", `
+                                                                   "LastName", `
+                                                                   "DisplayName", `
+                                                                   "City", `
+                                                                   "Country", `
+                                                                   "Department", `
+                                                                   "Fax", `
+                                                                   "MobilePhone", `
+                                                                   "Office", `
+                                                                   "PasswordNeverExpires", `
+                                                                   "PhoneNumber", `
+                                                                   "PostalCode", `
+                                                                   "PreferredDataLocation", `
+                                                                   "PreferredLanguage", `
+                                                                   "State", `
+                                                                   "StreetAddress", `
+                                                                   "Title", `
+                                                                   "UserType")
+
+    Write-Verbose "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource

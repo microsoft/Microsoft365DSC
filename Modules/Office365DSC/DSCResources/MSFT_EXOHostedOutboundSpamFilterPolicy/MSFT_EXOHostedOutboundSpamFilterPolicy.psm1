@@ -201,22 +201,22 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose -Message "Testing HostedOutboundSpamFilterPolicy for $($Identity)"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
-    $ValuesToCheck.Remove('IsSingleInstance') | out-null
-    $ValuesToCheck.Remove('Verbose') | out-null
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
+    $ValuesToCheck.Remove('Verbose') | Out-Null
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-    if ($TestResult)
-    {
-        Write-Verbose 'Test-TargetResource returned True'
-    }
-    else
-    {
-        Write-Verbose 'Test-TargetResource returned False'
-    }
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck $ValuesToCheck.Keys
+
+    Write-Verbose "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

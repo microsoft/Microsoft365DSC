@@ -128,15 +128,21 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    Write-Verbose -Message "Testing Office 365 Audit Log Config"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    Write-Verbose "Test-TargetResource CurrentValues: "
-    Write-Verbose "$($CurrentValues | Out-String)"
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @('UnifiedAuditLogIngestionEnabled')
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @('UnifiedAuditLogIngestionEnabled')
+
+    Write-Verbose "Test-TargetResource returned $TestResult"
 
     return $TestResult
-
 }
 
 function Export-TargetResource

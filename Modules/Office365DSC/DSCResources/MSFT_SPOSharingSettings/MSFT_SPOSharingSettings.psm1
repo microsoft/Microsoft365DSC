@@ -443,33 +443,43 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+
     Write-Verbose -Message "Testing SPO Tenant"
+
+    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("IsSingleInstance", `
-            "SharingCapability", `
-            "ShowEveryoneClaim", `
-            "ShowAllUsersClaim", `
-            "ShowEveryoneExceptExternalUsersClaim", `
-            "ProvisionSharedWithEveryoneFolder", `
-            "EnableGuestSignInAcceleration", `
-            "BccExternalSharingInvitations", `
-            "BccExternalSharingInvitationsList", `
-            "RequireAnonymousLinksExpireInDays", `
-            "SharingAllowedDomainList", `
-            "SharingBlockedDomainList", `
-            "SharingDomainRestrictionMode", `
-            "DefaultSharingLinkType", `
-            "PreventExternalUsersFromResharing", `
-            "ShowPeoplePickerSuggestionsForGuestUsers", `
-            "FileAnonymousLinkType", `
-            "FolderAnonymousLinkType", `
-            "NotifyOwnersWhenItemsReshared", `
-            "RequireAcceptingAccountMatchInvitedAccount", `
-            "DefaultLinkPermission"
-    )
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @("IsSingleInstance", `
+                                                                   "SharingCapability", `
+                                                                   "ShowEveryoneClaim", `
+                                                                   "ShowAllUsersClaim", `
+                                                                   "ShowEveryoneExceptExternalUsersClaim", `
+                                                                   "ProvisionSharedWithEveryoneFolder", `
+                                                                   "EnableGuestSignInAcceleration", `
+                                                                   "BccExternalSharingInvitations", `
+                                                                   "BccExternalSharingInvitationsList", `
+                                                                   "RequireAnonymousLinksExpireInDays", `
+                                                                   "SharingAllowedDomainList", `
+                                                                   "SharingBlockedDomainList", `
+                                                                   "SharingDomainRestrictionMode", `
+                                                                   "DefaultSharingLinkType", `
+                                                                   "PreventExternalUsersFromResharing", `
+                                                                   "ShowPeoplePickerSuggestionsForGuestUsers", `
+                                                                   "FileAnonymousLinkType", `
+                                                                   "FolderAnonymousLinkType", `
+                                                                   "NotifyOwnersWhenItemsReshared", `
+                                                                   "RequireAcceptingAccountMatchInvitedAccount", `
+                                                                   "DefaultLinkPermission")
+
+    Write-Verbose "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource
