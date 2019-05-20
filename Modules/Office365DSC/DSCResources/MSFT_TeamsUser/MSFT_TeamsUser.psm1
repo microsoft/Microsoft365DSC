@@ -40,9 +40,13 @@ function Get-TargetResource
     }
 
     Write-Verbose -Message "Checking for existance of Team User $User"
-    $team = Get-TeamByName $TeamName
-    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
+    $team = Get-TeamByName $TeamName -ErrorAction SilentlyContinue
+    if ($null -eq $team)
+    {
+        return $nullReturn
+    }
 
+    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
     try
     {

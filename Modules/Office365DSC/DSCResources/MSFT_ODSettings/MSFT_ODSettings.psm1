@@ -30,12 +30,12 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On","Off","Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On","Off","Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         $ODBAccessRequests,
 
         [Parameter()]
@@ -56,11 +56,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("OptOut","HardOptIn","SoftOptIn")]
+        [ValidateSet("OptOut", "HardOptIn", "SoftOptIn")]
         $GrooveBlockOption,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -90,7 +90,7 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message "Getting OneDrive quoata size for tenant"
+        Write-Verbose -Message "Getting OneDrive quota size for tenant"
         $tenant = Get-SPOTenant
 
         if (!$tenant)
@@ -99,7 +99,7 @@ function Get-TargetResource
             return $nullReturn
         }
 
-        Write-Verbose -Message "Getting OneDrive quoata size for tenant $($tenant.OneDriveStorageQuota)"
+        Write-Verbose -Message "Getting OneDrive quota size for tenant $($tenant.OneDriveStorageQuota)"
         Write-Verbose -Message "Getting tenant client sync setting"
         $tenantRestrictions = Get-SPOTenantSyncClientRestriction
 
@@ -195,12 +195,12 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On","Off","Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On","Off","Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         $ODBAccessRequests,
 
         [Parameter()]
@@ -221,11 +221,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("OptOut","HardOptIn","SoftOptIn")]
+        [ValidateSet("OptOut", "HardOptIn", "SoftOptIn")]
         $GrooveBlockOption,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -236,76 +236,53 @@ function Set-TargetResource
 
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
+    ## Configure OneDrive settings
+    ## Parameters below are remove for the Set-SPOTenant cmdlet
+    ## they are used in the Set-SPOTenantSyncClientRestriction cmdlet
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
 
-    if ($CurrentParameters.ContainsKey("OneDriveStorageQuota"))
+    if ($CurrentParameters.ContainsKey("BlockMacSync"))
     {
-        Set-SPOTenant -OneDriveStorageQuota $OneDriveStorageQuota
-        Write-Verbose -Message "Setting OneDrive storage quoata to $OneDriveStorageQuota"
+        $CurrentParameters.Remove("BlockMacSync")
+    }
+    if ($CurrentParameters.ContainsKey("DomainGuids"))
+    {
+        $CurrentParameters.Remove("DomainGuids")
+    }
+    if ($CurrentParameters.ContainsKey("DisableReportProblemDialog"))
+    {
+        $CurrentParameters.Remove("DisableReportProblemDialog")
+    }
+    if ($CurrentParameters.ContainsKey("ExcludedFileExtensions"))
+    {
+        $CurrentParameters.Remove("ExcludedFileExtensions")
+    }
+    if ($CurrentParameters.ContainsKey("GrooveBlockOption"))
+    {
+        $CurrentParameters.Remove("GrooveBlockOption")
     }
 
-    if ($CurrentParameters.ContainsKey("OrphanedPersonalSitesRetentionPeriod"))
-    {
-        Set-SPOTenant -OrphanedPersonalSitesRetentionPeriod $OrphanedPersonalSitesRetentionPeriod
-        Write-Verbose -Message "Setting OneDrive retention period $OrphanedPersonalSitesRetentionPeriod"
-    }
+    Write-Verbose -Message "Configuring OneDrive settings."
+    Set-SPOTenant @CurrentParameters
 
-    if ($CurrentParameters.ContainsKey("OneDriveForGuestsEnabled"))
-    {
-        Set-SPOTenant -OneDriveForGuestsEnabled $OneDriveForGuestsEnabled
-        Write-Verbose -Message "Setting OneDrive for guest access $OneDriveForGuestsEnabled"
-    }
+    $clientSyncParameters =  $PSBoundParameters
 
-    if ($CurrentParameters.ContainsKey("NotifyOwnersWhenInvitationsAccepted"))
-    {
-        Set-SPOTenant -NotifyOwnersWhenInvitationsAccepted $NotifyOwnersWhenInvitationsAccepted
-        Write-Verbose -Message "Setting OneDrive notify owner when guest access accepted $NotifyOwnersWhenInvitationsAccepted"
-    }
+    ## Configure Sync Client restrictions
+    ## Set-SPOTenantSyncClientRestriction has different parameter sets and they cannot be combined see article:
+    ## https://docs.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps
 
-    if ($CurrentParameters.ContainsKey("NotificationsInOneDriveForBusinessEnabled"))
+    if ($clientSyncParameters.ContainsKey("BlockMacSync") -and $clientSyncParameters.ContainsKey("DomainGuids"))
     {
-        Set-SPOTenant -NotificationsInOneDriveForBusinessEnabled $NotificationsInOneDriveForBusinessEnabled
-        Write-Verbose -Message "Setting OneDrive notify enabled to  $NotificationsInOneDriveForBusinessEnabled"
+        Set-SPOTenantSyncClientRestriction -BlockMacSync:$BlockMacSync -DomainGuids $DomainGuids -Enable
     }
-
-    if ($CurrentParameters.ContainsKey("ODBAccessRequests"))
-    {
-        Set-SPOTenant -ODBAccessRequests $ODBAccessRequests
-        Write-Verbose -Message "Setting OneDrive access requests $ODBAccessRequests"
-    }
-
-    if ($CurrentParameters.ContainsKey("ODBMembersCanShare"))
-    {
-        Set-SPOTenant -ODBMembersCanShare $ODBMembersCanShare
-        Write-Verbose -Message "Setting OneDrive member share requets $ODBMembersCanShare"
-    }
-    ## Sync client settings
-
-    if ($CurrentParameters.ContainsKey("BlockMacSync") -and $CurrentParameters.ContainsKey("DomainGuids"))
-    {
-        if ($BlockMacSync -eq $true)
-        {
-            Set-SPOTenantSyncClientRestriction -BlockMacSync:$BlockMacSync -DomainGuids $DomainGuids -Enable
-        }
-        elseif ($BlockMacSync -eq $false)
-        {
-            Set-SPOTenantSyncClientRestriction -BlockMacSync:$BlockMacSync -DomainGuids $DomainGuids -Enable
-        }
-    }
-
-    if ($CurrentParameters.ContainsKey("DomainGuids") -and ($BlockMacSync -eq $null))
+    elseif ($clientSyncParameters.ContainsKey("DomainGuids") -and (!$clientSyncParameters.ContainsKey("BlockMacSync")))
     {
         Set-SPOTenantSyncClientRestriction -DomainGuids $DomainGuids -Enable
     }
 
-    if (!$CurrentParameters.ContainsKey("DomainGuids") -and ($BlockMacSync -ne $null))
-    {
-        Write-Verbose "Cannot block Mac Clients without specifiing an allowed domain !"
-    }
-
-    if ($CurrentParameters.ContainsKey("ExcludedFileExtensions"))
+    if ($clientSyncParameters.ContainsKey("ExcludedFileExtensions"))
     {
         $BlockedFileTypes = ""
         foreach ($fileTypes in $ExcludedFileExtensions)
@@ -315,12 +292,12 @@ function Set-TargetResource
 
         Set-SPOTenantSyncClientRestriction -ExcludedFileExtensions $BlockedFileTypes
     }
-    if ($CurrentParameters.ContainsKey("DisableReportProblemDialog"))
+    if ($clientSyncParameters.ContainsKey("DisableReportProblemDialog"))
     {
         Set-SPOTenantSyncClientRestriction -DisableReportProblemDialog $DisableReportProblemDialog
     }
 
-    if ($CurrentParameters.ContainsKey("GrooveBlockOption"))
+    if ($clientSyncParameters.ContainsKey("GrooveBlockOption"))
     {
         Set-SPOTenantSyncClientRestriction -GrooveBlockOption $GrooveBlockOption
     }
@@ -359,12 +336,12 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On","Off","Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         $ODBMembersCanShare,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("On","Off","Unspecified")]
+        [ValidateSet("On", "Off", "Unspecified")]
         $ODBAccessRequests,
 
         [Parameter()]
@@ -385,11 +362,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("OptOut","HardOptIn","SoftOptIn")]
+        [ValidateSet("OptOut", "HardOptIn", "SoftOptIn")]
         $GrooveBlockOption,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 

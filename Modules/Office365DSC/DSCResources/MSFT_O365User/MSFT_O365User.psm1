@@ -315,7 +315,14 @@ function Set-TargetResource
                 }
             }
             Write-Verbose "Updating License Assignment"
-            Set-MsolUserLicense -UserPrincipalName $UserPrincipalName -AddLicenses $licensesToAdd -RemoveLicenses $licensesToRemove
+            try
+            {
+                Set-MsolUserLicense -UserPrincipalName $UserPrincipalName -AddLicenses $LicenseAssignment -ErrorAction SilentlyContinue
+            }
+            catch
+            {
+                Write-Verbose "License {$($LicenseAssignment)} doesn't exist in tenant."
+            }
         }
         Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
         $user = Set-MsolUser @CurrentParameters
@@ -323,7 +330,17 @@ function Set-TargetResource
     else
     {
         Write-Verbose -Message "Creating Office 365 User $UserPrincipalName"
+        $CurrentParameters.Remove("LicenseAssignment")
         $user = New-MsolUser @CurrentParameters
+
+        try
+        {
+            Set-MsolUserLicense -UserPrincipalName $UserPrincipalName -AddLicenses $licensesToAdd -RemoveLicenses $licensesToRemove -ErrorAction SilentlyContinue
+        }
+        catch
+        {
+            throw "Could not assign license {$($newLicenseAssignment)} to user"
+        }
     }
 }
 

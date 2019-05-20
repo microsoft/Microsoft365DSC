@@ -15,7 +15,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1, 50)]
+        [ValidateLength(0, 50)]
         $NewDisplayName,
 
         [Parameter()]
@@ -45,36 +45,42 @@ function Get-TargetResource
         Ensure             = "Absent"
         GlobalAdminAccount = $GlobalAdminAccount
     }
-
     Write-Verbose -Message "Checking for existance of team channels"
     $CurrentParameters = $PSBoundParameters
 
-    $team = Get-TeamByName $TeamName
-
-    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
-
-    $channel = Get-TeamChannel -GroupId $team.GroupId -ErrorAction SilentlyContinue | Where-Object {($_.DisplayName -eq $DisplayName)}
-
-    #Current channel doesnt exist and trying to rename throw an error
-    if (($null -eq $channel) -and $CurrentParameters.ContainsKey("NewDisplayName"))
+    try
     {
-        Write-Verbose "Cannot rename channel $DisplayName , doesnt exist in current Team"
-        throw "Channel named $DisplayName doesn't exist in current Team"
+        $team = Get-TeamByName $TeamName
+
+        Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
+
+        $channel = Get-TeamChannel -GroupId $team.GroupId -ErrorAction SilentlyContinue | Where-Object {($_.DisplayName -eq $DisplayName)}
+
+        #Current channel doesnt exist and trying to rename throw an error
+        if (($null -eq $channel) -and $CurrentParameters.ContainsKey("NewDisplayName"))
+        {
+            Write-Verbose "Cannot rename channel $DisplayName , doesnt exist in current Team"
+            throw "Channel named $DisplayName doesn't exist in current Team"
+        }
+
+        if ($null -eq $channel)
+        {
+            Write-Verbose "Failed to get team channels with ID $($team.GroupId) and display name of $DisplayName"
+            return $nullReturn
+        }
+
+        return @{
+            DisplayName        = $channel.DisplayName
+            TeamName           = $team.DisplayName
+            Description        = $channel.Description
+            NewDisplayName     = $NewDisplayName
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
     }
-
-    if ($null -eq $channel)
+    catch
     {
-        Write-Verbose "Failed to get team channels with ID $($team.GroupId) and display name of $DisplayName"
         return $nullReturn
-    }
-
-    return @{
-        DisplayName        = $channel.DisplayName
-        TeamName           = $team.DisplayName
-        Description        = $channel.Description
-        NewDisplayName     = $NewDisplayName
-        Ensure             = "Present"
-        GlobalAdminAccount = $GlobalAdminAccount
     }
 }
 
@@ -94,7 +100,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1, 50)]
+        [ValidateLength(0, 50)]
         $NewDisplayName,
 
         [Parameter()]
@@ -123,6 +129,10 @@ function Set-TargetResource
 
     $team = Get-TeamByName $TeamName
 
+    if ($team.Length -gt 1)
+    {
+        throw "Multiple Teams with name {$($TeamName)} were found"
+    }
     Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
     $CurrentParameters.Remove("TeamName")
@@ -178,7 +188,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1, 50)]
+        [ValidateLength(0, 50)]
         $NewDisplayName,
 
         [Parameter()]

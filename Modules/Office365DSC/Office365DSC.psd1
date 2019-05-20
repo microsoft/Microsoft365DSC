@@ -50,9 +50,10 @@
   # ProcessorArchitecture = ''
 
   # Modules that must be imported into the global environment prior to importing this module
-  RequiredModules = @(@{ModuleName = "ReverseDSC"; ModuleVersion = "1.9.4.2"; },
+  RequiredModules = @(@{ModuleName = "ReverseDSC"; ModuleVersion = "1.9.4.4"; },
                       @{ModuleName = "MSOnline"; ModuleVersion = "1.1.183.17"; },
                       @{ModuleName = "SharePointPnPPowerShellOnline"; ModuleVersion = "3.5.1901.0"; },
+                      @{ModuleName = "Microsoft.Online.SharePoint.PowerShell"; ModuleVersion = "16.0.8316.0"; },
                       @{ModuleName = "MicrosoftTeams"; ModuleVersion = "1.0.0"; },
                       @{ModuleName = "AzureAD"; ModuleVersion = "2.0.2.4"; })
 
@@ -76,25 +77,16 @@
 
   # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
   CmdletsToExport = 'Test-SPOServiceConnection', 'Test-Office365DSCParameterState',
-                 'Test-O365ServiceConnection', 'Export-O365Configuration',
-                 'Get-TimeZoneNameFromID', 'Get-TimeZoneIDFromName', 'Get-LocaleIDFromName',
-                 'Get-LocaleNameFromID', 'Test-TeamsServiceConnection', 'Show-O365GUI', 'Start-O365ConfigurationExtract',
-                 'Test-PnPOnlineConnection', 'Connect-ExchangeOnline', 'Connect-SecurityAndComplianceCenter'
+                    'Test-O365ServiceConnection', 'Export-O365Configuration',
+                    'Get-TimeZoneNameFromID', 'Get-TimeZoneIDFromName', 'Get-LocaleIDFromName',
+                    'Get-LocaleNameFromID', 'Test-TeamsServiceConnection', 'Show-O365GUI', 'Start-O365ConfigurationExtract',
+                    'Test-PnPOnlineConnection', 'Connect-ExchangeOnline', 'Connect-SecurityAndComplianceCenter'
 
   # Variables to export from this module
   # VariablesToExport = @()
 
   # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
   AliasesToExport = @()
-
-# DSC resources to export from this module
-  # DscResourcesToExport = 'MSFT_O365User', 'MSFT_O365Group', 'MSFT_SPOSite', 'MSFT_SPOHubSite',
-  #                       'MSFT_EXOSharedMailbox', 'MSFT_O365AdminAuditLogConfig','MSFT_EXOAcceptedDomain','MSFT_EXOAntiPhishPolicy',
-  #                       'MSFT_EXOAntiPhishRule', 'MSFT_EXOAtpPolicyForO365', 'MSFT_EXOCASMailboxPlan', 'MSFT_EXOClientAccessRule',
-  #                       'MSFT_EXODkimSigningConfig', 'MSFT_EXOHostedConnectionFilterPolicy', 'MSFT_EXOHostedContentFilterPolicy',
-  #                       'MSFT_EXOHostedContentFilterRule', 'MSFT_EXOHostedOutboundSpamFilterPolicy', 'MSFT_EXOSafeAttachmentPolicy',
-  #                       'MSFT_EXOSafeAttachmentRule', 'MSFT_EXOSafeLinksPolicy', 'MSFT_EXOSafeLinksRule', 'MSFT_TeamsFunSettings',
-  #                       'MSFT_SPOApp'
 
   # List of all modules packaged with this module
   # ModuleList = @()
@@ -110,7 +102,7 @@
           # Tags applied to this module. These help with module discovery in online galleries.
           Tags = 'DesiredStateConfiguration','DSC','DSCResourceKit','DSCResource','Office365'
 
-          Prerelease = '-alpha453'
+          Prerelease = '-alpha455'
 
           # A URL to the license for this module.
           LicenseUri = 'https://github.com/Microsoft/Office365/blob/master/LICENSE'
