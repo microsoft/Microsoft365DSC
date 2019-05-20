@@ -91,7 +91,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("BlockMoveOnly", "BlockFull")]
+        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
         $RestrictedToGeo,
 
         [Parameter()]
@@ -185,6 +185,11 @@ function Get-TargetResource
             return $nullReturn
         }
 
+        $DenyAddAndCustomizePagesValue = $false
+        if ($site.DenyAddAndCustomizePages -eq "Enabled")
+        {
+            $DenyAddAndCustomizePagesValue = $true
+        }
         if ($site.HubSiteId -ne "00000000-0000-0000-0000-000000000000")
         {
             $hubSites = Get-SPOHubSite
@@ -220,7 +225,7 @@ function Get-TargetResource
             CompatibilityLevel                          = $site.CompatibilityLevel
             Title                                       = $site.Title
             AllowSelfServiceUpgrade                     = $site.AllowSelfServiceUpgrade
-            DenyAddAndCustomizePages                    = $denyAddAndCustomizePages
+            DenyAddAndCustomizePages                    = $DenyAddAndCustomizePagesValue
             LockState                                   = $site.LockState
             ResourceQuotaWarningLevel                   = $site.ResourceQuotaWarningLevel
             SharingCapability                           = $site.SharingCapability
@@ -342,7 +347,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("BlockMoveOnly", "BlockFull")]
+        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
         $RestrictedToGeo,
 
         [Parameter()]
@@ -518,7 +523,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("BlockMoveOnly", "BlockFull")]
+        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
         $RestrictedToGeo,
 
         [Parameter()]
@@ -623,6 +628,12 @@ function Export-TargetResource
     )
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    if ($result.RestrictedToGeo -eq "Unknown")
+    {
+        $result.Remove("RestrictedToGeo")
+    }
+    $result.Remove("HubUrl")
+
     $content = "        SPOSite " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
