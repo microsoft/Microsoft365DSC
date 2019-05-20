@@ -184,12 +184,12 @@ function Set-TargetResource
 
     $AntiPhishRule = $AntiPhishRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
-    if (('Present' -eq $Ensure ) -and (-not $AntiPhishRule))
+    if (('Present' -eq $Ensure) -and (-not $AntiPhishRule))
     {
         New-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
     }
 
-    if (('Present' -eq $Ensure ) -and ($AntiPhishRule))
+    if (('Present' -eq $Ensure) -and ($AntiPhishRule))
     {
         if ($PSBoundParameters.Enabled -and ('Disabled' -eq $AntiPhishRule.State))
         {
@@ -205,7 +205,7 @@ function Set-TargetResource
         }
     }
 
-    if (('Absent' -eq $Ensure ) -and ($AntiPhishRule))
+    if (('Absent' -eq $Ensure) -and ($AntiPhishRule))
     {
         Write-Verbose -Message "Removing AntiPhishRule $($Identity) "
         Remove-AntiPhishRule -Identity $Identity -Confirm:$false
