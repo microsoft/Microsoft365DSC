@@ -67,6 +67,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Getting configuration of SharePoint Online Access Control Settings"
+
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -111,11 +113,12 @@ function Get-TargetResource
     {
         if ($error[0].Exception.Message -like "No connection available")
         {
-            Write-Verbose "Make sure that you are connected to your SPOService"
+            Write-Verbose -Message "Make sure that you are connected to your SPOService"
         }
         return $nullReturn
     }
 }
+
 function Set-TargetResource
 {
     [CmdletBinding()]
@@ -184,6 +187,8 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration of SharePoint Online Access Control Settings"
+
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $CurrentParameters = $PSBoundParameters
@@ -199,6 +204,7 @@ function Set-TargetResource
     }
     $tenant = Set-PnPTenant @CurrentParameters
 }
+
 function Test-TargetResource
 {
     [CmdletBinding()]
@@ -268,7 +274,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing SPO Tenant"
+    Write-Verbose -Message "Testing configuration of SharePoint Online Access Control Settings"
 
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
@@ -294,7 +300,7 @@ function Test-TargetResource
                                                                    "EmailAttestationRequired", `
                                                                    "EmailAttestationReAuthDays")
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

@@ -69,6 +69,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Getting configuration of OneDrive Settings"
+
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -93,9 +95,9 @@ function Get-TargetResource
         Write-Verbose -Message "Getting OneDrive quota size for tenant"
         $tenant = Get-SPOTenant
 
-        if (!$tenant)
+        if ($null -eq $tenant)
         {
-            Write-Verbose "Failed to get Tenant information"
+            Write-Verbose -Message "Failed to get Tenant information"
             return $nullReturn
         }
 
@@ -103,9 +105,9 @@ function Get-TargetResource
         Write-Verbose -Message "Getting tenant client sync setting"
         $tenantRestrictions = Get-SPOTenantSyncClientRestriction
 
-        if (!$tenantRestrictions)
+        if ($null -eq $tenantRestrictions)
         {
-            Write-Verbose "Failed to get Tenant client synce settings!"
+            Write-Verbose -Message "Failed to get Tenant client synce settings!"
             return $nullReturn
         }
 
@@ -159,7 +161,7 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose "Failed to get Tenant client sync settings !"
+        Write-Verbose -Message "Failed to get Tenant client sync settings !"
         return $nullReturn
     }
 }
@@ -234,6 +236,8 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration of OneDrive Settings"
+
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     ## Configure OneDrive settings
@@ -277,7 +281,7 @@ function Set-TargetResource
     {
         Set-SPOTenantSyncClientRestriction -BlockMacSync:$BlockMacSync -DomainGuids $DomainGuids -Enable
     }
-    elseif ($clientSyncParameters.ContainsKey("DomainGuids") -and (!$clientSyncParameters.ContainsKey("BlockMacSync")))
+    elseif ($clientSyncParameters.ContainsKey("DomainGuids") -and ($clientSyncParameters.ContainsKey("BlockMacSync") -eq $false))
     {
         Set-SPOTenantSyncClientRestriction -DomainGuids $DomainGuids -Enable
     }
@@ -375,7 +379,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing client tenant sync settings"
+    Write-Verbose -Message "Testing configuration of OneDrive Settings"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -398,7 +402,7 @@ function Test-TargetResource
                                                                    "NotificationsInOneDriveForBusinessEnabled",
                                                                    "Ensure")
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

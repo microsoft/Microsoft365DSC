@@ -139,6 +139,7 @@ function Get-TargetResource
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $CurrentParameters = $PSBoundParameters
+
     try
     {
         ## will only return 1 instance
@@ -147,7 +148,7 @@ function Get-TargetResource
             $team = Get-Team -GroupId $GroupID
             if ($null -eq $team)
             {
-                Write-Verbose "Teams with GroupId $($GroupID) doesn't exist"
+                Write-Verbose -Message "Teams with GroupId $($GroupID) doesn't exist"
                 return $nullReturn
             }
         }
@@ -157,7 +158,7 @@ function Get-TargetResource
             $team = Get-Team -DisplayName $DisplayName
             if ($null -eq $team)
             {
-                Write-Verbose "Teams with displayname $DisplayName doesn't exist"
+                Write-Verbose -Message "Teams with displayname $DisplayName doesn't exist"
                 return $nullReturn
             }
             if ($team.Count -gt 1)
@@ -311,10 +312,9 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of Team $DisplayName"
 
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose  -Message "Entering Set-TargetResource"
-    Write-Verbose  -Message "Retrieving information about team $($DisplayName) to see if it already exists"
 
     $team = Get-TargetResource @PSBoundParameters
+
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
@@ -494,7 +494,7 @@ function Test-TargetResource
                                                                    "AllowCreateUpdateChannels", `
                                                                    "DisplayName")
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

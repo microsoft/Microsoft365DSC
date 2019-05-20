@@ -39,6 +39,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Getting configuration for SPO Storage Entity for $Key"
+
     Test-PnPOnlineConnection -SiteUrl $SiteUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -121,7 +123,10 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration for SPO Storage Entity for $Key"
+
     Test-PnPOnlineConnection -SiteUrl $SiteUrl -GlobalAdminAccount $GlobalAdminAccount
+
     $curStorageEntry = Get-TargetResource @PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
@@ -184,7 +189,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing SPOStorageEntity for $Key"
+    Write-Verbose -Message "Testing configuration for SPO Storage Entity for $Key"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -201,7 +206,7 @@ function Test-TargetResource
                                                                    "EntityScope", `
                                                                    "Ensure")
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

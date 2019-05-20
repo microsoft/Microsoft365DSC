@@ -45,11 +45,15 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose "Get-TargetResource will attempt to retrieve SafeLinksPolicy $($Identity)"
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
+
+    Write-Verbose -Message "Getting configuration of SafeLinksPolicy for $Identity"
+
+    Write-Verbose -Message "Calling Connect-ExchangeOnline function:"
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
+
+    Write-Verbose -Message "Global ExchangeOnlineSession status:"
+    Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
+
     try
     {
         $SafeLinksPolicies = Get-SafeLinksPolicy
@@ -59,10 +63,10 @@ function Get-TargetResource
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
 
-    $SafeLinksPolicy = $SafeLinksPolicies | Where-Object Identity -eq $Identity
-    if (-NOT $SafeLinksPolicy)
+    $SafeLinksPolicy = $SafeLinksPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    if (-not $SafeLinksPolicy)
     {
-        Write-Verbose "SafeLinksPolicy $($Identity) does not exist."
+        Write-Verbose -Message "SafeLinksPolicy $($Identity) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -73,7 +77,7 @@ function Get-TargetResource
             Ensure = 'Present'
         }
 
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -inotmatch 'Ensure'}) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -inotmatch 'Ensure' }) )
         {
             if ($null -ne $SafeLinksPolicy.$KeyName)
             {
@@ -89,8 +93,8 @@ function Get-TargetResource
             }
         }
 
-        Write-Verbose "Found SafeLinksPolicy $($Identity)"
-        Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
+        Write-Verbose -Message "Found SafeLinksPolicy $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
 }
@@ -141,11 +145,14 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose 'Entering Set-TargetResource'
+
+    Write-Verbose -Message "Setting configuration of SafeLinksPolicy for $Identity"
+
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
     $SafeLinksPolicies = Get-SafeLinksPolicy
 
-    $SafeLinksPolicy = $SafeLinksPolicies | Where-Object Identity -eq $Identity
+    $SafeLinksPolicy = $SafeLinksPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
     $SafeLinksPolicyParams = $PSBoundParameters
     $SafeLinksPolicyParams.Remove('Ensure') | Out-Null
     $SafeLinksPolicyParams.Remove('GlobalAdminAccount') | Out-Null
@@ -156,17 +163,17 @@ function Set-TargetResource
             Name = $SafeLinksPolicyParams.Identity
         }
         $SafeLinksPolicyParams.Remove('Identity') | Out-Null
-        Write-Verbose "Creating SafeLinksPolicy $($Identity)"
+        Write-Verbose -Message "Creating SafeLinksPolicy $($Identity)"
         New-SafeLinksPolicy @SafeLinksPolicyParams
     }
     elseif ( ('Present' -eq $Ensure ) -and ($null -ne $SafeLinksPolicy) )
     {
-        Write-Verbose "Setting SafeLinksPolicy $($Identity) with values: $($SafeLinksPolicyParams | Out-String)"
+        Write-Verbose -Message "Setting SafeLinksPolicy $($Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $SafeLinksPolicyParams)"
         Set-SafeLinksPolicy @SafeLinksPolicyParams -Confirm:$false
     }
     elseif ( ('Absent' -eq $Ensure ) -and ($null -ne $SafeLinksPolicy) )
     {
-        Write-Verbose "Removing SafeLinksPolicy $($Identity) "
+        Write-Verbose -Message "Removing SafeLinksPolicy $($Identity) "
         Remove-SafeLinksPolicy -Identity $Identity -Confirm:$false
     }
 }
@@ -218,7 +225,8 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message "Testing SafeLinksPolicy for $($Identity)"
+
+    Write-Verbose -Message "Testing configuration of SafeLinksPolicy for $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -234,7 +242,7 @@ function Test-TargetResource
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck $ValuesToCheck.Keys
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

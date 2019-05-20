@@ -40,11 +40,15 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose "Get-TargetResource will attempt to retrieve DkimSigningConfig $($Identity)"
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
+
+    Write-Verbose -Message "Getting configuration of DkimSigningConfig for $Identity"
+
+    Write-Verbose -Message "Calling Connect-ExchangeOnline function:"
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
+
+    Write-Verbose -Message "Global ExchangeOnlineSession status:"
+    Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
+
     try
     {
         $DkimSigningConfigs = Get-DkimSigningConfig
@@ -53,10 +57,10 @@ function Get-TargetResource
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
-    $DkimSigningConfig = $DkimSigningConfigs | Where-Object Identity -eq $Identity
-    if (-NOT $DkimSigningConfig)
+    $DkimSigningConfig = $DkimSigningConfigs | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    if (-not $DkimSigningConfig)
     {
-        Write-Verbose "DkimSigningConfig $($Identity) does not exist."
+        Write-Verbose -Message "DkimSigningConfig $($Identity) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -66,7 +70,7 @@ function Get-TargetResource
         $result = @{
             Ensure = 'Present'
         }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -ne 'Ensure'}) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }) )
         {
             if ($null -ne $DkimSigningConfig.$KeyName)
             {
@@ -82,8 +86,8 @@ function Get-TargetResource
             }
         }
 
-        Write-Verbose "Found DkimSigningConfig $($Identity)"
-        Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
+        Write-Verbose -Message "Found DkimSigningConfig $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
 }
@@ -129,11 +133,14 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose 'Entering Set-TargetResource'
+
+    Write-Verbose -Message "Setting configuration of DkimSigningConfig for $Identity"
+
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
     $DkimSigningConfigs = Get-DkimSigningConfig
 
-    $DkimSigningConfig = $DkimSigningConfigs | Where-Object Identity -eq $Identity
+    $DkimSigningConfig = $DkimSigningConfigs | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
     if ( ('Present' -eq $Ensure ) -and ($null -eq $DkimSigningConfig) )
     {
@@ -144,7 +151,7 @@ function Set-TargetResource
             DomainName = $PSBoundParameters.Identity
         }
         $DkimSigningConfigParams.Remove('Identity') | Out-Null
-        Write-Verbose "Creating DkimSigningConfig $($Identity)."
+        Write-Verbose -Message "Creating DkimSigningConfig $($Identity)."
         New-DkimSigningConfig @DkimSigningConfigParams
     }
     elseif ( ('Present' -eq $Ensure ) -and ($null -ne $DkimSigningConfig) )
@@ -153,13 +160,13 @@ function Set-TargetResource
         $DkimSigningConfigParams.Remove('Ensure') | Out-Null
         $DkimSigningConfigParams.Remove('GlobalAdminAccount') | Out-Null
         $DkimSigningConfigParams.Remove('KeySize') | Out-Null
-        Write-Verbose "Setting DkimSigningConfig $($Identity) with values: $($DkimSigningConfigParams | Out-String)"
+        Write-Verbose -Message "Setting DkimSigningConfig $($Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $DkimSigningConfigParams)"
         Set-DkimSigningConfig @DkimSigningConfigParams -Confirm:$false
     }
 
     if ( ('Absent' -eq $Ensure ) -and ($DkimSigningConfig) )
     {
-        Write-Verbose "Removing DkimSigningConfig $($Identity) "
+        Write-Verbose -Message "Removing DkimSigningConfig $($Identity) "
     Remove-DkimSigningConfig -Identity $Identity -Confirm:$false
     }
 }
@@ -206,7 +213,8 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message "Testing DkimSigningConfig for $($Identity)"
+
+    Write-Verbose -Message "Testing configuration of DkimSigningConfig for $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -220,7 +228,7 @@ function Test-TargetResource
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck $ValuesToCheck.Keys
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

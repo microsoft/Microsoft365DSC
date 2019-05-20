@@ -33,19 +33,21 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    Write-Verbose -Message "Getting configuration of CASMailboxPlan for $Identity"
+
     if ('Absent' -eq $Ensure)
     {
         throw "EXOCASMailboxPlan configurations MUST specify Ensure value of 'Present'"
     }
 
-    Write-Verbose "Get-TargetResource will attempt to retrieve CASMailboxPlan $($Identity)"
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     $CASMailboxPlans = Get-CASMailboxPlan
 
-    $CASMailboxPlan = $CASMailboxPlans | Where-Object {$_.Identity -eq $Identity}
+    $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -eq $Identity }
     if ($null -eq $CASMailboxPlan)
     {
-        Write-Verbose "CASMailboxPlan $($Identity) does not exist."
+        Write-Verbose -Message "CASMailboxPlan $($Identity) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -56,7 +58,7 @@ function Get-TargetResource
             Ensure = 'Present'
         }
 
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -ne 'Ensure'}) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }) )
         {
             if ($null -ne $CASMailboxPlan.$KeyName)
             {
@@ -72,8 +74,8 @@ function Get-TargetResource
             }
         }
 
-        Write-Verbose "Found CASMailboxPlan $($Identity)"
-        Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
+        Write-Verbose -Message "Found CASMailboxPlan $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
 }
@@ -112,23 +114,26 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    Write-Verbose -Message "Setting configuration of CASMailboxPlan for $Identity"
+
     if ('Absent' -eq $Ensure)
     {
         throw "EXOCASMailboxPlan configurations MUST specify Ensure value of 'Present'"
     }
 
-    Write-Verbose 'Entering Set-TargetResource'
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
     $CASMailboxPlanParams = $PSBoundParameters
-    $CASMailboxPlanParams.Remove('Ensure') | out-null
-    $CASMailboxPlanParams.Remove('GlobalAdminAccount') | out-null
+    $CASMailboxPlanParams.Remove('Ensure') | Out-Null
+    $CASMailboxPlanParams.Remove('GlobalAdminAccount') | Out-Null
 
     $CASMailboxPlans = Get-CASMailboxPlan
-    $CASMailboxPlan = $CASMailboxPlans | Where-Object {$_.Identity -eq $Identity}
+    $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
     if ($null -ne $CASMailboxPlan)
     {
-        Write-Verbose "Setting CASMailboxPlan $Identity with values: $($CASMailboxPlanParams | Out-String)"
+        Write-Verbose -Message "Setting CASMailboxPlan $Identity with values: $(Convert-O365DscHashtableToString -Hashtable $CASMailboxPlanParams)"
         Set-CASMailboxPlan @CASMailboxPlanParams
     }
     else
@@ -172,7 +177,8 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message "Testing CASMailboxPlan for $($Identity)"
+
+    Write-Verbose -Message "Testing configuration of CASMailboxPlan for $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -186,7 +192,7 @@ function Test-TargetResource
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck $ValuesToCheck.Keys
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

@@ -33,7 +33,9 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose "Get-TargetResource will attempt to retrieve information for group $($DisplayName)"
+
+    Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
+
     $nullReturn = @{
         DisplayName = $DisplayName
         MailNickName = $Name
@@ -43,7 +45,6 @@ function Get-TargetResource
         Ensure = "Absent"
     }
 
-    Write-Verbose "Found Office365 Group $($group.DisplayName)"
     $catch = Connect-AzureAD -Credential $GlobalAdminAccount
 
     $ADGroup = Get-AzureADGroup -SearchString $MailNickName -ErrorAction SilentlyContinue
@@ -52,11 +53,11 @@ function Get-TargetResource
         $ADGroup = Get-AzureADGroup -SearchString $DisplayName -ErrorAction SilentlyContinue
         if ($null -eq $ADGroup)
         {
-            Write-Verbose "Office 365 Group {$DisplayName} was not found."
+            Write-Verbose -Message "Office 365 Group {$DisplayName} was not found."
             return $nullReturn
         }
     }
-    Write-Verbose "Found Existing Instance of Group {$($ADGroup.DisplayName)}"
+    Write-Verbose -Message "Found Existing Instance of Group {$($ADGroup.DisplayName)}"
 
     $membersList = Get-AzureADGroupMember -ObjectId $ADGroup.ObjectId
     $owners = Get-AzureADGroupOwner -ObjectId $ADGroup.ObjectId
@@ -71,10 +72,10 @@ function Get-TargetResource
         Ensure = "Present"
     }
 
-    Write-Verbose "Retrieved the following instance of the Group:"
+    Write-Verbose -Message "Retrieved the following instance of the Group:"
     foreach ($value in $returnValue.GetEnumerator())
     {
-        Write-Verbose "$($value.Key) = $($value.Value)"
+        Write-Verbose -Message "$($value.Key) = $($value.Value)"
     }
 
     return $returnValue
@@ -114,11 +115,13 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose "Entering Set-TargetResource"
-    Write-Verbose "Retrieving information about group $($DisplayName) to see if it already exists"
+
+    Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
+
     $currentGroup = Get-TargetResource @PSBoundParameters
 
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
     if ($Ensure -eq "Present")
     {
         $CurrentParameters = $PSBoundParameters
@@ -139,15 +142,15 @@ function Set-TargetResource
             {
                 $groupParams.Add("Name", $MailNickName)
             }
-            Write-Verbose "Initiating Group Creation"
-            Write-Verbose "Owner = $($groupParams.Owner)"
+            Write-Verbose -Message "Initiating Group Creation"
+            Write-Verbose -Message "Owner = $($groupParams.Owner)"
             New-UnifiedGroup @groupParams
-            Write-Verbose "Group Created"
+            Write-Verbose -Message "Group Created"
             if ($ManagedBy.Length -gt 1)
             {
                 for ($i = 1; $i -lt $ManagedBy.Length; $i++)
                 {
-                    Write-Verbose "Adding additional owner {$($ManagedBy[$i])} to group."
+                    Write-Verbose -Message "Adding additional owner {$($ManagedBy[$i])} to group."
                     if ("" -ne $Name)
                     {
                         Add-UnifiedGroupLinks -Identity $Name -LinkType Owner -Links $ManagedBy[$i]
@@ -183,7 +186,7 @@ function Set-TargetResource
 
             if ($difference.InputObject)
             {
-                Write-Verbose "Detected a difference in the current list of members and the desired one"
+                Write-Verbose -Message "Detected a difference in the current list of members and the desired one"
                 $membersToRemove = @()
                 $membersToAdd = @()
                 foreach ($diff in $difference)
@@ -265,7 +268,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing Office 365 Group $DisplayName"
+    Write-Verbose -Message "Testing configuration of Office 365 Group $DisplayName"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -280,7 +283,7 @@ function Test-TargetResource
                                                                    "Description", `
                                                                    "Members")
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

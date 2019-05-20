@@ -429,9 +429,9 @@ function Show-O365GUI
             {
                 $form.Hide()
                 $SelectedComponents = @()
-                foreach ($panel in ($form.Controls[0].Controls | Where-Object { $_.GetType().Name -eq "Panel"}))
+                foreach ($panel in ($form.Controls[0].Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Panel"}))
                 {
-                    foreach ($checkbox in ($panel.Controls | Where-Object { $_.GetType().Name -eq "Checkbox"}))
+                    foreach ($checkbox in ($panel.Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Checkbox"}))
                     {
                         if ($checkbox.Checked)
                         {

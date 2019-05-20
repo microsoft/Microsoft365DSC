@@ -46,6 +46,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Getting configuration for hub site collection $Url"
+
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
@@ -68,13 +70,13 @@ function Get-TargetResource
         $site = Get-SPOSite $Url
         if ($null -eq $site)
         {
-            Write-Verbose "The specified Site Collection doesn't already exist."
+            Write-Verbose -Message "The specified Site Collection doesn't already exist."
             return $nullReturn
         }
 
         if ($site.IsHubSite -eq $false)
         {
-            Write-Verbose "The specified Site Collection isn't a hub site."
+            Write-Verbose -Message "The specified Site Collection isn't a hub site."
             return $nullReturn
         }
         else
@@ -133,7 +135,7 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose "The specified Site Collection doesn't already exist."
+        Write-Verbose -Message "The specified Site Collection doesn't already exist."
         return $nullReturn
     }
 }
@@ -184,6 +186,9 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    Write-Verbose -Message "Setting configuration for hub site collection $Url"
+
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
@@ -201,7 +206,7 @@ function Set-TargetResource
 
     if($Ensure -eq "Present" -and $currentValues.Ensure -eq "Absent")
     {
-        Write-Verbose "Configuring site collection as Hub Site"
+        Write-Verbose -Message "Configuring site collection as Hub Site"
         Register-SPOHubSite -Site $site -Principals $AllowedToJoin | Out-Null
         $params = @{
             Identity = $site
@@ -234,7 +239,7 @@ function Set-TargetResource
 
         if ($params.Count -ne 1)
         {
-            Write-Verbose "Updating Hub Site properties"
+            Write-Verbose -Message "Updating Hub Site properties"
             Set-SPOHubSite @params | Out-Null
         }
 
@@ -264,7 +269,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Present")
     {
-        Write-Verbose "Updating Hub Site settings"
+        Write-Verbose -Message "Updating Hub Site settings"
         $params = @{
             Identity = $site
         }
@@ -301,7 +306,7 @@ function Set-TargetResource
 
         if ($params.Count -ne 1)
         {
-            Write-Verbose "Updating Hub Site properties"
+            Write-Verbose -Message "Updating Hub Site properties"
             Set-SPOHubSite @params | Out-Null
         }
 
@@ -321,7 +326,7 @@ function Set-TargetResource
                 $groups = Get-MsolGroup -All
                 $regex = "^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
 
-                Write-Verbose "Updating Hub Site permissions"
+                Write-Verbose -Message "Updating Hub Site permissions"
                 foreach ($item in $differences)
                 {
                     if ($item.SideIndicator -eq "<=")
@@ -333,8 +338,8 @@ function Set-TargetResource
                             if ($principal -notmatch $regex)
                             {
                                 $group = $groups | Where-Object -FilterScript {
-                                                    $_.DisplayName -eq $principal
-                                                }
+                                                       $_.DisplayName -eq $principal
+                                                   }
 
                                 if ($group.Count -ne 1)
                                 {
@@ -408,7 +413,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing hub site collection $Url"
+    Write-Verbose -Message "Testing configuration for hub site collection $Url"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -426,7 +431,7 @@ function Test-TargetResource
                                                                    "AllowedToJoin", `
                                                                    "SiteDesignId")
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

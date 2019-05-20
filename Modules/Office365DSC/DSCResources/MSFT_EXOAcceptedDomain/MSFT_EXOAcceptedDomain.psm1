@@ -33,24 +33,26 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose "Get-TargetResource will attempt to retrieve Accepted Domain configuration for $($Identity)"
+
+    Write-Verbose -Message "Getting configuration of Accepted Domain for $Identity"
+
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     $AllAcceptedDomains = Get-AcceptedDomain
 
-    $AcceptedDomain = ($AllAcceptedDomains | Where-Object Identity -IMatch $Identity)
+    $AcceptedDomain = ($AllAcceptedDomains | Where-Object -FilterScript { $_.Identity -IMatch $Identity })
 
-    if (!$AcceptedDomain)
+    if ($null -eq $AcceptedDomain)
     {
-        Write-Verbose "AcceptedDomain configuration for $($Identity) does not exist."
+        Write-Verbose -Message "AcceptedDomain configuration for $($Identity) does not exist."
 
         # Check to see if $Identity matches a verified domain in the O365 Tenant
         Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-        $VerifiedDomains = Get-AzureADDomain | Where-Object {$_.IsVerified}
-        $MatchingVerifiedDomain = $VerifiedDomains | Where-Object {$_.Name -eq $Identity}
+        $VerifiedDomains = Get-AzureADDomain | Where-Object -FilterScript { $_.IsVerified }
+        $MatchingVerifiedDomain = $VerifiedDomains | Where-Object -FilterScript { $_.Name -eq $Identity }
 
         if ($null -ne $MatchingVerifiedDomain)
         {
-            Write-Verbose "A verified domain matching $($Identity) does not exist in this O365 Tenant."
+            Write-Verbose -Message "A verified domain matching $($Identity) does not exist in this O365 Tenant."
             $nullReturn = @{
                 DomainType         = $DomainType
                 Ensure             = $Ensure
@@ -90,7 +92,7 @@ function Get-TargetResource
             OutboundOnly       = $AcceptedDomain.OutboundOnly
         }
 
-        Write-Verbose "Found AcceptedDomain configuration for $($Identity)"
+        Write-Verbose -Message "Found AcceptedDomain configuration for $($Identity)"
         return $result
     }
 }
@@ -129,7 +131,9 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose 'Entering Set-TargetResource'
+
+    Write-Verbose -Message "Setting configuration of Accepted Domain for $Identity"
+
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     $AcceptedDomainParams = @{
         DomainType      = $DomainType
@@ -138,7 +142,7 @@ function Set-TargetResource
         OutboundOnly    = $OutboundOnly
     }
 
-    Write-Verbose "Setting AcceptedDomain for $($Identity) with values: $($AcceptedDomainParams | Out-String)"
+    Write-Verbose -Message "Setting AcceptedDomain for $($Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $AcceptedDomainParams)"
     Set-AcceptedDomain @AcceptedDomainParams
 }
 
@@ -177,7 +181,8 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message "Testing AcceptedDomain for $($Identity)"
+
+    Write-Verbose -Message "Testing configuration of Accepted Domain for $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -191,7 +196,7 @@ function Test-TargetResource
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck $ValuesToCheck.Keys
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

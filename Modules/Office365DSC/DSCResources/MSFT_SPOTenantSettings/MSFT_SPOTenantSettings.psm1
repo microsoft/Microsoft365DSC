@@ -91,6 +91,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Getting configuration for SPO Tenant"
+
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -147,7 +149,7 @@ function Get-TargetResource
     {
         if ($error[0].Exception.Message -like "No connection available")
         {
-            Write-Verbose "Make sure that you are connected to your SPOService"
+            Write-Verbose -Message "Make sure that you are connected to your SPOService"
         }
         return $nullReturn
     }
@@ -244,6 +246,8 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    Write-Verbose -Message "Setting configuration for SPO Tenant"
 
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
@@ -353,7 +357,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing SPO Tenant"
+    Write-Verbose -Message "Testing configuration for SPO Tenant"
 
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
@@ -384,7 +388,7 @@ function Test-TargetResource
                                                                    "FilePickerExternalImageSearchEnabled", `
                                                                    "HideDefaultThemes")
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

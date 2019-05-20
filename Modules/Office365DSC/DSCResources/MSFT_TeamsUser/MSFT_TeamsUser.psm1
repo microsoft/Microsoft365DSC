@@ -67,11 +67,11 @@ function Get-TargetResource
 
     if ($null -eq $allMembers)
     {
-        Write-Verbose "Failed to get Team's users for Team $TeamName"
+        Write-Verbose -Message "Failed to get Team's users for Team $TeamName"
         return $nullReturn
     }
 
-    $myUser = $allMembers | Where-Object {$_.User -eq $User}
+    $myUser = $allMembers | Where-Object -FilterScript { $_.User -eq $User }
     Write-Verbose -Message "Found team user $($myUser.User) with role:$($myUser.Role)"
     return @{
         User               = $myUser.User
@@ -184,7 +184,7 @@ function Test-TargetResource
                                                                    "User", `
                                                                    "Role")
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

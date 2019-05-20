@@ -227,14 +227,17 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose "Get-TargetResource will attempt to retrieve HostedContentFilterPolicy $($Identity)"
+
+    Write-Verbose -Message "Getting configuration of HostedContentFilterPolicy for $Identity"
+
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
     $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
 
-    $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object {$_.Identity -eq $Identity}
+    $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
     if ($null -eq $HostedContentFilterPolicy)
     {
-        Write-Verbose "HostedContentFilterPolicy $($Identity) does not exist."
+        Write-Verbose -Message "HostedContentFilterPolicy $($Identity) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -245,7 +248,7 @@ function Get-TargetResource
             Ensure = 'Present'
         }
 
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -inotmatch 'Ensure|MakeDefault'}) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -inotmatch 'Ensure|MakeDefault' }) )
         {
             if ($null -ne $HostedContentFilterPolicy.$KeyName)
             {
@@ -274,8 +277,8 @@ function Get-TargetResource
             }
         }
 
-        Write-Verbose "Found HostedContentFilterPolicy $($Identity)"
-        Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
+        Write-Verbose -Message "Found HostedContentFilterPolicy $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
 }
@@ -508,11 +511,14 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose 'Entering Set-TargetResource'
+
+    Write-Verbose -Message "Setting configuration of HostedContentFilterPolicy for $Identity"
+
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
     $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
 
-    $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object { $_.Identity -eq $Identity }
+    $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
     $HostedContentFilterPolicyParams = $PSBoundParameters
     $HostedContentFilterPolicyParams.Remove('Ensure') | Out-Null
     $HostedContentFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
@@ -524,12 +530,12 @@ function Set-TargetResource
             Name = $HostedContentFilterPolicyParams.Identity
         }
         $HostedContentFilterPolicyParams.Remove('Identity') | Out-Null
-        Write-Verbose "Creating HostedContentFilterPolicy $($Identity)."
+        Write-Verbose -Message "Creating HostedContentFilterPolicy $($Identity)."
         New-HostedContentFilterPolicy @HostedContentFilterPolicyParams
     }
     elseif ( ('Present' -eq $Ensure ) -and ($null -ne $HostedContentFilterPolicy) )
     {
-        Write-Verbose "Setting HostedContentFilterPolicy $($Identity) with values: $($HostedContentFilterPolicyParams | Out-String)."
+        Write-Verbose -Message "Setting HostedContentFilterPolicy $($Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $HostedContentFilterPolicyParams)."
         if ($PSBoundParameters.MakeDefault)
         {
             Set-HostedContentFilterPolicy @HostedContentFilterPolicyParams -MakeDefault -Confirm:$false
@@ -541,7 +547,7 @@ function Set-TargetResource
     }
     elseif ( ('Absent' -eq $Ensure ) -and ($null -ne $HostedContentFilterPolicy) )
     {
-        Write-Verbose "Removing HostedContentFilterPolicy $($Identity) "
+        Write-Verbose -Message "Removing HostedContentFilterPolicy $($Identity) "
         Remove-HostedContentFilterPolicy -Identity $Identity -Confirm:$false
     }
 }
@@ -775,7 +781,8 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message "Testing HostedContentFilterPolicy for $($Identity)"
+
+    Write-Verbose -Message "Testing configuration of HostedContentFilterPolicy for $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -789,7 +796,7 @@ function Test-TargetResource
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck $ValuesToCheck.Keys
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

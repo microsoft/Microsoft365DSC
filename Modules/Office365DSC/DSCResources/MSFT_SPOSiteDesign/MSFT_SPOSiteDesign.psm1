@@ -51,6 +51,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Getting configuration for SPO SiteDesign for $Title"
+
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -161,6 +163,8 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration for SPO SiteDesign for $Title"
+
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $curSiteDesign = Get-TargetResource @PSBoundParameters
@@ -169,7 +173,7 @@ function Set-TargetResource
     $scriptIds = @()
     foreach ($siteScriptName in $SiteScriptNames)
     {
-        $siteScript = Get-PnPSiteScript | Where-Object {$_.Title -eq $siteScriptName}
+        $siteScript = Get-PnPSiteScript | Where-Object -FilterScript { $_.Title -eq $siteScriptName }
         $scriptIds += $siteScript.Id
     }
 
@@ -259,7 +263,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing SPOSiteDesign for $SiteDesignTitle"
+    Write-Verbose -Message "Testing configuration for SPO SiteDesign for $Title"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -274,7 +278,7 @@ function Test-TargetResource
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck $ValuesToCheck.Keys
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

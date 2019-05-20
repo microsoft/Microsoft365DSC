@@ -139,6 +139,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration for site collection $Url"
+
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -181,7 +183,7 @@ function Get-TargetResource
         $site = Get-SPOSite $Url
         if ($null -eq $site)
         {
-            Write-Verbose "The specified Site Collection doesn't exist."
+            Write-Verbose -Message "The specified Site Collection doesn't exist."
             return $nullReturn
         }
 
@@ -250,7 +252,7 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose "The specified Site Collection doesn't exist."
+        Write-Verbose -Message "The specified Site Collection doesn't exist."
         return $nullReturn
     }
 }
@@ -394,6 +396,8 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    Write-Verbose -Message "Setting configuration for site collection $Url"
 
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
@@ -571,7 +575,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing site collection $Url"
+    Write-Verbose -Message "Testing configuration for site collection $Url"
 
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
@@ -612,7 +616,7 @@ function Test-TargetResource
                                                                    "DefaultLinkPermission",
                                                                    "HubUrl")
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }
@@ -794,11 +798,11 @@ function Set-SPOSiteConfiguration
     )
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
-    $deletedSite = Get-SPODeletedSite | Where-Object { $_.Url -eq $Url }
+    $deletedSite = Get-SPODeletedSite | Where-Object -FilterScript { $_.Url -eq $Url }
     if ($deletedSite)
     {
-        Write-Verbose "A site with URL $($URL) was found in the Recycle Bin."
-        Write-Verbose "Restoring deleted SPOSite $($Url)"
+        Write-Verbose -Message "A site with URL $($URL) was found in the Recycle Bin."
+        Write-Verbose -Message "Restoring deleted SPOSite $($Url)"
         Restore-SPODeletedSite $deletedSite
         Start-Sleep -Seconds 5
     }
@@ -808,7 +812,7 @@ function Set-SPOSiteConfiguration
     }
     catch
     {
-        Write-Verbose "Site does not exist. Creating it"
+        Write-Verbose -Message "Site does not exist. Creating it"
     }
     if ($null -ne $site)
     {

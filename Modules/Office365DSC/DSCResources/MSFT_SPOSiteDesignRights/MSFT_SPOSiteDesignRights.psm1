@@ -31,6 +31,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Getting configuration for SPO SiteDesignRights for $SiteDesignTitle"
+
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -53,11 +55,11 @@ function Get-TargetResource
     Write-Verbose -Message "Site Design ID is $($siteDesign.Id)"
 
     $siteDesignRights = Get-PnPSiteDesignRights -Identity $siteDesign.Id -ErrorAction SilentlyContinue | `
-        Where-Object {$_.Rights -eq $Rights}
+        Where-Object -FilterScript { $_.Rights -eq $Rights }
 
     if ($null -eq $siteDesignRights)
     {
-        Write-Verbose "No Site Design Rights exist for site design $SiteDesignTitle."
+        Write-Verbose -Message "No Site Design Rights exist for site design $SiteDesignTitle."
         return $nullReturn
     }
 
@@ -68,7 +70,7 @@ function Get-TargetResource
         $curUserPrincipals += $siteDesignRight.PrincipalName.split("|")[2]
     }
 
-    Write-Verbose "Site Design Rights User Principals = $($curUserPrincipals)"
+    Write-Verbose -Message "Site Design Rights User Principals = $($curUserPrincipals)"
     return @{
         SiteDesignTitle    = $SiteDesignTitle
         UserPrincipals     = $curUserPrincipals
@@ -111,6 +113,8 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration for SPO SiteDesignRights for $SiteDesignTitle"
+
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $cursiteDesign = Get-PnPSiteDesign -Identity $SiteDesignTitle
@@ -128,7 +132,7 @@ function Set-TargetResource
 
         if ($difference.InputObject)
         {
-            Write-Verbose "Detected a difference in the current design rights of user principals and the desired one"
+            Write-Verbose -Message "Detected a difference in the current design rights of user principals and the desired one"
             $principalsToRemove = @()
             $principalsToAdd = @()
             foreach ($diff in $difference)
@@ -203,7 +207,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing SPOSiteDesignRights for $SiteDesignTitle"
+    Write-Verbose -Message "Testing configuration for SPO SiteDesignRights for $SiteDesignTitle"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -216,7 +220,7 @@ function Test-TargetResource
                                                                    "Rights", `
                                                                    "Ensure")
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

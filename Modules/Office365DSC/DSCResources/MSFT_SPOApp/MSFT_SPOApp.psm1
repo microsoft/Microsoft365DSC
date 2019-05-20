@@ -34,8 +34,10 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "GSetting configuration for app $Identity"
+
     $nullReturn = @{
-        Identity        = $Title
+        Identity        = ""
         Path            = $null
         Publish         = $Publish
         Overwrite       = $Overwrite
@@ -45,14 +47,14 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message "Getting app instance $Title"
         Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
         $app = Get-PnPApp -Identity $Identity -ErrorAction SilentlyContinue
         if ($null -eq $app)
         {
-            Write-Verbose "The specified app wasn't found."
+            Write-Verbose -Message "The specified app wasn't found."
             return $nullReturn
         }
+
         return @{
             Identity        = $app.Title
             Path            = $Path
@@ -64,7 +66,7 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose "The specified app doesn't already exist."
+        Write-Verbose -Message "The specified app doesn't already exist."
         return $nullReturn
     }
 }
@@ -104,20 +106,24 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration for app $Identity"
+
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+
     $currentApp = Get-TargetResource @PSBoundParameters
+
     if ($Ensure -eq "Present" -and $currentApp.Ensure -eq "Present" -and $Overwrite -eq $false)
     {
         throw "The app already exists in the Catalog. To overwrite it, please make sure you set the Overwrite property to 'true'."
     }
     elseif ($Ensure -eq "Present")
     {
-        Write-Verbose -Message "Adding app instance $Title"
+        Write-Verbose -Message "Adding app instance $Identity"
         Add-PnPApp -Path $Path -Overwrite $Overwrite
     }
     elseif ($Ensure -eq "Absent" -and $currentApp.Ensure -eq "Present")
     {
-        Write-Verbose -Message "Removing app instance $Title"
+        Write-Verbose -Message "Removing app instance $Identity"
         Remove-PnpApp -Identity $Identity
     }
 }
@@ -158,7 +164,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing app $Title"
+    Write-Verbose -Message "Testing configuration for app $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -168,9 +174,9 @@ function Test-TargetResource
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck @("Ensure", `
-                                                                   "Title")
+                                                                   "Identity")
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

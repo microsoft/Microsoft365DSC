@@ -103,6 +103,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
+
     $nullReturn = @{
         UserPrincipalName = $null
         DisplayName = $null
@@ -120,13 +122,13 @@ function Get-TargetResource
         Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
         Connect-MsolService -Credential $GlobalAdminAccount
         $user = Get-MSOLUser -UserPrincipalName $UserPrincipalName -ErrorAction SilentlyContinue
-        if (!$user)
+        if ($null -eq $user)
         {
-            Write-Verbose "The specified User doesn't already exist."
+            Write-Verbose -Message "The specified User doesn't already exist."
             return $nullReturn
         }
 
-        Write-Verbose "Found User $($UserPrincipalName)"
+        Write-Verbose -Message "Found User $($UserPrincipalName)"
         $currentLicenseAssignment = @()
         foreach($license in $user.Licenses)
         {
@@ -168,7 +170,7 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose "The specified User doesn't already exist."
+        Write-Verbose -Message "The specified User doesn't already exist."
         return $nullReturn
     }
     return $nullReturn
@@ -278,6 +280,8 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration of Office 365 User $UserPrincipalName"
+
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $user = Get-TargetResource @PSBoundParameters
@@ -288,7 +292,7 @@ function Set-TargetResource
 
     if ($user.UserPrincipalName)
     {
-        Write-Verbose "Comparing License Assignment for user $UserPrincipalName"
+        Write-Verbose -Message "Comparing License Assignment for user $UserPrincipalName"
         $diff = Compare-Object -ReferenceObject $user.LicenseAssignment -DifferenceObject $newLicenseAssignment
         $CurrentParameters.Remove("LicenseAssignment")
         if($Password)
@@ -298,9 +302,9 @@ function Set-TargetResource
         $CurrentParameters.Remove("LicenseAssignment")
         if ($diff.InputObject)
         {
-            Write-Verbose "Detected a change in license assignment for user $UserPrincipalName"
-            Write-Verbose "Current License Assignment is $($user.LicenseAssignment)"
-            Write-Verbose "New License Assignment is $($newLicenseAssignment)"
+            Write-Verbose -Message "Detected a change in license assignment for user $UserPrincipalName"
+            Write-Verbose -Message "Current License Assignment is $($user.LicenseAssignment)"
+            Write-Verbose -Message "New License Assignment is $($newLicenseAssignment)"
             $licensesToRemove = @()
             $licensesToAdd = @()
             foreach($difference in $diff)
@@ -314,14 +318,14 @@ function Set-TargetResource
                     $licensesToAdd += $difference.InputObject
                 }
             }
-            Write-Verbose "Updating License Assignment"
+            Write-Verbose -Message "Updating License Assignment"
             try
             {
                 Set-MsolUserLicense -UserPrincipalName $UserPrincipalName -AddLicenses $LicenseAssignment -ErrorAction SilentlyContinue
             }
             catch
             {
-                Write-Verbose "License {$($LicenseAssignment)} doesn't exist in tenant."
+                Write-Verbose -Message "License {$($LicenseAssignment)} doesn't exist in tenant."
             }
         }
         Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
@@ -449,7 +453,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing Office 365 User $UserPrincipalName"
+    Write-Verbose -Message "Testing configuration of Office 365 User $UserPrincipalName"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -481,7 +485,7 @@ function Test-TargetResource
                                                                    "Title", `
                                                                    "UserType")
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

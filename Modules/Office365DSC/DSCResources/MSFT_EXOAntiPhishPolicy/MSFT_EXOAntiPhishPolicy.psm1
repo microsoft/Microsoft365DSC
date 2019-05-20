@@ -117,14 +117,16 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose "Get-TargetResource will attempt to retrieve AntiPhishPolicy $($Identity)"
+
+    Write-Verbose -Message "Getting configuration of AntiPhishPolicy for $Identity"
+
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     $AntiPhishPolicies = Get-AntiPhishPolicy
 
-    $AntiPhishPolicy = $AntiPhishPolicies | Where-Object Identity -eq $Identity
-    if (-NOT $AntiPhishPolicy)
+    $AntiPhishPolicy = $AntiPhishPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    if (-not $AntiPhishPolicy)
     {
-        Write-Verbose "AntiPhishPolicy $($Identity) does not exist."
+        Write-Verbose -Message "AntiPhishPolicy $($Identity) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -135,7 +137,7 @@ function Get-TargetResource
             Ensure = 'Present'
         }
 
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -ne 'Ensure'}) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }) )
         {
             if ($null -ne $AntiPhishPolicy.$KeyName)
             {
@@ -151,8 +153,8 @@ function Get-TargetResource
             }
         }
 
-        Write-Verbose "Found AntiPhishPolicy $($Identity)"
-        Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
+        Write-Verbose -Message "Found AntiPhishPolicy $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
 }
@@ -275,13 +277,15 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose 'Entering Set-TargetResource'
+
+    Write-Verbose -Message "Setting configuration of AntiPhishPolicy for $Identity"
+
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     $AntiPhishPolicies = Get-AntiPhishPolicy
 
-    $AntiPhishPolicy = $AntiPhishPolicies | Where-Object Identity -eq $Identity
+    $AntiPhishPolicy = $AntiPhishPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
-    if ( ('Present' -eq $Ensure ) -and (-NOT $AntiPhishPolicy) )
+    if ( ('Present' -eq $Ensure ) -and (-not $AntiPhishPolicy) )
     {
         New-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
         Start-Sleep -Seconds 1
@@ -295,7 +299,7 @@ function Set-TargetResource
 
     if ( ('Absent' -eq $Ensure ) -and ($AntiPhishPolicy) )
     {
-        Write-Verbose "Removing AntiPhishPolicy $($Identity)"
+        Write-Verbose -Message "Removing AntiPhishPolicy $($Identity)"
         Remove-AntiPhishPolicy -Identity $Identity -Confirm:$false -Force
     }
 }
@@ -419,7 +423,8 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message "Testing AntiPhishPolicy for $($Identity)"
+
+    Write-Verbose -Message "Testing configuration of AntiPhishPolicy for $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -433,7 +438,7 @@ function Test-TargetResource
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck $ValuesToCheck.Keys
 
-    Write-Verbose "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }
