@@ -2691,3 +2691,30 @@ function Compare-SPOTheme
         return "Themes are not identical"
     }
 }
+
+function Get-SPOAdminUrl
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory=$false)]
+        [switch]
+        $UseMFA
+    )
+    if ($UseMFA)
+    {
+        $UseMFASwitch = @{UseMFA = $true}
+    }
+    else
+    {
+        $UseMFASwitch = @{}
+    }
+    Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
+    Test-AzureADLogin @useMFASwitch
+    Write-Verbose -Message "Getting SharePoint Online admin URL..."
+    $defaultDomain = Get-AzureADDomain | Where-Object {$_.Name -like "*.onmicrosoft.com" -and $_.IsInitial -eq $true} # We don't use IsDefault here because the default could be a custom domain
+    $global:tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.com",""
+    $global:AdminUrl = "https://$global:tenantName-admin.sharepoint.com"
+    Write-Verbose -Message "SharePoint Online admin URL is $global:AdminUrl"
+    return $global:AdminUrl
+}

@@ -47,20 +47,11 @@ function Start-O365ConfigurationExtract
     # Obtain central administration url from a User Principal Name
     $centralAdminUrl = $null
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    $users = Get-AzureADUser
-    if ($users.Count -gt 0)
-    {
-        $tenantParts = $users[0].UserPrincipalName.Split('@')
-        if ($tenantParts.Length -gt 0)
-        {
-            $tenantName = $tenantParts[1].Split(".")[0]
-            $centralAdminUrl = "https://" + $tenantName + "-admin.sharepoint.com"
-            Add-ConfigurationDataEntry -Node "NonNodeData" `
-                                     -Key "CentralAdminUrl" `
-                                     -Value $centralAdminUrl `
-                                     -Description "Url of the SharePoint Central Adminsitration"
-        }
-    }
+    $centralAdminUrl = Get-SPOAdminUrl
+    Add-ConfigurationDataEntry -Node "NonNodeData" `
+                               -Key "CentralAdminUrl" `
+                               -Value $centralAdminUrl `
+                               -Description "Url of the SharePoint Central Adminsitration"
 
     # Add the GlobalAdminAccount to the Credentials List
     Save-Credentials -UserName "globaladmin"
@@ -528,7 +519,7 @@ function Start-O365ConfigurationExtract
             $i = 1
             foreach ($file in $allFiles)
             {
-                Write-Information "    - [$i/$($allFiles.Length)] $($file.Name)}"
+                Write-Information "    - [$i/$($allFiles.Length)] $($file.Name)"
                 $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl}
 
                 $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
