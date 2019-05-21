@@ -213,7 +213,7 @@ function Show-O365GUI
         $pnlSPO = New-Object System.Windows.Forms.Panel
         $pnlSPO.Top = 88 + $topBannerHeight
         $pnlSPO.Left = $SecondColumnLeft
-        $pnlSPO.Height = 140
+        $pnlSPO.Height = 180
         $pnlSPO.Width = 300
         $pnlSPO.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -280,6 +280,14 @@ function Show-O365GUI
         $chckSPOSiteDesignRights.Checked = $true
         $chckSPOSiteDesignRights.Text = "Site Design Rights"
         $pnlSPO.Controls.Add($chckSPOSiteDesignRights)
+
+        $chckSPOTheme = New-Object System.Windows.Forms.CheckBox
+        $chckSPOTheme.Top = 160
+        $chckSPOTheme.AutoSize = $true;
+        $chckSPOTheme.Name = "chckSPOTheme"
+        $chckSPOTheme.Checked = $false
+        $chckSPOTheme.Text = "Themes"
+        $pnlSPO.Controls.Add($chckSPOTheme)
         #endregion
 
         #region Teams
