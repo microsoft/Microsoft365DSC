@@ -42,6 +42,9 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    Write-Verbose -Message "Testing configuration of HostedOutboundSpamFilterPolicy for $Identity"
+
     if ('Absent' -eq $Ensure)
     {
         throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Ensure value of 'Present'"
@@ -52,14 +55,14 @@ function Get-TargetResource
         throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Identity value of 'Default'"
     }
 
-    Write-Verbose "Get-TargetResource will attempt to retrieve HostedOutboundSpamFilterPolicy $($Identity)"
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
     $HostedOutboundSpamFilterPolicies = Get-HostedOutboundSpamFilterPolicy
 
-    $HostedOutboundSpamFilterPolicy = $HostedOutboundSpamFilterPolicies | Where-Object Identity -eq $Identity
-    if (-NOT $HostedOutboundSpamFilterPolicy)
+    $HostedOutboundSpamFilterPolicy = $HostedOutboundSpamFilterPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    if (-not $HostedOutboundSpamFilterPolicy)
     {
-        Write-Verbose "HostedOutboundSpamFilterPolicy $($Identity) does not exist."
+        Write-Verbose -Message "HostedOutboundSpamFilterPolicy $($Identity) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -70,7 +73,7 @@ function Get-TargetResource
             Ensure = 'Present'
         }
 
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -ne 'Ensure'}) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
         {
             if ($null -ne $HostedOutboundSpamFilterPolicy.$KeyName)
             {
@@ -86,8 +89,8 @@ function Get-TargetResource
             }
         }
 
-        Write-Verbose "Found HostedOutboundSpamFilterPolicy $($Identity)"
-        Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
+        Write-Verbose -Message "Found HostedOutboundSpamFilterPolicy $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
 }
@@ -135,6 +138,9 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    Write-Verbose -Message "Testing configuration of HostedOutboundSpamFilterPolicy for $Identity"
+
     if ('Absent' -eq $Ensure)
     {
         throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Ensure value of 'Present'"
@@ -145,14 +151,14 @@ function Set-TargetResource
         throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Identity value of 'Default'"
     }
 
-    Write-Verbose 'Entering Set-TargetResource'
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-    $HostedOutboundSpamFilterPolicyParams = $PSBoundParameters
-    $HostedOutboundSpamFilterPolicyParams.Remove('Ensure') | out-null
-    $HostedOutboundSpamFilterPolicyParams.Remove('GlobalAdminAccount') | out-null
-    $HostedOutboundSpamFilterPolicyParams.Remove('IsSingleInstance') | out-null
 
-    Write-Verbose "Setting HostedOutboundSpamFilterPolicy $Identity with values: $($HostedOutboundSpamFilterPolicyParams | Out-String)"
+    $HostedOutboundSpamFilterPolicyParams = $PSBoundParameters
+    $HostedOutboundSpamFilterPolicyParams.Remove('Ensure') | Out-Null
+    $HostedOutboundSpamFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
+    $HostedOutboundSpamFilterPolicyParams.Remove('IsSingleInstance') | Out-Null
+
+    Write-Verbose -Message "Setting HostedOutboundSpamFilterPolicy $Identity with values: $(Convert-O365DscHashtableToString -Hashtable $HostedOutboundSpamFilterPolicyParams)"
     Set-HostedOutboundSpamFilterPolicy @HostedOutboundSpamFilterPolicyParams
 }
 
@@ -200,23 +206,24 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message "Testing HostedOutboundSpamFilterPolicy for $($Identity)"
+
+    Write-Verbose -Message "Testing configuration of HostedOutboundSpamFilterPolicy for $Identity"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
-    $ValuesToCheck.Remove('IsSingleInstance') | out-null
-    $ValuesToCheck.Remove('Verbose') | out-null
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
+    $ValuesToCheck.Remove('Verbose') | Out-Null
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-    if ($TestResult)
-    {
-        Write-Verbose 'Test-TargetResource returned True'
-    }
-    else
-    {
-        Write-Verbose 'Test-TargetResource returned False'
-    }
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck $ValuesToCheck.Keys
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

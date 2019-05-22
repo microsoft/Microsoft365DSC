@@ -33,6 +33,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Getting configuration of Teams channel $DisplayName"
+
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -52,18 +54,22 @@ function Get-TargetResource
 
         Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
-        $channel = Get-TeamChannel -GroupId $team.GroupId -ErrorAction SilentlyContinue | Where-Object {($_.DisplayName -eq $DisplayName)}
+        $channel = Get-TeamChannel -GroupId $team.GroupId `
+                                   -ErrorAction SilentlyContinue `
+                                        | Where-Object -FilterScript {
+                                            ($_.DisplayName -eq $DisplayName)
+                                          }
 
         #Current channel doesnt exist and trying to rename throw an error
         if (($null -eq $channel) -and $CurrentParameters.ContainsKey("NewDisplayName"))
         {
-            Write-Verbose "Cannot rename channel $DisplayName , doesnt exist in current Team"
+            Write-Verbose -Message "Cannot rename channel $DisplayName , doesnt exist in current Team"
             throw "Channel named $DisplayName doesn't exist in current Team"
         }
 
         if ($null -eq $channel)
         {
-            Write-Verbose "Failed to get team channels with ID $($team.GroupId) and display name of $DisplayName"
+            Write-Verbose -Message "Failed to get team channels with ID $($team.GroupId) and display name of $DisplayName"
             return $nullReturn
         }
 
@@ -116,10 +122,10 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration of Teams channel $DisplayName"
+
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
-    Write-Verbose  -Message "Entering Set-TargetResource"
-    Write-Verbose  -Message "Retrieving information about team channel $($DisplayName) to see if it already exists"
     $channel = Get-TargetResource @PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
@@ -203,11 +209,20 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing creation of new Team's channel"
+    Write-Verbose -Message "Testing configuration of Teams channel $DisplayName"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure")
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @("Ensure")
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource

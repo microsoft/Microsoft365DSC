@@ -109,6 +109,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Getting configuration for SPO Sharing settings"
+
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -171,7 +173,7 @@ function Get-TargetResource
     {
         if ($error[0].Exception.Message -like "No connection available")
         {
-            Write-Verbose "Make sure that you are connected to your SPOService"
+            Write-Verbose -Message "Make sure that you are connected to your SPOService"
         }
         return $nullReturn
     }
@@ -286,6 +288,8 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    Write-Verbose -Message "Setting configuration for SPO Sharing settings"
 
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
@@ -443,33 +447,43 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    Write-Verbose -Message "Testing configuration for SPO Sharing settings"
+
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose -Message "Testing SPO Tenant"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("IsSingleInstance", `
-            "SharingCapability", `
-            "ShowEveryoneClaim", `
-            "ShowAllUsersClaim", `
-            "ShowEveryoneExceptExternalUsersClaim", `
-            "ProvisionSharedWithEveryoneFolder", `
-            "EnableGuestSignInAcceleration", `
-            "BccExternalSharingInvitations", `
-            "BccExternalSharingInvitationsList", `
-            "RequireAnonymousLinksExpireInDays", `
-            "SharingAllowedDomainList", `
-            "SharingBlockedDomainList", `
-            "SharingDomainRestrictionMode", `
-            "DefaultSharingLinkType", `
-            "PreventExternalUsersFromResharing", `
-            "ShowPeoplePickerSuggestionsForGuestUsers", `
-            "FileAnonymousLinkType", `
-            "FolderAnonymousLinkType", `
-            "NotifyOwnersWhenItemsReshared", `
-            "RequireAcceptingAccountMatchInvitedAccount", `
-            "DefaultLinkPermission"
-    )
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @("IsSingleInstance", `
+                                                                   "SharingCapability", `
+                                                                   "ShowEveryoneClaim", `
+                                                                   "ShowAllUsersClaim", `
+                                                                   "ShowEveryoneExceptExternalUsersClaim", `
+                                                                   "ProvisionSharedWithEveryoneFolder", `
+                                                                   "EnableGuestSignInAcceleration", `
+                                                                   "BccExternalSharingInvitations", `
+                                                                   "BccExternalSharingInvitationsList", `
+                                                                   "RequireAnonymousLinksExpireInDays", `
+                                                                   "SharingAllowedDomainList", `
+                                                                   "SharingBlockedDomainList", `
+                                                                   "SharingDomainRestrictionMode", `
+                                                                   "DefaultSharingLinkType", `
+                                                                   "PreventExternalUsersFromResharing", `
+                                                                   "ShowPeoplePickerSuggestionsForGuestUsers", `
+                                                                   "FileAnonymousLinkType", `
+                                                                   "FolderAnonymousLinkType", `
+                                                                   "NotifyOwnersWhenItemsReshared", `
+                                                                   "RequireAcceptingAccountMatchInvitedAccount", `
+                                                                   "DefaultLinkPermission")
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource

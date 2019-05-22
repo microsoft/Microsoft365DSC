@@ -85,6 +85,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration for Result Source instance $Name"
+
     if ($Ensure -eq "Absent")
     {
         throw "This resource cannot delete Result Sources. Please make sure you set its Ensure value to Present."
@@ -111,11 +113,11 @@ function Get-TargetResource
         $Script:RecentExtract = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
     }
     $source =  $Script:RecentExtract.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source `
-                    | Where-Object { $_.Name -eq $Name }
+                    | Where-Object -FilterScript { $_.Name -eq $Name }
 
     if ($null -eq $source)
     {
-        Write-Verbose "The specified Result Source {$($Name)} doesn't already exist."
+        Write-Verbose -Message "The specified Result Source {$($Name)} doesn't already exist."
         return $nullReturn
     }
 
@@ -127,9 +129,9 @@ function Get-TargetResource
     }
 
     $allowPartial =  $source.QueryTransform.OverridePropertiesForSeralization.KeyValueOfstringanyType `
-                    | Where-Object { $_.Key -eq "AllowPartialResults" }
+                    | Where-Object -FilterScript { $_.Key -eq "AllowPartialResults" }
 
-    $mapping = $InfoMapping | Where-Object {$_.ProviderID -eq $source.ProviderId}
+    $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
 
     $returnValue = @{
         Name                = $Name
@@ -205,13 +207,15 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration for Result Source instance $Name"
+
     if ($Ensure -eq "Absent")
     {
         throw "This resource cannot delete Result Sources. Please make sure you set its Ensure value to Present."
     }
 
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Reading SearchConfigurationSettings XML file"
+    Write-Verbose -Message "Reading SearchConfigurationSettings XML file"
     $SearchConfigTemplatePath =  Join-Path -Path $PSScriptRoot `
                                            -ChildPath "..\..\Dependencies\SearchConfigurationSettings.xml" `
                                            -Resolve
@@ -224,35 +228,35 @@ function Set-TargetResource
     }
 
     $source =  $Script:RecentExtract.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source `
-                    | Where-Object { $_.Name -eq $Name }
+                    | Where-Object -FilterScript { $_.Name -eq $Name }
     if ($null -ne $source)
     {
         $currentID = $source.Id
     }
 
-    Write-Verbose "Generating new SearchConfigurationSettings XML file"
+    Write-Verbose -Message "Generating new SearchConfigurationSettings XML file"
     $newSource = $SearchConfigXML.CreateElement("d4p1:Source", `
                                                 "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
 
-    Write-Verbose "Setting ConnectionUrlTemplate"
+    Write-Verbose -Message "Setting ConnectionUrlTemplate"
     $node = $SearchConfigXML.CreateElement("d4p1:ConnectionUrlTemplate", `
                                            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
     $node.InnerText = $SourceUrl
     $newSource.AppendChild($node) | Out-Null
 
-    Write-Verbose "Setting CreatedDate"
+    Write-Verbose -Message "Setting CreatedDate"
     $node = $SearchConfigXML.CreateElement("d4p1:CreatedDate", `
                                            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
     $node.InnerText = [DateTime]::Now.ToString("yyyy-MM-ddThh:mm:ss.00")
     $newSource.AppendChild($node) | Out-Null
 
-    Write-Verbose "Setting Description"
+    Write-Verbose -Message "Setting Description"
     $node = $SearchConfigXML.CreateElement("d4p1:Description", `
                                            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
     $node.InnerText = $Description
     $newSource.AppendChild($node) | Out-Null
 
-    Write-Verbose "Setting Existing Id"
+    Write-Verbose -Message "Setting Existing Id"
     $node = $SearchConfigXML.CreateElement("d4p1:Id", `
                                            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
 
@@ -266,85 +270,85 @@ function Set-TargetResource
     }
     $newSource.AppendChild($node) | Out-Null
 
-    Write-Verbose "Setting Name"
+    Write-Verbose -Message "Setting Name"
     $node = $SearchConfigXML.CreateElement("d4p1:Name", `
                                            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
     $node.InnerText = $Name
     $newSource.AppendChild($node) | Out-Null
 
-    Write-Verbose "Setting ProviderId"
-    $mapping = $InfoMapping | Where-Object {$_.Protocol -eq $Protocol -and $_.Type -eq $Type}
+    Write-Verbose -Message "Setting ProviderId"
+    $mapping = $InfoMapping | Where-Object -FilterScript { $_.Protocol -eq $Protocol -and $_.Type -eq $Type }
     $node = $SearchConfigXML.CreateElement("d4p1:ProviderId", `
                                            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
     $node.InnerText = $mapping.ProviderID
     $catch = $newSource.AppendChild($node)
 
-    Write-Verbose "Setting QueryTransform"
+    Write-Verbose -Message "Setting QueryTransform"
     $queryTransformNode = $SearchConfigXML.CreateElement("d4p1:QueryTransform", `
                                                          "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query")
     $queryTransformNode.SetAttribute("xmlns:d6p1", "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
 
-    Write-Verbose "Setting QueryTransform:Id"
+    Write-Verbose -Message "Setting QueryTransform:Id"
     $node = $SearchConfigXML.CreateElement("d6p1:Id", `
                                            "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
     $node.InnerText = (New-Guid).ToString()
     $queryTransformNode.AppendChild($node)
 
-    Write-Verbose "Setting QueryTransform:ParentType"
+    Write-Verbose -Message "Setting QueryTransform:ParentType"
     $queryTransformNode = $SearchConfigXML.CreateElement("d6p1:ParentType", `
                                                          "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
     $node.InnerText = "Source"
     $queryTransformNode.AppendChild($node)
 
-    Write-Verbose "Setting QueryTransform:QueryPropertyExpressions"
+    Write-Verbose -Message "Setting QueryTransform:QueryPropertyExpressions"
     $QueryPropertyExpressions = $SearchConfigXML.CreateElement("d6p1:QueryPropertyExpressions", `
                                            "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
 
-    Write-Verbose "Setting QueryTransform:QueryPropertyExpressions:MaxSize"
+    Write-Verbose -Message "Setting QueryTransform:QueryPropertyExpressions:MaxSize"
     $node = $SearchConfigXML.CreateElement("d6p1:MaxSize", `
                                            "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
     $node.InnerText = "2147483647"
     $QueryPropertyExpressions.AppendChild($node)
 
-    Write-Verbose "Setting QueryTransform:QueryPropertyExpressions:OrderedItems"
+    Write-Verbose -Message "Setting QueryTransform:QueryPropertyExpressions:OrderedItems"
     $node = $SearchConfigXML.CreateElement("d6p1:OrderedItems", `
                                            "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
     $QueryPropertyExpressions.AppendChild($node)
 
     $queryTransformNode.AppendChild($QueryPropertyExpressions)
 
-    Write-Verbose "Setting QueryTransform:_IsReadOnly"
+    Write-Verbose -Message "Setting QueryTransform:_IsReadOnly"
     $node = $SearchConfigXML.CreateElement("d6p1:_IsReadOnly", `
                                            "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
     $node.InnerText = "true"
     $queryTransformNode.AppendChild($node)
 
-    Write-Verbose "Setting QueryTransform:_QueryTemplate"
+    Write-Verbose -Message "Setting QueryTransform:_QueryTemplate"
     $node = $SearchConfigXML.CreateElement("d6p1:_QueryTemplate", `
                                            "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
     $node.InnerText = $QueryTransform
     $queryTransformNode.AppendChild($node) | Out-Null
 
-    Write-Verbose "Setting QueryTransform:_SourceId"
+    Write-Verbose -Message "Setting QueryTransform:_SourceId"
     $node = $SearchConfigXML.CreateElement("d6p1:_SourceId", `
                                            "http://www.microsoft.com/sharepoint/search/KnownTypes/2008/08")
     $node.SetAttribute("i:nil", "true")
     $queryTransformNode.AppendChild($node)
 
-    Write-Verbose "Inserting QueryTransform"
+    Write-Verbose -Message "Inserting QueryTransform"
     $newSource.AppendChild($queryTransformNode) | Out-Null
 
-    Write-Verbose "Inserting new Source Node"
+    Write-Verbose -Message "Inserting new Source Node"
     $xmlNode = $SearchConfigXML.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.OwnerDocument.ImportNode($newSource, $true)
     $SearchConfigXML.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.AppendChild($xmlNode)
 
-    Write-Verbose "Saving XML file in a temporary location"
+    Write-Verbose -Message "Saving XML file in a temporary location"
     $tempPath = Join-Path -Path $ENV:TEMP `
                            -ChildPath ((New-Guid).ToString().Split('-')[0] + ".config")
     $SearchConfigXML.OuterXml | Out-File $tempPath
 
     # Create the Result Source if it doesn't already exist
-    Write-Verbose "Applying new Search Configuration back to the Office365 Tenant"
+    Write-Verbose -Message "Applying new Search Configuration back to the Office365 Tenant"
     Set-PnPSearchConfiguration -Scope Subscription -Path $tempPath
 }
 
@@ -402,13 +406,22 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Testing configuration for Result Source instance $Name"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    Write-Verbose "Testing Result Source Instance"
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                           -DesiredValues $PSBoundParameters `
-                                           -ValuesToCheck @("Ensure", `
-                                                            "Name",
-                                                            "Type")
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @("Ensure", `
+                                                                   "Name",
+                                                                   "Type")
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource

@@ -57,11 +57,15 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose "Get-TargetResource will attempt to retrieve SafeAttachmentRule $($Identity)"
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
+
+    Write-Verbose -Message "Getting configuration of SafeAttachmentRule for $Identity"
+
+    Write-Verbose -Message "Calling Connect-ExchangeOnline function:"
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
+
+    Write-Verbose -Message "Global ExchangeOnlineSession status:"
+    Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
+
     try
     {
         $SafeAttachmentRules = Get-SafeAttachmentRule
@@ -70,10 +74,10 @@ function Get-TargetResource
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
-    $SafeAttachmentRule = $SafeAttachmentRules | Where-Object Identity -eq $Identity
-    if (-NOT $SafeAttachmentRule)
+    $SafeAttachmentRule = $SafeAttachmentRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    if (-not $SafeAttachmentRule)
     {
-        Write-Verbose "SafeAttachmentRule $($Identity) does not exist."
+        Write-Verbose -Message "SafeAttachmentRule $($Identity) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -83,7 +87,7 @@ function Get-TargetResource
         $result = @{
             Ensure = 'Present'
         }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -ne 'Ensure'}) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript {$_ -ne 'Ensure'}))
         {
             if ($null -ne $SafeAttachmentRule.$KeyName)
             {
@@ -109,8 +113,8 @@ function Get-TargetResource
             $result.Enabled = $false
         }
 
-        Write-Verbose "Found SafeAttachmentRule $($Identity)"
-        Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
+        Write-Verbose -Message "Found SafeAttachmentRule $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
 }
@@ -173,24 +177,27 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose 'Entering Set-TargetResource'
+
+    Write-Verbose -Message "Setting configuration of SafeAttachmentRule for $Identity"
+
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
     $SafeAttachmentRules = Get-SafeAttachmentRule
 
-    $SafeAttachmentRule = $SafeAttachmentRules | Where-Object Identity -eq $Identity
+    $SafeAttachmentRule = $SafeAttachmentRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
-    if ( ('Present' -eq $Ensure ) -and (-NOT $SafeAttachmentRule) )
+    if (('Present' -eq $Ensure ) -and (-not $SafeAttachmentRule))
     {
         New-EXOSafeAttachmentRule -SafeAttachmentRuleParams $PSBoundParameters
     }
 
-    if ( ('Present' -eq $Ensure ) -and ($SafeAttachmentRule) )
+    if (('Present' -eq $Ensure ) -and ($SafeAttachmentRule))
     {
-        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $SafeAttachmentRule.State) )
+        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $SafeAttachmentRule.State))
         {
             # New-SafeAttachmentRule has the Enabled parameter, Set-SafeAttachmentRule does not.
             # There doesn't appear to be any way to change the Enabled state of a rule once created.
-            Write-Verbose "Removing SafeAttachmentRule $($Identity) in order to change Enabled state."
+            Write-Verbose -Message "Removing SafeAttachmentRule $($Identity) in order to change Enabled state."
             Remove-SafeAttachmentRule -Identity $Identity -Confirm:$false
             New-EXOSafeAttachmentRule -SafeAttachmentRuleParams $PSBoundParameters
         }
@@ -200,9 +207,9 @@ function Set-TargetResource
         }
     }
 
-    if ( ('Absent' -eq $Ensure ) -and ($SafeAttachmentRule) )
+    if (('Absent' -eq $Ensure ) -and ($SafeAttachmentRule))
     {
-        Write-Verbose "Removing SafeAttachmentRule $($Identity) "
+        Write-Verbose -Message "Removing SafeAttachmentRule $($Identity) "
         Remove-SafeAttachmentRule -Identity $Identity -Confirm:$false
     }
 }
@@ -266,21 +273,22 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message "Testing SafeAttachmentRule for $($Identity)"
+
+    Write-Verbose -Message "Testing configuration of SafeAttachmentRule for $Identity"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-    if ($TestResult)
-    {
-        Write-Verbose 'Test-TargetResource returned True'
-    }
-    else
-    {
-        Write-Verbose 'Test-TargetResource returned False'
-    }
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck $ValuesToCheck.Keys
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

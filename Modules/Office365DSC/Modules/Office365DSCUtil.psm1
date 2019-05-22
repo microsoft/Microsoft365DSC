@@ -824,21 +824,21 @@ function Format-EXOParams
         $Operation
     )
     $EXOParams = $InputEXOParams
-    $EXOParams.Remove("GlobalAdminAccount") | out-null
-    $EXOParams.Remove("Ensure") | out-null
-    $EXOParams.Remove("Verbose") | out-null
+    $EXOParams.Remove("GlobalAdminAccount") | Out-Null
+    $EXOParams.Remove("Ensure") | Out-Null
+    $EXOParams.Remove("Verbose") | Out-Null
     if ('New' -eq $Operation)
     {
         $EXOParams += @{
             Name = $EXOParams.Identity
         }
-        $EXOParams.Remove("Identity") | out-null
-        $EXOParams.Remove("MakeDefault") | out-null
+        $EXOParams.Remove("Identity") | Out-Null
+        $EXOParams.Remove("MakeDefault") | Out-Null
         return $EXOParams
     }
     if ('Set' -eq $Operation)
     {
-        $EXOParams.Remove("Enabled") | out-null
+        $EXOParams.Remove("Enabled") | Out-Null
         return $EXOParams
     }
 }
@@ -854,7 +854,7 @@ function Get-LocaleIDFromName
         $Name
     )
 
-    $LocaleObject = $Locales | Where-Object { $_.EnglishName -eq $Name }
+    $LocaleObject = $Locales | Where-Object -FilterScript { $_.EnglishName -eq $Name }
 
     if ($null -eq $LocaleObject)
     {
@@ -874,7 +874,7 @@ function Get-LocaleNameFromID
         $ID
     )
 
-    $LocaleObject = $Locales | Where-Object { $_.ID -eq $ID }
+    $LocaleObject = $Locales | Where-Object -FilterScript { $_.ID -eq $ID }
 
     if ($null -eq $LocaleObject)
     {
@@ -894,7 +894,7 @@ function Get-TimeZoneNameFromID
         $ID
     )
 
-    $TimezoneObject = $Timezones | Where-Object { $_.ID -eq $ID }
+    $TimezoneObject = $Timezones | Where-Object -FilterScript { $_.ID -eq $ID }
 
     if ($null -eq $TimezoneObject)
     {
@@ -913,7 +913,7 @@ function Get-TimeZoneIDFromName
         $Name
     )
 
-    $TimezoneObject = $Timezones | Where-Object { $_.EnglishName -eq $Name }
+    $TimezoneObject = $Timezones | Where-Object -FilterScript { $_.EnglishName -eq $Name }
 
     if ($null -eq $TimezoneObject)
     {
@@ -984,35 +984,35 @@ function Connect-ExchangeOnline
     )
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "Continue"
-    $ClosedOrBrokenSessions = Get-PSSession -ErrorAction SilentlyContinue | Where-Object { $_.State -ne 'Opened' }
+    $ClosedOrBrokenSessions = Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.State -ne 'Opened' }
     if ($ClosedOrBrokenSessions)
     {
-        Write-Verbose "Found Existing Unusable Session(s)."
+        Write-Verbose -Message "Found Existing Unusable Session(s)."
         foreach ($SessionToBeClosed in $ClosedOrBrokenSessions)
         {
-            Write-Verbose "Closing Session: $(($SessionToBeClosed).InstanceId)"
+            Write-Verbose -Message "Closing Session: $(($SessionToBeClosed).InstanceId)"
             $SessionToBeClosed | Remove-PSSession
         }
     }
 
-    $Global:OpenExchangeSession = Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Where-Object { $_.State -eq 'Opened' }
+    $Global:OpenExchangeSession = Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.State -eq 'Opened' }
     if ($null -eq $Global:OpenExchangeSession)
     {
         try
         {
-            $PowerShellConnections = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
+            $PowerShellConnections = Get-NetTCPConnection | Where-Object -FilterScript { $_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established' }
 
             while ($PowerShellConnections)
             {
-                Write-Verbose "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
-                Write-Verbose "Waiting for closing connections to close..."
+                Write-Verbose -Message "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
+                Write-Verbose -Message "Waiting for closing connections to close..."
                 Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
                 Start-Sleep -seconds 1
-                $CheckConnectionsWithoutKillingWhileLoop = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
-                if (-NOT $CheckConnectionsWithoutKillingWhileLoop) {
-                    Write-Verbose "Connections have closed.  Waiting 5 more seconds..."
+                $CheckConnectionsWithoutKillingWhileLoop = Get-NetTCPConnection | Where-Object -FilterScript { $_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established' }
+                if (-not $CheckConnectionsWithoutKillingWhileLoop) {
+                    Write-Verbose -Message "Connections have closed.  Waiting 5 more seconds..."
                     Start-Sleep -seconds 5
-                    $PowerShellConnections = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
+                    $PowerShellConnections = Get-NetTCPConnection | Where-Object -FilterScript { $_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established' }
                 }
             }
 
@@ -1024,7 +1024,7 @@ function Connect-ExchangeOnline
 
             while ($null -eq $Global:ExchangeOnlineSession)
             {
-                Write-Verbose "Creating new EXO Session"
+                Write-Verbose -Message "Creating new EXO Session"
                 $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
 
                 if ($null -eq $Global:ExchangeOnlineSession)
@@ -1036,7 +1036,7 @@ function Connect-ExchangeOnline
 
             if ($null -eq $Global:ExchangeOnlineModules)
             {
-                Write-Verbose "Importing all commands into the EXO Session"
+                Write-Verbose -Message "Importing all commands into the EXO Session"
                 $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber
                 Import-Module $Global:ExchangeOnlineModules -Global | Out-Null
             }
@@ -1048,32 +1048,32 @@ function Connect-ExchangeOnline
             $VerbosePreference = 'SilentlyContinue'
             if ($ExceptionMessage -imatch 'Please wait for [0-9]* seconds' )
             {
-                Write-Verbose "Waiting for available runspace..."
+                Write-Verbose -Message "Waiting for available runspace..."
                 [regex]$WaitTimePattern = 'Please wait for [0-9]* seconds'
                 $WaitTimePatternMatch = (($WaitTimePattern.Match($ExceptionMessage)).Value | Select-String -Pattern '[0-9]*' -AllMatches )
-                $WaitTimeInSeconds = ($WaitTimePatternMatch | ForEach-Object {$_.Matches} | Where-Object Value -NotLike $null).Value
-                Write-Verbose "Waiting for requested $WaitTimeInSeconds seconds..."
+                $WaitTimeInSeconds = ($WaitTimePatternMatch | ForEach-Object {$_.Matches} | Where-Object -FilterScript { $_.Value -NotLike $null }).Value
+                Write-Verbose -Message "Waiting for requested $WaitTimeInSeconds seconds..."
                 Start-Sleep -Seconds ($WaitTimeInSeconds + 1)
                 try
                 {
-                    Write-Verbose "Opening New ExchangeOnline Session."
-                    $PowerShellConnections = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
+                    Write-Verbose -Message "Opening New ExchangeOnline Session."
+                    $PowerShellConnections = Get-NetTCPConnection | Where-Object -FilterScript { $_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established' }
                     while ($PowerShellConnections)
                     {
-                        Write-Verbose "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
-                        Write-Verbose "Waiting for closing connections to close..."
+                        Write-Verbose -Message "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
+                        Write-Verbose -Message "Waiting for closing connections to close..."
                         Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
                         Start-Sleep -seconds 1
-                        $CheckConnectionsWithoutKillingWhileLoop = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
-                        if (-NOT $CheckConnectionsWithoutKillingWhileLoop) {
-                            Write-Verbose "Connections have closed.  Waiting 5 more seconds..."
+                        $CheckConnectionsWithoutKillingWhileLoop = Get-NetTCPConnection | Where-Object -FilterScript { $_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established' }
+                        if (-not $CheckConnectionsWithoutKillingWhileLoop) {
+                            Write-Verbose -Message "Connections have closed.  Waiting 5 more seconds..."
                             Start-Sleep -seconds 5
-                            $PowerShellConnections = Get-NetTCPConnection | Where-Object {$_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established'}
+                            $PowerShellConnections = Get-NetTCPConnection | Where-Object -FilterScript { $_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established' }
                         }
                     }
                     $VerbosePreference = 'SilentlyContinue'
                     $Global:ExchangeOnlineSession = $null
-                    while (-NOT $Global:ExchangeOnlineSession)
+                    while (-not $Global:ExchangeOnlineSession)
                     {
                         $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
                     }
@@ -1095,12 +1095,12 @@ function Connect-ExchangeOnline
                 Write-Verbose $_.Exception
                 $VerbosePreference = 'SilentlyContinue'
                 Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
-                Write-Verbose "Exchange Online connection failed."
-                Write-Verbose "Waiting 60 seconds..."
+                Write-Verbose -Message "Exchange Online connection failed."
+                Write-Verbose -Message "Waiting 60 seconds..."
                 Start-Sleep -Seconds 60
                 try
                 {
-                    Write-Verbose "Opening New ExchangeOnline Session."
+                    Write-Verbose -Message "Opening New ExchangeOnline Session."
                     $VerbosePreference = 'SilentlyContinue'
                     Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
                     $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
@@ -1120,11 +1120,41 @@ function Connect-ExchangeOnline
     }
     else
     {
-        Write-Verbose "Using Existing ExchangeOnline Session."
-        $Global:OpenExchangeSession = Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Where-Object { $_.State -eq 'Opened' }
+        Write-Verbose -Message "Using Existing ExchangeOnline Session."
+        $Global:OpenExchangeSession = Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.State -eq 'Opened' }
         $VerbosePreference = 'SilentlyContinue'
         $WarningPreference = "SilentlyContinue"
     }
+}
+
+function Convert-O365DscHashtableToString
+{
+    param
+    (
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Hashtable
+    )
+    $values = @()
+    foreach ($pair in $Hashtable.GetEnumerator())
+    {
+        if ($pair.Value -is [System.Array])
+        {
+            $str = "$($pair.Key)=($($pair.Value -join ","))"
+        }
+        elseif ($pair.Value -is [System.Collections.Hashtable])
+        {
+            $str = "$($pair.Key)={$(Convert-O365DscHashtableToString -Hashtable $pair.Value)}"
+        }
+        else
+        {
+            $str = "$($pair.Key)=$($pair.Value)"
+        }
+        $values += $str
+    }
+
+    [array]::Sort($values)
+    return ($values -join "; ")
 }
 
 function New-EXOAntiPhishPolicy
@@ -1138,7 +1168,7 @@ function New-EXOAntiPhishPolicy
     {
         $VerbosePreference = 'Continue'
         $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'New' )
-        Write-Verbose "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        Write-Verbose -Message "Creating New AntiPhishPolicy $($BuiltParams.Name) with values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
         New-AntiPhishPolicy @BuiltParams
         $VerbosePreference = 'SilentlyContinue'
     }
@@ -1159,7 +1189,7 @@ function New-EXOAntiPhishRule
     {
         $VerbosePreference = 'Continue'
         $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'New' )
-        Write-Verbose "Creating New AntiPhishRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        Write-Verbose -Message "Creating New AntiPhishRule $($BuiltParams.Name) with values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
         New-AntiPhishRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
     }
@@ -1180,7 +1210,7 @@ function New-EXOHostedContentFilterRule
     {
         $VerbosePreference = 'Continue'
         $BuiltParams = (Format-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'New' )
-        Write-Verbose "Creating New HostedContentFilterRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        Write-Verbose -Message "Creating New HostedContentFilterRule $($BuiltParams.Name) with values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
         New-HostedContentFilterRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
     }
@@ -1201,7 +1231,7 @@ function New-EXOSafeAttachmentRule
     {
         $VerbosePreference = 'Continue'
         $BuiltParams = (Format-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'New' )
-        Write-Verbose "Creating New SafeAttachmentRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        Write-Verbose -Message "Creating New SafeAttachmentRule $($BuiltParams.Name) with values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
         New-SafeAttachmentRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
     }
@@ -1222,7 +1252,7 @@ function New-EXOSafeLinksRule
     {
         $VerbosePreference = 'Continue'
         $BuiltParams = (Format-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'New' )
-        Write-Verbose "Creating New SafeLinksRule $($BuiltParams.Name) with values: $($BuiltParams | Out-String)"
+        Write-Verbose -Message "Creating New SafeLinksRule $($BuiltParams.Name) with values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
         New-SafeLinksRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
     }
@@ -1245,13 +1275,13 @@ function Set-EXOAntiPhishRule
         $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
-            Write-Verbose "Setting AntiPhishRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Write-Verbose -Message "Setting AntiPhishRule $($BuiltParams.Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
             Set-AntiPhishRule @BuiltParams -Confirm:$false
             $VerbosePreference = 'SilentlyContinue'
         }
         else
         {
-            Write-Verbose "No more values to Set on AntiPhishRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            Write-Verbose -Message "No more values to Set on AntiPhishRule $($BuiltParams.Identity) using supplied values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
             $VerbosePreference = 'SilentlyContinue'
         }
     }
@@ -1274,13 +1304,13 @@ function Set-EXOAntiPhishPolicy
         $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishPolicyParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
-            Write-Verbose "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Write-Verbose -Message "Setting AntiPhishPolicy $($BuiltParams.Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
             Set-AntiPhishPolicy @BuiltParams -Confirm:$false
             $VerbosePreference = 'SilentlyContinue'
         }
         else
         {
-            Write-Verbose "No more values to Set on AntiPhishPolicy $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            Write-Verbose -Message "No more values to Set on AntiPhishPolicy $($BuiltParams.Identity) using supplied values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
             $VerbosePreference = 'SilentlyContinue'
         }
     }
@@ -1303,13 +1333,13 @@ function Set-EXOHostedContentFilterRule
         $BuiltParams = (Format-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
-            Write-Verbose "Setting HostedContentFilterRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Write-Verbose -Message "Setting HostedContentFilterRule $($BuiltParams.Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
             Set-HostedContentFilterRule @BuiltParams -Confirm:$false
             $VerbosePreference = 'SilentlyContinue'
         }
         else
         {
-            Write-Verbose "No more values to Set on HostedContentFilterRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            Write-Verbose -Message "No more values to Set on HostedContentFilterRule $($BuiltParams.Identity) using supplied values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
             $VerbosePreference = 'SilentlyContinue'
         }
     }
@@ -1359,13 +1389,13 @@ function Set-EXOSafeAttachmentRule
         $BuiltParams = (Format-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
-            Write-Verbose "Setting SafeAttachmentRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Write-Verbose -Message "Setting SafeAttachmentRule $($BuiltParams.Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
             Set-SafeAttachmentRule @BuiltParams -Confirm:$false
             $VerbosePreference = 'SilentlyContinue'
         }
         else
         {
-            Write-Verbose "No more values to Set on SafeAttachmentRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            Write-Verbose -Message "No more values to Set on SafeAttachmentRule $($BuiltParams.Identity) using supplied values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
             $VerbosePreference = 'SilentlyContinue'
         }
     }
@@ -1388,13 +1418,13 @@ function Set-EXOSafeLinksRule
         $BuiltParams = (Format-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'Set' )
         if ($BuiltParams.keys -gt 1)
         {
-            Write-Verbose "Setting SafeLinksRule $($BuiltParams.Identity) with values: $($BuiltParams | Out-String)"
+            Write-Verbose -Message "Setting SafeLinksRule $($BuiltParams.Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
             Set-SafeLinksRule @BuiltParams -Confirm:$false
             $VerbosePreference = 'SilentlyContinue'
         }
         else
         {
-            Write-Verbose "No more values to Set on SafeLinksRule $($BuiltParams.Identity) using supplied values: $($BuiltParams | Out-String)"
+            Write-Verbose -Message "No more values to Set on SafeLinksRule $($BuiltParams.Identity) using supplied values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
             $VerbosePreference = 'SilentlyContinue'
         }
     }
@@ -1456,7 +1486,7 @@ function Test-O365ServiceConnection
     )
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
-    Write-Verbose "Verifying the LCM connection state to Microsoft Azure Active Directory Services"
+    Write-Verbose -Message "Verifying the LCM connection state to Microsoft Azure Active Directory Services"
     $catch = Connect-MsolService -Credential $GlobalAdminAccount
     $catch = Connect-AzureAD -Credential $GlobalAdminAccount
 }
@@ -1474,7 +1504,7 @@ function Test-TeamsServiceConnection
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     Import-Module MicrosoftTeams -Force
-    Write-Verbose "Verifying the LCM connection state to Teams"
+    Write-Verbose -Message "Verifying the LCM connection state to Teams"
     Connect-MicrosoftTeams -Credential $GlobalAdminAccount | Out-Null
 }
 
@@ -1685,7 +1715,9 @@ function Get-UsersLicenses
         $GlobalAdminAccount
     )
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+
     Write-Verbose "Store all users licenses information in Global Variable for future usage."
+
     #Store information to be able to check later if the users is correctly licences for features.
     if ($null -eq $Global:UsersLicenses)
     {
@@ -1857,7 +1889,7 @@ function Start-O365ConfigurationExtract
         Import-Module $EXODkimSigningConfigModulePath | Out-Null
         foreach ($DkimSigningConfig in $DkimSigningConfigs)
         {
-            Write-Verbose "    {$($DkimSigningConfig.Identity)}"
+            Write-Verbose -Message "    {$($DkimSigningConfig.Identity)}"
             $DSCContent += Export-TargetResource -Identity $DkimSigningConfig.Identity -GlobalAdminAccount $GlobalAdminAccount
         }
     }
@@ -2086,7 +2118,7 @@ function Start-O365ConfigurationExtract
         Import-Module $EXOSharedMailboxModulePath | Out-Null
         Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
         $mailboxes = Get-Mailbox
-        $mailboxes = $mailboxes | Where-Object {$_.RecipientTypeDetails -eq "SharedMailbox"}
+        $mailboxes = $mailboxes | Where-Object -FilterScript { $_.RecipientTypeDetails -eq "SharedMailbox" }
 
         foreach ($mailbox in $mailboxes)
         {
@@ -2112,7 +2144,7 @@ function Start-O365ConfigurationExtract
 
         # Security Groups
         Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-        $securityGroups = Get-AzureAdGroup | Where-Object {$_.SecurityEnabled -eq $true}
+        $securityGroups = Get-AzureAdGroup | Where-Object -FilterScript { $_.SecurityEnabled -eq $true }
 
         foreach ($securityGroup in $securityGroups)
         {
@@ -2126,13 +2158,13 @@ function Start-O365ConfigurationExtract
             }
         }
 
-        $securityGroups = Get-AzureAdGroup | Where-Object {$_.SecurityEnabled -eq $true}
+        $securityGroups = Get-AzureAdGroup | Where-Object -FilterScript { $_.SecurityEnabled -eq $true }
 
         # Other Groups
         Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
         $groups = Get-Group
 
-        $groups = $groups | Where-Object { `
+        $groups = $groups | Where-Object -FilterScript { `
             $_.RecipientType -eq "MailUniversalDistributionGroup" `
             -or $_.RecipientType -eq "MailUniversalSecurityGroup" `
         }
@@ -2285,7 +2317,7 @@ function Start-O365ConfigurationExtract
         $sources =  $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
         foreach ($source in $sources)
         {
-            $mapping = $InfoMapping | Where-Object { $_.ProviderID -eq $source.ProviderId }
+            $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
             Write-Information "    Result Source {$($source.Name)}"
             $DSCContent += Export-TargetResource -Name $source.Name `
                                                 -Protocol $mapping.Protocol `
@@ -2592,7 +2624,7 @@ function Start-O365ConfigurationExtract
 
     #region Prompt the user for a location to save the extract and generate the files
     $OutputDSCPath = Read-Host "Destination Path"
-    while (!(Test-Path -Path $OutputDSCPath -PathType Container -ErrorAction SilentlyContinue))
+    while ((Test-Path -Path $OutputDSCPath -PathType Container -ErrorAction SilentlyContinue) -eq $false)
     {
         try
         {

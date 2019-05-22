@@ -97,6 +97,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Getting configuration for Managed Property instance $Name"
+
     if ($Ensure -eq "Absent")
     {
         throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
@@ -133,11 +135,11 @@ function Get-TargetResource
         $Script:RecentMPExtract = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
     }
     $property =  $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
-                    | Where-Object { $_.Value.Name -eq $Name }
+                    | Where-Object -FilterScript { $_.Value.Name -eq $Name }
 
     if ($null -eq $property)
     {
-        Write-Verbose "The specified Managed Property {$($Name)} doesn't already exist."
+        Write-Verbose -Message "The specified Managed Property {$($Name)} doesn't already exist."
         return $nullReturn
     }
 
@@ -155,7 +157,7 @@ function Get-TargetResource
     # Get Mapped Crawled Properties
     $currentManagedPID = [string] $property.Value.Pid
     $mappedProperties = $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.Mappings.dictionary.KeyValueOfstringMappingInfoy6h3NzC8 `
-                            | Where-Object { $_.Value.ManagedPid -eq $currentManagedPID }
+                            | Where-Object -FilterScript { $_.Value.ManagedPid -eq $currentManagedPID }
 
     $mappings = @()
     foreach ($mappedProperty in $mappedProperties)
@@ -174,7 +176,7 @@ function Get-TargetResource
     {
         $fixedSortable = "Yes"
     }
-    Write-Verbose "Retrieved Property"
+    Write-Verbose -Message "Retrieved Property"
     return @{
         Name = [string] $property.Value.Name
         Type = [string] $property.Value.ManagedType
@@ -298,6 +300,8 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration for Managed Property instance $Name"
+
     if ($Ensure -eq "Absent")
     {
         throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
@@ -316,7 +320,7 @@ function Set-TargetResource
     }
 
     $property =  $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
-                    | Where-Object { $_.Value.Name -eq $Name }
+                    | Where-Object -FilterScript { $_.Value.Name -eq $Name }
     if ($null -ne $property)
     {
         $currentPID = $property.Value.Pid
@@ -560,7 +564,7 @@ function Set-TargetResource
             # Get the managed property back. This is the only way to ensure we have the right PID
             $currentConfigXML = [XML] (Get-PnpSearchCOnfiguration -Scope Subscription)
             $property =  $currentConfigXML.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
-                            | Where-Object { $_.Value.Name -eq $Name }
+                            | Where-Object -FilterScript { $_.Value.Name -eq $Name }
             $currentPID = $property.Value.Pid
 
             $node = $SearchConfigXML.CreateElement("d3p1:Pid", `
@@ -606,7 +610,7 @@ function Set-TargetResource
 
         $tempPath = Join-Path -Path $ENV:TEMP `
                               -ChildPath ((New-Guid).ToString().Split('-')[0] + ".config")
-        Write-Verbose "Configuring SPO Search Schema with the following XML Document"
+        Write-Verbose -Message "Configuring SPO Search Schema with the following XML Document"
         Write-Verbose $SearchConfigXML.OuterXML
         $SearchConfigXML.OuterXml | Out-File $tempPath
 
@@ -714,13 +718,22 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Testing configuration for Managed Property instance $Name"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    Write-Verbose "Testing Managed Property Instance"
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                           -DesiredValues $PSBoundParameters `
-                                           -ValuesToCheck @("Ensure", `
-                                                            "Name",
-                                                            "Type")
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @("Ensure", `
+                                                                   "Name",
+                                                                   "Type")
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource

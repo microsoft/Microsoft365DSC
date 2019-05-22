@@ -158,7 +158,7 @@ function Start-O365ConfigurationExtract
         $i = 1
         foreach ($DkimSigningConfig in $DkimSigningConfigs)
         {
-            Write-Verbose "    - [$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)}"
+            Write-Verbose -Message "    - [$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)}"
 
             $partialContent = Export-TargetResource -Identity $DkimSigningConfig.Identity -GlobalAdminAccount $GlobalAdminAccount
             if ($partialContent.ToLower().IndexOf($principal) -gt 0)
@@ -374,7 +374,7 @@ function Start-O365ConfigurationExtract
         Import-Module $EXOSharedMailboxModulePath | Out-Null
         Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
         $mailboxes = Get-Mailbox
-        $mailboxes = $mailboxes | Where-Object {$_.RecipientTypeDetails -eq "SharedMailbox"}
+        $mailboxes = $mailboxes | Where-Object -FilterScript { $_.RecipientTypeDetails -eq "SharedMailbox" }
 
         $i = 1
         foreach ($mailbox in $mailboxes)
@@ -439,7 +439,9 @@ function Start-O365ConfigurationExtract
 
         # Other Groups
         Connect-AzureAD -Credential $GlobalAdminAccount
-        $groups = Get-AzureADGroup | Where-Object {$_.MailNickName -ne "00000000-0000-0000-0000-000000000000"}
+        $groups = Get-AzureADGroup | Where-Object -FilterScript {
+                                         $_.MailNickName -ne "00000000-0000-0000-0000-000000000000"
+                                     }
 
         $i = 1
         foreach ($group in $groups)
@@ -585,7 +587,7 @@ function Start-O365ConfigurationExtract
 
         Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
         $invalidTemplates = @("SRCHCEN#0", "GROUP#0", "SPSMSITEHOST#0", "POINTPUBLISHINGHUB#0", "POINTPUBLISHINGTOPIC#0")
-        $sites = Get-SPOSite -Limit All | Where-Object{$_.Template -notin $invalidTemplates}
+        $sites = Get-SPOSite -Limit All | Where-Object -FilterScript { $_.Template -notin $invalidTemplates }
 
         $partialContent = ""
         $i = 1
@@ -688,7 +690,7 @@ function Start-O365ConfigurationExtract
         $i = 1
         foreach ($source in $sources)
         {
-            $mapping = $InfoMapping | Where-Object { $_.ProviderID -eq $source.ProviderId }
+            $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
             Write-Information "    - [$i/$($sources.Length)] $($source.Name)"
             $partialContent = Export-TargetResource -Name $source.Name `
                                                     -Protocol $mapping.Protocol `
@@ -945,7 +947,7 @@ function Start-O365ConfigurationExtract
 
     #region Prompt the user for a location to save the extract and generate the files
     $OutputDSCPath = Read-Host "Destination Path"
-    while (!(Test-Path -Path $OutputDSCPath -PathType Container -ErrorAction SilentlyContinue))
+    while ((Test-Path -Path $OutputDSCPath -PathType Container -ErrorAction SilentlyContinue) -eq $false)
     {
         try
         {
