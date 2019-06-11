@@ -358,6 +358,7 @@ function Start-O365ConfigurationExtract
     #region "EXOSharedMailbox"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSharedMailbox"))
     {
+        Write-Information "Extracting EXOSharedMailbox..."
         $EXOSharedMailboxModulePath = Join-Path -Path $PSScriptRoot `
                                                 -ChildPath "..\DSCResources\MSFT_EXOSharedMailbox\MSFT_EXOSharedMailbox.psm1" `
                                                 -Resolve
@@ -368,9 +369,14 @@ function Start-O365ConfigurationExtract
         $mailboxes = $mailboxes | Where-Object -FilterScript { $_.RecipientTypeDetails -eq "SharedMailbox" }
 
         $i = 1
+        $total = $mailboxes.Length
+        if ($null -eq $total -and $null -ne $mailboxes)
+        {
+            $total = 1
+        }
         foreach ($mailbox in $mailboxes)
         {
-            Write-Information "    - [$i/$($mailboxes.Length)] $($mailbox.Name)"
+            Write-Information "    - [$i/$total] $($mailbox.Name)"
             $mailboxName = $mailbox.Name
             if ($mailboxName)
             {
@@ -780,7 +786,7 @@ function Start-O365ConfigurationExtract
         $i = 1
         foreach ($siteDesign in $siteDesigns)
         {
-            Write-Information "    - [$i/$($siteDesigns.Length)] ($siteDesign.Title)"
+            Write-Information "    - [$i/$($siteDesigns.Length)] $($siteDesign.Title)"
             $partialContent += Export-TargetResource -SiteDesignTitle $siteDesign.Title `
                                                  -CentralAdminUrl $centralAdminUrl `
                                                  -GlobalAdminAccount $GlobalAdminAccount
