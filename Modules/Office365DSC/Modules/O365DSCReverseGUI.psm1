@@ -388,7 +388,7 @@ function Show-O365GUI
         $lblFarmAccount = New-Object System.Windows.Forms.Label
         $lblFarmAccount.Text = "Tenant Admin:"
         $lblFarmAccount.Top = 10
-        $lblFarmAccount.Left = 900
+        $lblFarmAccount.Left = 940
         $lblFarmAccount.AutoSize = $true
         $lblFarmAccount.TextAlign = [System.Drawing.ContentAlignment]::TopRight
         $lblFarmAccount.Font = [System.Drawing.Font]::new($lblFarmAccount.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
@@ -470,6 +470,7 @@ function Show-O365GUI
 
         $pnlMain.AutoScroll = $true
         $form.Controls.Add($pnlMain)
+        $form.ActiveControl = $txtTenantAdmin
         $form.Text = "ReverseDSC for Office 365"
         $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
         $return = $form.ShowDialog()
