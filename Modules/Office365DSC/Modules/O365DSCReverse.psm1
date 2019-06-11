@@ -47,7 +47,7 @@ function Start-O365ConfigurationExtract
     # Obtain central administration url from a User Principal Name
     $centralAdminUrl = $null
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    $centralAdminUrl = Get-SPOAdminUrl
+    $centralAdminUrl = Get-SPOAdministrationUrl
     Add-ConfigurationDataEntry -Node "NonNodeData" `
                                -Key "CentralAdminUrl" `
                                -Value $centralAdminUrl `

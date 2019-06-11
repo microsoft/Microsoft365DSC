@@ -1776,7 +1776,7 @@ function Compare-SPOTheme
     }
 }
 
-function Get-SPOAdminUrl
+function Get-SPOAdministrationUrl
 {
     [CmdletBinding()]
     param
