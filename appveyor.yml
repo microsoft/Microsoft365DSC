@@ -13,7 +13,7 @@ install:
         Install-Module MSOnline -RequiredVersion 1.1.183.17 -Force
         Install-Module MicrosoftTeams -RequiredVersion 1.0.0 -Force
         Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.5.1901.0 -Force
-        Install-Module MSCloudLoginAssistant -AllowPrerelease -RequiredVersion '0.5.1';
+        Install-Module MSCloudLoginAssistant -RequiredVersion 0.5.1 -Force
 
         $webClient = new-object System.Net.WebClient
         $url = "https://github.com/Microsoft/Office365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_8615-1200_x64_en-us.msi?raw=true"
@@ -23,7 +23,8 @@ install:
 
         Install-Module Microsoft.Online.SharePoint.PowerShell -RequiredVersion 16.0.8316.0 -Force
         Import-Module Microsoft.Online.SharePoint.PowerShell -Force
-        Import-Module SharePointPnpPowerShellOnline
+        Import-Module SharePointPnpPowerShellOnline -Force
+        Import-Module MSCloudLoginAssistant -Force
         Import-Module -Name "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
         Invoke-AppveyorInstallTask
 
