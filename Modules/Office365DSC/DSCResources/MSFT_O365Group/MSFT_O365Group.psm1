@@ -61,13 +61,24 @@ function Get-TargetResource
 
     $membersList = Get-AzureADGroupMember -ObjectId $ADGroup.ObjectId
     $owners = Get-AzureADGroupOwner -ObjectId $ADGroup.ObjectId
+    $ownersUPN = $null
+    if ($null -ne $owners)
+    {
+        $ownersUPN = $owners.UserPrincipalName
+    }
+
+    $description = ""
+    if ($null -ne $ADGroup.Description)
+    {
+        $description = $ADGroup.Description.ToString()
+    }
 
     $returnValue = @{
         DisplayName = $ADGroup.DisplayName
         MailNickName = $ADGroup.MailNickName
         Members = $membersList.UserPrincipalName
-        ManagedBy = $owners.UserPrincipalName
-        Description = $ADGroup.Description.ToString()
+        ManagedBy = $ownersUPN
+        Description = $description
         GlobalAdminAccount = $GlobalAdminAccount
         Ensure = "Present"
     }

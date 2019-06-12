@@ -47,20 +47,11 @@ function Start-O365ConfigurationExtract
     # Obtain central administration url from a User Principal Name
     $centralAdminUrl = $null
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    $users = Get-AzureADUser
-    if ($users.Count -gt 0)
-    {
-        $tenantParts = $users[0].UserPrincipalName.Split('@')
-        if ($tenantParts.Length -gt 0)
-        {
-            $tenantName = $tenantParts[1].Split(".")[0]
-            $centralAdminUrl = "https://" + $tenantName + "-admin.sharepoint.com"
-            Add-ConfigurationDataEntry -Node "NonNodeData" `
-                                     -Key "CentralAdminUrl" `
-                                     -Value $centralAdminUrl `
-                                     -Description "Url of the SharePoint Central Adminsitration"
-        }
-    }
+    $centralAdminUrl = Get-SPOAdministrationUrl
+    Add-ConfigurationDataEntry -Node "NonNodeData" `
+                               -Key "CentralAdminUrl" `
+                               -Value $centralAdminUrl `
+                               -Description "Url of the SharePoint Central Adminsitration"
 
     # Add the GlobalAdminAccount to the Credentials List
     Save-Credentials -UserName "globaladmin"
@@ -367,6 +358,7 @@ function Start-O365ConfigurationExtract
     #region "EXOSharedMailbox"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSharedMailbox"))
     {
+        Write-Information "Extracting EXOSharedMailbox..."
         $EXOSharedMailboxModulePath = Join-Path -Path $PSScriptRoot `
                                                 -ChildPath "..\DSCResources\MSFT_EXOSharedMailbox\MSFT_EXOSharedMailbox.psm1" `
                                                 -Resolve
@@ -377,9 +369,14 @@ function Start-O365ConfigurationExtract
         $mailboxes = $mailboxes | Where-Object -FilterScript { $_.RecipientTypeDetails -eq "SharedMailbox" }
 
         $i = 1
+        $total = $mailboxes.Length
+        if ($null -eq $total -and $null -ne $mailboxes)
+        {
+            $total = 1
+        }
         foreach ($mailbox in $mailboxes)
         {
-            Write-Information "    - [$i/$($mailboxes.Length)] $($mailbox.Name)"
+            Write-Information "    - [$i/$total] $($mailbox.Name)"
             $mailboxName = $mailbox.Name
             if ($mailboxName)
             {
@@ -528,7 +525,7 @@ function Start-O365ConfigurationExtract
             $i = 1
             foreach ($file in $allFiles)
             {
-                Write-Information "    - [$i/$($allFiles.Length)] $($file.Name)}"
+                Write-Information "    - [$i/$($allFiles.Length)] $($file.Name)"
                 $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl}
 
                 $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
@@ -789,7 +786,7 @@ function Start-O365ConfigurationExtract
         $i = 1
         foreach ($siteDesign in $siteDesigns)
         {
-            Write-Information "    - [$i/$($siteDesigns.Length)] ($siteDesign.Title)"
+            Write-Information "    - [$i/$($siteDesigns.Length)] $($siteDesign.Title)"
             $partialContent += Export-TargetResource -SiteDesignTitle $siteDesign.Title `
                                                  -CentralAdminUrl $centralAdminUrl `
                                                  -GlobalAdminAccount $GlobalAdminAccount
