@@ -1,3 +1,8 @@
+
+#region Session Objects
+$Global:SessionSecurityCompliance = $null
+#endregion
+
 $Locales = @(
     @{
         EnglishName = "Arabic (Algeria)"
@@ -1508,6 +1513,26 @@ function Test-TeamsServiceConnection
     Connect-MicrosoftTeams -Credential $GlobalAdminAccount | Out-Null
 }
 
+function Test-SecurityAndComplianceConnection
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+    $VerbosePreference = 'SilentlyContinue'
+    $WarningPreference = "SilentlyContinue"
+
+    if ($null -eq $Global:SessionSecurityCompliance)
+    {
+        Write-Verbose "Session to Security & COmpliance already exists, re-using existing session"
+        $Global:SessionSecurityCompliance = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
+        Import-PSSession $Global:SessionSecurityCompliance -DisableNameChecking | Out-Null
+    }
+}
 
 function Test-Office365DSCParameterState
 {
