@@ -32,7 +32,7 @@ and be released to [PowerShell Gallery](https://www.powershellgallery.com/).
 ## How to Install
 
 In order to acquire the latest
-bits of the module from a machine that has internet connectivity, 
+bits of the module from a machine that has internet connectivity,
 simply run the following PowerShell line:
 
 ```powershell
