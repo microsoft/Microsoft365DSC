@@ -31,24 +31,10 @@ and be released to [PowerShell Gallery](https://www.powershellgallery.com/).
 
 ## How to Install
 
-At this current point int time, the Office365DSC module is only
-available in Alpha Release. In order to acquire the latest Alpha
-bits of the module, you need to make sure you have PowerShellGet
-1.6.0 or greater installed on your machine. In order to acquire that
-version of the PowerShellGet module simply run the following line of
-PowerShell code from a machine that has internet connectivity:
+In order to acquire the latest
+bits of the module from a machine that has internet connectivity, 
+simply run the following PowerShell line:
 
 ```powershell
-Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-Install-Module PowerShellGet -Force
-```
-
-You will need to close the PowerShell session and re-open a new one
-after installing the latest PowerShellGet version in order to be
-allowed to acquire Alpha releases of the Office365DSC module. Once
-done, run the following line of PowerShell to acquire the latest
-Office365DSC module's alpha release from the PowerShell Gallery:
-
-```powershell
-Install-Module -Name Office365DSC -AllowPrerelease -Force
+Install-Module -Name Office365DSC -Force
 ```
