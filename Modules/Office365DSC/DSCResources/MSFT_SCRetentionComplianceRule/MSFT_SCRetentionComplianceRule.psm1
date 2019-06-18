@@ -263,6 +263,10 @@ function Export-TargetResource
         $Name,
 
         [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
