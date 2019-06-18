@@ -10,7 +10,7 @@ class MSFT_SCRetentionCompliancePolicy : OMI_BaseResource
     [Write, Description("This parameter specifies the mailboxes to remove from the list of excluded mailboxes when you use the value All for the ExchangeLocation parameter")] String ExchangeLocationException[];
     [Write, Description("The ModernGroupLocation parameter specifies the Office 365 groups to include in the policy.")] String ModernGroupLocation[];
     [Write, Description("The ModernGroupLocationException parameter specifies the Office 365 groups to exclude when you're using the value All for the ModernGroupLocation parameter.")] String ModernGroupLocationException[];
-    [Write, Description("The OneDriveLocation parameter specifies the OneDrive for Business sites to include. You identify the site by its URL value, or you can use the value All to include all sites.")] String OneDriveLocation;[]
+    [Write, Description("The OneDriveLocation parameter specifies the OneDrive for Business sites to include. You identify the site by its URL value, or you can use the value All to include all sites.")] String OneDriveLocation[];
     [Write, Description("This parameter specifies the OneDrive for Business sites to exclude when you use the value All for the OneDriveLocation parameter. You identify the site by its URL value.")] String OneDriveLocationException[];
     [Write, Description("The PublicFolderLocation parameter specifies that you want to include all public folders in the retention policy. You use the value All for this parameter.")] String PublicFolderLocation[];
     [Write, Description("The RestrictiveRetention parameter specifies whether Preservation Lock is enabled for the policy.")] Boolean RestrictiveRetention;
