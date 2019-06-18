@@ -144,6 +144,16 @@ function Get-RetentionCompliancePolicy
     )
 }
 
+function Remove-RetentionCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
 function Set-PnPSearchConfiguration{
     [CmdletBinding()]
     param(

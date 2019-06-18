@@ -32,6 +32,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
+        Mock -CommandName Remove-RetentionCompliancePolicy -MockWith {
+
+        }
+
         Mock -CommandName New-RetentionCompliancePolicy -MockWith {
             return @{
 
@@ -80,6 +84,37 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should Be $true
+            }
+
+            It 'Should recreate from the Set method' {
+                Set-TargetResource @testParams
+            }
+
+            It 'Should return Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            }
+        }
+
+        Context -Name "Policy should not exist" -Fixture {
+            $testParams = @{
+                Ensure             = 'Absent'
+                GlobalAdminAccount = $GlobalAdminAccount
+                SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
+                Name               = 'TestPolicy'
+            }
+
+            Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
+                return @{
+                    Identity = "TestPolicy"
+                }
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should Be $false
+            }
+
+            It 'Should delete from the Set method' {
+                Set-TargetResource @testParams
             }
 
             It 'Should return Present from the Get method' {
