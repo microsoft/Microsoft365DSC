@@ -49,6 +49,101 @@ function Test-PnPOnlineConnection{
     )
 }
 
+function New-RetentionCompliancePolicy{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $DynamicScopeLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $ModernGroupLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ModernGroupLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $PublicFolderLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $RestrictiveRetention = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $SkypeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SkypeLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsChannelLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsChannelLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsChatLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsChatLocationException
+    )
+}
+
+function Get-RetentionCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
 function Set-PnPSearchConfiguration{
     [CmdletBinding()]
     param(

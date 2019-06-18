@@ -160,7 +160,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Should call the Set method" {
                 Set-TargetResource @testParams
             }
+        }
 
+        Context -Name "ReverseDSC Tests" -Fixture {
+            $testParams = @{
+                GlobalAdminAccount = $GlobalAdminAccount
+                Identity           = "contoso.com"
+            }
+
+            It "Should Reverse Engineer resource from the Export method" {
+                Export-TargetResource @testParams
+            }
         }
     }
 }

@@ -99,14 +99,9 @@ function Get-TargetResource
     Write-Verbose -Message "Calling Test-SecurityAndComplianceConnection function:"
     Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
 
-    try
-    {
-        $PolicyObject = Get-RetentionCompliancePolicy -Identity $Name
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
+    $PolicyObjects = Get-RetentionCompliancePolicy
+    $PolicyObject = $PolicyObjects | Where-Object {$_.Identity -eq $Name}
+
     if ($null -eq $PolicyObject)
     {
         Write-Verbose -Message "RetentionCompliancePolicy $($Name) does not exist."
@@ -116,6 +111,7 @@ function Get-TargetResource
     }
     else
     {
+        Write-Host "Found existing RetentionCompliancePolicy $($Name)"
         $result = @{
             Ensure = 'Present'
         }
@@ -166,31 +162,31 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $ExchangeLocation = @(),
+        $ExchangeLocation,
 
         [Parameter()]
         [System.String[]]
-        $ExchangeLocationException = @(),
+        $ExchangeLocationException,
 
         [Parameter()]
         [System.String[]]
-        $ModernGroupLocation = @(),
+        $ModernGroupLocation,
 
         [Parameter()]
         [System.String[]]
-        $ModernGroupLocationException = @(),
+        $ModernGroupLocationException,
 
         [Parameter()]
         [System.String[]]
-        $OneDriveLocation = @(),
+        $OneDriveLocation,
 
         [Parameter()]
         [System.String[]]
-        $OneDriveLocationException = @(),
+        $OneDriveLocationException,
 
         [Parameter()]
         [System.String[]]
-        $PublicFolderLocation = @(),
+        $PublicFolderLocation,
 
         [Parameter()]
         [System.Boolean]
@@ -198,35 +194,35 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $SharePointLocation = @(),
+        $SharePointLocation,
 
         [Parameter()]
         [System.String[]]
-        $SharePointLocationException = @(),
+        $SharePointLocationException,
 
         [Parameter()]
         [System.String[]]
-        $SkypeLocation = @(),
+        $SkypeLocation,
 
         [Parameter()]
         [System.String[]]
-        $SkypeLocationException = @(),
+        $SkypeLocationException,
 
         [Parameter()]
         [System.String[]]
-        $TeamsChannelLocation = @(),
+        $TeamsChannelLocation,
 
         [Parameter()]
         [System.String[]]
-        $TeamsChannelLocationException = @(),
+        $TeamsChannelLocationException,
 
         [Parameter()]
         [System.String[]]
-        $TeamsChatLocation = @(),
+        $TeamsChatLocation,
 
         [Parameter()]
         [System.String[]]
-        $TeamsChatLocationException = @(),
+        $TeamsChatLocationException ,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -375,11 +371,7 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $AntiPhishPolicy,
+        $Name,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -387,7 +379,7 @@ function Export-TargetResource
     )
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        EXOAntiPhishRule " + (New-GUID).ToString() + "`r`n"
+    $content = "        SCRetentionCOmpliancePolicy " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
