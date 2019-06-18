@@ -13,7 +13,7 @@ remote API calls (therefore requires internet connectivity)
 
 ### master
 
-[![Build status](https://ci.appveyor.com/api/projects/status/95vpnnprqkr0k1wn?svg=true)](https://ci.appveyor.com/project/NikCharlebois/office365dsc-s5220)
+[![Build status](https://ci.appveyor.com/api/projects/status/5a7f2ao7d1mnoqrb/branch/master?svg=true)](https://ci.appveyor.com/project/NikCharlebois/office365dsc-s5220)
 [![codecov](https://codecov.io/gh/Microsoft/office365dsc/branch/master/graph/badge.svg)](https://codecov.io/gh/Microsoft/office365dsc)
 
 This is the branch containing the latest release -
@@ -21,7 +21,7 @@ no contributions should be made directly to this branch.
 
 ### dev
 
-[![Build status](https://ci.appveyor.com/api/projects/status/95vpnnprqkr0k1wn/branch/Dev?svg=true)](https://ci.appveyor.com/project/NikCharlebois/office365dsc-s5220/branch/Dev)
+[![Build status](https://ci.appveyor.com/api/projects/status/5a7f2ao7d1mnoqrb?svg=true)](https://ci.appveyor.com/project/NikCharlebois/office365dsc-s5220/branch/Dev)
 [![codecov](https://codecov.io/gh/Microsoft/office365dsc/branch/dev/graph/badge.svg)](https://codecov.io/gh/Microsoft/office365dsc/branch/dev)
 
 This is the development branch
