@@ -49,6 +49,71 @@ function Test-PnPOnlineConnection{
     )
 }
 
+function New-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedItemClasses,
+
+        [Parameter()]
+        [System.String]
+        $RetentionDuration,
+
+        [Parameter()]
+        [ValidateSet("Days", "Months", "Years")]
+        [System.String]
+        $RetentionDurationDisplayHint,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [ValidateSet("CreationAgeInDays", "ModificationAgeInDays")]
+        [System.String]
+        $ExpirationDateOption,
+
+        [Parameter()]
+        [ValidateSet("Delete","Keep","KeepAndDelete")]
+        [System.String]
+        $RetentionComplianceAction
+    )
+}
+
+function Get-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
 function New-RetentionCompliancePolicy{
     [CmdletBinding()]
     param(
