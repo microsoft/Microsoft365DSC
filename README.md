@@ -22,7 +22,7 @@ no contributions should be made directly to this branch.
 ### dev
 
 [![Build status](https://ci.appveyor.com/api/projects/status/5a7f2ao7d1mnoqrb?svg=true)](https://ci.appveyor.com/project/NikCharlebois/office365dsc)
-[![codecov](https://codecov.io/gh/Microsoft/office365dsc/branch/dev/graph/badge.svg)](https://codecov.io/gh/Microsoft/office365dsc/branch/dev)
+[![codecov](https://codecov.io/gh/microsoft/Office365DSC/branch/Dev/graph/badge.svg)](https://codecov.io/gh/microsoft/Office365DSC)
 
 This is the development branch
 to which contributions should be proposed by contributors as pull requests.
