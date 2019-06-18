@@ -2,9 +2,9 @@
 class MSFT_SCRetentionComplianceRule : OMI_BaseResource
 {
     [Key, Description("The Name parameter specifies the unique name of the retention rule.")] String Name;
+    [Required, Description("The Policy parameter specifies the policy to contain the rule.")] String Policy;
     [Write, Description("Specify if this rule should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("The Comment parameter specifies an optional comment.")] String Comment;
-    [Write, Description("The Policy parameter specifies the policy to contain the rule.")] String Policy;
     [Write, Description("The ExpirationDateOption parameter specifies whether the expiration date is calculated from the content creation date or last modification date. Valid values are: CreationAgeInDays and ModificationAgeInDays."), ValueMap{"CreationAgeInDays","ModificationAgeInDays"}, Values{"CreationAgeInDays","ModificationAgeInDays"}] String ExpirationDateOption;
     [Write, Description("The ExcludedItemClasses parameter specifies the types of messages to exclude from the rule. You can use this parameter only to exclude items from a hold policy, which excludes the specified item class from being held. Using this parameter won't exclude items from deletion policies. Typically, you use this parameter to exclude voicemail messages, IM conversations, and other Skype for Business Online content from being held by a hold policy.")] String ExcludedItemClasses[];
     [Write, Description("The ContentMatchQuery parameter specifies a content search filter.")] String ContentMatchQuery;
