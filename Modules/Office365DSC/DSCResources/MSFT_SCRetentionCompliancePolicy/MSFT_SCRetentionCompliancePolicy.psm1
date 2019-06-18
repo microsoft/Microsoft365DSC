@@ -111,7 +111,7 @@ function Get-TargetResource
     }
     else
     {
-        Write-Host "Found existing RetentionCompliancePolicy $($Name)"
+        Write-Verbose "Found existing RetentionCompliancePolicy $($Name)"
         $result = @{
             Ensure = 'Present'
         }
