@@ -1530,8 +1530,16 @@ function Test-SecurityAndComplianceConnection
     if ($null -eq $Global:SessionSecurityCompliance)
     {
         Write-Verbose "Session to Security & Compliance already exists, re-using existing session"
-        $Global:SessionSecurityCompliance = New-PSSession -ConfigurationName "Microsoft.Exchange" -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-        $Global:SCModule = Import-PSSession $Global:SessionSecurityCompliance -ErrorAction SilentlyContinue -AllowClobber
+        $Global:SessionSecurityCompliance = New-PSSession -ConfigurationName "Microsoft.Exchange" `
+            -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ `
+            -Credential $GlobalAdminAccount `
+            -Authentication Basic `
+            -AllowRedirection
+
+        $Global:SCModule = Import-PSSession $Global:SessionSecurityCompliance  `
+            -ErrorAction SilentlyContinue `
+            -AllowClobber
+
         Import-Module $Global:SCModule -Global | Out-Null
     }
 }

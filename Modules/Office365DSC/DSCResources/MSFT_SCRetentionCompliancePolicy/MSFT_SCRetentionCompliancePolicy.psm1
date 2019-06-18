@@ -245,6 +245,20 @@ function Set-TargetResource
         $CreationParams.Remove("Ensure")
         New-RetentionCompliancePolicy @CreationParams
     }
+    else if (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
+    {
+        # Easier to delete the Policy and recreate it from scratch;
+        Remove-RetentionCompliancePolicy -Identity $Name
+        $CreationParams = $PSBoundParameters
+        $CreationParams.Remove("GlobalAdminAccount")
+        $CreationParams.Remove("Ensure")
+        New-RetentionCompliancePolicy @CreationParams
+    }
+    else if (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
+    {
+        # If the Policy exists and it shouldn't, simply remove it;
+        Remove-RetentionCompliancePolicy -Identity $Name
+    }
 }
 
 function Test-TargetResource
