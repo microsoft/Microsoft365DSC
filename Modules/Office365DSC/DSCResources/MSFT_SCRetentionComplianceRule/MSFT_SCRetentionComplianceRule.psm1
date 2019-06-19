@@ -59,7 +59,7 @@ function Get-TargetResource
     Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $RuleObjects = Get-RetentionComplianceRule
-    $RuleObject = $RuleObjects | Where-Object {$_.Identity -eq $Name}
+    $RuleObject = $RuleObjects | Where-Object {$_.Name -eq $Name}
 
     if ($null -eq $RuleObject)
     {
