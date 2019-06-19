@@ -84,7 +84,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-RetentionComplianceRule -MockWith {
                 return @{
-                    Identity = "TestRule"
+                    Name = "TestRule"
                 }
             }
 
@@ -114,7 +114,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-RetentionComplianceRule -MockWith {
                 return @{
-                    Identity = "TestRule"
+                    Name = "TestRule"
                 }
             }
 
