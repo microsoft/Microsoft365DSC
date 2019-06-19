@@ -17,7 +17,7 @@ Configuration Example
         SCRetentionComplianceRule DemoRule
         {
             Name                      = "DemoRule2"
-            Policy                    = "Nik"
+            Policy                    = "ContosoPolicy"
             Comment                   = "This is a Demo Rule"
             RetentionComplianceAction = "Keep"
             RetentionDuration         = "Unlimited"
