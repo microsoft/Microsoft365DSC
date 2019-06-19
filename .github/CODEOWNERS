@@ -5,6 +5,7 @@
 *       @nikcharlebois
 
 /Modules/Office365DSC/DSCResources/MSFT_SCRetentionCompliancePolicy/ @nikcharlebois
+/Modules/Office365DSC/DSCResources/MSFT_SCRetentionComplianceRule/ @nikcharlebois
 
 /Modules/Office365DSC/DSCResources/MSFT_ODSettings/ @desmay
 
