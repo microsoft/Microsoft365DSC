@@ -455,7 +455,8 @@ function Show-O365GUI
                 }
                 catch
                 {
-                    Write-Information $_
+                    $Message = "Could not initiate the ReverseDSC Extraction"
+                    New-Office365DSCLogEntry -Error $_ -Message $Message_
                 }
             }
             else
@@ -475,7 +476,10 @@ function Show-O365GUI
         $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
         $return = $form.ShowDialog()
     }
-    catch {}
+    catch
+    {
+
+    }
 }
 
 function SelectComponentsForMode($panelMain, $mode){
@@ -503,7 +507,10 @@ function SelectComponentsForMode($panelMain, $mode){
                         $control.Checked = $true
                     }
                 }
-                catch{}
+                catch
+                {
+
+                }
             }
         }
     }
@@ -512,6 +519,9 @@ function SelectComponentsForMode($panelMain, $mode){
         try{
             $control.Checked = $true
         }
-        catch{}
+        catch
+        {
+
+        }
     }
 }

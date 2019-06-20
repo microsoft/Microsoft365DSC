@@ -199,7 +199,9 @@ function Set-TargetResource
     }
     catch
     {
-        throw "The specified Site Collection doesn't already exist."
+        $Message = "The specified Site Collection {$Url} for SPOHubSite doesn't already exist."
+        New-Office365DSCLogEntry -Error $_ -Message $Message
+        throw $Message
     }
 
     $currentValues = Get-TargetResource @PSBoundParameters

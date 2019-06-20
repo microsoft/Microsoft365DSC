@@ -73,6 +73,8 @@ function Get-TargetResource
     catch
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+        $Message = "Error calling {Get-SafeAttachmentRule}"
+        New-Office365DSCLogEntry -Error $_ -Message $Message
     }
     $SafeAttachmentRule = $SafeAttachmentRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
     if (-not $SafeAttachmentRule)
@@ -209,7 +211,7 @@ function Set-TargetResource
 
     if (('Absent' -eq $Ensure ) -and ($SafeAttachmentRule))
     {
-        Write-Verbose -Message "Removing SafeAttachmentRule $($Identity) "
+        Write-Verbose -Message "Removing SafeAttachmentRule $($Identity)"
         Remove-SafeAttachmentRule -Identity $Identity -Confirm:$false
     }
 }

@@ -161,7 +161,8 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message "Failed to get Tenant client sync settings !"
+        $Message = "Failed to get Tenant client sync settings"
+        New-Office365DSCLogEntry -Error $_ -Message $Message
         return $nullReturn
     }
 }

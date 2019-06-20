@@ -51,7 +51,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should throw error in the Set method" {
-                { Set-TargetResource @testParams } | Should throw "The specified Site Collection doesn't already exist."
+                { Set-TargetResource @testParams } | Should throw "The specified Site Collection {$($testPArams.Url)} for SPOHubSite doesn't already exist."
             }
         }
 
