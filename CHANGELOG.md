@@ -4,3 +4,5 @@
 
 * SCRetentionCompliancePolicy
   * Initial Release
+* SCRetentionComplianceRule
+  * Initial Release
