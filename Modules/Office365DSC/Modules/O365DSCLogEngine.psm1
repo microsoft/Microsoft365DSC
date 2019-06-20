@@ -16,11 +16,6 @@ function New-Office365DSCLogEntry
         $Message
     )
 
-    # Get the current folder we are executing the script from;
-    $ExecPath = $SCRIPT:MyInvocation.MyCommand.Path
-    $LastSlash = $ExecPath.ToString().LastIndexOf("\")
-    $ExecPath = $ExecPath.Substring(0, $LastSlash + 1)
-
     # Obtain the ID of the current PowerShell session. While this may
     # not be unique, it will;
     $SessionID = [System.Diagnostics.Process]::GetCurrentProcess().Id.ToString()

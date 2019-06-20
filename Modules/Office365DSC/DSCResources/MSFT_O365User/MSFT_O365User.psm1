@@ -172,6 +172,7 @@ function Get-TargetResource
     catch
     {
         $Message = "The specified User {$UserPrincipalName} doesn't already exist."
+        Write-Verbose $Message
         return $nullReturn
     }
     return $nullReturn
@@ -351,8 +352,7 @@ function Set-TargetResource
         }
         catch
         {
-            $Message = "Could not assign license {$($newLicenseAssignment)} to user "`
-                       "{$($UserPrincipalName)}"
+            $Message = "Could not assign license {$($newLicenseAssignment)} to user {$($UserPrincipalName)}"
             New-Office365DSCLogEntry -Error $_ -Message $Message
             throw $Message
         }
