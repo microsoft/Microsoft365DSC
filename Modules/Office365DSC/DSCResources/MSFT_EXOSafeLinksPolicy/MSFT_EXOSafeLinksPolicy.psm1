@@ -61,6 +61,8 @@ function Get-TargetResource
     catch
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+        $Message = "Error calling {Get-SafeLinksPolicy}"
+        New-Office365DSCLogEntry -Error $_ -Message $Message
     }
 
     $SafeLinksPolicy = $SafeLinksPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }

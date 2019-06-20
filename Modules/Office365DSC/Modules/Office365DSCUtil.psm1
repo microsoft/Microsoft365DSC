@@ -1093,6 +1093,8 @@ function Connect-ExchangeOnline
                     $WarningPreference = "SilentlyContinue"
                     $Global:ExchangeOnlineSession = $null
                     Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+                    $Message = "Can't open Exchange Online session from Connect-ExchangeOnline"
+                    New-Office365DSCLogEntry -Error $_ -Message $Message
                 }
             }
             else

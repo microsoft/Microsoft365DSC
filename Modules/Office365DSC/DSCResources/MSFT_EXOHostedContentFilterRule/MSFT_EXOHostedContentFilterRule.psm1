@@ -73,6 +73,8 @@ function Get-TargetResource
     catch
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+        $Message = "Error calling {Get-HostedContentFilterRule}"
+        New-Office365DSCLogEntry -Error $_ -Message $Message
     }
     $HostedContentFilterRule = $HostedContentFilterRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
     if (-not $HostedContentFilterRule)

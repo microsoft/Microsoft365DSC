@@ -171,7 +171,7 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message "The specified User doesn't already exist."
+        $Message = "The specified User {$UserPrincipalName} doesn't already exist."
         return $nullReturn
     }
     return $nullReturn
@@ -322,11 +322,15 @@ function Set-TargetResource
             Write-Verbose -Message "Updating License Assignment"
             try
             {
-                Set-MsolUserLicense -UserPrincipalName $UserPrincipalName -AddLicenses $LicenseAssignment -ErrorAction SilentlyContinue
+                Set-MsolUserLicense -UserPrincipalName $UserPrincipalName `
+                                    -AddLicenses $LicenseAssignment `
+                                    -ErrorAction SilentlyContinue
             }
             catch
             {
-                Write-Verbose -Message "License {$($LicenseAssignment)} doesn't exist in tenant."
+                $Message = "License {$($LicenseAssignment)} doesn't exist in tenant."
+                Write-Verbose $Message
+                New-Office365DSCLogEntry -Error $_ -Message $Message
             }
         }
         Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
@@ -340,11 +344,17 @@ function Set-TargetResource
 
         try
         {
-            Set-MsolUserLicense -UserPrincipalName $UserPrincipalName -AddLicenses $licensesToAdd -RemoveLicenses $licensesToRemove -ErrorAction SilentlyContinue
+            Set-MsolUserLicense -UserPrincipalName $UserPrincipalName `
+                                -AddLicenses $licensesToAdd `
+                                -RemoveLicenses $licensesToRemove `
+                                -ErrorAction SilentlyContinue
         }
         catch
         {
-            throw "Could not assign license {$($newLicenseAssignment)} to user"
+            $Message = "Could not assign license {$($newLicenseAssignment)} to user "`
+                       "{$($UserPrincipalName)}"
+            New-Office365DSCLogEntry -Error $_ -Message $Message
+            throw $Message
         }
     }
 }

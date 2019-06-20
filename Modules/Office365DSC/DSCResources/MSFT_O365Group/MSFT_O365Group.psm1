@@ -96,7 +96,8 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose "An error occured retrieving info for Group $DisplayName"
+        $Message = "An error occured retrieving info for Group $DisplayName"
+        New-Office365DSCLogEntry -Error $_ -Message $Message
     }
     return $nullReturn
 }
