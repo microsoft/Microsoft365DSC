@@ -392,7 +392,7 @@ function Export-TargetResource
     )
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        SCRetentionCOmpliancePolicy " + (New-GUID).ToString() + "`r`n"
+    $content = "        SCRetentionCompliancePolicy " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
