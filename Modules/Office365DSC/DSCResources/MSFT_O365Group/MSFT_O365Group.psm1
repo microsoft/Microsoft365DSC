@@ -59,37 +59,46 @@ function Get-TargetResource
     }
     Write-Verbose -Message "Found Existing Instance of Group {$($ADGroup.DisplayName)}"
 
-    $membersList = Get-AzureADGroupMember -ObjectId $ADGroup.ObjectId
-    $owners = Get-AzureADGroupOwner -ObjectId $ADGroup.ObjectId
-    $ownersUPN = $null
-    if ($null -ne $owners)
+    try
     {
-        $ownersUPN = $owners.UserPrincipalName
-    }
+        $membersList = Get-AzureADGroupMember -ObjectId $ADGroup.ObjectId
+        Write-Verbose -Message "Found Members for Group {$($ADGroup.DisplayName)}"
+        $owners = Get-AzureADGroupOwner -ObjectId $ADGroup.ObjectId
+        Write-Verbose -Message "Found Owners for Group {$($ADGroup.DisplayName)}"
+        $ownersUPN = $null
+        if ($null -ne $owners)
+        {
+            $ownersUPN = $owners.UserPrincipalName
+        }
 
-    $description = ""
-    if ($null -ne $ADGroup.Description)
+        $description = ""
+        if ($null -ne $ADGroup.Description)
+        {
+            $description = $ADGroup.Description.ToString()
+        }
+
+        $returnValue = @{
+            DisplayName = $ADGroup.DisplayName
+            MailNickName = $ADGroup.MailNickName
+            Members = $membersList.UserPrincipalName
+            ManagedBy = $ownersUPN
+            Description = $description
+            GlobalAdminAccount = $GlobalAdminAccount
+            Ensure = "Present"
+        }
+
+        Write-Verbose -Message "Retrieved the following instance of the Group:"
+        foreach ($value in $returnValue.GetEnumerator())
+        {
+            Write-Verbose -Message "$($value.Key) = $($value.Value)"
+        }
+        return $returnValue
+    }
+    catch
     {
-        $description = $ADGroup.Description.ToString()
+        Write-Verbose "An error occured retrieving info for Group $DisplayName"
     }
-
-    $returnValue = @{
-        DisplayName = $ADGroup.DisplayName
-        MailNickName = $ADGroup.MailNickName
-        Members = $membersList.UserPrincipalName
-        ManagedBy = $ownersUPN
-        Description = $description
-        GlobalAdminAccount = $GlobalAdminAccount
-        Ensure = "Present"
-    }
-
-    Write-Verbose -Message "Retrieved the following instance of the Group:"
-    foreach ($value in $returnValue.GetEnumerator())
-    {
-        Write-Verbose -Message "$($value.Key) = $($value.Value)"
-    }
-
-    return $returnValue
+    return $nullReturn
 }
 
 function Set-TargetResource
