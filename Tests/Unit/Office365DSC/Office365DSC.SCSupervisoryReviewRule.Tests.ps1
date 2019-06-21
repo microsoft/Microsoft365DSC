@@ -138,8 +138,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should throw error from the Set method' {
-                { Set-TargetResource @testParams } | Should Throw "The SCSupervisoryReviewRule resource doesn't not support deleting Rules. " + `
-                "Instead try removing the associated policy, or modifying the existing rule."
+                { Set-TargetResource @testParams } | Should Throw "The SCSupervisoryReviewRule resource doesn't not support deleting Rules."
             }
         }
 
