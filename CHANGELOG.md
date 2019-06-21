@@ -6,3 +6,5 @@
   * Initial Release
 * SCRetentionComplianceRule
   * Initial Release
+* SCSupervisoryReviewPolicy
+  * Initial Release

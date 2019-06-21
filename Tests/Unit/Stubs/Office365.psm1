@@ -49,6 +49,45 @@ function Test-PnPOnlineConnection{
     )
 }
 
+
+function Get-SupervisoryReviewPolicyV2
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-SupervisoryReviewPolicyV2
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function New-SupervisoryReviewPolicyV2
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $Reviewers
+    )
+}
+
 function New-RetentionComplianceRule
 {
     [CmdletBinding()]

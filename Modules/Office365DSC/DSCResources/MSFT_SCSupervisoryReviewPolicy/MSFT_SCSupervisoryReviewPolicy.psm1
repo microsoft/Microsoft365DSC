@@ -12,7 +12,7 @@ function Get-TargetResource
         [System.String]
         $Comment,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String[]]
         $Reviewers,
 
@@ -31,39 +31,28 @@ function Get-TargetResource
     Write-Verbose -Message "Calling Test-SecurityAndComplianceConnection function:"
     Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
 
-    $RuleObjects = Get-SupervisoryReviewPolicyV2
-    $RuleObject = $RuleObjects | Where-Object {$_.Name -eq $Name}
+    $PolicyObjects = Get-SupervisoryReviewPolicyV2
+    $PolicyObject = $PolicyObjects | Where-Object {$_.Name -eq $Name}
 
-    if ($null -eq $RuleObject)
+    if ($null -eq $PolicyObject)
     {
-        Write-Verbose -Message "RetentionComplianceRule $($Name) does not exist."
+        Write-Verbose -Message "SupervisoryReviewPolicy $($Name) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
     }
     else
     {
-        Write-Verbose "Found existing RetentionComplianceRule $($Name)"
+        Write-Verbose "Found existing SupervisoryReviewPolicy $($Name)"
         $result = @{
-            Ensure = 'Present'
-        }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-        {
-            if ($null -ne $RuleObject.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $RuleObject.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
+            Name               = $PolicyObject.Name
+            Comment            = $PolicyObject.Comment
+            Reviewers          = $PolicyObject.Reviewers
+            Ensure             = 'Present'
+            GlobalAdminAccount = $GlobalAdminAccount
         }
 
-        Write-Verbose -Message "Found RetentionComplianceRule $($Name)"
+        Write-Verbose -Message "Found SupervisoryReviewPolicy $($Name)"
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
@@ -82,7 +71,7 @@ function Set-TargetResource
         [System.String]
         $Comment,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String[]]
         $Reviewers,
 
@@ -96,31 +85,31 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of RetentionComplianceRule for $Name"
+    Write-Verbose -Message "Setting configuration of SupervisoryReviewPolicy for $Name"
 
     Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
-    $CurrentRule = Get-TargetResource @PSBoundParameters
+    $CurrentPolicy = Get-TargetResource @PSBoundParameters
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentRule.Ensure))
+    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
     {
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
-        New-RetentionComplianceRule @CreationParams
+        New-SupervisoryReviewPolicyV2 @CreationParams
     }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
+    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
-        # Easier to delete the Rule and recreate it from scratch;
-        Remove-RetentionComplianceRule -Identity $Name
+        # Easier to delete the Policy and recreate it from scratch;
+        Remove-SupervisoryReviewPolicyV2 -Identity $Name
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
-        New-RetentionComplianceRule @CreationParams
+        New-SupervisoryReviewPolicyV2 @CreationParams
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
-        # If the Rule exists and it shouldn't, simply remove it;
-        Remove-RetentionComplianceRule -Identity $Name
+        # If the Policy exists and it shouldn't, simply remove it;
+        Remove-SupervisoryReviewPolicyV2 -Identity $Name
     }
 }
 
@@ -138,7 +127,7 @@ function Test-TargetResource
         [System.String]
         $Comment,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String[]]
         $Reviewers,
 
@@ -152,7 +141,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of RetentionComplianceRule for $Name"
+    Write-Verbose -Message "Testing configuration of SupervisoryReviewPolicy for $Name"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
