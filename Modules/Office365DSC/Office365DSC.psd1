@@ -11,7 +11,7 @@
   # RootModule = ''
 
   # Version number of this module.
-  ModuleVersion = '1.0.0.7'
+  ModuleVersion = '1.0.0.8'
 
   # Supported PSEditions
   # CompatiblePSEditions = @()
@@ -114,7 +114,7 @@
           ProjectUri = 'https://github.com/Microsoft/Office365'
 
           # A URL to an icon representing this module.
-          IconUri = 'https://github.com/Microsoft/Office365DSC/blob/master/Images/Logo.png?raw=true'
+          IconUri = 'https://github.com/microsoft/Office365DSC/raw/master/Modules/Office365DSC/Dependencies/Images/Logo.png?raw=true'
 
           # ReleaseNotes of this module
           ReleaseNotes = '
