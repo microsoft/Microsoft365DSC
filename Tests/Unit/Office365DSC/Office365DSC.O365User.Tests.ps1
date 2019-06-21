@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [string] 
+    [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
                                          -ChildPath "..\Stubs\Office365.psm1" `
                                          -Resolve)
@@ -19,12 +19,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
-        
+
         Mock -CommandName Test-O365ServiceConnection -MockWith {
 
         }
 
-        # Test contexts 
+        Mock -CommandName Connect-ExchangeOnline -MockWith {
+
+        }
+
+        # Test contexts
         Context -Name "When the user doesn't already exist" -Fixture {
             $testParams = @{
                 UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
@@ -37,14 +41,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName New-MSOLUser -MockWith { 
+            Mock -CommandName New-MSOLUser -MockWith {
                 return @{
                     UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
                 }
             }
-            
+
             It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
             }
 
             It "Should return false from the Test method" {
@@ -79,16 +83,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Licenses= @(@{
                         AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
                     })
+                    PasswordNeverExpires = $False
                     Ensure = "Present"
                 }
             }
-            
+
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
             It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should be $true
+                Test-TargetResource @testParams | Should be $True
             }
         }
 
@@ -120,9 +125,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure = "Present"
                 }
             }
-            
+
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present" 
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
             It "Should remove the License Assignment in the Set Method" {
@@ -137,10 +142,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
-                DisplayName = "John Smith"
-                FirstName = "John"
-                LastName = "Smith"
-                UsageLocation = "US"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

@@ -1,8 +1,8 @@
-# Change log for SharePointDsc
+# Change log for Office365Dsc
 
 ## Unreleased
 
-* O365User
-  ** Initial Release
-* SPOSite
-  ** Initial Release
+* SCRetentionCompliancePolicy
+  * Initial Release
+* SCRetentionComplianceRule
+  * Initial Release

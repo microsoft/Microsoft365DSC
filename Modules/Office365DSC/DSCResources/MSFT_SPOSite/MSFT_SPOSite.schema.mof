@@ -2,14 +2,33 @@
 class MSFT_SPOSite : OMI_BaseResource
 {
     [Key, Description("The URL of the site collection")] string Url;
-    [Required, Description("The username of the site collection administrator")] string Owner;
-    [Required, Description("The resource quota to apply to the site collection")] uint32 StorageQuota;
+    [Write, Description("The username of the site collection administrator")] string Owner;
+    [Write, Description("The resource quota to apply to the site collection")] uint32 StorageQuota;
     [Write, Description("The title of the site")] string Title;
     [Write, Description("The compatibility level of the site")] uint32 CompatibilityLevel;
     [Write, Description("The locale code of the site")] uint32 LocaleId;
     [Write, Description("The resource quota to apply to the site collection")] uint32 ResourceQuota;
     [Write, Description("The template to apply to the site collection")] string Template;
     [Write, Description("Id ot the Timezone to assign to this site collection")] uint32 TimeZoneId;
+    [Write, Description("Determines whether site collection administrators can upgrade their site collections.")] boolean AllowSelfServiceUpgrade;
+    [Write, Description("Determines whether the Add And Customize Pages right is denied on the site collection. For more information about permission levels, see User permissions and permission levels in SharePoint.")] boolean DenyAddAndCustomizePages;
+    [Write, Description("Sets the lock state on a site. Valid values are: NoAccess and Unlock. When the lock state of a site is NoAccess, all traffic to the site will be blocked."), ValueMap{"NoAccess","Unlock"}, Values{"NoAccess","Unlock"}] string LockState;
+    [Write, Description("Specifies the warning level in megabytes of the site collection to warn the site collection administrator that the site is approaching the resource quota.")] uint32 ResourceQuotaWarningLevel;
+    [Write, Description("Determines what level of sharing is available for the site. The possible values are: Disabled - don't allow sharing outside your organization, ExistingExternalUserSharingOnly - Allow sharing only with the external users that already exist in your organization's directory, ExternalUserSharingOnly - allow external users who accept sharing invitations and sign in as authenticated users, or ExternalUserAndGuestSharing - allow sharing with all external users, and by using anonymous access links."), ValueMap{"Disabled","ExistingExternalUserSharingOnly","ExternalUserSharingOnly","ExternalUserAndGuestSharing"}, Values{"Disabled","ExistingExternalUserSharingOnly","ExternalUserSharingOnly","ExternalUserAndGuestSharing"}] string SharingCapability;
+    [Write, Description("Specifies the warning level in megabytes of the site collection to warn the site collection administrator that the site is approaching the storage quota.")] uint32 StorageQuotaWarningLevel;
+    [Write, Description("Configure comments on site pages")] boolean CommentsOnSitePagesDisabled;
+    [Write, Description("Disables or enables the Social Bar for Site Collection.")] boolean SocialBarOnSitePagesDisabled;
+    [Write, Description("Disables or enables AppViews."), ValueMap{"Unknown","Disabled", "NotDisabled"}, Values{"Unknown","Disabled", "NotDisabled"}] string DisableAppViews;
+    [Write, Description("Disables or enables company wide sharing links."), ValueMap{"Unknown","Disabled", "NotDisabled"}, Values{"Unknown","Disabled", "NotDisabled"}] string DisableCompanyWideSharingLinks;
+    [Write, Description("Disables or enables Flows."), ValueMap{"Unknown","Disabled", "NotDisabled"}, Values{"Unknown","Disabled", "NotDisabled"}] string DisableFlows;
+    [Write, Description("Defines geo-restriction settings for this site"), ValueMap{"NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown"}, Values{"NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown"}] string RestrictedToGeo;
+    [Write, Description("Specifies a list of email domains that is allowed for sharing with the external collaborators. Use the space character as the delimiter.")] string SharingAllowedDomainList;
+    [Write, Description("Specifies a list of email domains that is blocked for sharing with the external collaborators.")] string SharingBlockedDomainList;
+    [Write, Description("Specifies the external sharing mode for domains."), ValueMap{"None","AllowList", "BlockList"}, Values{"None","AllowList", "BlockList"}] string SharingDomainRestrictionMode ;
+    [Write, Description("To enable the option to search for existing guest users at Site Collection Level, set this parameter to $true.")] boolean ShowPeoplePickerSuggestionsForGuestUsers  ;
+    [Write, Description("None - Respect the organization default sharing link type AnonymousAccess - Sets the default sharing link for this site to an Anonymous Access or Anyone link Internal - Sets the default sharing link for this site to the organization link or company shareable link Direct - Sets the default sharing link for this site to the Specific people link"), ValueMap{"None","AnonymousAccess", "Internal","Direct"}, Values{"None","AnonymousAccess", "Internal","Direct"}] string DefaultSharingLinkType;
+    [Write, Description("The default link permission for the site collection"), ValueMap{"None","View", "Edit"}, Values{"None","View", "Edit"}] string DefaultLinkPermission;
+    [Write, Description("The URL of the Hub site the site collection needs to get connected to")] string HubUrl;
     [Write, Description("Present ensures the site collection exists, absent ensures it is removed"), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Required, Description("The Url of the SharePoint Online Central Administration")] string CentralAdminUrl;
     [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
