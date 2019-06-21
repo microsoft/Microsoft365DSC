@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Modules
+  * Added embedded Log Engine
 * SCRetentionCompliancePolicy
   * Initial Release
 * SCRetentionComplianceRule
