@@ -1,6 +1,6 @@
 # Office365DSC
 
-![DSC Resources Flow](https://github.com/Microsoft/Office365DSC/blob/master/Images/Logo.png?raw=true)
+![DSC Resources Flow](https://github.com/microsoft/Office365DSC/blob/master/Modules/Office365DSC/Dependencies/Images/Logo.png?raw=true)
 
 This module allows organizations to automate the deployment,
 configuration, and monitoring of Office 365 Tenants via PowerShell
