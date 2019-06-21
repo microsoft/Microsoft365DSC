@@ -955,7 +955,8 @@ function Start-O365ConfigurationExtract
                     $i++
                 }
             }
-            catch {
+            catch
+            {
                 Write-Information "The current User doesn't have the required permissions to extract Users for Team {$($team.DisplayName)}."
             }
             $j++

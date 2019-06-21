@@ -422,12 +422,16 @@ function Set-TargetResource
                     $siteAlreadyDeleted = Get-SPODeletedSite -Identity $Url
                     if ($null -ne $siteAlreadyDeleted)
                     {
-                        Write-Error -Message "The site $($Url) already exists in the deleted sites."
+                        $Message = "The site $($Url) already exists in the deleted sites."
+                        New-Office365DSCLogEntry -Error $_ -Message $Message
+                        Write-Error $Message
                     }
                 }
                 catch
                 {
-                    Write-Error -Message "The site $($Url) does not exist in the deleted sites."
+                    $Message = "The site $($Url) does not exist in the deleted sites."
+                    New-Office365DSCLogEntry -Error $_ -Message $Message
+                    Write-Error $Message
                 }
             }
         }
