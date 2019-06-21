@@ -290,6 +290,39 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOTheme)
         #endregion
 
+        #region Security and Compliance
+        $imgSC = New-Object System.Windows.Forms.PictureBox
+        $imagePath = $PSScriptRoot + "\..\Dependencies\Images\SecurityAndCompliance.png"
+        $imgSC.ImageLocation = $imagePath
+        $imgSC.Left = $SecondColumnLeft
+        $imgSC.Top = $topBannerHeight + $pnlSPO.Height + $imgSPO.Height + 75
+        $imgSC.AutoSize = $true
+        $pnlMain.Controls.Add($imgSC)
+
+        $pnlSC = New-Object System.Windows.Forms.Panel
+        $pnlSC.Top = $pnlSPO.Heigth + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 300
+        $pnlSC.Left = $SecondColumnLeft
+        $pnlSC.Height = 40
+        $pnlSC.Width = 300
+        $pnlSC.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+
+        $chckSCRetentionCompliancePolicy = New-Object System.Windows.Forms.CheckBox
+        $chckSCRetentionCompliancePolicy.Top = 0
+        $chckSCRetentionCompliancePolicy.AutoSize = $true;
+        $chckSCRetentionCompliancePolicy.Name = "chckSCRetentionCompliancePolicy"
+        $chckSCRetentionCompliancePolicy.Checked = $true
+        $chckSCRetentionCompliancePolicy.Text = "Retention Compliance Policy"
+        $pnlSC.Controls.Add($chckSCRetentionCompliancePolicy)
+
+        $chckSCRetentionComplianceRule = New-Object System.Windows.Forms.CheckBox
+        $chckSCRetentionComplianceRule.Top = 20
+        $chckSCRetentionComplianceRule.AutoSize = $true;
+        $chckSCRetentionComplianceRule.Name = "chckSCRetentionComplianceRule"
+        $chckSCRetentionComplianceRule.Checked = $true
+        $chckSCRetentionComplianceRule.Text = "Retention Compliance Rule"
+        $pnlSC.Controls.Add($chckSCRetentionComplianceRule)
+        #endregion
+
         #region Teams
         $imgTeams = New-Object System.Windows.Forms.PictureBox
         $imagePath = $PSScriptRoot + "\..\Dependencies\Images\Teams.jpg"
@@ -361,6 +394,7 @@ function Show-O365GUI
         $pnlMain.Controls.Add($pnlExo)
         $pnlMain.Controls.Add($pnlOD)
         $pnlMain.Controls.Add($pnlSPO)
+        $pnlMain.Controls.Add($pnlSC)
         $pnlMain.Controls.Add($pnlTeams)
 
         #region Extraction Modes
