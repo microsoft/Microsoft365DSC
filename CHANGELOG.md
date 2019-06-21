@@ -8,3 +8,5 @@
   * Initial Release
 * SCSupervisoryReviewPolicy
   * Initial Release
+* SCSupervisoryReviewRule
+  * Initial Release

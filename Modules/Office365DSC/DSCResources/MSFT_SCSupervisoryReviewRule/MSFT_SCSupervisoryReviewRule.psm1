@@ -8,13 +8,17 @@ function Get-TargetResource
         [System.String]
         $Name,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
         [Parameter()]
         [System.String]
-        $Comment,
+        $Condition,
 
-        [Parameter(Mandatory = $true)]
-        [System.String[]]
-        $Reviewers,
+        [Parameter()]
+        [System.Int32]
+        $SamplingRate,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -26,33 +30,36 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of SupervisoryReviewPolicy for $Name"
+    Write-Verbose -Message "Getting configuration of SupervisoryReviewRule for $Name"
 
     Write-Verbose -Message "Calling Test-SecurityAndComplianceConnection function:"
     Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
 
-    $PolicyObjects = Get-SupervisoryReviewPolicyV2
-    $PolicyObject = $PolicyObjects | Where-Object {$_.Name -eq $Name}
+    $RuleObjects = Get-SupervisoryReviewRule
+    $RuleObject = $RuleObjects | Where-Object {$_.Name -eq $Name}
 
-    if ($null -eq $PolicyObject)
+    if ($null -eq $RuleObject)
     {
-        Write-Verbose -Message "SupervisoryReviewPolicy $($Name) does not exist."
+        Write-Verbose -Message "SupervisoryReviewRule $($Name) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
     }
     else
     {
-        Write-Verbose "Found existing SupervisoryReviewPolicy $($Name)"
+        Write-Verbose "Found existing SupervisoryReviewRule $($Name)"
+        $PolicyName = (Get-SupervisoryReviewPolicyV2 -Identity $RuleObject.Policy).Name
+
         $result = @{
-            Name               = $PolicyObject.Name
-            Comment            = $PolicyObject.Comment
-            Reviewers          = $PolicyObject.Reviewers
+            Name               = $RuleObject.Name
+            Policy             = $RuleObject.Policy
+            Condition          = $RuleObject.Condition
+            SamplingRate       = $RuleObject.SamplingRate
             Ensure             = 'Present'
             GlobalAdminAccount = $GlobalAdminAccount
         }
 
-        Write-Verbose -Message "Found SupervisoryReviewPolicy $($Name)"
+        Write-Verbose -Message "Found SupervisoryReviewRule $($Name)"
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
@@ -67,13 +74,17 @@ function Set-TargetResource
         [System.String]
         $Name,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
         [Parameter()]
         [System.String]
-        $Comment,
+        $Condition,
 
-        [Parameter(Mandatory = $true)]
-        [System.String[]]
-        $Reviewers,
+        [Parameter()]
+        [System.Int32]
+        $SamplingRate,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -85,31 +96,28 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of SupervisoryReviewPolicy for $Name"
+    Write-Verbose -Message "Setting configuration of SupervisoryReviewRule for $Name"
 
     Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
-    $CurrentPolicy = Get-TargetResource @PSBoundParameters
+    $CurrentRule = Get-TargetResource @PSBoundParameters
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
+    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentRule.Ensure))
     {
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
-        New-SupervisoryReviewPolicyV2 @CreationParams
+        New-SupervisoryReviewRule @CreationParams
     }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
+    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
-        # Easier to delete the Policy and recreate it from scratch;
-        Remove-SupervisoryReviewPolicyV2 -Identity $Name
-        $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("GlobalAdminAccount")
-        $CreationParams.Remove("Ensure")
-        New-SupervisoryReviewPolicyV2 @CreationParams
+        Set-SupervisoryReviewRule -Identity $CurrentRule.Name `
+                                  -Condition $CurrentRule.Condition `
+                                  -SamplingRate $CurrentRule.SamplingRate
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
+    elseif ('Absent' -eq $Ensure)
     {
-        # If the Policy exists and it shouldn't, simply remove it;
-        Remove-SupervisoryReviewPolicyV2 -Identity $Name
+        throw "The SCSupervisoryReviewRule resource doesn't not support deleting Rules. " + `
+              "Instead try removing the associated policy, or modifying the existing rule."
     }
 }
 
@@ -123,13 +131,17 @@ function Test-TargetResource
         [System.String]
         $Name,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
         [Parameter()]
         [System.String]
-        $Comment,
+        $Condition,
 
-        [Parameter(Mandatory = $true)]
-        [System.String[]]
-        $Reviewers,
+        [Parameter()]
+        [System.Int32]
+        $SamplingRate,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -141,7 +153,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of SupervisoryReviewPolicy for $Name"
+    Write-Verbose -Message "Testing configuration of SupervisoryReviewRule for $Name"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -169,8 +181,8 @@ function Export-TargetResource
         $Name,
 
         [Parameter(Mandatory = $true)]
-        [System.String[]]
-        $Reviewers,
+        [System.String]
+        $Policy,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -178,7 +190,7 @@ function Export-TargetResource
     )
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        SCSupervisoryReviewPolicy " + (New-GUID).ToString() + "`r`n"
+    $content = "        SCSupervisoryReviewRule " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"

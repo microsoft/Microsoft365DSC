@@ -88,6 +88,60 @@ function New-SupervisoryReviewPolicyV2
     )
 }
 
+function New-SupervisoryReviewRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
+        [Parameter()]
+        [System.String]
+        $Condition,
+
+        [Parameter()]
+        [System.Int32]
+        $SamplingRate
+    )
+}
+
+function Set-SupervisoryReviewRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Condition,
+
+        [Parameter()]
+        [System.Int32]
+        $SamplingRate
+    )
+}
+
+function Get-SupervisoryReviewRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Policy
+    )
+}
+
 function New-RetentionComplianceRule
 {
     [CmdletBinding()]

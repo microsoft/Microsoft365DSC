@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SCSupervisoryReviewPolicy"
+    -DscResource "SCSupervisoryReviewRule"
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -32,26 +32,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Mock -CommandName Remove-SupervisoryReviewPolicyV2 -MockWith {
+        Mock -CommandName Set-SupervisoryReviewRule -MockWith {
 
         }
 
-        Mock -CommandName New-SupervisoryReviewPolicyV2 -MockWith {
+        Mock -CommandName New-SupervisoryReviewRule -MockWith {
             return @{
 
             }
         }
 
         # Test contexts
-        Context -Name "Policy doesn't already exist" -Fixture {
+        Context -Name "Rule doesn't already exist" -Fixture {
             $testParams = @{
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
-                Name               = 'TestPolicy'
-                Reviewers          = @("admin@contoso.com")
+                Name               = "MyRule"
+                Condition          = "(NOT(Reviewee:US Compliance))"
+                SamplingRate       = 100
+                Policy             = 'TestPolicy'
             }
 
-            Mock -CommandName Get-SupervisoryReviewPolicyV2 -MockWith {
+            Mock -CommandName Get-SupervisoryReviewRule -MockWith {
                 return $null
             }
 
@@ -68,19 +70,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Policy already exists" -Fixture {
+        Context -Name "Rule already exists" -Fixture {
             $testParams = @{
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
-                Name               = 'TestPolicy'
-                Reviewers          = @("admin@contoso.com")
+                Name               = "MyRule"
+                Condition          = "(NOT(Reviewee:US Compliance))"
+                SamplingRate       = 100
+                Policy             = 'TestPolicy'
+            }
+
+            Mock -CommandName Get-SupervisoryReviewRule -MockWith {
+                return @{
+                    Name         = "MyRule"
+                    Condition    = "(NOT(Reviewee:US Compliance))"
+                    SamplingRate = 100
+                    Policy       = 'TestPolicy'
+                }
             }
 
             Mock -CommandName Get-SupervisoryReviewPolicyV2 -MockWith {
                 return @{
-                    Name      = "TestPolicy"
-                    Comment   = "Hello World"
-                    Reviewers = @("admin@contoso.com")
+                    Name = "TestPolicy"
                 }
             }
 
@@ -88,7 +99,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $true
             }
 
-            It 'Should recreate from the Set method' {
+            It 'Should update from the Set method' {
                 Set-TargetResource @testParams
             }
 
@@ -97,19 +108,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Policy should not exist" -Fixture {
+        Context -Name "Rule is set to Absent" -Fixture {
             $testParams = @{
                 Ensure             = 'Absent'
                 GlobalAdminAccount = $GlobalAdminAccount
-                Name               = 'TestPolicy'
-                Reviewers          = @("admin@contoso.com")
+                Name               = "MyRule"
+                Condition          = "(NOT(Reviewee:US Compliance))"
+                SamplingRate       = 100
+                Policy             = 'TestPolicy'
             }
 
             Mock -CommandName Get-SupervisoryReviewPolicyV2 -MockWith {
                 return @{
-                    Name      = "TestPolicy"
-                    Comment   = "Hello World"
-                    Reviewers = @("admin@contoso.com")
+                    Name = "TestPolicy"
+                }
+            }
+
+            Mock -CommandName Get-SupervisoryReviewRule -MockWith {
+                return @{
+                    Name         = "MyRule"
+                    Condition    = "(NOT(Reviewee:US Compliance))"
+                    SamplingRate = 100
+                    Policy       = 'TestPolicy'
                 }
             }
 
@@ -117,27 +137,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-            It 'Should delete from the Set method' {
-                Set-TargetResource @testParams
-            }
-
-            It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            It 'Should throw error from the Set method' {
+                { Set-TargetResource @testParams } | Should Throw "The SCSupervisoryReviewRule resource doesn't not support deleting Rules. " + `
+                "Instead try removing the associated policy, or modifying the existing rule."
             }
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
-                Name               = "Test Policy"
-                Reviewers          = @("admin@contoso.com")
+                Name               = "MyRule"
+                Policy             = 'TestPolicy'
             }
 
             Mock -CommandName Get-SupervisoryReviewPolicyV2 -MockWith {
                 return @{
-                    Name      = "TestPolicy"
-                    Comment   = "Hello World"
-                    Reviewers = @("admin@contoso.com")
+                    Name = "TestPolicy"
+                }
+            }
+
+            Mock -CommandName Get-SupervisoryReviewRule -MockWith {
+                return @{
+                    Name         = "MyRule"
+                    Condition    = "(NOT(Reviewee:US Compliance))"
+                    SamplingRate = 100
+                    Policy       = 'TestPolicy'
                 }
             }
 
