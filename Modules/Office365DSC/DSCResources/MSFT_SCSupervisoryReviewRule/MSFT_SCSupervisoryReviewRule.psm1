@@ -17,7 +17,7 @@ function Get-TargetResource
         $Condition,
 
         [Parameter()]
-        [System.Int32]
+        [System.UInt32]
         $SamplingRate,
 
         [Parameter()]
@@ -52,7 +52,7 @@ function Get-TargetResource
 
         $result = @{
             Name               = $RuleObject.Name
-            Policy             = $RuleObject.Policy
+            Policy             = $PolicyName
             Condition          = $RuleObject.Condition
             SamplingRate       = $RuleObject.SamplingRate
             Ensure             = 'Present'
@@ -83,7 +83,7 @@ function Set-TargetResource
         $Condition,
 
         [Parameter()]
-        [System.Int32]
+        [System.UInt32]
         $SamplingRate,
 
         [Parameter()]
@@ -140,7 +140,7 @@ function Test-TargetResource
         $Condition,
 
         [Parameter()]
-        [System.Int32]
+        [System.UInt32]
         $SamplingRate,
 
         [Parameter()]
