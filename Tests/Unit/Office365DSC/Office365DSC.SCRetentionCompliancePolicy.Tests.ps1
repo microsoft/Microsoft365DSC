@@ -78,7 +78,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
                 return @{
-                    Name = "TestPolicy"
+                    Name               = "TestPolicy"
+                    SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
                 }
             }
 
