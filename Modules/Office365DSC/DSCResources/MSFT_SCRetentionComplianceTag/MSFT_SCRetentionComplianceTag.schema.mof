@@ -1,0 +1,17 @@
+[ClassVersion("1.0.0.0"), FriendlyName("SCRetentionComplianceTag")]
+class MSFT_SCRetentionComplianceTag : OMI_BaseResource
+{
+    [Key, Description("The Name parameter specifies the unique name of the complaiance tag.")] String Identity;
+    [Write, Description("Specify if this rule should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("The Comment parameter specifies an optional comment.")] String Comment;
+    [Write, Description("The FilePlanProperty parameter specifies the file plan properties to include in the label. To view the file plan property names that you need to use in this parameter, run the following commands.")] string FilePlanProperty
+    [Write, Description("The EventType parameter specifies the retention rule that's associated with the label")] String EventType;
+    [Write, Description("The IsRecordLabel parameter specifies whether the label is a record label")] Boolean IsRecordLabel;
+    [Write, Description("The Notes parameter specifies an optional note. If you specify a value that contains spaces, enclose the value in quotation marks ("), for example: "This is a user note"")] String Notes;
+    [Write, Description("Regulatory")] Boolean Regulatory;
+    [Write, Description("The ReviewerEmail parameter specifies the email address of a reviewer for Delete and KeepAndDelete retention actions. You can specify multiple email addresses separated by commas.")] String ReviewerEmail;
+    [Write, Description("The RetentionDuration parameter specifies the hold duration for the retention rule. Valid values are: An integer - The hold duration in days, Unlimited - The content is held indefinitely.")] String RetentionDuration;
+    [Write, Description("The RetentionAction parameter specifies the action for the label. Valid values are: Delete, Keep or KeepAndDelete."), ValueMap{"Delete","Keep","KeepAndDelete"}, Values{"Delete","Keep","KeepAndDelete"}] String RetentionAction;
+    [Write, Description("The RetentionType parameter specifies whether the retention duration is calculated from the content creation date, tagged date, or last modification date. Valid values are: CreationAgeInDays, EventAgeInDays,ModificationAgeInDays, or TaggedAgeInDays."), ValueMap{"CreationAgeInDays","EventAgeInDays","ModificationAgeInDays","TaggedAgeInDays"}, Values{"CreationAgeInDays","EventAgeInDays","ModificationAgeInDays","TaggedAgeInDays"}] String RetentionType;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};
