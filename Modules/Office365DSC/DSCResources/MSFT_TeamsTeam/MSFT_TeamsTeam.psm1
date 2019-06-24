@@ -106,6 +106,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Getting configuration of Team $DisplayName"
+
     $nullReturn = @{
         DisplayName                       = $DisplayName
         GroupId                           = $GroupID
@@ -137,58 +139,66 @@ function Get-TargetResource
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $CurrentParameters = $PSBoundParameters
-    ## will only return 1 instance
-    if ($CurrentParameters.ContainsKey("GroupID"))
+
+    try
     {
-        $team = Get-Team -GroupId $GroupID
-        if ($null -eq $team)
+        ## will only return 1 instance
+        if ($CurrentParameters.ContainsKey("GroupID"))
         {
-            Write-Verbose "Teams with GroupId $($GroupID) doesn't exist"
-            return $nullReturn
+            $team = Get-Team -GroupId $GroupID
+            if ($null -eq $team)
+            {
+                Write-Verbose -Message "Teams with GroupId $($GroupID) doesn't exist"
+                return $nullReturn
+            }
+        }
+        else
+        {
+            ## Can retreive multiple Teams since displayname is not unique
+            $team = Get-Team -DisplayName $DisplayName
+            if ($null -eq $team)
+            {
+                Write-Verbose -Message "Teams with displayname $DisplayName doesn't exist"
+                return $nullReturn
+            }
+            if ($team.Count -gt 1)
+            {
+                throw "Duplicate Teams name $DisplayName exist in tenant"
+            }
+        }
+
+        Write-Verbose -Message "Found Team $($team.DisplayName)."
+
+        return @{
+            DisplayName                       = $team.DisplayName
+            GroupID                           = $team.GroupId
+            Description                       = $team.Description
+            Owner                             = $Owner
+            MailNickName                      = $team.MailNickName
+            Visibility                        = $team.Visibility
+            AllowAddRemoveApps                = $team.AllowAddRemoveApps
+            AllowGiphy                        = $team.AllowGiphy
+            GiphyContentRating                = $team.GiphyContentRating
+            AllowStickersAndMemes             = $team.AllowStickersAndMemes
+            AllowCustomMemes                  = $team.AllowCustomMemes
+            AllowUserEditMessages             = $team.AllowUserEditMessages
+            AllowUserDeleteMessages           = $team.AllowUserDeleteMessages
+            AllowOwnerDeleteMessages          = $team.AllowOwnerDeleteMessages
+            AllowCreateUpdateRemoveConnectors = $team.AllowCreateUpdateRemoveConnectors
+            AllowCreateUpdateRemoveTabs       = $team.AllowCreateUpdateRemoveTabs
+            AllowTeamMentions                 = $team.AllowTeamMentions
+            AllowChannelMentions              = $team.AllowChannelMentions
+            AllowGuestCreateUpdateChannels    = $team.AllowGuestCreateUpdateChannels
+            AllowGuestDeleteChannels          = $team.AllowGuestDeleteChannels
+            AllowCreateUpdateChannels         = $team.AllowCreateUpdateChannels
+            AllowDeleteChannels               = $team.AllowDeleteChannels
+            Ensure                            = "Present"
+            GlobalAdminAccount                = $GlobalAdminAccount
         }
     }
-    else
+    catch
     {
-        ## Can retreive multiple Teams since displayname is not unique
-        $team = Get-Team -DisplayName $DisplayName
-        if ($null -eq $team)
-        {
-            Write-Verbose "Teams with displayname $DisplayName doesn't exist"
-            return $nullReturn
-        }
-        if ($team.Count -gt 1)
-        {
-            throw "Duplicate Teams name $DisplayName exist in tenant"
-        }
-    }
-
-    Write-Verbose -Message "Found Team $($team.DisplayName)."
-
-    return @{
-        DisplayName                       = $team.DisplayName
-        GroupID                           = $team.GroupId
-        Description                       = $team.Description
-        Owner                             = $Owner
-        MailNickName                      = $team.MailNickName
-        Visibility                        = $team.Visibility
-        AllowAddRemoveApps                = $team.AllowAddRemoveApps
-        AllowGiphy                        = $team.AllowGiphy
-        GiphyContentRating                = $team.GiphyContentRating
-        AllowStickersAndMemes             = $team.AllowStickersAndMemes
-        AllowCustomMemes                  = $team.AllowCustomMemes
-        AllowUserEditMessages             = $team.AllowUserEditMessages
-        AllowUserDeleteMessages           = $team.AllowUserDeleteMessages
-        AllowOwnerDeleteMessages          = $team.AllowOwnerDeleteMessages
-        AllowCreateUpdateRemoveConnectors = $team.AllowCreateUpdateRemoveConnectors
-        AllowCreateUpdateRemoveTabs       = $team.AllowCreateUpdateRemoveTabs
-        AllowTeamMentions                 = $team.AllowTeamMentions
-        AllowChannelMentions              = $team.AllowChannelMentions
-        AllowGuestCreateUpdateChannels    = $team.AllowGuestCreateUpdateChannels
-        AllowGuestDeleteChannels          = $team.AllowGuestDeleteChannels
-        AllowCreateUpdateChannels         = $team.AllowCreateUpdateChannels
-        AllowDeleteChannels               = $team.AllowDeleteChannels
-        Ensure                            = "Present"
-        GlobalAdminAccount                = $GlobalAdminAccount
+        return $nullReturn
     }
 }
 
@@ -299,11 +309,12 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration of Team $DisplayName"
+
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose  -Message "Entering Set-TargetResource"
-    Write-Verbose  -Message "Retrieving information about team $($DisplayName) to see if it already exists"
 
     $team = Get-TargetResource @PSBoundParameters
+
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Ensure")
@@ -447,42 +458,45 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing creation of new Team"
+    Write-Verbose -Message "Testing configuration of Team $DisplayName"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
-    $ValuesToCheck.Remove('GroupID') | out-null
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('GroupID') | Out-Null
 
-    $result = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "AllowCreateUpdateRemoveTabs", `
-            "Description", `
-            "MailNickName", `
-            "Visibility", `
-            "AddAllowRemoveApps", `
-            "AllowGiphy", `
-            "GiphyContent", `
-            "AllowStickersandMemes", `
-            "AllowCustomMemes", `
-            "AllowUserEditMessage", `
-            "AllowUserDeleteMessages", `
-            "AllowOwnerDeleteMessages", `
-            "AllowDeleteChannels", `
-            "AllowCreateUpdateRemoveConnectors", `
-            "AllowCreateUpdateRemoveTabs", `
-            "AllowTeamMentions", `
-            "AllowChannelMentions", `
-            "AllowGuestCreateUpdateChannels", `
-            "AllowGuestDeleteChannels", `
-            "AllowCreateUpdateChannels", `
-            "DisplayName")
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @("Ensure", `
+                                                                   "AllowCreateUpdateRemoveTabs", `
+                                                                   "Description", `
+                                                                   "MailNickName", `
+                                                                   "Visibility", `
+                                                                   "AddAllowRemoveApps", `
+                                                                   "AllowGiphy", `
+                                                                   "GiphyContent", `
+                                                                   "AllowStickersandMemes", `
+                                                                   "AllowCustomMemes", `
+                                                                   "AllowUserEditMessage", `
+                                                                   "AllowUserDeleteMessages", `
+                                                                   "AllowOwnerDeleteMessages", `
+                                                                   "AllowDeleteChannels", `
+                                                                   "AllowCreateUpdateRemoveConnectors", `
+                                                                   "AllowCreateUpdateRemoveTabs", `
+                                                                   "AllowTeamMentions", `
+                                                                   "AllowChannelMentions", `
+                                                                   "AllowGuestCreateUpdateChannels", `
+                                                                   "AllowGuestDeleteChannels", `
+                                                                   "AllowCreateUpdateChannels", `
+                                                                   "DisplayName")
 
-    if (!$result)
-    {
-        Write-Verbose "Team $DisplayName is not in its Desired State"
-    }
-    return $result
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource
@@ -503,6 +517,11 @@ function Export-TargetResource
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    $result.Remove("GroupID")
+    if ("" -eq $result.Owner)
+    {
+        $result.Remove("Owner")
+    }
     $content = "        TeamsTeam " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

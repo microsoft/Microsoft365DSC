@@ -57,11 +57,15 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose "Get-TargetResource will attempt to retrieve HostedContentFilterRule $($Identity)"
-    Write-Verbose "Calling Connect-ExchangeOnline function:"
+
+    Write-Verbose -Message "Getting configuration of HostedContentFilterRule for $Identity"
+
+    Write-Verbose -Message "Calling Connect-ExchangeOnline function:"
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
+
+    Write-Verbose -Message "Global ExchangeOnlineSession status:"
+    Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
+
     try
     {
         $HostedContentFilterRules = Get-HostedContentFilterRule
@@ -69,11 +73,13 @@ function Get-TargetResource
     catch
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+        $Message = "Error calling {Get-HostedContentFilterRule}"
+        New-Office365DSCLogEntry -Error $_ -Message $Message
     }
-    $HostedContentFilterRule = $HostedContentFilterRules | Where-Object Identity -eq $Identity
-    if (-NOT $HostedContentFilterRule)
+    $HostedContentFilterRule = $HostedContentFilterRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    if (-not $HostedContentFilterRule)
     {
-        Write-Verbose "HostedContentFilterRule $($Identity) does not exist."
+        Write-Verbose -Message "HostedContentFilterRule $($Identity) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -83,7 +89,7 @@ function Get-TargetResource
         $result = @{
             Ensure = 'Present'
         }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object {$_ -ne 'Ensure'}) )
+        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
         {
             if ($null -ne $HostedContentFilterRule.$KeyName)
             {
@@ -109,8 +115,8 @@ function Get-TargetResource
             $result.Enabled = $false
         }
 
-        Write-Verbose "Found HostedContentFilterRule $($Identity)"
-        Write-Verbose "Get-TargetResource Result: `n $($result | Out-String)"
+        Write-Verbose -Message "Found HostedContentFilterRule $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
 }
@@ -173,25 +179,29 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose 'Entering Set-TargetResource'
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose "Global ExchangeOnlineSession status:"
-    Write-Verbose "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object Name -eq 'ExchangeOnline' | Out-String)"
-    $HostedContentFilterRules = Get-HostedContentFilterRule
-    $HostedContentFilterRule = $HostedContentFilterRules | Where-Object {$_.Identity -eq $Identity}
 
-    if ( ('Present' -eq $Ensure ) -and (-NOT $HostedContentFilterRule) )
+    Write-Verbose -Message "Setting configuration of HostedContentFilterRule for $Identity"
+
+    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
+    Write-Verbose -Message "Global ExchangeOnlineSession status:"
+    Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
+
+    $HostedContentFilterRules = Get-HostedContentFilterRule
+    $HostedContentFilterRule = $HostedContentFilterRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
+
+    if (('Present' -eq $Ensure ) -and (-not $HostedContentFilterRule))
     {
         New-EXOHostedContentFilterRule -HostedContentFilterRuleParams $PSBoundParameters
     }
 
-    if ( ('Present' -eq $Ensure ) -and ($HostedContentFilterRule) )
+    if (('Present' -eq $Ensure ) -and ($HostedContentFilterRule))
     {
-        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $HostedContentFilterRule.State) )
+        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $HostedContentFilterRule.State))
         {
              # New-HostedContentFilterRule has the Enabled parameter, Set-HostedContentFilterRule does not.
             # There doesn't appear to be any way to change the Enabled state of a rule once created.
-            Write-Verbose "Removing HostedContentFilterRule $($Identity) in order to change Enabled state."
+            Write-Verbose -Message "Removing HostedContentFilterRule $($Identity) in order to change Enabled state."
             Remove-HostedContentFilterRule -Identity $Identity -Confirm:$false
             New-EXOHostedContentFilterRule -HostedContentFilterRuleParams $PSBoundParameters
         }
@@ -201,9 +211,9 @@ function Set-TargetResource
         }
     }
 
-    if ( ('Absent' -eq $Ensure ) -and ($HostedContentFilterRule) )
+    if (('Absent' -eq $Ensure ) -and ($HostedContentFilterRule))
     {
-        Write-Verbose "Removing HostedContentFilterRule $($Identity) "
+        Write-Verbose -Message "Removing HostedContentFilterRule $($Identity) "
         Remove-HostedContentFilterRule -Identity $Identity -Confirm:$false
     }
 }
@@ -267,21 +277,22 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message "Testing HostedContentFilterRule for $($Identity)"
+
+    Write-Verbose -Message "Testing configuration of HostedContentFilterRule for $Identity"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | out-null
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-    if ($TestResult)
-    {
-        Write-Verbose 'Test-TargetResource returned True'
-    }
-    else
-    {
-        Write-Verbose 'Test-TargetResource returned False'
-    }
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck $ValuesToCheck.Keys
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

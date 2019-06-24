@@ -43,7 +43,7 @@ function Show-O365GUI
         $chckO365AdminAuditLogConfig.Top = 0
         $chckO365AdminAuditLogConfig.AutoSize = $true;
         $chckO365AdminAuditLogConfig.Name = "chckO365AdminAuditLogConfig"
-        $chckO365AdminAuditLogConfig.Checked = $true
+        $chckO365AdminAuditLogConfig.Checked = $false
         $chckO365AdminAuditLogConfig.Text = "Admin Audit Log Config"
         $pnlO365.Controls.Add($chckO365AdminAuditLogConfig)
 
@@ -51,7 +51,7 @@ function Show-O365GUI
         $chckO365Group.Top = 20
         $chckO365Group.AutoSize = $true;
         $chckO365Group.Name = "chckO365Group"
-        $chckO365Group.Checked = $true
+        $chckO365Group.Checked = $false
         $chckO365Group.Text = "Groups"
         $pnlO365.Controls.Add($chckO365Group);
 
@@ -84,7 +84,7 @@ function Show-O365GUI
         $chckEXOAtpPolicyForO365.Top = 0
         $chckEXOAtpPolicyForO365.AutoSize = $true;
         $chckEXOAtpPolicyForO365.Name = "chckEXOAtpPolicyForO365"
-        $chckEXOAtpPolicyForO365.Checked = $true
+        $chckEXOAtpPolicyForO365.Checked = $false
         $chckEXOAtpPolicyForO365.Text = "Advanced Threat Protection Policies"
         $pnlExo.Controls.Add($chckEXOAtpPolicyForO365)
 
@@ -92,7 +92,7 @@ function Show-O365GUI
         $chckEXOClientAccessRule.Top = 20
         $chckEXOClientAccessRule.AutoSize = $true;
         $chckEXOClientAccessRule.Name = "chckEXOClientAccessRule"
-        $chckEXOClientAccessRule.Checked = $true
+        $chckEXOClientAccessRule.Checked = $false
         $chckEXOClientAccessRule.Text = "Client Access Rule"
         $pnlExo.Controls.Add($chckEXOClientAccessRule)
 
@@ -100,7 +100,7 @@ function Show-O365GUI
         $chckEXOCASMailboxPlan.Top = 40
         $chckEXOCASMailboxPlan.AutoSize = $true;
         $chckEXOCASMailboxPlan.Name = "chckEXOCASMailboxPlan"
-        $chckEXOCASMailboxPlan.Checked = $true
+        $chckEXOCASMailboxPlan.Checked = $false
         $chckEXOCASMailboxPlan.Text = "Client Access Service Mailbox Plan"
         $pnlExo.Controls.Add($chckEXOCASMailboxPlan)
 
@@ -108,7 +108,7 @@ function Show-O365GUI
         $chckEXODkimSigningConfig.Top = 60
         $chckEXODkimSigningConfig.AutoSize = $true;
         $chckEXODkimSigningConfig.Name = "chckEXODkimSigningConfig"
-        $chckEXODkimSigningConfig.Checked = $true
+        $chckEXODkimSigningConfig.Checked = $false
         $chckEXODkimSigningConfig.Text = "DKIM Signing Configuration"
         $pnlExo.Controls.Add($chckEXODkimSigningConfig)
 
@@ -116,7 +116,7 @@ function Show-O365GUI
         $chckEXOHostedConnectionFilterPolicy.Top = 80
         $chckEXOHostedConnectionFilterPolicy.AutoSize = $true;
         $chckEXOHostedConnectionFilterPolicy.Name = "chckEXOHostedConnectionFilterPolicy"
-        $chckEXOHostedConnectionFilterPolicy.Checked = $true
+        $chckEXOHostedConnectionFilterPolicy.Checked = $false
         $chckEXOHostedConnectionFilterPolicy.Text = "Hosted Connection Filter Policy"
         $pnlExo.Controls.Add($chckEXOHostedConnectionFilterPolicy)
 
@@ -124,7 +124,7 @@ function Show-O365GUI
         $chckEXOHostedContentFilterPolicy.Top = 100
         $chckEXOHostedContentFilterPolicy.AutoSize = $true;
         $chckEXOHostedContentFilterPolicy.Name = "chckEXOHostedContentFilterPolicy"
-        $chckEXOHostedContentFilterPolicy.Checked = $true
+        $chckEXOHostedContentFilterPolicy.Checked = $false
         $chckEXOHostedContentFilterPolicy.Text = "Hosted Content Filter Policy"
         $pnlExo.Controls.Add($chckEXOHostedContentFilterPolicy)
 
@@ -132,7 +132,7 @@ function Show-O365GUI
         $chckEXOHostedContentFilterRule.Top = 120
         $chckEXOHostedContentFilterRule.AutoSize = $true;
         $chckEXOHostedContentFilterRule.Name = "chckEXOHostedContentFilterRule"
-        $chckEXOHostedContentFilterRule.Checked = $true
+        $chckEXOHostedContentFilterRule.Checked = $false
         $chckEXOHostedContentFilterRule.Text = "Hosted Content Filter Rule"
         $pnlExo.Controls.Add($chckEXOHostedContentFilterRule)
 
@@ -140,7 +140,7 @@ function Show-O365GUI
         $chckEXOMailboxSettings.Top = 140
         $chckEXOMailboxSettings.AutoSize = $true;
         $chckEXOMailboxSettings.Name = "chckEXOMailboxSettings"
-        $chckEXOMailboxSettings.Checked = $true
+        $chckEXOMailboxSettings.Checked = $false
         $chckEXOMailboxSettings.Text = "Mailbox Settings"
         $pnlExo.Controls.Add($chckEXOMailboxSettings)
 
@@ -148,7 +148,7 @@ function Show-O365GUI
         $chckEXOMailTips.Top = 160
         $chckEXOMailTips.AutoSize = $true;
         $chckEXOMailTips.Name = "chckEXOMailTips"
-        $chckEXOMailTips.Checked = $true
+        $chckEXOMailTips.Checked = $false
         $chckEXOMailTips.Text = "Mail Tips"
         $pnlExo.Controls.Add($chckEXOMailTips);
 
@@ -156,7 +156,7 @@ function Show-O365GUI
         $chckEXOOutboundSpamFilterPolicy.Top = 180
         $chckEXOOutboundSpamFilterPolicy.AutoSize = $true;
         $chckEXOOutboundSpamFilterPolicy.Name = "chckEXOOutboundSpamFilterPolicy"
-        $chckEXOOutboundSpamFilterPolicy.Checked = $true
+        $chckEXOOutboundSpamFilterPolicy.Checked = $false
         $chckEXOOutboundSpamFilterPolicy.Text = "Outbound Spam Filter Policy"
         $pnlExo.Controls.Add($chckEXOOutboundSpamFilterPolicy)
 
@@ -164,7 +164,7 @@ function Show-O365GUI
         $chckEXOSafeAttachmentPolicy.Top = 200
         $chckEXOSafeAttachmentPolicy.AutoSize = $true;
         $chckEXOSafeAttachmentPolicy.Name = "chckEXOSafeAttachmentPolicy"
-        $chckEXOSafeAttachmentPolicy.Checked = $true
+        $chckEXOSafeAttachmentPolicy.Checked = $false
         $chckEXOSafeAttachmentPolicy.Text = "Safe Attachment Policy"
         $pnlExo.Controls.Add($chckEXOSafeAttachmentPolicy)
 
@@ -172,7 +172,7 @@ function Show-O365GUI
         $chckEXOSafeAttachmentRule.Top = 220
         $chckEXOSafeAttachmentRule.AutoSize = $true;
         $chckEXOSafeAttachmentRule.Name = "chckEXOSafeAttachmentRule"
-        $chckEXOSafeAttachmentRule.Checked = $true
+        $chckEXOSafeAttachmentRule.Checked = $false
         $chckEXOSafeAttachmentRule.Text = "Safe Attachment Rule"
         $pnlExo.Controls.Add($chckEXOSafeAttachmentRule)
 
@@ -180,7 +180,7 @@ function Show-O365GUI
         $chckEXOSafeLinksPolicy.Top = 240
         $chckEXOSafeLinksPolicy.AutoSize = $true;
         $chckEXOSafeLinksPolicy.Name = "chckEXOSafeLinksPolicy"
-        $chckEXOSafeLinksPolicy.Checked = $true
+        $chckEXOSafeLinksPolicy.Checked = $false
         $chckEXOSafeLinksPolicy.Text = "Safe Links Policy"
         $pnlExo.Controls.Add($chckEXOSafeLinksPolicy)
 
@@ -188,7 +188,7 @@ function Show-O365GUI
         $chckEXOSafeLinksRule.Top = 260
         $chckEXOSafeLinksRule.AutoSize = $true;
         $chckEXOSafeLinksRule.Name = "chckEXOSafeLinksRule"
-        $chckEXOSafeLinksRule.Checked = $true
+        $chckEXOSafeLinksRule.Checked = $false
         $chckEXOSafeLinksRule.Text = "Safe Links Rule"
         $pnlExo.Controls.Add($chckEXOSafeLinksRule)
 
@@ -213,7 +213,7 @@ function Show-O365GUI
         $pnlSPO = New-Object System.Windows.Forms.Panel
         $pnlSPO.Top = 88 + $topBannerHeight
         $pnlSPO.Left = $SecondColumnLeft
-        $pnlSPO.Height = 140
+        $pnlSPO.Height = 180
         $pnlSPO.Width = 300
         $pnlSPO.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -237,7 +237,7 @@ function Show-O365GUI
         $chckSPOHubSite.Top = 40
         $chckSPOHubSite.AutoSize = $true;
         $chckSPOHubSite.Name = "chckSPOHubSite"
-        $chckSPOHubSite.Checked = $true
+        $chckSPOHubSite.Checked = $false
         $chckSPOHubSite.Text = "Hub Sites"
         $pnlSPO.Controls.Add($chckSPOHubSite)
 
@@ -245,7 +245,7 @@ function Show-O365GUI
         $chckSPOSearchManagedProperty.Top = 60
         $chckSPOSearchManagedProperty.AutoSize = $true;
         $chckSPOSearchManagedProperty.Name = "chckSPOSearchManagedProperty"
-        $chckSPOSearchManagedProperty.Checked = $true
+        $chckSPOSearchManagedProperty.Checked = $false
         $chckSPOSearchManagedProperty.Text = "Search Managed Properties"
         $pnlSPO.Controls.Add($chckSPOSearchManagedProperty)
 
@@ -280,6 +280,14 @@ function Show-O365GUI
         $chckSPOSiteDesignRights.Checked = $true
         $chckSPOSiteDesignRights.Text = "Site Design Rights"
         $pnlSPO.Controls.Add($chckSPOSiteDesignRights)
+
+        $chckSPOTheme = New-Object System.Windows.Forms.CheckBox
+        $chckSPOTheme.Top = 160
+        $chckSPOTheme.AutoSize = $true;
+        $chckSPOTheme.Name = "chckSPOTheme"
+        $chckSPOTheme.Checked = $false
+        $chckSPOTheme.Text = "Themes"
+        $pnlSPO.Controls.Add($chckSPOTheme)
         #endregion
 
         #region Teams
@@ -294,7 +302,7 @@ function Show-O365GUI
         $pnlTeams = New-Object System.Windows.Forms.Panel
         $pnlTeams.Top = 88 + $topBannerHeight
         $pnlTeams.Left = $ThirdColumnLeft
-        $pnlTeams.Height = 140
+        $pnlTeams.Height = 60
         $pnlTeams.Width = 300
         $pnlTeams.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -306,40 +314,8 @@ function Show-O365GUI
         $chckTeamsChannel.Text = "Channels"
         $pnlTeams.Controls.Add($chckTeamsChannel)
 
-        $chckTeamsFunSettings = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsFunSettings.Top = 20
-        $chckTeamsFunSettings.AutoSize = $true;
-        $chckTeamsFunSettings.Name = "chckTeamsFunSettings"
-        $chckTeamsFunSettings.Checked = $true
-        $chckTeamsFunSettings.Text = "Fun Settings"
-        $pnlTeams.Controls.Add($chckTeamsFunSettings)
-
-        $chckTeamsGuestSettings = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsGuestSettings.Top = 40
-        $chckTeamsGuestSettings.AutoSize = $true;
-        $chckTeamsGuestSettings.Name = "chckTeamsGuestSettings"
-        $chckTeamsGuestSettings.Checked = $true
-        $chckTeamsGuestSettings.Text = "Guest Settings"
-        $pnlTeams.Controls.Add($chckTeamsGuestSettings)
-
-        $chckTeamsMemberSettings = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsMemberSettings.Top = 60
-        $chckTeamsMemberSettings.AutoSize = $true;
-        $chckTeamsMemberSettings.Name = "chckTeamsMemberSettings"
-        $chckTeamsMemberSettings.Checked = $true
-        $chckTeamsMemberSettings.Text = "Member Settings"
-        $pnlTeams.Controls.Add($chckTeamsMemberSettings)
-
-        $chckTeamsMessageSettings = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsMessageSettings.Top = 80
-        $chckTeamsMessageSettings.AutoSize = $true;
-        $chckTeamsMessageSettings.Name = "chckTeamsMessageSettings"
-        $chckTeamsMessageSettings.Checked = $true
-        $chckTeamsMessageSettings.Text = "Message Settings"
-        $pnlTeams.Controls.Add($chckTeamsMessageSettings)
-
         $chckTeamsTeam = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsTeam.Top = 100
+        $chckTeamsTeam.Top = 20
         $chckTeamsTeam.AutoSize = $true;
         $chckTeamsTeam.Name = "chckTeamsTeam"
         $chckTeamsTeam.Checked = $true
@@ -347,7 +323,7 @@ function Show-O365GUI
         $pnlTeams.Controls.Add($chckTeamsTeam)
 
         $chckTeamsUser = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsUser.Top = 120
+        $chckTeamsUser.Top = 40
         $chckTeamsUser.AutoSize = $true;
         $chckTeamsUser.Name = "chckTeamsUser"
         $chckTeamsUser.Checked = $true
@@ -376,7 +352,7 @@ function Show-O365GUI
         $chckODSettings.Top = 0
         $chckODSettings.AutoSize = $true;
         $chckODSettings.Name = "chckODSettings"
-        $chckODSettings.Checked = $true
+        $chckODSettings.Checked = $false
         $chckODSettings.Text = "OneDrive Settings"
         $pnlOD.Controls.Add($chckODSettings)
         #endregion
@@ -398,41 +374,6 @@ function Show-O365GUI
         $panelMenu.Width = $form.Width
         $panelMenu.BackColor = [System.Drawing.Color]::Silver
 
-        <#$lblMode = New-Object System.Windows.Forms.Label
-        $lblMode.Top = 25
-        $lblMode.Text = "Extraction Modes:"
-        $lblMode.AutoSize = $true
-        $lblMode.Left = 10
-        $lblMode.Font = [System.Drawing.Font]::new($lblMode.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
-        $panelMenu.Controls.Add($lblMode)
-
-        $btnLite = New-Object System.Windows.Forms.Button
-        $btnLite.Width = 150
-        $btnLite.Top = 5
-        $btnLite.Height = 60
-        $btnLite.Left = 220
-        $btnLite.Text = "Lite"
-        $btnLite.Add_Click({SelectComponentsForMode($pnlMain, 1)})
-        $panelMenu.Controls.Add($btnLite);
-
-        $btnDefault = New-Object System.Windows.Forms.Button
-        $btnDefault.Width = 150
-        $btnDefault.Top = 5
-        $btnDefault.Height = 60
-        $btnDefault.Left = 375
-        $btnDefault.Text = "Default"
-        $btnDefault.Add_Click({SelectComponentsForMode($pnlMain, 2)})
-        $panelMenu.Controls.Add($btnDefault);
-
-        $btnFull = New-Object System.Windows.Forms.Button
-        $btnFull.Width = 150
-        $btnFull.Top = 5
-        $btnFull.Left = 530
-        $btnFull.Height = 60
-        $btnFull.Text = "Full"
-        $btnFull.Add_Click({SelectComponentsForMode($pnlMain, 3)})
-        $panelMenu.Controls.Add($btnFull);#>
-
         $btnClear = New-Object System.Windows.Forms.Button
         $btnClear.Width = 150
         $btnClear.Top = 5
@@ -447,7 +388,7 @@ function Show-O365GUI
         $lblFarmAccount = New-Object System.Windows.Forms.Label
         $lblFarmAccount.Text = "Tenant Admin:"
         $lblFarmAccount.Top = 10
-        $lblFarmAccount.Left = 900
+        $lblFarmAccount.Left = 940
         $lblFarmAccount.AutoSize = $true
         $lblFarmAccount.TextAlign = [System.Drawing.ContentAlignment]::TopRight
         $lblFarmAccount.Font = [System.Drawing.Font]::new($lblFarmAccount.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
@@ -494,11 +435,11 @@ function Show-O365GUI
         $btnExtract.Add_Click({
             if($txtPassword.Text.Length -gt 0)
             {
-                $form.Hide();
-                $SelectedComponents = @();
-                foreach ($panel in ($form.Controls[0].Controls | Where-Object { $_.GetType().Name -eq "Panel"}))
+                $form.Hide()
+                $SelectedComponents = @()
+                foreach ($panel in ($form.Controls[0].Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Panel"}))
                 {
-                    foreach ($checkbox in ($panel.Controls | Where-Object { $_.GetType().Name -eq "Checkbox"}))
+                    foreach ($checkbox in ($panel.Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Checkbox"}))
                     {
                         if ($checkbox.Checked)
                         {
@@ -509,12 +450,13 @@ function Show-O365GUI
 
                 try
                 {
-                    $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force));
+                    $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force))
                     Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount -ComponentsToExtract $SelectedComponents
                 }
                 catch
                 {
-                    Write-Information $_
+                    $Message = "Could not initiate the ReverseDSC Extraction"
+                    New-Office365DSCLogEntry -Error $_ -Message $Message_
                 }
             }
             else
@@ -529,11 +471,15 @@ function Show-O365GUI
 
         $pnlMain.AutoScroll = $true
         $form.Controls.Add($pnlMain)
+        $form.ActiveControl = $txtTenantAdmin
         $form.Text = "ReverseDSC for Office 365"
         $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
-        $form.ShowDialog()
+        $return = $form.ShowDialog()
     }
-    catch {}
+    catch
+    {
+
+    }
 }
 
 function SelectComponentsForMode($panelMain, $mode){
@@ -561,7 +507,10 @@ function SelectComponentsForMode($panelMain, $mode){
                         $control.Checked = $true
                     }
                 }
-                catch{}
+                catch
+                {
+
+                }
             }
         }
     }
@@ -570,6 +519,9 @@ function SelectComponentsForMode($panelMain, $mode){
         try{
             $control.Checked = $true
         }
-        catch{}
+        catch
+        {
+
+        }
     }
 }

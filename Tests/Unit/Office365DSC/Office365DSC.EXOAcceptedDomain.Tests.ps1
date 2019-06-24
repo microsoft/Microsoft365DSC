@@ -54,7 +54,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name = 'different.contoso.com'
                     IsVerified = $true
                 }
-
             }
 
             Mock -CommandName Get-AcceptedDomain -MockWith {
@@ -70,7 +69,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-
             Mock -CommandName Set-AcceptedDomain -MockWith {
                 return @{
                     DomainType         = 'Authoritative'
@@ -82,6 +80,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the Set method" {
                 Set-TargetResource @testParams
+            }
+
+            It "Should return Present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
         }
 
@@ -112,6 +114,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should Be $true
+            }
+
+            It 'Should return Present from the Get Method' {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
         }
 
@@ -160,7 +166,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Should call the Set method" {
                 Set-TargetResource @testParams
             }
+        }
 
+        Context -Name "ReverseDSC Tests" -Fixture {
+            $testParams = @{
+                GlobalAdminAccount = $GlobalAdminAccount
+                Identity           = "contoso.com"
+            }
+
+            It "Should Reverse Engineer resource from the Export method" {
+                Export-TargetResource @testParams
+            }
         }
     }
 }

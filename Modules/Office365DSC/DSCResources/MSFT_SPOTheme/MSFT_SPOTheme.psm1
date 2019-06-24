@@ -30,6 +30,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Getting configuration for SPO Theme $Name"
+
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -47,9 +49,10 @@ function Get-TargetResource
         $theme = Get-SPOTheme -Name $Name
         if ($null -eq $theme)
         {
-            Write-Verbose "The specified theme doesn't exist."
+            Write-Verbose -Message "The specified theme doesn't exist."
             return $nullReturn
         }
+
         return @{
             Name                = $theme.Name
             IsInverted          = $theme.IsInverted
@@ -61,7 +64,7 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose "The specified theme doesn't exist."
+        Write-Verbose -Message "The specified theme doesn't exist."
         return $nullReturn
     }
 }
@@ -97,13 +100,15 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration for SPO Theme $Name"
+
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
-    if($Ensure -eq "Present")
+    if ($Ensure -eq "Present")
     {
         $PaletteHash = @{ }
         $PaletteObj = $Palette | ConvertFrom-Json
-        foreach($entry in $PaletteObj.Psobject.Properties)
+        foreach ($entry in $PaletteObj.Psobject.Properties)
         {
             $PaletteHash[$Entry.Name] = $entry.Value
         }
@@ -121,18 +126,20 @@ function Set-TargetResource
         }
         catch
         {
-            Write-verbose -Message "Theme $($Name) does not yet exist."
+            Write-Verbose -Message "Theme $($Name) does not yet exist."
         }
 
-        if($null -eq $existingTheme)
+        if ($null -eq $existingTheme)
         {
             Add-SPOTheme @CurrentParameters
         }
         else
         {
             $ThemeHashTable = Convert-ExistingThemePaletteToHashTable -existingTheme $existingTheme
-            $compareOutput = Compare-SPOTheme -existingThemePalette $ThemeHashTable -configThemePalette $currentParameters.Palette
-            if(($compareOutput -eq "Themes are identical") -and ($existingTheme.IsInverted -eq $CurrentParameters.isInverted))
+            $compareOutput = Compare-SPOTheme -existingThemePalette $ThemeHashTable `
+                                              -configThemePalette $currentParameters.Palette
+            if (($compareOutput -eq "Themes are identical") -and `
+                ($existingTheme.IsInverted -eq $CurrentParameters.isInverted))
             {
                 Write-verbose -Message "Theme $($Name) already exists and is configured as specified."
             }
@@ -143,7 +150,7 @@ function Set-TargetResource
             }
         }
     }
-    elseif($Ensure -eq "Absent")
+    elseif ($Ensure -eq "Absent")
     {
         Write-Verbose -Message "Removing theme $($Name)"
         try
@@ -152,7 +159,9 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Error -Message "The theme $($theme) does not exist and for that cannot be removed."
+            $Message = "The SPOTheme $($theme) does not exist and for that cannot be removed."
+            New-Office365DSCLogEntry -Error $_ -Message $Message
+            Write-Error $Message
         }
     }
 }
@@ -189,16 +198,25 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Testing configuration for SPO Theme $Name"
+
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose -Message "Testing theme $Name"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "Name", `
-            "IsInverted", `
-            "Palette"
-    )
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @("Ensure", `
+                                                                   "Name", `
+                                                                   "IsInverted", `
+                                                                   "Palette")
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource

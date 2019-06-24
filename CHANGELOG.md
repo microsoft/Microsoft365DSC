@@ -2,4 +2,7 @@
 
 ## Unreleased
 
-* Exchange Online Workload Major Refactoring and GUI Changes
+* SCRetentionCompliancePolicy
+  * Initial Release
+* SCRetentionComplianceRule
+  * Initial Release

@@ -27,6 +27,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Getting configuration of member $User to Team $TeamName"
+
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -38,9 +40,13 @@ function Get-TargetResource
     }
 
     Write-Verbose -Message "Checking for existance of Team User $User"
-    $team = Get-TeamByName $TeamName
-    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
+    $team = Get-TeamByName $TeamName -ErrorAction SilentlyContinue
+    if ($null -eq $team)
+    {
+        return $nullReturn
+    }
 
+    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
     try
     {
@@ -61,11 +67,11 @@ function Get-TargetResource
 
     if ($null -eq $allMembers)
     {
-        Write-Verbose "Failed to get Team's users for Team $TeamName"
+        Write-Verbose -Message "Failed to get Team's users for Team $TeamName"
         return $nullReturn
     }
 
-    $myUser = $allMembers | Where-Object {$_.User -eq $User}
+    $myUser = $allMembers | Where-Object -FilterScript { $_.User -eq $User }
     Write-Verbose -Message "Found team user $($myUser.User) with role:$($myUser.Role)"
     return @{
         User               = $myUser.User
@@ -104,6 +110,8 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    Write-Verbose -Message "Setting configuration of member $User to Team $TeamName"
 
     Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
@@ -163,14 +171,22 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing addition of team member"
+    Write-Verbose -Message "Testing configuration of member $User to Team $TeamName"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "User", `
-            "Role"
-    )
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @("Ensure", `
+                                                                   "User", `
+                                                                   "Role")
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource

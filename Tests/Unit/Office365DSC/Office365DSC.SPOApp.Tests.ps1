@@ -65,7 +65,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPApp -MockWith {
                 return @{
-                    Identity = "MyTestApp"
+                    Title    = "MyTestApp"
                     Deployed = $true
                 }
             }

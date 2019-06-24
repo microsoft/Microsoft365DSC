@@ -91,7 +91,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("BlockMoveOnly", "BlockFull")]
+        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
         $RestrictedToGeo,
 
         [Parameter()]
@@ -139,6 +139,8 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration for site collection $Url"
+
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $nullReturn = @{
@@ -181,10 +183,15 @@ function Get-TargetResource
         $site = Get-SPOSite $Url
         if ($null -eq $site)
         {
-            Write-Verbose "The specified Site Collection doesn't exist."
+            Write-Verbose -Message "The specified Site Collection doesn't exist."
             return $nullReturn
         }
 
+        $DenyAddAndCustomizePagesValue = $false
+        if ($site.DenyAddAndCustomizePages -eq "Enabled")
+        {
+            $DenyAddAndCustomizePagesValue = $true
+        }
         if ($site.HubSiteId -ne "00000000-0000-0000-0000-000000000000")
         {
             $hubSites = Get-SPOHubSite
@@ -220,7 +227,7 @@ function Get-TargetResource
             CompatibilityLevel                          = $site.CompatibilityLevel
             Title                                       = $site.Title
             AllowSelfServiceUpgrade                     = $site.AllowSelfServiceUpgrade
-            DenyAddAndCustomizePages                    = $denyAddAndCustomizePages
+            DenyAddAndCustomizePages                    = $DenyAddAndCustomizePagesValue
             LockState                                   = $site.LockState
             ResourceQuotaWarningLevel                   = $site.ResourceQuotaWarningLevel
             SharingCapability                           = $site.SharingCapability
@@ -245,7 +252,7 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose "The specified Site Collection doesn't exist."
+        Write-Verbose -Message "The specified Site Collection doesn't exist."
         return $nullReturn
     }
 }
@@ -342,7 +349,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("BlockMoveOnly", "BlockFull")]
+        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
         $RestrictedToGeo,
 
         [Parameter()]
@@ -390,6 +397,8 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Setting configuration for site collection $Url"
+
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     if ($Ensure -eq "Present")
@@ -413,12 +422,16 @@ function Set-TargetResource
                     $siteAlreadyDeleted = Get-SPODeletedSite -Identity $Url
                     if ($null -ne $siteAlreadyDeleted)
                     {
-                        Write-Error -Message "The site $($Url) already exists in the deleted sites."
+                        $Message = "The site $($Url) already exists in the deleted sites."
+                        New-Office365DSCLogEntry -Error $_ -Message $Message
+                        Write-Error $Message
                     }
                 }
                 catch
                 {
-                    Write-Error -Message "The site $($Url) does not exist in the deleted sites."
+                    $Message = "The site $($Url) does not exist in the deleted sites."
+                    New-Office365DSCLogEntry -Error $_ -Message $Message
+                    Write-Error $Message
                 }
             }
         }
@@ -518,7 +531,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("BlockMoveOnly", "BlockFull")]
+        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
         $RestrictedToGeo,
 
         [Parameter()]
@@ -566,41 +579,50 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
+    Write-Verbose -Message "Testing configuration for site collection $Url"
+
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose -Message "Testing site collection $Url"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    return Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                           -DesiredValues $PSBoundParameters `
-                                           -ValuesToCheck @("Ensure", `
-                                               "Url", `
-                                               "Title", `
-                                               "Owner", `
-                                               "StorageQuota", `
-                                               "CompatibilityLevel", `
-                                               "LocaleId", `
-                                               "ResourceQuota", `
-                                               "Template", `
-                                               "TimeZoneId", `
-                                               "AllowSelfServiceUpgrade", `
-                                               "DenyAddAndCustomizePages", `
-                                               "LockState", `
-                                               "ResourceQuotaWarningLevel", `
-                                               "SharingCapability", `
-                                               "StorageQuotaWarningLevel", `
-                                               "CommentsOnSitePagesDisabled", `
-                                               "SocialBarOnSitePagesDisabled", `
-                                               "DisableAppViews", `
-                                               "DisableCompanyWideSharingLinks", `
-                                               "DisableFlows", `
-                                               "RestrictedToGeo", `
-                                               "SharingAllowedDomainList", `
-                                               "SharingBlockedDomainList", `
-                                               "SharingDomainRestrictionMode", `
-                                               "ShowPeoplePickerSuggestionsForGuestUsers", `
-                                               "DefaultSharingLinkType", `
-                                               "DefaultLinkPermission",
-                                               "HubUrl"
-                                           )
+
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck @("Ensure", `
+                                                                   "Url", `
+                                                                   "Title", `
+                                                                   "Owner", `
+                                                                   "StorageQuota", `
+                                                                   "CompatibilityLevel", `
+                                                                   "LocaleId", `
+                                                                   "ResourceQuota", `
+                                                                   "Template", `
+                                                                   "TimeZoneId", `
+                                                                   "AllowSelfServiceUpgrade", `
+                                                                   "DenyAddAndCustomizePages", `
+                                                                   "LockState", `
+                                                                   "ResourceQuotaWarningLevel", `
+                                                                   "SharingCapability", `
+                                                                   "StorageQuotaWarningLevel", `
+                                                                   "CommentsOnSitePagesDisabled", `
+                                                                   "SocialBarOnSitePagesDisabled", `
+                                                                   "DisableAppViews", `
+                                                                   "DisableCompanyWideSharingLinks", `
+                                                                   "DisableFlows", `
+                                                                   "RestrictedToGeo", `
+                                                                   "SharingAllowedDomainList", `
+                                                                   "SharingBlockedDomainList", `
+                                                                   "SharingDomainRestrictionMode", `
+                                                                   "ShowPeoplePickerSuggestionsForGuestUsers", `
+                                                                   "DefaultSharingLinkType", `
+                                                                   "DefaultLinkPermission",
+                                                                   "HubUrl")
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource
@@ -623,6 +645,12 @@ function Export-TargetResource
     )
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    if ($result.RestrictedToGeo -eq "Unknown")
+    {
+        $result.Remove("RestrictedToGeo")
+    }
+    $result.Remove("HubUrl")
+
     $content = "        SPOSite " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
@@ -774,11 +802,11 @@ function Set-SPOSiteConfiguration
     )
     Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
-    $deletedSite = Get-SPODeletedSite | Where-Object { $_.Url -eq $Url }
+    $deletedSite = Get-SPODeletedSite | Where-Object -FilterScript { $_.Url -eq $Url }
     if ($deletedSite)
     {
-        Write-Verbose "A site with URL $($URL) was found in the Recycle Bin."
-        Write-Verbose "Restoring deleted SPOSite $($Url)"
+        Write-Verbose -Message "A site with URL $($URL) was found in the Recycle Bin."
+        Write-Verbose -Message "Restoring deleted SPOSite $($Url)"
         Restore-SPODeletedSite $deletedSite
         Start-Sleep -Seconds 5
     }
@@ -788,7 +816,7 @@ function Set-SPOSiteConfiguration
     }
     catch
     {
-        Write-Verbose "Site does not exist. Creating it"
+        Write-Verbose -Message "Site does not exist. Creating it"
     }
     if ($null -ne $site)
     {

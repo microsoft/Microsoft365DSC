@@ -49,6 +49,176 @@ function Test-PnPOnlineConnection{
     )
 }
 
+function New-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedItemClasses,
+
+        [Parameter()]
+        [System.String]
+        $RetentionDuration,
+
+        [Parameter()]
+        [ValidateSet("Days", "Months", "Years")]
+        [System.String]
+        $RetentionDurationDisplayHint,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [ValidateSet("CreationAgeInDays", "ModificationAgeInDays")]
+        [System.String]
+        $ExpirationDateOption,
+
+        [Parameter()]
+        [ValidateSet("Delete","Keep","KeepAndDelete")]
+        [System.String]
+        $RetentionComplianceAction
+    )
+}
+
+function Get-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function New-RetentionCompliancePolicy{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $DynamicScopeLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $ModernGroupLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ModernGroupLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $PublicFolderLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $RestrictiveRetention = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $SkypeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SkypeLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsChannelLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsChannelLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsChatLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsChatLocationException
+    )
+}
+
+function Get-RetentionCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-RetentionCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
 function Set-PnPSearchConfiguration{
     [CmdletBinding()]
     param(
