@@ -16,12 +16,13 @@ Configuration Example
     {
         SCRetentionComplianceTag DemoRule
         {
-            Name                      = "DemoRule2"
-            Comment                   = "This is a Demo Rule"
-            RetentionComplianceAction = "Keep"
-            RetentionDuration         = "Unlimited"
-            GlobalAdminAccount        = $credsGlobalAdmin
-            Ensure                    = "Present"
+            Identity           = "DemoRule2"
+            Comment            = "This is a Demo Rule"
+            RetentionAction    = "Keep"
+            RetentionDuration  = "1025"
+            GlobalAdminAccount = $credsGlobalAdmin
+            RetentionType      = "ModificationAgeInDays"
+            Ensure             = "Present"
         }
     }
 }

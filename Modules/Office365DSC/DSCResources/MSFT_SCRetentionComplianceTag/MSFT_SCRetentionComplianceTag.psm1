@@ -6,7 +6,7 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Name,
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -43,7 +43,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $EventyType,
+        $EventType,
 
         [Parameter()]
         [ValidateSet("CreationAgeInDays", "EventAgeInDays","ModificationAgeInDays","TaggedAgeInDays")]
@@ -61,23 +61,23 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of RetentionComplianceTag for $Name"
+    Write-Verbose -Message "Getting configuration of RetentionComplianceTag for $Identity"
 
     Write-Verbose -Message "Calling Test-SecurityAndComplianceConnection function:"
     Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
 
-    $tag = Get-ComplianceTag -name $Name
+    $tag = Get-ComplianceTag -Identity $Identity
 
     if ($null -eq $tag)
     {
-        Write-Verbose -Message "RetentionComplianceTag $($Name) does not exist."
+        Write-Verbose -Message "RetentionComplianceTag $($Identity) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
     }
     else
     {
-        Write-Verbose "Found existing RetentionComplianceTag $($Name)"
+        Write-Verbose "Found existing RetentionComplianceTag $($Identity)"
         $result = @{
             Ensure = 'Present'
         }
@@ -97,7 +97,7 @@ function Get-TargetResource
             }
         }
 
-        Write-Verbose -Message "Found RetentionComplianceTag $($Name)"
+        Write-Verbose -Message "Found RetentionComplianceTag $($Identity)"
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
@@ -110,7 +110,7 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Name,
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -147,13 +147,12 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $EventyType,
+        $EventType,
 
         [Parameter()]
         [ValidateSet("CreationAgeInDays", "EventAgeInDays","ModificationAgeInDays","TaggedAgeInDays")]
         [System.String]
         $RetentionType,
-
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -165,7 +164,7 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of RetentionComplianceTag for $Name"
+    Write-Verbose -Message "Setting configuration of RetentionComplianceTag for $Identity"
 
     Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
     $CurrentTag = Get-TargetResource @PSBoundParameters
@@ -191,7 +190,7 @@ function Set-TargetResource
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
         # If the Rule exists and it shouldn't, simply remove it;
-        Remove-ComplianceTag -Identity $Name
+        Remove-ComplianceTag -Identity $Identity
     }
 }
 
@@ -203,7 +202,7 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Name,
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -240,13 +239,12 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $EventyType,
+        $EventType,
 
         [Parameter()]
         [ValidateSet("CreationAgeInDays", "EventAgeInDays","ModificationAgeInDays","TaggedAgeInDays")]
         [System.String]
         $RetentionType,
-
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -258,7 +256,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of RetentionComplianceTag for $Name"
+    Write-Verbose -Message "Testing configuration of RetentionComplianceTag for $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -283,7 +281,7 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Name,
+        $Identity,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
