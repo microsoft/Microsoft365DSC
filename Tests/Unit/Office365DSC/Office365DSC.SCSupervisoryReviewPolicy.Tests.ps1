@@ -36,6 +36,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
+        Mock -CommandName Set-SupervisoryReviewPolicyV2 -MockWith {
+
+        }
+
         Mock -CommandName New-SupervisoryReviewPolicyV2 -MockWith {
             return @{
 

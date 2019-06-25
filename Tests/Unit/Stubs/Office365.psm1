@@ -88,6 +88,24 @@ function New-SupervisoryReviewPolicyV2
     )
 }
 
+function Set-SupervisoryReviewPolicyV2
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $Reviewers
+    )
+}
+
 function New-SupervisoryReviewRule
 {
     [CmdletBinding()]
