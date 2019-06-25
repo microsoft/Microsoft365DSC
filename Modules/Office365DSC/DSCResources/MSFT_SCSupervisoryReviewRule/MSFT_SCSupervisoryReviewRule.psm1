@@ -5,6 +5,7 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateLength(1,64)]
         [System.String]
         $Name,
 
@@ -17,6 +18,7 @@ function Get-TargetResource
         $Condition,
 
         [Parameter()]
+        [ValidateRange(0,100)]
         [System.UInt32]
         $SamplingRate,
 
@@ -71,6 +73,7 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateLength(1,64)]
         [System.String]
         $Name,
 
@@ -83,6 +86,7 @@ function Set-TargetResource
         $Condition,
 
         [Parameter()]
+        [ValidateRange(0,100)]
         [System.UInt32]
         $SamplingRate,
 
@@ -128,6 +132,7 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateLength(1,64)]
         [System.String]
         $Name,
 
@@ -140,6 +145,7 @@ function Test-TargetResource
         $Condition,
 
         [Parameter()]
+        [ValidateRange(0,100)]
         [System.UInt32]
         $SamplingRate,
 
@@ -177,6 +183,7 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateLength(1,64)]
         [System.String]
         $Name,
 

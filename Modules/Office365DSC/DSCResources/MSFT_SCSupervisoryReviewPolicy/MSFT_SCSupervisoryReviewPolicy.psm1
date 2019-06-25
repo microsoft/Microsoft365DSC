@@ -5,6 +5,7 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateLength(1,64)]
         [System.String]
         $Name,
 
@@ -64,6 +65,7 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateLength(1,64)]
         [System.String]
         $Name,
 
@@ -99,12 +101,12 @@ function Set-TargetResource
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
-        # Easier to delete the Policy and recreate it from scratch;
-        Remove-SupervisoryReviewPolicyV2 -Identity $Name
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
-        New-SupervisoryReviewPolicyV2 @CreationParams
+        $CreationParams.Remove("Name")
+        $CreationParams.Add("Identity", $Name)
+        Set-SupervisoryReviewPolicyV2 @CreationParams
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
@@ -120,6 +122,7 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateLength(1,64)]
         [System.String]
         $Name,
 
@@ -165,6 +168,7 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateLength(1,64)]
         [System.String]
         $Name,
 
