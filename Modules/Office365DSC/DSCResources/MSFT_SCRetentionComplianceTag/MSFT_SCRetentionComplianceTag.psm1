@@ -13,7 +13,7 @@ function Get-TargetResource
         $Comment,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $FilePlanProperty,
 
         [Parameter()]
@@ -118,7 +118,7 @@ function Set-TargetResource
         $Comment,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $FilePlanProperty,
 
         [Parameter()]
@@ -207,7 +207,7 @@ function Set-TargetResource
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
     {
         # If the Rule exists and it shouldn't, simply remove it;
-        Remove-ComplianceTag -Identity $Name -ForceDeletion
+        Remove-ComplianceTag -Identity $Name -Confirm:$false
     }
 }
 
@@ -226,7 +226,7 @@ function Test-TargetResource
         $Comment,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $FilePlanProperty,
 
         [Parameter()]

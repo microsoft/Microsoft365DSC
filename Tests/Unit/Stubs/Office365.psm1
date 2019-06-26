@@ -12101,7 +12101,11 @@ function Remove-ComplianceTag
     param(
         [Parameter()]
         [System.String]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ForceDeletion
     )
 }
 function New-ComplianceTag

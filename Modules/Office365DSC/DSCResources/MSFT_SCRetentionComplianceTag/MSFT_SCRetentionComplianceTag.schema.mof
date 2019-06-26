@@ -1,10 +1,14 @@
+[ClassVersion("1.0.0")]
+Class MSFT_FilePlanProperty
+{
+    [Write, Description("The FilePlanProperty parameter specifies the file plan properties to include in the label. To view the file plan property names that you need to use in this parameter, run the following commands.")] String FilePlanProperty;
+};
 [ClassVersion("1.0.0.0"), FriendlyName("SCRetentionComplianceTag")]
 class MSFT_SCRetentionComplianceTag : OMI_BaseResource
 {
     [Key, Description("The Name parameter specifies the unique name of the complaiance tag.")] String Name;
     [Write, Description("Specify if this rule should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("The Comment parameter specifies an optional comment.")] String Comment;
-    [Write, Description("The FilePlanProperty parameter specifies the file plan properties to include in the label. To view the file plan property names that you need to use in this parameter, run the following commands.")] string FilePlanProperty;
     [Write, Description("The EventType parameter specifies the retention rule that's associated with the label.")] String EventType;
     [Write, Description("The IsRecordLabel parameter specifies whether the label is a record label.")] Boolean IsRecordLabel;
     [Write, Description("The Notes parameter specifies an optional note. If you specify a value that contains spaces, enclose the value in quotation marks, for example: 'This is a user note'")] String Notes;

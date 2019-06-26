@@ -33,7 +33,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         Mock -CommandName Remove-ComplianceTag -MockWith {
+            return @{
 
+            }
         }
 
         Mock -CommandName New-ComplianceTag -MockWith {
@@ -55,6 +57,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Comment            = "This is a test Rule"
                 RetentionAction    = "Keep"
                 RetentionDuration  = "1025"
+                FilePlanProperty   = [PSCustomObject]@{Settings=@(@{Key="FilePlanPropertyDepartment";Value="Legal"})}
                 GlobalAdminAccount = $GlobalAdminAccount
                 RetentionType      = "ModificationAgeInDays"
                 Ensure             = "Present"
@@ -83,6 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Comment            = "This is a test Rule"
                 RetentionAction    = "Keep"
                 RetentionDuration  = "1025"
+                FilePlanProperty   = [PSCustomObject]@{Settings=@(@{Key="FilePlanPropertyDepartment";Value="Legal"})}
                 GlobalAdminAccount = $GlobalAdminAccount
                 RetentionType      = "ModificationAgeInDays"
                 Ensure             = "Present"
@@ -113,15 +117,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Name               = "TestRule"
                 Comment            = "This is a test Rule"
                 RetentionAction    = "Keep"
+                FilePlanProperty   = [PSCustomObject]@{Settings=@(@{Key="FilePlanPropertyDepartment";Value="Legal"})}
                 RetentionDuration  = "1025"
                 GlobalAdminAccount = $GlobalAdminAccount
                 RetentionType      = "ModificationAgeInDays"
             }
 
-            Mock -CommandName Get-RetentionComplianceRule -MockWith {
+            Mock -CommandName Get-ComplianceTag -MockWith {
                 return @{
                     Name = "TestRule"
-                    Ensure  = "Present"
                 }
             }
 
