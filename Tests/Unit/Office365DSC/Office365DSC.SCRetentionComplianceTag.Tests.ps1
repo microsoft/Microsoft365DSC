@@ -42,16 +42,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Mock -CommandName Set-ComplianceTag -MockWith {
+            return @{
+
+            }
+        }
+
         # Test contexts
         Context -Name "Rule doesn't already exist" -Fixture {
             $testParams = @{
-                Ensure                    = 'Present'
-                GlobalAdminAccount        = $GlobalAdminAccount
-                Comment                   = "This is a Demo Rule"
-                RetentionComplianceAction = "Keep"
-                RetentionDuration         = "Unlimited"
-                Name                      = 'TestRule'
-                Policy                    = 'TestPolicy'
+                Name               = "TestRule"
+                Comment            = "This is a test Rule"
+                RetentionAction    = "Keep"
+                RetentionDuration  = "1025"
+                GlobalAdminAccount = $GlobalAdminAccount
+                RetentionType      = "ModificationAgeInDays"
+                Ensure             = "Present"
             }
 
             Mock -CommandName Get-ComplianceTag -MockWith {
@@ -73,13 +79,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Rule already exists" -Fixture {
             $testParams = @{
-                Ensure                    = 'Present'
-                GlobalAdminAccount        = $GlobalAdminAccount
-                Comment                   = "This is a Demo Rule"
-                RetentionComplianceAction = "Keep"
-                RetentionDuration         = "Unlimited"
-                Name                      = 'TestRule'
-                Policy                    = 'TestPolicy'
+                Name           = "TestRule"
+                Comment            = "This is a test Rule"
+                RetentionAction    = "Keep"
+                RetentionDuration  = "1025"
+                GlobalAdminAccount = $GlobalAdminAccount
+                RetentionType      = "ModificationAgeInDays"
+                Ensure             = "Present"
             }
 
             Mock -CommandName Get-ComplianceTag -MockWith {
@@ -103,18 +109,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Rule should not exist" -Fixture {
             $testParams = @{
-                Ensure                    = 'Absent'
-                GlobalAdminAccount        = $GlobalAdminAccount
-                Comment                   = "This is a Demo Rule"
-                RetentionComplianceAction = "Keep"
-                RetentionDuration         = "Unlimited"
-                Name                      = 'TestRule'
-                Policy                    = 'TestPolicy'
+                Ensure             = "Absent"
+                Name               = "TestRule"
+                Comment            = "This is a test Rule"
+                RetentionAction    = "Keep"
+                RetentionDuration  = "1025"
+                GlobalAdminAccount = $GlobalAdminAccount
+                RetentionType      = "ModificationAgeInDays"
             }
 
             Mock -CommandName Get-RetentionComplianceRule -MockWith {
                 return @{
                     Name = "TestRule"
+                    Ensure  = "Present"
                 }
             }
 
@@ -126,15 +133,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
             }
 
-            It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            It 'Should return Absent from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
             }
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
-                Policy             = "TestPolicy"
                 Name               = "TestRule"
             }
 

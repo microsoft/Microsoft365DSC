@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("SCRetentionComplianceTag")]
 class MSFT_SCRetentionComplianceTag : OMI_BaseResource
 {
-    [Key, Description("The Name parameter specifies the unique name of the complaiance tag.")] String Identity;
+    [Key, Description("The Name parameter specifies the unique name of the complaiance tag.")] String Name;
     [Write, Description("Specify if this rule should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("The Comment parameter specifies an optional comment.")] String Comment;
     [Write, Description("The FilePlanProperty parameter specifies the file plan properties to include in the label. To view the file plan property names that you need to use in this parameter, run the following commands.")] string FilePlanProperty;

@@ -16,7 +16,7 @@ Configuration Example
     {
         SCRetentionComplianceTag DemoRule
         {
-            Identity           = "DemoRule2"
+            Name               = "DemoRule2"
             Comment            = "This is a Demo Rule"
             RetentionAction    = "Keep"
             RetentionDuration  = "1025"

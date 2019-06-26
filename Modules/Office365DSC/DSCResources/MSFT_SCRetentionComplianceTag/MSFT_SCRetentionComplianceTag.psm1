@@ -6,7 +6,7 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        $Name,
 
         [Parameter()]
         [System.String]
@@ -46,7 +46,7 @@ function Get-TargetResource
         $EventType,
 
         [Parameter()]
-        [ValidateSet("CreationAgeInDays", "EventAgeInDays","ModificationAgeInDays","TaggedAgeInDays")]
+        [ValidateSet("CreationAgeInDays", "EventAgeInDays", "ModificationAgeInDays", "TaggedAgeInDays")]
         [System.String]
         $RetentionType,
 
@@ -61,32 +61,33 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of RetentionComplianceTag for $Identity"
+    Write-Verbose -Message "Getting configuration of RetentionComplianceTag for $Name"
 
     Write-Verbose -Message "Calling Test-SecurityAndComplianceConnection function:"
     Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
 
-    $tag = Get-ComplianceTag -Identity $Identity
+    $tagObjects = Get-ComplianceTag
+    $tagObjects = $tagObjects | Where-Object { $_.Name -eq $Name }
 
-    if ($null -eq $tag)
+    if ($null -eq $tagObjects)
     {
-        Write-Verbose -Message "RetentionComplianceTag $($Identity) does not exist."
+        Write-Verbose -Message "RetentionComplianceTag $($Name) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
     }
     else
     {
-        Write-Verbose "Found existing RetentionComplianceTag $($Identity)"
+        Write-Verbose "Found existing RetentionComplianceTag $($Name)"
         $result = @{
             Ensure = 'Present'
         }
         foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
         {
-            if ($null -ne $tag.$KeyName)
+            if ($null -ne $tagObjects.$KeyName)
             {
                 $result += @{
-                    $KeyName = $tag.$KeyName
+                    $KeyName = $tagObjects.$KeyName
                 }
             }
             else
@@ -97,7 +98,7 @@ function Get-TargetResource
             }
         }
 
-        Write-Verbose -Message "Found RetentionComplianceTag $($Identity)"
+        Write-Verbose -Message "Found RetentionComplianceTag $($Name)"
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
@@ -110,7 +111,7 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        $Name,
 
         [Parameter()]
         [System.String]
@@ -150,7 +151,7 @@ function Set-TargetResource
         $EventType,
 
         [Parameter()]
-        [ValidateSet("CreationAgeInDays", "EventAgeInDays","ModificationAgeInDays","TaggedAgeInDays")]
+        [ValidateSet("CreationAgeInDays", "EventAgeInDays", "ModificationAgeInDays", "TaggedAgeInDays")]
         [System.String]
         $RetentionType,
 
@@ -164,7 +165,7 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of RetentionComplianceTag for $Identity"
+    Write-Verbose -Message "Setting configuration of RetentionComplianceTag for $Name"
 
     Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
     $CurrentTag = Get-TargetResource @PSBoundParameters
@@ -172,6 +173,12 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentTag.Ensure))
     {
         $CreationParams = $PSBoundParameters
+        #Convert File plan to JSON before Set
+        if ($null -ne $FilePlanProperty)
+        {
+            $FilePlanPropertyJSON = ConvertTo-Json $FilePlanProperty
+            $CreationParams["FilePlanProperty"] = $FilePlanPropertyJSON
+        }
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
         New-ComplianceTag @CreationParams
@@ -181,16 +188,23 @@ function Set-TargetResource
         $SetParams = $PSBoundParameters
         $SetParams.Remove("GlobalAdminAccount")
         $SetParams.Remove("Ensure")
-
+        $SetParams.Remove("Name")
+        $SetParams.Remove("IsRecordLabel")
+        $SetParams.Remove("Regulatory")
+        $SetParams.Remove("RetentionAction")
+        $SetParams.Remove("RetentionType")
         #Convert File plan to JSON before Set
-        $setFilePlan = ConvertTo-Json $FilePlanProperty
-        $SetParams["FilePlanProperty"] = $setFilePlan
-        Set-ComplianceTag @SetParams
+        if ($null -ne $FilePlanProperty)
+        {
+            $FilePlanPropertyJSON = ConvertTo-Json $FilePlanProperty
+            $SetParams["FilePlanProperty"] = $FilePlanPropertyJSON
+        }
+        Set-ComplianceTag @SetParams -Identity $Name
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
+    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
     {
         # If the Rule exists and it shouldn't, simply remove it;
-        Remove-ComplianceTag -Identity $Identity
+        Remove-ComplianceTag -Identity $Name -ForceDeletion
     }
 }
 
@@ -202,7 +216,7 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        $Name,
 
         [Parameter()]
         [System.String]
@@ -242,7 +256,7 @@ function Test-TargetResource
         $EventType,
 
         [Parameter()]
-        [ValidateSet("CreationAgeInDays", "EventAgeInDays","ModificationAgeInDays","TaggedAgeInDays")]
+        [ValidateSet("CreationAgeInDays", "EventAgeInDays", "ModificationAgeInDays", "TaggedAgeInDays")]
         [System.String]
         $RetentionType,
 
@@ -256,17 +270,18 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of RetentionComplianceTag for $Identity"
+    Write-Verbose -Message "Testing configuration of RetentionComplianceTag for $Name"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -281,7 +296,7 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        $Name,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
