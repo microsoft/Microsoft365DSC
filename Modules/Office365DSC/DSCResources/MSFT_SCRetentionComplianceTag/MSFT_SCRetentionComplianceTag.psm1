@@ -174,8 +174,9 @@ function Set-TargetResource
     {
         $CreationParams = $PSBoundParameters
         #Convert File plan to JSON before Set
-        if ($null -ne $FilePlanProperty)
+        if ($FilePlanProperty)
         {
+            Write-Verbose -Message "Converting fileplan to JSON"
             $FilePlanPropertyJSON = ConvertTo-Json $FilePlanProperty
             $CreationParams["FilePlanProperty"] = $FilePlanPropertyJSON
         }
@@ -186,6 +187,7 @@ function Set-TargetResource
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
     {
         $SetParams = $PSBoundParameters
+        #Remove unsed parameters for Set-ComplianceTag cmdlet
         $SetParams.Remove("GlobalAdminAccount")
         $SetParams.Remove("Ensure")
         $SetParams.Remove("Name")
@@ -194,8 +196,9 @@ function Set-TargetResource
         $SetParams.Remove("RetentionAction")
         $SetParams.Remove("RetentionType")
         #Convert File plan to JSON before Set
-        if ($null -ne $FilePlanProperty)
+        if ($FilePlanProperty)
         {
+            Write-Verbose -Message "Converting fileplan to JSON"
             $FilePlanPropertyJSON = ConvertTo-Json $FilePlanProperty
             $SetParams["FilePlanProperty"] = $FilePlanPropertyJSON
         }
