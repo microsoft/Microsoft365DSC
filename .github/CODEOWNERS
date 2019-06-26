@@ -31,6 +31,8 @@
 
 /Modules/Office365DSC/DSCResources/MSFT_SCRetentionCompliancePolicy/ @nikcharlebois
 /Modules/Office365DSC/DSCResources/MSFT_SCRetentionComplianceRule/ @nikcharlebois
+/Modules/Office365DSC/DSCResources/MSFT_SCSupervisoryReviewPolicy/ @nikcharlebois
+/Modules/Office365DSC/DSCResources/MSFT_SCSupervisoryReviewRule/ @nikcharlebois
 
 /Modules/Office365DSC/DSCResources/MSFT_SPOAccessControlSettings/ @thorstenloeschmann
 /Modules/Office365DSC/DSCResources/MSFT_SPOApp/ @nikcharlebois
