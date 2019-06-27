@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SCRetentionComplianceTag"
+    -DscResource "SCComplianceTag"
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -57,9 +57,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Comment            = "This is a test Rule"
                 RetentionAction    = "Keep"
                 RetentionDuration  = "1025"
-                FilePlanProperty   =  (New-CimInstance -ClassName MSFT_FilePlanProperty -Property @{
+                FilePlanProperty   = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
                     FilePlanPropertyDepartment = "Legal"
-                }-ClientOnly)
+                } -ClientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 RetentionType      = "ModificationAgeInDays"
                 Ensure             = "Present"
@@ -84,13 +84,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Rule already exists" -Fixture {
             $testParams = @{
-                Name           = "TestRule"
+                Name               = "TestRule"
                 Comment            = "This is a test Rule"
                 RetentionAction    = "Keep"
                 RetentionDuration  = "1025"
-                FilePlanProperty   =  (New-CimInstance -ClassName MSFT_FilePlanProperty -Property @{
-                    FilePlanPropertyDepartment = "Legal"
-                }-ClientOnly)
+                FilePlanProperty   = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
+                    FilePlanPropertyDepartment = "DemoDept"
+                    FilePlanPropertyCitation = "DemoCit"
+                    FilePlanPropertyReferenceId = "DemoRef"
+                    FilePlanPropertyAuthority = "DemoAuth"
+                    FilePlanPropertyCategory = "DemoCat"
+                    FilePlanPropertySubcategory = "DemoSub"
+                } -ClientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 RetentionType      = "ModificationAgeInDays"
                 Ensure             = "Present"
@@ -98,7 +103,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-ComplianceTag -MockWith {
                 return @{
-                    Name = "TestRule"
+                    Name              = "TestRule"
+                    Comment           = "This is a test Rule"
+                    RetentionAction   = "Keep"
+                    RetentionDuration = "1025"
+                    FilePlanMetadata  = '{"Settings":[
+                        {"Key":"FilePlanPropertyDepartment","Value":"DemoDept"},
+                        {"Key":"FilePlanPropertyCitation","Value":"DemoCit"},
+                        {"Key":"FilePlanPropertyReferenceId","Value":"DemoRef"},
+                        {"Key":"FilePlanPropertyAuthority","Value":"DemoAuth"},
+                        {"Key":"FilePlanPropertyCategory","Value":"DemoCat"},
+                        {"Key":"FilePlanPropertySubcategory","Value":"DemoSub"}]}'
+                    RetentionType     = "ModificationAgeInDays"
                 }
             }
 
@@ -106,7 +122,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $true
             }
 
-            It 'Should recreate from the Set method' {
+            It 'Should update from the Set method' {
                 Set-TargetResource @testParams
             }
 
@@ -121,9 +137,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Name               = "TestRule"
                 Comment            = "This is a test Rule"
                 RetentionAction    = "Keep"
-                FilePlanProperty   =  (New-CimInstance -ClassName MSFT_FilePlanProperty -Property @{
+                FilePlanProperty   = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
                     FilePlanPropertyDepartment = "Legal"
-                }-ClientOnly)
+                } -ClientOnly)
                 RetentionDuration  = "1025"
                 GlobalAdminAccount = $GlobalAdminAccount
                 RetentionType      = "ModificationAgeInDays"

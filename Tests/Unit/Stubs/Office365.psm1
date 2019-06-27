@@ -12121,7 +12121,7 @@ function New-ComplianceTag
     $Comment,
 
     [Parameter()]
-    [Microsoft.Management.Infrastructure.CimInstance]
+    [System.String]
     $FilePlanProperty,
 
     [Parameter()]
@@ -12173,7 +12173,7 @@ function Set-ComplianceTag
     $Comment,
 
     [Parameter()]
-    [Microsoft.Management.Infrastructure.CimInstance]
+    [System.String]
     $FilePlanProperty,
 
     [Parameter()]
