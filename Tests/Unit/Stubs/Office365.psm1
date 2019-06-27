@@ -12105,7 +12105,7 @@ function Remove-ComplianceTag
 
         [Parameter()]
         [System.Boolean]
-        $ForceDeletion
+        $Confirm
     )
 }
 function New-ComplianceTag
@@ -12121,7 +12121,7 @@ function New-ComplianceTag
     $Comment,
 
     [Parameter()]
-    [System.String]
+    [Microsoft.Management.Infrastructure.CimInstance]
     $FilePlanProperty,
 
     [Parameter()]
@@ -12173,7 +12173,7 @@ function Set-ComplianceTag
     $Comment,
 
     [Parameter()]
-    [System.String]
+    [Microsoft.Management.Infrastructure.CimInstance]
     $FilePlanProperty,
 
     [Parameter()]

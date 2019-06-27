@@ -66,6 +66,9 @@ function Get-TargetResource
     Write-Verbose -Message "Calling Test-SecurityAndComplianceConnection function:"
     Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
 
+    #Testing only
+    Write-Verbose -Message "FilePlane $($FilePlan.FilePlanPropertyDepartment)"
+
     $tagObjects = Get-ComplianceTag
     $tagObjects = $tagObjects | Where-Object { $_.Name -eq $Name }
 
@@ -177,7 +180,7 @@ function Set-TargetResource
         if ($FilePlanProperty)
         {
             Write-Verbose -Message "Converting fileplan to JSON"
-            $FilePlanPropertyJSON = ConvertTo-Json $FilePlanProperty
+            $FilePlanPropertyJSON = Get-SCFilePlanProperty $FilePlanProperty
             $CreationParams["FilePlanProperty"] = $FilePlanPropertyJSON
         }
         $CreationParams.Remove("GlobalAdminAccount")
@@ -199,7 +202,7 @@ function Set-TargetResource
         if ($FilePlanProperty)
         {
             Write-Verbose -Message "Converting fileplan to JSON"
-            $FilePlanPropertyJSON = ConvertTo-Json $FilePlanProperty
+            $FilePlanPropertyJSON = Get-SCFilePlanProperty $FilePlanProperty
             $SetParams["FilePlanProperty"] = $FilePlanPropertyJSON
         }
         Set-ComplianceTag @SetParams -Identity $Name

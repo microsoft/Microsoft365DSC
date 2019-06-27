@@ -57,7 +57,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Comment            = "This is a test Rule"
                 RetentionAction    = "Keep"
                 RetentionDuration  = "1025"
-                FilePlanProperty   = [PSCustomObject]@{Settings=@(@{Key="FilePlanPropertyDepartment";Value="Legal"})}
+                FilePlanProperty   =  (New-CimInstance -ClassName MSFT_FilePlanProperty -Property @{
+                    FilePlanPropertyDepartment = "Legal"
+                }-ClientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 RetentionType      = "ModificationAgeInDays"
                 Ensure             = "Present"
@@ -86,7 +88,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Comment            = "This is a test Rule"
                 RetentionAction    = "Keep"
                 RetentionDuration  = "1025"
-                FilePlanProperty   = [PSCustomObject]@{Settings=@(@{Key="FilePlanPropertyDepartment";Value="Legal"})}
+                FilePlanProperty   =  (New-CimInstance -ClassName MSFT_FilePlanProperty -Property @{
+                    FilePlanPropertyDepartment = "Legal"
+                }-ClientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 RetentionType      = "ModificationAgeInDays"
                 Ensure             = "Present"
@@ -117,7 +121,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Name               = "TestRule"
                 Comment            = "This is a test Rule"
                 RetentionAction    = "Keep"
-                FilePlanProperty   = [PSCustomObject]@{Settings=@(@{Key="FilePlanPropertyDepartment";Value="Legal"})}
+                FilePlanProperty   =  (New-CimInstance -ClassName MSFT_FilePlanProperty -Property @{
+                    FilePlanPropertyDepartment = "Legal"
+                }-ClientOnly)
                 RetentionDuration  = "1025"
                 GlobalAdminAccount = $GlobalAdminAccount
                 RetentionType      = "ModificationAgeInDays"
@@ -125,12 +131,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-ComplianceTag -MockWith {
                 return @{
-                    Name = "TestRule"
+
                 }
             }
 
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should Be $false
+            It 'Should return True from the Test method' {
+                Test-TargetResource @testParams | Should Be $True
             }
 
             It 'Should delete from the Set method' {
