@@ -14,15 +14,23 @@ Configuration Example
 
     node localhost
     {
-        SCRetentionComplianceTag DemoRule
+        SCComplianceTag DemoRule
         {
-            Name               = "DemoRule2"
-            Comment            = "This is a Demo Rule"
+            Name               = "DemoTag"
+            Comment            = "This is a Demo Tag"
             RetentionAction    = "Keep"
             RetentionDuration  = "1025"
-            GlobalAdminAccount = $credsGlobalAdmin
             RetentionType      = "ModificationAgeInDays"
+            FilePlanProperty   = MSFT_SCFilePlanProperty{
+                FilePlanPropertyDepartment = "DemoDept"
+                FilePlanPropertyCitation = "DemoCit"
+                FilePlanPropertyReferenceId = "DemoRef"
+                FilePlanPropertyAuthority = "DemoAuth"
+                FilePlanPropertyCategory = "DemoCat"
+                FilePlanPropertySubcategory = "DemoSub"
+            }
             Ensure             = "Present"
+            GlobalAdminAccount = $credsGlobalAdmin
         }
     }
 }
