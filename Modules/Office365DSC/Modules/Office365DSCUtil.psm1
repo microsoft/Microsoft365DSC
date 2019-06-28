@@ -1839,20 +1839,3 @@ function Get-SPOAdministrationUrl
     Write-Verbose -Message "SharePoint Online admin URL is $global:AdminUrl"
     return $global:AdminUrl
 }
-function Get-SCFilePlanProperty
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        $FilePlan
-    )
-
-    if ($null -eq $FilePlan)
-    {
-        return $null
-    }
-
-    Write-Verbose -Message "FilePlan Property: $($FilePlan.FilePlanPropertyDepartment)"
-
-    return $result
-}
