@@ -12197,3 +12197,110 @@ function Get-PnPStorageEntity
 
     )
 }
+function Get-ComplianceTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+function Remove-ComplianceTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+function New-ComplianceTag
+{
+    [CmdletBinding()]
+    param(
+    [Parameter()]
+    [System.String]
+    $Name,
+
+    [Parameter()]
+    [System.String]
+    $Comment,
+
+    [Parameter()]
+    [System.String]
+    $FilePlanProperty,
+
+    [Parameter()]
+    [System.String]
+    $RetentionDuration,
+
+    [Parameter()]
+    [System.Boolean]
+    $IsRecordLabel,
+
+    [Parameter()]
+    [System.Boolean]
+    $Regulatory,
+
+    [Parameter()]
+    [System.String]
+    $Notes,
+
+    [Parameter()]
+    [System.String]
+    $ReviewerEmail,
+
+    [Parameter()]
+    [ValidateSet("Delete", "Keep", "KeepAndDelete")]
+    [System.String]
+    $RetentionAction,
+
+    [Parameter()]
+    [System.String]
+    $EventType,
+
+    [Parameter()]
+    [ValidateSet("CreationAgeInDays", "EventAgeInDays","ModificationAgeInDays","TaggedAgeInDays")]
+    [System.String]
+    $RetentionType
+    )
+}
+
+function Set-ComplianceTag
+{
+    [CmdletBinding()]
+    param(
+    [Parameter()]
+    [System.String]
+    $Identity,
+
+    [Parameter()]
+    [System.String]
+    $Comment,
+
+    [Parameter()]
+    [System.String]
+    $FilePlanProperty,
+
+    [Parameter()]
+    [System.String]
+    $RetentionDuration,
+
+    [Parameter()]
+    [System.String]
+    $Notes,
+
+    [Parameter()]
+    [System.String]
+    $ReviewerEmail,
+
+    [Parameter()]
+    [System.String]
+    $EventType
+    )
+}
