@@ -24,7 +24,7 @@ Configuration Master
     {
         EXOAcceptedDomain EXOAcceptedDomain1
         {
-            Identity           = "contoso.com"
+            Identity           = "o365dsc.onmicrosoft.com"
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
         }
