@@ -1457,7 +1457,7 @@ function Test-SPOServiceConnection
     )
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
-    Write-Verbose "Verifying the LCM connection state to SharePoint Online"
+    Write-Verbose -Message "Verifying the LCM connection state to SharePoint Online"
     Test-MSCloudLogin -Platform SharePointOnline -o365Credential $GlobalAdminAccount
 }
 
@@ -1469,7 +1469,7 @@ function Test-PnPOnlineConnection
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $SPOCentralAdminUrl,
+        $SiteUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -1477,7 +1477,7 @@ function Test-PnPOnlineConnection
     )
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
-    Write-Verbose "Verifying the LCM connection state to SharePoint Online with PnP"
+    Write-Verbose -Message "Verifying the LCM connection state to SharePoint Online with PnP"
     Test-MSCloudLogin -Platform PnP -o365Credential $GlobalAdminAccount
 }
 
@@ -1531,7 +1531,7 @@ function Test-SecurityAndComplianceConnection
     $Global:SessionSecurityCompliance = Get-PSSession | Where-Object{$_.ComputerName -like "*.ps.compliance.protection.outlook.com"}
     if ($null -eq $Global:SessionSecurityCompliance)
     {
-        Write-Verbose "Session to Security & Compliance already exists, re-using existing session"
+        Write-Verbose -Message "Session to Security & Compliance already exists, re-using existing session"
         $Global:SessionSecurityCompliance = New-PSSession -ConfigurationName "Microsoft.Exchange" `
             -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ `
             -Credential $GlobalAdminAccount `
@@ -1753,7 +1753,7 @@ function Get-UsersLicenses
     )
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
 
-    Write-Verbose "Store all users licenses information in Global Variable for future usage."
+    Write-Verbose -Message "Store all users licenses information in Global Variable for future usage."
 
     #Store information to be able to check later if the users is correctly licences for features.
     if ($null -eq $Global:UsersLicenses)

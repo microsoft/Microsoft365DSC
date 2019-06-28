@@ -433,15 +433,6 @@ function Show-O365GUI
         $txtTenantAdmin.Left = 1060
         $txtTenantAdmin.Width = 175
         $txtTenantAdmin.Font = [System.Drawing.Font]::new($txtTenantAdmin.Font.Name, 10)
-        # Pre-populate the tenant admin box with the global admin username, if we already know it (e.g. from a recent attempt), otherwise try to guess it from the current user's UPN
-        if ($null -ne $GlobalAdminAccount.UserName)
-        {
-            $txtTenantAdmin.Text = $GlobalAdminAccount.UserName
-        }
-        else
-        {
-            $txtTenantAdmin.Text = ([ADSI]"LDAP://<SID=$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)>").UserPrincipalName
-        }
         $panelMenu.Controls.Add($txtTenantAdmin)
 
         $lblPassword = New-Object System.Windows.Forms.Label
