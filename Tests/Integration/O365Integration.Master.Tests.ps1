@@ -1,3 +1,14 @@
+param
+(
+    [Parameter()]
+    [System.String]
+    $GlobalAdminUser,
+
+    [Parameter()]
+    [System.String]
+    $GlobalAdminPassword
+)
+
 Configuration Master
 {
     param
@@ -29,5 +40,7 @@ $ConfigurationData = @{
     )
 }
 
-Master -ConfigurationData $ConfigurationData
+$password = ConvertTo-SecureString $GlobalAdminPassword -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential ($GlobalAdminUser, $password)
+Master -ConfigurationData $ConfigurationData -GlobalAdmin $credential
 Start-DscConfiguration Master -Wait -Force -Verbose
