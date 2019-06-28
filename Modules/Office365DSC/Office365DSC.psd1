@@ -53,7 +53,7 @@
   RequiredModules = @(@{ModuleName = "ReverseDSC"; ModuleVersion = "1.9.4.4"; },
                       @{ModuleName = "MSOnline"; ModuleVersion = "1.1.183.17"; },
                       @{ModuleName = "SharePointPnPPowerShellOnline"; ModuleVersion = "3.5.1901.0"; },
-                      @{ModuleName = 'Microsoft.Online.SharePoint.PowerShell'; ModuleVersion = "16.0.8316.0"; },
+                      @{ModuleName = "Microsoft.Online.SharePoint.PowerShell"; ModuleVersion = "16.0.8316.0"; },
                       @{ModuleName = "MicrosoftTeams"; ModuleVersion = "1.0.0"; },
                       @{ModuleName = "AzureAD"; ModuleVersion = "2.0.2.4"; },
                       @{ModuleName = "MSCloudLoginAssistant"; ModuleVersion = "0.5.1"; })
