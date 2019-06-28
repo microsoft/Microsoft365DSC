@@ -59,26 +59,47 @@ function Get-TargetResource
     }
     Write-Verbose -Message "Found Existing Instance of Group {$($ADGroup.DisplayName)}"
 
-    $membersList = Get-AzureADGroupMember -ObjectId $ADGroup.ObjectId
-    $owners = Get-AzureADGroupOwner -ObjectId $ADGroup.ObjectId
-
-    $returnValue = @{
-        DisplayName = $ADGroup.DisplayName
-        MailNickName = $ADGroup.MailNickName
-        Members = $membersList.UserPrincipalName
-        ManagedBy = $owners.UserPrincipalName
-        Description = $ADGroup.Description.ToString()
-        GlobalAdminAccount = $GlobalAdminAccount
-        Ensure = "Present"
-    }
-
-    Write-Verbose -Message "Retrieved the following instance of the Group:"
-    foreach ($value in $returnValue.GetEnumerator())
+    try
     {
-        Write-Verbose -Message "$($value.Key) = $($value.Value)"
-    }
+        $membersList = Get-AzureADGroupMember -ObjectId $ADGroup.ObjectId
+        Write-Verbose -Message "Found Members for Group {$($ADGroup.DisplayName)}"
+        $owners = Get-AzureADGroupOwner -ObjectId $ADGroup.ObjectId
+        Write-Verbose -Message "Found Owners for Group {$($ADGroup.DisplayName)}"
+        $ownersUPN = $null
+        if ($null -ne $owners)
+        {
+            $ownersUPN = $owners.UserPrincipalName
+        }
 
-    return $returnValue
+        $description = ""
+        if ($null -ne $ADGroup.Description)
+        {
+            $description = $ADGroup.Description.ToString()
+        }
+
+        $returnValue = @{
+            DisplayName = $ADGroup.DisplayName
+            MailNickName = $ADGroup.MailNickName
+            Members = $membersList.UserPrincipalName
+            ManagedBy = $ownersUPN
+            Description = $description
+            GlobalAdminAccount = $GlobalAdminAccount
+            Ensure = "Present"
+        }
+
+        Write-Verbose -Message "Retrieved the following instance of the Group:"
+        foreach ($value in $returnValue.GetEnumerator())
+        {
+            Write-Verbose -Message "$($value.Key) = $($value.Value)"
+        }
+        return $returnValue
+    }
+    catch
+    {
+        $Message = "An error occured retrieving info for Group $DisplayName"
+        New-Office365DSCLogEntry -Error $_ -Message $Message
+    }
+    return $nullReturn
 }
 
 function Set-TargetResource

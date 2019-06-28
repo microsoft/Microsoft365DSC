@@ -2,4 +2,13 @@
 
 ## Unreleased
 
-* Exchange Online Workload Major Refactoring and GUI Changes
+* Modules
+  * Added embedded Log Engine
+* SCRetentionCompliancePolicy
+  * Initial Release
+* SCRetentionComplianceRule
+  * Initial Release
+* SCSupervisoryReviewPolicy
+  * Initial Release
+* SCSupervisoryReviewRule
+  * Initial Release

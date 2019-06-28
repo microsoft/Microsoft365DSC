@@ -56,6 +56,8 @@ function Get-TargetResource
     catch
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
+        $Message = "Error calling {Get-DkimSigningConfig}"
+        New-Office365DSCLogEntry -Error $_ -Message $Message
     }
     $DkimSigningConfig = $DkimSigningConfigs | Where-Object -FilterScript { $_.Identity -eq $Identity }
     if (-not $DkimSigningConfig)

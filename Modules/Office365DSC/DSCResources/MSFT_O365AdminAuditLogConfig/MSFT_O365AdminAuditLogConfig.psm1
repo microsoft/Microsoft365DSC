@@ -108,7 +108,9 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Verbose -Message "Couldn't set the Audit Log Ingestion. Please run Enable-OrganizationCustomization first."
+            $Message = "Couldn't set the Audit Log Ingestion. Please run Enable-OrganizationCustomization first."
+            Write-Verbose $Message
+            New-Office365DSCLogEntry -Error $_ -Message $Message
         }
     }
     else
@@ -119,7 +121,9 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Verbose -Message "Couldn't set the Audit Log Ingestion. Please run Enable-OrganizationCustomization first."
+            $Message = "Couldn't set the Audit Log Ingestion. Please run Enable-OrganizationCustomization first."
+            Write-Verbose $Message
+            New-Office365DSCLogEntry -Error $_ -Message $Message
         }
     }
 }

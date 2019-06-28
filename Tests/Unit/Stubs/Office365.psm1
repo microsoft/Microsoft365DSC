@@ -49,6 +49,287 @@ function Test-PnPOnlineConnection{
     )
 }
 
+
+function Get-SupervisoryReviewPolicyV2
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-SupervisoryReviewPolicyV2
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function New-SupervisoryReviewPolicyV2
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $Reviewers
+    )
+}
+
+function Set-SupervisoryReviewPolicyV2
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $Reviewers
+    )
+}
+
+function New-SupervisoryReviewRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
+        [Parameter()]
+        [System.String]
+        $Condition,
+
+        [Parameter()]
+        [System.Int32]
+        $SamplingRate
+    )
+}
+
+function Set-SupervisoryReviewRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Condition,
+
+        [Parameter()]
+        [System.Int32]
+        $SamplingRate
+    )
+}
+
+function Get-SupervisoryReviewRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Policy
+    )
+}
+
+function New-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedItemClasses,
+
+        [Parameter()]
+        [System.String]
+        $RetentionDuration,
+
+        [Parameter()]
+        [ValidateSet("Days", "Months", "Years")]
+        [System.String]
+        $RetentionDurationDisplayHint,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [ValidateSet("CreationAgeInDays", "ModificationAgeInDays")]
+        [System.String]
+        $ExpirationDateOption,
+
+        [Parameter()]
+        [ValidateSet("Delete","Keep","KeepAndDelete")]
+        [System.String]
+        $RetentionComplianceAction
+    )
+}
+
+function Get-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function New-RetentionCompliancePolicy{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $DynamicScopeLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $ModernGroupLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ModernGroupLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $PublicFolderLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $RestrictiveRetention = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $SkypeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SkypeLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsChannelLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsChannelLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsChatLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsChatLocationException
+    )
+}
+
+function Get-RetentionCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-RetentionCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
 function Set-PnPSearchConfiguration{
     [CmdletBinding()]
     param(
@@ -11914,5 +12195,112 @@ function Get-PnPStorageEntity
         [string]
         $Scope
 
+    )
+}
+function Get-ComplianceTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+function Remove-ComplianceTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+function New-ComplianceTag
+{
+    [CmdletBinding()]
+    param(
+    [Parameter()]
+    [System.String]
+    $Name,
+
+    [Parameter()]
+    [System.String]
+    $Comment,
+
+    [Parameter()]
+    [System.String]
+    $FilePlanProperty,
+
+    [Parameter()]
+    [System.String]
+    $RetentionDuration,
+
+    [Parameter()]
+    [System.Boolean]
+    $IsRecordLabel,
+
+    [Parameter()]
+    [System.Boolean]
+    $Regulatory,
+
+    [Parameter()]
+    [System.String]
+    $Notes,
+
+    [Parameter()]
+    [System.String]
+    $ReviewerEmail,
+
+    [Parameter()]
+    [ValidateSet("Delete", "Keep", "KeepAndDelete")]
+    [System.String]
+    $RetentionAction,
+
+    [Parameter()]
+    [System.String]
+    $EventType,
+
+    [Parameter()]
+    [ValidateSet("CreationAgeInDays", "EventAgeInDays","ModificationAgeInDays","TaggedAgeInDays")]
+    [System.String]
+    $RetentionType
+    )
+}
+
+function Set-ComplianceTag
+{
+    [CmdletBinding()]
+    param(
+    [Parameter()]
+    [System.String]
+    $Identity,
+
+    [Parameter()]
+    [System.String]
+    $Comment,
+
+    [Parameter()]
+    [System.String]
+    $FilePlanProperty,
+
+    [Parameter()]
+    [System.String]
+    $RetentionDuration,
+
+    [Parameter()]
+    [System.String]
+    $Notes,
+
+    [Parameter()]
+    [System.String]
+    $ReviewerEmail,
+
+    [Parameter()]
+    [System.String]
+    $EventType
     )
 }

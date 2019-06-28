@@ -47,20 +47,11 @@ function Start-O365ConfigurationExtract
     # Obtain central administration url from a User Principal Name
     $centralAdminUrl = $null
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    $users = Get-AzureADUser
-    if ($users.Count -gt 0)
-    {
-        $tenantParts = $users[0].UserPrincipalName.Split('@')
-        if ($tenantParts.Length -gt 0)
-        {
-            $tenantName = $tenantParts[1].Split(".")[0]
-            $centralAdminUrl = "https://" + $tenantName + "-admin.sharepoint.com"
-            Add-ConfigurationDataEntry -Node "NonNodeData" `
-                                     -Key "CentralAdminUrl" `
-                                     -Value $centralAdminUrl `
-                                     -Description "Url of the SharePoint Central Adminsitration"
-        }
-    }
+    $centralAdminUrl = Get-SPOAdministrationUrl
+    Add-ConfigurationDataEntry -Node "NonNodeData" `
+                               -Key "CentralAdminUrl" `
+                               -Value $centralAdminUrl `
+                               -Description "Url of the SharePoint Central Adminsitration"
 
     # Add the GlobalAdminAccount to the Credentials List
     Save-Credentials -UserName "globaladmin"
@@ -367,6 +358,7 @@ function Start-O365ConfigurationExtract
     #region "EXOSharedMailbox"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSharedMailbox"))
     {
+        Write-Information "Extracting EXOSharedMailbox..."
         $EXOSharedMailboxModulePath = Join-Path -Path $PSScriptRoot `
                                                 -ChildPath "..\DSCResources\MSFT_EXOSharedMailbox\MSFT_EXOSharedMailbox.psm1" `
                                                 -Resolve
@@ -377,9 +369,14 @@ function Start-O365ConfigurationExtract
         $mailboxes = $mailboxes | Where-Object -FilterScript { $_.RecipientTypeDetails -eq "SharedMailbox" }
 
         $i = 1
+        $total = $mailboxes.Length
+        if ($null -eq $total -and $null -ne $mailboxes)
+        {
+            $total = 1
+        }
         foreach ($mailbox in $mailboxes)
         {
-            Write-Information "    - [$i/$($mailboxes.Length)] $($mailbox.Name)"
+            Write-Information "    - [$i/$total] $($mailbox.Name)"
             $mailboxName = $mailbox.Name
             if ($mailboxName)
             {
@@ -503,6 +500,52 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
+
+    #region "SCRetentionCompliancePolicy"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSCRetentionCompliancePolicy"))
+    {
+        Write-Information "Extracting SCRetentionCompliancePolicy..."
+        $SCRetentionCompliancePolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_SCRetentionCompliancePolicy\MSFT_SCRetentionCompliancePolicy.psm1" `
+                                        -Resolve
+
+        Import-Module $SCRetentionCompliancePolicyModulePath | Out-Null
+        $policies = Get-RetentionCompliancePolicy
+
+        $i = 1
+        foreach ($policy in $policies)
+        {
+            Write-Information "    - [$i/$($policies.Length)] $($policy.Name)"
+            $partialContent = Export-TargetResource -Name $policy.Name -GlobalAdminAccount $GlobalAdminAccount
+            $DSCContent += $partialContent
+            $i++
+        }
+    }
+    #endregion
+
+    #region "SCRetentionComplianceRule"
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSCRetentionComplianceRule"))
+    {
+        Write-Information "Extracting SCRetentionComplianceRule..."
+        $SCRetentionComplianceRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                            -ChildPath "..\DSCResources\MSFT_SCRetentionComplianceRule\MSFT_SCRetentionComplianceRule.psm1" `
+                                            -Resolve
+
+        Import-Module $SCRetentionComplianceRuleModulePath | Out-Null
+        $rules = Get-RetentionComplianceRule
+
+        $i = 1
+        foreach ($rule in $rules)
+        {
+            Write-Information "    - [$i/$($rules.Length)] $($rule.Name)"
+            $partialContent = Export-TargetResource -Name $rule.Name -Policy $rule.Policy -GlobalAdminAccount $GlobalAdminAccount
+            $DSCContent += $partialContent
+            $i++
+        }
+    }
+    #endregion
+
     #region SPOApp
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOApp"))
     {
@@ -528,7 +571,7 @@ function Start-O365ConfigurationExtract
             $i = 1
             foreach ($file in $allFiles)
             {
-                Write-Information "    - [$i/$($allFiles.Length)] $($file.Name)}"
+                Write-Information "    - [$i/$($allFiles.Length)] $($file.Name)"
                 $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl}
 
                 $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
@@ -789,7 +832,7 @@ function Start-O365ConfigurationExtract
         $i = 1
         foreach ($siteDesign in $siteDesigns)
         {
-            Write-Information "    - [$i/$($siteDesigns.Length)] ($siteDesign.Title)"
+            Write-Information "    - [$i/$($siteDesigns.Length)] $($siteDesign.Title)"
             $partialContent += Export-TargetResource -SiteDesignTitle $siteDesign.Title `
                                                  -CentralAdminUrl $centralAdminUrl `
                                                  -GlobalAdminAccount $GlobalAdminAccount
@@ -800,6 +843,30 @@ function Start-O365ConfigurationExtract
             }
             $DSCContent += $partialContent
             $i++
+        }
+    }
+    #endregion
+
+    #region SPOStorageEntity
+    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOStorageEntity"))
+    {
+        Write-Information "Extracting SPOStorageEntity..."
+        $SPOModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_SPOStorageEntity\MSFT_SPOStorageEntity.psm1" `
+                                    -Resolve
+
+        Import-Module $SPOModulePath | Out-Null
+
+        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+
+        $storageEntities = Get-PnPStorageEntity
+
+        foreach ($storageEntity in $storageEntities)
+        {
+            Write-Information "    Storage Entity {$($storageEntity.Key)}"
+            $DSCContent += Export-TargetResource -Key $storageEntity.Key `
+                                                -CentralAdminUrl $centralAdminUrl `
+                                                -GlobalAdminAccount $GlobalAdminAccount
         }
     }
     #endregion
@@ -888,35 +955,14 @@ function Start-O365ConfigurationExtract
                     $i++
                 }
             }
-            catch {
+            catch
+            {
                 Write-Information "The current User doesn't have the required permissions to extract Users for Team {$($team.DisplayName)}."
             }
             $j++
         }
     }
     #endregion
-
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOStorageEntity"))
-    {
-        Write-Information "Extracting SPOStorageEntity..."
-        $SPOModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_SPOStorageEntity\MSFT_SPOStorageEntity.psm1" `
-                                    -Resolve
-
-        Import-Module $SPOModulePath | Out-Null
-
-        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-
-        $storageEntities = Get-PnPStorageEntity
-
-        foreach ($storageEntity in $storageEntities)
-        {
-            Write-Information "    Storage Entity {$($storageEntity.Key)}"
-            $DSCContent += Export-TargetResource -Key $storageEntity.Key `
-                                                -CentralAdminUrl $centralAdminUrl `
-                                                -GlobalAdminAccount $GlobalAdminAccount
-        }
-    }
 
     # Close the Node and Configuration declarations
     $DSCContent += "    }`r`n"

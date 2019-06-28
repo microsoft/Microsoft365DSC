@@ -213,7 +213,7 @@ function Show-O365GUI
         $pnlSPO = New-Object System.Windows.Forms.Panel
         $pnlSPO.Top = 88 + $topBannerHeight
         $pnlSPO.Left = $SecondColumnLeft
-        $pnlSPO.Height = 140
+        $pnlSPO.Height = 180
         $pnlSPO.Width = 300
         $pnlSPO.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -280,6 +280,47 @@ function Show-O365GUI
         $chckSPOSiteDesignRights.Checked = $true
         $chckSPOSiteDesignRights.Text = "Site Design Rights"
         $pnlSPO.Controls.Add($chckSPOSiteDesignRights)
+
+        $chckSPOTheme = New-Object System.Windows.Forms.CheckBox
+        $chckSPOTheme.Top = 160
+        $chckSPOTheme.AutoSize = $true;
+        $chckSPOTheme.Name = "chckSPOTheme"
+        $chckSPOTheme.Checked = $false
+        $chckSPOTheme.Text = "Themes"
+        $pnlSPO.Controls.Add($chckSPOTheme)
+        #endregion
+
+        #region Security and Compliance
+        $imgSC = New-Object System.Windows.Forms.PictureBox
+        $imagePath = $PSScriptRoot + "\..\Dependencies\Images\SecurityAndCompliance.png"
+        $imgSC.ImageLocation = $imagePath
+        $imgSC.Left = $SecondColumnLeft
+        $imgSC.Top = $topBannerHeight + $pnlSPO.Height + $imgSPO.Height + 75
+        $imgSC.AutoSize = $true
+        $pnlMain.Controls.Add($imgSC)
+
+        $pnlSC = New-Object System.Windows.Forms.Panel
+        $pnlSC.Top = $pnlSPO.Heigth + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 300
+        $pnlSC.Left = $SecondColumnLeft
+        $pnlSC.Height = 40
+        $pnlSC.Width = 300
+        $pnlSC.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+
+        $chckSCRetentionCompliancePolicy = New-Object System.Windows.Forms.CheckBox
+        $chckSCRetentionCompliancePolicy.Top = 0
+        $chckSCRetentionCompliancePolicy.AutoSize = $true;
+        $chckSCRetentionCompliancePolicy.Name = "chckSCRetentionCompliancePolicy"
+        $chckSCRetentionCompliancePolicy.Checked = $true
+        $chckSCRetentionCompliancePolicy.Text = "Retention Compliance Policy"
+        $pnlSC.Controls.Add($chckSCRetentionCompliancePolicy)
+
+        $chckSCRetentionComplianceRule = New-Object System.Windows.Forms.CheckBox
+        $chckSCRetentionComplianceRule.Top = 20
+        $chckSCRetentionComplianceRule.AutoSize = $true;
+        $chckSCRetentionComplianceRule.Name = "chckSCRetentionComplianceRule"
+        $chckSCRetentionComplianceRule.Checked = $true
+        $chckSCRetentionComplianceRule.Text = "Retention Compliance Rule"
+        $pnlSC.Controls.Add($chckSCRetentionComplianceRule)
         #endregion
 
         #region Teams
@@ -353,6 +394,7 @@ function Show-O365GUI
         $pnlMain.Controls.Add($pnlExo)
         $pnlMain.Controls.Add($pnlOD)
         $pnlMain.Controls.Add($pnlSPO)
+        $pnlMain.Controls.Add($pnlSC)
         $pnlMain.Controls.Add($pnlTeams)
 
         #region Extraction Modes
@@ -456,7 +498,8 @@ function Show-O365GUI
                 }
                 catch
                 {
-                    Write-Information $_
+                    $Message = "Could not initiate the ReverseDSC Extraction"
+                    New-Office365DSCLogEntry -Error $_ -Message $Message_
                 }
             }
             else
@@ -471,11 +514,15 @@ function Show-O365GUI
 
         $pnlMain.AutoScroll = $true
         $form.Controls.Add($pnlMain)
+        $form.ActiveControl = $txtTenantAdmin
         $form.Text = "ReverseDSC for Office 365"
         $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
         $return = $form.ShowDialog()
     }
-    catch {}
+    catch
+    {
+
+    }
 }
 
 function SelectComponentsForMode($panelMain, $mode){
@@ -503,7 +550,10 @@ function SelectComponentsForMode($panelMain, $mode){
                         $control.Checked = $true
                     }
                 }
-                catch{}
+                catch
+                {
+
+                }
             }
         }
     }
@@ -512,6 +562,9 @@ function SelectComponentsForMode($panelMain, $mode){
         try{
             $control.Checked = $true
         }
-        catch{}
+        catch
+        {
+
+        }
     }
 }

@@ -126,7 +126,7 @@ function Set-TargetResource
         }
         catch
         {
-            Write-verbose -Message "Theme $($Name) does not yet exist."
+            Write-Verbose -Message "Theme $($Name) does not yet exist."
         }
 
         if ($null -eq $existingTheme)
@@ -159,7 +159,9 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Error -Message "The theme $($theme) does not exist and for that cannot be removed."
+            $Message = "The SPOTheme $($theme) does not exist and for that cannot be removed."
+            New-Office365DSCLogEntry -Error $_ -Message $Message
+            Write-Error $Message
         }
     }
 }
