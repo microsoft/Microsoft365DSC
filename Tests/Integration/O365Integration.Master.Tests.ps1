@@ -9,7 +9,7 @@ param
     $GlobalAdminPassword
 )
 
-Configuration Master
+Configuration DemoAlpha
 {
     param
     (
@@ -22,11 +22,11 @@ Configuration Master
 
     Node Localhost
     {
-        EXOAcceptedDomain EXOAcceptedDomain1
+        TeamsTeam TeamAlpha
         {
-            Identity           = "contoso.com"
+            DisplayName = "Alpha"
             GlobalAdminAccount = $GlobalAdmin
-            Ensure             = "Present"
+            Ensure = "Present"
         }
     }
 }
@@ -42,5 +42,5 @@ $ConfigurationData = @{
 
 $password = ConvertTo-SecureString $GlobalAdminPassword -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential ($GlobalAdminUser, $password)
-Master -ConfigurationData $ConfigurationData -GlobalAdmin $credential
+DemoAlpha -ConfigurationData $ConfigurationData -GlobalAdmin $credential
 Start-DscConfiguration Master -Wait -Force -Verbose
