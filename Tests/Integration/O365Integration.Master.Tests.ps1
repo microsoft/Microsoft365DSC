@@ -40,6 +40,7 @@ $ConfigurationData = @{
     )
 }
 
+# Compile and deploy configuration
 $password = ConvertTo-SecureString $GlobalAdminPassword -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential ($GlobalAdminUser, $password)
 Master -ConfigurationData $ConfigurationData -GlobalAdmin $credential
