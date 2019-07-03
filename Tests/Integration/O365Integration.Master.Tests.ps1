@@ -24,7 +24,7 @@ Configuration DemoAlpha
     {
         TeamsTeam TeamAlpha
         {
-            DisplayName = "AlphaTeam"
+            DisplayName = "Alpha"
             GlobalAdminAccount = $GlobalAdmin
             Ensure = "Present"
         }
