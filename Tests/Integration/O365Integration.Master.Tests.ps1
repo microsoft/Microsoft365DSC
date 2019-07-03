@@ -9,7 +9,7 @@ param
     $GlobalAdminPassword
 )
 
-Configuration DemoAlpha
+Configuration Master
 {
     param
     (
