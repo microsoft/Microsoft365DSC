@@ -42,5 +42,5 @@ $ConfigurationData = @{
 
 $password = ConvertTo-SecureString $GlobalAdminPassword -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential ($GlobalAdminUser, $password)
-DemoAlpha -ConfigurationData $ConfigurationData -GlobalAdmin $credential
+Master -ConfigurationData $ConfigurationData -GlobalAdmin $credential
 Start-DscConfiguration Master -Wait -Force -Verbose
