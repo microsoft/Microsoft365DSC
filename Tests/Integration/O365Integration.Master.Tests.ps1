@@ -48,7 +48,7 @@ Configuration Master
         O365Group O365DSCCoreTeam
         {
             DisplayName          = "Office365DSC Core Team"
-            MailNickName         = ""
+            MailNickName         = "O365DSCCore"
             Description          = "Group for all the Core Team members"
             Members              = @("John.Smith@$Domain")
             GlobalAdminAccount   = $GlobalAdmin
