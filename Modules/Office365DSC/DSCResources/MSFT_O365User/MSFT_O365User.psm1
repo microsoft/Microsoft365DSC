@@ -294,8 +294,12 @@ function Set-TargetResource
 
     if ($user.UserPrincipalName)
     {
-        Write-Verbose -Message "Comparing License Assignment for user $UserPrincipalName"
-        $diff = Compare-Object -ReferenceObject $user.LicenseAssignment -DifferenceObject $newLicenseAssignment
+        if ($LicenseAssignment.Length -gt 0)
+        {
+            Write-Verbose -Message "Comparing License Assignment for user $UserPrincipalName"
+            $diff = Compare-Object -ReferenceObject $user.LicenseAssignment -DifferenceObject $newLicenseAssignment
+        }
+
         $CurrentParameters.Remove("LicenseAssignment")
         if ($Password)
         {

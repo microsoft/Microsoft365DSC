@@ -37,7 +37,9 @@ Configuration Master
             FirstName            = "John"
             LastName             = "Smith"
             City                 = "Gatineau"
-
+            Country              = "Canada"
+            Office               = "HQ"
+            PostalCode           = "5K5 K5K"
             GlobalAdminAccount   = $GlobalAdmin
             Ensure               = "Present"
         }
