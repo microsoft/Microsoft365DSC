@@ -45,7 +45,7 @@ function Get-TargetResource
         Ensure = "Absent"
     }
 
-    $catch = Connect-AzureAD -Credential $GlobalAdminAccount
+    Connect-AzureAD -Credential $GlobalAdminAccount | Out-Null
 
     $ADGroup = Get-AzureADGroup -SearchString $MailNickName -ErrorAction SilentlyContinue
     if ($null -eq $ADGroup)
@@ -65,10 +65,24 @@ function Get-TargetResource
         Write-Verbose -Message "Found Members for Group {$($ADGroup.DisplayName)}"
         $owners = Get-AzureADGroupOwner -ObjectId $ADGroup.ObjectId
         Write-Verbose -Message "Found Owners for Group {$($ADGroup.DisplayName)}"
-        $ownersUPN = $null
+        $ownersUPN = @()
         if ($null -ne $owners)
         {
-            $ownersUPN = $owners.UserPrincipalName
+            # Need to cast as an array for the test to properly compare cases with
+            # a single owner;
+            $ownersUPN = [System.String[]]$owners.UserPrincipalName
+
+            # Also need to remove the owners from the members list for Test
+            # to handle the validation properly;
+            $newMemberList = @()
+
+            foreach ($member in $membersList)
+            {
+                if (-not $ownersUPN.Contains($member.UserPrincipalName))
+                {
+                    $newMemberList += $member.UserPrincipalName
+                }
+            }
         }
 
         $description = ""
@@ -80,7 +94,7 @@ function Get-TargetResource
         $returnValue = @{
             DisplayName = $ADGroup.DisplayName
             MailNickName = $ADGroup.MailNickName
-            Members = $membersList.UserPrincipalName
+            Members = $newMemberList
             ManagedBy = $ownersUPN
             Description = $description
             GlobalAdminAccount = $GlobalAdminAccount
@@ -216,10 +230,12 @@ function Set-TargetResource
                     {
                         if ($diff.SideIndicator -eq "<=" -and $diff.InputObject -ne $ManagedBy.Split('@')[0])
                         {
+                            Write-Verbose "Will be removing Member: {$($diff.InputObject)}"
                             $membersToRemove += $diff.InputObject
                         }
                         elseif ($diff.SideIndicator -eq "=>")
                         {
+                            Write-Verbose "Will be adding Member: {$($diff.InputObject)}"
                             $membersToAdd += $diff.InputObject
                         }
                     }
@@ -229,10 +245,12 @@ function Set-TargetResource
                 {
                     if ("" -ne $MailNickName)
                     {
+                        Write-Verbose "Adding members {$($membersToAdd.ToString())}"
                         Add-UnifiedGroupLinks -Identity $MailNickName -LinkType Members -Links $membersToAdd
                     }
                     else
                     {
+                        Write-Verbose "Adding members {$($membersToAdd.ToString())} with DisplayName"
                         Add-UnifiedGroupLinks -Identity $DisplayName -LinkType Members -Links $membersToAdd
                     }
                 }
