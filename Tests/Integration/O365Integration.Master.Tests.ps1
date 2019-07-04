@@ -50,7 +50,7 @@ Configuration Master
         {
             DisplayName        = "Channel Alpha 1"
             Description        = "Test Channel"
-            TeamName           = "Alpha Team"
+            TeamName           = "Alpha Team 1"
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
             DependsON          = "[TeamsTeam]TeamAlpha"
