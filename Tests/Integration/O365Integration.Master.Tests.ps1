@@ -6,32 +6,63 @@ param
 
     [Parameter()]
     [System.String]
-    $GlobalAdminPassword
+    $GlobalAdminPassword,
+
+    [Parameter(Mandatory=$true)]
+    [System.String]
+    $Domain
 )
 
 Configuration Master
 {
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory=$true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdmin
+        $GlobalAdmin,
+
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Domain
     )
 
     Import-DscResource -ModuleName Office365DSC
 
     Node Localhost
     {
+        O365User JohnSmith
+        {
+            UserPrincipalName    = "John.Smith@$($Domain)"
+            GlobalAdminAccount   = $GlobalAdmin
+            Ensure               = "Present"
+        }
+
         TeamsTeam TeamAlpha
         {
-            DisplayName = "AlphaTeam"
-            GlobalAdminAccount = $GlobalAdmin
-            Ensure = "Present"
+            DisplayName          = "Alpha Team"
+            AllowAddRemoveApps   = $true
+            AllowChannelMentions = $false
+            GlobalAdminAccount   = $GlobalAdmin
+            Ensure               = "Present"
         }
 
         TeamsChannel ChannelAlpha1
         {
+            DisplayName        = "Channel Alpha 1"
+            Description        = "This is a test Channel"
+            TeamName           = "Alpha Team"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+            DependsON          = "[TeamsTeam]TeamAlpha"
+        }
 
+        TeamsUser MemberJohn
+        {
+            TeamName           = "Alpha Team"
+            User               = "John.Smith@$($Domain)"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+            DependsON          = @("[O365User]JohnSmith","[TeamsTeam]TeamAlpha")
         }
     }
 }
@@ -48,5 +79,5 @@ $ConfigurationData = @{
 # Compile and deploy configuration
 $password = ConvertTo-SecureString $GlobalAdminPassword -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential ($GlobalAdminUser, $password)
-Master -ConfigurationData $ConfigurationData -GlobalAdmin $credential
+Master -ConfigurationData $ConfigurationData -GlobalAdmin $credential -Domain $Domain
 Start-DscConfiguration Master -Wait -Force -Verbose
