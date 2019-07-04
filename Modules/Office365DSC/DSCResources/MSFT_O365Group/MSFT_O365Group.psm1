@@ -342,6 +342,10 @@ function Export-TargetResource
         $DisplayName,
 
         [Parameter(Mandatory = $true)]
+        [System.String]
+        $ManagedBy,
+
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
