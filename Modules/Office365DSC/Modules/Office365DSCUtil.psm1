@@ -1458,7 +1458,7 @@ function Test-SPOServiceConnection
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     Write-Verbose -Message "Verifying the LCM connection state to SharePoint Online"
-    $catch = Connect-SPOService -Url $SPOCentralAdminUrl -Credential $GlobalAdminAccount
+    Test-MSCloudLogin -Platform SharePointOnline -o365Credential $GlobalAdminAccount
 }
 
 function Test-PnPOnlineConnection
@@ -1478,7 +1478,7 @@ function Test-PnPOnlineConnection
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     Write-Verbose -Message "Verifying the LCM connection state to SharePoint Online with PnP"
-    $catch = Connect-PnPOnline -Url $SiteUrl -Credentials $GlobalAdminAccount
+    Test-MSCloudLogin -Platform PnP -o365Credential $GlobalAdminAccount
 }
 
 function Test-O365ServiceConnection
@@ -1531,7 +1531,7 @@ function Test-SecurityAndComplianceConnection
     $Global:SessionSecurityCompliance = Get-PSSession | Where-Object{$_.ComputerName -like "*.ps.compliance.protection.outlook.com"}
     if ($null -eq $Global:SessionSecurityCompliance)
     {
-        Write-Verbose "Session to Security & Compliance already exists, re-using existing session"
+        Write-Verbose -Message "Session to Security & Compliance already exists, re-using existing session"
         $Global:SessionSecurityCompliance = New-PSSession -ConfigurationName "Microsoft.Exchange" `
             -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ `
             -Credential $GlobalAdminAccount `
@@ -1742,7 +1742,7 @@ function Test-Office365DSCParameterState
     return $returnValue
 }
 
-function Get-UsersLicences
+function Get-UsersLicenses
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -1752,13 +1752,15 @@ function Get-UsersLicences
         $GlobalAdminAccount
     )
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose -Message "Store all users licences information in Global Variable for futur usage."
-    #Store information to be able to check later if the users is correctly licences for features.
-    if ($null -eq $Global:UsersLicences)
+
+    Write-Verbose -Message "Store all users licenses information in Global Variable for future usage."
+
+    #Store information to be able to check later if the users is correctly licensed for features.
+    if ($null -eq $Global:UsersLicenses)
     {
-        $Global:UsersLicences = Get-MsolUser -All | Select-Object UserPrincipalName, isLicensed, Licenses
+        $Global:UsersLicenses = Get-MsolUser -All | Select-Object UserPrincipalName, isLicensed, Licenses
     }
-    Return $Global:UsersLicences
+    Return $Global:UsersLicenses
 }
 
 <# This is the main Office365DSC.Reverse function that extracts the DSC configuration from an existing
