@@ -1755,28 +1755,10 @@ function Get-UsersLicenses
 
     Write-Verbose -Message "Store all users licenses information in Global Variable for future usage."
 
-    #Store information to be able to check later if the users is correctly licences for features.
+    #Store information to be able to check later if the users is correctly licensed for features.
     if ($null -eq $Global:UsersLicenses)
     {
-<#         $Global:UsersLicenses = @()
-        $users = Get-AzureADUser
-        foreach ($user in $users)
-        {
-            $licenses = $user | Get-AzureADUserLicenseDetail
-            $isLicensed = $false
-            if ($licenses)
-            {
-                $isLicensed = $true
-            }
-            $userLicenseInfo = New-Object -TypeName System.Object
-            $userLicenseInfo | Add-Member -NotePropertyName UserPrincipalName -NotePropertyValue $user.UserPrincipalName
-            $userLicenseInfo | Add-Member -NotePropertyName isLicensed -NotePropertyValue $isLicensed
-            $userLicenseInfo | Add-Member -NotePropertyName Licenses -NotePropertyValue $licenses
-            $userLicenseInfo.GetType().ToString()
-            $userLicenseInfo
-            $Global:UsersLicenses += $userLicenseInfo
-        }
- #>        $Global:UsersLicences = Get-MsolUser -All | Select-Object UserPrincipalName, isLicensed, Licenses
+        $Global:UsersLicenses = Get-MsolUser -All | Select-Object UserPrincipalName, isLicensed, Licenses
     }
     Return $Global:UsersLicenses
 }
