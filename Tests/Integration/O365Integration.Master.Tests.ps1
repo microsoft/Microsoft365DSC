@@ -50,7 +50,7 @@ Configuration Master
         TeamsChannel ChannelAlpha1
         {
             DisplayName        = "Channel Alpha"
-            Description        = "Test Channel"
+            Description        = "Test Channel 1"
             TeamName           = "Alpha Team"
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
