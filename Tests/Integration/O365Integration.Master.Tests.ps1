@@ -44,6 +44,17 @@ Configuration Master
             Ensure               = "Present"
         }
 
+        # Security Group because MailNickName is empty
+        O365Group O365DSCCoreTeam
+        {
+            DisplayName          = "Office365DSC Core Team"
+            MailNickName         = ""
+            Description          = "Group for all the Core Team members"
+            Members              = @("John.Smith@$Domain")
+            GlobalAdminAccount   = $GlobalAdmin
+            Ensure               = "Present"
+        }
+
         TeamsTeam TeamAlpha
         {
             DisplayName          = "Alpha Team"
