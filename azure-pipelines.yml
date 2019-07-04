@@ -1,5 +1,5 @@
-trigger:
-- dev
+pr:
+- Dev
 
 pool:
   vmImage: 'windows-2019'
