@@ -15,7 +15,7 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("Member", "Owner")]
-        $Role,
+        $Role = "Member",
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -50,14 +50,8 @@ function Get-TargetResource
 
     try
     {
-        if ($null -eq $Role)
-        {
-            $allMembers = Get-TeamUser -GroupId $team.GroupId -ErrorAction SilentlyContinue
-        }
-        else
-        {
-            $allMembers = Get-TeamUser -GroupId $team.GroupId -Role $Role -ErrorAction SilentlyContinue
-        }
+        Write-Verbose "Retrieving user without a specific Role specified"
+        $allMembers = Get-TeamUser -GroupId $team.GroupId -ErrorAction SilentlyContinue
     }
     catch
     {
@@ -99,7 +93,7 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("Member", "Owner")]
-        $Role,
+        $Role = "Member",
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -159,7 +153,7 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("Member", "Owner")]
-        $Role,
+        $Role = "Member",
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -207,11 +201,6 @@ function Export-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $User,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("Member", "Owner")]
-        $Role,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
