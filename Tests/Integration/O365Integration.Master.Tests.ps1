@@ -28,6 +28,11 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
             Ensure = "Present"
         }
+
+        TeamsChannel ChannelAlpha1
+        {
+
+        }
     }
 }
 
