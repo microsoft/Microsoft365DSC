@@ -34,6 +34,10 @@ Configuration Master
         {
             UserPrincipalName    = "John.Smith@$Domain"
             DisplayName          = "John Smith"
+            FirstName            = "John"
+            LastName             = "Smith"
+            City                 = "Gatineau"
+
             GlobalAdminAccount   = $GlobalAdmin
             Ensure               = "Present"
         }
@@ -50,7 +54,7 @@ Configuration Master
         TeamsChannel ChannelAlpha1
         {
             DisplayName        = "Channel Alpha"
-            Description        = "Test Channel 1"
+            Description        = "Test Channel"
             TeamName           = "Alpha Team"
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
