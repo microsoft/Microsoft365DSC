@@ -32,7 +32,8 @@ Configuration Master
     {
         O365User JohnSmith
         {
-            UserPrincipalName    = "John.Smith@$($Domain)"
+            UserPrincipalName    = "John.Smith@$Domain"
+            DisplayName          = "John Smith"
             GlobalAdminAccount   = $GlobalAdmin
             Ensure               = "Present"
         }
@@ -50,7 +51,7 @@ Configuration Master
         {
             DisplayName        = "Channel Alpha 1"
             Description        = "Test Channel"
-            TeamName           = "Alpha Team 1"
+            TeamName           = "Alpha Team"
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
             DependsON          = "[TeamsTeam]TeamAlpha"
