@@ -56,6 +56,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 DisplayName = "Test Group"
                 MailNickName = "TestGroup"
+                ManagedBy = "JohnSmith@contoso.onmicrosoft.com"
                 Description = "This is a test"
                 Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount

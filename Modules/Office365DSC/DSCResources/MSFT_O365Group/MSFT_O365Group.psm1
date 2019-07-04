@@ -12,13 +12,13 @@ function Get-TargetResource
         [System.String]
         $DisplayName,
 
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $ManagedBy,
+
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String[]]
-        $ManagedBy,
 
         [Parameter()]
         [System.String[]]
@@ -115,13 +115,13 @@ function Set-TargetResource
         [System.String]
         $DisplayName,
 
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $ManagedBy,
+
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String[]]
-        $ManagedBy,
 
         [Parameter()]
         [System.String[]]
@@ -267,13 +267,13 @@ function Test-TargetResource
         [System.String]
         $DisplayName,
 
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $ManagedBy,
+
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String[]]
-        $ManagedBy,
 
         [Parameter()]
         [System.String[]]

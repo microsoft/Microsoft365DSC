@@ -49,6 +49,7 @@ Configuration Master
         {
             DisplayName          = "Office365DSC Core Team"
             MailNickName         = "O365DSCCore"
+            ManagedBy            = "admin@$Domain"
             Description          = "Group for all the Core Team members"
             Members              = @("John.Smith@$Domain")
             GlobalAdminAccount   = $GlobalAdmin
