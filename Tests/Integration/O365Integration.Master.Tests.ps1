@@ -30,21 +30,37 @@ Configuration Master
 
     Node Localhost
     {
-        O365User JohnSmith
+        EXOAcceptedDomain O365DSCDomain
         {
-            UserPrincipalName    = "John.Smith@$Domain"
-            DisplayName          = "John Smith"
-            FirstName            = "John"
-            LastName             = "Smith"
-            City                 = "Gatineau"
-            Country              = "Canada"
-            Office               = "HQ"
-            PostalCode           = "5K5 K5K"
-            GlobalAdminAccount   = $GlobalAdmin
-            Ensure               = "Present"
+            Identity           = $Domain
+            DomainType         = "Authoritative"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
         }
 
-        # Security Group because MailNickName is empty
+        EXOAntiPhishPolicy AntiPhishPolicy
+        {
+            Identity                 = "Test AntiPhish Policy"
+            AdminDisplayName         = "Default Monitoring Policy"
+            AuthenticationFailAction = "Quarantine"
+            GlobalAdminAccount       = $GlobalAdmin
+            Ensure                   = "Present"
+        }
+
+        O365User JohnSmith
+        {
+            UserPrincipalName  = "John.Smith@$Domain"
+            DisplayName        = "John Smith"
+            FirstName          = "John"
+            LastName           = "Smith"
+            City               = "Gatineau"
+            Country            = "Canada"
+            Office             = "HQ"
+            PostalCode         = "5K5 K5K"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+        }
+
         O365Group O365DSCCoreTeam
         {
             DisplayName          = "Office365DSC Core Team"
