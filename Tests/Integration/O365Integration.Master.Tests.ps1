@@ -52,7 +52,7 @@ Configuration Master
             Identity           = "Test AntiPhish Rule"
             AntiPhishPolicy    = "Test AntiPhish Policy"
             Comments           = "This is a Test Rule"
-            Priority           = 1
+            Priority           = 100
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
         }
