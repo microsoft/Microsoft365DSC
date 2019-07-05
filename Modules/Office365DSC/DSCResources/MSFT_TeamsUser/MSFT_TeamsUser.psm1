@@ -56,6 +56,7 @@ function Get-TargetResource
     catch
     {
         Write-Warning "The current user doesn't have the rights to access the list of members for Team {$($TeamName)}."
+        Write-Verbose $_
         return $nullReturn
     }
 

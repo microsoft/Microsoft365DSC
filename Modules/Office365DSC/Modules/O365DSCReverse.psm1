@@ -945,7 +945,6 @@ function Start-O365ConfigurationExtract
                     Write-Information "        - [$i/$($users.Length)] $($user.User)"
                     $partialContent = Export-TargetResource -TeamName $team.DisplayName `
                                                         -User $user.User `
-                                                        -Role $user.Role `
                                                         -GlobalAdminAccount $GlobalAdminAccount
                     if ($partialContent.ToLower().Contains($principal.ToLower()))
                     {
