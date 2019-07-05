@@ -1155,7 +1155,13 @@ function Convert-O365DscHashtableToString
         }
         else
         {
-            $str = "$($pair.Key)=$($pair.Value)"
+            if ($null -eq $pair.Value)
+            {
+                $str = "$($pair.Key)=`$null"
+            }
+            else {
+                $str = "$($pair.Key)=$($pair.Value)"
+            }
         }
         $values += $str
     }
@@ -1195,7 +1201,7 @@ function New-EXOAntiPhishRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'New' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'New')
         Write-Verbose -Message "Creating New AntiPhishRule $($BuiltParams.Name) with values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
         New-AntiPhishRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'

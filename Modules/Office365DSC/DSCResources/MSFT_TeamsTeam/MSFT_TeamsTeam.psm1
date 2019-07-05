@@ -167,13 +167,14 @@ function Get-TargetResource
             }
         }
 
+        $Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object {$_.Role -eq "owner"}
         Write-Verbose -Message "Found Team $($team.DisplayName)."
 
         return @{
             DisplayName                       = $team.DisplayName
             GroupID                           = $team.GroupId
             Description                       = $team.Description
-            Owner                             = $Owner
+            Owner                             = $Owners.User
             MailNickName                      = $team.MailNickName
             Visibility                        = $team.Visibility
             AllowAddRemoveApps                = $team.AllowAddRemoveApps
@@ -326,7 +327,7 @@ function Set-TargetResource
         {
             $CurrentParameters.Remove("Owner")
         }
-        if ($null -eq $CurrentParameters.ContainsKey("GroupID"))
+        if (-not $CurrentParameters.ContainsKey("GroupID"))
         {
             $CurrentParameters.Add("GroupID", $team.GroupID)
         }
@@ -468,6 +469,11 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('GroupID') | Out-Null
+
+    if ($null -eq $CurrentValues.Owner)
+    {
+        $ValuesToCheck.Remove("Owner")
+    }
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -DesiredValues $PSBoundParameters `
