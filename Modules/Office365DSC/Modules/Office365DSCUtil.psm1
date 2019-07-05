@@ -1494,8 +1494,8 @@ function Test-O365ServiceConnection
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     Write-Verbose -Message "Verifying the LCM connection state to Microsoft Azure Active Directory Services"
-    $catch = Connect-MsolService -Credential $GlobalAdminAccount
-    $catch = Connect-AzureAD -Credential $GlobalAdminAccount
+    Test-MSCloudLogin -Platform AzureAD -o365Credential $GlobalAdminAccount
+    Test-MSCloudLogin -Platform MSOnline -o365Credential $GlobalAdminAccount
 }
 
 function Test-TeamsServiceConnection
@@ -1512,7 +1512,7 @@ function Test-TeamsServiceConnection
     $WarningPreference = "SilentlyContinue"
     Import-Module MicrosoftTeams -Force
     Write-Verbose -Message "Verifying the LCM connection state to Teams"
-    Connect-MicrosoftTeams -Credential $GlobalAdminAccount | Out-Null
+    Test-MSCloudLogin -Platform MicrosoftTeams -o365Credential $GlobalAdminAccount
 }
 
 function Test-SecurityAndComplianceConnection
