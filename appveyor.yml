@@ -25,6 +25,7 @@ install:
         Import-Module Microsoft.Online.SharePoint.PowerShell -Force
         Import-Module SharePointPnpPowerShellOnline -Force
         Import-Module MSCloudLoginAssistant -Force
+        Import-Module AzureAD -Force
         Import-Module -Name "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
         Invoke-AppveyorInstallTask
 
