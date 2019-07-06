@@ -47,17 +47,6 @@ Configuration Master
             Ensure                   = "Present"
         }
 
-        EXOAntiPhishRule AntiPhishRule
-        {
-            Identity                  = "Test AntiPhish Rule"
-            AntiPhishPolicy           = "Test AntiPhish Policy"
-            Comments                  = "This is a Test Rule"
-            ExceptIfRecipientDomainIs = @("o365dsc.onmicrosoft.com")
-            Priority                  = 100
-            GlobalAdminAccount        = $GlobalAdmin
-            Ensure                    = "Present"
-        }
-
         O365User JohnSmith
         {
             UserPrincipalName  = "John.Smith@$Domain"
