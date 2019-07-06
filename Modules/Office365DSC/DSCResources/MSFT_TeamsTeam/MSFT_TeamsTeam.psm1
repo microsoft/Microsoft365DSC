@@ -161,20 +161,24 @@ function Get-TargetResource
                 Write-Verbose -Message "Teams with displayname $DisplayName doesn't exist"
                 return $nullReturn
             }
-            if ($team.Count -gt 1)
+            if ($team.Length -gt 1)
             {
                 throw "Duplicate Teams name $DisplayName exist in tenant"
             }
         }
 
         $Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object {$_.Role -eq "owner"}
+        if ($null -ne $Owners)
+        {
+            $Owners = $Owners.User
+        }
         Write-Verbose -Message "Found Team $($team.DisplayName)."
 
         return @{
             DisplayName                       = $team.DisplayName
             GroupID                           = $team.GroupId
             Description                       = $team.Description
-            Owner                             = $Owners.User
+            Owner                             = $Owners
             MailNickName                      = $team.MailNickName
             Visibility                        = $team.Visibility
             AllowAddRemoveApps                = $team.AllowAddRemoveApps
