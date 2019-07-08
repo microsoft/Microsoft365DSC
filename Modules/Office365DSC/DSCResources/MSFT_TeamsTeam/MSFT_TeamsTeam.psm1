@@ -23,7 +23,7 @@ function Get-TargetResource
         $MailNickName,
 
         [Parameter()]
-        [System.String
+        [System.String]
         $Owner,
 
         [Parameter()]
@@ -232,7 +232,7 @@ function Set-TargetResource
         $MailNickName,
 
         [Parameter()]
-        [System.String
+        [System.String]
         $Owner,
 
         [Parameter()]
@@ -381,7 +381,7 @@ function Test-TargetResource
         $MailNickName,
 
         [Parameter()]
-        [System.String
+        [System.String]
         $Owner,
 
         [Parameter()]
