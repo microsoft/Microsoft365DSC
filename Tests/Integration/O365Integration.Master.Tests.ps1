@@ -58,7 +58,7 @@ Configuration Master
             DependsOn          = "[O365Group]O365DSCCoreTeam"
         }
 
-        EXOAtpPolicyForO365 AntiPhishPolicy
+        <#EXOAtpPolicyForO365 AntiPhishPolicy
         {
             IsSingleInstance        = "Yes"
             AllowClickThrough       = $false
@@ -66,7 +66,7 @@ Configuration Master
             EnableATPForSPOTeamsODB = $true
             GlobalAdminAccount      = $GlobalAdmin
             Ensure                  = "Present"
-        }
+        }#>
 
         O365User JohnSmith
         {
