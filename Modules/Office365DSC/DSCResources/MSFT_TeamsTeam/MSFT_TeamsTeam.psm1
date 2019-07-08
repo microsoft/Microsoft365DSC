@@ -136,7 +136,7 @@ function Get-TargetResource
     }
 
     Write-Verbose -Message "Checking for existance of Team $DisplayName"
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount | Out-Null
 
     $CurrentParameters = $PSBoundParameters
 
@@ -203,6 +203,7 @@ function Get-TargetResource
     }
     catch
     {
+        Write-Verbose "Returning empty results due to error: $_"
         return $nullReturn
     }
 }
@@ -467,8 +468,8 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+    #Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    #Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
@@ -478,31 +479,10 @@ function Test-TargetResource
     {
         $ValuesToCheck.Remove("Owner")
     }
-
+    Write-Verbose "CurrentValues: " $CurrentValues
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "AllowCreateUpdateRemoveTabs", `
-                                                                   "Description", `
-                                                                   "MailNickName", `
-                                                                   "Visibility", `
-                                                                   "AddAllowRemoveApps", `
-                                                                   "AllowGiphy", `
-                                                                   "GiphyContent", `
-                                                                   "AllowStickersandMemes", `
-                                                                   "AllowCustomMemes", `
-                                                                   "AllowUserEditMessage", `
-                                                                   "AllowUserDeleteMessages", `
-                                                                   "AllowOwnerDeleteMessages", `
-                                                                   "AllowDeleteChannels", `
-                                                                   "AllowCreateUpdateRemoveConnectors", `
-                                                                   "AllowCreateUpdateRemoveTabs", `
-                                                                   "AllowTeamMentions", `
-                                                                   "AllowChannelMentions", `
-                                                                   "AllowGuestCreateUpdateChannels", `
-                                                                   "AllowGuestDeleteChannels", `
-                                                                   "AllowCreateUpdateChannels", `
-                                                                   "DisplayName")
+                                                  -ValuesToCheck $ValuesToCheck
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

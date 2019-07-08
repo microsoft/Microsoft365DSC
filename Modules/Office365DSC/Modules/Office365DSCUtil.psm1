@@ -1145,25 +1145,32 @@ function Convert-O365DscHashtableToString
     $values = @()
     foreach ($pair in $Hashtable.GetEnumerator())
     {
-        if ($pair.Value -is [System.Array])
+        try
         {
-            $str = "$($pair.Key)=($($pair.Value -join ","))"
-        }
-        elseif ($pair.Value -is [System.Collections.Hashtable])
-        {
-            $str = "$($pair.Key)={$(Convert-O365DscHashtableToString -Hashtable $pair.Value)}"
-        }
-        else
-        {
-            if ($null -eq $pair.Value)
+            if ($pair.Value -is [System.Array])
             {
-                $str = "$($pair.Key)=`$null"
+                $str = "$($pair.Key)=($($pair.Value -join ","))"
             }
-            else {
-                $str = "$($pair.Key)=$($pair.Value)"
+            elseif ($pair.Value -is [System.Collections.Hashtable])
+            {
+                $str = "$($pair.Key)={$(Convert-O365DscHashtableToString -Hashtable $pair.Value)}"
             }
+            else
+            {
+                if ($null -eq $pair.Value)
+                {
+                    $str = "$($pair.Key)=`$null"
+                }
+                else {
+                    $str = "$($pair.Key)=$($pair.Value)"
+                }
+            }
+            $values += $str
         }
-        $values += $str
+        catch
+        {
+            Write-Warning "There was an error converting the Hashtable to a string: $_"
+        }
     }
 
     [array]::Sort($values)
