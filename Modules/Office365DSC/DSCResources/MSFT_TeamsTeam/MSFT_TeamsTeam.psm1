@@ -23,7 +23,7 @@ function Get-TargetResource
         $MailNickName,
 
         [Parameter()]
-        [System.String[]]
+        [System.String
         $Owner,
 
         [Parameter()]
@@ -170,7 +170,7 @@ function Get-TargetResource
         $Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object {$_.Role -eq "owner"}
         if ($null -ne $Owners)
         {
-            $Owners = $Owners.User
+            $Owners = $Owners.User.ToString()
         }
         Write-Verbose -Message "Found Team $($team.DisplayName)."
 
@@ -232,7 +232,7 @@ function Set-TargetResource
         $MailNickName,
 
         [Parameter()]
-        [System.String[]]
+        [System.String
         $Owner,
 
         [Parameter()]
@@ -381,7 +381,7 @@ function Test-TargetResource
         $MailNickName,
 
         [Parameter()]
-        [System.String[]]
+        [System.String
         $Owner,
 
         [Parameter()]
