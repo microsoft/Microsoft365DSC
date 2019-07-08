@@ -482,7 +482,7 @@ function Test-TargetResource
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck
+                                                  -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
