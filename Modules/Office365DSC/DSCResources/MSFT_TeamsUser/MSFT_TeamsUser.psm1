@@ -15,7 +15,7 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("Member", "Owner")]
-        $Role,
+        $Role = "Member",
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -50,18 +50,13 @@ function Get-TargetResource
 
     try
     {
-        if ($null -eq $Role)
-        {
-            $allMembers = Get-TeamUser -GroupId $team.GroupId -ErrorAction SilentlyContinue
-        }
-        else
-        {
-            $allMembers = Get-TeamUser -GroupId $team.GroupId -Role $Role -ErrorAction SilentlyContinue
-        }
+        Write-Verbose "Retrieving user without a specific Role specified"
+        $allMembers = Get-TeamUser -GroupId $team.GroupId -ErrorAction SilentlyContinue
     }
     catch
     {
         Write-Warning "The current user doesn't have the rights to access the list of members for Team {$($TeamName)}."
+        Write-Verbose $_
         return $nullReturn
     }
 
@@ -99,7 +94,7 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("Member", "Owner")]
-        $Role,
+        $Role = "Member",
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -159,7 +154,7 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("Member", "Owner")]
-        $Role,
+        $Role = "Member",
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -174,6 +169,11 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of member $User to Team $TeamName"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    if ($null -eq $Role)
+    {
+        $CurrentValues.Remove("Role")
+    }
 
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -202,11 +202,6 @@ function Export-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $User,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("Member", "Owner")]
-        $Role,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

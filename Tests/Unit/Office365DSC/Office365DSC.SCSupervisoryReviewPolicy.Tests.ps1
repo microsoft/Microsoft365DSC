@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SCRetentionCompliancePolicy"
+    -DscResource "SCSupervisoryReviewPolicy"
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -32,11 +32,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Mock -CommandName Remove-RetentionCompliancePolicy -MockWith {
+        Mock -CommandName Remove-SupervisoryReviewPolicyV2 -MockWith {
 
         }
 
-        Mock -CommandName New-RetentionCompliancePolicy -MockWith {
+        Mock -CommandName Set-SupervisoryReviewPolicyV2 -MockWith {
+
+        }
+
+        Mock -CommandName New-SupervisoryReviewPolicyV2 -MockWith {
             return @{
 
             }
@@ -47,11 +51,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
-                SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
                 Name               = 'TestPolicy'
+                Reviewers          = @("admin@contoso.com")
             }
 
-            Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
+            Mock -CommandName Get-SupervisoryReviewPolicyV2 -MockWith {
                 return $null
             }
 
@@ -72,14 +76,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
-                SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
                 Name               = 'TestPolicy'
+                Reviewers          = @("admin@contoso.com")
             }
 
-            Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
+            Mock -CommandName Get-SupervisoryReviewPolicyV2 -MockWith {
                 return @{
-                    Name               = "TestPolicy"
-                    SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
+                    Name      = "TestPolicy"
+                    Comment   = "Hello World"
+                    Reviewers = @("admin@contoso.com")
                 }
             }
 
@@ -100,13 +105,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Ensure             = 'Absent'
                 GlobalAdminAccount = $GlobalAdminAccount
-                SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
                 Name               = 'TestPolicy'
+                Reviewers          = @("admin@contoso.com")
             }
 
-            Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
+            Mock -CommandName Get-SupervisoryReviewPolicyV2 -MockWith {
                 return @{
-                    Name = "TestPolicy"
+                    Name      = "TestPolicy"
+                    Comment   = "Hello World"
+                    Reviewers = @("admin@contoso.com")
                 }
             }
 
@@ -127,12 +134,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 Name               = "Test Policy"
+                Reviewers          = @("admin@contoso.com")
             }
 
-            Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
+            Mock -CommandName Get-SupervisoryReviewPolicyV2 -MockWith {
                 return @{
-                    Name                         = "Test Policy"
-                    SharePointLocation           = "https://o365dsc1.sharepoint.com"
+                    Name      = "TestPolicy"
+                    Comment   = "Hello World"
+                    Reviewers = @("admin@contoso.com")
                 }
             }
 
