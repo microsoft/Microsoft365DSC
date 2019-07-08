@@ -1523,9 +1523,9 @@ function Test-TeamsServiceConnection
     )
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
-    Import-Module MicrosoftTeams -Force
+    Import-Module MicrosoftTeams -Force | Out-Null
     Write-Verbose -Message "Verifying the LCM connection state to Teams"
-    Test-MSCloudLogin -Platform MicrosoftTeams -o365Credential $GlobalAdminAccount
+    Test-MSCloudLogin -Platform MicrosoftTeams -o365Credential $GlobalAdminAccount | Out-Null
 }
 
 function Test-SecurityAndComplianceConnection

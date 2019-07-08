@@ -468,8 +468,8 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    #Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
-    #Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
@@ -477,9 +477,9 @@ function Test-TargetResource
 
     if ($null -eq $CurrentValues.Owner)
     {
-        $ValuesToCheck.Remove("Owner")
+        $ValuesToCheck.Remove("Owner") | Out-Null
     }
-    Write-Verbose "CurrentValues: " $CurrentValues
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck $ValuesToCheck
