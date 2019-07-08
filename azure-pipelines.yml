@@ -15,7 +15,7 @@ steps:
   inputs:
     targetType: 'inline'
     failOnStderr: true
-    script: Install-Module Microsoft.Online.SharePoint.PowerShell -RequiredVersion "16.0.8316.0" -Force;Install-Module AzureAD -RequiredVersion "2.0.2.4" -Force; Install-Module MicrosoftTeams -RequiredVersion "1.0.0" -Force;Install-Module SharePointPnPPowerShellOnline -RequiredVersion "3.5.1901.0" -Force;Install-Module MSOnline -Force;Install-Module ReverseDSC -Requiredversion "1.9.4.4" -Force;Install-Module MSCloudLoginAssistant -Force -RequiredVersion "0.5.1";Import-Module '$(build.artifactstagingdirectory)\BuildFiles\Tests\TestHarness.psm1' -Force;Invoke-TestHarness
+    script: Install-Module Microsoft.Online.SharePoint.PowerShell -RequiredVersion "16.0.8316.0" -Force;Install-Module AzureAD -RequiredVersion "2.0.2.4" -Force; Install-Module MicrosoftTeams -RequiredVersion "1.0.0" -Force;Install-Module SharePointPnPPowerShellOnline -RequiredVersion "3.5.1901.0" -Force;Install-Module MSOnline -Force;Install-Module ReverseDSC -Requiredversion "1.9.4.4" -Force;Install-Module MSCloudLoginAssistant -Force -RequiredVersion "0.5.2";Import-Module '$(build.artifactstagingdirectory)\BuildFiles\Tests\TestHarness.psm1' -Force;Invoke-TestHarness
 - task: PublishBuildArtifacts@1
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
