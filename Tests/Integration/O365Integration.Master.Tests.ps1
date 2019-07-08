@@ -52,7 +52,7 @@ Configuration Master
             Identity           = "Test AntiPhish Rule"
             AntiPhishPolicy    = "Test AntiPhish Policy"
             Comments           = "This is a test Rule"
-            SentToMemberOf     = "Office365DSC Core Team"
+            SentToMemberOf     = @("O365DSCCore@o365dsc.onmicrosoft.com")
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
             DependsOn          = "[O365Group]O365DSCCoreTeam"
