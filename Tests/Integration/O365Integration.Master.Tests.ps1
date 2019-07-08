@@ -47,6 +47,27 @@ Configuration Master
             Ensure                   = "Present"
         }
 
+        EXOAntiPhishRule AntiPhishRule
+        {
+            Identity           = "Test AntiPhish Rule"
+            AntiPhishPolicy    = "Test AntiPhish Policy"
+            Comments           = "This is a test Rule"
+            SentToMemberOf     = "Office365DSC Core Team"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+            DependsOn          = "[O365Group]O365DSCCoreTeam"
+        }
+
+        EXOAtpPolicyForO365 AntiPhishPolicy
+        {
+            IsSingleInstance        = "Yes"
+            AllowClickThrough       = $false
+            BlockUrls               = "https://badurl.contoso.com"
+            EnableATPForSPOTeamsODB = $true
+            GlobalAdminAccount      = $GlobalAdmin
+            Ensure                  = "Present"
+        }
+
         O365User JohnSmith
         {
             UserPrincipalName  = "John.Smith@$Domain"
@@ -70,6 +91,7 @@ Configuration Master
             Members              = @("John.Smith@$Domain")
             GlobalAdminAccount   = $GlobalAdmin
             Ensure               = "Present"
+            DependsOn            = "[O365User]JohnSmith"
         }
 
         TeamsTeam TeamAlpha
