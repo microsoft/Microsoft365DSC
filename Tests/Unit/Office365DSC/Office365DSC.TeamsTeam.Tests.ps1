@@ -78,12 +78,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DisplayName        = "TestTeam"
                 Ensure             = "Present"
                 GroupID            = "1234-1234-1234-1234"
+                Owner              = "owner@contoso.com"
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -Command Get-TeamUser -MockWith {
+                return @(
+                    @{
+                        User = "owner@contoso.com"
+                        Role = "owner"
+                    }
+                )
             }
 
             Mock -CommandName Get-Team -MockWith {
                 return @{
                     DisplayName = "TestTeam"
+                    GroupID     = "1234-1234-1234-1234"
+                    Visibility  = "Private"
+                    Archived    = $false
                 }
             }
 
@@ -102,6 +115,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Present"
                 Description        = "Test Team"
                 Visibility         = "Private"
+                Owner              = "owner@contoso.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -111,9 +125,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -Command Get-TeamUser -MockWith {
+                return @{
+                    User = "owner@contoso.com"
+                    Role = "owner"
+                }
+            }
+
             Mock -CommandName Get-Team -MockWith {
                 return @{
-                    DisplayName = "TestTeam"
+                    DisplayName = "Test Team"
+                    GroupID     = "1234-1234-1234-1234"
+                    Description = "Different Description"
+                    Visibility  = "Private"
+                    Archived    = $false
                 }
             }
 
@@ -140,9 +165,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
+            Mock -Command Get-TeamUser -MockWith {
+                return @(
+                    @{
+                        User = "owner@contoso.com"
+                        Role = "owner"
+                    }
+                )
+            }
+
             Mock -CommandName Get-Team -MockWith {
                 return @{
-                    DisplayName = "Test Team"
+                    DisplayName  = "Test Team"
+                    GroupID      = "1234-1234-1234-1234"
+                    MailNickName = "testteam"
+                    Visibility   = "Private"
+                    Archived     = $false
                 }
             }
 
@@ -162,7 +200,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-
         Context -Name "Remove the Team" -Fixture {
             $testParams = @{
                 DisplayName        = "Test Team"
@@ -177,9 +214,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-Team -MockWith {
                 return @{
                     DisplayName = "Test Team"
+                    GroupID      = "1234-1234-1234-1234"
+                    MailNickName = "testteam"
+                    Visibility   = "Private"
+                    Archived     = $false
                 }
             }
 
+            Mock -Command Get-TeamUser -MockWith {
+                return @(
+                    @{
+                        User = "owner@contoso.com"
+                        Role = "owner"
+                    }
+                )
+            }
 
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present"

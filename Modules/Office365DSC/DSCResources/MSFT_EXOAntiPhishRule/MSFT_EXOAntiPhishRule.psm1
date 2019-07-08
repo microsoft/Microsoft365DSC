@@ -284,6 +284,12 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
+    if ($null -eq $PSBoundParameters.Enabled)
+    {
+        Write-Verbose "Removing Enabled from the list of Parameters to Test"
+        $ValuesToCheck.Remove("Enabled") | Out-Null
+    }
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck $ValuesToCheck.Keys

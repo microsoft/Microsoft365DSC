@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+* BREAKING CHANGES
+  * O365Group
+    * ManagedBy is now a mandatory property
 * Modules
   * Added embedded Log Engine
 * SCRetentionCompliancePolicy

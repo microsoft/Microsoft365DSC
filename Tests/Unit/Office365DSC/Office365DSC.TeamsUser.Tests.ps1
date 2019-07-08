@@ -209,7 +209,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 TeamName           = "TestTeam"
-                Role               = "Member"
                 User               = "JohnSmith@contoso.onmicrosoft.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }

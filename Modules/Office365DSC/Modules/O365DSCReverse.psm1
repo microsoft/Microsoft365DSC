@@ -445,6 +445,7 @@ function Start-O365ConfigurationExtract
         {
             Write-Information "    - [$i/$($groups.Length)] $($group.DisplayName)"
             $DSCContent += Export-TargetResource -DisplayName $group.DisplayName `
+                                                 -ManagedBy "DummyUser" `
                                                  -MailNickName $group.MailNickName `
                                                  -GlobalAdminAccount $GlobalAdminAccount
             $i++
@@ -945,7 +946,6 @@ function Start-O365ConfigurationExtract
                     Write-Information "        - [$i/$($users.Length)] $($user.User)"
                     $partialContent = Export-TargetResource -TeamName $team.DisplayName `
                                                         -User $user.User `
-                                                        -Role $user.Role `
                                                         -GlobalAdminAccount $GlobalAdminAccount
                     if ($partialContent.ToLower().Contains($principal.ToLower()))
                     {

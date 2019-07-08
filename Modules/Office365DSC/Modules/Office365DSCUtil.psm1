@@ -1145,19 +1145,32 @@ function Convert-O365DscHashtableToString
     $values = @()
     foreach ($pair in $Hashtable.GetEnumerator())
     {
-        if ($pair.Value -is [System.Array])
+        try
         {
-            $str = "$($pair.Key)=($($pair.Value -join ","))"
+            if ($pair.Value -is [System.Array])
+            {
+                $str = "$($pair.Key)=($($pair.Value -join ","))"
+            }
+            elseif ($pair.Value -is [System.Collections.Hashtable])
+            {
+                $str = "$($pair.Key)={$(Convert-O365DscHashtableToString -Hashtable $pair.Value)}"
+            }
+            else
+            {
+                if ($null -eq $pair.Value)
+                {
+                    $str = "$($pair.Key)=`$null"
+                }
+                else {
+                    $str = "$($pair.Key)=$($pair.Value)"
+                }
+            }
+            $values += $str
         }
-        elseif ($pair.Value -is [System.Collections.Hashtable])
+        catch
         {
-            $str = "$($pair.Key)={$(Convert-O365DscHashtableToString -Hashtable $pair.Value)}"
+            Write-Warning "There was an error converting the Hashtable to a string: $_"
         }
-        else
-        {
-            $str = "$($pair.Key)=$($pair.Value)"
-        }
-        $values += $str
     }
 
     [array]::Sort($values)
@@ -1195,7 +1208,7 @@ function New-EXOAntiPhishRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'New' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'New')
         Write-Verbose -Message "Creating New AntiPhishRule $($BuiltParams.Name) with values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
         New-AntiPhishRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
@@ -1510,9 +1523,9 @@ function Test-TeamsServiceConnection
     )
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
-    Import-Module MicrosoftTeams -Force
+    Import-Module MicrosoftTeams -Force | Out-Null
     Write-Verbose -Message "Verifying the LCM connection state to Teams"
-    Test-MSCloudLogin -Platform MicrosoftTeams -o365Credential $GlobalAdminAccount
+    Test-MSCloudLogin -Platform MicrosoftTeams -o365Credential $GlobalAdminAccount | Out-Null
 }
 
 function Test-SecurityAndComplianceConnection

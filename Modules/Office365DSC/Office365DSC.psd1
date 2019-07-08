@@ -50,13 +50,13 @@
   # ProcessorArchitecture = ''
 
   # Modules that must be imported into the global environment prior to importing this module
-  RequiredModules = @(@{ModuleName = "ReverseDSC"; ModuleVersion = "1.9.4.4"; },
-                      @{ModuleName = "MSOnline"; ModuleVersion = "1.1.183.17"; },
-                      @{ModuleName = "SharePointPnPPowerShellOnline"; ModuleVersion = "3.5.1901.0"; },
-                      @{ModuleName = "Microsoft.Online.SharePoint.PowerShell"; ModuleVersion = "16.0.8316.0"; },
-                      @{ModuleName = "MicrosoftTeams"; ModuleVersion = "1.0.0"; },
-                      @{ModuleName = "AzureAD"; ModuleVersion = "2.0.2.4"; },
-                      @{ModuleName = "MSCloudLoginAssistant"; ModuleVersion = "0.5.1"; })
+  RequiredModules = @(@{ModuleName = "ReverseDSC"; RequiredVersion = "1.9.4.4"; },
+                      @{ModuleName = "MSOnline"; RequiredVersion = "1.1.183.17"; },
+                      @{ModuleName = "SharePointPnPPowerShellOnline"; RequiredVersion = "3.5.1901.0"; },
+                      @{ModuleName = "Microsoft.Online.SharePoint.PowerShell"; RequiredVersion = "16.0.8316.0"; },
+                      @{ModuleName = "MicrosoftTeams"; RequiredVersion = "1.0.0"; },
+                      @{ModuleName = "AzureAD"; RequiredVersion = "2.0.2.4"; },
+                      @{ModuleName = "MSCloudLoginAssistant"; RequiredVersion = "0.5.2"; })
 
   # Assemblies that must be loaded prior to importing this module
   # RequiredAssemblies = @()
@@ -71,8 +71,8 @@
   # FormatsToProcess = @()
 
   # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-  NestedModules = @('modules\Office365DSCUtil.psm1', 'modules\O365DSCReverseGUI.psm1', 'modules\O365DSCReverse.psm1',
-                    'modules\O365DSCLogEngine.psm1')
+  NestedModules = @('modules\Office365DSCUtil.psm1', 'modules\O365DSCReverseGUI.psm1',
+                    'modules\O365DSCReverse.psm1', 'modules\O365DSCLogEngine.psm1')
 
   # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
   #FunctionsToExport = @()
