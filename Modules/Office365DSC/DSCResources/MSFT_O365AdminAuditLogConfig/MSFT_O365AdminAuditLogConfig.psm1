@@ -11,7 +11,7 @@ function Get-TargetResource
 
         [Parameter()]
         [ValidateSet('Present')]
-        [string]
+        [System.String]
         $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
@@ -133,7 +133,7 @@ function Test-TargetResource
 
         [Parameter()]
         [ValidateSet('Present')]
-        [string]
+        [System.String]
         $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
