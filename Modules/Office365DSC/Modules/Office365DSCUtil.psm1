@@ -1835,7 +1835,11 @@ function Get-SPOAdministrationUrl
     (
         [Parameter(Mandatory=$false)]
         [switch]
-        $UseMFA
+        $UseMFA,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
     )
     if ($UseMFA)
     {
@@ -1846,7 +1850,7 @@ function Get-SPOAdministrationUrl
         $UseMFASwitch = @{}
     }
     Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
-    Test-AzureADLogin @useMFASwitch
+    Test-MSCloudLogin -Platform "AzureAD" -o365Credential $GlobalAdminAccount | Out-Null
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
     $defaultDomain = Get-AzureADDomain | Where-Object {$_.Name -like "*.onmicrosoft.com" -and $_.IsInitial -eq $true} # We don't use IsDefault here because the default could be a custom domain
     $global:tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.com",""
