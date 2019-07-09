@@ -46,8 +46,21 @@ function Start-O365ConfigurationExtract
                                    -Description "Default Valus Used to Ensure a Configuration Data File is Generated"
     # Obtain central administration url from a User Principal Name
     $centralAdminUrl = $null
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    $centralAdminUrl = Get-SPOAdministrationUrl
+    $NeedToConnectToO365Admin = $false
+    foreach ($Component in $ComponentsToExtract)
+    {
+        if ($Component -like 'chckO365*')
+        {
+            $NeedToConnectToO365Admin = $true
+            break
+        }
+    }
+    if ($NeedToConnectToO365Admin)
+    {
+        Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    }
+
+    $centralAdminUrl = Get-SPOAdministrationUrl -GlobalAdminAccount $GlobalAdminAccount
 
     # Add the GlobalAdminAccount to the Credentials List
     Save-Credentials -UserName "globaladmin"
@@ -503,7 +516,19 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
-    Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
+    $NeedToConnectToSecurityAndCompliance = $false
+    foreach ($Component in $ComponentsToExtract)
+    {
+        if ($Component -like 'chckSC*')
+        {
+            $NeedToConnectToSecurityAndCompliance = $true
+            break
+        }
+    }
+    if ($NeedToConnectToSecurityAndCompliance)
+    {
+        Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
+    }
 
     #region "SCRetentionCompliancePolicy"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSCRetentionCompliancePolicy"))
@@ -874,8 +899,20 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    $Teams = Get-Team
+    $NeedToConnectToTeams = $false
+    foreach ($Component in $ComponentsToExtract)
+    {
+        if ($Component -like 'chckTeams*')
+        {
+            $NeedToConnectToTeams = $true
+            break
+        }
+    }
+    if ($NeedToConnectToTeams)
+    {
+        Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+        $Teams = Get-Team
+    }
 
     #region "TeamsTeam"
     if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsTeam"))
