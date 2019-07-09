@@ -48,10 +48,6 @@ function Start-O365ConfigurationExtract
     $centralAdminUrl = $null
     Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $centralAdminUrl = Get-SPOAdministrationUrl
-    Add-ConfigurationDataEntry -Node "NonNodeData" `
-                               -Key "CentralAdminUrl" `
-                               -Value $centralAdminUrl `
-                               -Description "Url of the SharePoint Central Adminsitration"
 
     # Add the GlobalAdminAccount to the Credentials List
     Save-Credentials -UserName "globaladmin"
@@ -152,9 +148,9 @@ function Start-O365ConfigurationExtract
             Write-Verbose -Message "    - [$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)}"
 
             $partialContent = Export-TargetResource -Identity $DkimSigningConfig.Identity -GlobalAdminAccount $GlobalAdminAccount
-            if ($partialContent.ToLower().IndexOf($principal) -gt 0)
+            if ($partialContent.ToLower().IndexOf($organization) -gt 0)
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape($principal), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
+                $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
             }
             $DSCContent += $partialContent
             $i++
@@ -347,9 +343,9 @@ function Start-O365ConfigurationExtract
         {
             $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $organization + "`""), "`$ConfigurationData.NonNodeData.OrganizationName"
         }
-        if ($partialContent.ToLower().IndexOf($principal) -gt 0)
+        if ($partialContent.ToLower().IndexOf($organization) -gt 0)
         {
-            $partialContent = $partialContent -ireplace [regex]::Escape($principal), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
+            $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
         }
         $DSCContent += $partialContent
     }
@@ -412,10 +408,10 @@ function Start-O365ConfigurationExtract
                 {
                     $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
                 }
-                if ($partialContent.ToLower().IndexOf($principal) -gt 0)
+                if ($partialContent.ToLower().IndexOf($organization) -gt 0)
                 {
-                    $partialContent = $partialContent -ireplace [regex]::Escape($principal + ":"), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0]):"
-                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
+                    $partialContent = $partialContent -ireplace [regex]::Escape($organization + ":"), "`$(`$ConfigurationData.NonNodeData.OrganizationName):"
+                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
                 }
                 $DSCContent += $partialContent
             }
@@ -443,11 +439,17 @@ function Start-O365ConfigurationExtract
         $i = 1
         foreach ($group in $groups)
         {
+            $partialContent = ""
             Write-Information "    - [$i/$($groups.Length)] $($group.DisplayName)"
-            $DSCContent += Export-TargetResource -DisplayName $group.DisplayName `
+            $partialContent += Export-TargetResource -DisplayName $group.DisplayName `
                                                  -ManagedBy "DummyUser" `
                                                  -MailNickName $group.MailNickName `
                                                  -GlobalAdminAccount $GlobalAdminAccount
+            if ($partialContent.ToLower().IndexOf($organization) -gt 0)
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
+            }
+            $DSCContent += $partialContent
             $i++
         }
     }
@@ -494,7 +496,7 @@ function Start-O365ConfigurationExtract
             $partialContent = Export-TargetResource -CentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+                $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
             }
             $DSCContent += $partialContent
         }
@@ -598,7 +600,7 @@ function Start-O365ConfigurationExtract
 
                 if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
                 {
-                    $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+                    $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
                 }
                 $DSCContent += $partialContent
                 $i++
@@ -644,8 +646,8 @@ function Start-O365ConfigurationExtract
 
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
-                $partialContent = $partialContent -ireplace [regex]::Escape($principal), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
+                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
+                $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
             }
             $DSCContent += $partialContent
             $i++
@@ -675,7 +677,7 @@ function Start-O365ConfigurationExtract
                 $partialContent = Export-TargetResource -Url $hub.SiteUrl -CentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
                 if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
                 {
-                    $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+                    $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
                     $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0]).sharepoint.com/"
                 }
                 $DSCContent += $partialContent
@@ -743,7 +745,7 @@ function Start-O365ConfigurationExtract
 
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
             }
             $DSCContent += $partialContent
             $i++
@@ -776,7 +778,7 @@ function Start-O365ConfigurationExtract
 
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
             }
             $DSCContent += $partialContent
             $i++
@@ -808,7 +810,7 @@ function Start-O365ConfigurationExtract
 
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
             }
             $DSCContent += $partialContent
             $i++
@@ -840,7 +842,7 @@ function Start-O365ConfigurationExtract
 
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
             }
             $DSCContent += $partialContent
             $i++
@@ -949,7 +951,7 @@ function Start-O365ConfigurationExtract
                                                         -GlobalAdminAccount $GlobalAdminAccount
                     if ($partialContent.ToLower().Contains($principal.ToLower()))
                     {
-                        $partialContent = $partialContent -ireplace [regex]::Escape($principal), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
+                        $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
                     }
                     $DSCContent += $partialContent
                     $i++
