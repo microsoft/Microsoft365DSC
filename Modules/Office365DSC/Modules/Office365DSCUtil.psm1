@@ -1780,7 +1780,31 @@ function Get-UsersLicenses
    Office 365 Tenant. #>
 function Export-O365Configuration
 {
-    Show-O365GUI
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Switch]
+        $Quiet,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+    if (-not $Quiet)
+    {
+        Show-O365GUI -Path $Path
+    }
+    else
+    {
+        Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                                       -AllComponents `
+                                       -Path $Path
+    }
 }
 
 function Compare-SPOTheme

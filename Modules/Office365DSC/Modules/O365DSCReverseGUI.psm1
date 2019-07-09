@@ -1,5 +1,11 @@
 function Show-O365GUI
 {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path
+    )
     try
     {
         [CmdletBinding()]
@@ -485,7 +491,9 @@ function Show-O365GUI
                 try
                 {
                     $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force))
-                    Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount -ComponentsToExtract $SelectedComponents
+                    Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                                                   -ComponentsToExtract $SelectedComponents `
+                                                   -Path $Path
                 }
                 catch
                 {
