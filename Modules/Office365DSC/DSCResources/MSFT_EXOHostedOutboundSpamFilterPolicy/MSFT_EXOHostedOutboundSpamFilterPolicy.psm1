@@ -34,7 +34,7 @@ function Get-TargetResource
         $NotifyOutboundSpam = $true,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -44,11 +44,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Testing configuration of HostedOutboundSpamFilterPolicy for $Identity"
-
-    if ('Absent' -eq $Ensure)
-    {
-        throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Ensure value of 'Present'"
-    }
 
     if ('Default' -ne $Identity)
     {
@@ -130,7 +125,7 @@ function Set-TargetResource
         $NotifyOutboundSpam = $true,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -140,11 +135,6 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Testing configuration of HostedOutboundSpamFilterPolicy for $Identity"
-
-    if ('Absent' -eq $Ensure)
-    {
-        throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Ensure value of 'Present'"
-    }
 
     if ('Default' -ne $Identity)
     {
@@ -198,7 +188,7 @@ function Test-TargetResource
         $NotifyOutboundSpam = $true,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 

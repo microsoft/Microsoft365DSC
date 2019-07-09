@@ -151,22 +151,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
             }
         }
-
-        Context -Name "When the Ensure is set to Absent" -Fixture {
-            $testParams = @{
-                Name               = "TestMP"
-                Protocol           = "Local"
-                Type               = "SharePoint"
-                Ensure             = "Absent"
-                GlobalAdminAccount = $GlobalAdminAccount
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
-            }
-
-            It "Should throw and errors" {
-                { Get-TargetResource @testParams } | Should Throw "This resource cannot delete Result Sources. Please make sure you set its Ensure value to Present."
-                { Set-TargetResource @testParams } | Should Throw "This resource cannot delete Result Sources. Please make sure you set its Ensure value to Present."
-            }
-        }
     }
 }
 

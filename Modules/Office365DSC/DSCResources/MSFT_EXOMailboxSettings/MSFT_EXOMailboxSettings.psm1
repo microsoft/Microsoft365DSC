@@ -17,7 +17,7 @@ function Get-TargetResource
         $Locale,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 
@@ -74,7 +74,7 @@ function Set-TargetResource
         $Locale,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 
@@ -126,7 +126,7 @@ function Test-TargetResource
         $Locale,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 

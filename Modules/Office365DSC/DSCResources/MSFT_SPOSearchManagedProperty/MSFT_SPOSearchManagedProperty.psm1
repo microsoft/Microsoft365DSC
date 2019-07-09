@@ -84,7 +84,7 @@ function Get-TargetResource
         $CompanyNameExtraction,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 
@@ -98,11 +98,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for Managed Property instance $Name"
-
-    if ($Ensure -eq "Absent")
-    {
-        throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
-    }
 
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
@@ -287,7 +282,7 @@ function Set-TargetResource
         $CompanyNameExtraction,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 
@@ -301,11 +296,6 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for Managed Property instance $Name"
-
-    if ($Ensure -eq "Absent")
-    {
-        throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
-    }
 
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     $SearchConfigTemplatePath =  Join-Path -Path $PSScriptRoot `
@@ -705,7 +695,7 @@ function Test-TargetResource
         $CompanyNameExtraction,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 

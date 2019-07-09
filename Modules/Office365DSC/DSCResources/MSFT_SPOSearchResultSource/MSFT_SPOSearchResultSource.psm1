@@ -72,7 +72,7 @@ function Get-TargetResource
         $UseAutoDiscover,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 
@@ -86,11 +86,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for Result Source instance $Name"
-
-    if ($Ensure -eq "Absent")
-    {
-        throw "This resource cannot delete Result Sources. Please make sure you set its Ensure value to Present."
-    }
 
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
@@ -194,7 +189,7 @@ function Set-TargetResource
         $UseAutoDiscover,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 
@@ -208,11 +203,6 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for Result Source instance $Name"
-
-    if ($Ensure -eq "Absent")
-    {
-        throw "This resource cannot delete Result Sources. Please make sure you set its Ensure value to Present."
-    }
 
     Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose -Message "Reading SearchConfigurationSettings XML file"
@@ -393,7 +383,7 @@ function Test-TargetResource
         $UseAutoDiscover,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 

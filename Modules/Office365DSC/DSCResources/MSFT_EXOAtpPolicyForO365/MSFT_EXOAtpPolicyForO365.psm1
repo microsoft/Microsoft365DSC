@@ -34,7 +34,7 @@ function Get-TargetResource
         $TrackClicks = $true,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -44,11 +44,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AtpPolicyForO365 for $Identity"
-
-    if ('Absent' -eq $Ensure)
-    {
-        throw "EXOAtpPolicyForO365 configurations MUST specify Ensure value of 'Present'"
-    }
 
     if ('Default' -ne $Identity)
     {
@@ -129,7 +124,7 @@ function Set-TargetResource
         $TrackClicks = $true,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -139,11 +134,6 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of AtpPolicyForO365 for $Identity"
-
-    if ('Absent' -eq $Ensure)
-    {
-        throw "EXOAtpPolicyForO365 configurations MUST specify Ensure value of 'Present'"
-    }
 
     if ('Default' -ne $Identity)
     {
@@ -195,7 +185,7 @@ function Test-TargetResource
         $TrackClicks = $true,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
