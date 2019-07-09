@@ -51,7 +51,7 @@ function Show-O365GUI
         $chckO365Group.Top = 20
         $chckO365Group.AutoSize = $true;
         $chckO365Group.Name = "chckO365Group"
-        $chckO365Group.Checked = $false
+        $chckO365Group.Checked = $true
         $chckO365Group.Text = "Groups"
         $pnlO365.Controls.Add($chckO365Group);
 
@@ -237,7 +237,7 @@ function Show-O365GUI
         $chckSPOHubSite.Top = 40
         $chckSPOHubSite.AutoSize = $true;
         $chckSPOHubSite.Name = "chckSPOHubSite"
-        $chckSPOHubSite.Checked = $false
+        $chckSPOHubSite.Checked = $true
         $chckSPOHubSite.Text = "Hub Sites"
         $pnlSPO.Controls.Add($chckSPOHubSite)
 
@@ -245,7 +245,7 @@ function Show-O365GUI
         $chckSPOSearchManagedProperty.Top = 60
         $chckSPOSearchManagedProperty.AutoSize = $true;
         $chckSPOSearchManagedProperty.Name = "chckSPOSearchManagedProperty"
-        $chckSPOSearchManagedProperty.Checked = $false
+        $chckSPOSearchManagedProperty.Checked = $true
         $chckSPOSearchManagedProperty.Text = "Search Managed Properties"
         $pnlSPO.Controls.Add($chckSPOSearchManagedProperty)
 
@@ -285,7 +285,7 @@ function Show-O365GUI
         $chckSPOTheme.Top = 160
         $chckSPOTheme.AutoSize = $true;
         $chckSPOTheme.Name = "chckSPOTheme"
-        $chckSPOTheme.Checked = $false
+        $chckSPOTheme.Checked = $true
         $chckSPOTheme.Text = "Themes"
         $pnlSPO.Controls.Add($chckSPOTheme)
         #endregion
@@ -385,7 +385,7 @@ function Show-O365GUI
         $chckODSettings.Top = 0
         $chckODSettings.AutoSize = $true;
         $chckODSettings.Name = "chckODSettings"
-        $chckODSettings.Checked = $false
+        $chckODSettings.Checked = $true
         $chckODSettings.Text = "OneDrive Settings"
         $pnlOD.Controls.Add($chckODSettings)
         #endregion

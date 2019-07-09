@@ -1491,7 +1491,7 @@ function Test-PnPOnlineConnection
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     Write-Verbose -Message "Verifying the LCM connection state to SharePoint Online with PnP"
-    Test-MSCloudLogin -Platform PnP -o365Credential $GlobalAdminAccount
+    Connect-PnpOnline -Url $SiteUrl -Credential $GlobalAdminAccount
 }
 
 function Test-O365ServiceConnection
