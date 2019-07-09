@@ -120,27 +120,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'Test Fails When the Ensure Absent is specified' -Fixture {
-            $testParams = @{
-                IsSingleInstance   = 'Yes'
-                Ensure             = 'Absent'
-                Identity           = 'Default'
-                GlobalAdminAccount = $GlobalAdminAccount
-            }
-
-            It 'Should throw error from the Get method' {
-                { Get-TargetResource @testParams } | Should Throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Ensure value of 'Present'"
-            }
-
-            It 'Should throw error from the Set method' {
-                { Set-TargetResource @testParams } | Should Throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Ensure value of 'Present'"
-            }
-
-            It 'Should throw error from the Test method' {
-                { Test-TargetResource @testParams } | Should Throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Ensure value of 'Present'"
-            }
-        }
-
         Context -Name 'ReverseDSC Tests' -Fixture {
             $testParams = @{
                 IsSingleInstance   = 'Yes'

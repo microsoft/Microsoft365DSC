@@ -126,7 +126,7 @@ function Test-TargetResource
         $Locale,
 
         [Parameter()]
-        [ValidateSet("Present"]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 

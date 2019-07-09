@@ -214,21 +214,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "When the Ensure is set to Absent" -Fixture {
-            $testParams = @{
-                Name ="TestMP"
-                Type = "Text"
-                Ensure = "Absent"
-                GlobalAdminAccount = $GlobalAdminAccount
-                CentralAdminUrl = "https://contoso-admin.sharepoint.com"
-            }
-
-            It "Should throw and errors" {
-                { Get-TargetResource @testParams } | Should Throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
-                { Set-TargetResource @testParams } | Should Throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
-            }
-        }
-
         Context -Name "When Invalid values are used" -Fixture {
             $testParams = @{
                 Name ="TestMP"
