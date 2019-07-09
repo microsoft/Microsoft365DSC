@@ -11,7 +11,8 @@ function Get-TargetResource
 
         [Parameter()]
         [ValidateSet('Present')]
-        [string]$Ensure = 'Present',
+        [string]
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('Enabled', 'Disabled')]
@@ -74,7 +75,8 @@ function Set-TargetResource
 
         [Parameter()]
         [ValidateSet('Present')]
-        [string]$Ensure = 'Present',
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('Enabled', 'Disabled')]
@@ -130,8 +132,9 @@ function Test-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [string]$Ensure = 'Present',
+        [ValidateSet('Present')]
+        [string]
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('Enabled', 'Disabled')]
