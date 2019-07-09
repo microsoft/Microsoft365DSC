@@ -9,7 +9,15 @@ function Start-O365ConfigurationExtract
 
         [Parameter()]
         [System.String[]]
-        $ComponentsToExtract
+        $ComponentsToExtract,
+
+        [Parameter()]
+        [Switch]
+        $AllComponents,
+
+        [Parameter()]
+        [System.String]
+        $Path
     )
 
     $organization = ""
@@ -55,7 +63,7 @@ function Start-O365ConfigurationExtract
             break
         }
     }
-    if ($NeedToConnectToO365Admin)
+    if ($NeedToConnectToO365Admin -or $AllComponents)
     {
         Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     }
@@ -66,7 +74,9 @@ function Start-O365ConfigurationExtract
     Save-Credentials -UserName "globaladmin"
 
     #region "O365AdminAuditLogConfig"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckO365AdminAuditLogConfig"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckO365AdminAuditLogConfig")) -or
+        $AllComponents)
     {
         Write-Information "Extracting O365AdminAuditLogConfig..."
         Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
@@ -88,7 +98,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOAtpPolicyForO365"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOAtpPolicyForO365"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOAtpPolicyForO365")) -or
+        $AllComponents)
     {
         if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-AtpPolicyForO365)
         {
@@ -108,7 +120,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOCASMailboxPlan"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOCASMailboxPlan"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOCASMailboxPlan")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOCASMailboxPlan..."
         Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
@@ -127,7 +141,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOClientAccessRule"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOClientAccessRule"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOClientAccessRule")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOClientAccessRule..."
         Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
@@ -145,7 +161,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXODkimSigningConfig"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXODkimSigningConfig"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXODkimSigningConfig")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXODkimSigningConfig..."
         Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
@@ -172,7 +190,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOHostedConnectionFilterPolicy"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedConnectionFilterPolicy"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOHostedConnectionFilterPolicy")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOHostedConnectionFilterPolicy..."
         Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
@@ -190,7 +210,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOHostedContentFilterPolicy"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedContentFilterPolicy"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOHostedContentFilterPolicy")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOHostedContentFilterPolicy..."
         Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
@@ -208,7 +230,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOHostedContentFilterRule"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedContentFilterRule"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOHostedContentFilterRule")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOHostedContentFilterRule..."
         Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
@@ -226,7 +250,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOHostedOutboundSpamFilterPolicy"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedOutboundSpamFilterPolicy"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOHostedOutboundSpamFilterPolicy")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOHostedOutboundSpamFilterPolicy..."
         $EXOHostedOutboundSpamFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
@@ -239,7 +265,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOSafeAttachmentPolicy"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeAttachmentPolicy"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOSafeAttachmentPolicy")) -or
+        $AllComponents)
     {
         if (Confirm-ImportedCmdletIsAvailable -CmdletName GetSafeAttachmentPolicy)
         {
@@ -264,7 +292,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOSafeAttachmentRule"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeAttachmentRule"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOSafeAttachmentRule")) -or
+        $AllComponents)
     {
         if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
         {
@@ -289,7 +319,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOSafeLinksPolicy"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeLinksPolicy"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOSafeLinksPolicy")) -or
+        $AllComponents)
     {
         if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
         {
@@ -314,7 +346,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOSafeLinksRule"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeLinksRule"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOSafeLinksRule")) -or
+        $AllComponents)
     {
         if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
         {
@@ -339,7 +373,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOMailTips"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOMailTips"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOMailTips")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOMailTips..."
         Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
@@ -365,7 +401,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOSharedMailbox"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSharedMailbox"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOSharedMailbox")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOSharedMailbox..."
         $EXOSharedMailboxModulePath = Join-Path -Path $PSScriptRoot `
@@ -397,7 +435,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "O365User"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckO365User"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckO365User")) -or
+        $AllComponents)
     {
         Write-Information "Extracting O365User..."
         $O365UserModulePath = Join-Path -Path $PSScriptRoot `
@@ -434,7 +474,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "O365Group"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckO365Group"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckO365Group")) -or
+        $AllComponents)
     {
         Write-Information "Extracting O365Group..."
         $O365GroupModulePath = Join-Path -Path $PSScriptRoot `
@@ -469,7 +511,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOMailboxSettings"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOMailboxSettings"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOMailboxSettings")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOMailboxSettings..."
         $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `
@@ -495,7 +539,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "ODSettings"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckODSettings"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckODSettings")) -or
+        $AllComponents)
     {
         Write-Information "Extracting ODSettings..."
         $ODSettingsModulePath = Join-Path -Path $PSScriptRoot `
@@ -525,13 +571,15 @@ function Start-O365ConfigurationExtract
             break
         }
     }
-    if ($NeedToConnectToSecurityAndCompliance)
+    if ($NeedToConnectToSecurityAndCompliance -or $AllComponents)
     {
         Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
     }
 
     #region "SCRetentionCompliancePolicy"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSCRetentionCompliancePolicy"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCRetentionCompliancePolicy")) -or
+        $AllComponents)
     {
         Write-Information "Extracting SCRetentionCompliancePolicy..."
         $SCRetentionCompliancePolicyModulePath = Join-Path -Path $PSScriptRoot `
@@ -553,7 +601,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "SCRetentionComplianceRule"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSCRetentionComplianceRule"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCRetentionComplianceRule")) -or
+        $AllComponents)
     {
         Write-Information "Extracting SCRetentionComplianceRule..."
         $SCRetentionComplianceRuleModulePath = Join-Path -Path $PSScriptRoot `
@@ -575,7 +625,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region SPOApp
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOApp"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOApp")) -or
+        $AllComponents)
     {
         Write-Information "Extracting SPOApp..."
         $SPOAppModulePath = Join-Path -Path $PSScriptRoot `
@@ -647,7 +699,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "SPOSite"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSite"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOSite")) -or
+        $AllComponents)
     {
         Write-Information "Extracting SPOSite..."
         $SPOSiteModulePath = Join-Path -Path $PSScriptRoot `
@@ -681,7 +735,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "SPOHubSite"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOHubSite"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOHubSite")) -or
+        $AllComponents)
     {
         Write-Information "Extracting SPOHubSite..."
         $SPOHubSiteModulePath = Join-Path -Path $PSScriptRoot `
@@ -713,7 +769,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "SPOSearchResultSource"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSearchResultSource"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOSearchResultSource")) -or
+        $AllComponents)
     {
         $InfoMapping = @(
         @{
@@ -779,7 +837,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "SPOSearchManagedProperty"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSearchManagedProperty"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOSearchManagedProperty")) -or
+        $AllComponents)
     {
         Write-Information "Extracting SPOSearchManagedProperty..."
         $SPOSearchManagedPropertyModulePath = Join-Path -Path $PSScriptRoot `
@@ -812,7 +872,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region SPOSiteDesign
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSiteDesign"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOSiteDesign")) -or
+        $AllComponents)
     {
         Write-Information "Extracting SPOSiteDesign..."
         $SPOSiteDesignModulePath = Join-Path -Path $PSScriptRoot `
@@ -844,7 +906,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region SPOSiteDesignRights
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSiteDesignRights"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOSiteDesignRights")) -or
+        $AllComponents)
     {
         Write-Information "Extracting SPOSiteDesignRights..."
         $SPOSiteDesignModulePath = Join-Path -Path $PSScriptRoot `
@@ -876,7 +940,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region SPOStorageEntity
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOStorageEntity"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOStorageEntity")) -or
+        $AllComponents)
     {
         Write-Information "Extracting SPOStorageEntity..."
         $SPOModulePath = Join-Path -Path $PSScriptRoot `
@@ -908,14 +974,16 @@ function Start-O365ConfigurationExtract
             break
         }
     }
-    if ($NeedToConnectToTeams)
+    if ($NeedToConnectToTeams -or $AllComponents)
     {
         Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
         $Teams = Get-Team
     }
 
     #region "TeamsTeam"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsTeam"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckTeamsTeam")) -or
+        $AllComponents)
     {
         Write-Information "Extracting TeamsTeam..."
         $TeamsModulePath = Join-Path -Path $PSScriptRoot `
@@ -936,7 +1004,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "TeamsChannel"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsChannel"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckTeamsChannel")) -or
+        $AllComponents)
     {
         Write-Information "Extracting TeamsChannel..."
         $TeamsChannelModulePath = Join-Path -Path $PSScriptRoot `
@@ -964,7 +1034,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "TeamsUser"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsUser"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckTeamsUser")) -or
+        $AllComponents)
     {
         Write-Information "Extracting TeamsUser..."
         $TeamsModulePath = Join-Path -Path $PSScriptRoot `
@@ -1031,7 +1103,15 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region Prompt the user for a location to save the extract and generate the files
-    $OutputDSCPath = Read-Host "Destination Path"
+    if ($null -eq $Path)
+    {
+        $OutputDSCPath = Read-Host "Destination Path"
+    }
+    else
+    {
+        $OutputDSCPath = $Path
+    }
+
     while ((Test-Path -Path $OutputDSCPath -PathType Container -ErrorAction SilentlyContinue) -eq $false)
     {
         try
