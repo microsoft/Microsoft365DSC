@@ -10,7 +10,7 @@ function Get-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [string]$Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
@@ -24,11 +24,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for Office 365 Audit Log"
-
-    if ('Absent' -eq $Ensure)
-    {
-        throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
-    }
 
     $nullReturn = @{
         IsSingleInstance                = $IsSingleInstance
@@ -78,7 +73,7 @@ function Set-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [string]$Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
@@ -92,11 +87,6 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for Office 365 Audit Log"
-
-    if ('Absent' -eq $Ensure)
-    {
-        throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
-    }
 
     Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
 
