@@ -383,7 +383,7 @@ function Test-TargetResource
         $UseAutoDiscover,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 
