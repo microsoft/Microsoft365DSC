@@ -1471,7 +1471,9 @@ function Test-SPOServiceConnection
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     Write-Verbose -Message "Verifying the LCM connection state to SharePoint Online"
-    Test-MSCloudLogin -Platform SharePointOnline -o365Credential $GlobalAdminAccount
+    Test-MSCloudLogin -Platform SharePointOnline `
+                      -O365Credential $GlobalAdminAccount `
+                      -ConnectionUrl $SPOCentralAdminUrl
 }
 
 function Test-PnPOnlineConnection
@@ -1491,7 +1493,9 @@ function Test-PnPOnlineConnection
     $VerbosePreference = 'SilentlyContinue'
     $WarningPreference = "SilentlyContinue"
     Write-Verbose -Message "Verifying the LCM connection state to SharePoint Online with PnP"
-    Connect-PnpOnline -Url $SiteUrl -Credential $GlobalAdminAccount
+    Test-MSCloudLogin -Platform PnP `
+                      -O365Credential $GlobalAdminAccount `
+                      -ConnectionUrl $SiteUrl
 }
 
 function Test-O365ServiceConnection

@@ -32,7 +32,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for SPO Theme $Name"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     $nullReturn = @{
         Name                = $Name
@@ -102,7 +104,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for SPO Theme $Name"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     if ($Ensure -eq "Present")
     {
@@ -199,9 +203,6 @@ function Test-TargetResource
     )
 
     Write-Verbose -Message "Testing configuration for SPO Theme $Name"
-
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"

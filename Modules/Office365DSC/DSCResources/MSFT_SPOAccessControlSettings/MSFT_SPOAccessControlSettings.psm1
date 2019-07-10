@@ -69,8 +69,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of SharePoint Online Access Control Settings"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
     $nullReturn = @{
         IsSingleInstance             = 'Yes'
         DisplayStartASiteOption      = $null
@@ -189,7 +190,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of SharePoint Online Access Control Settings"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("CentralAdminUrl")
@@ -276,8 +279,6 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing configuration of SharePoint Online Access Control Settings"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
@@ -324,8 +325,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-PnPOnlineConnection -GlobalAdminAccount $GlobalAdminAccount -SiteUrl $CentralAdminUrl
-
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "SPOAccessControlSettings " + (New-GUID).ToString() + "`r`n"

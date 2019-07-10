@@ -99,7 +99,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for Managed Property instance $Name"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     $nullReturn = @{
         Name                        = $Name
@@ -297,7 +299,10 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for Managed Property instance $Name"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
+
     $SearchConfigTemplatePath =  Join-Path -Path $PSScriptRoot `
                                            -ChildPath "..\..\Dependencies\SearchConfigurationSettings.xml" `
                                            -Resolve

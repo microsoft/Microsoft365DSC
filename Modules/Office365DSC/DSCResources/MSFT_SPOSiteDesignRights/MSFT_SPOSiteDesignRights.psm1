@@ -33,7 +33,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesignRights for $SiteDesignTitle"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
 
     $nullReturn = @{
         SiteDesignTitle    = $SiteDesignTitle
@@ -115,7 +117,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for SPO SiteDesignRights for $SiteDesignTitle"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
 
     $cursiteDesign = Get-PnPSiteDesign -Identity $SiteDesignTitle
     if ($null -eq $cursiteDesign)
@@ -243,7 +247,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
 
     $content = ""

@@ -53,21 +53,6 @@ function Start-O365ConfigurationExtract
                                    -Value "0" `
                                    -Description "Default Valus Used to Ensure a Configuration Data File is Generated"
     # Obtain central administration url from a User Principal Name
-    $centralAdminUrl = $null
-    $NeedToConnectToO365Admin = $false
-    foreach ($Component in $ComponentsToExtract)
-    {
-        if ($Component -like 'chckO365*')
-        {
-            $NeedToConnectToO365Admin = $true
-            break
-        }
-    }
-    if ($NeedToConnectToO365Admin -or $AllComponents)
-    {
-        Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    }
-
     $centralAdminUrl = Get-SPOAdministrationUrl -GlobalAdminAccount $GlobalAdminAccount
 
     # Add the GlobalAdminAccount to the Credentials List
@@ -445,7 +430,7 @@ function Start-O365ConfigurationExtract
                                         -Resolve
 
         Import-Module $O365UserModulePath | Out-Null
-        Connect-MsolService -Credential $GlobalAdminAccount
+        Test-MSCloudLogin -Platform MSOnline -O365Credential $GlobalAdminAccount
 
         $users = Get-MsolUser
         $partialContent = ""
@@ -486,7 +471,8 @@ function Start-O365ConfigurationExtract
         Import-Module $O365GroupModulePath | Out-Null
 
         # Other Groups
-        Connect-AzureAD -Credential $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform AzureAD
         $groups = Get-AzureADGroup | Where-Object -FilterScript {
                                          $_.MailNickName -ne "00000000-0000-0000-0000-000000000000"
                                      }
@@ -631,16 +617,19 @@ function Start-O365ConfigurationExtract
     {
         Write-Information "Extracting SPOApp..."
         $SPOAppModulePath = Join-Path -Path $PSScriptRoot `
-                                                     -ChildPath "..\DSCResources\MSFT_SPOApp\MSFT_SPOApp.psm1" `
-                                                     -Resolve
+                                      -ChildPath "..\DSCResources\MSFT_SPOApp\MSFT_SPOApp.psm1" `
+                                      -Resolve
 
         Import-Module $SPOAppModulePath | Out-Null
-        Test-PnPOnlineConnection -SiteUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -ConnectionUrl $centralAdminUrl `
+                          -O365Credential $GlobalAdminAccount `
+                          -Platform PnP
         try
         {
             $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
-            Test-PnPOnlineConnection -SiteUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
-
+            Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
+                              -O365Credential $GlobalAdminAccount `
+                              -Platform PnP
             $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
             $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
             $allFiles = $spfxFiles + $appFiles
@@ -683,7 +672,10 @@ function Start-O365ConfigurationExtract
                 $i++
             }
 
-            Test-PnPOnlineConnection -SiteUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
+            Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
+                              -O365Credential $GlobalAdminAccount `
+                              -Platform PnP
+
             foreach ($file in $allFiles)
             {
                 $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
@@ -710,7 +702,9 @@ function Start-O365ConfigurationExtract
 
         Import-Module $SPOSiteModulePath | Out-Null
 
-        Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                          -O365Credential $GlobalAdminAccount `
+                          -Platform SharePointOnline
         $invalidTemplates = @("SRCHCEN#0", "GROUP#0", "SPSMSITEHOST#0", "POINTPUBLISHINGHUB#0", "POINTPUBLISHINGTOPIC#0")
         $sites = Get-SPOSite -Limit All | Where-Object -FilterScript { $_.Template -notin $invalidTemplates }
 
@@ -748,7 +742,10 @@ function Start-O365ConfigurationExtract
         $partialContent = ""
         if ($centralAdminUrl)
         {
-            Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+            Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                              -O365Credential $GlobalAdminAccount `
+                              -Platform SharePointOnline
+
             $hubSites = Get-SPOHubSite
 
             $i = 1
@@ -811,7 +808,9 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSearchResultSourceModulePath | Out-Null
-        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                          -O365Credential $GlobalAdminAccount `
+                          -Platform PnP
         $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
         $sources =  $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
 
@@ -847,7 +846,9 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSearchManagedPropertyModulePath | Out-Null
-        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                          -O365Credential $GlobalAdminAccount `
+                          -Platform PnP
         $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
         $properties =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
 
@@ -882,7 +883,9 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSiteDesignModulePath | Out-Null
-        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                          -O365Credential $GlobalAdminAccount `
+                          -Platform PnP
 
         $siteDesigns = Get-PnPSiteDesign
 
@@ -916,7 +919,9 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSiteDesignModulePath | Out-Null
-        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                          -O365Credential $GlobalAdminAccount `
+                          -Platform PnP
 
         $siteDesigns = Get-PnPSiteDesign
 
@@ -951,47 +956,38 @@ function Start-O365ConfigurationExtract
 
         Import-Module $SPOModulePath | Out-Null
 
-        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                          -O365Credential $GlobalAdminAccount `
+                          -Platform PnP
 
         $storageEntities = Get-PnPStorageEntity
 
+        $i = 1
         foreach ($storageEntity in $storageEntities)
         {
-            Write-Information "    Storage Entity {$($storageEntity.Key)}"
+            Write-Information "    [$i/$($storageEntities.Length)] {$($storageEntity.Key)}"
             $DSCContent += Export-TargetResource -Key $storageEntity.Key `
-                                                -CentralAdminUrl $centralAdminUrl `
-                                                -GlobalAdminAccount $GlobalAdminAccount
+                                                 -SiteUrl $centralAdminUrl `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+            $i++
         }
     }
     #endregion
-
-    $NeedToConnectToTeams = $false
-    foreach ($Component in $ComponentsToExtract)
-    {
-        if ($Component -like 'chckTeams*')
-        {
-            $NeedToConnectToTeams = $true
-            break
-        }
-    }
-    if ($NeedToConnectToTeams -or $AllComponents)
-    {
-        Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-        $Teams = Get-Team
-    }
 
     #region "TeamsTeam"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckTeamsTeam")) -or
         $AllComponents)
     {
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform MicrosoftTeams
         Write-Information "Extracting TeamsTeam..."
         $TeamsModulePath = Join-Path -Path $PSScriptRoot `
                                     -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
                                     -Resolve
 
         Import-Module $TeamsModulePath | Out-Null
-
+        $teams = Get-Team
         $i = 1
         foreach ($team in $teams)
         {
@@ -1008,12 +1004,15 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckTeamsChannel")) -or
         $AllComponents)
     {
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform MicrosoftTeams
         Write-Information "Extracting TeamsChannel..."
         $TeamsChannelModulePath = Join-Path -Path $PSScriptRoot `
                                         -ChildPath "..\DSCResources\MSFT_TeamsChannel\MSFT_TeamsChannel.psm1" `
                                         -Resolve
 
         Import-Module $TeamsChannelModulePath | Out-Null
+        $teams = Get-Team
         $j = 1
         foreach ($team in $Teams)
         {
@@ -1038,12 +1037,15 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckTeamsUser")) -or
         $AllComponents)
     {
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform MicrosoftTeams
         Write-Information "Extracting TeamsUser..."
         $TeamsModulePath = Join-Path -Path $PSScriptRoot `
                                         -ChildPath "..\DSCResources\MSFT_TeamsUser\MSFT_TeamsUser.psm1" `
                                         -Resolve
 
         Import-Module $TeamsModulePath | Out-Null
+        $teams = Get-Team
         $j = 1
         foreach ($team in $Teams)
         {
@@ -1103,7 +1105,7 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region Prompt the user for a location to save the extract and generate the files
-    if ($null -eq $Path)
+    if ($null -eq $Path -or "" -eq $Path)
     {
         $OutputDSCPath = Read-Host "Destination Path"
     }

@@ -47,7 +47,9 @@ function Get-TargetResource
 
     try
     {
-        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                          -Platform PnP `
+                          -O365Credential $GlobalAdminAccount
         $app = Get-PnPApp -Identity $Identity -ErrorAction SilentlyContinue
         if ($null -eq $app)
         {
@@ -108,7 +110,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for app $Identity"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -Platform PnP `
+                      -O365Credential $GlobalAdminAccount
 
     $currentApp = Get-TargetResource @PSBoundParameters
 

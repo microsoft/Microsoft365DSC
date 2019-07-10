@@ -111,7 +111,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for SPO Sharing settings"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     $nullReturn = @{
         IsSingleInstance                           = 'Yes'
@@ -291,7 +293,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for SPO Sharing settings"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("CentralAdminUrl")
@@ -450,8 +454,6 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing configuration for SPO Sharing settings"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
@@ -591,7 +593,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-SPOServiceConnection -GlobalAdminAccount $GlobalAdminAccount -SPOCentralAdminUrl $CentralAdminUrl
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "SPOSharingSettings " + (New-GUID).ToString() + "`r`n"

@@ -35,7 +35,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Teams channel $DisplayName"
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform MicrosoftTeams
 
     $nullReturn = @{
         TeamName           = $TeamName
@@ -124,7 +125,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Teams channel $DisplayName"
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform MicrosoftTeams
 
     $channel = Get-TargetResource @PSBoundParameters
 
@@ -244,7 +246,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        TeamsChannel " + (New-GUID).ToString() + "`r`n"

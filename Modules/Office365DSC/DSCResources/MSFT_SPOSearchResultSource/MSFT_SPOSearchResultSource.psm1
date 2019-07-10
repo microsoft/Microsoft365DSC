@@ -87,7 +87,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Setting configuration for Result Source instance $Name"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
 
     $nullReturn = @{
         Name                = $Name
@@ -204,7 +206,10 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for Result Source instance $Name"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
+
     Write-Verbose -Message "Reading SearchConfigurationSettings XML file"
     $SearchConfigTemplatePath =  Join-Path -Path $PSScriptRoot `
                                            -ChildPath "..\..\Dependencies\SearchConfigurationSettings.xml" `

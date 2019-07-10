@@ -219,7 +219,7 @@ function Show-O365GUI
         $pnlSPO = New-Object System.Windows.Forms.Panel
         $pnlSPO.Top = 88 + $topBannerHeight
         $pnlSPO.Left = $SecondColumnLeft
-        $pnlSPO.Height = 180
+        $pnlSPO.Height = 200
         $pnlSPO.Width = 300
         $pnlSPO.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -287,8 +287,16 @@ function Show-O365GUI
         $chckSPOSiteDesignRights.Text = "Site Design Rights"
         $pnlSPO.Controls.Add($chckSPOSiteDesignRights)
 
+        $chckSPOStorageEntity= New-Object System.Windows.Forms.CheckBox
+        $chckSPOStorageEntity.Top = 160
+        $chckSPOStorageEntity.AutoSize = $true;
+        $chckSPOStorageEntity.Name = "chckSPOStorageEntity"
+        $chckSPOStorageEntity.Checked = $true
+        $chckSPOStorageEntity.Text = "Storage Entity"
+        $pnlSPO.Controls.Add($chckSPOStorageEntity)
+
         $chckSPOTheme = New-Object System.Windows.Forms.CheckBox
-        $chckSPOTheme.Top = 160
+        $chckSPOTheme.Top = 180
         $chckSPOTheme.AutoSize = $true;
         $chckSPOTheme.Name = "chckSPOTheme"
         $chckSPOTheme.Checked = $true
@@ -306,7 +314,7 @@ function Show-O365GUI
         $pnlMain.Controls.Add($imgSC)
 
         $pnlSC = New-Object System.Windows.Forms.Panel
-        $pnlSC.Top = $pnlSPO.Heigth + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 300
+        $pnlSC.Top = $pnlSPO.Heigth + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 320
         $pnlSC.Left = $SecondColumnLeft
         $pnlSC.Height = 40
         $pnlSC.Width = 300
