@@ -986,7 +986,7 @@ function Start-O365ConfigurationExtract
 
         Import-Module $SPOModulePath | Out-Null
 
-        $DSCContent += Export-TargetResource -ISSingleInstance 'Yes' `
+        $DSCContent += Export-TargetResource -IsSingleInstance 'Yes' `
                                              -CentralAdminUrl $centralAdminUrl `
                                              -GlobalAdminAccount $GlobalAdminAccount
     }
