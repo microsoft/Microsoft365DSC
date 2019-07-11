@@ -36,20 +36,6 @@ function Set-AdminAuditLogConfig{
     )
 }
 
-function Test-PnPOnlineConnection{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $SiteUrl
-    )
-}
-
-
 function Get-SupervisoryReviewPolicyV2
 {
     [CmdletBinding()]

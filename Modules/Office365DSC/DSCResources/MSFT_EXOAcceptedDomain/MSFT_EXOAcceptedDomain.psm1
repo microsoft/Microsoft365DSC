@@ -46,7 +46,9 @@ function Get-TargetResource
         Write-Verbose -Message "AcceptedDomain configuration for $($Identity) does not exist."
 
         # Check to see if $Identity matches a verified domain in the O365 Tenant
-        Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform AzureAD
+
         $VerifiedDomains = Get-AzureADDomain | Where-Object -FilterScript { $_.IsVerified }
         $MatchingVerifiedDomain = $VerifiedDomains | Where-Object -FilterScript { $_.Name -eq $Identity }
 

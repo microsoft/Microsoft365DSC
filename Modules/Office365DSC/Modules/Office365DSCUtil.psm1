@@ -1454,83 +1454,7 @@ function Set-EXOSafeLinksRule
     }
 }
 
-function Test-SPOServiceConnection
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $SPOCentralAdminUrl,
 
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    $VerbosePreference = 'SilentlyContinue'
-    $WarningPreference = "SilentlyContinue"
-    Write-Verbose -Message "Verifying the LCM connection state to SharePoint Online"
-    Test-MSCloudLogin -Platform SharePointOnline `
-                      -O365Credential $GlobalAdminAccount `
-                      -ConnectionUrl $SPOCentralAdminUrl
-}
-
-function Test-PnPOnlineConnection
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $SiteUrl,
-
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    $VerbosePreference = 'SilentlyContinue'
-    $WarningPreference = "SilentlyContinue"
-    Write-Verbose -Message "Verifying the LCM connection state to SharePoint Online with PnP"
-    Test-MSCloudLogin -Platform PnP `
-                      -O365Credential $GlobalAdminAccount `
-                      -ConnectionUrl $SiteUrl
-}
-
-function Test-O365ServiceConnection
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    $VerbosePreference = 'SilentlyContinue'
-    $WarningPreference = "SilentlyContinue"
-    Write-Verbose -Message "Verifying the LCM connection state to Microsoft Azure Active Directory Services"
-    Test-MSCloudLogin -Platform AzureAD -o365Credential $GlobalAdminAccount
-    Test-MSCloudLogin -Platform MSOnline -o365Credential $GlobalAdminAccount
-}
-
-function Test-TeamsServiceConnection
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    $VerbosePreference = 'SilentlyContinue'
-    $WarningPreference = "SilentlyContinue"
-    Import-Module MicrosoftTeams -Force | Out-Null
-    Write-Verbose -Message "Verifying the LCM connection state to Teams"
-    Test-MSCloudLogin -Platform MicrosoftTeams -o365Credential $GlobalAdminAccount | Out-Null
-}
 
 function Test-SecurityAndComplianceConnection
 {
@@ -1768,7 +1692,7 @@ function Get-UsersLicenses
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount -Platform MSOnline
 
     Write-Verbose -Message "Store all users licenses information in Global Variable for future usage."
 

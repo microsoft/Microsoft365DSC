@@ -974,6 +974,24 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region SPOTenantSettings
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOTenantSettings")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SPOTenantSettings..."
+        $SPOModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_SPOTenantSettings\MSFT_SPOTenantSettings.psm1" `
+                                    -Resolve
+
+        Import-Module $SPOModulePath | Out-Null
+
+        $DSCContent += Export-TargetResource -ISSingleInstance 'Yes' `
+                                             -CentralAdminUrl $centralAdminUrl `
+                                             -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "TeamsTeam"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckTeamsTeam")) -or
