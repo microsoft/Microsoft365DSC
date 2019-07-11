@@ -52,6 +52,7 @@ function Start-O365ConfigurationExtract
                                    -Key "ServerNumber" `
                                    -Value "0" `
                                    -Description "Default Value Used to Ensure a Configuration Data File is Generated"
+
     # Obtain central administration url from a User Principal Name
     $centralAdminUrl = Get-SPOAdministrationUrl -GlobalAdminAccount $GlobalAdminAccount
 
@@ -655,7 +656,7 @@ function Start-O365ConfigurationExtract
                 if ($null -ne $app)
                 {
                     $partialContent = Export-TargetResource -Identity $identity `
-                                                            -Path ("`$(`$ConfigurationData.NonNodeData.AppsLocation)" + $file.Name) `
+                                                            -Path ("`$PSScriptRoot\" + $file.Name) `
                                                             -CentralAdminUrl $centralAdminUrl `
                                                             -GlobalAdminAccount $GlobalAdminAccount
                 }
@@ -665,7 +666,7 @@ function Start-O365ConfigurationExtract
                     $app = Get-PnpApp -Identity $file.Title -ErrorAction SilentlyContinue
 
                     $partialContent = Export-TargetResource -Identity $app.Title `
-                                                            -Path ("`$(`$ConfigurationData.NonNodeData.AppsLocation)" + $file.Name) `
+                                                            -Path ("`$PSScriptRoot\" + $file.Name) `
                                                             -CentralAdminUrl $centralAdminUrl `
                                                             -GlobalAdminAccount $GlobalAdminAccount
                 }
@@ -1163,10 +1164,6 @@ function Start-O365ConfigurationExtract
     #region Copy Downloaded files back into output folder
     if ($filesToDownload.Count -gt 0)
     {
-        Add-ConfigurationDataEntry -Node "NonNodeData" `
-                                   -Key "AppsLocation" `
-                                   -Value $OutputDSCPath `
-                                   -Description "Location of the .app and .sppkg packages"
         foreach ($fileToCopy in $filesToDownload)
         {
             $filePath = Join-Path $env:Temp $fileToCopy.Name -Resolve
