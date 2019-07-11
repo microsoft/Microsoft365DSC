@@ -78,10 +78,7 @@
   #FunctionsToExport = @()
 
   # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-  CmdletsToExport = 'Test-Office365DSCParameterState', 'Export-O365Configuration',
-                    'Get-TimeZoneNameFromID', 'Get-TimeZoneIDFromName', 'Get-LocaleIDFromName',
-                    'Get-LocaleNameFromID', 'Show-O365GUI', 'Start-O365ConfigurationExtract',
-                    'New-Office365DSCLogEntry'
+  CmdletsToExport = 'Export-O365Configuration'
 
   # Variables to export from this module
   # VariablesToExport = @()
