@@ -36,7 +36,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Accepted Domain for $Identity"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
+
     $AllAcceptedDomains = Get-AcceptedDomain
 
     $AcceptedDomain = ($AllAcceptedDomains | Where-Object -FilterScript { $_.Identity -IMatch $Identity })
@@ -136,7 +138,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Accepted Domain for $Identity"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
+
     $AcceptedDomainParams = @{
         DomainType      = $DomainType
         Identity        = $Identity

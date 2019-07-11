@@ -230,7 +230,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of HostedContentFilterPolicy for $Identity"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
 
@@ -514,7 +515,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of HostedContentFilterPolicy for $Identity"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
 

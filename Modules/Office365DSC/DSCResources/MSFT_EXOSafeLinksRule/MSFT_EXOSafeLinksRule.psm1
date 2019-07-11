@@ -60,7 +60,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Setting configuration of SafeLinksRule for $Identity"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $SafeLinksRules = Get-SafeLinksRule
     $SafeLinksRule = $SafeLinksRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -170,7 +171,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of SafeLinksRule for $Identity"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $SafeLinksRules = Get-SafeLinksRule
 

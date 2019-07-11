@@ -29,8 +29,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of SupervisoryReviewPolicy for $Name"
 
-    Write-Verbose -Message "Calling Test-SecurityAndComplianceConnection function:"
-    Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SecurityComplianceCenter
 
     $PolicyObjects = Get-SupervisoryReviewPolicyV2
     $PolicyObject = $PolicyObjects | Where-Object {$_.Name -eq $Name}
@@ -89,7 +89,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of SupervisoryReviewPolicy for $Name"
 
-    Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SecurityComplianceCenter
+
     $CurrentPolicy = Get-TargetResource @PSBoundParameters
 
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))

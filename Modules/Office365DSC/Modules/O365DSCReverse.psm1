@@ -51,7 +51,7 @@ function Start-O365ConfigurationExtract
     Add-ConfigurationDataEntry -Node "localhost" `
                                    -Key "ServerNumber" `
                                    -Value "0" `
-                                   -Description "Default Valus Used to Ensure a Configuration Data File is Generated"
+                                   -Description "Default Value Used to Ensure a Configuration Data File is Generated"
     # Obtain central administration url from a User Principal Name
     $centralAdminUrl = Get-SPOAdministrationUrl -GlobalAdminAccount $GlobalAdminAccount
 
@@ -64,7 +64,8 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting O365AdminAuditLogConfig..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $O365AdminAuditLogConfig = Get-AdminAuditLogConfig
 
         $O365AdminAuditLogConfigModulePath = Join-Path -Path $PSScriptRoot `
@@ -110,7 +111,8 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting EXOCASMailboxPlan..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $CASMailboxPlans = Get-CASMailboxPlan
         $EXOCASMailboxPlanModulePath = Join-Path -Path $PSScriptRoot `
                                                 -ChildPath "..\DSCResources\MSFT_EXOCASMailboxPlan\MSFT_EXOCASMailboxPlan.psm1" `
@@ -131,7 +133,8 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting EXOClientAccessRule..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $ClientAccessRules = Get-ClientAccessRule
         $EXOClientAccessRuleModulePath = Join-Path -Path $PSScriptRoot `
                                                 -ChildPath "..\DSCResources\MSFT_EXOClientAccessRule\MSFT_EXOClientAccessRule.psm1" `
@@ -151,7 +154,8 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting EXODkimSigningConfig..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $DkimSigningConfigs = Get-DkimSigningConfig
         $EXODkimSigningConfigModulePath = Join-Path -Path $PSScriptRoot `
                                                     -ChildPath "..\DSCResources\MSFT_EXODkimSigningConfig\MSFT_EXODkimSigningConfig.psm1" `
@@ -180,7 +184,8 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting EXOHostedConnectionFilterPolicy..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $HostedConnectionFilterPolicys = Get-HostedConnectionFilterPolicy
         $EXOHostedConnectionFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
                                                     -ChildPath "..\DSCResources\MSFT_EXOHostedConnectionFilterPolicy\MSFT_EXOHostedConnectionFilterPolicy.psm1" `
@@ -200,7 +205,8 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting EXOHostedContentFilterPolicy..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
         $EXOHostedContentFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
                                                     -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterPolicy\MSFT_EXOHostedContentFilterPolicy.psm1" `
@@ -220,7 +226,8 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting EXOHostedContentFilterRule..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $HostedContentFilterRules = Get-HostedContentFilterRule
         $EXOHostedContentFilterRuleModulePath = Join-Path -Path $PSScriptRoot `
                                                     -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterRule\MSFT_EXOHostedContentFilterRule.psm1" `
@@ -257,7 +264,8 @@ function Start-O365ConfigurationExtract
         if (Confirm-ImportedCmdletIsAvailable -CmdletName GetSafeAttachmentPolicy)
         {
             Write-Information "Extracting EXOSafeAttachmentPolicy..."
-            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline
             $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
             $EXOSafeAttachmentPolicyModulePath = Join-Path -Path $PSScriptRoot `
                                                         -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentPolicy\MSFT_EXOSafeAttachmentPolicy.psm1" `
@@ -284,7 +292,8 @@ function Start-O365ConfigurationExtract
         if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
         {
             Write-Information "Extracting EXOSafeAttachmentRule..."
-            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline
             $SafeAttachmentRules = Get-SafeAttachmentRule
             $EXOSafeAttachmentRuleModulePath = Join-Path -Path $PSScriptRoot `
                                                         -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentRule\MSFT_EXOSafeAttachmentRule.psm1" `
@@ -311,7 +320,8 @@ function Start-O365ConfigurationExtract
         if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
         {
             Write-Information "Extracting EXOSafeLinksPolicy..."
-            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline
             $SafeLinksPolicies = Get-SafeLinksPolicy
             $EXOSafeLinksPolicyModulePath = Join-Path -Path $PSScriptRoot `
                                                         -ChildPath "..\DSCResources\MSFT_EXOSafeLinksPolicy\MSFT_EXOSafeLinksPolicy.psm1" `
@@ -338,7 +348,8 @@ function Start-O365ConfigurationExtract
         if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
         {
             Write-Information "Extracting EXOSafeLinksRule..."
-            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline
             $SafeLinksRules = Get-SafeLinksRule
             $EXOSafeLinksRuleModulePath = Join-Path -Path $PSScriptRoot `
                                                         -ChildPath "..\DSCResources\MSFT_EXOSafeLinksRule\MSFT_EXOSafeLinksRule.psm1" `
@@ -363,7 +374,8 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting EXOMailTips..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $OrgConfig = Get-OrganizationConfig
         $organizationName = $OrgConfig.Name
 
@@ -396,7 +408,8 @@ function Start-O365ConfigurationExtract
                                                 -Resolve
 
         Import-Module $EXOSharedMailboxModulePath | Out-Null
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $mailboxes = Get-Mailbox
         $mailboxes = $mailboxes | Where-Object -FilterScript { $_.RecipientTypeDetails -eq "SharedMailbox" }
 
@@ -507,7 +520,8 @@ function Start-O365ConfigurationExtract
                                                   -Resolve
 
         Import-Module $EXOMailboxSettingsModulePath | Out-Null
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $mailboxes = Get-Mailbox
 
         $i = 1
@@ -548,25 +562,14 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
-    $NeedToConnectToSecurityAndCompliance = $false
-    foreach ($Component in $ComponentsToExtract)
-    {
-        if ($Component -like 'chckSC*')
-        {
-            $NeedToConnectToSecurityAndCompliance = $true
-            break
-        }
-    }
-    if ($NeedToConnectToSecurityAndCompliance -or $AllComponents)
-    {
-        Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
-    }
-
     #region "SCRetentionCompliancePolicy"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCRetentionCompliancePolicy")) -or
         $AllComponents)
     {
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform SecurityComplianceCenter
+
         Write-Information "Extracting SCRetentionCompliancePolicy..."
         $SCRetentionCompliancePolicyModulePath = Join-Path -Path $PSScriptRoot `
                                         -ChildPath "..\DSCResources\MSFT_SCRetentionCompliancePolicy\MSFT_SCRetentionCompliancePolicy.psm1" `
@@ -591,6 +594,9 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckSCRetentionComplianceRule")) -or
         $AllComponents)
     {
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform SecurityComplianceCenter
+
         Write-Information "Extracting SCRetentionComplianceRule..."
         $SCRetentionComplianceRuleModulePath = Join-Path -Path $PSScriptRoot `
                                             -ChildPath "..\DSCResources\MSFT_SCRetentionComplianceRule\MSFT_SCRetentionComplianceRule.psm1" `

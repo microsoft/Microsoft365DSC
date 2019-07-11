@@ -81,7 +81,6 @@
   CmdletsToExport = 'Test-Office365DSCParameterState', 'Export-O365Configuration',
                     'Get-TimeZoneNameFromID', 'Get-TimeZoneIDFromName', 'Get-LocaleIDFromName',
                     'Get-LocaleNameFromID', 'Show-O365GUI', 'Start-O365ConfigurationExtract',
-                    'Connect-ExchangeOnline', 'Connect-SecurityAndComplianceCenter',
                     'New-Office365DSCLogEntry'
 
   # Variables to export from this module
