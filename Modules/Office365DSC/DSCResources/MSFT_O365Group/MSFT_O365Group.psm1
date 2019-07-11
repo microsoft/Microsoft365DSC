@@ -45,7 +45,8 @@ function Get-TargetResource
         Ensure = "Absent"
     }
 
-    Connect-AzureAD -Credential $GlobalAdminAccount | Out-Null
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform AzureAD
 
     $ADGroup = Get-AzureADGroup -SearchString $MailNickName -ErrorAction SilentlyContinue
     if ($null -eq $ADGroup)

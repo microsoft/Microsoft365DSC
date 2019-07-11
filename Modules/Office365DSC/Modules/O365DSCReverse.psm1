@@ -937,8 +937,8 @@ function Start-O365ConfigurationExtract
         {
             Write-Information "    - [$i/$($siteDesigns.Length)] $($siteDesign.Title)"
             $partialContent += Export-TargetResource -SiteDesignTitle $siteDesign.Title `
-                                                 -CentralAdminUrl $centralAdminUrl `
-                                                 -GlobalAdminAccount $GlobalAdminAccount
+                                                     -CentralAdminUrl $CentralAdminUrl `
+                                                     -GlobalAdminAccount $GlobalAdminAccount
 
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
             {

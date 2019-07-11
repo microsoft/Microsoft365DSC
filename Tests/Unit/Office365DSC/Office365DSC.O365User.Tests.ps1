@@ -23,11 +23,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
-
-        Mock -CommandName Connect-ExchangeOnline -MockWith {
-
-        }
-
         # Test contexts
         Context -Name "When the user doesn't already exist" -Fixture {
             $testParams = @{

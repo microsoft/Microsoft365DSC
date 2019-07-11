@@ -15,7 +15,7 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet("Tenant", "Site")]
         [System.String]
-        $EntityScope,
+        $EntityScope = "Tenant",
 
         [Parameter()]
         [System.String]
@@ -105,7 +105,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet("Tenant", "Site")]
         [System.String]
-        $EntityScope,
+        $EntityScope = "Tenant",
 
         [Parameter()]
         [System.String]
@@ -173,7 +173,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet("Tenant", "Site")]
         [System.String]
-        $EntityScope,
+        $EntityScope = "Tenant",
 
         [Parameter()]
         [System.String]

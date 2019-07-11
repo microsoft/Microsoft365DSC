@@ -24,14 +24,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Mock -CommandName Connect-ExchangeOnline -MockWith {
-
-        }
-
-        Mock -CommandName Connect-AzureAD -MockWith {
-
-        }
-
         # Test contexts
         Context -Name "When the group doesn't already exist" -Fixture {
             $testParams = @{

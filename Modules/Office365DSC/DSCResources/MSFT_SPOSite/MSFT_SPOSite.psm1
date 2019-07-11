@@ -196,6 +196,7 @@ function Get-TargetResource
         }
         if ($site.HubSiteId -ne "00000000-0000-0000-0000-000000000000")
         {
+            $hubId = $site.HubSiteId
             $hubSites = Get-SPOHubSite
 
             $hubSite = $hubSites | Where-Object -FilterScript { $_.Id -eq $site.HubSiteId }
@@ -205,7 +206,7 @@ function Get-TargetResource
             }
             else
             {
-                throw "Cannot find Hub site with ID: $($site.HubSiteId)"
+                Write-Warning "The site {$Url} is associated with Hub Site {$hubId} which no longer exists."
             }
         }
 
