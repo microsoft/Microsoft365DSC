@@ -35,7 +35,8 @@ function Get-TargetResource
         Ensure = "Absent"
     }
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $mailboxes = Get-Mailbox
     $mailbox = $mailboxes | Where-Object -FilterScript {
@@ -116,7 +117,8 @@ function Set-TargetResource
     #endregion
 
     $CurrentParameters = $PSBoundParameters
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     # CASE: Mailbox doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentMailbox.Ensure -eq "Absent")

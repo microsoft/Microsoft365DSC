@@ -20,11 +20,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Test-SPOServiceConnection -MockWith {
-
-        }
-
-        Mock -CommandName Connect-SPOService -MockWith {
+        Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
 
@@ -80,7 +76,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $false
             }
             It "Creates the site collection in the Set method" {
-                #Assert-MockCalled Test-SPOServiceConnection -Exactly 5
                 Set-TargetResource @testParams
             }
         }

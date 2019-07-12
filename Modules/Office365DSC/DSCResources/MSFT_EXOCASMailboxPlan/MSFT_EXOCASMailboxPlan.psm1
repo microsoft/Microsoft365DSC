@@ -36,7 +36,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of CASMailboxPlan for $Identity"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
+
     $CASMailboxPlans = Get-CASMailboxPlan
 
     $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -112,7 +114,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of CASMailboxPlan for $Identity"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $CASMailboxPlanParams = $PSBoundParameters
     $CASMailboxPlanParams.Remove('Ensure') | Out-Null

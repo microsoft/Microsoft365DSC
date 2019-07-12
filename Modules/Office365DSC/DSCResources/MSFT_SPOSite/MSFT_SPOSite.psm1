@@ -141,7 +141,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Setting configuration for site collection $Url"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     $nullReturn = @{
         Url                                         = $Url
@@ -194,6 +196,7 @@ function Get-TargetResource
         }
         if ($site.HubSiteId -ne "00000000-0000-0000-0000-000000000000")
         {
+            $hubId = $site.HubSiteId
             $hubSites = Get-SPOHubSite
 
             $hubSite = $hubSites | Where-Object -FilterScript { $_.Id -eq $site.HubSiteId }
@@ -203,7 +206,7 @@ function Get-TargetResource
             }
             else
             {
-                throw "Cannot find Hub site with ID: $($site.HubSiteId)"
+                Write-Warning "The site {$Url} is associated with Hub Site {$hubId} which no longer exists."
             }
         }
 
@@ -399,7 +402,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for site collection $Url"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     if ($Ensure -eq "Present")
     {
@@ -580,9 +585,6 @@ function Test-TargetResource
     )
 
     Write-Verbose -Message "Testing configuration for site collection $Url"
-
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
@@ -800,8 +802,9 @@ function Set-SPOSiteConfiguration
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
     $deletedSite = Get-SPODeletedSite | Where-Object -FilterScript { $_.Url -eq $Url }
     if ($deletedSite)
     {

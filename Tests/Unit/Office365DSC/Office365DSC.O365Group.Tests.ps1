@@ -20,15 +20,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Test-O365ServiceConnection -MockWith {
-
-        }
-
-        Mock -CommandName Connect-ExchangeOnline -MockWith {
-
-        }
-
-        Mock -CommandName Connect-AzureAD -MockWith {
+        Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
 
@@ -176,7 +168,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 DisplayName = "Test Group"
-                ManagedBy = "JohnSmith@contoso.onmicrosoft.com"  
+                ManagedBy = "JohnSmith@contoso.onmicrosoft.com"
                 MailNickName = "TestGroup"
                 GlobalAdminAccount = $GlobalAdminAccount
             }

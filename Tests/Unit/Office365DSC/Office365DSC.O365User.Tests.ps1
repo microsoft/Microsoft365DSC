@@ -20,14 +20,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Test-O365ServiceConnection -MockWith {
+        Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
-
-        Mock -CommandName Connect-ExchangeOnline -MockWith {
-
-        }
-
         # Test contexts
         Context -Name "When the user doesn't already exist" -Fixture {
             $testParams = @{

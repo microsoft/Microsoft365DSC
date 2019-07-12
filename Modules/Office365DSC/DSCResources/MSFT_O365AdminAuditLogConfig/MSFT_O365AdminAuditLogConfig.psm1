@@ -33,7 +33,8 @@ function Get-TargetResource
         UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabled
     }
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $GetResults = Get-AdminAuditLogConfig
     if (-not $GetResults)
@@ -90,7 +91,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for Office 365 Audit Log"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
     {

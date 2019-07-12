@@ -36,7 +36,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Accepted Domain for $Identity"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
+
     $AllAcceptedDomains = Get-AcceptedDomain
 
     $AcceptedDomain = ($AllAcceptedDomains | Where-Object -FilterScript { $_.Identity -IMatch $Identity })
@@ -46,7 +48,9 @@ function Get-TargetResource
         Write-Verbose -Message "AcceptedDomain configuration for $($Identity) does not exist."
 
         # Check to see if $Identity matches a verified domain in the O365 Tenant
-        Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform AzureAD
+
         $VerifiedDomains = Get-AzureADDomain | Where-Object -FilterScript { $_.IsVerified }
         $MatchingVerifiedDomain = $VerifiedDomains | Where-Object -FilterScript { $_.Name -eq $Identity }
 
@@ -134,7 +138,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Accepted Domain for $Identity"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
+
     $AcceptedDomainParams = @{
         DomainType      = $DomainType
         Identity        = $Identity

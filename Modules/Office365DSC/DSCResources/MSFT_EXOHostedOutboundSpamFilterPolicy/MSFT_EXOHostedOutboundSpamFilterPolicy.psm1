@@ -50,7 +50,8 @@ function Get-TargetResource
         throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Identity value of 'Default'"
     }
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $HostedOutboundSpamFilterPolicies = Get-HostedOutboundSpamFilterPolicy
 
@@ -141,7 +142,8 @@ function Set-TargetResource
         throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Identity value of 'Default'"
     }
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $HostedOutboundSpamFilterPolicyParams = $PSBoundParameters
     $HostedOutboundSpamFilterPolicyParams.Remove('Ensure') | Out-Null

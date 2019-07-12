@@ -56,7 +56,7 @@
                       @{ModuleName = "Microsoft.Online.SharePoint.PowerShell"; RequiredVersion = "16.0.8316.0"; },
                       @{ModuleName = "MicrosoftTeams"; RequiredVersion = "1.0.0"; },
                       @{ModuleName = "AzureAD"; RequiredVersion = "2.0.2.4"; },
-                      @{ModuleName = "MSCloudLoginAssistant"; RequiredVersion = "0.5.2"; })
+                      @{ModuleName = "MSCloudLoginAssistant"; RequiredVersion = "0.5.5"; })
 
   # Assemblies that must be loaded prior to importing this module
   # RequiredAssemblies = @()
@@ -78,12 +78,7 @@
   #FunctionsToExport = @()
 
   # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-  CmdletsToExport = 'Test-SPOServiceConnection', 'Test-Office365DSCParameterState',
-                    'Test-O365ServiceConnection', 'Export-O365Configuration',
-                    'Get-TimeZoneNameFromID', 'Get-TimeZoneIDFromName', 'Get-LocaleIDFromName',
-                    'Get-LocaleNameFromID', 'Test-TeamsServiceConnection', 'Show-O365GUI', 'Start-O365ConfigurationExtract',
-                    'Test-PnPOnlineConnection', 'Connect-ExchangeOnline', 'Connect-SecurityAndComplianceCenter',
-                    'New-Office365DSCLogEntry'
+  CmdletsToExport = 'Export-O365Configuration'
 
   # Variables to export from this module
   # VariablesToExport = @()

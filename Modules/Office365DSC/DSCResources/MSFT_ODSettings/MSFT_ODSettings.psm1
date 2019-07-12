@@ -71,7 +71,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of OneDrive Settings"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     $nullReturn = @{
         CentralAdminUrl                           = $CentralAdminUrl
@@ -239,7 +241,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of OneDrive Settings"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     ## Configure OneDrive settings
     ## Parameters below are remove for the Set-SPOTenant cmdlet

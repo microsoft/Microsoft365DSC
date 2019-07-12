@@ -48,8 +48,12 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for hub site collection $Url"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
+
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform MSOnline
 
     $nullReturn = @{
         Url                  = $Url
@@ -189,8 +193,12 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for hub site collection $Url"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
+
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform MSOnline
 
     try
     {

@@ -102,7 +102,7 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-
+    Test-MSCloudLogin -Platform MSOnline -O365Credential $GlobalAdminAccount
     Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
 
     $nullReturn = @{
@@ -120,7 +120,6 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-        Connect-MsolService -Credential $GlobalAdminAccount
         $user = Get-MSOLUser -UserPrincipalName $UserPrincipalName -ErrorAction SilentlyContinue
         if ($null -eq $user)
         {
@@ -284,7 +283,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Office 365 User $UserPrincipalName"
 
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform MSOnline
 
     $user = Get-TargetResource @PSBoundParameters
     $CurrentParameters = $PSBoundParameters

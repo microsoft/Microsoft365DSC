@@ -15,7 +15,7 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet("Tenant", "Site")]
         [System.String]
-        $EntityScope,
+        $EntityScope = "Tenant",
 
         [Parameter()]
         [System.String]
@@ -41,7 +41,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for SPO Storage Entity for $Key"
 
-    Test-PnPOnlineConnection -SiteUrl $SiteUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $SiteUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
 
     $nullReturn = @{
         Key                = $Key
@@ -58,7 +60,11 @@ function Get-TargetResource
 
     $entityStorageParms = @{}
     $entityStorageParms.Add("Key", $Key)
-    $entityStorageParms.Add("Scope", $EntityScope)
+
+    if ($null -ne $EntityScope -and "" -ne $EntityScope)
+    {
+        $entityStorageParms.Add("Scope", $EntityScope)
+    }
 
     $Entity = Get-PnPStorageEntity @entityStorageParms -ErrorAction SilentlyContinue
     ## Get-PnPStorageEntity seems to not return $null when not found
@@ -99,7 +105,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet("Tenant", "Site")]
         [System.String]
-        $EntityScope,
+        $EntityScope = "Tenant",
 
         [Parameter()]
         [System.String]
@@ -125,7 +131,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for SPO Storage Entity for $Key"
 
-    Test-PnPOnlineConnection -SiteUrl $SiteUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $SiteUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
 
     $curStorageEntry = Get-TargetResource @PSBoundParameters
 
@@ -165,7 +173,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet("Tenant", "Site")]
         [System.String]
-        $EntityScope,
+        $EntityScope = "Tenant",
 
         [Parameter()]
         [System.String]
@@ -229,7 +237,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-PnPOnlineConnection -SiteUrl $SiteUrl -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        SPOStorageEntity " + (New-Guid).ToString() + "`r`n"

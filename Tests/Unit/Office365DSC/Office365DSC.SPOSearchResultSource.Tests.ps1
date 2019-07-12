@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Test-PnPOnlineConnection -MockWith {
+        Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
         $existingValueXML = "<SearchConfigurationSettings xmlns=`"http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Portability`" xmlns:i=`"http://www.w3.org/2001/XMLSchema-instance`">

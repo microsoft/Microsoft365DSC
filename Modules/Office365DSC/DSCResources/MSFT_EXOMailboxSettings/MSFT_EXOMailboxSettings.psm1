@@ -35,7 +35,8 @@ function Get-TargetResource
         Ensure = "Absent"
     }
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $mailboxSettings = Get-MailboxRegionalConfiguration -Identity $DisplayName
 
@@ -84,6 +85,8 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Mailbox Settings for $DisplayName"
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $currentMailbox = Get-TargetResource @PSBoundParameters
 
@@ -101,7 +104,7 @@ function Set-TargetResource
         throw "The specified Time Zone {$($TimeZone)} is not valid."
     }
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+
     Set-MailboxRegionalConfiguration -Identity $DisplayName `
                                      -Language $Locale `
                                      -TimeZone $TimeZone

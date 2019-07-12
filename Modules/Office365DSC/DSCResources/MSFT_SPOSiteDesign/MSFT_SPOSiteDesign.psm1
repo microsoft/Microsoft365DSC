@@ -53,8 +53,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesign for $Title"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
     $nullReturn = @{
         Title               = $Title
         SiteScriptNames     = $SiteScriptNames
@@ -165,7 +166,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for SPO SiteDesign for $Title"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     $curSiteDesign = Get-TargetResource @PSBoundParameters
 
@@ -301,7 +304,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        SPOSiteDesign " + (New-GUID).ToString() + "`r`n"
