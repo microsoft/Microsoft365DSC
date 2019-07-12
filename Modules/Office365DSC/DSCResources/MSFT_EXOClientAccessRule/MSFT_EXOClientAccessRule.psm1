@@ -78,7 +78,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of ClientAccessRule for $Identity"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
+
 
     $ClientAccessRules = Get-ClientAccessRule
 
@@ -203,7 +205,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of ClientAccessRule for $Identity"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
+
 
     $ClientAccessRules = Get-ClientAccessRule
 

@@ -47,7 +47,9 @@ function Get-TargetResource
 
     try
     {
-        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                          -Platform PnP `
+                          -O365Credential $GlobalAdminAccount
         $app = Get-PnPApp -Identity $Identity -ErrorAction SilentlyContinue
         if ($null -eq $app)
         {
@@ -108,7 +110,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for app $Identity"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -Platform PnP `
+                      -O365Credential $GlobalAdminAccount
 
     $currentApp = Get-TargetResource @PSBoundParameters
 
@@ -208,7 +212,8 @@ function Export-TargetResource
     $content = "        SPOApp " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $convertedContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += $convertedContent
     $content += "        }`r`n"
     return $content
 }

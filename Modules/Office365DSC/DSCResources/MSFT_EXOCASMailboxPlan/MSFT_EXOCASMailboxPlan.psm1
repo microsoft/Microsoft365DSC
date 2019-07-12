@@ -25,7 +25,7 @@ function Get-TargetResource
         $PopEnabled = $true,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -36,12 +36,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of CASMailboxPlan for $Identity"
 
-    if ('Absent' -eq $Ensure)
-    {
-        throw "EXOCASMailboxPlan configurations MUST specify Ensure value of 'Present'"
-    }
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
     $CASMailboxPlans = Get-CASMailboxPlan
 
     $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -106,7 +103,7 @@ function Set-TargetResource
         $PopEnabled = $true,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -117,12 +114,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of CASMailboxPlan for $Identity"
 
-    if ('Absent' -eq $Ensure)
-    {
-        throw "EXOCASMailboxPlan configurations MUST specify Ensure value of 'Present'"
-    }
-
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $CASMailboxPlanParams = $PSBoundParameters
     $CASMailboxPlanParams.Remove('Ensure') | Out-Null
@@ -169,7 +162,7 @@ function Test-TargetResource
         $PopEnabled = $true,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 

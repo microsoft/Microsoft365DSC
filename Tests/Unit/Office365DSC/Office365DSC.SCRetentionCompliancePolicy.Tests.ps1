@@ -20,7 +20,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Test-SecurityAndComplianceConnection -MockWith {
+        Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
 
@@ -78,7 +78,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
                 return @{
-                    Identity = "TestPolicy"
+                    Name               = "TestPolicy"
+                    SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
                 }
             }
 
@@ -105,7 +106,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
                 return @{
-                    Identity = "TestPolicy"
+                    Name = "TestPolicy"
                 }
             }
 

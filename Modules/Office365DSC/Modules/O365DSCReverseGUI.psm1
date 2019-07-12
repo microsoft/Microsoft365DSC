@@ -1,5 +1,11 @@
 function Show-O365GUI
 {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Path
+    )
     try
     {
         [CmdletBinding()]
@@ -51,7 +57,7 @@ function Show-O365GUI
         $chckO365Group.Top = 20
         $chckO365Group.AutoSize = $true;
         $chckO365Group.Name = "chckO365Group"
-        $chckO365Group.Checked = $false
+        $chckO365Group.Checked = $true
         $chckO365Group.Text = "Groups"
         $pnlO365.Controls.Add($chckO365Group);
 
@@ -213,7 +219,7 @@ function Show-O365GUI
         $pnlSPO = New-Object System.Windows.Forms.Panel
         $pnlSPO.Top = 88 + $topBannerHeight
         $pnlSPO.Left = $SecondColumnLeft
-        $pnlSPO.Height = 180
+        $pnlSPO.Height = 220
         $pnlSPO.Width = 300
         $pnlSPO.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -237,7 +243,7 @@ function Show-O365GUI
         $chckSPOHubSite.Top = 40
         $chckSPOHubSite.AutoSize = $true;
         $chckSPOHubSite.Name = "chckSPOHubSite"
-        $chckSPOHubSite.Checked = $false
+        $chckSPOHubSite.Checked = $true
         $chckSPOHubSite.Text = "Hub Sites"
         $pnlSPO.Controls.Add($chckSPOHubSite)
 
@@ -245,7 +251,7 @@ function Show-O365GUI
         $chckSPOSearchManagedProperty.Top = 60
         $chckSPOSearchManagedProperty.AutoSize = $true;
         $chckSPOSearchManagedProperty.Name = "chckSPOSearchManagedProperty"
-        $chckSPOSearchManagedProperty.Checked = $false
+        $chckSPOSearchManagedProperty.Checked = $true
         $chckSPOSearchManagedProperty.Text = "Search Managed Properties"
         $pnlSPO.Controls.Add($chckSPOSearchManagedProperty)
 
@@ -281,13 +287,62 @@ function Show-O365GUI
         $chckSPOSiteDesignRights.Text = "Site Design Rights"
         $pnlSPO.Controls.Add($chckSPOSiteDesignRights)
 
+        $chckSPOStorageEntity= New-Object System.Windows.Forms.CheckBox
+        $chckSPOStorageEntity.Top = 160
+        $chckSPOStorageEntity.AutoSize = $true;
+        $chckSPOStorageEntity.Name = "chckSPOStorageEntity"
+        $chckSPOStorageEntity.Checked = $true
+        $chckSPOStorageEntity.Text = "Storage Entity"
+        $pnlSPO.Controls.Add($chckSPOStorageEntity)
+
+        $chckSPOTenantSettings = New-Object System.Windows.Forms.CheckBox
+        $chckSPOTenantSettings.Top = 180
+        $chckSPOTenantSettings.AutoSize = $true;
+        $chckSPOTenantSettings.Name = "chckSPOTenantSettings"
+        $chckSPOTenantSettings.Checked = $true
+        $chckSPOTenantSettings.Text = "Tenant Settings"
+        $pnlSPO.Controls.Add($chckSPOTenantSettings)
+
         $chckSPOTheme = New-Object System.Windows.Forms.CheckBox
-        $chckSPOTheme.Top = 160
+        $chckSPOTheme.Top = 200
         $chckSPOTheme.AutoSize = $true;
         $chckSPOTheme.Name = "chckSPOTheme"
-        $chckSPOTheme.Checked = $false
+        $chckSPOTheme.Checked = $true
         $chckSPOTheme.Text = "Themes"
         $pnlSPO.Controls.Add($chckSPOTheme)
+        #endregion
+
+        #region Security and Compliance
+        $imgSC = New-Object System.Windows.Forms.PictureBox
+        $imagePath = $PSScriptRoot + "\..\Dependencies\Images\SecurityAndCompliance.png"
+        $imgSC.ImageLocation = $imagePath
+        $imgSC.Left = $SecondColumnLeft
+        $imgSC.Top = $topBannerHeight + $pnlSPO.Height + $imgSPO.Height + 75
+        $imgSC.AutoSize = $true
+        $pnlMain.Controls.Add($imgSC)
+
+        $pnlSC = New-Object System.Windows.Forms.Panel
+        $pnlSC.Top = $pnlSPO.Heigth + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 340
+        $pnlSC.Left = $SecondColumnLeft
+        $pnlSC.Height = 40
+        $pnlSC.Width = 300
+        $pnlSC.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+
+        $chckSCRetentionCompliancePolicy = New-Object System.Windows.Forms.CheckBox
+        $chckSCRetentionCompliancePolicy.Top = 0
+        $chckSCRetentionCompliancePolicy.AutoSize = $true;
+        $chckSCRetentionCompliancePolicy.Name = "chckSCRetentionCompliancePolicy"
+        $chckSCRetentionCompliancePolicy.Checked = $true
+        $chckSCRetentionCompliancePolicy.Text = "Retention Compliance Policy"
+        $pnlSC.Controls.Add($chckSCRetentionCompliancePolicy)
+
+        $chckSCRetentionComplianceRule = New-Object System.Windows.Forms.CheckBox
+        $chckSCRetentionComplianceRule.Top = 20
+        $chckSCRetentionComplianceRule.AutoSize = $true;
+        $chckSCRetentionComplianceRule.Name = "chckSCRetentionComplianceRule"
+        $chckSCRetentionComplianceRule.Checked = $true
+        $chckSCRetentionComplianceRule.Text = "Retention Compliance Rule"
+        $pnlSC.Controls.Add($chckSCRetentionComplianceRule)
         #endregion
 
         #region Teams
@@ -352,7 +407,7 @@ function Show-O365GUI
         $chckODSettings.Top = 0
         $chckODSettings.AutoSize = $true;
         $chckODSettings.Name = "chckODSettings"
-        $chckODSettings.Checked = $false
+        $chckODSettings.Checked = $true
         $chckODSettings.Text = "OneDrive Settings"
         $pnlOD.Controls.Add($chckODSettings)
         #endregion
@@ -361,6 +416,7 @@ function Show-O365GUI
         $pnlMain.Controls.Add($pnlExo)
         $pnlMain.Controls.Add($pnlOD)
         $pnlMain.Controls.Add($pnlSPO)
+        $pnlMain.Controls.Add($pnlSC)
         $pnlMain.Controls.Add($pnlTeams)
 
         #region Extraction Modes
@@ -451,7 +507,9 @@ function Show-O365GUI
                 try
                 {
                     $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force))
-                    Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount -ComponentsToExtract $SelectedComponents
+                    Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                                                   -ComponentsToExtract $SelectedComponents `
+                                                   -Path $Path
                 }
                 catch
                 {

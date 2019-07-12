@@ -120,7 +120,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of AntiPhishPolicy for $Identity"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
+
     $AntiPhishPolicies = Get-AntiPhishPolicy
 
     $AntiPhishPolicy = $AntiPhishPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -280,7 +282,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of AntiPhishPolicy for $Identity"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
+
     $AntiPhishPolicies = Get-AntiPhishPolicy
 
     $AntiPhishPolicy = $AntiPhishPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }

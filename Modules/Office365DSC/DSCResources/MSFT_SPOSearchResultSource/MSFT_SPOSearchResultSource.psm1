@@ -72,7 +72,7 @@ function Get-TargetResource
         $UseAutoDiscover,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 
@@ -87,12 +87,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Setting configuration for Result Source instance $Name"
 
-    if ($Ensure -eq "Absent")
-    {
-        throw "This resource cannot delete Result Sources. Please make sure you set its Ensure value to Present."
-    }
-
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
 
     $nullReturn = @{
         Name                = $Name
@@ -194,7 +191,7 @@ function Set-TargetResource
         $UseAutoDiscover,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 
@@ -209,12 +206,10 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for Result Source instance $Name"
 
-    if ($Ensure -eq "Absent")
-    {
-        throw "This resource cannot delete Result Sources. Please make sure you set its Ensure value to Present."
-    }
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose -Message "Reading SearchConfigurationSettings XML file"
     $SearchConfigTemplatePath =  Join-Path -Path $PSScriptRoot `
                                            -ChildPath "..\..\Dependencies\SearchConfigurationSettings.xml" `
@@ -393,7 +388,7 @@ function Test-TargetResource
         $UseAutoDiscover,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 

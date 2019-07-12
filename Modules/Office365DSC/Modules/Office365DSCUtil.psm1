@@ -977,162 +977,6 @@ function Get-TeamByName
     }
     return $team
 }
-function Connect-ExchangeOnline
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    $VerbosePreference = 'SilentlyContinue'
-    $WarningPreference = "Continue"
-    $ClosedOrBrokenSessions = Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.State -ne 'Opened' }
-    if ($ClosedOrBrokenSessions)
-    {
-        Write-Verbose -Message "Found Existing Unusable Session(s)."
-        foreach ($SessionToBeClosed in $ClosedOrBrokenSessions)
-        {
-            Write-Verbose -Message "Closing Session: $(($SessionToBeClosed).InstanceId)"
-            $SessionToBeClosed | Remove-PSSession
-        }
-    }
-
-    $Global:OpenExchangeSession = Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.State -eq 'Opened' }
-    if ($null -eq $Global:OpenExchangeSession)
-    {
-        try
-        {
-            $PowerShellConnections = Get-NetTCPConnection | Where-Object -FilterScript { $_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established' }
-
-            while ($PowerShellConnections)
-            {
-                Write-Verbose -Message "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
-                Write-Verbose -Message "Waiting for closing connections to close..."
-                Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
-                Start-Sleep -seconds 1
-                $CheckConnectionsWithoutKillingWhileLoop = Get-NetTCPConnection | Where-Object -FilterScript { $_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established' }
-                if (-not $CheckConnectionsWithoutKillingWhileLoop) {
-                    Write-Verbose -Message "Connections have closed.  Waiting 5 more seconds..."
-                    Start-Sleep -seconds 5
-                    $PowerShellConnections = Get-NetTCPConnection | Where-Object -FilterScript { $_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established' }
-                }
-            }
-
-            if ($Global:ExchangeOnlineSession.State -eq "Closed")
-            {
-                Remove-PSSession $Global:ExchangeOnlineSession
-                $Global:ExchangeOnlineSession = $null
-            }
-
-            while ($null -eq $Global:ExchangeOnlineSession)
-            {
-                Write-Verbose -Message "Creating new EXO Session"
-                $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
-
-                if ($null -eq $Global:ExchangeOnlineSession)
-                {
-                    Write-Warning "Exceeded max number of connections. Waiting 60 seconds"
-                    Start-Sleep 60
-                }
-            }
-
-            if ($null -eq $Global:ExchangeOnlineModules)
-            {
-                Write-Verbose -Message "Importing all commands into the EXO Session"
-                $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber
-                Import-Module $Global:ExchangeOnlineModules -Global | Out-Null
-            }
-        }
-        catch
-        {
-            $ExceptionMessage = $_.Exception
-            $Error.Clear()
-            $VerbosePreference = 'SilentlyContinue'
-            if ($ExceptionMessage -imatch 'Please wait for [0-9]* seconds' )
-            {
-                Write-Verbose -Message "Waiting for available runspace..."
-                [regex]$WaitTimePattern = 'Please wait for [0-9]* seconds'
-                $WaitTimePatternMatch = (($WaitTimePattern.Match($ExceptionMessage)).Value | Select-String -Pattern '[0-9]*' -AllMatches )
-                $WaitTimeInSeconds = ($WaitTimePatternMatch | ForEach-Object {$_.Matches} | Where-Object -FilterScript { $_.Value -NotLike $null }).Value
-                Write-Verbose -Message "Waiting for requested $WaitTimeInSeconds seconds..."
-                Start-Sleep -Seconds ($WaitTimeInSeconds + 1)
-                try
-                {
-                    Write-Verbose -Message "Opening New ExchangeOnline Session."
-                    $PowerShellConnections = Get-NetTCPConnection | Where-Object -FilterScript { $_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established' }
-                    while ($PowerShellConnections)
-                    {
-                        Write-Verbose -Message "This process is using the following connections in a non-Established state: $($PowerShellConnections | Out-String)"
-                        Write-Verbose -Message "Waiting for closing connections to close..."
-                        Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
-                        Start-Sleep -seconds 1
-                        $CheckConnectionsWithoutKillingWhileLoop = Get-NetTCPConnection | Where-Object -FilterScript { $_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established' }
-                        if (-not $CheckConnectionsWithoutKillingWhileLoop) {
-                            Write-Verbose -Message "Connections have closed.  Waiting 5 more seconds..."
-                            Start-Sleep -seconds 5
-                            $PowerShellConnections = Get-NetTCPConnection | Where-Object -FilterScript { $_.OwningProcess -eq $PID -and $_.RemotePort -eq '443' -and $_.State -ne 'Established' }
-                        }
-                    }
-                    $VerbosePreference = 'SilentlyContinue'
-                    $Global:ExchangeOnlineSession = $null
-                    while (-not $Global:ExchangeOnlineSession)
-                    {
-                        $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection -ErrorAction SilentlyContinue
-                    }
-
-                    $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
-
-                    $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global -ErrorAction SilentlyContinue
-                }
-                catch
-                {
-                    $VerbosePreference = 'SilentlyContinue'
-                    $WarningPreference = "SilentlyContinue"
-                    $Global:ExchangeOnlineSession = $null
-                    Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-                    $Message = "Can't open Exchange Online session from Connect-ExchangeOnline"
-                    New-Office365DSCLogEntry -Error $_ -Message $Message
-                }
-            }
-            else
-            {
-                Write-Verbose $_.Exception
-                $VerbosePreference = 'SilentlyContinue'
-                Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession
-                Write-Verbose -Message "Exchange Online connection failed."
-                Write-Verbose -Message "Waiting 60 seconds..."
-                Start-Sleep -Seconds 60
-                try
-                {
-                    Write-Verbose -Message "Opening New ExchangeOnline Session."
-                    $VerbosePreference = 'SilentlyContinue'
-                    Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Remove-PSSession -ErrorAction SilentlyContinue
-                    $Global:ExchangeOnlineSession = New-PSSession -Name 'ExchangeOnline' -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $GlobalAdminAccount -Authentication Basic -AllowRedirection
-                    $Global:ExchangeOnlineModules = Import-PSSession $Global:ExchangeOnlineSession -AllowClobber -ErrorAction SilentlyContinue
-
-                    $ExchangeOnlineModuleImport = Import-Module $ExchangeOnlineModules -Global -ErrorAction SilentlyContinue
-                }
-                catch
-                {
-                    $VerbosePreference = 'SilentlyContinue'
-                    $WarningPreference = "SilentlyContinue"
-                    $Global:ExchangeOnlineSession = $null
-                    Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-                }
-            }
-        }
-    }
-    else
-    {
-        Write-Verbose -Message "Using Existing ExchangeOnline Session."
-        $Global:OpenExchangeSession = Get-PSSession -Name 'ExchangeOnline' -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.State -eq 'Opened' }
-        $VerbosePreference = 'SilentlyContinue'
-        $WarningPreference = "SilentlyContinue"
-    }
-}
 
 function Convert-O365DscHashtableToString
 {
@@ -1145,19 +989,32 @@ function Convert-O365DscHashtableToString
     $values = @()
     foreach ($pair in $Hashtable.GetEnumerator())
     {
-        if ($pair.Value -is [System.Array])
+        try
         {
-            $str = "$($pair.Key)=($($pair.Value -join ","))"
+            if ($pair.Value -is [System.Array])
+            {
+                $str = "$($pair.Key)=($($pair.Value -join ","))"
+            }
+            elseif ($pair.Value -is [System.Collections.Hashtable])
+            {
+                $str = "$($pair.Key)={$(Convert-O365DscHashtableToString -Hashtable $pair.Value)}"
+            }
+            else
+            {
+                if ($null -eq $pair.Value)
+                {
+                    $str = "$($pair.Key)=`$null"
+                }
+                else {
+                    $str = "$($pair.Key)=$($pair.Value)"
+                }
+            }
+            $values += $str
         }
-        elseif ($pair.Value -is [System.Collections.Hashtable])
+        catch
         {
-            $str = "$($pair.Key)={$(Convert-O365DscHashtableToString -Hashtable $pair.Value)}"
+            Write-Warning "There was an error converting the Hashtable to a string: $_"
         }
-        else
-        {
-            $str = "$($pair.Key)=$($pair.Value)"
-        }
-        $values += $str
     }
 
     [array]::Sort($values)
@@ -1195,7 +1052,7 @@ function New-EXOAntiPhishRule
     try
     {
         $VerbosePreference = 'Continue'
-        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'New' )
+        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'New')
         Write-Verbose -Message "Creating New AntiPhishRule $($BuiltParams.Name) with values: $(Convert-O365DscHashtableToString -Hashtable $BuiltParams)"
         New-AntiPhishRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
@@ -1441,110 +1298,8 @@ function Set-EXOSafeLinksRule
     }
 }
 
-function Test-SPOServiceConnection
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $SPOCentralAdminUrl,
 
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    $VerbosePreference = 'SilentlyContinue'
-    $WarningPreference = "SilentlyContinue"
-    Write-Verbose -Message "Verifying the LCM connection state to SharePoint Online"
-    $catch = Connect-SPOService -Url $SPOCentralAdminUrl -Credential $GlobalAdminAccount
-}
 
-function Test-PnPOnlineConnection
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $SiteUrl,
-
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    $VerbosePreference = 'SilentlyContinue'
-    $WarningPreference = "SilentlyContinue"
-    Write-Verbose -Message "Verifying the LCM connection state to SharePoint Online with PnP"
-    $catch = Connect-PnPOnline -Url $SiteUrl -Credentials $GlobalAdminAccount
-}
-
-function Test-O365ServiceConnection
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    $VerbosePreference = 'SilentlyContinue'
-    $WarningPreference = "SilentlyContinue"
-    Write-Verbose -Message "Verifying the LCM connection state to Microsoft Azure Active Directory Services"
-    $catch = Connect-MsolService -Credential $GlobalAdminAccount
-    $catch = Connect-AzureAD -Credential $GlobalAdminAccount
-}
-
-function Test-TeamsServiceConnection
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    $VerbosePreference = 'SilentlyContinue'
-    $WarningPreference = "SilentlyContinue"
-    Import-Module MicrosoftTeams -Force
-    Write-Verbose -Message "Verifying the LCM connection state to Teams"
-    Connect-MicrosoftTeams -Credential $GlobalAdminAccount | Out-Null
-}
-
-function Test-SecurityAndComplianceConnection
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    $VerbosePreference = 'SilentlyContinue'
-    $WarningPreference = "SilentlyContinue"
-
-    $Global:SessionSecurityCompliance = Get-PSSession | Where-Object{$_.ComputerName -like "*.ps.compliance.protection.outlook.com"}
-    if ($null -eq $Global:SessionSecurityCompliance)
-    {
-        Write-Verbose "Session to Security & Compliance already exists, re-using existing session"
-        $Global:SessionSecurityCompliance = New-PSSession -ConfigurationName "Microsoft.Exchange" `
-            -ConnectionUri https://ps.compliance.protection.outlook.com/powershell-liveid/ `
-            -Credential $GlobalAdminAccount `
-            -Authentication Basic `
-            -AllowRedirection
-
-        $Global:SCModule = Import-PSSession $Global:SessionSecurityCompliance  `
-            -ErrorAction SilentlyContinue `
-            -AllowClobber
-
-        Import-Module $Global:SCModule -Global | Out-Null
-    }
-}
 
 function Test-Office365DSCParameterState
 {
@@ -1742,7 +1497,7 @@ function Test-Office365DSCParameterState
     return $returnValue
 }
 
-function Get-UsersLicences
+function Get-UsersLicenses
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -1751,21 +1506,47 @@ function Get-UsersLicences
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    Write-Verbose -Message "Store all users licences information in Global Variable for futur usage."
-    #Store information to be able to check later if the users is correctly licences for features.
-    if ($null -eq $Global:UsersLicences)
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount -Platform MSOnline
+
+    Write-Verbose -Message "Store all users licenses information in Global Variable for future usage."
+
+    #Store information to be able to check later if the users is correctly licensed for features.
+    if ($null -eq $Global:UsersLicenses)
     {
-        $Global:UsersLicences = Get-MsolUser -All | Select-Object UserPrincipalName, isLicensed, Licenses
+        $Global:UsersLicenses = Get-MsolUser -All | Select-Object UserPrincipalName, isLicensed, Licenses
     }
-    Return $Global:UsersLicences
+    Return $Global:UsersLicenses
 }
 
 <# This is the main Office365DSC.Reverse function that extracts the DSC configuration from an existing
    Office 365 Tenant. #>
 function Export-O365Configuration
 {
-    Show-O365GUI
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Switch]
+        $Quiet,
+
+        [Parameter()]
+        [System.String]
+        $Path,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+    if (-not $Quiet)
+    {
+        Show-O365GUI -Path $Path
+    }
+    else
+    {
+        Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                                       -AllComponents `
+                                       -Path $Path
+    }
 }
 
 function Compare-SPOTheme
@@ -1820,7 +1601,11 @@ function Get-SPOAdministrationUrl
     (
         [Parameter(Mandatory=$false)]
         [switch]
-        $UseMFA
+        $UseMFA,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
     )
     if ($UseMFA)
     {
@@ -1831,7 +1616,7 @@ function Get-SPOAdministrationUrl
         $UseMFASwitch = @{}
     }
     Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
-    Test-AzureADLogin @useMFASwitch
+    Test-MSCloudLogin -Platform "AzureAD" -o365Credential $GlobalAdminAccount | Out-Null
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
     $defaultDomain = Get-AzureADDomain | Where-Object {$_.Name -like "*.onmicrosoft.com" -and $_.IsInitial -eq $true} # We don't use IsDefault here because the default could be a custom domain
     $global:tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.com",""

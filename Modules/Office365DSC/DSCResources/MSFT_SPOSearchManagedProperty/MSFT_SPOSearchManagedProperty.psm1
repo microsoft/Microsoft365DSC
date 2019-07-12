@@ -84,7 +84,7 @@ function Get-TargetResource
         $CompanyNameExtraction,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 
@@ -99,12 +99,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for Managed Property instance $Name"
 
-    if ($Ensure -eq "Absent")
-    {
-        throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
-    }
-
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     $nullReturn = @{
         Name                        = $Name
@@ -287,7 +284,7 @@ function Set-TargetResource
         $CompanyNameExtraction,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 
@@ -302,12 +299,10 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for Managed Property instance $Name"
 
-    if ($Ensure -eq "Absent")
-    {
-        throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
-    }
+    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                      -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     $SearchConfigTemplatePath =  Join-Path -Path $PSScriptRoot `
                                            -ChildPath "..\..\Dependencies\SearchConfigurationSettings.xml" `
                                            -Resolve
@@ -705,7 +700,7 @@ function Test-TargetResource
         $CompanyNameExtraction,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 

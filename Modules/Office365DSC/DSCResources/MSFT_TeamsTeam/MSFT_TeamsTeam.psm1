@@ -136,7 +136,8 @@ function Get-TargetResource
     }
 
     Write-Verbose -Message "Checking for existance of Team $DisplayName"
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform MicrosoftTeams
 
     $CurrentParameters = $PSBoundParameters
 
@@ -161,19 +162,24 @@ function Get-TargetResource
                 Write-Verbose -Message "Teams with displayname $DisplayName doesn't exist"
                 return $nullReturn
             }
-            if ($team.Count -gt 1)
+            if ($team.Length -gt 1)
             {
                 throw "Duplicate Teams name $DisplayName exist in tenant"
             }
         }
 
+        $Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object {$_.Role -eq "owner"}
+        if ($null -ne $Owners)
+        {
+            $Owners = $Owners.User.ToString()
+        }
         Write-Verbose -Message "Found Team $($team.DisplayName)."
 
         return @{
             DisplayName                       = $team.DisplayName
             GroupID                           = $team.GroupId
             Description                       = $team.Description
-            Owner                             = $Owner
+            Owner                             = $Owners
             MailNickName                      = $team.MailNickName
             Visibility                        = $team.Visibility
             AllowAddRemoveApps                = $team.AllowAddRemoveApps
@@ -198,6 +204,7 @@ function Get-TargetResource
     }
     catch
     {
+        Write-Verbose "Returning empty results due to error: $_"
         return $nullReturn
     }
 }
@@ -311,7 +318,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Team $DisplayName"
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform MicrosoftTeams
 
     $team = Get-TargetResource @PSBoundParameters
 
@@ -326,7 +334,7 @@ function Set-TargetResource
         {
             $CurrentParameters.Remove("Owner")
         }
-        if ($null -eq $CurrentParameters.ContainsKey("GroupID"))
+        if (-not $CurrentParameters.ContainsKey("GroupID"))
         {
             $CurrentParameters.Add("GroupID", $team.GroupID)
         }
@@ -469,30 +477,14 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('GroupID') | Out-Null
 
+    if ($null -eq $CurrentValues.Owner)
+    {
+        $ValuesToCheck.Remove("Owner") | Out-Null
+    }
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "AllowCreateUpdateRemoveTabs", `
-                                                                   "Description", `
-                                                                   "MailNickName", `
-                                                                   "Visibility", `
-                                                                   "AddAllowRemoveApps", `
-                                                                   "AllowGiphy", `
-                                                                   "GiphyContent", `
-                                                                   "AllowStickersandMemes", `
-                                                                   "AllowCustomMemes", `
-                                                                   "AllowUserEditMessage", `
-                                                                   "AllowUserDeleteMessages", `
-                                                                   "AllowOwnerDeleteMessages", `
-                                                                   "AllowDeleteChannels", `
-                                                                   "AllowCreateUpdateRemoveConnectors", `
-                                                                   "AllowCreateUpdateRemoveTabs", `
-                                                                   "AllowTeamMentions", `
-                                                                   "AllowChannelMentions", `
-                                                                   "AllowGuestCreateUpdateChannels", `
-                                                                   "AllowGuestDeleteChannels", `
-                                                                   "AllowCreateUpdateChannels", `
-                                                                   "DisplayName")
+                                                  -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -514,7 +506,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $result.Remove("GroupID")

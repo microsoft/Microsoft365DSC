@@ -9,11 +9,11 @@ install:
         $moduleName = 'Office365DSC'
         $mainModuleFolder = "Modules\$moduleName"
         Install-Module ReverseDSC -RequiredVersion 1.9.4.4 -Force
-        Install-Module AzureAD -Force
+        Install-Module AzureAD -RequiredVersion 2.0.2.4 -Force
         Install-Module MSOnline -RequiredVersion 1.1.183.17 -Force
         Install-Module MicrosoftTeams -RequiredVersion 1.0.0 -Force
-        Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.5.1901.0 -Force
-        Install-Module MSCloudLoginAssistant -RequiredVersion 0.5.1 -Force
+        Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.11.1907.0 -Force
+        Install-Module MSCloudLoginAssistant -RequiredVersion 0.5.5 -Force
 
         $webClient = new-object System.Net.WebClient
         $url = "https://github.com/Microsoft/Office365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_8615-1200_x64_en-us.msi?raw=true"
@@ -25,6 +25,7 @@ install:
         Import-Module Microsoft.Online.SharePoint.PowerShell -Force
         Import-Module SharePointPnpPowerShellOnline -Force
         Import-Module MSCloudLoginAssistant -Force
+        Import-Module AzureAD -Force
         Import-Module -Name "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
         Invoke-AppveyorInstallTask
 

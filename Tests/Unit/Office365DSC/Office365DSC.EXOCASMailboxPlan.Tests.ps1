@@ -24,7 +24,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Mock -CommandName Connect-ExchangeOnline -MockWith {
+        Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
 
@@ -106,30 +106,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the Set method" {
                 Set-TargetResource @testParams
-            }
-        }
-
-        Context -Name 'Test Fails When the Ensure Absent is specified' -Fixture {
-            $testParams = @{
-                Ensure             = 'Absent'
-                Identity           = 'ExchangeOnlineEnterprise-6f6c267b-f8db-4020-b441-f7bd966a0ca0'
-                GlobalAdminAccount = $GlobalAdminAccount
-                ActiveSyncEnabled  = $true
-                ImapEnabled        = $true
-                OwaMailboxPolicy   = 'OwaMailboxPolicy-Default'
-                PopEnabled         = $true
-            }
-
-            It 'Should throw error from the Get method' {
-                { Get-TargetResource @testParams } | Should Throw "EXOCASMailboxPlan configurations MUST specify Ensure value of 'Present'"
-            }
-
-            It 'Should throw error from the Set method' {
-                { Set-TargetResource @testParams } | Should Throw "EXOCASMailboxPlan configurations MUST specify Ensure value of 'Present'"
-            }
-
-            It 'Should throw error from the Test method' {
-                { Test-TargetResource @testParams } | Should Throw "EXOCASMailboxPlan configurations MUST specify Ensure value of 'Present'"
             }
         }
 

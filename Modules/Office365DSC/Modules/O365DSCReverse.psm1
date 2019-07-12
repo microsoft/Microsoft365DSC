@@ -9,7 +9,15 @@ function Start-O365ConfigurationExtract
 
         [Parameter()]
         [System.String[]]
-        $ComponentsToExtract
+        $ComponentsToExtract,
+
+        [Parameter()]
+        [Switch]
+        $AllComponents,
+
+        [Parameter()]
+        [System.String]
+        $Path
     )
 
     $organization = ""
@@ -43,24 +51,22 @@ function Start-O365ConfigurationExtract
     Add-ConfigurationDataEntry -Node "localhost" `
                                    -Key "ServerNumber" `
                                    -Value "0" `
-                                   -Description "Default Valus Used to Ensure a Configuration Data File is Generated"
+                                   -Description "Default Value Used to Ensure a Configuration Data File is Generated"
+
     # Obtain central administration url from a User Principal Name
-    $centralAdminUrl = $null
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    $centralAdminUrl = Get-SPOAdministrationUrl
-    Add-ConfigurationDataEntry -Node "NonNodeData" `
-                               -Key "CentralAdminUrl" `
-                               -Value $centralAdminUrl `
-                               -Description "Url of the SharePoint Central Adminsitration"
+    $centralAdminUrl = Get-SPOAdministrationUrl -GlobalAdminAccount $GlobalAdminAccount
 
     # Add the GlobalAdminAccount to the Credentials List
     Save-Credentials -UserName "globaladmin"
 
     #region "O365AdminAuditLogConfig"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckO365AdminAuditLogConfig"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckO365AdminAuditLogConfig")) -or
+        $AllComponents)
     {
         Write-Information "Extracting O365AdminAuditLogConfig..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $O365AdminAuditLogConfig = Get-AdminAuditLogConfig
 
         $O365AdminAuditLogConfigModulePath = Join-Path -Path $PSScriptRoot `
@@ -79,7 +85,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOAtpPolicyForO365"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOAtpPolicyForO365"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOAtpPolicyForO365")) -or
+        $AllComponents)
     {
         if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-AtpPolicyForO365)
         {
@@ -99,10 +107,13 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOCASMailboxPlan"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOCASMailboxPlan"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOCASMailboxPlan")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOCASMailboxPlan..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $CASMailboxPlans = Get-CASMailboxPlan
         $EXOCASMailboxPlanModulePath = Join-Path -Path $PSScriptRoot `
                                                 -ChildPath "..\DSCResources\MSFT_EXOCASMailboxPlan\MSFT_EXOCASMailboxPlan.psm1" `
@@ -118,10 +129,13 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOClientAccessRule"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOClientAccessRule"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOClientAccessRule")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOClientAccessRule..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $ClientAccessRules = Get-ClientAccessRule
         $EXOClientAccessRuleModulePath = Join-Path -Path $PSScriptRoot `
                                                 -ChildPath "..\DSCResources\MSFT_EXOClientAccessRule\MSFT_EXOClientAccessRule.psm1" `
@@ -136,10 +150,13 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXODkimSigningConfig"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXODkimSigningConfig"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXODkimSigningConfig")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXODkimSigningConfig..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $DkimSigningConfigs = Get-DkimSigningConfig
         $EXODkimSigningConfigModulePath = Join-Path -Path $PSScriptRoot `
                                                     -ChildPath "..\DSCResources\MSFT_EXODkimSigningConfig\MSFT_EXODkimSigningConfig.psm1" `
@@ -152,9 +169,9 @@ function Start-O365ConfigurationExtract
             Write-Verbose -Message "    - [$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)}"
 
             $partialContent = Export-TargetResource -Identity $DkimSigningConfig.Identity -GlobalAdminAccount $GlobalAdminAccount
-            if ($partialContent.ToLower().IndexOf($principal) -gt 0)
+            if ($partialContent.ToLower().IndexOf($organization) -gt 0)
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape($principal), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
+                $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
             }
             $DSCContent += $partialContent
             $i++
@@ -163,10 +180,13 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOHostedConnectionFilterPolicy"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedConnectionFilterPolicy"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOHostedConnectionFilterPolicy")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOHostedConnectionFilterPolicy..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $HostedConnectionFilterPolicys = Get-HostedConnectionFilterPolicy
         $EXOHostedConnectionFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
                                                     -ChildPath "..\DSCResources\MSFT_EXOHostedConnectionFilterPolicy\MSFT_EXOHostedConnectionFilterPolicy.psm1" `
@@ -181,10 +201,13 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOHostedContentFilterPolicy"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedContentFilterPolicy"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOHostedContentFilterPolicy")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOHostedContentFilterPolicy..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
         $EXOHostedContentFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
                                                     -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterPolicy\MSFT_EXOHostedContentFilterPolicy.psm1" `
@@ -199,10 +222,13 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOHostedContentFilterRule"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedContentFilterRule"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOHostedContentFilterRule")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOHostedContentFilterRule..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $HostedContentFilterRules = Get-HostedContentFilterRule
         $EXOHostedContentFilterRuleModulePath = Join-Path -Path $PSScriptRoot `
                                                     -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterRule\MSFT_EXOHostedContentFilterRule.psm1" `
@@ -217,7 +243,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOHostedOutboundSpamFilterPolicy"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOHostedOutboundSpamFilterPolicy"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOHostedOutboundSpamFilterPolicy")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOHostedOutboundSpamFilterPolicy..."
         $EXOHostedOutboundSpamFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
@@ -230,12 +258,15 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOSafeAttachmentPolicy"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeAttachmentPolicy"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOSafeAttachmentPolicy")) -or
+        $AllComponents)
     {
         if (Confirm-ImportedCmdletIsAvailable -CmdletName GetSafeAttachmentPolicy)
         {
             Write-Information "Extracting EXOSafeAttachmentPolicy..."
-            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline
             $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
             $EXOSafeAttachmentPolicyModulePath = Join-Path -Path $PSScriptRoot `
                                                         -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentPolicy\MSFT_EXOSafeAttachmentPolicy.psm1" `
@@ -255,12 +286,15 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOSafeAttachmentRule"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeAttachmentRule"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOSafeAttachmentRule")) -or
+        $AllComponents)
     {
         if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
         {
             Write-Information "Extracting EXOSafeAttachmentRule..."
-            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline
             $SafeAttachmentRules = Get-SafeAttachmentRule
             $EXOSafeAttachmentRuleModulePath = Join-Path -Path $PSScriptRoot `
                                                         -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentRule\MSFT_EXOSafeAttachmentRule.psm1" `
@@ -280,12 +314,15 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOSafeLinksPolicy"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeLinksPolicy"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOSafeLinksPolicy")) -or
+        $AllComponents)
     {
         if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
         {
             Write-Information "Extracting EXOSafeLinksPolicy..."
-            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline
             $SafeLinksPolicies = Get-SafeLinksPolicy
             $EXOSafeLinksPolicyModulePath = Join-Path -Path $PSScriptRoot `
                                                         -ChildPath "..\DSCResources\MSFT_EXOSafeLinksPolicy\MSFT_EXOSafeLinksPolicy.psm1" `
@@ -305,12 +342,15 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOSafeLinksRule"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSafeLinksRule"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOSafeLinksRule")) -or
+        $AllComponents)
     {
         if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
         {
             Write-Information "Extracting EXOSafeLinksRule..."
-            Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline
             $SafeLinksRules = Get-SafeLinksRule
             $EXOSafeLinksRuleModulePath = Join-Path -Path $PSScriptRoot `
                                                         -ChildPath "..\DSCResources\MSFT_EXOSafeLinksRule\MSFT_EXOSafeLinksRule.psm1" `
@@ -330,10 +370,13 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "EXOMailTips"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOMailTips"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOMailTips")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOMailTips..."
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $OrgConfig = Get-OrganizationConfig
         $organizationName = $OrgConfig.Name
 
@@ -347,16 +390,18 @@ function Start-O365ConfigurationExtract
         {
             $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $organization + "`""), "`$ConfigurationData.NonNodeData.OrganizationName"
         }
-        if ($partialContent.ToLower().IndexOf($principal) -gt 0)
+        if ($partialContent.ToLower().IndexOf($organization) -gt 0)
         {
-            $partialContent = $partialContent -ireplace [regex]::Escape($principal), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
+            $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
         }
         $DSCContent += $partialContent
     }
     #endregion
 
     #region "EXOSharedMailbox"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOSharedMailbox"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOSharedMailbox")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOSharedMailbox..."
         $EXOSharedMailboxModulePath = Join-Path -Path $PSScriptRoot `
@@ -364,7 +409,8 @@ function Start-O365ConfigurationExtract
                                                 -Resolve
 
         Import-Module $EXOSharedMailboxModulePath | Out-Null
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $mailboxes = Get-Mailbox
         $mailboxes = $mailboxes | Where-Object -FilterScript { $_.RecipientTypeDetails -eq "SharedMailbox" }
 
@@ -388,7 +434,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "O365User"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckO365User"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckO365User")) -or
+        $AllComponents)
     {
         Write-Information "Extracting O365User..."
         $O365UserModulePath = Join-Path -Path $PSScriptRoot `
@@ -396,7 +444,7 @@ function Start-O365ConfigurationExtract
                                         -Resolve
 
         Import-Module $O365UserModulePath | Out-Null
-        Connect-MsolService -Credential $GlobalAdminAccount
+        Test-MSCloudLogin -Platform MSOnline -O365Credential $GlobalAdminAccount
 
         $users = Get-MsolUser
         $partialContent = ""
@@ -412,10 +460,10 @@ function Start-O365ConfigurationExtract
                 {
                     $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
                 }
-                if ($partialContent.ToLower().IndexOf($principal) -gt 0)
+                if ($partialContent.ToLower().IndexOf($organization) -gt 0)
                 {
-                    $partialContent = $partialContent -ireplace [regex]::Escape($principal + ":"), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0]):"
-                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
+                    $partialContent = $partialContent -ireplace [regex]::Escape($organization + ":"), "`$(`$ConfigurationData.NonNodeData.OrganizationName):"
+                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
                 }
                 $DSCContent += $partialContent
             }
@@ -425,7 +473,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "O365Group"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckO365Group"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckO365Group")) -or
+        $AllComponents)
     {
         Write-Information "Extracting O365Group..."
         $O365GroupModulePath = Join-Path -Path $PSScriptRoot `
@@ -435,7 +485,8 @@ function Start-O365ConfigurationExtract
         Import-Module $O365GroupModulePath | Out-Null
 
         # Other Groups
-        Connect-AzureAD -Credential $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform AzureAD
         $groups = Get-AzureADGroup | Where-Object -FilterScript {
                                          $_.MailNickName -ne "00000000-0000-0000-0000-000000000000"
                                      }
@@ -443,17 +494,26 @@ function Start-O365ConfigurationExtract
         $i = 1
         foreach ($group in $groups)
         {
+            $partialContent = ""
             Write-Information "    - [$i/$($groups.Length)] $($group.DisplayName)"
-            $DSCContent += Export-TargetResource -DisplayName $group.DisplayName `
+            $partialContent += Export-TargetResource -DisplayName $group.DisplayName `
+                                                 -ManagedBy "DummyUser" `
                                                  -MailNickName $group.MailNickName `
                                                  -GlobalAdminAccount $GlobalAdminAccount
+            if ($partialContent.ToLower().IndexOf($organization) -gt 0)
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
+            }
+            $DSCContent += $partialContent
             $i++
         }
     }
     #endregion
 
     #region "EXOMailboxSettings"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckEXOMailboxSettings"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOMailboxSettings")) -or
+        $AllComponents)
     {
         Write-Information "Extracting EXOMailboxSettings..."
         $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `
@@ -461,7 +521,8 @@ function Start-O365ConfigurationExtract
                                                   -Resolve
 
         Import-Module $EXOMailboxSettingsModulePath | Out-Null
-        Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform ExchangeOnline
         $mailboxes = Get-Mailbox
 
         $i = 1
@@ -479,7 +540,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "ODSettings"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckODSettings"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckODSettings")) -or
+        $AllComponents)
     {
         Write-Information "Extracting ODSettings..."
         $ODSettingsModulePath = Join-Path -Path $PSScriptRoot `
@@ -493,28 +556,87 @@ function Start-O365ConfigurationExtract
             $partialContent = Export-TargetResource -CentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+                $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
             }
             $DSCContent += $partialContent
         }
     }
     #endregion
 
+    #region "SCRetentionCompliancePolicy"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCRetentionCompliancePolicy")) -or
+        $AllComponents)
+    {
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform SecurityComplianceCenter
+
+        Write-Information "Extracting SCRetentionCompliancePolicy..."
+        $SCRetentionCompliancePolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_SCRetentionCompliancePolicy\MSFT_SCRetentionCompliancePolicy.psm1" `
+                                        -Resolve
+
+        Import-Module $SCRetentionCompliancePolicyModulePath | Out-Null
+        $policies = Get-RetentionCompliancePolicy
+
+        $i = 1
+        foreach ($policy in $policies)
+        {
+            Write-Information "    - [$i/$($policies.Length)] $($policy.Name)"
+            $partialContent = Export-TargetResource -Name $policy.Name -GlobalAdminAccount $GlobalAdminAccount
+            $DSCContent += $partialContent
+            $i++
+        }
+    }
+    #endregion
+
+    #region "SCRetentionComplianceRule"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCRetentionComplianceRule")) -or
+        $AllComponents)
+    {
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform SecurityComplianceCenter
+
+        Write-Information "Extracting SCRetentionComplianceRule..."
+        $SCRetentionComplianceRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                            -ChildPath "..\DSCResources\MSFT_SCRetentionComplianceRule\MSFT_SCRetentionComplianceRule.psm1" `
+                                            -Resolve
+
+        Import-Module $SCRetentionComplianceRuleModulePath | Out-Null
+        $rules = Get-RetentionComplianceRule
+
+        $i = 1
+        foreach ($rule in $rules)
+        {
+            Write-Information "    - [$i/$($rules.Length)] $($rule.Name)"
+            $partialContent = Export-TargetResource -Name $rule.Name -Policy $rule.Policy -GlobalAdminAccount $GlobalAdminAccount
+            $DSCContent += $partialContent
+            $i++
+        }
+    }
+    #endregion
+
     #region SPOApp
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOApp"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOApp")) -or
+        $AllComponents)
     {
         Write-Information "Extracting SPOApp..."
         $SPOAppModulePath = Join-Path -Path $PSScriptRoot `
-                                                     -ChildPath "..\DSCResources\MSFT_SPOApp\MSFT_SPOApp.psm1" `
-                                                     -Resolve
+                                      -ChildPath "..\DSCResources\MSFT_SPOApp\MSFT_SPOApp.psm1" `
+                                      -Resolve
 
         Import-Module $SPOAppModulePath | Out-Null
-        Test-PnPOnlineConnection -SiteUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -ConnectionUrl $centralAdminUrl `
+                          -O365Credential $GlobalAdminAccount `
+                          -Platform PnP
         try
         {
             $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
-            Test-PnPOnlineConnection -SiteUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
-
+            Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
+                              -O365Credential $GlobalAdminAccount `
+                              -Platform PnP
             $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
             $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
             $allFiles = $spfxFiles + $appFiles
@@ -534,7 +656,7 @@ function Start-O365ConfigurationExtract
                 if ($null -ne $app)
                 {
                     $partialContent = Export-TargetResource -Identity $identity `
-                                                            -Path ("`$(`$ConfigurationData.NonNodeData.AppsLocation)" + $file.Name) `
+                                                            -Path ("`$PSScriptRoot\" + $file.Name) `
                                                             -CentralAdminUrl $centralAdminUrl `
                                                             -GlobalAdminAccount $GlobalAdminAccount
                 }
@@ -544,20 +666,23 @@ function Start-O365ConfigurationExtract
                     $app = Get-PnpApp -Identity $file.Title -ErrorAction SilentlyContinue
 
                     $partialContent = Export-TargetResource -Identity $app.Title `
-                                                            -Path ("`$(`$ConfigurationData.NonNodeData.AppsLocation)" + $file.Name) `
+                                                            -Path ("`$PSScriptRoot\" + $file.Name) `
                                                             -CentralAdminUrl $centralAdminUrl `
                                                             -GlobalAdminAccount $GlobalAdminAccount
                 }
 
                 if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
                 {
-                    $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+                    $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
                 }
                 $DSCContent += $partialContent
                 $i++
             }
 
-            Test-PnPOnlineConnection -SiteUrl $tenantAppCatalogUrl -GlobalAdminAccount $GlobalAdminAccount
+            Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
+                              -O365Credential $GlobalAdminAccount `
+                              -Platform PnP
+
             foreach ($file in $allFiles)
             {
                 $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
@@ -573,7 +698,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "SPOSite"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSite"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOSite")) -or
+        $AllComponents)
     {
         Write-Information "Extracting SPOSite..."
         $SPOSiteModulePath = Join-Path -Path $PSScriptRoot `
@@ -582,7 +709,9 @@ function Start-O365ConfigurationExtract
 
         Import-Module $SPOSiteModulePath | Out-Null
 
-        Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                          -O365Credential $GlobalAdminAccount `
+                          -Platform SharePointOnline
         $invalidTemplates = @("SRCHCEN#0", "GROUP#0", "SPSMSITEHOST#0", "POINTPUBLISHINGHUB#0", "POINTPUBLISHINGTOPIC#0")
         $sites = Get-SPOSite -Limit All | Where-Object -FilterScript { $_.Template -notin $invalidTemplates }
 
@@ -597,8 +726,8 @@ function Start-O365ConfigurationExtract
 
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
-                $partialContent = $partialContent -ireplace [regex]::Escape($principal), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
+                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
+                $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
             }
             $DSCContent += $partialContent
             $i++
@@ -607,7 +736,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "SPOHubSite"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOHubSite"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOHubSite")) -or
+        $AllComponents)
     {
         Write-Information "Extracting SPOHubSite..."
         $SPOHubSiteModulePath = Join-Path -Path $PSScriptRoot `
@@ -618,7 +749,10 @@ function Start-O365ConfigurationExtract
         $partialContent = ""
         if ($centralAdminUrl)
         {
-            Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+            Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                              -O365Credential $GlobalAdminAccount `
+                              -Platform SharePointOnline
+
             $hubSites = Get-SPOHubSite
 
             $i = 1
@@ -628,7 +762,7 @@ function Start-O365ConfigurationExtract
                 $partialContent = Export-TargetResource -Url $hub.SiteUrl -CentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
                 if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
                 {
-                    $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+                    $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
                     $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0]).sharepoint.com/"
                 }
                 $DSCContent += $partialContent
@@ -639,7 +773,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "SPOSearchResultSource"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSearchResultSource"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOSearchResultSource")) -or
+        $AllComponents)
     {
         $InfoMapping = @(
         @{
@@ -679,7 +815,9 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSearchResultSourceModulePath | Out-Null
-        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                          -O365Credential $GlobalAdminAccount `
+                          -Platform PnP
         $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
         $sources =  $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
 
@@ -696,7 +834,7 @@ function Start-O365ConfigurationExtract
 
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
             }
             $DSCContent += $partialContent
             $i++
@@ -705,7 +843,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "SPOSearchManagedProperty"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSearchManagedProperty"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOSearchManagedProperty")) -or
+        $AllComponents)
     {
         Write-Information "Extracting SPOSearchManagedProperty..."
         $SPOSearchManagedPropertyModulePath = Join-Path -Path $PSScriptRoot `
@@ -713,7 +853,9 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSearchManagedPropertyModulePath | Out-Null
-        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                          -O365Credential $GlobalAdminAccount `
+                          -Platform PnP
         $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
         $properties =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
 
@@ -729,7 +871,7 @@ function Start-O365ConfigurationExtract
 
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
             }
             $DSCContent += $partialContent
             $i++
@@ -738,7 +880,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region SPOSiteDesign
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSiteDesign"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOSiteDesign")) -or
+        $AllComponents)
     {
         Write-Information "Extracting SPOSiteDesign..."
         $SPOSiteDesignModulePath = Join-Path -Path $PSScriptRoot `
@@ -746,7 +890,9 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSiteDesignModulePath | Out-Null
-        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                          -O365Credential $GlobalAdminAccount `
+                          -Platform PnP
 
         $siteDesigns = Get-PnPSiteDesign
 
@@ -761,7 +907,7 @@ function Start-O365ConfigurationExtract
 
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
             }
             $DSCContent += $partialContent
             $i++
@@ -770,7 +916,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region SPOSiteDesignRights
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOSiteDesignRights"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOSiteDesignRights")) -or
+        $AllComponents)
     {
         Write-Information "Extracting SPOSiteDesignRights..."
         $SPOSiteDesignModulePath = Join-Path -Path $PSScriptRoot `
@@ -778,7 +926,9 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSiteDesignModulePath | Out-Null
-        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                          -O365Credential $GlobalAdminAccount `
+                          -Platform PnP
 
         $siteDesigns = Get-PnPSiteDesign
 
@@ -788,12 +938,12 @@ function Start-O365ConfigurationExtract
         {
             Write-Information "    - [$i/$($siteDesigns.Length)] $($siteDesign.Title)"
             $partialContent += Export-TargetResource -SiteDesignTitle $siteDesign.Title `
-                                                 -CentralAdminUrl $centralAdminUrl `
-                                                 -GlobalAdminAccount $GlobalAdminAccount
+                                                     -CentralAdminUrl $CentralAdminUrl `
+                                                     -GlobalAdminAccount $GlobalAdminAccount
 
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.CentralAdminUrl"
+                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
             }
             $DSCContent += $partialContent
             $i++
@@ -801,19 +951,68 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
-    $Teams = Get-Team
+    #region SPOStorageEntity
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOStorageEntity")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SPOStorageEntity..."
+        $SPOModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_SPOStorageEntity\MSFT_SPOStorageEntity.psm1" `
+                                    -Resolve
+
+        Import-Module $SPOModulePath | Out-Null
+
+        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                          -O365Credential $GlobalAdminAccount `
+                          -Platform PnP
+
+        $storageEntities = Get-PnPStorageEntity
+
+        $i = 1
+        foreach ($storageEntity in $storageEntities)
+        {
+            Write-Information "    [$i/$($storageEntities.Length)] {$($storageEntity.Key)}"
+            $DSCContent += Export-TargetResource -Key $storageEntity.Key `
+                                                 -SiteUrl $centralAdminUrl `
+                                                 -GlobalAdminAccount $GlobalAdminAccount
+            $i++
+        }
+    }
+    #endregion
+
+    #region SPOTenantSettings
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOTenantSettings")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SPOTenantSettings..."
+        $SPOModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_SPOTenantSettings\MSFT_SPOTenantSettings.psm1" `
+                                    -Resolve
+
+        Import-Module $SPOModulePath | Out-Null
+
+        $DSCContent += Export-TargetResource -IsSingleInstance 'Yes' `
+                                             -CentralAdminUrl $centralAdminUrl `
+                                             -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
 
     #region "TeamsTeam"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsTeam"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckTeamsTeam")) -or
+        $AllComponents)
     {
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform MicrosoftTeams
         Write-Information "Extracting TeamsTeam..."
         $TeamsModulePath = Join-Path -Path $PSScriptRoot `
                                     -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
                                     -Resolve
 
         Import-Module $TeamsModulePath | Out-Null
-
+        $teams = Get-Team
         $i = 1
         foreach ($team in $teams)
         {
@@ -826,14 +1025,19 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "TeamsChannel"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsChannel"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckTeamsChannel")) -or
+        $AllComponents)
     {
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform MicrosoftTeams
         Write-Information "Extracting TeamsChannel..."
         $TeamsChannelModulePath = Join-Path -Path $PSScriptRoot `
                                         -ChildPath "..\DSCResources\MSFT_TeamsChannel\MSFT_TeamsChannel.psm1" `
                                         -Resolve
 
         Import-Module $TeamsChannelModulePath | Out-Null
+        $teams = Get-Team
         $j = 1
         foreach ($team in $Teams)
         {
@@ -854,14 +1058,19 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region "TeamsUser"
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckTeamsUser"))
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckTeamsUser")) -or
+        $AllComponents)
     {
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform MicrosoftTeams
         Write-Information "Extracting TeamsUser..."
         $TeamsModulePath = Join-Path -Path $PSScriptRoot `
                                         -ChildPath "..\DSCResources\MSFT_TeamsUser\MSFT_TeamsUser.psm1" `
                                         -Resolve
 
         Import-Module $TeamsModulePath | Out-Null
+        $teams = Get-Team
         $j = 1
         foreach ($team in $Teams)
         {
@@ -875,11 +1084,10 @@ function Start-O365ConfigurationExtract
                     Write-Information "        - [$i/$($users.Length)] $($user.User)"
                     $partialContent = Export-TargetResource -TeamName $team.DisplayName `
                                                         -User $user.User `
-                                                        -Role $user.Role `
                                                         -GlobalAdminAccount $GlobalAdminAccount
                     if ($partialContent.ToLower().Contains($principal.ToLower()))
                     {
-                        $partialContent = $partialContent -ireplace [regex]::Escape($principal), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
+                        $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
                     }
                     $DSCContent += $partialContent
                     $i++
@@ -893,28 +1101,6 @@ function Start-O365ConfigurationExtract
         }
     }
     #endregion
-
-    if ($null -ne $ComponentsToExtract -and $ComponentsToExtract.Contains("chckSPOStorageEntity"))
-    {
-        Write-Information "Extracting SPOStorageEntity..."
-        $SPOModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_SPOStorageEntity\MSFT_SPOStorageEntity.psm1" `
-                                    -Resolve
-
-        Import-Module $SPOModulePath | Out-Null
-
-        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-
-        $storageEntities = Get-PnPStorageEntity
-
-        foreach ($storageEntity in $storageEntities)
-        {
-            Write-Information "    Storage Entity {$($storageEntity.Key)}"
-            $DSCContent += Export-TargetResource -Key $storageEntity.Key `
-                                                -CentralAdminUrl $centralAdminUrl `
-                                                -GlobalAdminAccount $GlobalAdminAccount
-        }
-    }
 
     # Close the Node and Configuration declarations
     $DSCContent += "    }`r`n"
@@ -944,7 +1130,15 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region Prompt the user for a location to save the extract and generate the files
-    $OutputDSCPath = Read-Host "Destination Path"
+    if ($null -eq $Path -or "" -eq $Path)
+    {
+        $OutputDSCPath = Read-Host "Destination Path"
+    }
+    else
+    {
+        $OutputDSCPath = $Path
+    }
+
     while ((Test-Path -Path $OutputDSCPath -PathType Container -ErrorAction SilentlyContinue) -eq $false)
     {
         try
@@ -970,10 +1164,6 @@ function Start-O365ConfigurationExtract
     #region Copy Downloaded files back into output folder
     if ($filesToDownload.Count -gt 0)
     {
-        Add-ConfigurationDataEntry -Node "NonNodeData" `
-                                   -Key "AppsLocation" `
-                                   -Value $OutputDSCPath `
-                                   -Description "Location of the .app and .sppkg packages"
         foreach ($fileToCopy in $filesToDownload)
         {
             $filePath = Join-Path $env:Temp $fileToCopy.Name -Resolve

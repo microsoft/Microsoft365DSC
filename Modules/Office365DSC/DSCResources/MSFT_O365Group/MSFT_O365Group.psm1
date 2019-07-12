@@ -12,13 +12,13 @@ function Get-TargetResource
         [System.String]
         $DisplayName,
 
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $ManagedBy,
+
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String[]]
-        $ManagedBy,
 
         [Parameter()]
         [System.String[]]
@@ -45,7 +45,8 @@ function Get-TargetResource
         Ensure = "Absent"
     }
 
-    $catch = Connect-AzureAD -Credential $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform AzureAD
 
     $ADGroup = Get-AzureADGroup -SearchString $MailNickName -ErrorAction SilentlyContinue
     if ($null -eq $ADGroup)
@@ -65,10 +66,24 @@ function Get-TargetResource
         Write-Verbose -Message "Found Members for Group {$($ADGroup.DisplayName)}"
         $owners = Get-AzureADGroupOwner -ObjectId $ADGroup.ObjectId
         Write-Verbose -Message "Found Owners for Group {$($ADGroup.DisplayName)}"
-        $ownersUPN = $null
+        $ownersUPN = @()
         if ($null -ne $owners)
         {
-            $ownersUPN = $owners.UserPrincipalName
+            # Need to cast as an array for the test to properly compare cases with
+            # a single owner;
+            $ownersUPN = [System.String[]]$owners.UserPrincipalName
+
+            # Also need to remove the owners from the members list for Test
+            # to handle the validation properly;
+            $newMemberList = @()
+
+            foreach ($member in $membersList)
+            {
+                if (-not $ownersUPN.Contains($member.UserPrincipalName))
+                {
+                    $newMemberList += $member.UserPrincipalName
+                }
+            }
         }
 
         $description = ""
@@ -80,7 +95,7 @@ function Get-TargetResource
         $returnValue = @{
             DisplayName = $ADGroup.DisplayName
             MailNickName = $ADGroup.MailNickName
-            Members = $membersList.UserPrincipalName
+            Members = $newMemberList
             ManagedBy = $ownersUPN
             Description = $description
             GlobalAdminAccount = $GlobalAdminAccount
@@ -115,13 +130,13 @@ function Set-TargetResource
         [System.String]
         $DisplayName,
 
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $ManagedBy,
+
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String[]]
-        $ManagedBy,
 
         [Parameter()]
         [System.String[]]
@@ -138,10 +153,10 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $currentGroup = Get-TargetResource @PSBoundParameters
-
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
 
     if ($Ensure -eq "Present")
     {
@@ -216,10 +231,12 @@ function Set-TargetResource
                     {
                         if ($diff.SideIndicator -eq "<=" -and $diff.InputObject -ne $ManagedBy.Split('@')[0])
                         {
+                            Write-Verbose "Will be removing Member: {$($diff.InputObject)}"
                             $membersToRemove += $diff.InputObject
                         }
                         elseif ($diff.SideIndicator -eq "=>")
                         {
+                            Write-Verbose "Will be adding Member: {$($diff.InputObject)}"
                             $membersToAdd += $diff.InputObject
                         }
                     }
@@ -229,10 +246,12 @@ function Set-TargetResource
                 {
                     if ("" -ne $MailNickName)
                     {
+                        Write-Verbose "Adding members {$($membersToAdd.ToString())}"
                         Add-UnifiedGroupLinks -Identity $MailNickName -LinkType Members -Links $membersToAdd
                     }
                     else
                     {
+                        Write-Verbose "Adding members {$($membersToAdd.ToString())} with DisplayName"
                         Add-UnifiedGroupLinks -Identity $DisplayName -LinkType Members -Links $membersToAdd
                     }
                 }
@@ -267,13 +286,13 @@ function Test-TargetResource
         [System.String]
         $DisplayName,
 
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $ManagedBy,
+
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String[]]
-        $ManagedBy,
 
         [Parameter()]
         [System.String[]]
@@ -322,6 +341,10 @@ function Export-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ManagedBy,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

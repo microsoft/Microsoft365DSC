@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [string] 
+    [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
@@ -21,11 +21,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Test-SPOServiceConnection -MockWith {
+        Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
 
-        # Test contexts 
+        # Test contexts
         Context -Name "SPOSharing settings are not configured" -Fixture {
             $testParams = @{
                 CentralAdminUrl                            = "https://o365dsc1-admin.sharepoint.com"
@@ -53,7 +53,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 RequireAcceptingAccountMatchInvitedAccount = $false
             }
 
-            Mock -CommandName Set-SPOTenant -MockWith { 
+            Mock -CommandName Set-SPOTenant -MockWith {
                 return @{
                     SharingCapability                          = 'ExternalUserSharingOnly'
                     ShowEveryoneClaim                          = $false
@@ -78,7 +78,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-SPOTenant -MockWith { 
+            Mock -CommandName Get-SPOTenant -MockWith {
                 return @{
                     SharingCapability                          = 'Disabled'
                     ShowEveryoneClaim                          = $false
@@ -111,7 +111,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 set-TargetResource @testParams
             }
         }
-        
+
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 CentralAdminUrl                            = "https://o365dsc1-admin.sharepoint.com"
@@ -139,7 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 RequireAcceptingAccountMatchInvitedAccount = $false
             }
 
-            Mock -CommandName Get-SPOTenant -MockWith { 
+            Mock -CommandName Get-SPOTenant -MockWith {
                 return @{
                     CentralAdminUrl                            = "https://o365dsc1-admin.sharepoint.com"
                     GlobalAdminAccount                         = $GlobalAdminAccount

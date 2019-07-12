@@ -34,7 +34,7 @@ function Get-TargetResource
         $NotifyOutboundSpam = $true,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -45,17 +45,13 @@ function Get-TargetResource
 
     Write-Verbose -Message "Testing configuration of HostedOutboundSpamFilterPolicy for $Identity"
 
-    if ('Absent' -eq $Ensure)
-    {
-        throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Ensure value of 'Present'"
-    }
-
     if ('Default' -ne $Identity)
     {
         throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Identity value of 'Default'"
     }
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $HostedOutboundSpamFilterPolicies = Get-HostedOutboundSpamFilterPolicy
 
@@ -130,7 +126,7 @@ function Set-TargetResource
         $NotifyOutboundSpam = $true,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -141,17 +137,13 @@ function Set-TargetResource
 
     Write-Verbose -Message "Testing configuration of HostedOutboundSpamFilterPolicy for $Identity"
 
-    if ('Absent' -eq $Ensure)
-    {
-        throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Ensure value of 'Present'"
-    }
-
     if ('Default' -ne $Identity)
     {
         throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Identity value of 'Default'"
     }
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $HostedOutboundSpamFilterPolicyParams = $PSBoundParameters
     $HostedOutboundSpamFilterPolicyParams.Remove('Ensure') | Out-Null
@@ -198,7 +190,7 @@ function Test-TargetResource
         $NotifyOutboundSpam = $true,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 

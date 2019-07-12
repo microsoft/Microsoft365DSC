@@ -96,11 +96,11 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of RetentionCompliancePolicy for $Name"
 
-    Write-Verbose -Message "Calling Test-SecurityAndComplianceConnection function:"
-    Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SecurityComplianceCenter
 
     $PolicyObjects = Get-RetentionCompliancePolicy
-    $PolicyObject = $PolicyObjects | Where-Object {$_.Identity -eq $Name}
+    $PolicyObject = $PolicyObjects | Where-Object {$_.Name -eq $Name}
 
     if ($null -eq $PolicyObject)
     {
@@ -113,22 +113,27 @@ function Get-TargetResource
     {
         Write-Verbose "Found existing RetentionCompliancePolicy $($Name)"
         $result = @{
-            Ensure = 'Present'
-        }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-        {
-            if ($null -ne $PolicyObject.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $PolicyObject.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
+            Ensure                        = 'Present'
+            Name                          = $PolicyObject.Name
+            Comment                       = $PolicyObject.Comment
+            DynamicScopeLocation          = $PolicyObject.DynamicScopeLocation
+            Enabled                       = $PolicyObject.Enabled
+            ExchangeLocation              = $PolicyObject.ExchangeLocation
+            ExchangeLocationException     = $PolicyObject.ExchangeLocationException
+            ModernGroupLocation           = $PolicyObject.ModernGroupLocation
+            ModernGroupLocationException  = $PolicyObject.ModernGroupLocationException
+            OneDriveLocation              = $PolicyObject.OneDriveLocation
+            OneDriveLocationException     = $PolicyObject.OneDriveLocationException
+            PublicFolderLocation          = $PolicyObject.PublicFolderLocation
+            RestrictiveRetention          = $PolicyObject.RestrictiveRetention
+            SharePointLocation            = $PolicyObject.SharePointLocation
+            SharePointLocationException   = $PolicyObject.SharePointLocationException
+            SkypeLocation                 = $PolicyObject.SkypeLocation
+            SkypeLocationException        = $PolicyObject.SkypeLocationException
+            TeamsChannelLocation          = $PolicyObject.TeamsChannelLocation
+            TeamsChannelLocationException = $PolicyObject.TeamsChannelLocationException
+            TeamsChatLocation             = $PolicyObject.TeamsChatLocation
+            TeamsChatLocationException    = $PolicyObject.TeamsChatLocationException
         }
 
         Write-Verbose -Message "Found RetentionCompliancePolicy $($Name)"
@@ -235,7 +240,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of RetentionCompliancePolicy for $Name"
 
-    Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SecurityComplianceCenter
+
     $CurrentPolicy = Get-TargetResource @PSBoundParameters
 
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
