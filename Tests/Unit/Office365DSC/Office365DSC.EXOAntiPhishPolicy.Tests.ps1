@@ -24,7 +24,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Mock -CommandName MSCloudLogin -MockWith {
+        Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
 
