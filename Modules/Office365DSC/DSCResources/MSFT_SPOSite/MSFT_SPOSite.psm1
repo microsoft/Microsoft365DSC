@@ -8,7 +8,7 @@ function Get-TargetResource
         [System.String]
         $Url,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Owner,
 
@@ -269,13 +269,13 @@ function Set-TargetResource
         [System.String]
         $Url,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Owner,
 
         [Parameter()]
         [System.UInt32]
-        $StorageQuota,
+        $StorageQuota = 26214400,
 
         [Parameter()]
         [System.String]
@@ -453,13 +453,13 @@ function Test-TargetResource
         [System.String]
         $Url,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Owner,
 
         [Parameter()]
         [System.UInt32]
-        $StorageQuota,
+        $StorageQuota = 26214400,
 
         [Parameter()]
         [System.String]
@@ -639,6 +639,10 @@ function Export-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
+        $Owner,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
         $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
@@ -672,13 +676,13 @@ function Set-SPOSiteConfiguration
         [System.String]
         $Url,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Owner,
 
         [Parameter()]
         [System.UInt32]
-        $StorageQuota,
+        $StorageQuota = 26214400,
 
         [Parameter()]
         [System.String]
@@ -800,7 +804,11 @@ function Set-SPOSiteConfiguration
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsSecondTry = $false
     )
     Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
                       -O365Credential $GlobalAdminAccount `
@@ -972,7 +980,15 @@ function Set-SPOSiteConfiguration
             Template = $Template
         }
         New-SPOSite @siteCreation
-        $CurrentParameters4Config = $PSBoundParameters
-        Set-SPOSiteConfiguration @CurrentParameters4Config
+
+        if (-not $IsSecondTry)
+        {
+            $CurrentParameters4Config = $PSBoundParameters
+            Set-SPOSiteConfiguration @CurrentParameters4Config -IsSecondTry $true
+        }
+        else
+        {
+            throw "There was an error trying to create SPOSite $Url"
+        }
     }
 }

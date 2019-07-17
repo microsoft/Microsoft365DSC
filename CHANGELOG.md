@@ -8,6 +8,8 @@
 * BREAKING CHANGES
   * O365Group
     * ManagedBy is now a mandatory property
+  * SPOSite
+    * Owner is now a mandatory property
 * Modules
   * Added embedded Log Engine
 * SCRetentionCompliancePolicy
@@ -18,3 +20,6 @@
   * Initial Release
 * SCSupervisoryReviewRule
   * Initial Release
+* SPOSite
+  * Added default value for Storage Quota
+  * Fixed an issue with site creation that could result in infinite loops
