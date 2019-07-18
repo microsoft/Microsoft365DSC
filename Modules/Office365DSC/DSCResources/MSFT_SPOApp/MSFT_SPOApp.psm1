@@ -34,7 +34,7 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "GSetting configuration for app $Identity"
+    Write-Verbose -Message "Getting configuration for app $Identity"
 
     $nullReturn = @{
         Identity        = ""
