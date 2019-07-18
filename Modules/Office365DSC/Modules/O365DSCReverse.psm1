@@ -721,7 +721,7 @@ function Start-O365ConfigurationExtract
         {
             Write-Information "    - [$i/$($sites.Length)] $($site.Url)"
             $partialContent = Export-TargetResource -Url $site.Url `
-                                                    -Owner "Reverse"
+                                                    -Owner "Reverse" `
                                                     -CentralAdminUrl $centralAdminUrl `
                                                     -GlobalAdminAccount $GlobalAdminAccount
 
