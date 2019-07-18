@@ -961,6 +961,7 @@ function Set-SPOSiteConfiguration
             if ($CurrentParameters.ContainsKey("Template")) { $null = $CurrentParameters.Remove("Template") }
             if ($CurrentParameters.ContainsKey("LocaleId")) { $null = $CurrentParameters.Remove("LocaleId") }
             if ($CurrentParameters.ContainsKey("HubUrl")) { $null = $CurrentParameters.Remove("HubUrl") }
+            if ($CurrentParameters.ContainsKey("IsSecondTry")) { $null = $CurrentParameters.Remove("IsSecondTry") }
             if ($CurrentParameters.Count -gt 0)
             {
                 Set-SPOSite -Identity $Url @CurrentParameters -NoWait
