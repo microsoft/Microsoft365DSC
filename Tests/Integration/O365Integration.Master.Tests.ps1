@@ -96,7 +96,7 @@ Configuration Master
 
         SPOSite ClassicSite
         {
-            Name                 = "Classic Site"
+            Title                = "Classic Site"
             Url                  = "https://o365dsc.sharepoint.com/sites/Classic"
             Owner                = "adminnonMFA@o365dsc.onmicrosoft.com"
             Template             = "STS#0"
@@ -107,7 +107,7 @@ Configuration Master
 
         SPOSite ModernSite
         {
-            Name                 = "Modern Site"
+            Title                = "Modern Site"
             Url                  = "https://o365dsc.sharepoint.com/sites/Modern"
             Owner                = "admin@o365dsc.onmicrosoft.com"
             Template             = "STS#3"
