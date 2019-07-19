@@ -17,7 +17,6 @@ Configuration Example
         SPOTenantSettings MyTenantSettings
         {
             IsSingleInstance                                = "Yes"
-            CentralAdminUrl                                 = "https://o365dsc1-admin.sharepoint.com"
             GlobalAdminAccount                              = $credsGlobalAdmin
             MinCompatibilityLevel                           = 16
             MaxCompatibilityLevel                           = 16

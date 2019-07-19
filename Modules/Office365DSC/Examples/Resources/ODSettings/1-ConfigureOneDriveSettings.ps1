@@ -16,7 +16,7 @@ Configuration Example
     {
         ODSettings OneDriveSettings
         {
-            CentralAdminUrl                           = "https://o365dsc1-admin.sharepoint.com"
+            IsSingleInstance =                        = "Yes"
             GlobalAdminAccount                        = $credsGlobalAdmin
             OneDriveStorageQuota                      = "1024"
             ExcludedFileExtensions                    = @("pst")
