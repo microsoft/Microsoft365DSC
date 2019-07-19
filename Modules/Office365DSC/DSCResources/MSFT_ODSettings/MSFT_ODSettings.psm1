@@ -4,9 +4,10 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [ValidateSet("Yes")]
         [System.String]
-        $CentralAdminUrl,
+        $IsSingleInstance,
 
         [Parameter()]
         [System.UInt32]
@@ -76,7 +77,7 @@ function Get-TargetResource
                       -Platform SharePointOnline
 
     $nullReturn = @{
-        CentralAdminUrl                           = $CentralAdminUrl
+        IsSingleInstance                          = "Yes"
         BlockMacSync                              = $null
         DisableReportProblemDialog                = $null
         DomainGuids                               = $null
@@ -145,7 +146,7 @@ function Get-TargetResource
         }
 
         return @{
-            CentralAdminUrl                           = $CentralAdminUrl
+            IsSingleInstance                          = "Yes"
             BlockMacSync                              = $tenantRestrictions.BlockMacSync
             DisableReportProblemDialog                = $tenantRestrictions.DisableReportProblemDialog
             DomainGuids                               = $FixedAllowedDomainList
@@ -174,9 +175,10 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [ValidateSet("Yes")]
         [System.String]
-        $CentralAdminUrl,
+        $IsSingleInstance,
 
         [Parameter()]
         [System.UInt32]
@@ -241,15 +243,13 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of OneDrive Settings"
 
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SharePointOnline
 
     ## Configure OneDrive settings
     ## Parameters below are remove for the Set-SPOTenant cmdlet
     ## they are used in the Set-SPOTenantSyncClientRestriction cmdlet
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
 
     if ($CurrentParameters.ContainsKey("BlockMacSync"))
@@ -318,10 +318,10 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [ValidateSet("Yes")]
         [System.String]
-        $CentralAdminUrl,
+        $IsSingleInstance,
 
         [Parameter()]
         [System.UInt32]
@@ -418,9 +418,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [ValidateSet("Yes")]
         [System.String]
-        $CentralAdminUrl,
+        $IsSingleInstance,
 
         [Parameter()]
         [System.UInt32]

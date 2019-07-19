@@ -28,7 +28,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "SPOSharing settings are not configured" -Fixture {
             $testParams = @{
-                CentralAdminUrl                            = "https://o365dsc1-admin.sharepoint.com"
                 GlobalAdminAccount                         = $GlobalAdminAccount
                 IsSingleInstance                           = "Yes"
                 SharingCapability                          = 'ExternalUserSharingOnly'
@@ -114,7 +113,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                CentralAdminUrl                            = "https://o365dsc1-admin.sharepoint.com"
                 GlobalAdminAccount                         = $GlobalAdminAccount
                 IsSingleInstance                           = "Yes"
                 SharingCapability                          = 'ExternalUserSharingOnly'
@@ -141,7 +139,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-SPOTenant -MockWith {
                 return @{
-                    CentralAdminUrl                            = "https://o365dsc1-admin.sharepoint.com"
                     GlobalAdminAccount                         = $GlobalAdminAccount
                     SharingCapability                          = 'ExternalUserSharingOnly'
                     ShowEveryoneClaim                          = $false

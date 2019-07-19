@@ -553,7 +553,7 @@ function Start-O365ConfigurationExtract
         $partialContent = ""
         if ($centralAdminUrl)
         {
-            $partialContent = Export-TargetResource -CentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+            $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
             {
                 $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
@@ -628,8 +628,7 @@ function Start-O365ConfigurationExtract
                                       -Resolve
 
         Import-Module $SPOAppModulePath | Out-Null
-        Test-MSCloudLogin -ConnectionUrl $centralAdminUrl `
-                          -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                           -Platform PnP
         try
         {
@@ -657,7 +656,6 @@ function Start-O365ConfigurationExtract
                 {
                     $partialContent = Export-TargetResource -Identity $identity `
                                                             -Path ("`$PSScriptRoot\" + $file.Name) `
-                                                            -CentralAdminUrl $centralAdminUrl `
                                                             -GlobalAdminAccount $GlobalAdminAccount
                 }
                 else
@@ -667,7 +665,6 @@ function Start-O365ConfigurationExtract
 
                     $partialContent = Export-TargetResource -Identity $app.Title `
                                                             -Path ("`$PSScriptRoot\" + $file.Name) `
-                                                            -CentralAdminUrl $centralAdminUrl `
                                                             -GlobalAdminAccount $GlobalAdminAccount
                 }
 
@@ -709,8 +706,7 @@ function Start-O365ConfigurationExtract
 
         Import-Module $SPOSiteModulePath | Out-Null
 
-        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                          -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                           -Platform SharePointOnline
         $invalidTemplates = @("SRCHCEN#0", "GROUP#0", "SPSMSITEHOST#0", "POINTPUBLISHINGHUB#0", "POINTPUBLISHINGTOPIC#0")
         $sites = Get-SPOSite -Limit All | Where-Object -FilterScript { $_.Template -notin $invalidTemplates }
@@ -722,7 +718,6 @@ function Start-O365ConfigurationExtract
             Write-Information "    - [$i/$($sites.Length)] $($site.Url)"
             $partialContent = Export-TargetResource -Url $site.Url `
                                                     -Owner "Reverse" `
-                                                    -CentralAdminUrl $centralAdminUrl `
                                                     -GlobalAdminAccount $GlobalAdminAccount
 
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
@@ -750,8 +745,7 @@ function Start-O365ConfigurationExtract
         $partialContent = ""
         if ($centralAdminUrl)
         {
-            Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                              -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                               -Platform SharePointOnline
 
             $hubSites = Get-SPOHubSite
@@ -760,7 +754,7 @@ function Start-O365ConfigurationExtract
             foreach ($hub in $hubSites)
             {
                 Write-Information "    - [$i/$($hubSites.Length)] $($hub.SiteUrl)"
-                $partialContent = Export-TargetResource -Url $hub.SiteUrl -CentralAdminUrl $centralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+                $partialContent = Export-TargetResource -Url $hub.SiteUrl -GlobalAdminAccount $GlobalAdminAccount
                 if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
                 {
                     $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
@@ -816,8 +810,7 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSearchResultSourceModulePath | Out-Null
-        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                          -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                           -Platform PnP
         $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
         $sources =  $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
@@ -830,7 +823,6 @@ function Start-O365ConfigurationExtract
             Write-Information "    - [$i/$($sources.Length)] $($source.Name)"
             $partialContent = Export-TargetResource -Name $source.Name `
                                                     -Protocol $mapping.Protocol `
-                                                    -CentralAdminUrl $centralAdminUrl `
                                                     -GlobalAdminAccount $GlobalAdminAccount
 
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
@@ -854,8 +846,7 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSearchManagedPropertyModulePath | Out-Null
-        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                          -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                           -Platform PnP
         $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
         $properties =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
@@ -867,7 +858,6 @@ function Start-O365ConfigurationExtract
             Write-Information "    - [$i/$($properties.Length)] $($property.Value.Name)"
             $partialContent = Export-TargetResource -Name $property.Value.Name `
                                                     -Type $property.Value.ManagedType `
-                                                    -CentralAdminUrl $centralAdminUrl `
                                                     -GlobalAdminAccount $GlobalAdminAccount
 
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
@@ -891,8 +881,7 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSiteDesignModulePath | Out-Null
-        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                          -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                           -Platform PnP
 
         $siteDesigns = Get-PnPSiteDesign
@@ -903,7 +892,6 @@ function Start-O365ConfigurationExtract
         {
             Write-Information "    - [$i/$($siteDesigns.Length)] $($siteDesign.Title)"
             $partialContent = Export-TargetResource -Title $siteDesign.Title `
-                                                    -CentralAdminUrl $centralAdminUrl `
                                                     -GlobalAdminAccount $GlobalAdminAccount
 
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
@@ -927,8 +915,7 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSiteDesignModulePath | Out-Null
-        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                          -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                           -Platform PnP
 
         $siteDesigns = Get-PnPSiteDesign
@@ -939,7 +926,6 @@ function Start-O365ConfigurationExtract
         {
             Write-Information "    - [$i/$($siteDesigns.Length)] $($siteDesign.Title)"
             $partialContent += Export-TargetResource -SiteDesignTitle $siteDesign.Title `
-                                                     -CentralAdminUrl $CentralAdminUrl `
                                                      -GlobalAdminAccount $GlobalAdminAccount
 
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
@@ -995,7 +981,6 @@ function Start-O365ConfigurationExtract
         Import-Module $SPOModulePath | Out-Null
 
         $DSCContent += Export-TargetResource -IsSingleInstance 'Yes' `
-                                             -CentralAdminUrl $centralAdminUrl `
                                              -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion

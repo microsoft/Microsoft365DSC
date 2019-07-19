@@ -92,7 +92,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Type               = "SharePoint"
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
             }
             $xmlTemplatePath = Join-Path -Path $PSScriptRoot `
                                          -ChildPath "..\..\..\Modules\Office365DSC\Dependencies\SearchConfigurationSettings.xml" `
@@ -129,7 +128,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Type               = "SharePoint"
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
             }
             Mock -CommandName Get-PnPSearchConfiguration -MockWith {
                 return $existingValueXML

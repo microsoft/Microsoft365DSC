@@ -43,18 +43,13 @@ function Get-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesign for $Title"
 
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SharePointOnline
     $nullReturn = @{
         Title               = $Title
@@ -66,7 +61,6 @@ function Get-TargetResource
         PreviewImageUrl     = $PreviewImageUrl
         Version             = $Version
         Ensure              = "Absent"
-        CentralAdminUrl     = $CentralAdminUrl
         GlobalAdminAccount  = $GlobalAdminAccount
     }
 
@@ -107,7 +101,6 @@ function Get-TargetResource
         PreviewImageUrl     = $siteDesign.PreviewImageUrl
         Version             = $siteDesign.Version
         Ensure              = "Present"
-        CentralAdminUrl     = $CentralAdminUrl
         GlobalAdminAccount  = $GlobalAdminAccount
     }
 }
@@ -156,18 +149,13 @@ function Set-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Setting configuration for SPO SiteDesign for $Title"
 
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SharePointOnline
 
     $curSiteDesign = Get-TargetResource @PSBoundParameters
@@ -181,7 +169,6 @@ function Set-TargetResource
     }
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("SiteScriptNames")
     $CurrentParameters.Remove("Ensure")
@@ -258,10 +245,6 @@ function Test-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -274,7 +257,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('CentralAdminUrl') | Out-Null
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
@@ -295,10 +277,6 @@ function Export-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Title,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
