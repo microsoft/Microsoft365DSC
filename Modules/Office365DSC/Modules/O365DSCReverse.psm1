@@ -636,60 +636,68 @@ function Start-O365ConfigurationExtract
             Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
                               -O365Credential $GlobalAdminAccount `
                               -Platform PnP
-            $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
-            $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
-            $allFiles = $spfxFiles + $appFiles
-            $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
-            $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
 
-            $partialContent = ""
-            $i = 1
-            foreach ($file in $allFiles)
+            if (-not [string]::IsNullOrEmpty($tenantAppCatalogUrl))
             {
-                Write-Information "    - [$i/$($allFiles.Length)] $($file.Name)"
-                $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl}
+                $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
+                $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+                $allFiles = $spfxFiles + $appFiles
+                $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
+                $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
 
-                $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
-                $app = Get-PnpApp -Identity $identity -ErrorAction SilentlyContinue
-
-                if ($null -ne $app)
+                $partialContent = ""
+                $i = 1
+                foreach ($file in $allFiles)
                 {
-                    $partialContent = Export-TargetResource -Identity $identity `
-                                                            -Path ("`$PSScriptRoot\" + $file.Name) `
-                                                            -GlobalAdminAccount $GlobalAdminAccount
-                }
-                else
-                {
-                    # Case - Where file name doesn't match the App's Title in the catalog
-                    $app = Get-PnpApp -Identity $file.Title -ErrorAction SilentlyContinue
+                    Write-Information "    - [$i/$($allFiles.Length)] $($file.Name)"
+                    $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl}
 
-                    $partialContent = Export-TargetResource -Identity $app.Title `
-                                                            -Path ("`$PSScriptRoot\" + $file.Name) `
-                                                            -GlobalAdminAccount $GlobalAdminAccount
+                    $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
+                    $app = Get-PnpApp -Identity $identity -ErrorAction SilentlyContinue
+
+                    if ($null -ne $app)
+                    {
+                        $partialContent = Export-TargetResource -Identity $identity `
+                                                                -Path ("`$PSScriptRoot\" + $file.Name) `
+                                                                -GlobalAdminAccount $GlobalAdminAccount
+                    }
+                    else
+                    {
+                        # Case - Where file name doesn't match the App's Title in the catalog
+                        $app = Get-PnpApp -Identity $file.Title -ErrorAction SilentlyContinue
+
+                        $partialContent = Export-TargetResource -Identity $app.Title `
+                                                                -Path ("`$PSScriptRoot\" + $file.Name) `
+                                                                -GlobalAdminAccount $GlobalAdminAccount
+                    }
+
+                    if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
+                    {
+                        $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
+                    }
+                    $DSCContent += $partialContent
+                    $i++
                 }
 
-                if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
+                Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
+                                -O365Credential $GlobalAdminAccount `
+                                -Platform PnP
+
+                foreach ($file in $allFiles)
                 {
-                    $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
+                    $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
+                    $fileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length -1]
+                    Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $fileName -AsFile | Out-Null
                 }
-                $DSCContent += $partialContent
-                $i++
             }
-
-            Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
-                              -O365Credential $GlobalAdminAccount `
-                              -Platform PnP
-
-            foreach ($file in $allFiles)
+            else
             {
-                $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
-                $fileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length -1]
-                Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $fileName -AsFile | Out-Null
+                Write-Information "    * App Catalog is not configured on tenant. Cannot extract information about SharePoint apps."
             }
         }
         catch
         {
-            Write-Information "    * App Catalog is not configured on tenant. Cannot extract information about SharePoint apps."
+            throw $_
         }
     }
     #endregion
