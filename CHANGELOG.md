@@ -2,27 +2,34 @@
 
 ## Unreleased
 
-* GENERAL
-  * Updated Dependency on SharePointPnPPowerShellOnline
-    to version 3.11.1907.0
 * BREAKING CHANGES
-  * OD
-    * ManagedBy is now a mandatory property
+  * ODSettings
+    * IsSingleInstance is now a Mandatory parameter;
+    * Removed CentralAdminUrl as a parameter;
+  * SPOAccessControlSettings
+    * Removed CentralAdminUrl as a parameter;
+  * SPOAPP
+    * Removed CentralAdminUrl as a parameter;
+  * SPOHubSite
+    * Removed CentralAdminUrl as a parameter;
+  * SPOSearchManagedProperty
+    * Removed CentralAdminUrl as a parameter;
+  * SPOSearchResultSource
+    * Removed CentralAdminUrl as a parameter;
+  * SPOSharingSettings
+    * Removed CentralAdminUrl as a parameter;
   * SPOSite
-    * Owner is now a mandatory property
-* Modules
-  * Added embedded Log Engine
-* SCRetentionCompliancePolicy
-  * Initial Release
-* SCRetentionComplianceRule
-  * Initial Release
-* SCSupervisoryReviewPolicy
-  * Initial Release
-* SCSupervisoryReviewRule
-  * Initial Release
-* SPOSite
-  * Added default value for Storage Quota
-  * Fixed an issue with site creation that could result in infinite loops
+    * Removed CentralAdminUrl as a parameter;
+  * SPOSiteDesign
+    * Removed CentralAdminUrl as a parameter;
+  * SPOSiteDesignRights
+    * Removed CentralAdminUrl as a parameter;
+  * SPOTenantSettings
+    * Removed CentralAdminUrl as a parameter;
+  * SPOTheme
+    * Removed CentralAdminUrl as a parameter;
+* SPOApp
+  * Change logic for detection when no App Catalog exist;
 
 ## 1.0.0.744
 
