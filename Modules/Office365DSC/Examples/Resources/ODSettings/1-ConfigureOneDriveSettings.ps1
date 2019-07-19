@@ -16,7 +16,7 @@ Configuration Example
     {
         ODSettings OneDriveSettings
         {
-            IsSingleInstance =                        = "Yes"
+            IsSingleInstance                          = "Yes"
             GlobalAdminAccount                        = $credsGlobalAdmin
             OneDriveStorageQuota                      = "1024"
             ExcludedFileExtensions                    = @("pst")
