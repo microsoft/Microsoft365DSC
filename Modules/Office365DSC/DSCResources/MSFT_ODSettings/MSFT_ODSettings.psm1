@@ -272,6 +272,10 @@ function Set-TargetResource
     {
         $CurrentParameters.Remove("GrooveBlockOption")
     }
+    if ($CurrentParameters.ContainsKey("IsSingleInstance"))
+    {
+        $CurrentParameters.Remove("IsSingleInstance")
+    }
 
     Write-Verbose -Message "Configuring OneDrive settings."
     Set-SPOTenant @CurrentParameters
