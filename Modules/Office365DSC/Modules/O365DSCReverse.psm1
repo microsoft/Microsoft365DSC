@@ -553,7 +553,8 @@ function Start-O365ConfigurationExtract
         $partialContent = ""
         if ($centralAdminUrl)
         {
-            $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+            $partialContent = Export-TargetResource -IsSingleInstance "Yes" `
+                                                    -GlobalAdminAccount $GlobalAdminAccount
             if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
             {
                 $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
