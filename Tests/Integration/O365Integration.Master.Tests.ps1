@@ -94,6 +94,28 @@ Configuration Master
             DependsOn            = "[O365User]JohnSmith"
         }
 
+        SPOSite ClassicSite
+        {
+            Title                = "Classic Site"
+            Url                  = "https://o365dsc.sharepoint.com/sites/Classic"
+            Owner                = "adminnonMFA@o365dsc.onmicrosoft.com"
+            Template             = "STS#0"
+            CentralAdminUrl      = "https://o365dsc-admin.sharepoint.com"
+            GlobalAdminAccount   = $GlobalAdmin
+            Ensure               = "Present"
+        }
+
+        SPOSite ModernSite
+        {
+            Title                = "Modern Site"
+            Url                  = "https://o365dsc.sharepoint.com/sites/Modern"
+            Owner                = "admin@o365dsc.onmicrosoft.com"
+            Template             = "STS#3"
+            CentralAdminUrl      = "https://o365dsc-admin.sharepoint.com"
+            GlobalAdminAccount   = $GlobalAdmin
+            Ensure               = "Present"
+        }
+
         TeamsTeam TeamAlpha
         {
             DisplayName          = "Alpha Team"
