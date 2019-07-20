@@ -810,6 +810,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Url = "https://contoso.com/sites/TestSite"
                 CentralAdminUrl = "https://contoso-admin.sharepoint.com"
+                Owner              = "testuser@contoso.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
