@@ -18,7 +18,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $DislayName,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -29,7 +29,7 @@ function Get-TargetResource
         $ParentId,
 
         [Parameter()]
-        [System.Integer]
+        [uint32]
         $Priority,
 
         [Parameter()]
@@ -105,7 +105,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $DislayName,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -116,7 +116,7 @@ function Set-TargetResource
         $ParentId,
 
         [Parameter()]
-        [System.Integer]
+        [uint32]
         $Priority,
 
         [Parameter()]
@@ -189,7 +189,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $DislayName,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -200,7 +200,7 @@ function Test-TargetResource
         $ParentId,
 
         [Parameter()]
-        [System.Integer]
+        [uint32]
         $Priority,
 
         [Parameter()]
