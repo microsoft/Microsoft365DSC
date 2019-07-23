@@ -169,7 +169,7 @@ function Start-O365ConfigurationExtract
             Write-Verbose -Message "    - [$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)}"
 
             $partialContent = Export-TargetResource -Identity $DkimSigningConfig.Identity -GlobalAdminAccount $GlobalAdminAccount
-            if ($partialContent.ToLower().IndexOf($organization) -gt 0)
+            if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
             {
                 $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
             }
@@ -386,11 +386,11 @@ function Start-O365ConfigurationExtract
 
         Import-Module $EXOMailTipsModulePath | Out-Null
         $partialContent = Export-TargetResource -Organization $organizationName -GlobalAdminAccount $GlobalAdminAccount
-        if ($partialContent.ToLower().IndexOf($organization) -gt 0)
+        if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
         {
             $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $organization + "`""), "`$ConfigurationData.NonNodeData.OrganizationName"
         }
-        if ($partialContent.ToLower().IndexOf($organization) -gt 0)
+        if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
         {
             $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
         }
@@ -456,11 +456,11 @@ function Start-O365ConfigurationExtract
             if ($userUPN)
             {
                 $partialContent = Export-TargetResource -UserPrincipalName $userUPN -GlobalAdminAccount $GlobalAdminAccount
-                if ($partialContent.ToLower().IndexOf($organization) -gt 0)
+                if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
                 {
                     $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
                 }
-                if ($partialContent.ToLower().IndexOf($organization) -gt 0)
+                if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
                 {
                     $partialContent = $partialContent -ireplace [regex]::Escape($organization + ":"), "`$(`$ConfigurationData.NonNodeData.OrganizationName):"
                     $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
@@ -500,7 +500,7 @@ function Start-O365ConfigurationExtract
                                                  -ManagedBy "DummyUser" `
                                                  -MailNickName $group.MailNickName `
                                                  -GlobalAdminAccount $GlobalAdminAccount
-            if ($partialContent.ToLower().IndexOf($organization) -gt 0)
+            if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
             {
                 $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
             }
@@ -729,9 +729,8 @@ function Start-O365ConfigurationExtract
                                                     -Owner "Reverse" `
                                                     -GlobalAdminAccount $GlobalAdminAccount
 
-            if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
+            if ($partialContent.ToLower().Contains($organization.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
                 $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
             }
             $DSCContent += $partialContent
