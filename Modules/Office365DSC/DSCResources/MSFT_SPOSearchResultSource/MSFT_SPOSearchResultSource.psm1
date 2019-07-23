@@ -77,18 +77,13 @@ function Get-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Setting configuration for Result Source instance $Name"
 
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform PnP
 
     $nullReturn = @{
@@ -102,7 +97,6 @@ function Get-TargetResource
         ShowPartialSearch   = $null
         GlobalAdminAccount  = $GlobalAdminAccount
         Ensure              = "Absent"
-        CentralAdminUrl     = $CentralAdminUrl
     }
 
     if ($null -eq $Script:RecentExtract)
@@ -140,7 +134,6 @@ function Get-TargetResource
         UseAutoDiscover     = $SourceHasAutoDiscover
         GlobalAdminAccount  = $GlobalAdminAccount
         Ensure              = "Present"
-        CentralAdminUrl     = $CentralAdminUrl
     }
 
     if ($null -ne $allowPartial)
@@ -196,18 +189,13 @@ function Set-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Setting configuration for Result Source instance $Name"
 
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform PnP
 
     Write-Verbose -Message "Reading SearchConfigurationSettings XML file"
@@ -393,10 +381,6 @@ function Test-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -433,10 +417,6 @@ function Export-TargetResource
         [ValidateSet("Local","Remote","OpenSearch","Exchange")]
         [System.String]
         $Protocol,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

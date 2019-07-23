@@ -22,7 +22,6 @@ Configuration Example
             Type               = "SharePoint"
             GlobalAdminAccount = $credsGlobalAdmin
             Ensure             = "Present"
-            CentralAdminUrl    = "https://Office365DSC-admin.sharepoint.com"
         }
     }
 }

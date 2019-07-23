@@ -131,18 +131,13 @@ function Get-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Setting configuration for site collection $Url"
 
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SharePointOnline
 
     $nullReturn = @{
@@ -176,7 +171,6 @@ function Get-TargetResource
         HubUrl                                      = $null
         Ensure                                      = "Absent"
         GlobalAdminAccount                          = $GlobalAdminAccount
-        CentralAdminUrl                             = $CentralAdminUrl
     }
 
     try
@@ -249,7 +243,6 @@ function Get-TargetResource
             DefaultLinkPermission                       = $site.DefaultLinkPermission
             HubUrl                                      = $hubUrl
             GlobalAdminAccount                          = $GlobalAdminAccount
-            CentralAdminUrl                             = $CentralAdminUrl
             Ensure                                      = "Present"
         }
     }
@@ -392,18 +385,13 @@ function Set-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Setting configuration for site collection $Url"
 
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SharePointOnline
 
     if ($Ensure -eq "Present")
@@ -576,10 +564,6 @@ function Test-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -640,10 +624,6 @@ function Export-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Owner,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -799,10 +779,6 @@ function Set-SPOSiteConfiguration
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
 
@@ -810,8 +786,7 @@ function Set-SPOSiteConfiguration
         [System.Boolean]
         $IsSecondTry = $false
     )
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SharePointOnline
     $deletedSite = Get-SPODeletedSite | Where-Object -FilterScript { $_.Url -eq $Url }
     if ($deletedSite)
@@ -836,7 +811,6 @@ function Set-SPOSiteConfiguration
         {
             $CurrentParameters = $PSBoundParameters
             Write-Debug "The site $url currently is in Lockstate NoAccess and for that cannot be changed"
-            if ($CurrentParameters.ContainsKey("CentralAdminUrl")) { $null = $CurrentParameters.Remove("CentralAdminUrl") }
             if ($CurrentParameters.ContainsKey("GlobalAdminAccount")) { $null = $CurrentParameters.Remove("GlobalAdminAccount") }
             if ($CurrentParameters.ContainsKey("Ensure")) { $null = $CurrentParameters.Remove("Ensure") }
             if ($CurrentParameters.ContainsKey("AllowSelfServiceUpgrade")) { $null = $CurrentParameters.Remove("AllowSelfServiceUpgrade") }
@@ -953,7 +927,6 @@ function Set-SPOSiteConfiguration
                 Write-Verbose -Message "ShowPeoplePickerSuggestionsForGuestUsers for this site cannot be set since it is set to false on tenant level"
                 if ($CurrentParameters.ContainsKey("showPeoplePickerSuggestionsForGuestUsers")) { $null = $CurrentParameters.Remove("showPeoplePickerSuggestionsForGuestUsers") }
             }
-            if ($CurrentParameters.ContainsKey("CentralAdminUrl")) { $null = $CurrentParameters.Remove("CentralAdminUrl") }
             if ($CurrentParameters.ContainsKey("GlobalAdminAccount")) { $null = $CurrentParameters.Remove("GlobalAdminAccount") }
             if ($CurrentParameters.ContainsKey("Ensure")) { $null = $CurrentParameters.Remove("Ensure") }
             if ($CurrentParameters.ContainsKey("Url")) { $null = $CurrentParameters.Remove("Url") }

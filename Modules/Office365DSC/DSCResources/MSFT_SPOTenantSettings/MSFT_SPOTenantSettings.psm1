@@ -77,10 +77,6 @@ function Get-TargetResource
         [System.Boolean]
         $HideDefaultThemes,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
         [Parameter()]
         [ValidateSet("Present","Absent")]
         [System.String]
@@ -93,8 +89,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for SPO Tenant"
 
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform PnP
 
     $nullReturn = @{
@@ -116,7 +111,6 @@ function Get-TargetResource
         ApplyAppEnforcedRestrictionsToAdHocRecipients = $null
         FilePickerExternalImageSearchEnabled          = $null
         HideDefaultThemes                             = $null
-        CentralAdminUrl                               = $null
         GlobalAdminAccount                            = $null
     }
 
@@ -143,7 +137,6 @@ function Get-TargetResource
             ApplyAppEnforcedRestrictionsToAdHocRecipients = $SPOTenantSettings.ApplyAppEnforcedRestrictionsToAdHocRecipients
             FilePickerExternalImageSearchEnabled          = $SPOTenantSettings.FilePickerExternalImageSearchEnabled
             HideDefaultThemes                             = $SPOTenantSettings.HideDefaultThemes
-            CentralAdminUrl                               = $CentralAdminUrl
             GlobalAdminAccount                            = $GlobalAdminAccount
         }
     }
@@ -235,10 +228,6 @@ function Set-TargetResource
         [System.Boolean]
         $HideDefaultThemes,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
         [Parameter()]
         [ValidateSet("Present","Absent")]
         [System.String]
@@ -251,12 +240,10 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for SPO Tenant"
 
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform PnP
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("IsSingleInstance")
 
@@ -347,10 +334,6 @@ function Test-TargetResource
         [System.Boolean]
         $HideDefaultThemes,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
         [Parameter()]
         [ValidateSet("Present","Absent")]
         [System.String]
@@ -370,7 +353,6 @@ function Test-TargetResource
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck @("IsSingleInstance", `
-                                                                   "CentralAdminUrl", `
                                                                    "GlobalAdminAccount", `
                                                                    "MaxCompatibilityLevel", `
                                                                    "SearchResolveExactEmailOrUPN", `
@@ -404,10 +386,6 @@ function Export-TargetResource
         [ValidateSet('Yes')]
         [String]
         $IsSingleInstance,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

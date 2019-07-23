@@ -36,7 +36,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 PreviewImageUrl     = ""
                 Ensure              = "Present"
                 GlobalAdminAccount  = $GlobalAdminAccount
-                CentralAdminUrl     = "https://contoso-admin.sharepoint.com"
             }
 
 
@@ -77,7 +76,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 PreviewImageAltText = "Office 365"
                 Ensure              = "Present"
                 GlobalAdminAccount  = $GlobalAdminAccount
-                CentralAdminUrl     = "https://contoso-admin.sharepoint.com"
             }
 
 
@@ -114,7 +112,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Title              = "DSC Site Design"
                 GlobalAdminAccount = $GlobalAdminAccount
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
             }
 
             Mock -CommandName Get-PnPSiteDesign -MockWith {
