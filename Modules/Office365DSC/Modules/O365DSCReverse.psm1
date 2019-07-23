@@ -459,11 +459,12 @@ function Start-O365ConfigurationExtract
                 if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
                 {
                     $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
-                }
-                if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
-                {
-                    $partialContent = $partialContent -ireplace [regex]::Escape($organization + ":"), "`$(`$ConfigurationData.NonNodeData.OrganizationName):"
                     $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
+                }
+
+                if ($partialContent.ToLower().IndexOf($principal.ToLower()) -gt 0)
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape($principal.ToLower() + ":"), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0]):"
                 }
                 $DSCContent += $partialContent
             }
@@ -729,9 +730,13 @@ function Start-O365ConfigurationExtract
                                                     -Owner "Reverse" `
                                                     -GlobalAdminAccount $GlobalAdminAccount
 
-            if ($partialContent.ToLower().Contains($organization.ToLower()))
+            if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
+                $partialContent = $partialContent -ireplace [regex]::Escape($principal + ".sharepoint.com"), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])-sharepoint.com"
+            }
+            if($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
             }
             $DSCContent += $partialContent
             $i++
