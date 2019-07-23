@@ -173,6 +173,10 @@ function Start-O365ConfigurationExtract
             {
                 $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
             }
+            if ($partialContent.ToLower().IndexOf($principal.ToLower() + ".") -gt 0)
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape($principal + "."), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])."
+            }
             $DSCContent += $partialContent
             $i++
         }
@@ -394,6 +398,10 @@ function Start-O365ConfigurationExtract
         {
             $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
         }
+        if ($partialContent.ToLower().IndexOf($principal.ToLower() + ".") -gt 0)
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape($principal + "."), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])."
+        }
         $DSCContent += $partialContent
     }
     #endregion
@@ -470,7 +478,7 @@ function Start-O365ConfigurationExtract
 
                 if ($partialContent.ToLower().IndexOf($principal.ToLower()) -gt 0)
                 {
-                    $partialContent = $partialContent -ireplace [regex]::Escape($principal.ToLower() + ":"), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0]):"
+                    $partialContent = $partialContent -ireplace [regex]::Escape($principal.ToLower()), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
                 }
                 $DSCContent += $partialContent
             }
@@ -510,6 +518,10 @@ function Start-O365ConfigurationExtract
             if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
             {
                 $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
+            }
+            if ($partialContent.ToLower().IndexOf($principal.ToLower()) -gt 0)
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
             }
             $DSCContent += $partialContent
             $i++
@@ -740,6 +752,10 @@ function Start-O365ConfigurationExtract
             {
                 $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
             }
+            if($partialContent.ToLower().Contains("@" + $principal.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
+            }
             $DSCContent += $partialContent
             $i++
         }
@@ -966,6 +982,10 @@ function Start-O365ConfigurationExtract
             if ($partialContent.ToLower().Contains("https://" + $principal.ToLower()))
             {
                 $partialContent = $partialContent -ireplace [regex]::Escape("https://" + $principal.ToLower()), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])-admin.sharepoint.com"
+            }
+            if($partialContent.ToLower().Contains($principal.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape($principal), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
             }
             $DSCContent += $partialContent
             $i++
