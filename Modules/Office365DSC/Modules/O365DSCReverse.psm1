@@ -426,8 +426,14 @@ function Start-O365ConfigurationExtract
             $mailboxName = $mailbox.Name
             if ($mailboxName)
             {
-                $DSCContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+                $partialContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+                if ($partialContent.ToLower().IndexOf("@" + $organization.ToLower()) -gt 0)
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
+                }
             }
+
+            $DSCContent += $partialContent
             $i++
         }
     }
@@ -673,10 +679,6 @@ function Start-O365ConfigurationExtract
                                                                 -GlobalAdminAccount $GlobalAdminAccount
                     }
 
-                    if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
-                    {
-                        $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
-                    }
                     $DSCContent += $partialContent
                     $i++
                 }
@@ -768,7 +770,8 @@ function Start-O365ConfigurationExtract
             {
                 Write-Information "    - [$i/$($hubSites.Length)] $($hub.SiteUrl)"
                 $partialContent = Export-TargetResource -Url $hub.SiteUrl -GlobalAdminAccount $GlobalAdminAccount
-                if ($partialContent.ToLower().Contains($organization.ToLower()))
+                if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+                    $partialContent.ToLower().Contains($principal.ToLower()))
                 {
                     $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0]).sharepoint.com/"
                     $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
@@ -838,10 +841,6 @@ function Start-O365ConfigurationExtract
                                                     -Protocol $mapping.Protocol `
                                                     -GlobalAdminAccount $GlobalAdminAccount
 
-            if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
-            }
             $DSCContent += $partialContent
             $i++
         }
@@ -873,10 +872,6 @@ function Start-O365ConfigurationExtract
                                                     -Type $property.Value.ManagedType `
                                                     -GlobalAdminAccount $GlobalAdminAccount
 
-            if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
-            }
             $DSCContent += $partialContent
             $i++
         }
@@ -937,10 +932,6 @@ function Start-O365ConfigurationExtract
             $partialContent += Export-TargetResource -SiteDesignTitle $siteDesign.Title `
                                                      -GlobalAdminAccount $GlobalAdminAccount
 
-            if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
-            }
             $DSCContent += $partialContent
             $i++
         }
@@ -969,9 +960,14 @@ function Start-O365ConfigurationExtract
         foreach ($storageEntity in $storageEntities)
         {
             Write-Information "    [$i/$($storageEntities.Length)] {$($storageEntity.Key)}"
-            $DSCContent += Export-TargetResource -Key $storageEntity.Key `
+            $partialContent = Export-TargetResource -Key $storageEntity.Key `
                                                  -SiteUrl $centralAdminUrl `
                                                  -GlobalAdminAccount $GlobalAdminAccount
+            if ($partialContent.ToLower().Contains("https://" + $principal.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("https://" + $principal.ToLower()), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])-admin.sharepoint.com"
+            }
+            $DSCContent += $partialContent
             $i++
         }
     }
