@@ -768,9 +768,8 @@ function Start-O365ConfigurationExtract
             {
                 Write-Information "    - [$i/$($hubSites.Length)] $($hub.SiteUrl)"
                 $partialContent = Export-TargetResource -Url $hub.SiteUrl -GlobalAdminAccount $GlobalAdminAccount
-                if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
+                if ($partialContent.ToLower().Contains($organization.ToLower()))
                 {
-                    $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
                     $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0]).sharepoint.com/"
                 }
                 $DSCContent += $partialContent
