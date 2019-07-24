@@ -748,24 +748,32 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckSCRetentionCompliancePolicy")) -or
         $AllComponents)
     {
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform SecurityComplianceCenter
-
-        Write-Information "Extracting SCRetentionCompliancePolicy..."
-        $SCRetentionCompliancePolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                        -ChildPath "..\DSCResources\MSFT_SCRetentionCompliancePolicy\MSFT_SCRetentionCompliancePolicy.psm1" `
-                                        -Resolve
-
-        Import-Module $SCRetentionCompliancePolicyModulePath | Out-Null
-        $policies = Get-RetentionCompliancePolicy
-
-        $i = 1
-        foreach ($policy in $policies)
+        try
         {
-            Write-Information "    - [$i/$($policies.Length)] $($policy.Name)"
-            $partialContent = Export-TargetResource -Name $policy.Name -GlobalAdminAccount $GlobalAdminAccount
-            $DSCContent += $partialContent
-            $i++
+            Write-Information "Extracting SCRetentionCompliancePolicy..."
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform SecurityComplianceCenter `
+                              -ErrorAction SilentlyContinue
+
+            $SCRetentionCompliancePolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                            -ChildPath "..\DSCResources\MSFT_SCRetentionCompliancePolicy\MSFT_SCRetentionCompliancePolicy.psm1" `
+                                            -Resolve
+
+            Import-Module $SCRetentionCompliancePolicyModulePath | Out-Null
+            $policies = Get-RetentionCompliancePolicy
+
+            $i = 1
+            foreach ($policy in $policies)
+            {
+                Write-Information "    - [$i/$($policies.Length)] $($policy.Name)"
+                $partialContent = Export-TargetResource -Name $policy.Name -GlobalAdminAccount $GlobalAdminAccount
+                $DSCContent += $partialContent
+                $i++
+            }
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
@@ -775,24 +783,32 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckSCRetentionComplianceRule")) -or
         $AllComponents)
     {
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform SecurityComplianceCenter
-
-        Write-Information "Extracting SCRetentionComplianceRule..."
-        $SCRetentionComplianceRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                            -ChildPath "..\DSCResources\MSFT_SCRetentionComplianceRule\MSFT_SCRetentionComplianceRule.psm1" `
-                                            -Resolve
-
-        Import-Module $SCRetentionComplianceRuleModulePath | Out-Null
-        $rules = Get-RetentionComplianceRule
-
-        $i = 1
-        foreach ($rule in $rules)
+        try
         {
-            Write-Information "    - [$i/$($rules.Length)] $($rule.Name)"
-            $partialContent = Export-TargetResource -Name $rule.Name -Policy $rule.Policy -GlobalAdminAccount $GlobalAdminAccount
-            $DSCContent += $partialContent
-            $i++
+            Write-Information "Extracting SCRetentionComplianceRule..."
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform SecurityComplianceCenter `
+                              -ErrorAction SilentlyContinue
+
+            $SCRetentionComplianceRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_SCRetentionComplianceRule\MSFT_SCRetentionComplianceRule.psm1" `
+                                                -Resolve
+
+            Import-Module $SCRetentionComplianceRuleModulePath | Out-Null
+            $rules = Get-RetentionComplianceRule
+
+            $i = 1
+            foreach ($rule in $rules)
+            {
+                Write-Information "    - [$i/$($rules.Length)] $($rule.Name)"
+                $partialContent = Export-TargetResource -Name $rule.Name -Policy $rule.Policy -GlobalAdminAccount $GlobalAdminAccount
+                $DSCContent += $partialContent
+                $i++
+            }
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
