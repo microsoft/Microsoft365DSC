@@ -33,7 +33,7 @@
     to 0.5.8;
 * Modules
   * ReverseDSC
-    * Fixed some issue with the abstraction of tenant name
+    * Fixed some issues with the abstraction of tenant name
       when the -Quiet switch is used;
 * SPOApp
   * Change logic for detection when no App Catalog exist;
