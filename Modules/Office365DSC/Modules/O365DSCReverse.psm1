@@ -65,22 +65,31 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting O365AdminAuditLogConfig..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform ExchangeOnline
-        $O365AdminAuditLogConfig = Get-AdminAuditLogConfig
-
-        $O365AdminAuditLogConfigModulePath = Join-Path -Path $PSScriptRoot `
-                                                       -ChildPath "..\DSCResources\MSFT_O365AdminAuditLogConfig\MSFT_O365AdminAuditLogConfig.psm1" `
-                                                       -Resolve
-
-        $value = "Disabled"
-        if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
+        try
         {
-            $value = "Enabled"
-        }
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline `
+                              -ErrorAction SilentlyContinue
 
-        Import-Module $O365AdminAuditLogConfigModulePath | Out-Null
-        $DSCContent += Export-TargetResource -UnifiedAuditLogIngestionEnabled $value -GlobalAdminAccount $GlobalAdminAccount -IsSingleInstance 'Yes'
+            $O365AdminAuditLogConfig = Get-AdminAuditLogConfig
+
+            $O365AdminAuditLogConfigModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_O365AdminAuditLogConfig\MSFT_O365AdminAuditLogConfig.psm1" `
+                                                        -Resolve
+
+            $value = "Disabled"
+            if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
+            {
+                $value = "Enabled"
+            }
+
+            Import-Module $O365AdminAuditLogConfigModulePath | Out-Null
+            $DSCContent += Export-TargetResource -UnifiedAuditLogIngestionEnabled $value -GlobalAdminAccount $GlobalAdminAccount -IsSingleInstance 'Yes'
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+        }
     }
     #endregion
 
@@ -89,19 +98,30 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckEXOAtpPolicyForO365")) -or
         $AllComponents)
     {
-        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-AtpPolicyForO365)
+        try
         {
-            Write-Information "Extracting EXOAtpPolicyForO365..."
-            $EXOAtpPolicyForO365ModulePath = Join-Path -Path $PSScriptRoot `
-                                                       -ChildPath "..\DSCResources\MSFT_EXOAtpPolicyForO365\MSFT_EXOAtpPolicyForO365.psm1" `
-                                                       -Resolve
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline `
+                              -ErrorAction SilentlyContinue
 
-            Import-Module $EXOAtpPolicyForO365ModulePath | Out-Null
-            $DSCContent += Export-TargetResource -IsSingleInstance "Yes" -GlobalAdminAccount $GlobalAdminAccount
+            if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-AtpPolicyForO365)
+            {
+                Write-Information "Extracting EXOAtpPolicyForO365..."
+                $EXOAtpPolicyForO365ModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXOAtpPolicyForO365\MSFT_EXOAtpPolicyForO365.psm1" `
+                                                        -Resolve
+
+                Import-Module $EXOAtpPolicyForO365ModulePath | Out-Null
+                $DSCContent += Export-TargetResource -IsSingleInstance "Yes" -GlobalAdminAccount $GlobalAdminAccount
+            }
+            else
+            {
+                Write-Information "The specified Tenant is not registered for ATP, and therefore can't extract policies"
+            }
         }
-        else
+        catch
         {
-            Write-Information "The specified Tenant is not registered for ATP, and therefore can't extract policies"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
@@ -112,18 +132,27 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting EXOCASMailboxPlan..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform ExchangeOnline
-        $CASMailboxPlans = Get-CASMailboxPlan
-        $EXOCASMailboxPlanModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOCASMailboxPlan\MSFT_EXOCASMailboxPlan.psm1" `
-                                                -Resolve
-
-        Import-Module $EXOCASMailboxPlanModulePath | Out-Null
-
-        foreach ($CASMailboxPlan in $CASMailboxPlans)
+        try
         {
-            $DSCContent += Export-TargetResource -Identity $CASMailboxPlan.Identity -GlobalAdminAccount $GlobalAdminAccount
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline `
+                              -ErrorAction SilentlyContinue
+
+            $CASMailboxPlans = Get-CASMailboxPlan
+            $EXOCASMailboxPlanModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOCASMailboxPlan\MSFT_EXOCASMailboxPlan.psm1" `
+                                                    -Resolve
+
+            Import-Module $EXOCASMailboxPlanModulePath | Out-Null
+
+            foreach ($CASMailboxPlan in $CASMailboxPlans)
+            {
+                $DSCContent += Export-TargetResource -Identity $CASMailboxPlan.Identity -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
@@ -134,17 +163,26 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting EXOClientAccessRule..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform ExchangeOnline
-        $ClientAccessRules = Get-ClientAccessRule
-        $EXOClientAccessRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOClientAccessRule\MSFT_EXOClientAccessRule.psm1" `
-                                                -Resolve
-
-        Import-Module $EXOClientAccessRuleModulePath | Out-Null
-        foreach ($ClientAccessRule in $ClientAccessRules)
+        try
         {
-            $DSCContent += Export-TargetResource -Identity $ClientAccessRule.Identity -Action $ClientAccessRule.Action -GlobalAdminAccount $GlobalAdminAccount
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline `
+                              -ErrorAction SilentlyContinue
+
+            $ClientAccessRules = Get-ClientAccessRule
+            $EXOClientAccessRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOClientAccessRule\MSFT_EXOClientAccessRule.psm1" `
+                                                    -Resolve
+
+            Import-Module $EXOClientAccessRuleModulePath | Out-Null
+            foreach ($ClientAccessRule in $ClientAccessRules)
+            {
+                $DSCContent += Export-TargetResource -Identity $ClientAccessRule.Identity -Action $ClientAccessRule.Action -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
@@ -155,26 +193,39 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting EXODkimSigningConfig..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform ExchangeOnline
-        $DkimSigningConfigs = Get-DkimSigningConfig
-        $EXODkimSigningConfigModulePath = Join-Path -Path $PSScriptRoot `
-                                                    -ChildPath "..\DSCResources\MSFT_EXODkimSigningConfig\MSFT_EXODkimSigningConfig.psm1" `
-                                                    -Resolve
-
-        Import-Module $EXODkimSigningConfigModulePath | Out-Null
-        $i = 1
-        foreach ($DkimSigningConfig in $DkimSigningConfigs)
+        try
         {
-            Write-Verbose -Message "    - [$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)}"
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline `
+                              -ErrorAction SilentlyContinue
 
-            $partialContent = Export-TargetResource -Identity $DkimSigningConfig.Identity -GlobalAdminAccount $GlobalAdminAccount
-            if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+            $DkimSigningConfigs = Get-DkimSigningConfig
+            $EXODkimSigningConfigModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXODkimSigningConfig\MSFT_EXODkimSigningConfig.psm1" `
+                                                        -Resolve
+
+            Import-Module $EXODkimSigningConfigModulePath | Out-Null
+            $i = 1
+            foreach ($DkimSigningConfig in $DkimSigningConfigs)
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
+                Write-Verbose -Message "    - [$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)}"
+
+                $partialContent = Export-TargetResource -Identity $DkimSigningConfig.Identity -GlobalAdminAccount $GlobalAdminAccount
+                if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
+                }
+                if ($partialContent.ToLower().IndexOf($principal.ToLower() + ".") -gt 0)
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape($principal + "."), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])."
+                }
+                $DSCContent += $partialContent
+                $i++
             }
-            $DSCContent += $partialContent
-            $i++
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
@@ -185,17 +236,26 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting EXOHostedConnectionFilterPolicy..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform ExchangeOnline
-        $HostedConnectionFilterPolicys = Get-HostedConnectionFilterPolicy
-        $EXOHostedConnectionFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                    -ChildPath "..\DSCResources\MSFT_EXOHostedConnectionFilterPolicy\MSFT_EXOHostedConnectionFilterPolicy.psm1" `
-                                                    -Resolve
-
-        Import-Module $EXOHostedConnectionFilterPolicyModulePath | Out-Null
-        foreach ($HostedConnectionFilterPolicy in $HostedConnectionFilterPolicys)
+        try
         {
-            $DSCContent += Export-TargetResource -Identity $HostedConnectionFilterPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline `
+                              -ErrorAction SilentlyContinue
+
+            $HostedConnectionFilterPolicys = Get-HostedConnectionFilterPolicy
+            $EXOHostedConnectionFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXOHostedConnectionFilterPolicy\MSFT_EXOHostedConnectionFilterPolicy.psm1" `
+                                                        -Resolve
+
+            Import-Module $EXOHostedConnectionFilterPolicyModulePath | Out-Null
+            foreach ($HostedConnectionFilterPolicy in $HostedConnectionFilterPolicys)
+            {
+                $DSCContent += Export-TargetResource -Identity $HostedConnectionFilterPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
@@ -206,17 +266,25 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting EXOHostedContentFilterPolicy..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform ExchangeOnline
-        $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
-        $EXOHostedContentFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                    -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterPolicy\MSFT_EXOHostedContentFilterPolicy.psm1" `
-                                                    -Resolve
-
-        Import-Module $EXOHostedContentFilterPolicyModulePath | Out-Null
-        foreach ($HostedContentFilterPolicy in $HostedContentFilterPolicies)
+        try
         {
-            $DSCContent += Export-TargetResource -Identity $HostedContentFilterPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline `
+                              -ErrorAction SilentlyContinue
+            $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
+            $EXOHostedContentFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterPolicy\MSFT_EXOHostedContentFilterPolicy.psm1" `
+                                                        -Resolve
+
+            Import-Module $EXOHostedContentFilterPolicyModulePath | Out-Null
+            foreach ($HostedContentFilterPolicy in $HostedContentFilterPolicies)
+            {
+                $DSCContent += Export-TargetResource -Identity $HostedContentFilterPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
@@ -227,17 +295,26 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting EXOHostedContentFilterRule..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform ExchangeOnline
-        $HostedContentFilterRules = Get-HostedContentFilterRule
-        $EXOHostedContentFilterRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                                    -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterRule\MSFT_EXOHostedContentFilterRule.psm1" `
-                                                    -Resolve
-
-        Import-Module $EXOHostedContentFilterRuleModulePath | Out-Null
-        foreach ($HostedContentFilterRule in $HostedContentFilterRules)
+        try
         {
-            $DSCContent += Export-TargetResource -Identity $HostedContentFilterRule.Identity -HostedContentFilterPolicy $HostedContentFilterRule.HostedContentFilterPolicy -GlobalAdminAccount $GlobalAdminAccount
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline `
+                              -ErrorAction SilentlyContinue
+
+            $HostedContentFilterRules = Get-HostedContentFilterRule
+            $EXOHostedContentFilterRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXOHostedContentFilterRule\MSFT_EXOHostedContentFilterRule.psm1" `
+                                                        -Resolve
+
+            Import-Module $EXOHostedContentFilterRuleModulePath | Out-Null
+            foreach ($HostedContentFilterRule in $HostedContentFilterRules)
+            {
+                $DSCContent += Export-TargetResource -Identity $HostedContentFilterRule.Identity -HostedContentFilterPolicy $HostedContentFilterRule.HostedContentFilterPolicy -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
@@ -248,12 +325,23 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting EXOHostedOutboundSpamFilterPolicy..."
-        $EXOHostedOutboundSpamFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                    -ChildPath "..\DSCResources\MSFT_EXOHostedOutboundSpamFilterPolicy\MSFT_EXOHostedOutboundSpamFilterPolicy.psm1" `
-                                                    -Resolve
+        try
+        {
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline `
+                              -ErrorAction SilentlyContinue
 
-        Import-Module $EXOHostedOutboundSpamFilterPolicyModulePath | Out-Null
-        $DSCContent += Export-TargetResource -IsSingleInstance "Yes" -GlobalAdminAccount $GlobalAdminAccount
+            $EXOHostedOutboundSpamFilterPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                        -ChildPath "..\DSCResources\MSFT_EXOHostedOutboundSpamFilterPolicy\MSFT_EXOHostedOutboundSpamFilterPolicy.psm1" `
+                                                        -Resolve
+
+            Import-Module $EXOHostedOutboundSpamFilterPolicyModulePath | Out-Null
+            $DSCContent += Export-TargetResource -IsSingleInstance "Yes" -GlobalAdminAccount $GlobalAdminAccount
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+        }
     }
     #endregion
 
@@ -262,25 +350,34 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckEXOSafeAttachmentPolicy")) -or
         $AllComponents)
     {
-        if (Confirm-ImportedCmdletIsAvailable -CmdletName GetSafeAttachmentPolicy)
+        try
         {
-            Write-Information "Extracting EXOSafeAttachmentPolicy..."
             Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                              -Platform ExchangeOnline
-            $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
-            $EXOSafeAttachmentPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                        -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentPolicy\MSFT_EXOSafeAttachmentPolicy.psm1" `
-                                                        -Resolve
+                              -Platform ExchangeOnline `
+                              -ErrorAction SilentlyContinue
 
-            Import-Module $EXOSafeAttachmentPolicyModulePath | Out-Null
-            foreach ($SafeAttachmentPolicy in $SafeAttachmentPolicies)
+            if (Confirm-ImportedCmdletIsAvailable -CmdletName GetSafeAttachmentPolicy)
             {
-                $DSCContent += Export-TargetResource -Identity $SafeAttachmentPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+                Write-Information "Extracting EXOSafeAttachmentPolicy..."
+                $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
+                $EXOSafeAttachmentPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                            -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentPolicy\MSFT_EXOSafeAttachmentPolicy.psm1" `
+                                                            -Resolve
+
+                Import-Module $EXOSafeAttachmentPolicyModulePath | Out-Null
+                foreach ($SafeAttachmentPolicy in $SafeAttachmentPolicies)
+                {
+                    $DSCContent += Export-TargetResource -Identity $SafeAttachmentPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+                }
+            }
+            else
+            {
+                Write-Information "The current tenant doesn't have access to Safe Attachment Policy APIs."
             }
         }
-        else
+        catch
         {
-            Write-Information "The current tenant doesn't have access to Safe Attachment Policy APIs."
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
@@ -290,25 +387,34 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckEXOSafeAttachmentRule")) -or
         $AllComponents)
     {
-        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
+        try
         {
-            Write-Information "Extracting EXOSafeAttachmentRule..."
             Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                              -Platform ExchangeOnline
-            $SafeAttachmentRules = Get-SafeAttachmentRule
-            $EXOSafeAttachmentRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                                        -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentRule\MSFT_EXOSafeAttachmentRule.psm1" `
-                                                        -Resolve
+                              -Platform ExchangeOnline `
+                              -ErrorAction SilentlyContinue
 
-            Import-Module $EXOSafeAttachmentRuleModulePath | Out-Null
-            foreach ($SafeAttachmentRule in $SafeAttachmentRules)
+            if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
             {
-                $DSCContent += Export-TargetResource -Identity $SafeAttachmentRule.Identity -SafeAttachmentPolicy $SafeAttachmentRule.SafeAttachmentPolicy -GlobalAdminAccount $GlobalAdminAccount
+                Write-Information "Extracting EXOSafeAttachmentRule..."
+                $SafeAttachmentRules = Get-SafeAttachmentRule
+                $EXOSafeAttachmentRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                            -ChildPath "..\DSCResources\MSFT_EXOSafeAttachmentRule\MSFT_EXOSafeAttachmentRule.psm1" `
+                                                            -Resolve
+
+                Import-Module $EXOSafeAttachmentRuleModulePath | Out-Null
+                foreach ($SafeAttachmentRule in $SafeAttachmentRules)
+                {
+                    $DSCContent += Export-TargetResource -Identity $SafeAttachmentRule.Identity -SafeAttachmentPolicy $SafeAttachmentRule.SafeAttachmentPolicy -GlobalAdminAccount $GlobalAdminAccount
+                }
+            }
+            else
+            {
+                Write-Information "The current tenant doesn't have access to the Safe Attachment Rule API"
             }
         }
-        else
+        catch
         {
-            Write-Information "The current tenant doesn't have access to the Safe Attachment Rule API"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
@@ -318,25 +424,34 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckEXOSafeLinksPolicy")) -or
         $AllComponents)
     {
-        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
+        try
         {
-            Write-Information "Extracting EXOSafeLinksPolicy..."
             Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                              -Platform ExchangeOnline
-            $SafeLinksPolicies = Get-SafeLinksPolicy
-            $EXOSafeLinksPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                        -ChildPath "..\DSCResources\MSFT_EXOSafeLinksPolicy\MSFT_EXOSafeLinksPolicy.psm1" `
-                                                        -Resolve
+                              -Platform ExchangeOnline `
+                              -ErrorAction SilentlyContinue
 
-            Import-Module $EXOSafeLinksPolicyModulePath | Out-Null
-            foreach($SafeLinksPolicy in $SafeLinksPolicies)
+            if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
             {
-                $DSCContent += Export-TargetResource -Identity $SafeLinksPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+                Write-Information "Extracting EXOSafeLinksPolicy..."
+                $SafeLinksPolicies = Get-SafeLinksPolicy
+                $EXOSafeLinksPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                            -ChildPath "..\DSCResources\MSFT_EXOSafeLinksPolicy\MSFT_EXOSafeLinksPolicy.psm1" `
+                                                            -Resolve
+
+                Import-Module $EXOSafeLinksPolicyModulePath | Out-Null
+                foreach($SafeLinksPolicy in $SafeLinksPolicies)
+                {
+                    $DSCContent += Export-TargetResource -Identity $SafeLinksPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
+                }
+            }
+            else
+            {
+                Write-Information "The current tenant is not registered to allow for Safe Attachment Rules."
             }
         }
-        else
+        catch
         {
-            Write-Information "The current tenant is not registered to allow for Safe Attachment Rules."
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
@@ -346,25 +461,34 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckEXOSafeLinksRule")) -or
         $AllComponents)
     {
-        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
+        try
         {
-            Write-Information "Extracting EXOSafeLinksRule..."
             Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                              -Platform ExchangeOnline
-            $SafeLinksRules = Get-SafeLinksRule
-            $EXOSafeLinksRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                                        -ChildPath "..\DSCResources\MSFT_EXOSafeLinksRule\MSFT_EXOSafeLinksRule.psm1" `
-                                                        -Resolve
+                              -Platform ExchangeOnline `
+                              -ErrorAction SilentlyContinue
 
-            Import-Module $EXOSafeLinksRuleModulePath | Out-Null
-            foreach ($SafeLinksRule in $SafeLinksRules)
+            if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
             {
-                $DSCContent += Export-TargetResource -Identity $SafeLinksRule.Identity -SafeLinksPolicy $SafeLinksRule.SafeLinksPolicy -GlobalAdminAccount $GlobalAdminAccount
+                Write-Information "Extracting EXOSafeLinksRule..."
+                $SafeLinksRules = Get-SafeLinksRule
+                $EXOSafeLinksRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                            -ChildPath "..\DSCResources\MSFT_EXOSafeLinksRule\MSFT_EXOSafeLinksRule.psm1" `
+                                                            -Resolve
+
+                Import-Module $EXOSafeLinksRuleModulePath | Out-Null
+                foreach ($SafeLinksRule in $SafeLinksRules)
+                {
+                    $DSCContent += Export-TargetResource -Identity $SafeLinksRule.Identity -SafeLinksPolicy $SafeLinksRule.SafeLinksPolicy -GlobalAdminAccount $GlobalAdminAccount
+                }
+            }
+            else
+            {
+                Write-Information "The current tenant is not registered to allow for Safe Links Rules."
             }
         }
-        else
+        catch
         {
-            Write-Information "The current tenant is not registered to allow for Safe Links Rules."
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
@@ -375,26 +499,39 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting EXOMailTips..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform ExchangeOnline
-        $OrgConfig = Get-OrganizationConfig
-        $organizationName = $OrgConfig.Name
-
-        $EXOMailTipsModulePath = Join-Path -Path $PSScriptRoot `
-                                           -ChildPath "..\DSCResources\MSFT_EXOMailTips\MSFT_EXOMailTips.psm1" `
-                                           -Resolve
-
-        Import-Module $EXOMailTipsModulePath | Out-Null
-        $partialContent = Export-TargetResource -Organization $organizationName -GlobalAdminAccount $GlobalAdminAccount
-        if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+        try
         {
-            $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $organization + "`""), "`$ConfigurationData.NonNodeData.OrganizationName"
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline `
+                              -ErrorAction SilentlyContinue
+
+            $OrgConfig = Get-OrganizationConfig
+            $organizationName = $OrgConfig.Name
+
+            $EXOMailTipsModulePath = Join-Path -Path $PSScriptRoot `
+                                            -ChildPath "..\DSCResources\MSFT_EXOMailTips\MSFT_EXOMailTips.psm1" `
+                                            -Resolve
+
+            Import-Module $EXOMailTipsModulePath | Out-Null
+            $partialContent = Export-TargetResource -Organization $organizationName -GlobalAdminAccount $GlobalAdminAccount
+            if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $organization + "`""), "`$ConfigurationData.NonNodeData.OrganizationName"
+            }
+            if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
+            }
+            if ($partialContent.ToLower().IndexOf($principal.ToLower() + ".") -gt 0)
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape($principal + "."), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])."
+            }
+            $DSCContent += $partialContent
         }
-        if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+        catch
         {
-            $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
-        $DSCContent += $partialContent
     }
     #endregion
 
@@ -404,31 +541,47 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting EXOSharedMailbox..."
-        $EXOSharedMailboxModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOSharedMailbox\MSFT_EXOSharedMailbox.psm1" `
-                                                -Resolve
-
-        Import-Module $EXOSharedMailboxModulePath | Out-Null
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform ExchangeOnline
-        $mailboxes = Get-Mailbox
-        $mailboxes = $mailboxes | Where-Object -FilterScript { $_.RecipientTypeDetails -eq "SharedMailbox" }
-
-        $i = 1
-        $total = $mailboxes.Length
-        if ($null -eq $total -and $null -ne $mailboxes)
+        try
         {
-            $total = 1
-        }
-        foreach ($mailbox in $mailboxes)
-        {
-            Write-Information "    - [$i/$total] $($mailbox.Name)"
-            $mailboxName = $mailbox.Name
-            if ($mailboxName)
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline `
+                              -ErrorAction SilentlyContinue
+
+            $EXOSharedMailboxModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOSharedMailbox\MSFT_EXOSharedMailbox.psm1" `
+                                                    -Resolve
+
+            Import-Module $EXOSharedMailboxModulePath | Out-Null
+
+            $mailboxes = Get-Mailbox
+            $mailboxes = $mailboxes | Where-Object -FilterScript { $_.RecipientTypeDetails -eq "SharedMailbox" }
+
+            $i = 1
+            $total = $mailboxes.Length
+            if ($null -eq $total -and $null -ne $mailboxes)
             {
-                $DSCContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+                $total = 1
             }
-            $i++
+            foreach ($mailbox in $mailboxes)
+            {
+                Write-Information "    - [$i/$total] $($mailbox.Name)"
+                $mailboxName = $mailbox.Name
+                if ($mailboxName)
+                {
+                    $partialContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+                    if ($partialContent.ToLower().IndexOf("@" + $organization.ToLower()) -gt 0)
+                    {
+                        $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
+                    }
+                }
+
+                $DSCContent += $partialContent
+                $i++
+            }
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
@@ -459,11 +612,12 @@ function Start-O365ConfigurationExtract
                 if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
                 {
                     $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
-                }
-                if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
-                {
-                    $partialContent = $partialContent -ireplace [regex]::Escape($organization + ":"), "`$(`$ConfigurationData.NonNodeData.OrganizationName):"
                     $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
+                }
+
+                if ($partialContent.ToLower().IndexOf($principal.ToLower()) -gt 0)
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape($principal.ToLower()), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
                 }
                 $DSCContent += $partialContent
             }
@@ -504,6 +658,10 @@ function Start-O365ConfigurationExtract
             {
                 $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
             }
+            if ($partialContent.ToLower().IndexOf($principal.ToLower()) -gt 0)
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
+            }
             $DSCContent += $partialContent
             $i++
         }
@@ -521,20 +679,29 @@ function Start-O365ConfigurationExtract
                                                   -Resolve
 
         Import-Module $EXOMailboxSettingsModulePath | Out-Null
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform ExchangeOnline
-        $mailboxes = Get-Mailbox
-
-        $i = 1
-        foreach ($mailbox in $mailboxes)
+        try
         {
-            Write-Information "    - [$i/$($mailboxes.Length)] $($mailbox.Name)"
-            $mailboxName = $mailbox.Name
-            if ($mailboxName)
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline `
+                              -ErrorAction SilentlyContinue
+
+            $mailboxes = Get-Mailbox
+
+            $i = 1
+            foreach ($mailbox in $mailboxes)
             {
-                $DSCContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+                Write-Information "    - [$i/$($mailboxes.Length)] $($mailbox.Name)"
+                $mailboxName = $mailbox.Name
+                if ($mailboxName)
+                {
+                    $DSCContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+                }
+                $i++
             }
-            $i++
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
@@ -545,21 +712,33 @@ function Start-O365ConfigurationExtract
         $AllComponents)
     {
         Write-Information "Extracting ODSettings..."
-        $ODSettingsModulePath = Join-Path -Path $PSScriptRoot `
-                                        -ChildPath "..\DSCResources\MSFT_ODSettings\MSFT_ODSettings.psm1" `
-                                        -Resolve
-
-        Import-Module $ODSettingsModulePath | Out-Null
-        $partialContent = ""
-        if ($centralAdminUrl)
+        try
         {
-            $partialContent = Export-TargetResource -IsSingleInstance "Yes" `
-                                                    -GlobalAdminAccount $GlobalAdminAccount
-            if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
+            Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
+                              -O365Credential $GlobalAdminAccount `
+                              -Platform SharePointOnline `
+                              -ErrorAction SilentlyContinue
+
+            $ODSettingsModulePath = Join-Path -Path $PSScriptRoot `
+                                            -ChildPath "..\DSCResources\MSFT_ODSettings\MSFT_ODSettings.psm1" `
+                                            -Resolve
+
+            Import-Module $ODSettingsModulePath | Out-Null
+            $partialContent = ""
+            if ($centralAdminUrl)
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
+                $partialContent = Export-TargetResource -IsSingleInstance "Yes" `
+                                                        -GlobalAdminAccount $GlobalAdminAccount
+                if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
+                }
+                $DSCContent += $partialContent
             }
-            $DSCContent += $partialContent
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
@@ -569,24 +748,32 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckSCRetentionCompliancePolicy")) -or
         $AllComponents)
     {
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform SecurityComplianceCenter
-
-        Write-Information "Extracting SCRetentionCompliancePolicy..."
-        $SCRetentionCompliancePolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                        -ChildPath "..\DSCResources\MSFT_SCRetentionCompliancePolicy\MSFT_SCRetentionCompliancePolicy.psm1" `
-                                        -Resolve
-
-        Import-Module $SCRetentionCompliancePolicyModulePath | Out-Null
-        $policies = Get-RetentionCompliancePolicy
-
-        $i = 1
-        foreach ($policy in $policies)
+        try
         {
-            Write-Information "    - [$i/$($policies.Length)] $($policy.Name)"
-            $partialContent = Export-TargetResource -Name $policy.Name -GlobalAdminAccount $GlobalAdminAccount
-            $DSCContent += $partialContent
-            $i++
+            Write-Information "Extracting SCRetentionCompliancePolicy..."
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform SecurityComplianceCenter `
+                              -ErrorAction SilentlyContinue
+
+            $SCRetentionCompliancePolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                            -ChildPath "..\DSCResources\MSFT_SCRetentionCompliancePolicy\MSFT_SCRetentionCompliancePolicy.psm1" `
+                                            -Resolve
+
+            Import-Module $SCRetentionCompliancePolicyModulePath | Out-Null
+            $policies = Get-RetentionCompliancePolicy
+
+            $i = 1
+            foreach ($policy in $policies)
+            {
+                Write-Information "    - [$i/$($policies.Length)] $($policy.Name)"
+                $partialContent = Export-TargetResource -Name $policy.Name -GlobalAdminAccount $GlobalAdminAccount
+                $DSCContent += $partialContent
+                $i++
+            }
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
@@ -596,24 +783,32 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckSCRetentionComplianceRule")) -or
         $AllComponents)
     {
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform SecurityComplianceCenter
-
-        Write-Information "Extracting SCRetentionComplianceRule..."
-        $SCRetentionComplianceRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                            -ChildPath "..\DSCResources\MSFT_SCRetentionComplianceRule\MSFT_SCRetentionComplianceRule.psm1" `
-                                            -Resolve
-
-        Import-Module $SCRetentionComplianceRuleModulePath | Out-Null
-        $rules = Get-RetentionComplianceRule
-
-        $i = 1
-        foreach ($rule in $rules)
+        try
         {
-            Write-Information "    - [$i/$($rules.Length)] $($rule.Name)"
-            $partialContent = Export-TargetResource -Name $rule.Name -Policy $rule.Policy -GlobalAdminAccount $GlobalAdminAccount
-            $DSCContent += $partialContent
-            $i++
+            Write-Information "Extracting SCRetentionComplianceRule..."
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform SecurityComplianceCenter `
+                              -ErrorAction SilentlyContinue
+
+            $SCRetentionComplianceRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_SCRetentionComplianceRule\MSFT_SCRetentionComplianceRule.psm1" `
+                                                -Resolve
+
+            Import-Module $SCRetentionComplianceRuleModulePath | Out-Null
+            $rules = Get-RetentionComplianceRule
+
+            $i = 1
+            foreach ($rule in $rules)
+            {
+                Write-Information "    - [$i/$($rules.Length)] $($rule.Name)"
+                $partialContent = Export-TargetResource -Name $rule.Name -Policy $rule.Policy -GlobalAdminAccount $GlobalAdminAccount
+                $DSCContent += $partialContent
+                $i++
+            }
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
     #endregion
@@ -672,10 +867,6 @@ function Start-O365ConfigurationExtract
                                                                 -GlobalAdminAccount $GlobalAdminAccount
                     }
 
-                    if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
-                    {
-                        $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
-                    }
                     $DSCContent += $partialContent
                     $i++
                 }
@@ -729,9 +920,17 @@ function Start-O365ConfigurationExtract
                                                     -Owner "Reverse" `
                                                     -GlobalAdminAccount $GlobalAdminAccount
 
-            if ($partialContent.ToLower().Contains($organization.ToLower()))
+            if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
+                $partialContent = $partialContent -ireplace [regex]::Escape($principal + ".sharepoint.com"), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])-sharepoint.com"
+            }
+            if($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
+            }
+            if($partialContent.ToLower().Contains("@" + $principal.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
             }
             $DSCContent += $partialContent
             $i++
@@ -763,10 +962,11 @@ function Start-O365ConfigurationExtract
             {
                 Write-Information "    - [$i/$($hubSites.Length)] $($hub.SiteUrl)"
                 $partialContent = Export-TargetResource -Url $hub.SiteUrl -GlobalAdminAccount $GlobalAdminAccount
-                if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
+                if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+                    $partialContent.ToLower().Contains($principal.ToLower()))
                 {
-                    $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
                     $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0]).sharepoint.com/"
+                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
                 }
                 $DSCContent += $partialContent
                 $i++
@@ -833,10 +1033,6 @@ function Start-O365ConfigurationExtract
                                                     -Protocol $mapping.Protocol `
                                                     -GlobalAdminAccount $GlobalAdminAccount
 
-            if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
-            }
             $DSCContent += $partialContent
             $i++
         }
@@ -868,10 +1064,6 @@ function Start-O365ConfigurationExtract
                                                     -Type $property.Value.ManagedType `
                                                     -GlobalAdminAccount $GlobalAdminAccount
 
-            if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
-            }
             $DSCContent += $partialContent
             $i++
         }
@@ -902,10 +1094,6 @@ function Start-O365ConfigurationExtract
             $partialContent = Export-TargetResource -Title $siteDesign.Title `
                                                     -GlobalAdminAccount $GlobalAdminAccount
 
-            if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
-            }
             $DSCContent += $partialContent
             $i++
         }
@@ -936,10 +1124,6 @@ function Start-O365ConfigurationExtract
             $partialContent += Export-TargetResource -SiteDesignTitle $siteDesign.Title `
                                                      -GlobalAdminAccount $GlobalAdminAccount
 
-            if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape('"' + $centralAdminUrl + '"'), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
-            }
             $DSCContent += $partialContent
             $i++
         }
@@ -968,9 +1152,18 @@ function Start-O365ConfigurationExtract
         foreach ($storageEntity in $storageEntities)
         {
             Write-Information "    [$i/$($storageEntities.Length)] {$($storageEntity.Key)}"
-            $DSCContent += Export-TargetResource -Key $storageEntity.Key `
+            $partialContent = Export-TargetResource -Key $storageEntity.Key `
                                                  -SiteUrl $centralAdminUrl `
                                                  -GlobalAdminAccount $GlobalAdminAccount
+            if ($partialContent.ToLower().Contains("https://" + $principal.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("https://" + $principal.ToLower()), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])-admin.sharepoint.com"
+            }
+            if($partialContent.ToLower().Contains($principal.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape($principal), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])"
+            }
+            $DSCContent += $partialContent
             $i++
         }
     }
@@ -1011,8 +1204,13 @@ function Start-O365ConfigurationExtract
         foreach ($team in $teams)
         {
             Write-Information "    - [$i/$($teams.Length)] $($team.DisplayName)"
-            $DSCContent += Export-TargetResource -DisplayName $team.DisplayName `
+            $partialContent = Export-TargetResource -DisplayName $team.DisplayName `
                                                  -GlobalAdminAccount $GlobalAdminAccount
+            if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$ConfigurationData.NonNodeData.OrganizationName"
+            }
+            $DSCContent += $partialContent
             $i++
         }
     }
