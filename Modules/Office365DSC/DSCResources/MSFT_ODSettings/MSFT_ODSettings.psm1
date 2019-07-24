@@ -72,8 +72,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of OneDrive Settings"
 
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SharePointOnline
 
     $nullReturn = @{
