@@ -23,7 +23,6 @@ Configuration Example
             Description         = "Created by DSC"
             PreviewImageAltText = "Office 365"
             Ensure             = "Present"
-            CentralAdminUrl    = "https://o365dsc1-admin.sharepoint.com"
             GlobalAdminAccount = $credsGlobalAdmin
         }
     }

@@ -29,7 +29,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "SPO Tenant settings are not configured" -Fixture {
             $testParams = @{
                 IsSingleInstance                                = "Yes"
-                CentralAdminUrl                                 = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                              = $GlobalAdminAccount
                 MinCompatibilityLevel                           = 16
                 MaxCompatibilityLevel                           = 16
@@ -105,7 +104,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                CentralAdminUrl              = "https://Office365DSC-admin.sharepoint.com"
                 GlobalAdminAccount           = $GlobalAdminAccount
                 IsSingleInstance             = "Yes"
             }

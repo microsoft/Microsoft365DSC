@@ -30,7 +30,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Url                                         = "https://contoso.sharepoint.com/sites/TestSite"
                 Owner                                       = "testuser@contoso.com"
                 StorageQuota                                = 1000
-                CentralAdminUrl                             = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                          = $GlobalAdminAccount
                 Ensure                                      = "Present"
                 LocaleId                                    = 1033
@@ -132,7 +131,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Url                                         = "https://contoso.sharepoint.com/sites/TestSite"
                 Owner                                       = "testuser@contoso.com"
                 StorageQuota                                = 1000
-                CentralAdminUrl                             = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                          = $GlobalAdminAccount
                 LocaleId                                    = 1033
                 Template                                    = "STS#3"
@@ -233,7 +231,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Url                                         = "https://contoso.sharepoint.com/sites/TestSite"
                 Owner                                       = "testuser@contoso.com"
                 StorageQuota                                = 1000
-                CentralAdminUrl                             = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                          = $GlobalAdminAccount
                 Ensure                                      = "Present"
                 LocaleId                                    = 1033
@@ -338,7 +335,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Url                                         = "https://contoso.sharepoint.com/sites/TestSite"
                 Owner                                       = "testuser@contoso.com"
                 StorageQuota                                = 1000
-                CentralAdminUrl                             = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                          = $GlobalAdminAccount
                 LocaleId                                    = 1033
                 Template                                    = "STS#3"
@@ -472,7 +468,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Url                                         = "https://contoso.sharepoint.com/sites/TestSite"
                 Owner                                       = "testuser@contoso.com"
                 StorageQuota                                = 1000
-                CentralAdminUrl                             = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                          = $GlobalAdminAccount
                 LocaleId                                    = 1033
                 Template                                    = "STS#3"
@@ -606,7 +601,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Url                                      = "https://contoso.sharepoint.com/sites/TestSite"
                 Owner                                    = "testuser@contoso.com"
                 StorageQuota                             = 1000
-                CentralAdminUrl                          = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                       = $GlobalAdminAccount
                 Ensure                                   = "Present"
                 LocaleId                                 = 1033
@@ -733,7 +727,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Url                                      = "https://contoso.sharepoint.com/sites/TestSite"
                 Owner                                    = "testuser@contoso.com"
                 StorageQuota                             = 1000
-                CentralAdminUrl                          = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                       = $GlobalAdminAccount
                 Ensure                                   = "Absent"
                 LocaleId                                 = 1033
@@ -809,7 +802,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 Url = "https://contoso.com/sites/TestSite"
-                CentralAdminUrl = "https://contoso-admin.sharepoint.com"
                 Owner              = "testuser@contoso.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
