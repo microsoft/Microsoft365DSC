@@ -146,6 +146,124 @@ function Get-SupervisoryReviewRule
     )
 }
 
+function New-DLPCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeSenderMemberOf,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeSenderMemberOfException,
+
+        [Parameter()]
+        [ValidateSet('Enable','TestWithNotifications','TestWithoutNotifications','Disable','PendingDeletion')]
+        [System.String]
+        $Mode,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveLocationException,
+
+        [Parameter()]
+        [System.UInt32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsLocationException
+    )
+}
+
+function Set-DLPCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeSenderMemberOf,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeSenderMemberOfException,
+
+        [Parameter()]
+        [ValidateSet('Enable','TestWithNotifications','TestWithoutNotifications','Disable','PendingDeletion')]
+        [System.String]
+        $Mode,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveLocationException,
+
+        [Parameter()]
+        [System.UInt32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsLocationException
+    )
+}
+
 function New-RetentionComplianceRule
 {
     [CmdletBinding()]
@@ -192,6 +310,26 @@ function New-RetentionComplianceRule
 }
 
 function Get-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Get-DLPCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-DLPCompliancePolicy
 {
     [CmdletBinding()]
     param(
