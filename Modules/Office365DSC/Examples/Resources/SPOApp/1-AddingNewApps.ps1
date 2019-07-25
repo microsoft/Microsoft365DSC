@@ -19,7 +19,6 @@ Configuration Example
             Identity           = "DemoApp"
             Path               = "C:\Demo\DemoApp.sppkg"
             Publish            = $true
-            CentralAdminUrl    = "https://Office365DSC-admin.sharepoint.com"
             GlobalAdminAccount = $credsGlobalAdmin
             Ensure             = "Present"
         }
@@ -29,7 +28,6 @@ Configuration Example
             Identity           = "DemoApp2"
             Path               = "C:\Demo\DemoApp2.app"
             Publish            = $true
-            CentralAdminUrl    = "https://Office365DSC-admin.sharepoint.com"
             GlobalAdminAccount = $credsGlobalAdmin
             Ensure             = "Present"
         }

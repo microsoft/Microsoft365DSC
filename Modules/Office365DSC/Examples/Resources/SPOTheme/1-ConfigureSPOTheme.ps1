@@ -17,7 +17,6 @@ Configuration Example
         SPOTheme MySPOTheme
         {
             GlobalAdminAccount = $credsGlobalAdmin
-            CentralAdminUrl    = "https://o365spoapp-admin.sharepoint.com"
             Name               = "PSTheme1"
             IsInverted         = $false
             Palette            = '{

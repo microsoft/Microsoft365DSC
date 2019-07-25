@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Test-PnPOnlineConnection -MockWith {
+        Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
         $existingValueXML = "<SearchConfigurationSettings xmlns=`"http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Portability`" xmlns:i=`"http://www.w3.org/2001/XMLSchema-instance`">
@@ -92,7 +92,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Type               = "SharePoint"
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
             }
             $xmlTemplatePath = Join-Path -Path $PSScriptRoot `
                                          -ChildPath "..\..\..\Modules\Office365DSC\Dependencies\SearchConfigurationSettings.xml" `
@@ -129,7 +128,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Type               = "SharePoint"
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
             }
             Mock -CommandName Get-PnPSearchConfiguration -MockWith {
                 return $existingValueXML
@@ -149,22 +147,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Update the managed property in the Set method" {
                 Set-TargetResource @testParams
-            }
-        }
-
-        Context -Name "When the Ensure is set to Absent" -Fixture {
-            $testParams = @{
-                Name               = "TestMP"
-                Protocol           = "Local"
-                Type               = "SharePoint"
-                Ensure             = "Absent"
-                GlobalAdminAccount = $GlobalAdminAccount
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
-            }
-
-            It "Should throw and errors" {
-                { Get-TargetResource @testParams } | Should Throw "This resource cannot delete Result Sources. Please make sure you set its Ensure value to Present."
-                { Set-TargetResource @testParams } | Should Throw "This resource cannot delete Result Sources. Please make sure you set its Ensure value to Present."
             }
         }
     }

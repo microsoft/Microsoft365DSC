@@ -22,24 +22,20 @@ function Get-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Getting configuration for SPO Theme $Name"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     $nullReturn = @{
         Name                = $Name
         IsInverted          = $null
         Palette             = $null
         Ensure              = "Absent"
-        CentralAdminUrl     = $CentralAdminUrl
         GlobalAdminAccount  = $GlobalAdminAccount
     }
 
@@ -57,7 +53,6 @@ function Get-TargetResource
             Name                = $theme.Name
             IsInverted          = $theme.IsInverted
             Palette             = $theme.Palette
-            CentralAdminUrl     = $CentralAdminUrl
             GlobalAdminAccount  = $GlobalAdminAccount
             Ensure              = "Present"
         }
@@ -92,17 +87,14 @@ function Set-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Setting configuration for SPO Theme $Name"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     if ($Ensure -eq "Present")
     {
@@ -115,7 +107,6 @@ function Set-TargetResource
         $CurrentParameters = $PSBoundParameters
         $CurrentParameters.Remove("Palette")
         $CurrentParameters.Remove("Ensure")
-        $CurrentParameters.Remove("CentralAdminURL")
         $CurrentParameters.Remove("GlobalAdminAccount")
         $CurrentParameters.Add("Palette", $PaletteHash)
 
@@ -190,18 +181,11 @@ function Test-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Testing configuration for SPO Theme $Name"
-
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
@@ -228,10 +212,6 @@ function Export-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

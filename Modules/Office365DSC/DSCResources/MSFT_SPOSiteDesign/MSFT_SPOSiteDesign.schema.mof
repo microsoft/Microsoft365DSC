@@ -10,7 +10,6 @@ class MSFT_SPOSiteDesign : OMI_BaseResource
     [Write, Description("Site design preview image url.")] string PreviewImageUrl;
     [Write, Description("Site design version number.")] uint32 Version;
     [Write, Description("Used to add or remove site design."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Required, Description("The Url of the SharePoint Online Central Administration.")] string CentralAdminUrl;
     [Required, Description("Credentials of the Office365 Tenant Admin."), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };
 

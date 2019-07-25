@@ -12,8 +12,8 @@ install:
         Install-Module AzureAD -RequiredVersion 2.0.2.4 -Force
         Install-Module MSOnline -RequiredVersion 1.1.183.17 -Force
         Install-Module MicrosoftTeams -RequiredVersion 1.0.0 -Force
-        Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.5.1901.0 -Force
-        Install-Module MSCloudLoginAssistant -RequiredVersion 0.5.2 -Force
+        Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.11.1907.0 -Force
+        Install-Module MSCloudLoginAssistant -RequiredVersion 0.5.8 -Force
 
         $webClient = new-object System.Net.WebClient
         $url = "https://github.com/Microsoft/Office365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_8615-1200_x64_en-us.msi?raw=true"

@@ -95,10 +95,6 @@ function Get-TargetResource
         [System.boolean]
         $RequireAcceptingAccountMatchInvitedAccount,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
         [Parameter()]
         [ValidateSet("Present","Absent")]
         [System.String]
@@ -111,7 +107,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for SPO Sharing settings"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     $nullReturn = @{
         IsSingleInstance                           = 'Yes'
@@ -135,7 +132,6 @@ function Get-TargetResource
         NotifyOwnersWhenItemsReshared              = $null
         DefaultLinkPermission                      = $null
         RequireAcceptingAccountMatchInvitedAccount = $null
-        CentralAdminUrl                            = $null
         GlobalAdminAccount                         = $null
     }
 
@@ -165,7 +161,6 @@ function Get-TargetResource
             NotifyOwnersWhenItemsReshared              = $SPOSharingSettings.NotifyOwnersWhenItemsReshared
             DefaultLinkPermission                      = $SPOSharingSettings.DefaultLinkPermission
             RequireAcceptingAccountMatchInvitedAccount = $SPOSharingSettings.RequireAcceptingAccountMatchInvitedAccount
-            CentralAdminUrl                            = $CentralAdminUrl
             GlobalAdminAccount                         = $GlobalAdminAccount
         }
     }
@@ -275,10 +270,6 @@ function Set-TargetResource
         [System.boolean]
         $RequireAcceptingAccountMatchInvitedAccount,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
         [Parameter()]
         [ValidateSet("Present","Absent")]
         [System.String]
@@ -291,10 +282,10 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for SPO Sharing settings"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("Verbose")
     $CurrentParameters.Remove("IsSingleInstance")
@@ -434,10 +425,6 @@ function Test-TargetResource
         [System.boolean]
         $RequireAcceptingAccountMatchInvitedAccount,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
         [Parameter()]
         [ValidateSet("Present","Absent")]
         [System.String]
@@ -449,8 +436,6 @@ function Test-TargetResource
     )
 
     Write-Verbose -Message "Testing configuration for SPO Sharing settings"
-
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -584,14 +569,9 @@ function Export-TargetResource
         $RequireAcceptingAccountMatchInvitedAccount,
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-SPOServiceConnection -GlobalAdminAccount $GlobalAdminAccount -SPOCentralAdminUrl $CentralAdminUrl
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "SPOSharingSettings " + (New-GUID).ToString() + "`r`n"

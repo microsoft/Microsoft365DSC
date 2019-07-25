@@ -23,24 +23,20 @@ function Get-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesignRights for $SiteDesignTitle"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
 
     $nullReturn = @{
         SiteDesignTitle    = $SiteDesignTitle
         UserPrincipals     = $UserPrincipals
         Rights             = $Rights
         Ensure             = "Absent"
-        CentralAdminUrl    = $CentralAdminUrl
         GlobalAdminAccount = $GlobalAdminAccount
     }
 
@@ -76,7 +72,6 @@ function Get-TargetResource
         UserPrincipals     = $curUserPrincipals
         Rights             = $Rights
         Ensure             = "Present"
-        CentralAdminUrl    = $CentralAdminUrl
         GlobalAdminAccount = $GlobalAdminAccount
     }
 }
@@ -105,17 +100,14 @@ function Set-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Setting configuration for SPO SiteDesignRights for $SiteDesignTitle"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
 
     $cursiteDesign = Get-PnPSiteDesign -Identity $SiteDesignTitle
     if ($null -eq $cursiteDesign)
@@ -199,10 +191,6 @@ function Test-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -236,14 +224,9 @@ function Export-TargetResource
         $SiteDesignTitle,
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
 
     $content = ""

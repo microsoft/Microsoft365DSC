@@ -45,7 +45,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of SafeAttachmentPolicy for $Identity"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
 
@@ -131,7 +132,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of SafeAttachmentPolicy for $Identity"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $SafeAttachmentPolicyParams = $PSBoundParameters
     $SafeAttachmentPolicyParams.Remove('Ensure') | Out-Null

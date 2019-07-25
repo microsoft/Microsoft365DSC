@@ -34,7 +34,7 @@ function Get-TargetResource
         $TrackClicks = $true,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -45,17 +45,14 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of AtpPolicyForO365 for $Identity"
 
-    if ('Absent' -eq $Ensure)
-    {
-        throw "EXOAtpPolicyForO365 configurations MUST specify Ensure value of 'Present'"
-    }
-
     if ('Default' -ne $Identity)
     {
         throw "EXOAtpPolicyForO365 configurations MUST specify Identity value of 'Default'"
     }
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
+
     $AtpPolicies = Get-AtpPolicyForO365
 
     $AtpPolicyForO365 = $AtpPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -129,7 +126,7 @@ function Set-TargetResource
         $TrackClicks = $true,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -140,17 +137,14 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of AtpPolicyForO365 for $Identity"
 
-    if ('Absent' -eq $Ensure)
-    {
-        throw "EXOAtpPolicyForO365 configurations MUST specify Ensure value of 'Present'"
-    }
-
     if ('Default' -ne $Identity)
     {
         throw "EXOAtpPolicyForO365 configurations MUST specify Identity value of 'Default'"
     }
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
+
     $AtpPolicyParams = $PSBoundParameters
     $AtpPolicyParams.Remove('Ensure') | Out-Null
     $AtpPolicyParams.Remove('GlobalAdminAccount') | Out-Null
@@ -195,7 +189,7 @@ function Test-TargetResource
         $TrackClicks = $true,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 

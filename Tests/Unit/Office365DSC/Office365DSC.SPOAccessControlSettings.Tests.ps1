@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [string] 
+    [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
@@ -21,14 +21,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Test-PnPOnlineConnection -MockWith {
+        Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
 
-        # Test contexts 
+        # Test contexts
         Context -Name "PNP AccessControl settings are not configured" -Fixture {
             $testParams = @{
-                CentralAdminUrl              = "https://o365dsc1-admin.sharepoint.com"
                 GlobalAdminAccount           = $GlobalAdminAccount
                 IsSingleInstance             = "Yes"
                 DisplayStartASiteOption      = $false
@@ -87,14 +86,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                CentralAdminUrl              = "https://o365dsc1-admin.sharepoint.com"
                 GlobalAdminAccount           = $GlobalAdminAccount
                 IsSingleInstance             = "Yes"
             }
 
             Mock -CommandName Get-PnPTenant -MockWith {
                 return @{
-                    CentralAdminUrl              = "https://o365dsc1-admin.sharepoint.com"
                     GlobalAdminAccount           = $GlobalAdminAccount
                     DisplayStartASiteOption      = $false
                     StartASiteFormUrl            = "https://o365dsc1.sharepoint.com"

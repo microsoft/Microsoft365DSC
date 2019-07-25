@@ -84,13 +84,9 @@ function Get-TargetResource
         $CompanyNameExtraction,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -99,12 +95,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for Managed Property instance $Name"
 
-    if ($Ensure -eq "Absent")
-    {
-        throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
-    }
-
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     $nullReturn = @{
         Name                        = $Name
@@ -127,7 +119,6 @@ function Get-TargetResource
         MappedCrawledProperties     = $null
         CompanyNameExtraction       = $null
         Ensure                      = "Absent"
-        CentralAdminUrl             = $CentralAdminUrl
     }
 
     if ($null -eq $Script:RecentMPExtract)
@@ -197,7 +188,6 @@ function Get-TargetResource
         FinerQueryTokenization = [boolean] $property.Value.ExpandSegments
         MappedCrawledProperties = $mappings
         CompanyNameExtraction = $CompanyNameExtraction
-        CentralAdminUrl = $CentralAdminUrl
         Ensure = "Present"
     }
 }
@@ -287,13 +277,9 @@ function Set-TargetResource
         $CompanyNameExtraction,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -302,12 +288,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for Managed Property instance $Name"
 
-    if ($Ensure -eq "Absent")
-    {
-        throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
-    }
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     $SearchConfigTemplatePath =  Join-Path -Path $PSScriptRoot `
                                            -ChildPath "..\..\Dependencies\SearchConfigurationSettings.xml" `
                                            -Resolve
@@ -705,13 +688,9 @@ function Test-TargetResource
         $CompanyNameExtraction,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -750,10 +729,6 @@ function Export-TargetResource
         [ValidateSet("Text","Integer","Decimal","DateTime","YesNo","Double","Binary")]
         [System.String]
         $Type,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "Pass@word1)" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Test-PnPOnlineConnection -MockWith {
+        Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
         # Test contexts
@@ -36,7 +36,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 PreviewImageUrl     = ""
                 Ensure              = "Present"
                 GlobalAdminAccount  = $GlobalAdminAccount
-                CentralAdminUrl     = "https://contoso-admin.sharepoint.com"
             }
 
 
@@ -77,7 +76,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 PreviewImageAltText = "Office 365"
                 Ensure              = "Present"
                 GlobalAdminAccount  = $GlobalAdminAccount
-                CentralAdminUrl     = "https://contoso-admin.sharepoint.com"
             }
 
 
@@ -114,7 +112,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Title              = "DSC Site Design"
                 GlobalAdminAccount = $GlobalAdminAccount
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
             }
 
             Mock -CommandName Get-PnPSiteDesign -MockWith {

@@ -21,11 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
 
-        Mock -CommandName Connect-ExchangeOnline -MockWith {
-
-        }
-
-        Mock -CommandName Connect-SecurityAndComplianceCenter -MockWith {
+        Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
 
@@ -131,33 +127,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $true
             }
 
-        }
-
-        Context -Name 'Test Fails When the Ensure Absent is specified' -Fixture {
-            $testParams = @{
-                IsSingleInstance                = 'Yes'
-                Ensure                          = 'Absent'
-                GlobalAdminAccount              = $GlobalAdminAccount
-                UnifiedAuditLogIngestionEnabled = 'Enabled'
-            }
-
-            Mock -CommandName Get-AdminAuditLogConfig -MockWith {
-                return @{
-                    UnifiedAuditLogIngestionEnabled = $true
-                }
-            }
-
-            It 'Should throw error from the Get method' {
-                { Get-TargetResource @testParams } | Should Throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
-            }
-
-            It 'Should throw error from the Set method' {
-                { Set-TargetResource @testParams } | Should Throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
-            }
-
-            It 'Should throw error from the Test method' {
-                { Test-TargetResource @testParams } | Should Throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
-            }
         }
 
         Context -Name 'ReverseDSC Tests' -Fixture {

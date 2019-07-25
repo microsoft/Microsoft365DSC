@@ -136,7 +136,8 @@ function Get-TargetResource
     }
 
     Write-Verbose -Message "Checking for existance of Team $DisplayName"
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount | Out-Null
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform MicrosoftTeams
 
     $CurrentParameters = $PSBoundParameters
 
@@ -170,7 +171,7 @@ function Get-TargetResource
         $Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object {$_.Role -eq "owner"}
         if ($null -ne $Owners)
         {
-            $Owners = $Owners.User
+            $Owners = $Owners.User.ToString()
         }
         Write-Verbose -Message "Found Team $($team.DisplayName)."
 
@@ -317,7 +318,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Team $DisplayName"
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform MicrosoftTeams
 
     $team = Get-TargetResource @PSBoundParameters
 
@@ -504,7 +506,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $result.Remove("GroupID")

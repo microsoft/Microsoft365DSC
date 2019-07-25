@@ -72,13 +72,9 @@ function Get-TargetResource
         $UseAutoDiscover,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -87,12 +83,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Setting configuration for Result Source instance $Name"
 
-    if ($Ensure -eq "Absent")
-    {
-        throw "This resource cannot delete Result Sources. Please make sure you set its Ensure value to Present."
-    }
-
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
 
     $nullReturn = @{
         Name                = $Name
@@ -105,7 +97,6 @@ function Get-TargetResource
         ShowPartialSearch   = $null
         GlobalAdminAccount  = $GlobalAdminAccount
         Ensure              = "Absent"
-        CentralAdminUrl     = $CentralAdminUrl
     }
 
     if ($null -eq $Script:RecentExtract)
@@ -143,7 +134,6 @@ function Get-TargetResource
         UseAutoDiscover     = $SourceHasAutoDiscover
         GlobalAdminAccount  = $GlobalAdminAccount
         Ensure              = "Present"
-        CentralAdminUrl     = $CentralAdminUrl
     }
 
     if ($null -ne $allowPartial)
@@ -194,13 +184,9 @@ function Set-TargetResource
         $UseAutoDiscover,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -209,12 +195,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for Result Source instance $Name"
 
-    if ($Ensure -eq "Absent")
-    {
-        throw "This resource cannot delete Result Sources. Please make sure you set its Ensure value to Present."
-    }
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
     Write-Verbose -Message "Reading SearchConfigurationSettings XML file"
     $SearchConfigTemplatePath =  Join-Path -Path $PSScriptRoot `
                                            -ChildPath "..\..\Dependencies\SearchConfigurationSettings.xml" `
@@ -393,13 +376,9 @@ function Test-TargetResource
         $UseAutoDiscover,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -438,10 +417,6 @@ function Export-TargetResource
         [ValidateSet("Local","Remote","OpenSearch","Exchange")]
         [System.String]
         $Protocol,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

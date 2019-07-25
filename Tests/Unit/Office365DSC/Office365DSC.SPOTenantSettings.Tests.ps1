@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [string] 
+    [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
@@ -21,15 +21,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Test-PnPOnlineConnection -MockWith {
+        Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
 
-        # Test contexts 
+        # Test contexts
         Context -Name "SPO Tenant settings are not configured" -Fixture {
             $testParams = @{
                 IsSingleInstance                                = "Yes"
-                CentralAdminUrl                                 = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                              = $GlobalAdminAccount
                 MinCompatibilityLevel                           = 16
                 MaxCompatibilityLevel                           = 16
@@ -105,7 +104,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                CentralAdminUrl              = "https://Office365DSC-admin.sharepoint.com"
                 GlobalAdminAccount           = $GlobalAdminAccount
                 IsSingleInstance             = "Yes"
             }

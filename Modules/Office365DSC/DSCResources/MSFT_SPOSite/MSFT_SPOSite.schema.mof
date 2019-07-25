@@ -2,8 +2,8 @@
 class MSFT_SPOSite : OMI_BaseResource
 {
     [Key, Description("The URL of the site collection")] string Url;
-    [Write, Description("The username of the site collection administrator")] string Owner;
-    [Write, Description("The resource quota to apply to the site collection")] uint32 StorageQuota;
+    [Key, Description("The username of the site collection administrator")] string Owner;
+    [Write, Description("The resource quota to apply to the site collection. Default value is 26214400")] uint32 StorageQuota;
     [Write, Description("The title of the site")] string Title;
     [Write, Description("The compatibility level of the site")] uint32 CompatibilityLevel;
     [Write, Description("The locale code of the site")] uint32 LocaleId;
@@ -30,7 +30,6 @@ class MSFT_SPOSite : OMI_BaseResource
     [Write, Description("The default link permission for the site collection"), ValueMap{"None","View", "Edit"}, Values{"None","View", "Edit"}] string DefaultLinkPermission;
     [Write, Description("The URL of the Hub site the site collection needs to get connected to")] string HubUrl;
     [Write, Description("Present ensures the site collection exists, absent ensures it is removed"), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
-    [Required, Description("The Url of the SharePoint Online Central Administration")] string CentralAdminUrl;
     [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };
 

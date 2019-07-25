@@ -51,7 +51,8 @@ function Get-TargetResource
         GlobalAdminAccount = $null
     }
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $OrgConfig = Get-OrganizationConfig
 
@@ -120,7 +121,8 @@ function Set-TargetResource
 
     $OrgConfig = Get-TargetResource @PSBoundParameters
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     # CASE : MailTipsAllTipsEnabled is used
 

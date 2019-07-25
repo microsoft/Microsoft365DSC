@@ -36,20 +36,6 @@ function Set-AdminAuditLogConfig{
     )
 }
 
-function Test-PnPOnlineConnection{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.String]
-        $SiteUrl
-    )
-}
-
-
 function Get-SupervisoryReviewPolicyV2
 {
     [CmdletBinding()]
@@ -977,59 +963,6 @@ param(
 
  }
 
- function Global:Connect-ExchangeOnline
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-
-}
-function Global:Connect-SecurityAndComplianceCenter
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-
-}
-
-function Connect-SPOService {
- [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [ValidateNotNullOrEmpty()]
-    [object]
-    ${Url},
-
-    [Parameter(Position=1, ValueFromPipeline=$true)]
-    [object]
-    ${Credential},
-
-    [Parameter(Position=2)]
-    [string]
-    ${ClientTag},
-
-    [Parameter(ParameterSetName='AuthenticationLocation', Position=3)]
-    [object]
-    ${Region},
-
-    [Parameter(ParameterSetName='AuthenticationUrl', Mandatory=$true, Position=3)]
-    [string]
-    ${AuthenticationUrl})
-
-
- }
-
-
 function ConvertTo-SPOMigrationEncryptedPackage {
  [CmdletBinding()]
 param(
@@ -1156,13 +1089,6 @@ param()
 
  }
 
-
-function Disconnect-SPOService {
- [CmdletBinding()]
-param()
-
-
- }
 
 
 function Enable-SPOTenantServicePrincipal {
@@ -5968,33 +5894,6 @@ param(
 
  }
 
-
-function Connect-MsolService {
- [CmdletBinding(DefaultParameterSetName='None__0')]
-param(
-    [Parameter(ParameterSetName='Credential')]
-    [pscredential]
-    ${Credential},
-
-    [Parameter(ParameterSetName='AccessToken')]
-    [Alias('AccessToken')]
-    [string]
-    ${AdGraphAccessToken},
-
-    [Parameter(ParameterSetName='AccessToken')]
-    [string]
-    ${MsGraphAccessToken},
-
-    [Parameter(ParameterSetName='None__0')]
-    [Parameter(ParameterSetName='Credential')]
-    [Parameter(ParameterSetName='AccessToken')]
-    [object]
-    ${AzureEnvironment})
-
-
- }
-
-
 function Convert-MsolDomainToFederated {
  [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
@@ -8368,67 +8267,6 @@ param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Name})
-
-
- }
-
-
-function Connect-AzureAD {
- [CmdletBinding(DefaultParameterSetName='UserCredential', SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param(
-    [ValidateNotNullOrEmpty()]
-    [object]
-    ${AzureEnvironmentName},
-
-    [Parameter(ParameterSetName='UserCredential')]
-    [Parameter(ParameterSetName='ServicePrincipalCertificate', Mandatory=$true)]
-    [Parameter(ParameterSetName='AccessToken')]
-    [Alias('Domain','TenantDomain')]
-    [ValidateNotNullOrEmpty()]
-    [string]
-    ${TenantId},
-
-    [Parameter(ParameterSetName='UserCredential')]
-    [pscredential]
-    ${Credential},
-
-    [Parameter(ParameterSetName='ServicePrincipalCertificate', Mandatory=$true)]
-    [string]
-    ${CertificateThumbprint},
-
-    [Parameter(ParameterSetName='ServicePrincipalCertificate', Mandatory=$true)]
-    [string]
-    ${ApplicationId},
-
-    [Parameter(ParameterSetName='AccessToken', Mandatory=$true)]
-    [ValidateNotNullOrEmpty()]
-    [string]
-    ${AadAccessToken},
-
-    [Parameter(ParameterSetName='AccessToken')]
-    [ValidateNotNullOrEmpty()]
-    [string]
-    ${MsAccessToken},
-
-    [Parameter(ParameterSetName='AccessToken', Mandatory=$true)]
-    [Parameter(ParameterSetName='UserCredential')]
-    [ValidateNotNullOrEmpty()]
-    [string]
-    ${AccountId},
-
-    [object]
-    ${LogLevel},
-
-    [string]
-    ${LogFilePath})
-
-
- }
-
-
-function Disconnect-AzureAD {
- [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-param()
 
 
  }

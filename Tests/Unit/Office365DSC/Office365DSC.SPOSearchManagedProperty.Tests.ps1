@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Test-PnPOnlineConnection -MockWith {
+        Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
         $existingValueXML = "<?xml version=`"1.0`" encoding=`"ISO-8859-1`"?>
@@ -140,7 +140,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 CompanyNameExtraction = $true
                 Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
-                CentralAdminUrl = "https://contoso-admin.sharepoint.com"
             }
             $xmlTemplatePath = Join-Path -Path $PSScriptRoot `
                                          -ChildPath "..\..\..\Modules\Office365DSC\Dependencies\SearchConfigurationSettings.xml" `
@@ -190,7 +189,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 CompanyNameExtraction = $true
                 Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
-                CentralAdminUrl = "https://contoso-admin.sharepoint.com"
             }
             Mock -CommandName Get-PnPSearchConfiguration -MockWith {
 
@@ -214,21 +212,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "When the Ensure is set to Absent" -Fixture {
-            $testParams = @{
-                Name ="TestMP"
-                Type = "Text"
-                Ensure = "Absent"
-                GlobalAdminAccount = $GlobalAdminAccount
-                CentralAdminUrl = "https://contoso-admin.sharepoint.com"
-            }
-
-            It "Should throw and errors" {
-                { Get-TargetResource @testParams } | Should Throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
-                { Set-TargetResource @testParams } | Should Throw "This resource cannot delete Managed Properties. Please make sure you set its Ensure value to Present."
-            }
-        }
-
         Context -Name "When Invalid values are used" -Fixture {
             $testParams = @{
                 Name ="TestMP"
@@ -237,7 +220,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 CompleteMatching = $true
                 Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
-                CentralAdminUrl = "https://contoso-admin.sharepoint.com"
             }
 
             It "Should throw and errors" {

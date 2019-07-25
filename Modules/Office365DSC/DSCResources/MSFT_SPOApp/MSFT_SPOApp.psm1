@@ -26,15 +26,11 @@ function Get-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "GSetting configuration for app $Identity"
+    Write-Verbose -Message "Getting configuration for app $Identity"
 
     $nullReturn = @{
         Identity        = ""
@@ -42,12 +38,12 @@ function Get-TargetResource
         Publish         = $Publish
         Overwrite       = $Overwrite
         Ensure          = "Absent"
-        CentralAdminUrl = $CentralAdminUrl
     }
 
     try
     {
-        Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+        Test-MSCloudLogin -Platform PnP `
+                          -O365Credential $GlobalAdminAccount
         $app = Get-PnPApp -Identity $Identity -ErrorAction SilentlyContinue
         if ($null -eq $app)
         {
@@ -60,7 +56,6 @@ function Get-TargetResource
             Path            = $Path
             Publish         = $app.Deployed
             Overwrite       = $Overwrite
-            CentralAdminUrl = $CentralAdminUrl
             Ensure          = "Present"
         }
     }
@@ -98,17 +93,14 @@ function Set-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Setting configuration for app $Identity"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -Platform PnP `
+                      -O365Credential $GlobalAdminAccount
 
     $currentApp = Get-TargetResource @PSBoundParameters
 
@@ -156,10 +148,6 @@ function Test-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -196,10 +184,6 @@ function Export-TargetResource
         $Path,
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -208,7 +192,8 @@ function Export-TargetResource
     $content = "        SPOApp " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $convertedContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += $convertedContent
     $content += "        }`r`n"
     return $content
 }

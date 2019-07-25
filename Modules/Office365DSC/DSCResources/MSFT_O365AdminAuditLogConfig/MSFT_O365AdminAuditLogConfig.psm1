@@ -10,8 +10,9 @@ function Get-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [string]$Ensure = 'Present',
+        [ValidateSet('Present')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('Enabled', 'Disabled')]
@@ -25,11 +26,6 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for Office 365 Audit Log"
 
-    if ('Absent' -eq $Ensure)
-    {
-        throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
-    }
-
     $nullReturn = @{
         IsSingleInstance                = $IsSingleInstance
         Ensure                          = 'Present'
@@ -37,7 +33,8 @@ function Get-TargetResource
         UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabled
     }
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     $GetResults = Get-AdminAuditLogConfig
     if (-not $GetResults)
@@ -78,8 +75,9 @@ function Set-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [string]$Ensure = 'Present',
+        [ValidateSet('Present')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('Enabled', 'Disabled')]
@@ -93,12 +91,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for Office 365 Audit Log"
 
-    if ('Absent' -eq $Ensure)
-    {
-        throw "O365AdminAuditLogConfig configurations MUST specify Ensure value of 'Present'"
-    }
-
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
 
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
     {
@@ -140,8 +134,9 @@ function Test-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [string]$Ensure = 'Present',
+        [ValidateSet('Present')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('Enabled', 'Disabled')]

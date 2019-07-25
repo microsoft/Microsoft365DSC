@@ -60,8 +60,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of AntiPhishRule for $Identity"
 
-    Write-Verbose -Message "Calling Connect-ExchangeOnline function:"
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
+
     Write-Verbose -Message "Global ExchangeOnlineSession status:"
     Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
 
@@ -181,7 +182,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of AntiPhishRule for $Identity"
 
-    Connect-ExchangeOnline -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
+
     $AntiPhishRules = Get-AntiPhishRule
 
     $AntiPhishRule = $AntiPhishRules | Where-Object -FilterScript { $_.Identity -eq $Identity }

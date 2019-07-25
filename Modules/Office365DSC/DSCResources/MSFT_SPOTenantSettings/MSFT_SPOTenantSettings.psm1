@@ -77,10 +77,6 @@ function Get-TargetResource
         [System.Boolean]
         $HideDefaultThemes,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
         [Parameter()]
         [ValidateSet("Present","Absent")]
         [System.String]
@@ -93,7 +89,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for SPO Tenant"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
 
     $nullReturn = @{
         IsSingleInstance                              = 'Yes'
@@ -114,7 +111,6 @@ function Get-TargetResource
         ApplyAppEnforcedRestrictionsToAdHocRecipients = $null
         FilePickerExternalImageSearchEnabled          = $null
         HideDefaultThemes                             = $null
-        CentralAdminUrl                               = $null
         GlobalAdminAccount                            = $null
     }
 
@@ -141,7 +137,6 @@ function Get-TargetResource
             ApplyAppEnforcedRestrictionsToAdHocRecipients = $SPOTenantSettings.ApplyAppEnforcedRestrictionsToAdHocRecipients
             FilePickerExternalImageSearchEnabled          = $SPOTenantSettings.FilePickerExternalImageSearchEnabled
             HideDefaultThemes                             = $SPOTenantSettings.HideDefaultThemes
-            CentralAdminUrl                               = $CentralAdminUrl
             GlobalAdminAccount                            = $GlobalAdminAccount
         }
     }
@@ -233,10 +228,6 @@ function Set-TargetResource
         [System.Boolean]
         $HideDefaultThemes,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
         [Parameter()]
         [ValidateSet("Present","Absent")]
         [System.String]
@@ -249,10 +240,10 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for SPO Tenant"
 
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("IsSingleInstance")
 
@@ -343,10 +334,6 @@ function Test-TargetResource
         [System.Boolean]
         $HideDefaultThemes,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
         [Parameter()]
         [ValidateSet("Present","Absent")]
         [System.String]
@@ -358,9 +345,6 @@ function Test-TargetResource
     )
 
     Write-Verbose -Message "Testing configuration for SPO Tenant"
-
-    Test-PnPOnlineConnection -SiteUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
@@ -369,7 +353,6 @@ function Test-TargetResource
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck @("IsSingleInstance", `
-                                                                   "CentralAdminUrl", `
                                                                    "GlobalAdminAccount", `
                                                                    "MaxCompatibilityLevel", `
                                                                    "SearchResolveExactEmailOrUPN", `
@@ -405,21 +388,16 @@ function Export-TargetResource
         $IsSingleInstance,
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-PnPOnlineConnection -GlobalAdminAccount $GlobalAdminAccount -SiteUrl $CentralAdminUrl
-
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "SPOTenantSettings " + (New-GUID).ToString() + "`r`n"
-    $content += "{`r`n"
-    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += "}`r`n"
+    $content = "        SPOTenantSettings " + (New-GUID).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += "        }`r`n"
     return $content
 }
 

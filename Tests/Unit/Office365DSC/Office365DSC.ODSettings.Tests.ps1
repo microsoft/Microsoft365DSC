@@ -21,14 +21,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "Pass@word1)" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Test-SPOServiceConnection -MockWith {
+        Mock -CommandName Test-MSCloudLogin -MockWith {
         }
 
         # Test contexts
         Context -Name "Check OneDrive Quota" -Fixture {
             $testParams = @{
                 OneDriveStorageQuota = 1024
-                CentralAdminUrl = "https://contoso.sharepoint.com"
+                IsSingleInstance = "Yes"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -53,7 +53,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Set OneDrive Quota" -Fixture {
             $testParams = @{
                 OneDriveStorageQuota = 1024
-                CentralAdminUrl = "https://contoso.sharepoint.com"
+                IsSingleInstance = "Yes"
                 OrphanedPersonalSitesRetentionPeriod = 60
                 OneDriveForGuestsEnabled = $true
                 NotifyOwnersWhenInvitationsAccepted = $true
@@ -102,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 OneDriveStorageQuota = 1024
-                CentralAdminUrl = "https://contoso.sharepoint.com"
+                IsSingleInstance = "Yes"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

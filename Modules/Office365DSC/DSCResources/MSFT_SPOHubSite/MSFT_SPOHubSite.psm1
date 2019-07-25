@@ -38,18 +38,17 @@ function Get-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Getting configuration for hub site collection $Url"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
+
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform MSOnline
 
     $nullReturn = @{
         Url                  = $Url
@@ -60,7 +59,6 @@ function Get-TargetResource
         AllowedToJoin        = $null
         SiteDesignId         = $null
         Ensure               = "Absent"
-        CentralAdminUrl      = $CentralAdminUrl
         GlobalAdminAccount   = $GlobalAdminAccount
     }
 
@@ -127,7 +125,6 @@ function Get-TargetResource
                 AllowedToJoin        = $principals
                 SiteDesignId         = $hubSite.SiteDesignId
                 Ensure               = "Present"
-                CentralAdminUrl      = $CentralAdminUrl
                 GlobalAdminAccount   = $GlobalAdminAccount
             }
             return $result
@@ -179,18 +176,17 @@ function Set-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Setting configuration for hub site collection $Url"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
-    Test-O365ServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
+
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform MSOnline
 
     try
     {
@@ -407,10 +403,6 @@ function Test-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -447,10 +439,6 @@ function Export-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Url,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

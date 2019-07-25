@@ -5,8 +5,9 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateSet("Yes")]
         [System.String]
-        $CentralAdminUrl,
+        $IsSingleInstance,
 
         [Parameter()]
         [System.UInt32]
@@ -71,10 +72,11 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of OneDrive Settings"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     $nullReturn = @{
-        CentralAdminUrl                           = $CentralAdminUrl
+        IsSingleInstance                          = "Yes"
         BlockMacSync                              = $null
         DisableReportProblemDialog                = $null
         DomainGuids                               = $null
@@ -143,7 +145,7 @@ function Get-TargetResource
         }
 
         return @{
-            CentralAdminUrl                           = $CentralAdminUrl
+            IsSingleInstance                          = "Yes"
             BlockMacSync                              = $tenantRestrictions.BlockMacSync
             DisableReportProblemDialog                = $tenantRestrictions.DisableReportProblemDialog
             DomainGuids                               = $FixedAllowedDomainList
@@ -173,8 +175,9 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateSet("Yes")]
         [System.String]
-        $CentralAdminUrl,
+        $IsSingleInstance,
 
         [Parameter()]
         [System.UInt32]
@@ -239,13 +242,13 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of OneDrive Settings"
 
-    Test-SPOServiceConnection -SPOCentralAdminUrl $CentralAdminUrl -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SharePointOnline
 
     ## Configure OneDrive settings
     ## Parameters below are remove for the Set-SPOTenant cmdlet
     ## they are used in the Set-SPOTenantSyncClientRestriction cmdlet
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
 
     if ($CurrentParameters.ContainsKey("BlockMacSync"))
@@ -267,6 +270,10 @@ function Set-TargetResource
     if ($CurrentParameters.ContainsKey("GrooveBlockOption"))
     {
         $CurrentParameters.Remove("GrooveBlockOption")
+    }
+    if ($CurrentParameters.ContainsKey("IsSingleInstance"))
+    {
+        $CurrentParameters.Remove("IsSingleInstance")
     }
 
     Write-Verbose -Message "Configuring OneDrive settings."
@@ -314,10 +321,10 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-
         [Parameter(Mandatory = $true)]
+        [ValidateSet("Yes")]
         [System.String]
-        $CentralAdminUrl,
+        $IsSingleInstance,
 
         [Parameter()]
         [System.UInt32]
@@ -415,8 +422,9 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateSet("Yes")]
         [System.String]
-        $CentralAdminUrl,
+        $IsSingleInstance,
 
         [Parameter()]
         [System.UInt32]

@@ -62,8 +62,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of ComplianceTag for $Name"
 
-    Write-Verbose -Message "Calling Test-SecurityAndComplianceConnection function:"
-    Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SecurityComplianceCenter
 
     $tagObjects = Get-ComplianceTag
     $tagObject = $tagObjects | Where-Object { $_.Name -eq $Name }
@@ -163,7 +163,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of ComplianceTag for $Name"
 
-    Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SecurityComplianceCenter
+
     $CurrentTag = Get-TargetResource @PSBoundParameters
 
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentTag.Ensure))

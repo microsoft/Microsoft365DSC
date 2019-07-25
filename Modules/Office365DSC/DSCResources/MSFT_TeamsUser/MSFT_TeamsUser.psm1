@@ -14,7 +14,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Member", "Owner")]
+        [ValidateSet("Guest", "Member", "Owner")]
         $Role = "Member",
 
         [Parameter()]
@@ -29,7 +29,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of member $User to Team $TeamName"
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform MicrosoftTeams
 
     $nullReturn = @{
         User               = $User
@@ -93,7 +94,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Member", "Owner")]
+        [ValidateSet("Guest", "Member", "Owner")]
         $Role = "Member",
 
         [Parameter()]
@@ -108,7 +109,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of member $User to Team $TeamName"
 
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform MicrosoftTeams
 
     $team = Get-TeamByName $TeamName
 
@@ -153,7 +155,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Member", "Owner")]
+        [ValidateSet("Guest", "Member", "Owner")]
         $Role = "Member",
 
         [Parameter()]
@@ -207,7 +209,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Test-TeamsServiceConnection -GlobalAdminAccount $GlobalAdminAccount
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        TeamsUser " + (New-GUID).ToString() + "`r`n"

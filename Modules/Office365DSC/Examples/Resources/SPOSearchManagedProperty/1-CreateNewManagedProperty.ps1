@@ -24,7 +24,6 @@ Configuration Example
             CompanyNameExtraction       = $False
             AllowMultipleValues         = $True
             Aliases                     = $True
-            CentralAdminUrl             = "https://Office365DSC-admin.sharepoint.com"
             Queryable                   = $True
             Name                        = "TestManagedProperty"
             Safe                        = $True

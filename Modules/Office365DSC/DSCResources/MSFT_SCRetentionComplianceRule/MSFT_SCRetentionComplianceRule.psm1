@@ -55,8 +55,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of RetentionComplianceRule for $Name"
 
-    Write-Verbose -Message "Calling Test-SecurityAndComplianceConnection function:"
-    Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SecurityComplianceCenter
 
     $RuleObjects = Get-RetentionComplianceRule
     $RuleObject = $RuleObjects | Where-Object {$_.Name -eq $Name}
@@ -152,7 +152,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of RetentionComplianceRule for $Name"
 
-    Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SecurityComplianceCenter
+
     $CurrentRule = Get-TargetResource @PSBoundParameters
 
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentRule.Ensure))

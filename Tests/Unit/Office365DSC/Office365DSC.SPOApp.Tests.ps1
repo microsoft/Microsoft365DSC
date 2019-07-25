@@ -20,7 +20,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Test-SPOServiceConnection -MockWith {
+        Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
 
@@ -29,7 +29,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Identity           = "MyTestApp"
                 Path               = "C:\Test\MyTestApp.sppkg"
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Present"
             }
@@ -58,7 +57,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Identity           = "MyTestApp"
                 Path               = "C:\Test\MyTestApp.sppkg"
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Present"
             }
@@ -83,7 +81,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Identity           = "MyTestApp"
                 Path               = "C:\Test\MyTestApp.sppkg"
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Absent"
             }
@@ -107,7 +104,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Ident              = "MyTestApp"
                 Path               = "C:\Test\MyTestApp.sppkg"
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
