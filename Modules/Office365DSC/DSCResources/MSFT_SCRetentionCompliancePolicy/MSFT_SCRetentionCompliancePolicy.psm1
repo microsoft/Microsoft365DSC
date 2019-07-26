@@ -269,8 +269,6 @@ function Set-TargetResource
         if ($null -ne $CreationParams.ExchangeLocation -or `
             $null -ne $ExchangeLocation)
         {
-            $CreationParams.Remove("ExchangeLocation")
-
             $ToBeRemoved = $CreationParams.ExchangeLocation | `
                                 Where {$ExchangeLocation -NotContains $_}
             if ($null -ne $ToBeRemoved)
@@ -284,6 +282,8 @@ function Set-TargetResource
             {
                 $CreationParams.Add("AddExchangeLocation", $ToBeAdded)
             }
+
+            $CreationParams.Remove("ExchangeLocation")
         }
 
         # Exchange Location Exception is specified or already existing, we need to determine
@@ -291,8 +291,6 @@ function Set-TargetResource
         if ($null -ne $CreationParams.ExchangeLocationException -or `
             $null -ne $ExchangeLocationException)
         {
-            $CreationParams.Remove("ExchangeLocationException")
-
             $ToBeRemoved = $CreationParams.ExchangeLocationException | `
                                 Where {$ExchangeLocationException -NotContains $_}
             if ($null -ne $ToBeRemoved)
@@ -306,6 +304,7 @@ function Set-TargetResource
             {
                 $CreationParams.Add("AddExchangeLocationException", $ToBeAdded)
             }
+            $CreationParams.Remove("ExchangeLocationException")
         }
 
         # Modern Group Location is specified or already existing, we need to determine
@@ -313,8 +312,6 @@ function Set-TargetResource
         if ($null -ne $CreationParams.ModernGroupLocation -or `
             $null -ne $ModernGroupLocation)
         {
-            $CreationParams.Remove("ModernGroupLocation")
-
             $ToBeRemoved = $CreationParams.ModernGroupLocation | `
                                 Where {$ModernGroupLocation -NotContains $_}
             if ($null -ne $ToBeRemoved)
@@ -328,6 +325,7 @@ function Set-TargetResource
             {
                 $CreationParams.Add("AddModernGroupLocation", $ToBeAdded)
             }
+            $CreationParams.Remove("ModernGroupLocation")
         }
 
         # Modern Group Location Exception is specified or already existing, we need to determine
@@ -335,8 +333,6 @@ function Set-TargetResource
         if ($null -ne $CreationParams.ModernGroupLocationException -or `
             $null -ne $ModernGroupLocationException)
         {
-            $CreationParams.Remove("ModernGroupLocationException")
-
             $ToBeRemoved = $CreationParams.ModernGroupLocationException | `
                                 Where {$ModernGroupLocationException -NotContains $_}
             if ($null -ne $ToBeRemoved)
@@ -350,6 +346,7 @@ function Set-TargetResource
             {
                 $CreationParams.Add("AddModernGroupLocationException", $ToBeAdded)
             }
+            $CreationParams.Remove("ModernGroupLocationException")
         }
 
         # OneDrive Location is specified or already existing, we need to determine
@@ -357,8 +354,6 @@ function Set-TargetResource
         if ($null -ne $CreationParams.OneDriveLocation -or `
             $null -ne $OneDriveLocation)
         {
-            $CreationParams.Remove("OneDriveLocation")
-
             $ToBeRemoved = $CreationParams.OneDriveLocation | `
                                 Where {$OneDriveLocation -NotContains $_}
             if ($null -ne $ToBeRemoved)
@@ -372,6 +367,7 @@ function Set-TargetResource
             {
                 $CreationParams.Add("AddOneDriveLocation", $ToBeAdded)
             }
+            $CreationParams.Remove("OneDriveLocation")
         }
 
         # OneDrive Location Exception is specified or already existing, we need to determine
@@ -379,8 +375,6 @@ function Set-TargetResource
         if ($null -ne $CreationParams.OneDriveLocationException -or `
             $null -ne $OneDriveLocationException)
         {
-            $CreationParams.Remove("OneDriveLocationException")
-
             $ToBeRemoved = $CreationParams.OneDriveLocationException | `
                                 Where {$OneDriveLocationException -NotContains $_}
             if ($null -ne $ToBeRemoved)
@@ -394,6 +388,7 @@ function Set-TargetResource
             {
                 $CreationParams.Add("AddOneDriveLocationException", $ToBeAdded)
             }
+            $CreationParams.Remove("OneDriveLocationException")
         }
 
         # Public Folder Location is specified or already existing, we need to determine
@@ -401,8 +396,6 @@ function Set-TargetResource
         if ($null -ne $CreationParams.PublicFolderLocation -or `
             $null -ne $PublicFolderLocation)
         {
-            $CreationParams.Remove("PublicFolderLocation")
-
             $ToBeRemoved = $CreationParams.PublicFolderLocation | `
                                 Where {$PublicFolderLocation -NotContains $_}
             if ($null -ne $ToBeRemoved)
@@ -416,6 +409,7 @@ function Set-TargetResource
             {
                 $CreationParams.Add("AddPublicFolderLocation", $ToBeAdded)
             }
+            $CreationParams.Remove("PublicFolderLocation")
         }
 
         # SharePoint Location is specified or already existing, we need to determine
@@ -423,8 +417,6 @@ function Set-TargetResource
         if ($null -ne $CreationParams.SharePointLocation -or `
             $null -ne $SharePointLocation)
         {
-            $CreationParams.Remove("SharePointLocation")
-
             $ToBeRemoved = $CreationParams.SharePointLocation | `
                                 Where {$SharePointLocation -NotContains $_}
             if ($null -ne $ToBeRemoved)
@@ -438,6 +430,7 @@ function Set-TargetResource
             {
                 $CreationParams.Add("AddSharePointLocation", $ToBeAdded)
             }
+            $CreationParams.Remove("SharePointLocation")
         }
 
         # SharePoint Location Exception is specified or already existing, we need to determine
@@ -445,8 +438,6 @@ function Set-TargetResource
         if ($null -ne $CreationParams.SharePointLocationException -or `
             $null -ne $SharePointLocationException)
         {
-            $CreationParams.Remove("SharePointLocationException")
-
             $ToBeRemoved = $CreationParams.SharePointLocationException | `
                                 Where {$SharePointLocationException -NotContains $_}
             if ($null -ne $ToBeRemoved)
@@ -460,6 +451,7 @@ function Set-TargetResource
             {
                 $CreationParams.Add("AddSharePointLocationException", $ToBeAdded)
             }
+            $CreationParams.Remove("SharePointLocationException")
         }
 
         # Skype Location is specified or already existing, we need to determine
@@ -467,8 +459,6 @@ function Set-TargetResource
         if ($null -ne $CreationParams.SkypeLocation -or `
             $null -ne $SkypeLocation)
         {
-            $CreationParams.Remove("SkypeLocation")
-
             $ToBeRemoved = $CreationParams.SkypeLocation | `
                                 Where {$SkypeLocation -NotContains $_}
             if ($null -ne $ToBeRemoved)
@@ -482,6 +472,7 @@ function Set-TargetResource
             {
                 $CreationParams.Add("AddSkypeLocation", $ToBeAdded)
             }
+            $CreationParams.Remove("SkypeLocation")
         }
 
         # Skype Location Exception is specified or already existing, we need to determine
@@ -489,8 +480,6 @@ function Set-TargetResource
         if ($null -ne $CreationParams.SkypeLocationException -or `
             $null -ne $SkypeLocationException)
         {
-            $CreationParams.Remove("SkypeLocationException")
-
             $ToBeRemoved = $CreationParams.SkypeLocationException | `
                                 Where {$SkypeLocationException -NotContains $_}
             if ($null -ne $ToBeRemoved)
@@ -504,6 +493,7 @@ function Set-TargetResource
             {
                 $CreationParams.Add("AddSkypeLocationException", $ToBeAdded)
             }
+            $CreationParams.Remove("SkypeLocationException")
         }
 
         Write-Verbose "Updating Policy with values: $(Convert-O365DscHashtableToString -Hashtable $CreationParams)"
