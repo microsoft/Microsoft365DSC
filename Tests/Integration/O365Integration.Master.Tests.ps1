@@ -131,7 +131,7 @@ Configuration Master
         SCRetentionComplianceRule DemoRule
         {
             Name                      = "DemoRule2"
-            Policy                    = "ContosoPolicy"
+            Policy                    = "MyRCPolicy"
             Comment                   = "This is a Demo Rule"
             RetentionComplianceAction = "Keep"
             RetentionDuration         = "Unlimited"
@@ -153,7 +153,7 @@ Configuration Master
             Name               = "DemoRule"
             Condition          = "(NOT(Reviewee:US Compliance))"
             SamplingRate       = 100
-            Policy             = 'TestPolicy'
+            Policy             = 'MySRPolicy'
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }
