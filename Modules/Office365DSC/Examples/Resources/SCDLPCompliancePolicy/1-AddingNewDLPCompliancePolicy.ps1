@@ -18,7 +18,7 @@ Configuration Example
         {
             Name               = "MyPolicy"
             Comment            = "Test Policy"
-            Priority           = 100
+            Priority           = 1
             SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
             Ensure             = "Present"
             GlobalAdminAccount = $credsGlobalAdmin
