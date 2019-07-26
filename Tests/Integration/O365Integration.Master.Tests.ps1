@@ -114,7 +114,7 @@ Configuration Master
             Name               = "MyDLPPolicy"
             Comment            = "Test Policy"
             Priority           = 1
-            SharePointLocation = "https://o365dsc.sharepoint.com/sites/finances"
+            SharePointLocation = "https://o365dsc.sharepoint.com/sites/Classic"
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }
@@ -123,7 +123,7 @@ Configuration Master
         {
             Name               = "MyRCPolicy"
             Comment            = "Test Policy"
-            SharePointLocation = "https://o365dsc.sharepoint.com/sites/finances"
+            SharePointLocation = "https://o365dsc.sharepoint.com/sites/Classic"
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }
