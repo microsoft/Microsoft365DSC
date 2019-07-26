@@ -74,6 +74,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
                 Priority           = 1
+                Mode               = "Enable"
                 SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
                 Name               = 'TestPolicy'
             }
