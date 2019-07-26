@@ -97,7 +97,7 @@ function Get-TargetResource
             OneDriveLocation                      = $PolicyObject.OneDriveLocation
             OneDriveLocationException             = $PolicyObject.OneDriveLocationException
             Priority                              = $PolicyObject.Priority
-            SharePointLocation                    = $PolicyObject.SharePointLocation
+            SharePointLocation                    = $PolicyObject.SharePointLocation.Name
             SharePointLocationException           = $PolicyObject.SharePointLocationException
             TeamsLocation                         = $PolicyObject.TeamsLocation
             TeamsLocationException                = $PolicyObject.TeamsLocationException

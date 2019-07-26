@@ -99,8 +99,7 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
 
-    $PolicyObjects = Get-RetentionCompliancePolicy
-    $PolicyObject = $PolicyObjects | Where-Object {$_.Name -eq $Name}
+    $PolicyObject = Get-RetentionCompliancePolicy $Name
 
     if ($null -eq $PolicyObject)
     {
@@ -507,6 +506,7 @@ function Set-TargetResource
             }
         }
 
+        Write-Verbose "Updating Policy with values: $(Convert-O365DscHashtableToString -Hashtable $CreationParams)"
         Set-RetentionCompliancePolicy @CreationParams
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
