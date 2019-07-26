@@ -102,12 +102,8 @@ Configuration Master
             RetentionDuration  = "1025"
             RetentionType      = "ModificationAgeInDays"
             FilePlanProperty   = MSFT_SCFilePlanProperty{
-                FilePlanPropertyDepartment = "DemoDept"
-                FilePlanPropertyCitation = "DemoCit"
-                FilePlanPropertyReferenceId = "DemoRef"
-                FilePlanPropertyAuthority = "DemoAuth"
-                FilePlanPropertyCategory = "DemoCat"
-                FilePlanPropertySubcategory = "DemoSub"
+                FilePlanPropertyDepartment = "Human resources"
+                FilePlanPropertyCategory = "Accounts receivable"
             }
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
