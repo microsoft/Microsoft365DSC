@@ -354,7 +354,7 @@ function Set-TargetResource
                 $CreationParams.Add("AddTeamsLocationException", $ToBeAdded)
             }
         }
-
+        Write-Verbose "Updating Policy with values: $(Convert-O365DscHashtableToString -Hashtable $CreationParams)"
         Set-DLPCompliancePolicy @CreationParams
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
