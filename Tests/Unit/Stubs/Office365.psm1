@@ -347,6 +347,10 @@ function New-RetentionComplianceRule
 
         [Parameter()]
         [System.String]
+        $Policy,
+
+        [Parameter()]
+        [System.String]
         $Comment,
 
         [Parameter()]
