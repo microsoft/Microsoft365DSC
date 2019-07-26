@@ -254,12 +254,260 @@ function Set-TargetResource
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
-        # Easier to delete the Policy and recreate it from scratch;
-        Remove-RetentionCompliancePolicy -Identity $Name
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
-        New-RetentionCompliancePolicy @CreationParams
+        $CreationParams.Remove("Name")
+        $CreationParams.Add("Identity", $Name)
+        $CreationParams.Remove("TeamsChannelLocation")
+        $CreationParams.Remove("TeamsChannelLocationException")
+        $CreationParams.Remove("TeamsChatLocation")
+        $CreationParams.Remove("TeamsChatLocationException")
+        $CreationParams.Remove("DynamicScopeLocation")
+
+        # Exchange Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.ExchangeLocation -or `
+            $null -ne $ExchangeLocation)
+        {
+            $CreationParams.Remove("ExchangeLocation")
+
+            $ToBeRemoved = $CreationParams.ExchangeLocation | `
+                                Where {$ExchangeLocation -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemoveExchangeLocation", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $ExchangeLocation | `
+                                Where {$CreationParams.ExchangeLocation -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddExchangeLocation", $ToBeAdded)
+            }
+        }
+
+        # Exchange Location Exception is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.ExchangeLocationException -or `
+            $null -ne $ExchangeLocationException)
+        {
+            $CreationParams.Remove("ExchangeLocationException")
+
+            $ToBeRemoved = $CreationParams.ExchangeLocationException | `
+                                Where {$ExchangeLocationException -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemoveExchangeLocationException", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $ExchangeLocationException | `
+                                Where {$CreationParams.ExchangeLocationException -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddExchangeLocationException", $ToBeAdded)
+            }
+        }
+
+        # Modern Group Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.ModernGroupLocation -or `
+            $null -ne $ModernGroupLocation)
+        {
+            $CreationParams.Remove("ModernGroupLocation")
+
+            $ToBeRemoved = $CreationParams.ModernGroupLocation | `
+                                Where {$ModernGroupLocation -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemoveModernGroupLocation", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $ModernGroupLocation | `
+                                Where {$CreationParams.ModernGroupLocation -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddModernGroupLocation", $ToBeAdded)
+            }
+        }
+
+        # Modern Group Location Exception is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.ModernGroupLocationException -or `
+            $null -ne $ModernGroupLocationException)
+        {
+            $CreationParams.Remove("ModernGroupLocationException")
+
+            $ToBeRemoved = $CreationParams.ModernGroupLocationException | `
+                                Where {$ModernGroupLocationException -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemoveModernGroupLocationException", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $ModernGroupLocationException | `
+                                Where {$CreationParams.ModernGroupLocationException -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddModernGroupLocationException", $ToBeAdded)
+            }
+        }
+
+        # OneDrive Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.OneDriveLocation -or `
+            $null -ne $OneDriveLocation)
+        {
+            $CreationParams.Remove("OneDriveLocation")
+
+            $ToBeRemoved = $CreationParams.OneDriveLocation | `
+                                Where {$OneDriveLocation -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemoveOneDriveLocation", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $OneDriveLocation | `
+                                Where {$CreationParams.OneDriveLocation -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddOneDriveLocation", $ToBeAdded)
+            }
+        }
+
+        # OneDrive Location Exception is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.OneDriveLocationException -or `
+            $null -ne $OneDriveLocationException)
+        {
+            $CreationParams.Remove("OneDriveLocationException")
+
+            $ToBeRemoved = $CreationParams.OneDriveLocationException | `
+                                Where {$OneDriveLocationException -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemoveOneDriveLocationException", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $OneDriveLocationException | `
+                                Where {$CreationParams.OneDriveLocationException -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddOneDriveLocationException", $ToBeAdded)
+            }
+        }
+
+        # Public Folder Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.PublicFolderLocation -or `
+            $null -ne $PublicFolderLocation)
+        {
+            $CreationParams.Remove("PublicFolderLocation")
+
+            $ToBeRemoved = $CreationParams.PublicFolderLocation | `
+                                Where {$PublicFolderLocation -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemovePublicFolderLocation", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $PublicFolderLocation | `
+                                Where {$CreationParams.PublicFolderLocation -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddPublicFolderLocation", $ToBeAdded)
+            }
+        }
+
+        # SharePoint Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.SharePointLocation -or `
+            $null -ne $SharePointLocation)
+        {
+            $CreationParams.Remove("SharePointLocation")
+
+            $ToBeRemoved = $CreationParams.SharePointLocation | `
+                                Where {$SharePointLocation -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemoveSharePointLocation", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $SharePointLocation | `
+                                Where {$CreationParams.SharePointLocation -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddSharePointLocation", $ToBeAdded)
+            }
+        }
+
+        # SharePoint Location Exception is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.SharePointLocationException -or `
+            $null -ne $SharePointLocationException)
+        {
+            $CreationParams.Remove("SharePointLocationException")
+
+            $ToBeRemoved = $CreationParams.SharePointLocationException | `
+                                Where {$SharePointLocationException -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemoveSharePointLocationException", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $SharePointLocationException | `
+                                Where {$CreationParams.SharePointLocationException -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddSharePointLocationException", $ToBeAdded)
+            }
+        }
+
+        # Skype Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.SkypeLocation -or `
+            $null -ne $SkypeLocation)
+        {
+            $CreationParams.Remove("SkypeLocation")
+
+            $ToBeRemoved = $CreationParams.SkypeLocation | `
+                                Where {$SkypeLocation -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemoveSkypeLocation", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $SkypeLocation | `
+                                Where {$CreationParams.SkypeLocation -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddSkypeLocation", $ToBeAdded)
+            }
+        }
+
+        # Skype Location Exception is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.SkypeLocationException -or `
+            $null -ne $SkypeLocationException)
+        {
+            $CreationParams.Remove("SkypeLocationException")
+
+            $ToBeRemoved = $CreationParams.SkypeLocationException | `
+                                Where {$SkypeLocationException -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemoveSkypeLocationException", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $SkypeLocationException | `
+                                Where {$CreationParams.SkypeLocationException -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddSkypeLocationException", $ToBeAdded)
+            }
+        }
+
+        Set-RetentionCompliancePolicy @CreationParams
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {

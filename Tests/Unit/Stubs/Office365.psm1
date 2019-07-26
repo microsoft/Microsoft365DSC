@@ -462,6 +462,115 @@ function New-RetentionCompliancePolicy{
     )
 }
 
+function Set-RetentionCompliancePolicy{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddExchangeLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveExchangeLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $AddModernGroupLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveModernGroupLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddModernGroupLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveModernGroupLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $AddOneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveOneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddOneDriveLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveOneDriveLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $AddPublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemovePublicFolderLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $RestrictiveRetention = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSkypeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSkypeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSkypeLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSkypeLocationException
+    )
+}
+
 function Get-RetentionCompliancePolicy
 {
     [CmdletBinding()]
