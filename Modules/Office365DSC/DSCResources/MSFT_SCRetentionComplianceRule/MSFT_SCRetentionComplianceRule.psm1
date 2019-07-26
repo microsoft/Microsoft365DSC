@@ -171,6 +171,7 @@ function Set-TargetResource
         $CreationParams.Remove("Ensure")
         $CreationParams.Remove("Name")
         $CreationParams.Add("Identity", $Name)
+        $CreationParams.Remove("Policy")
 
         Set-RetentionComplianceRule @CreationParams
     }
