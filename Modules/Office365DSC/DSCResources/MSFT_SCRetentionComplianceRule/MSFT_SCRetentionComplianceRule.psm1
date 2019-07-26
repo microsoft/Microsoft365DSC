@@ -166,12 +166,13 @@ function Set-TargetResource
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
-        # Easier to delete the Rule and recreate it from scratch;
-        Remove-RetentionComplianceRule -Identity $Name
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
-        New-RetentionComplianceRule @CreationParams
+        $CreationParams.Remove("Name")
+        $CreationParams.Add("Identity", $Name)
+
+        Set-RetentionComplianceRule @CreationParams
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
