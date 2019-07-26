@@ -47,7 +47,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
-                Priority           = 100
+                Priority           = 1
                 SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
                 Name               = 'TestPolicy'
             }
@@ -73,7 +73,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
-                Priority           = 100
+                Priority           = 1
                 SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
                 Name               = 'TestPolicy'
             }
@@ -81,7 +81,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-DLPCompliancePolicy -MockWith {
                 return @{
                     Name               = "TestPolicy"
-                    Priority           = 100
+                    Priority           = 1
                     SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
                 }
             }
@@ -135,7 +135,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-DLPCompliancePolicy -MockWith {
                 return @{
                     Name                         = "Test Policy"
-                    Priority                     = 100
+                    Priority                     = 1
                     SharePointLocation           = "https://o365dsc1.sharepoint.com"
                 }
             }

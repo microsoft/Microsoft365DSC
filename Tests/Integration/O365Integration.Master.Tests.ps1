@@ -113,7 +113,7 @@ Configuration Master
         {
             Name               = "MyPolicy"
             Comment            = "Test Policy"
-            Priority           = 100
+            Priority           = 1
             SharePointLocation = "https://o365dsc.sharepoint.com"
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin

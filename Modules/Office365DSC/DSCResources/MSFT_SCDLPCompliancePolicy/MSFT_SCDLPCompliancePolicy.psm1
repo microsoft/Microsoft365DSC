@@ -38,6 +38,7 @@ function Get-TargetResource
         $OneDriveLocationException,
 
         [Parameter()]
+        [ValidateRange(0,1)]
         [System.UInt32]
         $Priority,
 
@@ -149,6 +150,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.UInt32]
+        [ValidateRange(0,1)]
         $Priority,
 
         [Parameter()]
@@ -246,6 +248,7 @@ function Test-TargetResource
         $OneDriveLocationException,
 
         [Parameter()]
+        [ValidateRange(0,1)]
         [System.UInt32]
         $Priority,
 
