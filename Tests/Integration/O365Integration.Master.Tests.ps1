@@ -123,7 +123,7 @@ Configuration Master
         {
             Name               = "MyRCPolicy"
             Comment            = "Test Policy"
-            SharePointLocation = "https://o365dsc.sharepoint.com/sites/Classic"
+            SharePointLocation = "https://o365dsc.sharepoint.com/sites/Modern"
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }
