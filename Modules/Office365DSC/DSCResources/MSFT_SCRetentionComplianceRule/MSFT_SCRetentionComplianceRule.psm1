@@ -58,8 +58,7 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
 
-    $RuleObjects = Get-RetentionComplianceRule
-    $RuleObject = $RuleObjects | Where-Object {$_.Name -eq $Name}
+    $RuleObject = Get-RetentionComplianceRule $Name
 
     if ($null -eq $RuleObject)
     {
@@ -71,23 +70,18 @@ function Get-TargetResource
     else
     {
         Write-Verbose "Found existing RetentionComplianceRule $($Name)"
+        $AssociatedPolicy = Get-RetentionCompliancePolicy $RuleObject.Policy
         $result = @{
-            Ensure = 'Present'
-        }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-        {
-            if ($null -ne $RuleObject.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $RuleObject.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
+            Name                         = $RuleObject.Name
+            Policy                       = $AssociatedPolicy.Name
+            ExcludedItemClasses          = $RuleObject.ExcludedItemClasses
+            RetentionDuration            = $RuleObject.RetentionDuration
+            RetentionDurationDisplayHint = $RuleObject.RetentionDurationDisplayHint
+            ContentMatchQuery            = $RuleObject.ContentMatchQuery
+            ExpirationDateOption         = $RuleObject.ExpirationDateOption
+            RetentionComplianceAction    = $RuleObject.RetentionComplianceAction
+            GlobalAdminAccount           = $GlobalAdminAccount
+            Ensure                       = 'Present'
         }
 
         Write-Verbose -Message "Found RetentionComplianceRule $($Name)"
