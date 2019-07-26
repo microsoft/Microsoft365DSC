@@ -199,6 +199,8 @@ function Set-TargetResource
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
+        $CreationParams.Remove("Name")
+        $CreationParams.Add("Identity", $Name)
         Set-DLPCompliancePolicy @CreationParams
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
