@@ -151,6 +151,7 @@ Configuration Master
         SCSupervisoryReviewRule Rule
         {
             Name               = "DemoRule"
+            Condition          = "(Reviewee:adminnonmfa@o365dsc.onmicrosoft.com)"
             SamplingRate       = 100
             Policy             = 'MySRPolicy'
             Ensure             = "Present"
