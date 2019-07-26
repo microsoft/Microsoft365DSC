@@ -266,10 +266,10 @@ function Set-TargetResource
 
         # Exchange Location is specified or already existing, we need to determine
         # the delta.
-        if ($null -ne $CreationParams.ExchangeLocation -or `
+        if ($null -ne $CurrentPolicy.ExchangeLocation -or `
             $null -ne $ExchangeLocation)
         {
-            $ToBeRemoved = $CreationParams.ExchangeLocation | `
+            $ToBeRemoved = $CurrentPolicy.ExchangeLocation | `
                                 Where {$ExchangeLocation -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
@@ -277,7 +277,7 @@ function Set-TargetResource
             }
 
             $ToBeAdded = $ExchangeLocation | `
-                                Where {$CreationParams.ExchangeLocation -NotContains $_}
+                                Where {$CurrentPolicy.ExchangeLocation -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddExchangeLocation", $ToBeAdded)
@@ -288,10 +288,10 @@ function Set-TargetResource
 
         # Exchange Location Exception is specified or already existing, we need to determine
         # the delta.
-        if ($null -ne $CreationParams.ExchangeLocationException -or `
+        if ($null -ne $CurrentPolicy.ExchangeLocationException -or `
             $null -ne $ExchangeLocationException)
         {
-            $ToBeRemoved = $CreationParams.ExchangeLocationException | `
+            $ToBeRemoved = $CurrentPolicy.ExchangeLocationException | `
                                 Where {$ExchangeLocationException -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
@@ -299,7 +299,7 @@ function Set-TargetResource
             }
 
             $ToBeAdded = $ExchangeLocationException | `
-                                Where {$CreationParams.ExchangeLocationException -NotContains $_}
+                                Where {$CurrentPolicy.ExchangeLocationException -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddExchangeLocationException", $ToBeAdded)
@@ -309,10 +309,10 @@ function Set-TargetResource
 
         # Modern Group Location is specified or already existing, we need to determine
         # the delta.
-        if ($null -ne $CreationParams.ModernGroupLocation -or `
+        if ($null -ne $CurrentPolicy.ModernGroupLocation -or `
             $null -ne $ModernGroupLocation)
         {
-            $ToBeRemoved = $CreationParams.ModernGroupLocation | `
+            $ToBeRemoved = $CurrentPolicy.ModernGroupLocation | `
                                 Where {$ModernGroupLocation -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
@@ -320,7 +320,7 @@ function Set-TargetResource
             }
 
             $ToBeAdded = $ModernGroupLocation | `
-                                Where {$CreationParams.ModernGroupLocation -NotContains $_}
+                                Where {$CurrentPolicy.ModernGroupLocation -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddModernGroupLocation", $ToBeAdded)
@@ -330,10 +330,10 @@ function Set-TargetResource
 
         # Modern Group Location Exception is specified or already existing, we need to determine
         # the delta.
-        if ($null -ne $CreationParams.ModernGroupLocationException -or `
+        if ($null -ne $CurrentPolicy.ModernGroupLocationException -or `
             $null -ne $ModernGroupLocationException)
         {
-            $ToBeRemoved = $CreationParams.ModernGroupLocationException | `
+            $ToBeRemoved = $CurrentPolicy.ModernGroupLocationException | `
                                 Where {$ModernGroupLocationException -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
@@ -341,7 +341,7 @@ function Set-TargetResource
             }
 
             $ToBeAdded = $ModernGroupLocationException | `
-                                Where {$CreationParams.ModernGroupLocationException -NotContains $_}
+                                Where {$CurrentPolicy.ModernGroupLocationException -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddModernGroupLocationException", $ToBeAdded)
@@ -351,10 +351,10 @@ function Set-TargetResource
 
         # OneDrive Location is specified or already existing, we need to determine
         # the delta.
-        if ($null -ne $CreationParams.OneDriveLocation -or `
+        if ($null -ne $CurrentPolicy.OneDriveLocation -or `
             $null -ne $OneDriveLocation)
         {
-            $ToBeRemoved = $CreationParams.OneDriveLocation | `
+            $ToBeRemoved = $CurrentPolicy.OneDriveLocation | `
                                 Where {$OneDriveLocation -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
@@ -362,7 +362,7 @@ function Set-TargetResource
             }
 
             $ToBeAdded = $OneDriveLocation | `
-                                Where {$CreationParams.OneDriveLocation -NotContains $_}
+                                Where {$CurrentPolicy.OneDriveLocation -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddOneDriveLocation", $ToBeAdded)
@@ -372,10 +372,10 @@ function Set-TargetResource
 
         # OneDrive Location Exception is specified or already existing, we need to determine
         # the delta.
-        if ($null -ne $CreationParams.OneDriveLocationException -or `
+        if ($null -ne $CurrentPolicy.OneDriveLocationException -or `
             $null -ne $OneDriveLocationException)
         {
-            $ToBeRemoved = $CreationParams.OneDriveLocationException | `
+            $ToBeRemoved = $CurrentPolicy.OneDriveLocationException | `
                                 Where {$OneDriveLocationException -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
@@ -383,7 +383,7 @@ function Set-TargetResource
             }
 
             $ToBeAdded = $OneDriveLocationException | `
-                                Where {$CreationParams.OneDriveLocationException -NotContains $_}
+                                Where {$CurrentPolicy.OneDriveLocationException -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddOneDriveLocationException", $ToBeAdded)
@@ -393,10 +393,10 @@ function Set-TargetResource
 
         # Public Folder Location is specified or already existing, we need to determine
         # the delta.
-        if ($null -ne $CreationParams.PublicFolderLocation -or `
+        if ($null -ne $CurrentPolicy.PublicFolderLocation -or `
             $null -ne $PublicFolderLocation)
         {
-            $ToBeRemoved = $CreationParams.PublicFolderLocation | `
+            $ToBeRemoved = $CurrentPolicy.PublicFolderLocation | `
                                 Where {$PublicFolderLocation -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
@@ -404,7 +404,7 @@ function Set-TargetResource
             }
 
             $ToBeAdded = $PublicFolderLocation | `
-                                Where {$CreationParams.PublicFolderLocation -NotContains $_}
+                                Where {$CurrentPolicy.PublicFolderLocation -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddPublicFolderLocation", $ToBeAdded)
@@ -414,10 +414,10 @@ function Set-TargetResource
 
         # SharePoint Location is specified or already existing, we need to determine
         # the delta.
-        if ($null -ne $CreationParams.SharePointLocation -or `
+        if ($null -ne $CurrentPolicy.SharePointLocation -or `
             $null -ne $SharePointLocation)
         {
-            $ToBeRemoved = $CreationParams.SharePointLocation | `
+            $ToBeRemoved = $CurrentPolicy.SharePointLocation | `
                                 Where {$SharePointLocation -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
@@ -425,7 +425,7 @@ function Set-TargetResource
             }
 
             $ToBeAdded = $SharePointLocation | `
-                                Where {$CreationParams.SharePointLocation -NotContains $_}
+                                Where {$CurrentPolicy.SharePointLocation -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddSharePointLocation", $ToBeAdded)
@@ -435,10 +435,10 @@ function Set-TargetResource
 
         # SharePoint Location Exception is specified or already existing, we need to determine
         # the delta.
-        if ($null -ne $CreationParams.SharePointLocationException -or `
+        if ($null -ne $CurrentPolicy.SharePointLocationException -or `
             $null -ne $SharePointLocationException)
         {
-            $ToBeRemoved = $CreationParams.SharePointLocationException | `
+            $ToBeRemoved = $CurrentPolicy.SharePointLocationException | `
                                 Where {$SharePointLocationException -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
@@ -446,7 +446,7 @@ function Set-TargetResource
             }
 
             $ToBeAdded = $SharePointLocationException | `
-                                Where {$CreationParams.SharePointLocationException -NotContains $_}
+                                Where {$CurrentPolicy.SharePointLocationException -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddSharePointLocationException", $ToBeAdded)
@@ -456,10 +456,10 @@ function Set-TargetResource
 
         # Skype Location is specified or already existing, we need to determine
         # the delta.
-        if ($null -ne $CreationParams.SkypeLocation -or `
+        if ($null -ne $CurrentPolicy.SkypeLocation -or `
             $null -ne $SkypeLocation)
         {
-            $ToBeRemoved = $CreationParams.SkypeLocation | `
+            $ToBeRemoved = $CurrentPolicy.SkypeLocation | `
                                 Where {$SkypeLocation -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
@@ -467,7 +467,7 @@ function Set-TargetResource
             }
 
             $ToBeAdded = $SkypeLocation | `
-                                Where {$CreationParams.SkypeLocation -NotContains $_}
+                                Where {$CurrentPolicy.SkypeLocation -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddSkypeLocation", $ToBeAdded)
@@ -477,10 +477,10 @@ function Set-TargetResource
 
         # Skype Location Exception is specified or already existing, we need to determine
         # the delta.
-        if ($null -ne $CreationParams.SkypeLocationException -or `
+        if ($null -ne $CurrentPolicy.SkypeLocationException -or `
             $null -ne $SkypeLocationException)
         {
-            $ToBeRemoved = $CreationParams.SkypeLocationException | `
+            $ToBeRemoved = $CurrentPolicy.SkypeLocationException | `
                                 Where {$SkypeLocationException -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
@@ -488,7 +488,7 @@ function Set-TargetResource
             }
 
             $ToBeAdded = $SkypeLocationException | `
-                                Where {$CreationParams.SkypeLocationException -NotContains $_}
+                                Where {$CurrentPolicy.SkypeLocationException -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddSkypeLocationException", $ToBeAdded)
