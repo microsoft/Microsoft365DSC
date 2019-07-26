@@ -143,7 +143,7 @@ Configuration Master
         {
             Name               = "MySRPolicy"
             Comment            = "Test Policy"
-            Reviewers          = @("admin@contoso.com")
+            Reviewers          = @("admin@o365dsc.onmicrosoft.com")
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }

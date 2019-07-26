@@ -211,7 +211,7 @@ function Set-DLPCompliancePolicy
     param(
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Name,
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -219,7 +219,11 @@ function Set-DLPCompliancePolicy
 
         [Parameter()]
         [System.String[]]
-        $ExchangeLocation,
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveExchangeLocation,
 
         [Parameter()]
         [System.String[]]
@@ -236,11 +240,19 @@ function Set-DLPCompliancePolicy
 
         [Parameter()]
         [System.String[]]
-        $OneDriveLocation,
+        $AddOneDriveLocation,
 
         [Parameter()]
         [System.String[]]
-        $OneDriveLocationException,
+        $RemoveOneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddOneDriveLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveOneDriveLocationException,
 
         [Parameter()]
         [System.UInt32]
@@ -248,19 +260,35 @@ function Set-DLPCompliancePolicy
 
         [Parameter()]
         [System.String[]]
-        $SharePointLocation,
+        $AddSharePointLocation,
 
         [Parameter()]
         [System.String[]]
-        $SharePointLocationException,
+        $RemoveSharePointLocation,
 
         [Parameter()]
         [System.String[]]
-        $TeamsLocation,
+        $AddSharePointLocationException,
 
         [Parameter()]
         [System.String[]]
-        $TeamsLocationException
+        $RemoveSharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $AddTeamsLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveTeamsLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddTeamsLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveTeamsLocationException
     )
 }
 

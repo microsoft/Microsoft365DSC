@@ -195,12 +195,166 @@ function Set-TargetResource
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
-        # Easier to delete the Policy and recreate it from scratch;
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
         $CreationParams.Remove("Name")
         $CreationParams.Add("Identity", $Name)
+
+        # SharePoint Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.SharePointLocation -or `
+            $null -ne $SharePointLocation)
+        {
+            $CreationParams.Remove("SharePointLocation")
+
+            $ToBeRemoved = $CreationParams.SharePointLocation | `
+                                Where {$SharePointLocation -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemoveSharePointLocation", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $SharePointLocation | `
+                                Where {$CreationParams.SharePointLocation -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddSharePointLocation", $ToBeAdded)
+            }
+        }
+
+        # Exchange Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.ExchangeLocation -or `
+            $null -ne $ExchangeLocation)
+        {
+            $CreationParams.Remove("ExchangeLocation")
+
+            $ToBeRemoved = $CreationParams.ExchangeLocation | `
+                                Where {$ExchangeLocation -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemoveExchangeLocation", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $ExchangeLocation | `
+                                Where {$CreationParams.ExchangeLocation -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddExchangeLocation", $ToBeAdded)
+            }
+        }
+
+        # OneDrive Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.OneDriveLocation -or `
+            $null -ne $OneDriveLocation)
+        {
+            $CreationParams.Remove("OneDriveLocation")
+
+            $ToBeRemoved = $CreationParams.OneDriveLocation | `
+                                Where {$OneDriveLocation -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemoveOneDriveLocation", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $OneDriveLocation | `
+                                Where {$CreationParams.OneDriveLocation -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddOneDriveLocation", $ToBeAdded)
+            }
+        }
+
+        # OneDrive Location Exception is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.OneDriveLocationException -or `
+            $null -ne $OneDriveLocationException)
+        {
+            $CreationParams.Remove("OneDriveLocationException")
+
+            $ToBeRemoved = $CreationParams.OneDriveLocationException | `
+                                Where {$OneDriveLocationException -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemoveOneDriveLocationException", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $OneDriveLocationException | `
+                                Where {$CreationParams.OneDriveLocationException -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddOneDriveLocationException", $ToBeAdded)
+            }
+        }
+
+        # SharePoint Location Exception is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.SharePointLocationException -or `
+            $null -ne $SharePointLocationException)
+        {
+            $CreationParams.Remove("SharePointLocationException")
+
+            $ToBeRemoved = $CreationParams.SharePointLocationException | `
+                                Where {$SharePointLocationException -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemoveSharePointLocationException", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $SharePointLocationException | `
+                                Where {$CreationParams.SharePointLocationException -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddSharePointLocationException", $ToBeAdded)
+            }
+        }
+
+        # Teams Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.TeamsLocation -or `
+            $null -ne $TeamsLocation)
+        {
+            $CreationParams.Remove("TeamsLocation")
+
+            $ToBeRemoved = $CreationParams.TeamsLocation | `
+                                Where {$TeamsLocation -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemoveTeamsLocation", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $TeamsLocation | `
+                                Where {$CreationParams.TeamsLocation -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddTeamsLocation", $ToBeAdded)
+            }
+        }
+
+        # Teams Location Exception is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CreationParams.TeamsLocationException -or `
+            $null -ne $TeamsLocationException)
+        {
+            $CreationParams.Remove("TeamsLocationException")
+
+            $ToBeRemoved = $CreationParams.TeamsLocationException | `
+                                Where {$TeamsLocationException -NotContains $_}
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add("RemoveTeamsLocationException", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $TeamsLocationException | `
+                                Where {$CreationParams.TeamsLocationException -NotContains $_}
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add("AddTeamsLocationException", $ToBeAdded)
+            }
+        }
+
         Set-DLPCompliancePolicy @CreationParams
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
