@@ -27,7 +27,7 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('Enable','TestWithNotifications','TestWithoutNotifications','Disable','PendingDeletion')]
         [System.String]
-        $Mode,
+        $Mode = "Enable",
 
         [Parameter()]
         [System.String[]]
@@ -137,7 +137,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('Enable','TestWithNotifications','TestWithoutNotifications','Disable','PendingDeletion')]
         [System.String]
-        $Mode,
+        $Mode = "Enable",
 
         [Parameter()]
         [System.String[]]
@@ -235,7 +235,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('Enable','TestWithNotifications','TestWithoutNotifications','Disable','PendingDeletion')]
         [System.String]
-        $Mode,
+        $Mode = "Enable",
 
         [Parameter()]
         [System.String[]]

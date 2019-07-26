@@ -16,5 +16,4 @@ class MSFT_SCDLPCompliancePolicy : OMI_BaseResource
     [Write, Description("Teams locations to exclude.")] String TeamsLocationException[];
     [Write, Description("Specify if this policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
-    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };

@@ -1,5 +1,5 @@
-# SCRetentionCompliancePolicy
+# SCDLPCompliancePolicy
 
 ## Description
 
-This resource configures a Retention Compliance Policy in Security and Compliance.
+This resource configures a Data Loss Prevention Compliance Policy in Security and Compliance Center.

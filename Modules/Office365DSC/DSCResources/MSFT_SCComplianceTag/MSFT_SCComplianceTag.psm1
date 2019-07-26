@@ -347,9 +347,11 @@ function Export-TargetResource
     )
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    $result.FilePlanProperty = Get-SCFilePlanPropertyAsString $result.FilePlanProperty
     $content = "        SCComplianceTag " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "FilePlanProperty"
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
     $content += "        }`r`n"
     return $content
@@ -407,6 +409,17 @@ function Get-SCFilePlanProperty
     }
 
     return $result
+}
+
+function Get-SCFilePlanPropertyAsString($params)
+{
+    $currentProperty = "MSFT_SCFilePlanProperty{`r`n"
+    foreach($key in $params.Keys)
+    {
+        $currentProperty += "                " + $key + " = '" + $params[$key] + "'`r`n"
+    }
+    $currentProperty += "            }"
+    return $currentProperty
 }
 
 function Test-SCFilePlanProperties

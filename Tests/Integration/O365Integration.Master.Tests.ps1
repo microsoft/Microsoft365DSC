@@ -94,6 +94,74 @@ Configuration Master
             DependsOn            = "[O365User]JohnSmith"
         }
 
+        SCComplianceTag DemoRule
+        {
+            Name               = "DemoTag"
+            Comment            = "This is a Demo Tag"
+            RetentionAction    = "Keep"
+            RetentionDuration  = "1025"
+            RetentionType      = "ModificationAgeInDays"
+            FilePlanProperty   = MSFT_SCFilePlanProperty{
+                FilePlanPropertyDepartment = "DemoDept"
+                FilePlanPropertyCitation = "DemoCit"
+                FilePlanPropertyReferenceId = "DemoRef"
+                FilePlanPropertyAuthority = "DemoAuth"
+                FilePlanPropertyCategory = "DemoCat"
+                FilePlanPropertySubcategory = "DemoSub"
+            }
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SCDLPCompliancePolicy Policy
+        {
+            Name               = "MyPolicy"
+            Comment            = "Test Policy"
+            Priority           = 100
+            SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SCRetentionCompliancePolicy Policy
+        {
+            Name               = "MyPolicy"
+            Comment            = "Test Policy"
+            SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SCRetentionComplianceRule DemoRule
+        {
+            Name                      = "DemoRule2"
+            Policy                    = "ContosoPolicy"
+            Comment                   = "This is a Demo Rule"
+            RetentionComplianceAction = "Keep"
+            RetentionDuration         = "Unlimited"
+            GlobalAdminAccount        = $GlobalAdmin
+            Ensure                    = "Present"
+        }
+
+        SCSupervisoryReviewPolicy Policy
+        {
+            Name               = "MyPolicy"
+            Comment            = "Test Policy"
+            Reviewers          = @("admin@contoso.com")
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SCSupervisoryReviewRule Rule
+        {
+            Name               = "DemoRule"
+            Condition          = "(NOT(Reviewee:US Compliance))"
+            SamplingRate       = 100
+            Policy             = 'TestPolicy'
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
         SPOSite ClassicSite
         {
             Title                = "Classic Site"
