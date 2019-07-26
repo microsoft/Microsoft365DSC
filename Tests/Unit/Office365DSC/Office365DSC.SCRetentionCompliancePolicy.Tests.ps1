@@ -72,7 +72,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
+                ExchangeLocation   = "https://contoso.sharepoint.com/sites/demo"
+                ExchangeLocationException = "https://contoso.sharepoint.com"
+                OneDriveLocation = "https://contoso.sharepoint.com/sites/demo"
+                OneDriveLocationException = "https://contoso.com"
+                PublicFolderLocation = "\\contoso\PF"
+                SkypeLocation = "https://contoso.sharepoint.com/sites/demo"
+                SkypeLocationException = "https://contoso.sharepoint.com/"
                 SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
+                SharePointLocationException = "https://contoso.com"
                 Name               = 'TestPolicy'
             }
 
