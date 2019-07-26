@@ -114,7 +114,7 @@ Configuration Master
             Name               = "MyPolicy"
             Comment            = "Test Policy"
             Priority           = 100
-            SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
+            SharePointLocation = "https://o365dsc.sharepoint.com"
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }
@@ -123,7 +123,7 @@ Configuration Master
         {
             Name               = "MyPolicy"
             Comment            = "Test Policy"
-            SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
+            SharePointLocation = "https://o365dsc.sharepoint.com"
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }
