@@ -109,9 +109,9 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
         }
 
-        SCDLPCompliancePolicy Policy
+        SCDLPCompliancePolicy DLPPolicy
         {
-            Name               = "MyPolicy"
+            Name               = "MyDLPPolicy"
             Comment            = "Test Policy"
             Priority           = 1
             SharePointLocation = "https://o365dsc.sharepoint.com"
@@ -119,9 +119,9 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
         }
 
-        SCRetentionCompliancePolicy Policy
+        SCRetentionCompliancePolicy RCPolicy
         {
-            Name               = "MyPolicy"
+            Name               = "MyRCPolicy"
             Comment            = "Test Policy"
             SharePointLocation = "https://o365dsc.sharepoint.com"
             Ensure             = "Present"
@@ -139,9 +139,9 @@ Configuration Master
             Ensure                    = "Present"
         }
 
-        SCSupervisoryReviewPolicy Policy
+        SCSupervisoryReviewPolicy SRPolicy
         {
-            Name               = "MyPolicy"
+            Name               = "MySRPolicy"
             Comment            = "Test Policy"
             Reviewers          = @("admin@contoso.com")
             Ensure             = "Present"
