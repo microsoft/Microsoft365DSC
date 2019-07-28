@@ -28,7 +28,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "PNP AccessControl settings are not configured" -Fixture {
             $testParams = @{
-                CentralAdminUrl              = "https://o365dsc1-admin.sharepoint.com"
                 GlobalAdminAccount           = $GlobalAdminAccount
                 IsSingleInstance             = "Yes"
                 DisplayStartASiteOption      = $false
@@ -87,14 +86,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                CentralAdminUrl              = "https://o365dsc1-admin.sharepoint.com"
                 GlobalAdminAccount           = $GlobalAdminAccount
                 IsSingleInstance             = "Yes"
             }
 
             Mock -CommandName Get-PnPTenant -MockWith {
                 return @{
-                    CentralAdminUrl              = "https://o365dsc1-admin.sharepoint.com"
                     GlobalAdminAccount           = $GlobalAdminAccount
                     DisplayStartASiteOption      = $false
                     StartASiteFormUrl            = "https://o365dsc1.sharepoint.com"

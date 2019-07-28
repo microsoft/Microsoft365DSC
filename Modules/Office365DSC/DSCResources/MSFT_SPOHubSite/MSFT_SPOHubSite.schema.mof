@@ -9,7 +9,6 @@ class MSFT_SPOHubSite : OMI_BaseResource
     [Write, Description("The users or mail-enabled security groups which are allowed to associate their site with a hub site")] string AllowedToJoin[];
     [Write, Description("The guid of the site design to link to the hub site")] string SiteDesignId;
     [Write, Description("Present ensures the site collection is registered as hub site, absent ensures it is unregistered"), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
-    [Required, Description("The Url of the SharePoint Online Central Administration")] string CentralAdminUrl;
     [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };
 

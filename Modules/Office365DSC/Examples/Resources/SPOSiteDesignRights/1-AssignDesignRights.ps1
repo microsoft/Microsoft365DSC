@@ -20,7 +20,6 @@ Configuration Example
             UserPrincipals     = "jdoe@O365DSC1.onmicrosoft.com"
             Rights             = "View"
             Ensure             = "Present"
-            CentralAdminUrl    = "https://o365dsc1-admin.sharepoint.com"
             GlobalAdminAccount = $credsGlobalAdmin
         }
     }

@@ -28,7 +28,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Check OneDrive Quota" -Fixture {
             $testParams = @{
                 OneDriveStorageQuota = 1024
-                CentralAdminUrl = "https://contoso.sharepoint.com"
+                IsSingleInstance = "Yes"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -53,7 +53,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Set OneDrive Quota" -Fixture {
             $testParams = @{
                 OneDriveStorageQuota = 1024
-                CentralAdminUrl = "https://contoso.sharepoint.com"
+                IsSingleInstance = "Yes"
                 OrphanedPersonalSitesRetentionPeriod = 60
                 OneDriveForGuestsEnabled = $true
                 NotifyOwnersWhenInvitationsAccepted = $true
@@ -102,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 OneDriveStorageQuota = 1024
-                CentralAdminUrl = "https://contoso.sharepoint.com"
+                IsSingleInstance = "Yes"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

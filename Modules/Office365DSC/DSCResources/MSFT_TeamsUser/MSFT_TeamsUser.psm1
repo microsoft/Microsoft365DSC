@@ -14,7 +14,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Member", "Owner")]
+        [ValidateSet("Guest", "Member", "Owner")]
         $Role = "Member",
 
         [Parameter()]
@@ -94,7 +94,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Member", "Owner")]
+        [ValidateSet("Guest", "Member", "Owner")]
         $Role = "Member",
 
         [Parameter()]
@@ -155,7 +155,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Member", "Owner")]
+        [ValidateSet("Guest", "Member", "Owner")]
         $Role = "Member",
 
         [Parameter()]

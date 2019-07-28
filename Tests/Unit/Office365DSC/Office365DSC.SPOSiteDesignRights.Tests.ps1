@@ -32,7 +32,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Rights             = "View"
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
             }
 
             Mock -CommandName Grant-PnPSiteDesignRights -MockWith {
@@ -71,7 +70,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 UserPrincipals     = "jdoe@dsazure.com"
                 Rights             = "View"
                 Ensure             = "Present"
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -111,7 +109,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 UserPrincipals     = "jdoe@dsazure.com","dsmay@dsazure.com"
                 Rights             = "View"
                 Ensure             = "Present"
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -155,7 +152,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 UserPrincipals     = "dsmay@dsazure.com"
                 Rights             = "View"
                 Ensure             = "Present"
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -200,7 +196,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 SiteDesignTitle    = "Customer List"
                 GlobalAdminAccount = $GlobalAdminAccount
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
             }
 
             Mock -CommandName Get-PnPSiteDesign -MockWith {

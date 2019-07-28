@@ -38,18 +38,13 @@ function Get-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Getting configuration for hub site collection $Url"
 
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SharePointOnline
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
@@ -64,7 +59,6 @@ function Get-TargetResource
         AllowedToJoin        = $null
         SiteDesignId         = $null
         Ensure               = "Absent"
-        CentralAdminUrl      = $CentralAdminUrl
         GlobalAdminAccount   = $GlobalAdminAccount
     }
 
@@ -131,7 +125,6 @@ function Get-TargetResource
                 AllowedToJoin        = $principals
                 SiteDesignId         = $hubSite.SiteDesignId
                 Ensure               = "Present"
-                CentralAdminUrl      = $CentralAdminUrl
                 GlobalAdminAccount   = $GlobalAdminAccount
             }
             return $result
@@ -183,18 +176,13 @@ function Set-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Setting configuration for hub site collection $Url"
 
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SharePointOnline
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
@@ -415,10 +403,6 @@ function Test-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -455,10 +439,6 @@ function Export-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Url,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

@@ -17,7 +17,6 @@ Configuration Example
         SPOSharingSettings MyTenant
         {
             IsSingleInstance                              = "Yes"
-            CentralAdminUrl                               = "https://o365dsc1-admin.sharepoint.com"
             GlobalAdminAccount                            = $credsGlobalAdmin
             SharingCapability                             = 'ExternalUserSharingOnly'
             ShowEveryoneClaim                             = $false

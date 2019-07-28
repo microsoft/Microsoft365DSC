@@ -53,10 +53,6 @@ function Get-TargetResource
         [System.UInt32]
         $EmailAttestationReAuthDays,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
         [Parameter()]
         [ValidateSet("Present","Absent")]
         [System.String]
@@ -69,8 +65,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of SharePoint Online Access Control Settings"
 
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform PnP
     $nullReturn = @{
         IsSingleInstance             = 'Yes'
@@ -85,7 +80,6 @@ function Get-TargetResource
         ExternalServicesEnabled      = $null
         EmailAttestationRequired     = $null
         EmailAttestationReAuthDays   = $null
-        CentralAdminUrl              = $null
         GlobalAdminAccount           = $null
     }
 
@@ -106,7 +100,6 @@ function Get-TargetResource
             ExternalServicesEnabled      = $SPOAccessControlSettings.ExternalServicesEnabled
             EmailAttestationRequired     = $SPOAccessControlSettings.EmailAttestationRequired
             EmailAttestationReAuthDays   = $SPOAccessControlSettings.EmailAttestationReAuthDays
-            CentralAdminUrl              = $CentralAdminUrl
             GlobalAdminAccount           = $GlobalAdminAccount
         }
     }
@@ -174,10 +167,6 @@ function Set-TargetResource
         [System.UInt32]
         $EmailAttestationReAuthDays,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
         [Parameter()]
         [ValidateSet("Present","Absent")]
         [System.String]
@@ -190,12 +179,10 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of SharePoint Online Access Control Settings"
 
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform PnP
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("CentralAdminUrl")
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("IsSingleInstance")
 
@@ -263,10 +250,6 @@ function Test-TargetResource
         [System.UInt32]
         $EmailAttestationReAuthDays,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
         [Parameter()]
         [ValidateSet("Present","Absent")]
         [System.String]
@@ -287,7 +270,6 @@ function Test-TargetResource
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck @("IsSingleInstance", `
-                                                                   "CentralAdminUrl", `
                                                                    "GlobalAdminAccount", `
                                                                    "DisplayStartASiteOption", `
                                                                    "StartASiteFormUrl", `
@@ -316,10 +298,6 @@ function Export-TargetResource
         [ValidateSet('Yes')]
         [String]
         $IsSingleInstance,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

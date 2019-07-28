@@ -5,6 +5,5 @@ class MSFT_SPOTheme : OMI_BaseResource
     [Write, Description("This value should be false for light themes and true for dark themes; it controls whether SharePoint uses dark or light theme colors to render text on colored backgrounds.")] boolean IsInverted;
     [Write, Description("Specifies the color scheme which composes your theme.")] String Palette;
     [Write, Description("Only accepted value is 'Present'."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Required, Description("The Url of the SharePoint Online Central Administration")] string CentralAdminUrl;
     [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };
