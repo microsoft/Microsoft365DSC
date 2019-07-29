@@ -337,7 +337,7 @@ function New-RetentionComplianceRule
     )
 }
 
-function New-RetentionComplianceRule
+function Set-RetentionComplianceRule
 {
     [CmdletBinding()]
     param(

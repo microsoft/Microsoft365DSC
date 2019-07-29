@@ -100,7 +100,6 @@ function Get-TargetResource
             SharePointLocationException           = $PolicyObject.SharePointLocationException
             TeamsLocation                         = $PolicyObject.TeamsLocation
             TeamsLocationException                = $PolicyObject.TeamsLocationException
-            GlobalAdminAccount                    = $GlobalAdminAccount
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
