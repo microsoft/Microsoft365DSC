@@ -1,6 +1,16 @@
 # Change log for Office365Dsc
 
-## Unreleased
+## UNRELEASED
+
+* Modules
+  * ReverseDSC
+    * Added all missing Security and Compliance items;
+* SCDLPCompliancePolicy
+  * New Resource;
+* SCRetentionCompliancePolicy
+  * Changed logic to update existing Policy;
+
+## 1.0.0.776
 
 * BREAKING CHANGES
   * ODSettings

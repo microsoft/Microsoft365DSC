@@ -324,12 +324,28 @@ function Show-O365GUI
         $pnlSC = New-Object System.Windows.Forms.Panel
         $pnlSC.Top = $pnlSPO.Heigth + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 340
         $pnlSC.Left = $SecondColumnLeft
-        $pnlSC.Height = 40
+        $pnlSC.Height = 120
         $pnlSC.Width = 300
         $pnlSC.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
+        $chckSCComplianceTag = New-Object System.Windows.Forms.CheckBox
+        $chckSCComplianceTag.Top = 0
+        $chckSCComplianceTag.AutoSize = $true;
+        $chckSCComplianceTag.Name = "chckSCComplianceTag"
+        $chckSCComplianceTag.Checked = $true
+        $chckSCComplianceTag.Text = "Compliance Tag"
+        $pnlSC.Controls.Add($chckSCComplianceTag)
+
+        $chckSCDLPCompliancePolicy = New-Object System.Windows.Forms.CheckBox
+        $chckSCDLPCompliancePolicy.Top = 20
+        $chckSCDLPCompliancePolicy.AutoSize = $true;
+        $chckSCDLPCompliancePolicy.Name = "chckSCDLPCompliancePolicy"
+        $chckSCDLPCompliancePolicy.Checked = $true
+        $chckSCDLPCompliancePolicy.Text = "Data Loss Prevention Compliance Policy"
+        $pnlSC.Controls.Add($chckSCDLPCompliancePolicy)
+
         $chckSCRetentionCompliancePolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSCRetentionCompliancePolicy.Top = 0
+        $chckSCRetentionCompliancePolicy.Top = 40
         $chckSCRetentionCompliancePolicy.AutoSize = $true;
         $chckSCRetentionCompliancePolicy.Name = "chckSCRetentionCompliancePolicy"
         $chckSCRetentionCompliancePolicy.Checked = $true
@@ -337,12 +353,28 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCRetentionCompliancePolicy)
 
         $chckSCRetentionComplianceRule = New-Object System.Windows.Forms.CheckBox
-        $chckSCRetentionComplianceRule.Top = 20
+        $chckSCRetentionComplianceRule.Top = 60
         $chckSCRetentionComplianceRule.AutoSize = $true;
         $chckSCRetentionComplianceRule.Name = "chckSCRetentionComplianceRule"
         $chckSCRetentionComplianceRule.Checked = $true
         $chckSCRetentionComplianceRule.Text = "Retention Compliance Rule"
         $pnlSC.Controls.Add($chckSCRetentionComplianceRule)
+
+        $chckSCSupervisoryReviewPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckSCSupervisoryReviewPolicy.Top = 80
+        $chckSCSupervisoryReviewPolicy.AutoSize = $true;
+        $chckSCSupervisoryReviewPolicy.Name = "chckSCSupervisoryReviewPolicy"
+        $chckSCSupervisoryReviewPolicy.Checked = $true
+        $chckSCSupervisoryReviewPolicy.Text = "Supervisory Review Policy"
+        $pnlSC.Controls.Add($chckSCSupervisoryReviewPolicy)
+
+        $chckSCSupervisoryReviewRule = New-Object System.Windows.Forms.CheckBox
+        $chckSCSupervisoryReviewRule.Top = 100
+        $chckSCSupervisoryReviewRule.AutoSize = $true;
+        $chckSCSupervisoryReviewRule.Name = "chckSCSupervisoryReviewRule"
+        $chckSCSupervisoryReviewRule.Checked = $true
+        $chckSCSupervisoryReviewRule.Text = "Supervisory Review Rule"
+        $pnlSC.Controls.Add($chckSCSupervisoryReviewRule)
         #endregion
 
         #region Teams

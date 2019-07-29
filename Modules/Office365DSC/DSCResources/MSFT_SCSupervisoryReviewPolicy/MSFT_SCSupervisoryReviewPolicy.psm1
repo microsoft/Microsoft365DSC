@@ -32,8 +32,7 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
 
-    $PolicyObjects = Get-SupervisoryReviewPolicyV2
-    $PolicyObject = $PolicyObjects | Where-Object {$_.Name -eq $Name}
+    $PolicyObject = Get-SupervisoryReviewPolicyV2 $Name
 
     if ($null -eq $PolicyObject)
     {
