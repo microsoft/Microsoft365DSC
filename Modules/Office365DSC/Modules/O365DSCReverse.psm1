@@ -865,15 +865,22 @@ function Start-O365ConfigurationExtract
                                                 -Resolve
 
             Import-Module $SCRetentionComplianceRuleModulePath | Out-Null
-            $rules = Get-RetentionComplianceRule
+            $policies = Get-RetentionCompliancePolicy
 
-            $i = 1
-            foreach ($rule in $rules)
+            $j = 1
+            foreach($policy in $policies)
             {
-                Write-Information "    - [$i/$($rules.Length)] $($rule.Name)"
-                $partialContent = Export-TargetResource -Name $rule.Name -Policy $rule.Policy -GlobalAdminAccount $GlobalAdminAccount
-                $DSCContent += $partialContent
-                $i++
+                $rules = Get-RetentionComplianceRule -Policy $policy.Name
+                Write-Information "    - Policy [$j/$($policy.Length)] $($policy.Name)"
+                $i = 1
+                foreach ($rule in $rules)
+                {
+                    Write-Information "        - [$i/$($rules.Length)] $($rule.Name)"
+                    $partialContent = Export-TargetResource -Name $rule.Name -Policy $rule.Policy -GlobalAdminAccount $GlobalAdminAccount
+                    $DSCContent += $partialContent
+                    $i++
+                }
+                $j++
             }
         }
         catch
