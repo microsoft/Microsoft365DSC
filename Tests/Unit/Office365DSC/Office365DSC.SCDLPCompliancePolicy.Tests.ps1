@@ -84,7 +84,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name               = "TestPolicy"
                     Priority           = 1
                     Mode               = "Enable"
-                    SharePointLocation = @("https://contoso.sharepoint.com/sites/demo")
+                    SharePointLocation = @(@{Name="https://contoso.sharepoint.com/sites/demo"})
                 }
             }
 

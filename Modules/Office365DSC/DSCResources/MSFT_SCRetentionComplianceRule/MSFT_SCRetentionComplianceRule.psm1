@@ -58,7 +58,7 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
 
-    $RuleObject = Get-RetentionComplianceRule $Name -ErrorAction SilentlyContinue
+    $RuleObject = Get-RetentionComplianceRule -Identity $Name -ErrorAction SilentlyContinue
 
     if ($null -eq $RuleObject)
     {

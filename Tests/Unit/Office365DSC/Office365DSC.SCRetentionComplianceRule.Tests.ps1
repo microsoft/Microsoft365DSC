@@ -84,7 +84,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
                 return @{
-                    Name = "TestPolicy"
+                    Name                      = "TestPolicy"
+                    Comment                   = "This is a Demo Rule"
+                    RetentionComplianceAction = "Keep"
+                    RetentionDuration         = "Unlimited"
                 }
             }
 
