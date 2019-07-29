@@ -27,7 +27,7 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet("Days", "Months", "Years")]
         [System.String]
-        $RetentionDurationDisplayHint,
+        $RetentionDurationDisplayHint = "Days",
 
         [Parameter()]
         [System.String]
@@ -118,7 +118,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet("Days", "Months", "Years")]
         [System.String]
-        $RetentionDurationDisplayHint,
+        $RetentionDurationDisplayHint = "Days",
 
         [Parameter()]
         [System.String]
@@ -205,7 +205,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet("Days", "Months", "Years")]
         [System.String]
-        $RetentionDurationDisplayHint,
+        $RetentionDurationDisplayHint = "Days",
 
         [Parameter()]
         [System.String]

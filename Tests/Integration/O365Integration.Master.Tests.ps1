@@ -127,15 +127,16 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
         }
 
-        SCRetentionComplianceRule DemoRule
+        SCRetentionComplianceRule RCRule
         {
-            Name                      = "DemoRule2"
-            Policy                    = "MyRCPolicy"
-            Comment                   = "This is a Demo Rule"
-            RetentionComplianceAction = "Keep"
-            RetentionDuration         = "Unlimited"
-            GlobalAdminAccount        = $GlobalAdmin
-            Ensure                    = "Present"
+            Name                         = "DemoRule2"
+            Policy                       = "MyRCPolicy"
+            Comment                      = "This is a Demo Rule"
+            RetentionComplianceAction    = "Keep"
+            RetentionDuration            = "Unlimited"
+            RetentionDurationDisplayHint = "Days"
+            GlobalAdminAccount           = $GlobalAdmin
+            Ensure                       = "Present"
         }
 
         SCSupervisoryReviewPolicy SRPolicy
@@ -147,7 +148,7 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
         }
 
-        SCSupervisoryReviewRule Rule
+        SCSupervisoryReviewRule SRRule
         {
             Name               = "DemoRule"
             Condition          = "(Reviewee:adminnonmfa@o365dsc.onmicrosoft.com)"
