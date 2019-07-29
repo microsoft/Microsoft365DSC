@@ -205,14 +205,14 @@ function Set-TargetResource
             $null -ne $SharePointLocation)
         {
             $ToBeRemoved = $CurrentPolicy.SharePointLocation | `
-                                Where {$SharePointLocation -NotContains $_}
+                                Where-Object {$SharePointLocation -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add("RemoveSharePointLocation", $ToBeRemoved)
             }
 
             $ToBeAdded = $SharePointLocation | `
-                                Where {$CurrentPolicy.SharePointLocation -NotContains $_}
+                                Where-Object {$CurrentPolicy.SharePointLocation -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddSharePointLocation", $ToBeAdded)
@@ -227,14 +227,14 @@ function Set-TargetResource
             $null -ne $ExchangeLocation)
         {
             $ToBeRemoved = $CurrentPolicy.ExchangeLocation | `
-                                Where {$ExchangeLocation -NotContains $_}
+                                Where-Object {$ExchangeLocation -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add("RemoveExchangeLocation", $ToBeRemoved)
             }
 
             $ToBeAdded = $ExchangeLocation | `
-                                Where {$CurrentPolicy.ExchangeLocation -NotContains $_}
+                                Where-Object {$CurrentPolicy.ExchangeLocation -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddExchangeLocation", $ToBeAdded)
@@ -249,14 +249,14 @@ function Set-TargetResource
             $null -ne $OneDriveLocation)
         {
             $ToBeRemoved = $CurrentPolicy.OneDriveLocation | `
-                                Where {$OneDriveLocation -NotContains $_}
+                                Where-Object {$OneDriveLocation -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add("RemoveOneDriveLocation", $ToBeRemoved)
             }
 
             $ToBeAdded = $OneDriveLocation | `
-                                Where {$CurrentPolicy.OneDriveLocation -NotContains $_}
+                                Where-Object {$CurrentPolicy.OneDriveLocation -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddOneDriveLocation", $ToBeAdded)
@@ -270,14 +270,14 @@ function Set-TargetResource
             $null -ne $OneDriveLocationException)
         {
             $ToBeRemoved = $CurrentPolicy.OneDriveLocationException | `
-                                Where {$OneDriveLocationException -NotContains $_}
+                                Where-Object {$OneDriveLocationException -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add("RemoveOneDriveLocationException", $ToBeRemoved)
             }
 
             $ToBeAdded = $OneDriveLocationException | `
-                                Where {$CurrentPolicy.OneDriveLocationException -NotContains $_}
+                                Where-Object {$CurrentPolicy.OneDriveLocationException -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddOneDriveLocationException", $ToBeAdded)
@@ -291,14 +291,14 @@ function Set-TargetResource
             $null -ne $SharePointLocationException)
         {
             $ToBeRemoved = $CurrentPolicy.SharePointLocationException | `
-                                Where {$SharePointLocationException -NotContains $_}
+                                Where-Object {$SharePointLocationException -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add("RemoveSharePointLocationException", $ToBeRemoved)
             }
 
             $ToBeAdded = $SharePointLocationException | `
-                                Where {$CurrentPolicy.SharePointLocationException -NotContains $_}
+                                Where-Object {$CurrentPolicy.SharePointLocationException -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddSharePointLocationException", $ToBeAdded)
@@ -312,14 +312,14 @@ function Set-TargetResource
             $null -ne $TeamsLocation)
         {
             $ToBeRemoved = $CurrentPolicy.TeamsLocation | `
-                                Where {$TeamsLocation -NotContains $_}
+                                Where-Object {$TeamsLocation -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add("RemoveTeamsLocation", $ToBeRemoved)
             }
 
             $ToBeAdded = $TeamsLocation | `
-                                Where {$CurrentPolicy.TeamsLocation -NotContains $_}
+                                Where-Object {$CurrentPolicy.TeamsLocation -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddTeamsLocation", $ToBeAdded)
@@ -333,14 +333,14 @@ function Set-TargetResource
             $null -ne $TeamsLocationException)
         {
             $ToBeRemoved = $CurrentPolicy.TeamsLocationException | `
-                                Where {$TeamsLocationException -NotContains $_}
+                                Where-Object {$TeamsLocationException -NotContains $_}
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add("RemoveTeamsLocationException", $ToBeRemoved)
             }
 
             $ToBeAdded = $TeamsLocationException | `
-                                Where {$CurrentPolicy.TeamsLocationException -NotContains $_}
+                                Where-Object {$CurrentPolicy.TeamsLocationException -NotContains $_}
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddTeamsLocationException", $ToBeAdded)
