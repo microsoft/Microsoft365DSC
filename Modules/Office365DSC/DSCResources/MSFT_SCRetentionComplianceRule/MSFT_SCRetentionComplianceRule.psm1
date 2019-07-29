@@ -73,6 +73,7 @@ function Get-TargetResource
         $AssociatedPolicy = Get-RetentionCompliancePolicy $RuleObject.Policy
         $result = @{
             Name                         = $RuleObject.Name
+            Comment                      = $RuleObject.Comment
             Policy                       = $AssociatedPolicy.Name
             ExcludedItemClasses          = $RuleObject.ExcludedItemClasses
             RetentionDuration            = $RuleObject.RetentionDuration
