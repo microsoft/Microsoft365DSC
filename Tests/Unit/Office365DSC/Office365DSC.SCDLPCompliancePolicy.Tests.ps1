@@ -75,7 +75,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
                 Priority           = 1
                 Mode               = "Enable"
-                SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
+                SharePointLocation = @("https://contoso.sharepoint.com/sites/demo")
                 Name               = 'TestPolicy'
             }
 
@@ -84,7 +84,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name               = "TestPolicy"
                     Priority           = 1
                     Mode               = "Enable"
-                    SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
+                    SharePointLocation = @("https://contoso.sharepoint.com/sites/demo")
                 }
             }
 

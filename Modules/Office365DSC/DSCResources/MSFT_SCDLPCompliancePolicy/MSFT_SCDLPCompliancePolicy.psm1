@@ -73,7 +73,7 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
 
-    $PolicyObject = Get-DlpCompliancePolicy $Name -ErrorAction SilentlyContinue
+    $PolicyObject = Get-DlpCompliancePolicy -Identity $Name -ErrorAction SilentlyContinue
 
     if ($null -eq $PolicyObject)
     {
