@@ -94,6 +94,70 @@ Configuration Master
             DependsOn            = "[O365User]JohnSmith"
         }
 
+        SCComplianceTag DemoRule
+        {
+            Name               = "DemoTag"
+            Comment            = "This is a Demo Tag"
+            RetentionAction    = "Keep"
+            RetentionDuration  = "1025"
+            RetentionType      = "ModificationAgeInDays"
+            FilePlanProperty   = MSFT_SCFilePlanProperty{
+                FilePlanPropertyDepartment = "Human resources"
+                FilePlanPropertyCategory = "Accounts receivable"
+            }
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SCDLPCompliancePolicy DLPPolicy
+        {
+            Name               = "MyDLPPolicy"
+            Comment            = "Test Policy"
+            Priority           = 1
+            SharePointLocation = "https://o365dsc.sharepoint.com/sites/Classic"
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SCRetentionCompliancePolicy RCPolicy
+        {
+            Name               = "MyRCPolicy"
+            Comment            = "Test Policy"
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SCRetentionComplianceRule RCRule
+        {
+            Name                         = "DemoRule2"
+            Policy                       = "MyRCPolicy"
+            Comment                      = "This is a Demo Rule"
+            RetentionComplianceAction    = "Keep"
+            RetentionDuration            = "Unlimited"
+            RetentionDurationDisplayHint = "Days"
+            GlobalAdminAccount           = $GlobalAdmin
+            Ensure                       = "Present"
+        }
+
+        SCSupervisoryReviewPolicy SRPolicy
+        {
+            Name               = "MySRPolicy"
+            Comment            = "Test Policy"
+            Reviewers          = @("admin@o365dsc.onmicrosoft.com")
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SCSupervisoryReviewRule SRRule
+        {
+            Name               = "DemoRule"
+            Condition          = "(Reviewee:adminnonmfa@o365dsc.onmicrosoft.com)"
+            SamplingRate       = 100
+            Policy             = 'MySRPolicy'
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
         SPOSite ClassicSite
         {
             Title                = "Classic Site"

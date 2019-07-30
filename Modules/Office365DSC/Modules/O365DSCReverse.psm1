@@ -743,6 +743,76 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "SCComplianceTag"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCComplianceTag")) -or
+        $AllComponents)
+    {
+        try
+        {
+            Write-Information "Extracting SCComplianceTag..."
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform SecurityComplianceCenter `
+                              -ErrorAction SilentlyContinue
+
+            $SCComplianceTagModulePath = Join-Path -Path $PSScriptRoot `
+                                            -ChildPath "..\DSCResources\MSFT_SCComplianceTag\MSFT_SCComplianceTag.psm1" `
+                                            -Resolve
+
+            Import-Module $SCComplianceTagModulePath | Out-Null
+            $tags = Get-ComplianceTag
+
+            $i = 1
+            foreach ($tag in $tags)
+            {
+                Write-Information "    - [$i/$($tags.Length)] $($tag.Name)"
+                $partialContent = Export-TargetResource -Name $tag.Name -GlobalAdminAccount $GlobalAdminAccount
+                $DSCContent += $partialContent
+                $i++
+            }
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Security and Compliance Center"
+        }
+    }
+    #endregion
+
+    #region "SCDLPCompliancePolicy"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCDLPCompliancePolicy")) -or
+        $AllComponents)
+    {
+        try
+        {
+            Write-Information "Extracting SCDLPCompliancePolicy..."
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform SecurityComplianceCenter `
+                              -ErrorAction SilentlyContinue
+
+            $SCDLPCompliancePolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                            -ChildPath "..\DSCResources\MSFT_SCDLPCompliancePolicy\MSFT_SCDLPCompliancePolicy.psm1" `
+                                            -Resolve
+
+            Import-Module $SCDLPCompliancePolicyModulePath | Out-Null
+            $policies = Get-DLPCompliancePolicy
+
+            $i = 1
+            foreach ($policy in $policies)
+            {
+                Write-Information "    - [$i/$($policies.Length)] $($policy.Name)"
+                $partialContent = Export-TargetResource -Name $policy.Name -GlobalAdminAccount $GlobalAdminAccount
+                $DSCContent += $partialContent
+                $i++
+            }
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Security and Compliance Center"
+        }
+    }
+    #endregion
+
     #region "SCRetentionCompliancePolicy"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCRetentionCompliancePolicy")) -or
@@ -796,6 +866,76 @@ function Start-O365ConfigurationExtract
 
             Import-Module $SCRetentionComplianceRuleModulePath | Out-Null
             $rules = Get-RetentionComplianceRule
+
+            $i = 1
+            foreach ($rule in $rules)
+            {
+                Write-Information "    - [$i/$($rules.Length)] $($rule.Name)"
+                $partialContent = Export-TargetResource -Name $rule.Name -Policy $rule.Policy -GlobalAdminAccount $GlobalAdminAccount
+                $DSCContent += $partialContent
+                $i++
+            }
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+        }
+    }
+    #endregion
+
+    #region "SCSupervisoryReviewPolicy"
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckSCSupervisoryReviewPolicy")) -or
+    $AllComponents)
+    {
+        try
+        {
+            Write-Information "Extracting SCSupervisoryReviewPolicy..."
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform SecurityComplianceCenter `
+                              -ErrorAction SilentlyContinue
+
+            $SCSCSupervisoryReviewPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_SCSupervisoryReviewPolicy\MSFT_SCSupervisoryReviewPolicy.psm1" `
+                                                -Resolve
+
+            Import-Module $SCSCSupervisoryReviewPolicyModulePath | Out-Null
+            $policies = Get-SupervisoryReviewPolicyV2
+
+            $i = 1
+            foreach ($policy in $policies)
+            {
+                Write-Information "    - [$i/$($policies.Length)] $($policy.Name)"
+                $partialContent = Export-TargetResource -Name $policy.Name -Reviewers "ReverseDSC" -GlobalAdminAccount $GlobalAdminAccount
+                $DSCContent += $partialContent
+                $i++
+            }
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+        }
+    }
+    #endregion
+
+    #region "SCSupervisoryReviewRule"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCSupervisoryReviewRule")) -or
+        $AllComponents)
+    {
+        try
+        {
+            Write-Information "Extracting SCSupervisoryReviewRule..."
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform SecurityComplianceCenter `
+                              -ErrorAction SilentlyContinue
+
+            $SCSupervisoryReviewRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                -ChildPath "..\DSCResources\MSFT_SCSupervisoryReviewRule\MSFT_SCSupervisoryReviewRule.psm1" `
+                                                -Resolve
+
+            Import-Module $SCSupervisoryReviewRuleModulePath | Out-Null
+            $rules = Get-SupervisoryReviewRule
 
             $i = 1
             foreach ($rule in $rules)
