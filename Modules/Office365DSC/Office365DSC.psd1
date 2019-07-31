@@ -52,7 +52,7 @@
   # Modules that must be imported into the global environment prior to importing this module
   RequiredModules = @(@{ModuleName = "ReverseDSC"; RequiredVersion = "1.9.4.4"; },
                       @{ModuleName = "MSOnline"; RequiredVersion = "1.1.183.17"; },
-                      @{ModuleName = "SharePointPnPPowerShellOnline"; RequiredVersion = "3.11.1907.0"; },
+                      @{ModuleName = "SharePointPnPPowerShellOnline"; RequiredVersion = "3.12.1908.1"; },
                       @{ModuleName = "Microsoft.Online.SharePoint.PowerShell"; RequiredVersion = "16.0.8316.0"; },
                       @{ModuleName = "MicrosoftTeams"; RequiredVersion = "1.0.0"; },
                       @{ModuleName = "AzureAD"; RequiredVersion = "2.0.2.4"; },
