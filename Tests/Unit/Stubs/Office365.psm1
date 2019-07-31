@@ -932,6 +932,10 @@ function New-UnifiedGroup
 
         [Parameter()]
         [string]
+        $Name,
+
+        [Parameter()]
+        [string]
         $Notes,
 
         [Parameter(Mandatory=$true)]

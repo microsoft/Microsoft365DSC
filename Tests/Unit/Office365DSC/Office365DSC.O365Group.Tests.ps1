@@ -52,7 +52,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 DisplayName = "Test Group"
                 MailNickName = "TestGroup"
-                ManagedBy = "JohnSmith@contoso.onmicrosoft.com"
+                ManagedBy = "Bob.Houle@contoso.onmicrosoft.com"
                 Description = "This is a test"
                 Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
@@ -63,7 +63,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = "Test Group"
                     ObjectId = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
                     Members = @("John.Smith@contoso.onmcirosoft.com")
-                    Owners = @("John.Smith@contoso.onmcirosoft.com")
+                    Owners = @("Bob.Houle@contoso.onmcirosoft.com")
                     Description = "This is a test"
                 }
             }
@@ -84,7 +84,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
-            It "Should return false from the Test method" {
+            It "Should return true from the Test method" {
                 Test-TargetResource @testParams | Should be $true
             }
 
