@@ -42,6 +42,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Should return absent from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Absent"
             }
+
+            It "Should create the Group from the Set method" {
+                Set-TargetResource @testParams
+            }
         }
 
         Context -Name "When the group already exists" -Fixture {
@@ -57,7 +61,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-AzureADGroup -MockWith {
                 return @{
                     DisplayName = "Test Group"
-                    MailNickName = "TestGroup"
                     ObjectId = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
                     Members = @("John.Smith@contoso.onmcirosoft.com")
                     Owners = @("John.Smith@contoso.onmcirosoft.com")
@@ -85,11 +88,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should be $true
             }
 
-            It "Should create the new Group in the Set method" {
+            It "Should update the new Group in the Set method" {
                 Set-TargetResource @testParams
             }
         }
-
 
         Context -Name "Office 365 Group - When the group already exists but with different members" -Fixture {
             $testParams = @{
@@ -97,7 +99,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 MailNickName = "TestGroup"
                 Description = "This is a test"
                 Members = @("GoodUser1", "GoodUser2")
-                ManagedBy = "JohnSmith@contoso.onmicrosoft.com"
+                ManagedBy = @("JohnSmith@contoso.onmicrosoft.com", "Bob.Houle@contoso.onmicrosoft.com")
                 Ensure = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }

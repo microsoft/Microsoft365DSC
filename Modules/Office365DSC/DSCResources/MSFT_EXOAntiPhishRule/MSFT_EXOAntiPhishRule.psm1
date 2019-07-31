@@ -66,57 +66,65 @@ function Get-TargetResource
     Write-Verbose -Message "Global ExchangeOnlineSession status:"
     Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
 
-    try
-    {
-        $AntiPhishRules = Get-AntiPhishRule
+    try {
+        $AntiPhishRules = Get-AntiPhishRule -ErrorAction SilentlyContinue
     }
     catch
     {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-        $Message = "Error calling {Get-AntiPhishRule}"
-        New-Office365DSCLogEntry -Error $_ -Message $Message
+        New-Office365DSCLogEntry -Error $_ -Message "Couldn't get AntiPhishRules"
     }
-    $AntiPhishRule = $AntiPhishRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    if ($null -eq $AntiPhishRule)
+
+    if ($null -ne $AntiPhishRules)
+    {
+        $AntiPhishRule = $AntiPhishRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        if ($null -eq $AntiPhishRule)
+        {
+            Write-Verbose -Message "AntiPhishRule $($Identity) does not exist."
+            $result = $PSBoundParameters
+            $result.Ensure = 'Absent'
+            return $result
+        }
+        else
+        {
+            $result = @{
+                Ensure = 'Present'
+            }
+            foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
+            {
+                if ($null -ne $AntiPhishRule.$KeyName)
+                {
+                    $result += @{
+                        $KeyName = $AntiPhishRule.$KeyName
+                    }
+                }
+                else
+                {
+                    $result += @{
+                        $KeyName = $PSBoundParameters[$KeyName]
+                    }
+                }
+
+            }
+            if ('Enabled' -eq $AntiPhishRule.State)
+            {
+                # Accounts for Get-AntiPhishRule returning 'State' instead of 'Enabled' used by New/Set
+                $result.Enabled = $true
+            }
+            else
+            {
+                $result.Enabled = $false
+            }
+
+            Write-Verbose -Message "Found AntiPhishRule $($Identity)"
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    else
     {
         Write-Verbose -Message "AntiPhishRule $($Identity) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        $result = @{
-            Ensure = 'Present'
-        }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-        {
-            if ($null -ne $AntiPhishRule.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $AntiPhishRule.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
-
-        }
-        if ('Enabled' -eq $AntiPhishRule.State)
-        {
-            # Accounts for Get-AntiPhishRule returning 'State' instead of 'Enabled' used by New/Set
-            $result.Enabled = $true
-        }
-        else
-        {
-            $result.Enabled = $false
-        }
-
-        Write-Verbose -Message "Found AntiPhishRule $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
 }
