@@ -66,7 +66,8 @@ function Get-TargetResource
     Write-Verbose -Message "Global ExchangeOnlineSession status:"
     Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
 
-    try {
+    try
+    {
         $AntiPhishRules = Get-AntiPhishRule -ErrorAction SilentlyContinue
     }
     catch

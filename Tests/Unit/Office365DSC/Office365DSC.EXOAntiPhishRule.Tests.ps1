@@ -197,6 +197,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Identity           = 'contoso.com'
                 AntiPhishPolicy    = 'TestPolicy'
                 GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = "Present"
             }
 
             Mock -CommandName Get-AntiPhishRule -MockWith{
