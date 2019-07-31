@@ -180,7 +180,7 @@ Configuration Master
         {
             Title                = "Modern Site"
             Url                  = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
-            Owner                = "admin@$Domain.onmicrosoft.com"
+            Owner                = "admin@$Domain"
             Template             = "STS#3"
             GlobalAdminAccount   = $GlobalAdmin
             Ensure               = "Present"
