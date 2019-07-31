@@ -9,6 +9,9 @@
   * New Resource;
 * SCRetentionCompliancePolicy
   * Changed logic to update existing Policy;
+* Metadata
+  * Updated SharePointPnPPowerShellOnline dependency
+    to version 3.12.1908.1;
 
 ## 1.0.0.776
 
