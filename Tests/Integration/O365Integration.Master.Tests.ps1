@@ -192,7 +192,7 @@ Configuration Master
             Value              = "Modern Value"
             Description        = "Entity for Modern Site"
             EntityScope        = "Site"
-            SiteUrl            = "htps://o365dsc.sharepoint.com/sites/Modern"
+            SiteUrl            = "https://o365dsc.sharepoint.com/sites/Modern"
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
         }
@@ -203,7 +203,7 @@ Configuration Master
             Value              = "Tenant Value"
             Description        = "Entity for Tenant"
             EntityScope        = "Tenant"
-            SiteUrl            = "htps://o365dsc-admin.sharepoint.com/"
+            SiteUrl            = "https://o365dsc-admin.sharepoint.com/"
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
         }
