@@ -53,9 +53,10 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of Sensitiivity Label for $Name"
 
     Write-Verbose -Message "Calling Test-SecurityAndComplianceConnection function:"
-    Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+    -Platform SecurityComplianceCenter
 
-    $label = Get-Label -Identity $Name
+    $label = Get-Label -Identity $Name -ErrorAction SilentlyContinue
 
     if ($null -eq $label)
     {
@@ -139,7 +140,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Sensitiivity label for $Name"
 
-    Test-SecurityAndComplianceConnection -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+    -Platform SecurityComplianceCenter
+    
     $label = Get-TargetResource @PSBoundParameters
 
     if (('Present' -eq $Ensure) -and ('Absent' -eq $label.Ensure))
