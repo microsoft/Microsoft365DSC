@@ -186,7 +186,7 @@ Configuration Master
             Ensure               = "Present"
         }
 
-        SPOStorageEntity SiteEntity1
+        <#SPOStorageEntity SiteEntity1
         {
             Key                = "SiteEntity1"
             Value              = "Modern Value"
@@ -206,7 +206,7 @@ Configuration Master
             SiteUrl            = "https://o365dsc-admin.sharepoint.com/"
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
-        }
+        }#>
 
         TeamsTeam TeamAlpha
         {
