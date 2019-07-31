@@ -1183,7 +1183,6 @@ function Set-EXOAntiPhishPolicy
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
 }
-
 function Set-EXOHostedContentFilterRule
 {
     param (

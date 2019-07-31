@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SCRetentionComplianceRule"
+    -DscResource "SCDLPCompliancePolicy"
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -32,29 +32,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Mock -CommandName Remove-RetentionComplianceRule -MockWith {
+        Mock -CommandName Remove-DLPCompliancePolicy -MockWith {
 
         }
 
-        Mock -CommandName New-RetentionComplianceRule -MockWith {
+        Mock -CommandName New-DLPCompliancePolicy -MockWith {
             return @{
 
             }
         }
 
         # Test contexts
-        Context -Name "Rule doesn't already exist" -Fixture {
+        Context -Name "Policy doesn't already exist" -Fixture {
             $testParams = @{
-                Ensure                    = 'Present'
-                GlobalAdminAccount        = $GlobalAdminAccount
-                Comment                   = "This is a Demo Rule"
-                RetentionComplianceAction = "Keep"
-                RetentionDuration         = "Unlimited"
-                Name                      = 'TestRule'
-                Policy                    = 'TestPolicy'
+                Ensure             = 'Present'
+                GlobalAdminAccount = $GlobalAdminAccount
+                Priority           = 1
+                SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
+                Name               = 'TestPolicy'
             }
 
-            Mock -CommandName Get-RetentionComplianceRule -MockWith {
+            Mock -CommandName Get-DLPCompliancePolicy -MockWith {
                 return $null
             }
 
@@ -71,29 +69,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Rule already exists" -Fixture {
+        Context -Name "Policy already exists" -Fixture {
             $testParams = @{
-                Ensure                    = 'Present'
-                GlobalAdminAccount        = $GlobalAdminAccount
-                Comment                   = "This is a Demo Rule"
-                RetentionComplianceAction = "Keep"
-                RetentionDuration         = "Unlimited"
-                Name                      = 'TestRule'
-                Policy                    = 'TestPolicy'
+                Ensure             = 'Present'
+                GlobalAdminAccount = $GlobalAdminAccount
+                Priority           = 1
+                Mode               = "Enable"
+                SharePointLocation = @("https://contoso.sharepoint.com/sites/demo")
+                Name               = 'TestPolicy'
             }
 
-            Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
+            Mock -CommandName Get-DLPCompliancePolicy -MockWith {
                 return @{
-                    Name = "TestPolicy"
-                }
-            }
-
-            Mock -CommandName Get-RetentionComplianceRule -MockWith {
-                return @{
-                    Name                      = "TestRule"
-                    Comment                   = "This is a Demo Rule"
-                    RetentionComplianceAction = "Keep"
-                    RetentionDuration         = "Unlimited"
+                    Name               = "TestPolicy"
+                    Priority           = 1
+                    Mode               = "Enable"
+                    SharePointLocation = @(@{Name="https://contoso.sharepoint.com/sites/demo"})
                 }
             }
 
@@ -110,26 +101,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Rule should not exist" -Fixture {
+        Context -Name "Policy should not exist" -Fixture {
             $testParams = @{
-                Ensure                    = 'Absent'
-                GlobalAdminAccount        = $GlobalAdminAccount
-                Comment                   = "This is a Demo Rule"
-                RetentionComplianceAction = "Keep"
-                RetentionDuration         = "Unlimited"
-                Name                      = 'TestRule'
-                Policy                    = 'TestPolicy'
+                Ensure             = 'Absent'
+                GlobalAdminAccount = $GlobalAdminAccount
+                SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
+                Name               = 'TestPolicy'
             }
 
-            Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
+            Mock -CommandName Get-DLPCompliancePolicy -MockWith {
                 return @{
                     Name = "TestPolicy"
-                }
-            }
-
-            Mock -CommandName Get-RetentionComplianceRule -MockWith {
-                return @{
-                    Name = "TestRule"
                 }
             }
 
@@ -149,13 +131,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
-                Policy             = "TestPolicy"
-                Name               = "TestRule"
+                Name               = "Test Policy"
             }
 
-            Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
+            Mock -CommandName Get-DLPCompliancePolicy -MockWith {
                 return @{
-                    Name = "TestPolicy"
+                    Name                         = "Test Policy"
+                    Priority                     = 1
+                    SharePointLocation           = "https://o365dsc1.sharepoint.com"
                 }
             }
 
