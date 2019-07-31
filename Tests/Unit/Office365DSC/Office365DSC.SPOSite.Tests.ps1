@@ -805,7 +805,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Owner                                    = "testuser@contoso.com"
                 StorageQuota                             = 1000
                 GlobalAdminAccount                       = $GlobalAdminAccount
-                Ensure                                   = "Absent"
+                Ensure                                   = "Present"
                 LocaleId                                 = 1033
                 Template                                 = "GROUP#0"
                 CompatibilityLevel                       = 15
@@ -843,36 +843,37 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "should not create the site and highlight that it should be created via the O365 group" {
-                Set-TargetResource @testParams
+                { Set-TargetResource @testParams } | Should Throw "Group based sites (GROUP#0) should be created as part of an O365 group. Make sure to specify it as a configuration item"
              }
          }
 
          Context -Name "Group#0 site already exists but is not configured as desired" -Fixture {
             $testParams = @{
-                Url                                         = "https://contoso.sharepoint.com/sites/testgroup"
-                Owner                                       = "testuser@contoso.com"
-                StorageQuota                                = 1000
-                GlobalAdminAccount                          = $GlobalAdminAccount
-                LocaleId                                    = 1033
-                Template                                    = "GROUP#0"
-                CompatibilityLevel                          = 15
-                Title                                       = "testgroup"
-                DenyAddAndCustomizePages                    = $false
-                StorageQuotaWarningLevel                    = 25574400
-                LockState                                   = "Unlock"
-                SharingCapability                           = "Disabled"
-                CommentsOnSitePagesDisabled                 = $false
-                SocialBarOnSitePagesDisabled                = $false
-                DisableAppViews                             = "NotDisabled"
-                DisableCompanyWideSharingLinks              = "NotDisabled"
-                DisableFlows                                = "NotDisabled"
-                RestrictedToGeo                             = "BlockMoveOnly"
-                SharingDomainRestrictionMode                = "None"
-                SharingAllowedDomainList                    = ""
-                SharingBlockedDomainList                    = ""
-                ShowPeoplePickerSuggestionsForGuestUsers    = $false
-                DefaultSharingLinkType                      = "None"
-                DefaultLinkPermission                       = "None"
+                Ensure                                   = "Present"
+                Url                                      = "https://contoso.sharepoint.com/sites/testgroup"
+                Owner                                    = "testuser@contoso.com"
+                StorageQuota                             = 1000
+                GlobalAdminAccount                       = $GlobalAdminAccount
+                LocaleId                                 = 1033
+                Template                                 = "GROUP#0"
+                CompatibilityLevel                       = 15
+                Title                                    = "testgroup"
+                DenyAddAndCustomizePages                 = $false
+                StorageQuotaWarningLevel                 = 25574400
+                LockState                                = "Unlock"
+                SharingCapability                        = "Disabled"
+                CommentsOnSitePagesDisabled              = $false
+                SocialBarOnSitePagesDisabled             = $false
+                DisableAppViews                          = "NotDisabled"
+                DisableCompanyWideSharingLinks           = "NotDisabled"
+                DisableFlows                             = "NotDisabled"
+                RestrictedToGeo                          = "BlockMoveOnly"
+                SharingDomainRestrictionMode             = "None"
+                SharingAllowedDomainList                 = ""
+                SharingBlockedDomainList                 = ""
+                ShowPeoplePickerSuggestionsForGuestUsers = $false
+                DefaultSharingLinkType                   = "None"
+                DefaultLinkPermission                    = "None"
             }
 
             Mock -CommandName Get-SPOSite -MockWith {
