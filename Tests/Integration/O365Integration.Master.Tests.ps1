@@ -162,7 +162,7 @@ Configuration Master
         {
             Name               = "Gilles"
             Type               = "Text"
-            GlobalAdminAccount = $GlobalAdminAccount
+            GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
         }
 
