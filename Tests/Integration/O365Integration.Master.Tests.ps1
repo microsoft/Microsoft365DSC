@@ -158,6 +158,14 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
         }
 
+        SPOSearchManagedProperty ManagedProp1
+        {
+            Name               = "Gilles"
+            Type               = "Text"
+            GlobalAdminAccount = $GlobalAdminAccount
+            Ensure             = "Present"
+        }
+
         SPOSite ClassicSite
         {
             Title                = "Classic Site"
@@ -176,6 +184,38 @@ Configuration Master
             Template             = "STS#3"
             GlobalAdminAccount   = $GlobalAdmin
             Ensure               = "Present"
+        }
+
+        SPOStorageEntity Entity1
+        {
+            Key                = "Entity1"
+            Description        = "Entity for Modern Site"
+            EntityScope        = "Site"
+            SiteUrl            = "htps://o365dsc.sharepoint.com/sites/Modern"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Ensure"
+        }
+
+        SPOStorageEntity SiteEntity1
+        {
+            Key                = "SiteEntity1"
+            Value              = "Modern Value"
+            Description        = "Entity for Modern Site"
+            EntityScope        = "Site"
+            SiteUrl            = "htps://o365dsc.sharepoint.com/sites/Modern"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Ensure"
+        }
+
+        SPOStorageEntity TenantEntity1
+        {
+            Key                = "TenantEntity1"
+            Value              = "Tenant Value"
+            Description        = "Entity for Tenant"
+            EntityScope        = "Tenant"
+            SiteUrl            = "htps://o365dsc-admin.sharepoint.com/"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Ensure"
         }
 
         TeamsTeam TeamAlpha

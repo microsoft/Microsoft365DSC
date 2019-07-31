@@ -1172,10 +1172,15 @@ function Start-O365ConfigurationExtract
 
         $partialContent = ""
         $i = 1
+        $sourcesLength = $sources.Length
+        if ($null -eq $sourcesLength)
+        {
+            $sourcesLength = 1
+        }
         foreach ($source in $sources)
         {
             $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
-            Write-Information "    - [$i/$($sources.Length)] $($source.Name)"
+            Write-Information "    - [$i/$($sourcesLength)] $($source.Name)"
             $partialContent = Export-TargetResource -Name $source.Name `
                                                     -Protocol $mapping.Protocol `
                                                     -GlobalAdminAccount $GlobalAdminAccount
@@ -1204,9 +1209,14 @@ function Start-O365ConfigurationExtract
 
         $partialContent = ""
         $i = 1
+        $propertiesLength = $properties.Length
+        if ($null -eq $sourcesLength)
+        {
+            $propertiesLength = 1
+        }
         foreach ($property in $properties)
         {
-            Write-Information "    - [$i/$($properties.Length)] $($property.Value.Name)"
+            Write-Information "    - [$i/$($propertiesLength)] $($property.Value.Name)"
             $partialContent = Export-TargetResource -Name $property.Value.Name `
                                                     -Type $property.Value.ManagedType `
                                                     -GlobalAdminAccount $GlobalAdminAccount
