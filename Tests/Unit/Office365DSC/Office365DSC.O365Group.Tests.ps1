@@ -63,6 +63,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = "Test Group"
                     ObjectId = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
                     Members = @("John.Smith@contoso.onmcirosoft.com")
+                    MailNickName = "TestGroup"
                     Owners = @("Bob.Houle@contoso.onmcirosoft.com")
                     Description = "This is a test"
                 }

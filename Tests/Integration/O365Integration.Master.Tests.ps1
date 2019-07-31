@@ -52,7 +52,7 @@ Configuration Master
             Identity           = "Test AntiPhish Rule"
             AntiPhishPolicy    = "Test AntiPhish Policy"
             Comments           = "This is a test Rule"
-            SentToMemberOf     = @("O365DSCCore@o365dsc.onmicrosoft.com")
+            SentToMemberOf     = @("O365DSCCore@$Domain")
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
             DependsOn          = "[O365Group]O365DSCCoreTeam"
@@ -114,7 +114,7 @@ Configuration Master
             Name               = "MyDLPPolicy"
             Comment            = "Test Policy"
             Priority           = 1
-            SharePointLocation = "https://o365dsc.sharepoint.com/sites/Classic"
+            SharePointLocation = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }
@@ -143,7 +143,7 @@ Configuration Master
         {
             Name               = "MySRPolicy"
             Comment            = "Test Policy"
-            Reviewers          = @("admin@o365dsc.onmicrosoft.com")
+            Reviewers          = @("admin@$Domain")
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }
@@ -151,7 +151,7 @@ Configuration Master
         SCSupervisoryReviewRule SRRule
         {
             Name               = "DemoRule"
-            Condition          = "(Reviewee:adminnonmfa@o365dsc.onmicrosoft.com)"
+            Condition          = "(Reviewee:adminnonmfa@$Domain)"
             SamplingRate       = 100
             Policy             = 'MySRPolicy'
             Ensure             = "Present"
@@ -169,8 +169,8 @@ Configuration Master
         SPOSite ClassicSite
         {
             Title                = "Classic Site"
-            Url                  = "https://o365dsc.sharepoint.com/sites/Classic"
-            Owner                = "adminnonMFA@o365dsc.onmicrosoft.com"
+            Url                  = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
+            Owner                = "adminnonMFA@$Domain"
             Template             = "STS#0"
             GlobalAdminAccount   = $GlobalAdmin
             Ensure               = "Present"
@@ -179,8 +179,8 @@ Configuration Master
         SPOSite ModernSite
         {
             Title                = "Modern Site"
-            Url                  = "https://o365dsc.sharepoint.com/sites/Modern"
-            Owner                = "admin@o365dsc.onmicrosoft.com"
+            Url                  = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+            Owner                = "admin@$Domain.onmicrosoft.com"
             Template             = "STS#3"
             GlobalAdminAccount   = $GlobalAdmin
             Ensure               = "Present"
