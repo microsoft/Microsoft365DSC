@@ -864,7 +864,7 @@ function Set-SPOSiteConfiguration
                     if ($null -eq $hubSite)
                     {
                         throw ("Specified HubUrl ($HubUrl) is not a Hub site. Make sure you " + `
-                               "have promoted that to a Hub site first.")
+                                "have promoted that to a Hub site first.")
                     }
 
                     if ($site.HubSiteId -ne $hubSite.Id)
@@ -875,6 +875,22 @@ function Set-SPOSiteConfiguration
             }
 
             $CurrentParameters = $PSBoundParameters
+            if($CurrentParameters.Template -eq "GROUP#0")
+            {
+                if ($CurrentParameters.ContainsKey("Title")) { $null = $CurrentParameters.Remove("Title") }
+                if ($CurrentParameters.ContainsKey("CompatibilityLevel")) { $null = $CurrentParameters.Remove("CompatibilityLevel") }
+                if ($CurrentParameters.ContainsKey("LocaleId")) { $null = $CurrentParameters.Remove("LocaleId") }
+                if ($CurrentParameters.ContainsKey("Template")) { $null = $CurrentParameters.Remove("Template") }
+                if ($CurrentParameters.ContainsKey("TimeZoneId")) { $null = $CurrentParameters.Remove("TimeZoneId") }
+                if ($CurrentParameters.ContainsKey("CommentsOnSitePagesDisabled")) { $null = $CurrentParameters.Remove("CommentsOnSitePagesDisabled") }
+                if ($CurrentParameters.ContainsKey("DisableAppViews")) { $null = $CurrentParameters.Remove("DisableAppViews") }
+                if ($CurrentParameters.ContainsKey("DisableFlows")) { $null = $CurrentParameters.Remove("DisableFlows") }
+                if ($CurrentParameters.ContainsKey("RestrictedToGeo")) { $null = $CurrentParameters.Remove("RestrictedToGeo") }
+                if ($CurrentParameters.ContainsKey("SharingAllowedDomainList")) { $null = $CurrentParameters.Remove("SharingAllowedDomainList") }
+                if ($CurrentParameters.ContainsKey("SharingBlockedDomainList")) { $null = $CurrentParameters.Remove("SharingBlockedDomainList") }
+                if ($CurrentParameters.ContainsKey("SharingDomainRestrictionMode")) { $null = $CurrentParameters.Remove("SharingDomainRestrictionMode") }
+                if ($CurrentParameters.ContainsKey("HubUrl")) { $null = $CurrentParameters.Remove("HubUrl") }
+            }
             if ($CurrentParameters.SharingCapability -and $CurrentParameters.DenyAddAndCustomizePages)
             {
                 Write-Warning -Message "Setting the DenyAddAndCustomizePages and the SharingCapability property via Set-SPOSite at the same time might cause the DenyAddAndCustomizePages property not to be configured as desired."
@@ -943,15 +959,21 @@ function Set-SPOSiteConfiguration
     }
     else
     {
-        Write-Verbose -Message "Creating site collection $Url"
-        $siteCreation = @{
-            Url = $Url
-            Owner = $Owner
-            StorageQuota = $StorageQuota
-            Title = $Title
+        if($PSBoundParameters.Template -eq "GROUP#0")
+        {
+            Write-Error -Message "Group based sites (GROUP#0) should be created as part of an O365 group. Make sure to specify it as a configuration item"
+        }
+        else
+        {
+            Write-Verbose -Message "Creating site collection $Url"
+            $siteCreation = @{
+            Url                = $Url
+            Owner              = $Owner
+            StorageQuota       = $StorageQuota
+            Title              = $Title
             CompatibilityLevel = $CompatibilityLevel
-            LocaleId = $LocaleId
-            Template = $Template
+            LocaleId           = $LocaleId
+            Template           = $Template
         }
         New-SPOSite @siteCreation
 
@@ -964,5 +986,7 @@ function Set-SPOSiteConfiguration
         {
             throw "There was an error trying to create SPOSite $Url"
         }
+        }
+        
     }
 }
