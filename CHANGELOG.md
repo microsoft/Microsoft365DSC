@@ -12,6 +12,8 @@
 * Metadata
   * Updated SharePointPnPPowerShellOnline dependency
     to version 3.12.1908.1;
+  * Updated MSCloudLoginAssistant dependency to
+    version 0.6;
 
 ## 1.0.0.776
 
