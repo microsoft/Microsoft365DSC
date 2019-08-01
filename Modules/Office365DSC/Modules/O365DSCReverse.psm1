@@ -112,7 +112,14 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
                 Import-Module $EXOAtpPolicyForO365ModulePath | Out-Null
-                $DSCContent += Export-TargetResource -IsSingleInstance "Yes" -GlobalAdminAccount $GlobalAdminAccount
+
+                $ATPPolicies = Get-AtpPolicyForO365
+                foreach ($atpPolicy in $ATPPolicies)
+                {
+                    $DSCContent += Export-TargetResource -IsSingleInstance "Yes" `
+                                                         -GlobalAdminAccount $GlobalAdminAccount `
+                                                         -Identity $atpPolicy.Identity
+                }
             }
             else
             {

@@ -78,11 +78,9 @@ function Get-TargetResource
     else
     {
         Write-Verbose "Found existing ComplianceTag $($Name)"
-        $ConvertedFilePlanProperty = Get-SCFilePlanProperty $tagObject.FilePlanMetadata
         $result = @{
             Name               = $tagObject.Name
             Comment            = $tagObject.Comment
-            FilePlanProperty   = $ConvertedFilePlanProperty
             RetentionDuration  = $tagObject.RetentionDuration
             IsRecordLabel      = $tagObject.IsRecordLabel
             Regulatory         = $tagObject.Regulatory
@@ -93,6 +91,12 @@ function Get-TargetResource
             RetentionType      = $tagObject.RetentionType
             GlobalAdminAccount = $GlobalAdminAccount
             Ensure             = 'Present'
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($tagObject.FilePlanMetadata))
+        {
+            $ConvertedFilePlanProperty = Get-SCFilePlanProperty $tagObject.FilePlanMetadata
+            $result.Add("FilePlanProperty", $ConvertedFilePlanProperty)
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
