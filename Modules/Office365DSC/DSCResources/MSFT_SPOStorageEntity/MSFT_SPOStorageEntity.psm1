@@ -151,8 +151,19 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq "Present")
     {
-        Write-Verbose -Message "Adding new storage entity $Key"
-        Set-PnPStorageEntity @CurrentParameters
+        try
+        {
+            Write-Verbose -Message "Adding new storage entity $Key"
+            Set-PnPStorageEntity @CurrentParameters
+        }
+        catch
+        {
+            if ($_.Exception -like "*Access denied*")
+            {
+                throw "It appears that the account doesn't have access to create an SPO Storage " + `
+                      "Entity or that an App Catalog was not created for the specified location"
+            }
+        }
     }
 }
 

@@ -269,6 +269,12 @@ function Export-TargetResource
     )
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+
+    if ([System.String]::IsNullOrEmpty($result.ExpirationDateOption))
+    {
+        $result.Remove("ExpirationDateOption")
+    }
+
     $content = "        SCRetentionComplianceRule " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
