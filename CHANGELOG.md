@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## 1.0.0.846
+
 * Modules
   * ReverseDSC
     * Added all missing Security and Compliance items;
