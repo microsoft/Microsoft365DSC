@@ -875,14 +875,24 @@ function Start-O365ConfigurationExtract
             $policies = Get-RetentionCompliancePolicy
 
             $j = 1
+            $policiesLength = $policies.Length
+            if ($null -eq $policiesLength)
+            {
+                $policiesLength = 1
+            }
             foreach($policy in $policies)
             {
                 $rules = Get-RetentionComplianceRule -Policy $policy.Name
-                Write-Information "    - Policy [$j/$($policy.Length)] $($policy.Name)"
+                Write-Information "    - Policy [$j/$($policiesLength)] $($policy.Name)"
                 $i = 1
+                $rulesLength = $rules.Length
+                if ($null -eq $rulesLength)
+                {
+                    $rulesLength = 1
+                }
                 foreach ($rule in $rules)
                 {
-                    Write-Information "        - [$i/$($rules.Length)] $($rule.Name)"
+                    Write-Information "        - [$i/$($rulesLength)] $($rule.Name)"
                     $partialContent = Export-TargetResource -Name $rule.Name -Policy $rule.Policy -GlobalAdminAccount $GlobalAdminAccount
                     $DSCContent += $partialContent
                     $i++
