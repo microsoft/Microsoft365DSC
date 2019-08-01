@@ -5,6 +5,9 @@
 * Modules
   * ReverseDSC
     * Added all missing Security and Compliance items;
+* EXOATPPolicyForO365
+  * Fixed issue where we now extract any policy,
+    not just default;
 * SCDLPCompliancePolicy
   * New Resource;
 * SCRetentionCompliancePolicy

@@ -45,11 +45,6 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of AtpPolicyForO365 for $Identity"
 
-    if ('Default' -ne $Identity)
-    {
-        throw "EXOAtpPolicyForO365 configurations MUST specify Identity value of 'Default'"
-    }
-
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform ExchangeOnline
 
@@ -220,6 +215,10 @@ function Export-TargetResource
         [ValidateSet('Yes')]
         [String]
         $IsSingleInstance,
+
+        [Parameter()]
+        [String]
+        $Identity,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
