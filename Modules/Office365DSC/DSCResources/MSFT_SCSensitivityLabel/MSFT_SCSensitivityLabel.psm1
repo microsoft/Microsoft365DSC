@@ -142,7 +142,7 @@ function Set-TargetResource
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
     -Platform SecurityComplianceCenter
-    
+
     $label = Get-TargetResource @PSBoundParameters
 
     if (('Present' -eq $Ensure) -and ('Absent' -eq $label.Ensure))
@@ -163,6 +163,7 @@ function Set-TargetResource
         #Remove unused parameters for Set-Label cmdlet
         $SetParams.Remove("GlobalAdminAccount")
         $SetParams.Remove("Ensure")
+        $SetParams.Remove("Name")
         Set-Label @SetParams -Identity $Name
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $label.Ensure))

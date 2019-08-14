@@ -8415,6 +8415,8 @@ param(
  }
 
 
+
+
 <# AzureAD #>
 function Get-AzureADApplicationProxyConnectorGroupMembers {
  [CmdletBinding()]
@@ -12460,5 +12462,91 @@ function Set-ComplianceTag
     [Parameter()]
     [System.String]
     $EventType
+    )
+}
+
+function Remove-Label{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function New-Label{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String]
+        $AdvancedSettings,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $LocaleSettings
+    )
+}
+function Set-Label{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String]
+        $AdvancedSettings,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $LocaleSettings,
+
+        [Parameter()]
+        [System.String]
+        $ParentId,
+
+        [Parameter()]
+        [uint32]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $Tooltip,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled
+    )
+}
+function Get-Label{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
     )
 }
