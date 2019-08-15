@@ -2,13 +2,23 @@
 
 ## UNRELEASED
 
+## 1.0.0.846
+
 * Modules
   * ReverseDSC
     * Added all missing Security and Compliance items;
+* EXOATPPolicyForO365
+  * Fixed issue where we now extract any policy,
+    not just default;
 * SCDLPCompliancePolicy
   * New Resource;
 * SCRetentionCompliancePolicy
   * Changed logic to update existing Policy;
+* Metadata
+  * Updated SharePointPnPPowerShellOnline dependency
+    to version 3.12.1908.1;
+  * Updated MSCloudLoginAssistant dependency to
+    version 0.6;
 
 ## 1.0.0.776
 

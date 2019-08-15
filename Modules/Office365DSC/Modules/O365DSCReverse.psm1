@@ -112,7 +112,14 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
                 Import-Module $EXOAtpPolicyForO365ModulePath | Out-Null
-                $DSCContent += Export-TargetResource -IsSingleInstance "Yes" -GlobalAdminAccount $GlobalAdminAccount
+
+                $ATPPolicies = Get-AtpPolicyForO365
+                foreach ($atpPolicy in $ATPPolicies)
+                {
+                    $DSCContent += Export-TargetResource -IsSingleInstance "Yes" `
+                                                         -GlobalAdminAccount $GlobalAdminAccount `
+                                                         -Identity $atpPolicy.Identity
+                }
             }
             else
             {
@@ -865,15 +872,32 @@ function Start-O365ConfigurationExtract
                                                 -Resolve
 
             Import-Module $SCRetentionComplianceRuleModulePath | Out-Null
-            $rules = Get-RetentionComplianceRule
+            $policies = Get-RetentionCompliancePolicy
 
-            $i = 1
-            foreach ($rule in $rules)
+            $j = 1
+            $policiesLength = $policies.Length
+            if ($null -eq $policiesLength)
             {
-                Write-Information "    - [$i/$($rules.Length)] $($rule.Name)"
-                $partialContent = Export-TargetResource -Name $rule.Name -Policy $rule.Policy -GlobalAdminAccount $GlobalAdminAccount
-                $DSCContent += $partialContent
-                $i++
+                $policiesLength = 1
+            }
+            foreach($policy in $policies)
+            {
+                $rules = Get-RetentionComplianceRule -Policy $policy.Name
+                Write-Information "    - Policy [$j/$($policiesLength)] $($policy.Name)"
+                $i = 1
+                $rulesLength = $rules.Length
+                if ($null -eq $rulesLength)
+                {
+                    $rulesLength = 1
+                }
+                foreach ($rule in $rules)
+                {
+                    Write-Information "        - [$i/$($rulesLength)] $($rule.Name)"
+                    $partialContent = Export-TargetResource -Name $rule.Name -Policy $rule.Policy -GlobalAdminAccount $GlobalAdminAccount
+                    $DSCContent += $partialContent
+                    $i++
+                }
+                $j++
             }
         }
         catch
@@ -1165,10 +1189,15 @@ function Start-O365ConfigurationExtract
 
         $partialContent = ""
         $i = 1
+        $sourcesLength = $sources.Length
+        if ($null -eq $sourcesLength)
+        {
+            $sourcesLength = 1
+        }
         foreach ($source in $sources)
         {
             $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
-            Write-Information "    - [$i/$($sources.Length)] $($source.Name)"
+            Write-Information "    - [$i/$($sourcesLength)] $($source.Name)"
             $partialContent = Export-TargetResource -Name $source.Name `
                                                     -Protocol $mapping.Protocol `
                                                     -GlobalAdminAccount $GlobalAdminAccount
@@ -1197,9 +1226,14 @@ function Start-O365ConfigurationExtract
 
         $partialContent = ""
         $i = 1
+        $propertiesLength = $properties.Length
+        if ($null -eq $sourcesLength)
+        {
+            $propertiesLength = 1
+        }
         foreach ($property in $properties)
         {
-            Write-Information "    - [$i/$($properties.Length)] $($property.Value.Name)"
+            Write-Information "    - [$i/$($propertiesLength)] $($property.Value.Name)"
             $partialContent = Export-TargetResource -Name $property.Value.Name `
                                                     -Type $property.Value.ManagedType `
                                                     -GlobalAdminAccount $GlobalAdminAccount

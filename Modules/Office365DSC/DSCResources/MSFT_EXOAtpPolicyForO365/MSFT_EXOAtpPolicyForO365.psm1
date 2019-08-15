@@ -45,11 +45,6 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of AtpPolicyForO365 for $Identity"
 
-    if ('Default' -ne $Identity)
-    {
-        throw "EXOAtpPolicyForO365 configurations MUST specify Identity value of 'Default'"
-    }
-
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform ExchangeOnline
 
@@ -66,23 +61,14 @@ function Get-TargetResource
     else
     {
         $result = @{
-            Ensure = 'Present'
-        }
-
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-        {
-            if ($null -ne $AtpPolicyForO365.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $AtpPolicyForO365.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
+            IsSingleInstance = "Yes"
+            Identity                  = $AtpPolicyForO365.Identity
+            AllowClickThrough         = $AtpPolicyForO365.AllowClickThrough
+            BlockUrls                 = $AtpPolicyForO365.BlockUrls
+            EnableATPForSPOTeamsODB   = $AtpPolicyForO365.EnableATPForSPOTeamsODB
+            EnableSafeLinksForClients = $AtpPolicyForO365.EnableSafeLinksForClients
+            TrackClicks               = $AtpPolicyForO365.TrackClicks
+            Ensure                    = 'Present'
         }
 
         Write-Verbose -Message "Found AtpPolicyForO365 $($Identity)"
@@ -229,6 +215,10 @@ function Export-TargetResource
         [ValidateSet('Yes')]
         [String]
         $IsSingleInstance,
+
+        [Parameter()]
+        [String]
+        $Identity,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
