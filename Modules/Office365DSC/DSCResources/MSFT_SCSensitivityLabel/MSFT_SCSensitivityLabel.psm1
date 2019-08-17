@@ -67,11 +67,13 @@ function Get-TargetResource
     }
     else
     {
+        $parentLabel = Get-Label -Identity $label.ParentId -ErrorAction SilentlyContinue
+
         Write-Verbose "Found existing Sensitiivity Label $($Name)"
         $result = @{
             Name               = $label.Name
             Comment            = $label.Comment
-            ParentId           = $label.ParentId
+            ParentId           = $parentLabel.Name
             AdvancedSettings   = $label.AdvancedSettings
             DisplayName        = $label.DisplayName
             LocaleSettings     = $label.LocaleSettings
@@ -147,6 +149,20 @@ function Set-TargetResource
 
     if (('Present' -eq $Ensure) -and ('Absent' -eq $label.Ensure))
     {
+        if ($null -ne $label.Priority)
+        {
+            throw "SCSensitivityLabel can't set Priortity property on " + `
+                  "new label {$Name} to $label.Priority." + `
+                  "You will need to set priority property once label is created."
+        }
+
+        if ($null -ne $label.Disabled)
+        {
+            throw "SCSensitivityLabel can't set disabled property on " + `
+                  "new label {$Name} to $label.Disabled." + `
+                  "You will need to set disabled property once label is created."
+        }
+
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
