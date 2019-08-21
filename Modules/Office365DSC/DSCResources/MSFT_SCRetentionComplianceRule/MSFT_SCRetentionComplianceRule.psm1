@@ -27,7 +27,7 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet("Days", "Months", "Years")]
         [System.String]
-        $RetentionDurationDisplayHint,
+        $RetentionDurationDisplayHint = "Days",
 
         [Parameter()]
         [System.String]
@@ -58,8 +58,7 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
 
-    $RuleObjects = Get-RetentionComplianceRule
-    $RuleObject = $RuleObjects | Where-Object {$_.Name -eq $Name}
+    $RuleObject = Get-RetentionComplianceRule -Identity $Name -ErrorAction SilentlyContinue
 
     if ($null -eq $RuleObject)
     {
@@ -71,23 +70,19 @@ function Get-TargetResource
     else
     {
         Write-Verbose "Found existing RetentionComplianceRule $($Name)"
+        $AssociatedPolicy = Get-RetentionCompliancePolicy $RuleObject.Policy
         $result = @{
-            Ensure = 'Present'
-        }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-        {
-            if ($null -ne $RuleObject.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $RuleObject.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
+            Name                         = $RuleObject.Name
+            Comment                      = $RuleObject.Comment
+            Policy                       = $AssociatedPolicy.Name
+            ExcludedItemClasses          = $RuleObject.ExcludedItemClasses
+            RetentionDuration            = $RuleObject.RetentionDuration
+            RetentionDurationDisplayHint = $RuleObject.RetentionDurationDisplayHint
+            ContentMatchQuery            = $RuleObject.ContentMatchQuery
+            ExpirationDateOption         = $RuleObject.ExpirationDateOption
+            RetentionComplianceAction    = $RuleObject.RetentionComplianceAction
+            GlobalAdminAccount           = $GlobalAdminAccount
+            Ensure                       = 'Present'
         }
 
         Write-Verbose -Message "Found RetentionComplianceRule $($Name)"
@@ -124,7 +119,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet("Days", "Months", "Years")]
         [System.String]
-        $RetentionDurationDisplayHint,
+        $RetentionDurationDisplayHint = "Days",
 
         [Parameter()]
         [System.String]
@@ -166,12 +161,14 @@ function Set-TargetResource
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
-        # Easier to delete the Rule and recreate it from scratch;
-        Remove-RetentionComplianceRule -Identity $Name
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
-        New-RetentionComplianceRule @CreationParams
+        $CreationParams.Remove("Name")
+        $CreationParams.Add("Identity", $Name)
+        $CreationParams.Remove("Policy")
+
+        Set-RetentionComplianceRule @CreationParams
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
@@ -209,7 +206,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet("Days", "Months", "Years")]
         [System.String]
-        $RetentionDurationDisplayHint,
+        $RetentionDurationDisplayHint = "Days",
 
         [Parameter()]
         [System.String]
@@ -272,6 +269,12 @@ function Export-TargetResource
     )
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+
+    if ([System.String]::IsNullOrEmpty($result.ExpirationDateOption))
+    {
+        $result.Remove("ExpirationDateOption")
+    }
+
     $content = "        SCRetentionComplianceRule " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

@@ -30,7 +30,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Url                                         = "https://contoso.sharepoint.com/sites/TestSite"
                 Owner                                       = "testuser@contoso.com"
                 StorageQuota                                = 1000
-                CentralAdminUrl                             = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                          = $GlobalAdminAccount
                 Ensure                                      = "Present"
                 LocaleId                                    = 1033
@@ -132,7 +131,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Url                                         = "https://contoso.sharepoint.com/sites/TestSite"
                 Owner                                       = "testuser@contoso.com"
                 StorageQuota                                = 1000
-                CentralAdminUrl                             = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                          = $GlobalAdminAccount
                 LocaleId                                    = 1033
                 Template                                    = "STS#3"
@@ -233,7 +231,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Url                                         = "https://contoso.sharepoint.com/sites/TestSite"
                 Owner                                       = "testuser@contoso.com"
                 StorageQuota                                = 1000
-                CentralAdminUrl                             = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                          = $GlobalAdminAccount
                 Ensure                                      = "Present"
                 LocaleId                                    = 1033
@@ -338,7 +335,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Url                                         = "https://contoso.sharepoint.com/sites/TestSite"
                 Owner                                       = "testuser@contoso.com"
                 StorageQuota                                = 1000
-                CentralAdminUrl                             = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                          = $GlobalAdminAccount
                 LocaleId                                    = 1033
                 Template                                    = "STS#3"
@@ -472,7 +468,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Url                                         = "https://contoso.sharepoint.com/sites/TestSite"
                 Owner                                       = "testuser@contoso.com"
                 StorageQuota                                = 1000
-                CentralAdminUrl                             = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                          = $GlobalAdminAccount
                 LocaleId                                    = 1033
                 Template                                    = "STS#3"
@@ -606,7 +601,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Url                                      = "https://contoso.sharepoint.com/sites/TestSite"
                 Owner                                    = "testuser@contoso.com"
                 StorageQuota                             = 1000
-                CentralAdminUrl                          = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                       = $GlobalAdminAccount
                 Ensure                                   = "Present"
                 LocaleId                                 = 1033
@@ -733,7 +727,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Url                                      = "https://contoso.sharepoint.com/sites/TestSite"
                 Owner                                    = "testuser@contoso.com"
                 StorageQuota                             = 1000
-                CentralAdminUrl                          = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount                       = $GlobalAdminAccount
                 Ensure                                   = "Absent"
                 LocaleId                                 = 1033
@@ -806,10 +799,132 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
              }
          }
 
+        Context -Name "Group#0 site does not exist" -Fixture {
+            $testParams = @{
+                Url                                      = "https://contoso.sharepoint.com/sites/groupsite"
+                Owner                                    = "testuser@contoso.com"
+                StorageQuota                             = 1000
+                GlobalAdminAccount                       = $GlobalAdminAccount
+                Ensure                                   = "Present"
+                LocaleId                                 = 1033
+                Template                                 = "GROUP#0"
+                CompatibilityLevel                       = 15
+                Title                                    = "groupsite"
+                DenyAddAndCustomizePages                 = $false
+                StorageQuotaWarningLevel                 = 25574400
+                LockState                                = "Unlock"
+                SharingCapability                        = "Disabled"
+                CommentsOnSitePagesDisabled              = $false
+                SocialBarOnSitePagesDisabled             = $false
+                DisableAppViews                          = "NotDisabled"
+                DisableCompanyWideSharingLinks           = "NotDisabled"
+                DisableFlows                             = "NotDisabled"
+                RestrictedToGeo                          = "BlockMoveOnly"
+                SharingDomainRestrictionMode             = "None"
+                SharingAllowedDomainList                 = ""
+                SharingBlockedDomainList                 = ""
+                ShowPeoplePickerSuggestionsForGuestUsers = $false
+                DefaultSharingLinkType                   = "None"
+                DefaultLinkPermission                    = "None"
+            }
+
+            Mock -CommandName Set-SPOSite -MockWith { }
+
+            Mock -CommandName Get-SPOSite -MockWith {
+                return $null
+            }
+
+            It "Should return absent from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "absent"
+            }
+
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
+            }
+
+            It "should not create the site and highlight that it should be created via the O365 group" {
+                { Set-TargetResource @testParams } | Should Throw "Group based sites (GROUP#0) should be created as part of an O365 group. Make sure to specify it as a configuration item"
+             }
+         }
+
+         Context -Name "Group#0 site already exists but is not configured as desired" -Fixture {
+            $testParams = @{
+                Ensure                                   = "Present"
+                Url                                      = "https://contoso.sharepoint.com/sites/testgroup"
+                Owner                                    = "testuser@contoso.com"
+                StorageQuota                             = 1000
+                GlobalAdminAccount                       = $GlobalAdminAccount
+                LocaleId                                 = 1033
+                Template                                 = "GROUP#0"
+                CompatibilityLevel                       = 15
+                Title                                    = "testgroup"
+                DenyAddAndCustomizePages                 = $false
+                StorageQuotaWarningLevel                 = 25574400
+                LockState                                = "Unlock"
+                SharingCapability                        = "Disabled"
+                CommentsOnSitePagesDisabled              = $false
+                SocialBarOnSitePagesDisabled             = $false
+                DisableAppViews                          = "NotDisabled"
+                DisableCompanyWideSharingLinks           = "NotDisabled"
+                DisableFlows                             = "NotDisabled"
+                RestrictedToGeo                          = "BlockMoveOnly"
+                SharingDomainRestrictionMode             = "None"
+                SharingAllowedDomainList                 = ""
+                SharingBlockedDomainList                 = ""
+                ShowPeoplePickerSuggestionsForGuestUsers = $false
+                DefaultSharingLinkType                   = "None"
+                DefaultLinkPermission                    = "None"
+            }
+
+            Mock -CommandName Get-SPOSite -MockWith {
+                return @{
+                Url                                         = "https://contoso.sharepoint.com/sites/testgroup"
+                Owner                                       = "testuser@contoso.com"
+                StorageQuota                                = 1000
+                GlobalAdminAccount                          = $GlobalAdminAccount
+                LocaleId                                    = 1033
+                Template                                    = "GROUP#0"
+                CompatibilityLevel                          = 15
+                Title                                       = "testgroup"
+                DenyAddAndCustomizePages                    = $false
+                StorageQuotaWarningLevel                    = 25574400
+                LockState                                   = "Unlock"
+                SharingCapability                           = "ExistingExternalUserSharingOnly"
+                CommentsOnSitePagesDisabled                 = $false
+                SocialBarOnSitePagesDisabled                = $false
+                DisableAppViews                             = "NotDisabled"
+                DisableCompanyWideSharingLinks              = "NotDisabled"
+                DisableFlows                                = "NotDisabled"
+                RestrictedToGeo                             = "BlockMoveOnly"
+                SharingDomainRestrictionMode                = "None"
+                SharingAllowedDomainList                    = ""
+                SharingBlockedDomainList                    = ""
+                ShowPeoplePickerSuggestionsForGuestUsers    = $false
+                DefaultSharingLinkType                      = "None"
+                DefaultLinkPermission                       = "None"
+                HubSiteId                                   = "00000000-0000-0000-0000-000000000000"
+                }
+            }
+
+            Mock -CommandName Set-SPOSite -MockWith { }
+
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            }
+
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
+            }
+
+            It "Should configure the site to the desired state" {
+                Set-TargetResource @testParams
+                Assert-MockCalled Set-SPOSite
+            }
+        }
+
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 Url = "https://contoso.com/sites/TestSite"
-                CentralAdminUrl = "https://contoso-admin.sharepoint.com"
                 Owner              = "testuser@contoso.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }

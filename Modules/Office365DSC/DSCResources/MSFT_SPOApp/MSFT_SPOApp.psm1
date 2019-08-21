@@ -26,10 +26,6 @@ function Get-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -42,13 +38,11 @@ function Get-TargetResource
         Publish         = $Publish
         Overwrite       = $Overwrite
         Ensure          = "Absent"
-        CentralAdminUrl = $CentralAdminUrl
     }
 
     try
     {
-        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                          -Platform PnP `
+        Test-MSCloudLogin -Platform PnP `
                           -O365Credential $GlobalAdminAccount
         $app = Get-PnPApp -Identity $Identity -ErrorAction SilentlyContinue
         if ($null -eq $app)
@@ -62,7 +56,6 @@ function Get-TargetResource
             Path            = $Path
             Publish         = $app.Deployed
             Overwrite       = $Overwrite
-            CentralAdminUrl = $CentralAdminUrl
             Ensure          = "Present"
         }
     }
@@ -100,18 +93,13 @@ function Set-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Setting configuration for app $Identity"
 
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -Platform PnP `
+    Test-MSCloudLogin -Platform PnP `
                       -O365Credential $GlobalAdminAccount
 
     $currentApp = Get-TargetResource @PSBoundParameters
@@ -160,10 +148,6 @@ function Test-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -198,10 +182,6 @@ function Export-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Path,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

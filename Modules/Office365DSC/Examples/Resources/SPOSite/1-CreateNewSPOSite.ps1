@@ -17,7 +17,6 @@ Configuration Example
         SPOSite ee4a977d-4d7d-4968-9238-2a1702aa699c
         {
             Url                                         = "https://office365dsc.sharepoint.com/sites/testsite1"
-            CentralAdminUrl                             = "https://Office365DSC-admin.sharepoint.com"
             StorageQuota                                = 26214400
             LocaleId                                    = 1033
             Template                                    = "STS#3"
@@ -46,7 +45,6 @@ Configuration Example
         SPOSite ecd9c36d-d67b-46e6-801d-6faf145fd1d5
         {
             Url                                         = "https://office365dsc.sharepoint.com/sites/testsite2"
-            CentralAdminUrl                             = "https://Office365DSC-admin.sharepoint.com"
             StorageQuota                                = 26214400
             LocaleId                                    = 1033
             Template                                    = "STS#3"
@@ -75,7 +73,6 @@ Configuration Example
         SPOSite 6603245d-2cf0-45fa-b2ce-46060b2ffaca
         {
             Url                                         = "https://office365dsc.sharepoint.com/sites/testsite3"
-            CentralAdminUrl                             = "https://Office365DSC-admin.sharepoint.com"
             StorageQuota                                = 26214400
             LocaleId                                    = 1033
             Template                                    = "STS#3"
@@ -104,7 +101,6 @@ Configuration Example
         SPOSite ff3f784a-5611-4f61-81a4-4e17b1ee382b
         {
             Url                                         = "https://office365dsc.sharepoint.com/sites/testsite4"
-            CentralAdminUrl                             = "https://Office365DSC-admin.sharepoint.com"
             StorageQuota                                = 26214400
             LocaleId                                    = 1033
             Template                                    = "STS#3"
@@ -133,7 +129,6 @@ Configuration Example
         SPOSite dedbecc0-f869-4e8b-8518-f4d15e6257d7
         {
             Url                                         = "https://office365dsc.sharepoint.com/sites/testsite5"
-            CentralAdminUrl                             = "https://Office365DSC-admin.sharepoint.com"
             StorageQuota                                = 26214400
             LocaleId                                    = 1033
             Template                                    = "STS#3"

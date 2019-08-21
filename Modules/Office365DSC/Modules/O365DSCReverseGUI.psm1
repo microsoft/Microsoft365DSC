@@ -49,7 +49,7 @@ function Show-O365GUI
         $chckO365AdminAuditLogConfig.Top = 0
         $chckO365AdminAuditLogConfig.AutoSize = $true;
         $chckO365AdminAuditLogConfig.Name = "chckO365AdminAuditLogConfig"
-        $chckO365AdminAuditLogConfig.Checked = $false
+        $chckO365AdminAuditLogConfig.Checked = $true
         $chckO365AdminAuditLogConfig.Text = "Admin Audit Log Config"
         $pnlO365.Controls.Add($chckO365AdminAuditLogConfig)
 
@@ -90,7 +90,7 @@ function Show-O365GUI
         $chckEXOAtpPolicyForO365.Top = 0
         $chckEXOAtpPolicyForO365.AutoSize = $true;
         $chckEXOAtpPolicyForO365.Name = "chckEXOAtpPolicyForO365"
-        $chckEXOAtpPolicyForO365.Checked = $false
+        $chckEXOAtpPolicyForO365.Checked = $true
         $chckEXOAtpPolicyForO365.Text = "Advanced Threat Protection Policies"
         $pnlExo.Controls.Add($chckEXOAtpPolicyForO365)
 
@@ -98,7 +98,7 @@ function Show-O365GUI
         $chckEXOClientAccessRule.Top = 20
         $chckEXOClientAccessRule.AutoSize = $true;
         $chckEXOClientAccessRule.Name = "chckEXOClientAccessRule"
-        $chckEXOClientAccessRule.Checked = $false
+        $chckEXOClientAccessRule.Checked = $true
         $chckEXOClientAccessRule.Text = "Client Access Rule"
         $pnlExo.Controls.Add($chckEXOClientAccessRule)
 
@@ -106,7 +106,7 @@ function Show-O365GUI
         $chckEXOCASMailboxPlan.Top = 40
         $chckEXOCASMailboxPlan.AutoSize = $true;
         $chckEXOCASMailboxPlan.Name = "chckEXOCASMailboxPlan"
-        $chckEXOCASMailboxPlan.Checked = $false
+        $chckEXOCASMailboxPlan.Checked = $true
         $chckEXOCASMailboxPlan.Text = "Client Access Service Mailbox Plan"
         $pnlExo.Controls.Add($chckEXOCASMailboxPlan)
 
@@ -114,7 +114,7 @@ function Show-O365GUI
         $chckEXODkimSigningConfig.Top = 60
         $chckEXODkimSigningConfig.AutoSize = $true;
         $chckEXODkimSigningConfig.Name = "chckEXODkimSigningConfig"
-        $chckEXODkimSigningConfig.Checked = $false
+        $chckEXODkimSigningConfig.Checked = $true
         $chckEXODkimSigningConfig.Text = "DKIM Signing Configuration"
         $pnlExo.Controls.Add($chckEXODkimSigningConfig)
 
@@ -122,7 +122,7 @@ function Show-O365GUI
         $chckEXOHostedConnectionFilterPolicy.Top = 80
         $chckEXOHostedConnectionFilterPolicy.AutoSize = $true;
         $chckEXOHostedConnectionFilterPolicy.Name = "chckEXOHostedConnectionFilterPolicy"
-        $chckEXOHostedConnectionFilterPolicy.Checked = $false
+        $chckEXOHostedConnectionFilterPolicy.Checked = $true
         $chckEXOHostedConnectionFilterPolicy.Text = "Hosted Connection Filter Policy"
         $pnlExo.Controls.Add($chckEXOHostedConnectionFilterPolicy)
 
@@ -130,7 +130,7 @@ function Show-O365GUI
         $chckEXOHostedContentFilterPolicy.Top = 100
         $chckEXOHostedContentFilterPolicy.AutoSize = $true;
         $chckEXOHostedContentFilterPolicy.Name = "chckEXOHostedContentFilterPolicy"
-        $chckEXOHostedContentFilterPolicy.Checked = $false
+        $chckEXOHostedContentFilterPolicy.Checked = $true
         $chckEXOHostedContentFilterPolicy.Text = "Hosted Content Filter Policy"
         $pnlExo.Controls.Add($chckEXOHostedContentFilterPolicy)
 
@@ -138,7 +138,7 @@ function Show-O365GUI
         $chckEXOHostedContentFilterRule.Top = 120
         $chckEXOHostedContentFilterRule.AutoSize = $true;
         $chckEXOHostedContentFilterRule.Name = "chckEXOHostedContentFilterRule"
-        $chckEXOHostedContentFilterRule.Checked = $false
+        $chckEXOHostedContentFilterRule.Checked = $true
         $chckEXOHostedContentFilterRule.Text = "Hosted Content Filter Rule"
         $pnlExo.Controls.Add($chckEXOHostedContentFilterRule)
 
@@ -146,7 +146,7 @@ function Show-O365GUI
         $chckEXOMailboxSettings.Top = 140
         $chckEXOMailboxSettings.AutoSize = $true;
         $chckEXOMailboxSettings.Name = "chckEXOMailboxSettings"
-        $chckEXOMailboxSettings.Checked = $false
+        $chckEXOMailboxSettings.Checked = $true
         $chckEXOMailboxSettings.Text = "Mailbox Settings"
         $pnlExo.Controls.Add($chckEXOMailboxSettings)
 
@@ -154,7 +154,7 @@ function Show-O365GUI
         $chckEXOMailTips.Top = 160
         $chckEXOMailTips.AutoSize = $true;
         $chckEXOMailTips.Name = "chckEXOMailTips"
-        $chckEXOMailTips.Checked = $false
+        $chckEXOMailTips.Checked = $true
         $chckEXOMailTips.Text = "Mail Tips"
         $pnlExo.Controls.Add($chckEXOMailTips);
 
@@ -162,7 +162,7 @@ function Show-O365GUI
         $chckEXOOutboundSpamFilterPolicy.Top = 180
         $chckEXOOutboundSpamFilterPolicy.AutoSize = $true;
         $chckEXOOutboundSpamFilterPolicy.Name = "chckEXOOutboundSpamFilterPolicy"
-        $chckEXOOutboundSpamFilterPolicy.Checked = $false
+        $chckEXOOutboundSpamFilterPolicy.Checked = $true
         $chckEXOOutboundSpamFilterPolicy.Text = "Outbound Spam Filter Policy"
         $pnlExo.Controls.Add($chckEXOOutboundSpamFilterPolicy)
 
@@ -170,7 +170,7 @@ function Show-O365GUI
         $chckEXOSafeAttachmentPolicy.Top = 200
         $chckEXOSafeAttachmentPolicy.AutoSize = $true;
         $chckEXOSafeAttachmentPolicy.Name = "chckEXOSafeAttachmentPolicy"
-        $chckEXOSafeAttachmentPolicy.Checked = $false
+        $chckEXOSafeAttachmentPolicy.Checked = $true
         $chckEXOSafeAttachmentPolicy.Text = "Safe Attachment Policy"
         $pnlExo.Controls.Add($chckEXOSafeAttachmentPolicy)
 
@@ -178,7 +178,7 @@ function Show-O365GUI
         $chckEXOSafeAttachmentRule.Top = 220
         $chckEXOSafeAttachmentRule.AutoSize = $true;
         $chckEXOSafeAttachmentRule.Name = "chckEXOSafeAttachmentRule"
-        $chckEXOSafeAttachmentRule.Checked = $false
+        $chckEXOSafeAttachmentRule.Checked = $true
         $chckEXOSafeAttachmentRule.Text = "Safe Attachment Rule"
         $pnlExo.Controls.Add($chckEXOSafeAttachmentRule)
 
@@ -186,7 +186,7 @@ function Show-O365GUI
         $chckEXOSafeLinksPolicy.Top = 240
         $chckEXOSafeLinksPolicy.AutoSize = $true;
         $chckEXOSafeLinksPolicy.Name = "chckEXOSafeLinksPolicy"
-        $chckEXOSafeLinksPolicy.Checked = $false
+        $chckEXOSafeLinksPolicy.Checked = $true
         $chckEXOSafeLinksPolicy.Text = "Safe Links Policy"
         $pnlExo.Controls.Add($chckEXOSafeLinksPolicy)
 
@@ -194,7 +194,7 @@ function Show-O365GUI
         $chckEXOSafeLinksRule.Top = 260
         $chckEXOSafeLinksRule.AutoSize = $true;
         $chckEXOSafeLinksRule.Name = "chckEXOSafeLinksRule"
-        $chckEXOSafeLinksRule.Checked = $false
+        $chckEXOSafeLinksRule.Checked = $true
         $chckEXOSafeLinksRule.Text = "Safe Links Rule"
         $pnlExo.Controls.Add($chckEXOSafeLinksRule)
 
@@ -215,6 +215,14 @@ function Show-O365GUI
         $imgSPO.Top = $topBannerHeight
         $imgSPO.AutoSize = $true
         $pnlMain.Controls.Add($imgSPO)
+
+        <#$chckAllSharePoint = New-Object System.Windows.Forms.CheckBox
+        $chckAllSharePoint.Left = $SecondColumnLeft + 280
+        $chckAllSharePoint.Top = $topBannerHeight + 40
+        $chckAllSharePoint.Checked = $true
+        $chckAllSharePoint.AutoSize = $true
+        $chckAllSharePoint.Add_CheckedChanged({SectionChange})
+        $pnlMain.Controls.Add($chckAllSharePoint)#>
 
         $pnlSPO = New-Object System.Windows.Forms.Panel
         $pnlSPO.Top = 88 + $topBannerHeight
@@ -324,12 +332,28 @@ function Show-O365GUI
         $pnlSC = New-Object System.Windows.Forms.Panel
         $pnlSC.Top = $pnlSPO.Heigth + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 340
         $pnlSC.Left = $SecondColumnLeft
-        $pnlSC.Height = 40
+        $pnlSC.Height = 120
         $pnlSC.Width = 300
         $pnlSC.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
+        $chckSCComplianceTag = New-Object System.Windows.Forms.CheckBox
+        $chckSCComplianceTag.Top = 0
+        $chckSCComplianceTag.AutoSize = $true;
+        $chckSCComplianceTag.Name = "chckSCComplianceTag"
+        $chckSCComplianceTag.Checked = $true
+        $chckSCComplianceTag.Text = "Compliance Tag"
+        $pnlSC.Controls.Add($chckSCComplianceTag)
+
+        $chckSCDLPCompliancePolicy = New-Object System.Windows.Forms.CheckBox
+        $chckSCDLPCompliancePolicy.Top = 20
+        $chckSCDLPCompliancePolicy.AutoSize = $true;
+        $chckSCDLPCompliancePolicy.Name = "chckSCDLPCompliancePolicy"
+        $chckSCDLPCompliancePolicy.Checked = $true
+        $chckSCDLPCompliancePolicy.Text = "Data Loss Prevention Compliance Policy"
+        $pnlSC.Controls.Add($chckSCDLPCompliancePolicy)
+
         $chckSCRetentionCompliancePolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSCRetentionCompliancePolicy.Top = 0
+        $chckSCRetentionCompliancePolicy.Top = 40
         $chckSCRetentionCompliancePolicy.AutoSize = $true;
         $chckSCRetentionCompliancePolicy.Name = "chckSCRetentionCompliancePolicy"
         $chckSCRetentionCompliancePolicy.Checked = $true
@@ -337,12 +361,28 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCRetentionCompliancePolicy)
 
         $chckSCRetentionComplianceRule = New-Object System.Windows.Forms.CheckBox
-        $chckSCRetentionComplianceRule.Top = 20
+        $chckSCRetentionComplianceRule.Top = 60
         $chckSCRetentionComplianceRule.AutoSize = $true;
         $chckSCRetentionComplianceRule.Name = "chckSCRetentionComplianceRule"
         $chckSCRetentionComplianceRule.Checked = $true
         $chckSCRetentionComplianceRule.Text = "Retention Compliance Rule"
         $pnlSC.Controls.Add($chckSCRetentionComplianceRule)
+
+        $chckSCSupervisoryReviewPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckSCSupervisoryReviewPolicy.Top = 80
+        $chckSCSupervisoryReviewPolicy.AutoSize = $true;
+        $chckSCSupervisoryReviewPolicy.Name = "chckSCSupervisoryReviewPolicy"
+        $chckSCSupervisoryReviewPolicy.Checked = $true
+        $chckSCSupervisoryReviewPolicy.Text = "Supervisory Review Policy"
+        $pnlSC.Controls.Add($chckSCSupervisoryReviewPolicy)
+
+        $chckSCSupervisoryReviewRule = New-Object System.Windows.Forms.CheckBox
+        $chckSCSupervisoryReviewRule.Top = 100
+        $chckSCSupervisoryReviewRule.AutoSize = $true;
+        $chckSCSupervisoryReviewRule.Name = "chckSCSupervisoryReviewRule"
+        $chckSCSupervisoryReviewRule.Checked = $true
+        $chckSCSupervisoryReviewRule.Text = "Supervisory Review Rule"
+        $pnlSC.Controls.Add($chckSCSupervisoryReviewRule)
         #endregion
 
         #region Teams

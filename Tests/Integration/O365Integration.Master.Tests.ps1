@@ -52,7 +52,7 @@ Configuration Master
             Identity           = "Test AntiPhish Rule"
             AntiPhishPolicy    = "Test AntiPhish Policy"
             Comments           = "This is a test Rule"
-            SentToMemberOf     = @("O365DSCCore@o365dsc.onmicrosoft.com")
+            SentToMemberOf     = @("O365DSCCore@$Domain")
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
             DependsOn          = "[O365Group]O365DSCCoreTeam"
@@ -94,13 +94,84 @@ Configuration Master
             DependsOn            = "[O365User]JohnSmith"
         }
 
+        SCComplianceTag DemoRule
+        {
+            Name               = "DemoTag"
+            Comment            = "This is a Demo Tag"
+            RetentionAction    = "Keep"
+            RetentionDuration  = "1025"
+            RetentionType      = "ModificationAgeInDays"
+            FilePlanProperty   = MSFT_SCFilePlanProperty{
+                FilePlanPropertyDepartment = "Human resources"
+                FilePlanPropertyCategory = "Accounts receivable"
+            }
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SCDLPCompliancePolicy DLPPolicy
+        {
+            Name               = "MyDLPPolicy"
+            Comment            = "Test Policy"
+            Priority           = 1
+            SharePointLocation = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SCRetentionCompliancePolicy RCPolicy
+        {
+            Name               = "MyRCPolicy"
+            Comment            = "Test Policy"
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SCRetentionComplianceRule RCRule
+        {
+            Name                         = "DemoRule2"
+            Policy                       = "MyRCPolicy"
+            Comment                      = "This is a Demo Rule"
+            RetentionComplianceAction    = "Keep"
+            RetentionDuration            = "Unlimited"
+            RetentionDurationDisplayHint = "Days"
+            GlobalAdminAccount           = $GlobalAdmin
+            Ensure                       = "Present"
+        }
+
+        SCSupervisoryReviewPolicy SRPolicy
+        {
+            Name               = "MySRPolicy"
+            Comment            = "Test Policy"
+            Reviewers          = @("admin@$Domain")
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SCSupervisoryReviewRule SRRule
+        {
+            Name               = "DemoRule"
+            Condition          = "(Reviewee:adminnonmfa@$Domain)"
+            SamplingRate       = 100
+            Policy             = 'MySRPolicy'
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SPOSearchManagedProperty ManagedProp1
+        {
+            Name               = "Gilles"
+            Type               = "Text"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+        }
+
         SPOSite ClassicSite
         {
             Title                = "Classic Site"
-            Url                  = "https://o365dsc.sharepoint.com/sites/Classic"
-            Owner                = "adminnonMFA@o365dsc.onmicrosoft.com"
+            Url                  = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
+            Owner                = "adminnonMFA@$Domain"
             Template             = "STS#0"
-            CentralAdminUrl      = "https://o365dsc-admin.sharepoint.com"
             GlobalAdminAccount   = $GlobalAdmin
             Ensure               = "Present"
         }
@@ -108,13 +179,34 @@ Configuration Master
         SPOSite ModernSite
         {
             Title                = "Modern Site"
-            Url                  = "https://o365dsc.sharepoint.com/sites/Modern"
-            Owner                = "admin@o365dsc.onmicrosoft.com"
+            Url                  = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+            Owner                = "admin@$Domain"
             Template             = "STS#3"
-            CentralAdminUrl      = "https://o365dsc-admin.sharepoint.com"
             GlobalAdminAccount   = $GlobalAdmin
             Ensure               = "Present"
         }
+
+        <#SPOStorageEntity SiteEntity1
+        {
+            Key                = "SiteEntity1"
+            Value              = "Modern Value"
+            Description        = "Entity for Modern Site"
+            EntityScope        = "Site"
+            SiteUrl            = "https://o365dsc.sharepoint.com/sites/Modern"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+        }
+
+        SPOStorageEntity TenantEntity1
+        {
+            Key                = "TenantEntity1"
+            Value              = "Tenant Value"
+            Description        = "Entity for Tenant"
+            EntityScope        = "Tenant"
+            SiteUrl            = "https://o365dsc-admin.sharepoint.com/"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+        }#>
 
         TeamsTeam TeamAlpha
         {

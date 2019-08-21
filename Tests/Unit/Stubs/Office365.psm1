@@ -146,6 +146,152 @@ function Get-SupervisoryReviewRule
     )
 }
 
+function New-DLPCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeSenderMemberOf,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeSenderMemberOfException,
+
+        [Parameter()]
+        [ValidateSet('Enable','TestWithNotifications','TestWithoutNotifications','Disable','PendingDeletion')]
+        [System.String]
+        $Mode,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveLocationException,
+
+        [Parameter()]
+        [System.UInt32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsLocationException
+    )
+}
+
+function Set-DLPCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeSenderMemberOf,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeSenderMemberOfException,
+
+        [Parameter()]
+        [ValidateSet('Enable','TestWithNotifications','TestWithoutNotifications','Disable','PendingDeletion')]
+        [System.String]
+        $Mode,
+
+        [Parameter()]
+        [System.String[]]
+        $AddOneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveOneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddOneDriveLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveOneDriveLocationException,
+
+        [Parameter()]
+        [System.UInt32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $AddTeamsLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveTeamsLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddTeamsLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveTeamsLocationException
+    )
+}
+
 function New-RetentionComplianceRule
 {
     [CmdletBinding()]
@@ -191,7 +337,72 @@ function New-RetentionComplianceRule
     )
 }
 
+function Set-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Policy,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedItemClasses,
+
+        [Parameter()]
+        [System.String]
+        $RetentionDuration,
+
+        [Parameter()]
+        [ValidateSet("Days", "Months", "Years")]
+        [System.String]
+        $RetentionDurationDisplayHint,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [ValidateSet("CreationAgeInDays", "ModificationAgeInDays")]
+        [System.String]
+        $ExpirationDateOption,
+
+        [Parameter()]
+        [ValidateSet("Delete","Keep","KeepAndDelete")]
+        [System.String]
+        $RetentionComplianceAction
+    )
+}
+
 function Get-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Get-DLPCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-DLPCompliancePolicy
 {
     [CmdletBinding()]
     param(
@@ -293,6 +504,115 @@ function New-RetentionCompliancePolicy{
         [Parameter()]
         [System.String[]]
         $TeamsChatLocationException
+    )
+}
+
+function Set-RetentionCompliancePolicy{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddExchangeLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveExchangeLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $AddModernGroupLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveModernGroupLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddModernGroupLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveModernGroupLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $AddOneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveOneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddOneDriveLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveOneDriveLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $AddPublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemovePublicFolderLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $RestrictiveRetention = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSkypeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSkypeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSkypeLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSkypeLocationException
     )
 }
 
@@ -609,6 +929,10 @@ function New-UnifiedGroup
         [Parameter(Mandatory=$true)]
         [string]
         $DisplayName,
+
+        [Parameter()]
+        [string]
+        $Name,
 
         [Parameter()]
         [string]

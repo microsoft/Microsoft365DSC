@@ -14,11 +14,12 @@ Configuration Example
 
     node localhost
     {
-        SPOSiteDesignRights MyTenant
+        SCDLPCompliancePolicy Policy
         {
-            SiteDesignTitle    = "Customer List"
-            UserPrincipals     = "jdoe@O365DSC1.onmicrosoft.com"
-            Rights             = "View"
+            Name               = "MyPolicy"
+            Comment            = "Test Policy"
+            Priority           = 1
+            SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
             Ensure             = "Present"
             GlobalAdminAccount = $credsGlobalAdmin
         }

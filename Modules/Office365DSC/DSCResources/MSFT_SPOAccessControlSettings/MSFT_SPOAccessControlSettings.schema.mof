@@ -13,7 +13,6 @@ class MSFT_SPOAccessControlSettings : OMI_BaseResource
     [Write, Description("Enables external services for a tenant. External services are defined as services that are not in the Office 365 datacenters.")] boolean ExternalServicesEnabled;
     [Write, Description("Sets email attestation to required")] boolean EmailAttestationRequired;
     [Write, Description("Sets email attestation re-auth days")] uint32 EmailAttestationReAuthDays;
-    [Required, Description("The Url of the SharePoint Online Central Administration")] string CentralAdminUrl;
     [Write, Description("Only value accepted is 'Present'"), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };

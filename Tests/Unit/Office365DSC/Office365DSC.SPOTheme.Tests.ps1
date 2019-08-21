@@ -55,7 +55,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                    "bodyBackground": "#0078d4",
                                                    "bodyText": "#fff"
                                             }'
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Absent"
             }
@@ -110,7 +109,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                            "bodyBackground": "#0078d4",
                                            "bodyText": "#fff"
                                     }'
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Present"
             }
@@ -145,7 +143,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                 "bodyBackground": "#0078d4",
                                                 "bodyText": "#fff"
                                             }'
-                    CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
                     GlobalAdminAccount = $GlobalAdminAccount
                     Ensure             = "Present"
 
@@ -191,7 +188,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                         "bodyBackground": "#0078d4",
                                         "bodyText": "#fff"
                                     }'
-                CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Present"
             }
@@ -214,7 +210,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 Name                = "TestTheme"
-                CentralAdminUrl     = "https://contoso-admin.sharepoint.com"
                 GlobalAdminAccount  = $GlobalAdminAccount
             }
 
@@ -248,7 +243,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                             "bodyBackground": "#0078d4",
                                             "bodyText": "#fff"
                                     }'
-                    CentralAdminUrl    = "https://contoso-admin.sharepoint.com"
                     GlobalAdminAccount = $GlobalAdminAccount
                     Ensure             = "Present"
 

@@ -89,19 +89,14 @@ function Get-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Getting configuration for Managed Property instance $Name"
 
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
 
     $nullReturn = @{
         Name                        = $Name
@@ -124,7 +119,6 @@ function Get-TargetResource
         MappedCrawledProperties     = $null
         CompanyNameExtraction       = $null
         Ensure                      = "Absent"
-        CentralAdminUrl             = $CentralAdminUrl
     }
 
     if ($null -eq $Script:RecentMPExtract)
@@ -194,7 +188,6 @@ function Get-TargetResource
         FinerQueryTokenization = [boolean] $property.Value.ExpandSegments
         MappedCrawledProperties = $mappings
         CompanyNameExtraction = $CompanyNameExtraction
-        CentralAdminUrl = $CentralAdminUrl
         Ensure = "Present"
     }
 }
@@ -289,19 +282,14 @@ function Set-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
     Write-Verbose -Message "Setting configuration for Managed Property instance $Name"
 
-    Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                      -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
 
     $SearchConfigTemplatePath =  Join-Path -Path $PSScriptRoot `
                                            -ChildPath "..\..\Dependencies\SearchConfigurationSettings.xml" `
@@ -705,10 +693,6 @@ function Test-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -745,10 +729,6 @@ function Export-TargetResource
         [ValidateSet("Text","Integer","Decimal","DateTime","YesNo","Double","Binary")]
         [System.String]
         $Type,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CentralAdminUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
