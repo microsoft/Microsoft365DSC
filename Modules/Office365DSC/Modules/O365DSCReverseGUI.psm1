@@ -1,3 +1,24 @@
+function SectionChanged
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Windows.Forms.CheckBox]
+        $Control,
+
+        [Parameter(Mandatory = $true)]
+        [System.Windows.Forms.Panel]
+        $Panel
+    )
+
+    foreach ($pnlControl in $Panel.Controls)
+    {
+        if ($pnlControl.GetType().ToString() -eq "System.Windows.Forms.Checkbox")
+        {
+            $pnlControl.Checked = $Control.Checked
+        }
+    }
+}
 function Show-O365GUI
 {
     [CmdletBinding()]
@@ -68,6 +89,14 @@ function Show-O365GUI
         $chckO365User.Checked = $true
         $chckO365User.Text = "Users"
         $pnlO365.Controls.Add($chckO365User)
+
+        $chckAllO365 = New-Object System.Windows.Forms.CheckBox
+        $chckAllO365.Left = $FirstColumnLeft + 280
+        $chckAllO365.Top = $topBannerHeight + 40
+        $chckAllO365.Checked = $true
+        $chckAllO365.AutoSize = $true
+        $chckAllO365.Add_CheckedChanged({SectionChanged -Control $chckAllO365 -Panel $pnlO365})
+        $pnlMain.Controls.Add($chckAllO365)
         #endregion
 
         #region Exchange
@@ -205,6 +234,14 @@ function Show-O365GUI
         $chckEXOSharedMailbox.Checked = $true
         $chckEXOSharedMailbox.Text = "Shared Mailboxes"
         $pnlExo.Controls.Add($chckEXOSharedMailbox)
+
+        $chckAllEXO = New-Object System.Windows.Forms.CheckBox
+        $chckAllEXO.Left = $FirstColumnLeft + 280
+        $chckAllEXO.Top = $topBannerHeight + 340
+        $chckAllEXO.Checked = $true
+        $chckAllEXO.AutoSize = $true
+        $chckAllEXO.Add_CheckedChanged({SectionChanged -Control $chckAllEXO -Panel $pnlEXO})
+        $pnlMain.Controls.Add($chckAllEXO)
         #endregion
 
         #region SharePoint
@@ -215,14 +252,6 @@ function Show-O365GUI
         $imgSPO.Top = $topBannerHeight
         $imgSPO.AutoSize = $true
         $pnlMain.Controls.Add($imgSPO)
-
-        <#$chckAllSharePoint = New-Object System.Windows.Forms.CheckBox
-        $chckAllSharePoint.Left = $SecondColumnLeft + 280
-        $chckAllSharePoint.Top = $topBannerHeight + 40
-        $chckAllSharePoint.Checked = $true
-        $chckAllSharePoint.AutoSize = $true
-        $chckAllSharePoint.Add_CheckedChanged({SectionChange})
-        $pnlMain.Controls.Add($chckAllSharePoint)#>
 
         $pnlSPO = New-Object System.Windows.Forms.Panel
         $pnlSPO.Top = 88 + $topBannerHeight
@@ -318,6 +347,14 @@ function Show-O365GUI
         $chckSPOTheme.Checked = $true
         $chckSPOTheme.Text = "Themes"
         $pnlSPO.Controls.Add($chckSPOTheme)
+
+        $chckAllSharePoint = New-Object System.Windows.Forms.CheckBox
+        $chckAllSharePoint.Left = $SecondColumnLeft + 280
+        $chckAllSharePoint.Top = $topBannerHeight + 40
+        $chckAllSharePoint.Checked = $true
+        $chckAllSharePoint.AutoSize = $true
+        $chckAllSharePoint.Add_CheckedChanged({SectionChanged -Control $chckAllSharePoint -Panel $pnlSPO})
+        $pnlMain.Controls.Add($chckAllSharePoint)
         #endregion
 
         #region Security and Compliance
@@ -383,6 +420,14 @@ function Show-O365GUI
         $chckSCSupervisoryReviewRule.Checked = $true
         $chckSCSupervisoryReviewRule.Text = "Supervisory Review Rule"
         $pnlSC.Controls.Add($chckSCSupervisoryReviewRule)
+
+        $chckAllSC = New-Object System.Windows.Forms.CheckBox
+        $chckAllSC.Left = $SecondColumnLeft + 280
+        $chckAllSC.Top = $topBannerHeight + 380
+        $chckAllSC.Checked = $true
+        $chckAllSC.AutoSize = $true
+        $chckAllSC.Add_CheckedChanged({SectionChanged -Control $chckAllSC -Panel $pnlSC})
+        $pnlMain.Controls.Add($chckAllSC)
         #endregion
 
         #region Teams
@@ -424,6 +469,14 @@ function Show-O365GUI
         $chckTeamsUser.Checked = $true
         $chckTeamsUser.Text = "Users"
         $pnlTeams.Controls.Add($chckTeamsUser)
+
+        $chckAllTeams = New-Object System.Windows.Forms.CheckBox
+        $chckAllTeams.Left = $thirdColumnLeft + 280
+        $chckAllTeams.Top = $topBannerHeight + 40
+        $chckAllTeams.Checked = $true
+        $chckAllTeams.AutoSize = $true
+        $chckAllTeams.Add_CheckedChanged({SectionChanged -Control $chckAllTeams -Panel $pnlTeams})
+        $pnlMain.Controls.Add($chckAllTeams)
         #endregion
 
 
@@ -450,6 +503,14 @@ function Show-O365GUI
         $chckODSettings.Checked = $true
         $chckODSettings.Text = "OneDrive Settings"
         $pnlOD.Controls.Add($chckODSettings)
+
+        $chckAllOD = New-Object System.Windows.Forms.CheckBox
+        $chckAllOD.Left = $fourthColumnLeft + 280
+        $chckAllOD.Top = $topBannerHeight + 40
+        $chckAllOD.Checked = $true
+        $chckAllOD.AutoSize = $true
+        $chckAllOD.Add_CheckedChanged({SectionChanged -Control $chckAllOD -Panel $pnlOD})
+        $pnlMain.Controls.Add($chckAllOD)
         #endregion
 
         $pnlMain.Controls.Add($pnlO365)

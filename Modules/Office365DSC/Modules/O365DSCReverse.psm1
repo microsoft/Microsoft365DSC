@@ -1086,7 +1086,7 @@ function Start-O365ConfigurationExtract
 
             if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape($principal + ".sharepoint.com"), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])-sharepoint.com"
+                $partialContent = $partialContent -ireplace [regex]::Escape($principal + ".sharepoint.com"), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0]).sharepoint.com"
             }
             if($partialContent.ToLower().Contains("@" + $organization.ToLower()))
             {
@@ -1382,7 +1382,7 @@ function Start-O365ConfigurationExtract
                                                  -GlobalAdminAccount $GlobalAdminAccount
             if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$ConfigurationData.NonNodeData.OrganizationName"
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
             }
             $DSCContent += $partialContent
             $i++
