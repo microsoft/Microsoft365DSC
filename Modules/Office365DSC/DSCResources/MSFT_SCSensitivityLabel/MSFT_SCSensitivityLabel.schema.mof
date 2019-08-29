@@ -4,6 +4,7 @@ Class MSFT_SCLabelToolTips
     [Write, Description("Tooltip language")] String Locale;
     [Write, Description("Tooltip display name.")] String ToolTip ;
 };
+[ClassVersion("1.0.0")]
 Class MSFT_SCLabelDisplayNames
 {
     [Write, Description("Tooltip language")] String Locale;
@@ -12,8 +13,8 @@ Class MSFT_SCLabelDisplayNames
 [ClassVersion("1.0.0")]
 Class MSFT_SCLabelLocaleSettings
 {
-    [Write, Description("The LocaleSettings tooltips"),EmbeddedInstance("MSFT_SCLabelToolTips")] String[] Toolips;
-    [Write, Description("The LocaleSettings displayname"),EmbeddedInstance("MSFT_SCLabelDisplayNames")] String[] DisplayNames;
+    [Write, Description("The LocaleSettings tooltips"),EmbeddedInstance("MSFT_SCLabelToolTips")] String Toolips[];
+    [Write, Description("The LocaleSettings displayname"),EmbeddedInstance("MSFT_SCLabelDisplayNames")] String DisplayNames[];
 };
 [ClassVersion("1.0.0.0"), FriendlyName("SCSensitivityLabel")]
 Class MSFT_SCSensitivityLabel : OMI_BaseResource
