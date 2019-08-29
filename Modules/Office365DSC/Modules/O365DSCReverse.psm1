@@ -116,9 +116,15 @@ function Start-O365ConfigurationExtract
                 $ATPPolicies = Get-AtpPolicyForO365
                 foreach ($atpPolicy in $ATPPolicies)
                 {
-                    $DSCContent += Export-TargetResource -IsSingleInstance "Yes" `
-                                                         -GlobalAdminAccount $GlobalAdminAccount `
-                                                         -Identity $atpPolicy.Identity
+                    $partialContent = Export-TargetResource -IsSingleInstance "Yes" `
+                                                            -GlobalAdminAccount $GlobalAdminAccount `
+                                                            -Identity $atpPolicy.Identity
+
+                    if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+                    {
+                        $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
+                    }
+                    $DSCContent += $partialContent
                 }
             }
             else
