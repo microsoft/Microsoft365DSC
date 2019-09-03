@@ -36,6 +36,194 @@ function Set-AdminAuditLogConfig{
     )
 }
 
+function Get-DLPComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-DLPComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function New-DLPComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
+        [Parameter()]
+        [ValidateSet("InOrganization","NotInOrganization","None")]
+        [System.String[]]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockAccess,
+
+        [Parameter()]
+        [ValidateSet("All", "PerUser")]
+        [System.String]
+        $BlockAccessScope,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.String[]]
+        $ContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [System.String[]]
+        $GenerateAlert,
+
+        [Parameter()]
+        [System.String[]]
+        $GenerateIncidentReport,
+
+        [Parameter()]
+        [ValidateSet("All", "Default", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "RulesMatched", "Service", "Severity", "Title")]
+        [System.String[]]
+        $IncidentReportContent,
+
+        [Parameter()]
+        [ValidateSet("FalsePositive", "WithoutJustification", "WithJustification")]
+        [System.String[]]
+        $NotifyAllowOverride,
+
+        [Parameter()]
+        [System.String]
+        $NotifyEmailCustomText,
+
+        [Parameter()]
+        [System.String]
+        $NotifyPolicyTipCustomText,
+
+        [Parameter()]
+        [System.String[]]
+        $NotifyUser,
+
+        [Parameter()]
+        [ValidateSet("Low", "Medium", "High", "None")]
+        [System.String]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [ValidateSet("Ignore", "RetryThenBlock")]
+        [System.String]
+        $RuleErrorAction
+    )
+}
+
+function Set-DLPComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
+        [Parameter()]
+        [ValidateSet("InOrganization","NotInOrganization","None")]
+        [System.String[]]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockAccess,
+
+        [Parameter()]
+        [ValidateSet("All", "PerUser")]
+        [System.String]
+        $BlockAccessScope,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.String[]]
+        $ContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [System.String[]]
+        $GenerateAlert,
+
+        [Parameter()]
+        [System.String[]]
+        $GenerateIncidentReport,
+
+        [Parameter()]
+        [ValidateSet("All", "Default", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "RulesMatched", "Service", "Severity", "Title")]
+        [System.String[]]
+        $IncidentReportContent,
+
+        [Parameter()]
+        [ValidateSet("FalsePositive", "WithoutJustification", "WithJustification")]
+        [System.String[]]
+        $NotifyAllowOverride,
+
+        [Parameter()]
+        [System.String]
+        $NotifyEmailCustomText,
+
+        [Parameter()]
+        [System.String]
+        $NotifyPolicyTipCustomText,
+
+        [Parameter()]
+        [System.String[]]
+        $NotifyUser,
+
+        [Parameter()]
+        [ValidateSet("Low", "Medium", "High", "None")]
+        [System.String]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [ValidateSet("Ignore", "RetryThenBlock")]
+        [System.String]
+        $RuleErrorAction
+    )
+}
+
 function Get-SupervisoryReviewPolicyV2
 {
     [CmdletBinding()]

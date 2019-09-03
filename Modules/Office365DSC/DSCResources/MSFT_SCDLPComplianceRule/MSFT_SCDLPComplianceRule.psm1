@@ -394,6 +394,7 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
 
+    $InformationPreference = "Continue"
     $rules = Get-DLPComplianceRule
 
     $i = 1
