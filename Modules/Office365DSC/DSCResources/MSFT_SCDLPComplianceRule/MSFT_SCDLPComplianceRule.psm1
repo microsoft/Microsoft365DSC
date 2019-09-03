@@ -15,7 +15,7 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet("InOrganization","NotInOrganization","None")]
         [System.String[]]
-        $AccessLocation,
+        $AccessScope,
 
         [Parameter()]
         [System.Boolean]
@@ -97,33 +97,44 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
 
-    $PolicyObject = Get-DlpCompliancePolicy -Identity $Name -ErrorAction SilentlyContinue
+    $PolicyRule = Get-DlpComplianceRule -Identity $Name -ErrorAction SilentlyContinue
 
-    if ($null -eq $PolicyObject)
+    if ($null -eq $PolicyRule)
     {
-        Write-Verbose -Message "DLPCompliancePolicy $($Name) does not exist."
+        Write-Verbose -Message "DLPComplianceRule $($Name) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
     }
     else
     {
-        Write-Verbose "Found existing DLPCompliancePolicy $($Name)"
+        Write-Verbose "Found existing DLPComplianceRule $($Name)"
+
+        $HashContentContainsSensitiveInformation = $null
+        if ($null -ne $PolicyRule.ContentContainsSensitiveInformation)
+        {
+            $HashContentContainsSensitiveInformation = [System.Collections.Hashtable]$PolicyRule.ContentContainsSensitiveInformation[0]
+        }
         $result = @{
-            Ensure                                = 'Present'
-            Name                                  = $PolicyObject.Name
-            Comment                               = $PolicyObject.Comment
-            ExchangeLocation                      = $PolicyObject.ExchangeLocation
-            ExchangeSenderMemberOf                = $PolicyObject.ExchangeSenderMemberOf
-            ExchangeSenderMemberOfException       = $PolicyObject.ExchangeSenderMemberOfException
-            Mode                                  = $PolicyObject.Mode
-            OneDriveLocation                      = $PolicyObject.OneDriveLocation
-            OneDriveLocationException             = $PolicyObject.OneDriveLocationException
-            Priority                              = $PolicyObject.Priority
-            SharePointLocation                    = $PolicyObject.SharePointLocation.Name
-            SharePointLocationException           = $PolicyObject.SharePointLocationException
-            TeamsLocation                         = $PolicyObject.TeamsLocation
-            TeamsLocationException                = $PolicyObject.TeamsLocationException
+            Ensure                              = 'Present'
+            Name                                = $PolicyRule.Name
+            Policy                              = $PolicyRule.ParentPolicyName
+            AccessScope                         = $PolicyRule.AccessScope
+            BlockAccess                         = $PolicyRule.BlockAccess
+            BlockAccessScope                    = $PolicyRule.BlockAccessScope
+            Comment                             = $PolicyRule.Comment
+            ContentContainsSensitiveInformation = $HashContentContainsSensitiveInformation
+            ContentPropertyContainsWords        = $PolicyRule.ContentPropertyContainsWords
+            Disabled                            = $PolicyRule.Disabled
+            GenerateAlert                       = $PolicyRule.GenerateAlert
+            GenerateIncidentReport              = $PolicyRule.GenerateIncidentReport
+            IncidentReportContent               = $PolicyRule.IncidentReportContent
+            NotifyAllowOverride                 = $PolicyRule.NotifyAllowOverride
+            NotifyEmailCustomText               = $PolicyRule.NotifyEmailCustomText
+            NotifyPolicyTipCustomText           = $PolicyRule.NotifyPolicyTipCustomText
+            NotifyUser                          = $PolicyRule.NotifyUser
+            ReportSeverityLevel                 = $PolicyRule.ReportSeverityLevel
+            RuleErrorAction                     = $PolicyRule.RuleErrorAction
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
@@ -133,7 +144,6 @@ function Get-TargetResource
 
 function Set-TargetResource
 {
-
     [CmdletBinding()]
     param
     (
@@ -148,7 +158,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet("InOrganization","NotInOrganization","None")]
         [System.String[]]
-        $AccessLocation,
+        $AccessScope,
 
         [Parameter()]
         [System.Boolean]
@@ -225,183 +235,38 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of DLPCompliancePolicy for $Name"
+    Write-Verbose -Message "Setting configuration of DLPComplianceRule for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
 
-    $CurrentPolicy = Get-TargetResource @PSBoundParameters
+    $CurrentRule = Get-TargetResource @PSBoundParameters
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
+    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentRule.Ensure))
     {
+        Write-Verbose "Rule {$($CurrentRule.Name)} doesn't exists but need to. Creating Rule."
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
-        New-DLPCompliancePolicy @CreationParams
+
+        New-DLPComplianceRule @CreationParams
     }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
+    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
-        $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("GlobalAdminAccount")
-        $CreationParams.Remove("Ensure")
-        $CreationParams.Remove("Name")
-        $CreationParams.Add("Identity", $Name)
+        Write-Verbose "Rule {$($CurrentRUle.Name)} already exists and needs to. Updating Rule."
+        $UpdateParams = $PSBoundParameters
+        $UpdateParams.Remove("GlobalAdminAccount")
+        $UpdateParams.Remove("Ensure")
+        $UpdateParams.Remove("Name")
+        $UpdateParams.Add("Identity", $Name)
 
-        # SharePoint Location is specified or already existing, we need to determine
-        # the delta.
-        if ($null -ne $CurrentPolicy.SharePointLocation -or `
-            $null -ne $SharePointLocation)
-        {
-            $ToBeRemoved = $CurrentPolicy.SharePointLocation | `
-                                Where-Object {$SharePointLocation -NotContains $_}
-            if ($null -ne $ToBeRemoved)
-            {
-                $CreationParams.Add("RemoveSharePointLocation", $ToBeRemoved)
-            }
-
-            $ToBeAdded = $SharePointLocation | `
-                                Where-Object {$CurrentPolicy.SharePointLocation -NotContains $_}
-            if ($null -ne $ToBeAdded)
-            {
-                $CreationParams.Add("AddSharePointLocation", $ToBeAdded)
-            }
-
-            $CreationParams.Remove("SharePointLocation")
-        }
-
-        # Exchange Location is specified or already existing, we need to determine
-        # the delta.
-        if ($null -ne $CurrentPolicy.ExchangeLocation -or `
-            $null -ne $ExchangeLocation)
-        {
-            $ToBeRemoved = $CurrentPolicy.ExchangeLocation | `
-                                Where-Object {$ExchangeLocation -NotContains $_}
-            if ($null -ne $ToBeRemoved)
-            {
-                $CreationParams.Add("RemoveExchangeLocation", $ToBeRemoved)
-            }
-
-            $ToBeAdded = $ExchangeLocation | `
-                                Where-Object {$CurrentPolicy.ExchangeLocation -NotContains $_}
-            if ($null -ne $ToBeAdded)
-            {
-                $CreationParams.Add("AddExchangeLocation", $ToBeAdded)
-            }
-
-            $CreationParams.Remove("ExchangeLocation")
-        }
-
-        # OneDrive Location is specified or already existing, we need to determine
-        # the delta.
-        if ($null -ne $CurrentPolicy.OneDriveLocation -or `
-            $null -ne $OneDriveLocation)
-        {
-            $ToBeRemoved = $CurrentPolicy.OneDriveLocation | `
-                                Where-Object {$OneDriveLocation -NotContains $_}
-            if ($null -ne $ToBeRemoved)
-            {
-                $CreationParams.Add("RemoveOneDriveLocation", $ToBeRemoved)
-            }
-
-            $ToBeAdded = $OneDriveLocation | `
-                                Where-Object {$CurrentPolicy.OneDriveLocation -NotContains $_}
-            if ($null -ne $ToBeAdded)
-            {
-                $CreationParams.Add("AddOneDriveLocation", $ToBeAdded)
-            }
-            $CreationParams.Remove("OneDriveLocation")
-        }
-
-        # OneDrive Location Exception is specified or already existing, we need to determine
-        # the delta.
-        if ($null -ne $CurrentPolicy.OneDriveLocationException -or `
-            $null -ne $OneDriveLocationException)
-        {
-            $ToBeRemoved = $CurrentPolicy.OneDriveLocationException | `
-                                Where-Object {$OneDriveLocationException -NotContains $_}
-            if ($null -ne $ToBeRemoved)
-            {
-                $CreationParams.Add("RemoveOneDriveLocationException", $ToBeRemoved)
-            }
-
-            $ToBeAdded = $OneDriveLocationException | `
-                                Where-Object {$CurrentPolicy.OneDriveLocationException -NotContains $_}
-            if ($null -ne $ToBeAdded)
-            {
-                $CreationParams.Add("AddOneDriveLocationException", $ToBeAdded)
-            }
-            $CreationParams.Remove("OneDriveLocationException")
-        }
-
-        # SharePoint Location Exception is specified or already existing, we need to determine
-        # the delta.
-        if ($null -ne $CurrentPolicy.SharePointLocationException -or `
-            $null -ne $SharePointLocationException)
-        {
-            $ToBeRemoved = $CurrentPolicy.SharePointLocationException | `
-                                Where-Object {$SharePointLocationException -NotContains $_}
-            if ($null -ne $ToBeRemoved)
-            {
-                $CreationParams.Add("RemoveSharePointLocationException", $ToBeRemoved)
-            }
-
-            $ToBeAdded = $SharePointLocationException | `
-                                Where-Object {$CurrentPolicy.SharePointLocationException -NotContains $_}
-            if ($null -ne $ToBeAdded)
-            {
-                $CreationParams.Add("AddSharePointLocationException", $ToBeAdded)
-            }
-            $CreationParams.Remove("SharePointLocationException")
-        }
-
-        # Teams Location is specified or already existing, we need to determine
-        # the delta.
-        if ($null -ne $CurrentPolicy.TeamsLocation -or `
-            $null -ne $TeamsLocation)
-        {
-            $ToBeRemoved = $CurrentPolicy.TeamsLocation | `
-                                Where-Object {$TeamsLocation -NotContains $_}
-            if ($null -ne $ToBeRemoved)
-            {
-                $CreationParams.Add("RemoveTeamsLocation", $ToBeRemoved)
-            }
-
-            $ToBeAdded = $TeamsLocation | `
-                                Where-Object {$CurrentPolicy.TeamsLocation -NotContains $_}
-            if ($null -ne $ToBeAdded)
-            {
-                $CreationParams.Add("AddTeamsLocation", $ToBeAdded)
-            }
-            $CreationParams.Remove("TeamsLocation")
-        }
-
-        # Teams Location Exception is specified or already existing, we need to determine
-        # the delta.
-        if ($null -ne $CurrentPolicy.TeamsLocationException -or `
-            $null -ne $TeamsLocationException)
-        {
-            $ToBeRemoved = $CurrentPolicy.TeamsLocationException | `
-                                Where-Object {$TeamsLocationException -NotContains $_}
-            if ($null -ne $ToBeRemoved)
-            {
-                $CreationParams.Add("RemoveTeamsLocationException", $ToBeRemoved)
-            }
-
-            $ToBeAdded = $TeamsLocationException | `
-                                Where-Object {$CurrentPolicy.TeamsLocationException -NotContains $_}
-            if ($null -ne $ToBeAdded)
-            {
-                $CreationParams.Add("AddTeamsLocationException", $ToBeAdded)
-            }
-            $CreationParams.Remove("TeamsLocationException")
-        }
-        Write-Verbose "Updating Policy with values: $(Convert-O365DscHashtableToString -Hashtable $CreationParams)"
-        Set-DLPCompliancePolicy @CreationParams
+        Write-Verbose "Updating Rule with values: $(Convert-O365DscHashtableToString -Hashtable $UpdateParams)"
+        Set-DLPComplianceRuleV2 @UpdateParams
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
+    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
-        # If the Policy exists and it shouldn't, simply remove it;
-        Remove-DLPCompliancePolicy -Identity $Name
+        Write-Verbose "Rule {$($CurrentRule.Name)} already exists but shouldn't. Deleting Rule."
+        Remove-DLPComplianceRuleV -Identity $CurrentRule.Name -Confirm:$false
     }
 }
 
@@ -422,7 +287,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet("InOrganization","NotInOrganization","None")]
         [System.String[]]
-        $AccessLocation,
+        $AccessScope,
 
         [Parameter()]
         [System.Boolean]
@@ -499,7 +364,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of DLPCompliancePolicy for $Name"
+    Write-Verbose -Message "Testing configuration of DLPComplianceRule for $Name"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -525,21 +390,29 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        SCDLPComplianceRule " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
-    return $content
+
+    $rules = Get-DLPComplianceRule
+
+    $i = 1
+    $DSCContent = ""
+    foreach ($rule in $rules)
+    {
+        Write-Information "    - [$i/$($rules.Length)] $($rule.Name)"
+        $result = Get-TargetResource -Name $rule.Name -Policy $rule.Policy -GlobalAdminAccount $GlobalAdminAccount
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $partialContent = "        SCDLPComplianceRule " + (New-GUID).ToString() + "`r`n"
+        $partialContent += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $partialContent += "        }`r`n"
+        $DSCContent += $partialContent
+        $i++
+    }
+
+    return $DSCContent
 }
 
 Export-ModuleMember -Function *-TargetResource
