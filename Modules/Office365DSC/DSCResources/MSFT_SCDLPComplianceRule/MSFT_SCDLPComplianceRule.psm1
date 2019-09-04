@@ -241,7 +241,7 @@ function Set-TargetResource
     {
         Write-Verbose "Rule {$($CurrentRule.Name)} doesn't exists but need to. Creating Rule."
         $CreationParams = $PSBoundParameters
-        if ($CreationParams.ContentContainsSensitiveInformation -ne $null)
+        if ($null -ne $CreationParams.ContentContainsSensitiveInformation)
         {
             $CreationParams.ContentContainsSensitiveInformation = Get-SCDLPSensitiveInformation $CreationParams.ContentContainsSensitiveInformation
         }
@@ -256,6 +256,7 @@ function Set-TargetResource
     {
         Write-Verbose "Rule {$($CurrentRule.Name)} already exists and needs to. Updating Rule."
         $UpdateParams = $PSBoundParameters
+        $UpdateParams.ContentContainsSensitiveInformation = Get-SCDLPSensitiveInformation -SensitiveInformation $UpdateParams.ContentContainsSensitiveInformation
         $UpdateParams.Remove("GlobalAdminAccount")
         $UpdateParams.Remove("Ensure")
         $UpdateParams.Remove("Name")
