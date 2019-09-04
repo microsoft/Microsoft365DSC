@@ -123,15 +123,10 @@ Configuration Master
         {
             Policy                              = "MyDLPPolicy"
             ReportSeverityLevel                 = "Low";
-            ContentPropertyContainsWords        = @();
             NotifyUser                          = @("LastModifier");
             Disabled                            = $False;
-            GenerateAlert                       = @();
-            NotifyPolicyTipCustomText           = "";
-            GenerateIncidentReport              = @();
             Ensure                              = "Present";
             GlobalAdminAccount                  = $GlobalAdmin;
-            Comment                             = "";
             ContentContainsSensitiveInformation = MSFT_SCDLPSensitiveInformation
                                                   {
                                                       maxconfidence = "100";
