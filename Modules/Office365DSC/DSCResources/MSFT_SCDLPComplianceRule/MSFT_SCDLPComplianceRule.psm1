@@ -249,6 +249,7 @@ function Set-TargetResource
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
 
+        Write-Verbose -Message "Calling New-DLPComplianceRule with Values: $(Convert-O365DscHashtableToString -Hashtable $CreationParams)"
         New-DLPComplianceRule @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
