@@ -148,10 +148,6 @@ function Set-DLPComplianceRule
         [System.String]
         $Identity,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Policy,
-
         [Parameter()]
         [ValidateSet("InOrganization","NotInOrganization","None")]
         [System.String[]]
