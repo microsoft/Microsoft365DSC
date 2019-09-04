@@ -86,7 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Verified domain doesn't exist in the tenant." -Fixture {
             $testParams = @{
                 DomainType         = 'Authoritative'
-                Ensure             = 'Present'
+                Ensure             = 'Absent'
                 MatchSubDomain     = $false
                 OutboundOnly       = $false
                 GlobalAdminAccount = $GlobalAdminAccount
