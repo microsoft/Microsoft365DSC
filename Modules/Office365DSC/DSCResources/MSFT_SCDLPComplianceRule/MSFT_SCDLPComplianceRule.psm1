@@ -379,7 +379,23 @@ function Test-TargetResource
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+                                                  -ValuesToCheck @("Name",
+                                                    "Policy",
+                                                    "AccessScope",
+                                                    "BlockAccess",
+                                                    "BlockAccessScope",
+                                                    "Comment",
+                                                    "ContentPropertyContainsWords",
+                                                    "Disabled",
+                                                    "GenerateAlert",
+                                                    "GenerateIncidentReport",
+                                                    "IncidentReportContent",
+                                                    "NotifyAllowOverride",
+                                                    "NotifyEmailCustomText",
+                                                    "NotifyPolicyTipCustomText",
+                                                    "NotifyUser",
+                                                    "ReportSeverityLevel",
+                                                    "RuleErrorAction")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
