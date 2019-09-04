@@ -31,7 +31,7 @@ function Get-TargetResource
         $Comment,
 
         [Parameter()]
-        [System.Collections.Hashtable]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ContentContainsSensitiveInformation,
 
         [Parameter()]
@@ -174,7 +174,7 @@ function Set-TargetResource
         $Comment,
 
         [Parameter()]
-        [System.Collections.Hashtable]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ContentContainsSensitiveInformation,
 
         [Parameter()]
@@ -303,7 +303,7 @@ function Test-TargetResource
         $Comment,
 
         [Parameter()]
-        [System.Collections.Hashtable]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ContentContainsSensitiveInformation,
 
         [Parameter()]
