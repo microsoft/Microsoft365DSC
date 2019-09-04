@@ -241,6 +241,11 @@ function Set-TargetResource
     {
         Write-Verbose "Rule {$($CurrentRule.Name)} doesn't exists but need to. Creating Rule."
         $CreationParams = $PSBoundParameters
+        if ($CreationParams.ContentContainsSensitiveInformation -ne $null)
+        {
+            $CreationParams.ContentContainsSensitiveInformation = Get-SCDLPSensitiveInformation $CreationParams.ContentContainsSensitiveInformatio
+        }
+
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
 
@@ -248,7 +253,7 @@ function Set-TargetResource
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
-        Write-Verbose "Rule {$($CurrentRUle.Name)} already exists and needs to. Updating Rule."
+        Write-Verbose "Rule {$($CurrentRule.Name)} already exists and needs to. Updating Rule."
         $UpdateParams = $PSBoundParameters
         $UpdateParams.Remove("GlobalAdminAccount")
         $UpdateParams.Remove("Ensure")
@@ -256,12 +261,12 @@ function Set-TargetResource
         $UpdateParams.Add("Identity", $Name)
 
         Write-Verbose "Updating Rule with values: $(Convert-O365DscHashtableToString -Hashtable $UpdateParams)"
-        Set-DLPComplianceRuleV2 @UpdateParams
+        Set-DLPComplianceRule @UpdateParams
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
         Write-Verbose "Rule {$($CurrentRule.Name)} already exists but shouldn't. Deleting Rule."
-        Remove-DLPComplianceRuleV -Identity $CurrentRule.Name -Confirm:$false
+        Remove-DLPComplianceRule -Identity $CurrentRule.Name -Confirm:$false
     }
 }
 
@@ -411,4 +416,27 @@ function Export-TargetResource
     return $DSCContent
 }
 
+function Get-SCDLPSensitiveInformation
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $SensitiveInformation
+    )
+
+    $result = @{
+        name           = $SensitiveInformation.name
+        id             = $SensitiveInformation.id
+        maxconfidence  = $SensitiveInformation.maxconfidence
+        minconfidence  = $SensitiveInformation.minconfidence
+        rulePackId     = $SensitiveInformation.rulePackId
+        classifiertype = $SensitiveInformation.classifiertype
+        mincount       = $SensitiveInformation.mincount
+        maxcount       = $SensitiveInformation.maxcount
+    }
+    return $result
+}
 Export-ModuleMember -Function *-TargetResource
