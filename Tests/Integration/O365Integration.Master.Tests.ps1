@@ -128,7 +128,7 @@ Configuration Master
             GlobalAdminAccount                  = $GlobalAdmin;
             ContentContainsSensitiveInformation = MSFT_SCDLPSensitiveInformation
                                                   {
-                                                      name = "U.S. Social Security Number (SSN)";
+                                                      name = "U.S. Social Security Number (SSN)"
                                                   };
         }
 
