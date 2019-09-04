@@ -83,10 +83,43 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name "Verified domain doesn't exist in the tenant." -Fixture {
+            $testParams = @{
+                DomainType         = 'Authoritative'
+                Ensure             = 'Present'
+                MatchSubDomain     = $false
+                OutboundOnly       = $false
+                GlobalAdminAccount = $GlobalAdminAccount
+                Identity           = 'contoso.com'
+            }
+
+            Mock -CommandName Get-AcceptedDomain -MockWith {
+                return @{
+                    DomainType         = 'Authoritative'
+                    Identity           = 'different.contoso.com'
+                    MatchSubDomains    = $false
+                    OutboundOnly       = $false
+                }
+            }
+
+            Mock -CommandName Get-AzureADDomain -MockWith {
+                return @{
+                    Name = 'contoso.com'
+                    IsVerified = $true
+                }
+            }
+
+            It "Should return Absent from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
+            }
+        }
+
         Context -Name "Authoritative Accepted Domain should exist.  Domain exists. Test should pass." -Fixture {
             $testParams = @{
                 DomainType         = 'Authoritative'
                 Ensure             = 'Present'
+                MatchSubDomain     = $false
+                OutboundOnly       = $false
                 GlobalAdminAccount = $GlobalAdminAccount
                 Identity           = 'contoso.com'
             }
