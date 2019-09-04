@@ -48,7 +48,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure                              = 'Present'
                 Policy                              = "MyParentPolicy"
                 Comment                             = "";
-                ContentContainsSensitiveInformation = @{maxconfidence = "100"; id = "eefbb00e-8282-433c-8620-8f1da3bffdb2"; minconfidence = "75"; rulePackId = "00000000-0000-0000-0000-000000000000"; classifiertype = "Content"; name = "Argentina National Identity (DNI) Number"; mincount = "1"; maxcount = "9"; };
+                ContentContainsSensitiveInformation = (New-CimInstance -ClassName MSFT_SCDLPSensitiveInformation -Property @{
+                    name                = "rulename"
+                    maxcount            = "10"
+                    mincount            = "0"
+                } -ClientOnly)
                 BlockAccess                         = $False;
                 Name                                = 'TestPolicy'
             }
@@ -75,7 +79,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure                              = 'Present'
                 Policy                              = "MyParentPolicy"
                 Comment                             = "";
-                ContentContainsSensitiveInformation = @{maxconfidence = "100"; id = "eefbb00e-8282-433c-8620-8f1da3bffdb2"; minconfidence = "75"; rulePackId = "00000000-0000-0000-0000-000000000000"; classifiertype = "Content"; name = "Argentina National Identity (DNI) Number"; mincount = "1"; maxcount = "9"; };
+                ContentContainsSensitiveInformation = (New-CimInstance -ClassName MSFT_SCDLPSensitiveInformation -Property @{
+                    maxconfidence = "100";
+                    id = "eefbb00e-8282-433c-8620-8f1da3bffdb2";
+                    minconfidence = "75";
+                    rulePackId = "00000000-0000-0000-0000-000000000000";
+                    classifiertype = "Content";
+                    name = "Argentina National Identity (DNI) Number";
+                    mincount = "1";
+                    maxcount = "9";
+                } -ClientOnly)
                 BlockAccess                         = $False;
                 Name                                = 'TestPolicy'
             }
@@ -118,7 +131,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name = "TestPolicy"
                     Policy                              = "MyParentPolicy"
                     Comment                             = "";
-                    ContentContainsSensitiveInformation = @{maxconfidence = "100"; id = "eefbb00e-8282-433c-8620-8f1da3bffdb2"; minconfidence = "75"; rulePackId = "00000000-0000-0000-0000-000000000000"; classifiertype = "Content"; name = "Argentina National Identity (DNI) Number"; mincount = "1"; maxcount = "9"; };
+                    ContentContainsSensitiveInformation = (New-CimInstance -ClassName MSFT_SCDLPSensitiveInformation -Property @{
+                        name                = "rulename"
+                        maxcount            = "10"
+                        mincount            = "0"
+                    } -ClientOnly)
                     BlockAccess                         = $False;
                 }
             }
@@ -147,7 +164,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name = "TestPolicy"
                     Policy                              = "MyParentPolicy"
                     Comment                             = "";
-                    ContentContainsSensitiveInformation = @{maxconfidence = "100"; id = "eefbb00e-8282-433c-8620-8f1da3bffdb2"; minconfidence = "75"; rulePackId = "00000000-0000-0000-0000-000000000000"; classifiertype = "Content"; name = "Argentina National Identity (DNI) Number"; mincount = "1"; maxcount = "9"; };
+                    ContentContainsSensitiveInformation = (New-CimInstance -ClassName MSFT_SCDLPSensitiveInformation -Property @{
+                        name                = "rulename"
+                        maxcount            = "10"
+                        mincount            = "0"
+                    } -ClientOnly)
                     BlockAccess                         = $False;
                 }
             }
