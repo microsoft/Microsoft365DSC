@@ -121,7 +121,7 @@ Configuration Master
 
         SCDLPComplianceRule DLPRule
         {
-            Name                                = "USFinancialChecks";
+            Name                                = "MyDLPRule";
             Policy                              = "MyDLPPolicy"
             BlockAccess                         = $True;
             Ensure                              = "Present";
