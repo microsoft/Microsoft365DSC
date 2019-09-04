@@ -121,26 +121,15 @@ Configuration Master
 
         SCDLPComplianceRule DLPRule
         {
+            Name                                = "USFinancialChecks";
             Policy                              = "MyDLPPolicy"
-            ReportSeverityLevel                 = "Low";
-            NotifyUser                          = @("LastModifier");
-            Disabled                            = $False;
+            BlockAccess                         = $True;
             Ensure                              = "Present";
             GlobalAdminAccount                  = $GlobalAdmin;
             ContentContainsSensitiveInformation = MSFT_SCDLPSensitiveInformation
                                                   {
-                                                      maxconfidence = "100";
-                                                      id = "eefbb00e-8282-433c-8620-8f1da3bffdb2";
-                                                      minconfidence = "75";
-                                                      rulePackId = "00000000-0000-0000-0000-000000000000";
-                                                      classifiertype = "Content";
-                                                      name = "Argentina National Identity (DNI) Number";
-                                                      mincount = "1";
-                                                      maxcount = "9";
+                                                      name = "U.S. Social Security Number (SSN)";
                                                   };
-            BlockAccess                         = $False;
-            Name                                = "MyDLPRule";
-            AccessScope                         = "NotInOrganization";
         }
 
         SCRetentionCompliancePolicy RCPolicy
