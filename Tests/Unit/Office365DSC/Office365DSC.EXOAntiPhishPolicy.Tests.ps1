@@ -74,6 +74,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            It 'Should return Absent from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
+            }
+
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should Be $false
             }
@@ -145,8 +149,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should Be $true
             }
-
-
         }
 
         Context -Name "AntiPhishPolicy update needed." -Fixture {
@@ -216,7 +218,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should call the Set method" {
+            It "Should Successfully call the Set method" {
                 Set-TargetResource @testParams
             }
 
@@ -245,7 +247,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should call the Set method" {
+            It "Should Remove the Policy in the Set method" {
                 Set-TargetResource @testParams
             }
         }
