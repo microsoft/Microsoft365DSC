@@ -132,6 +132,20 @@ function Get-TargetResource
             RuleErrorAction                     = $PolicyRule.RuleErrorAction
         }
 
+        $paramsToRemove = @()
+        foreach ($paramName in $result.Keys)
+        {
+            if ($null -eq $result[$paramName] -or "" -eq $result[$paramName] -or @() -eq $result[$paramName])
+            {
+                $paramsToRemove += $paramName
+            }
+        }
+
+        foreach ($paramName in $paramsToRemove)
+        {
+            $result.Remove($paramName)
+        }
+
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
@@ -423,10 +437,11 @@ function Export-TargetResource
     {
         Write-Information "    - [$i/$($rules.Length)] $($rule.Name)"
         $result = Get-TargetResource -Name $rule.Name -Policy $rule.ParentPolicyName -GlobalAdminAccount $GlobalAdminAccount
+        $result.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -SensitiveInformationHash $result.ContentContainsSensitiveInformation
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $partialContent = "        SCDLPComplianceRule " + (New-GUID).ToString() + "`r`n"
         $partialContent += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $currentDSCBlock = Get-DSCBlock -UseGetTargetResource -Params $result -ModulePath $PSScriptRoot
         $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $partialContent += "        }`r`n"
         $DSCContent += $partialContent
@@ -434,6 +449,59 @@ function Export-TargetResource
     }
 
     return $DSCContent
+}
+
+function ConvertTo-SCDLPSensitiveInformationString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $SensitiveInformationHash
+    )
+
+    $StringContent = "MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
+    $StringContent += "                name = `"$($SensitiveInformationHash.name)`"`r`n"
+
+    if ($null -ne $SensitiveInformationHash.id)
+    {
+        $StringContent += "                id = `"$($SensitiveInformationHash.id)`"`r`n"
+    }
+
+    if ($null -ne $SensitiveInformationHash.maxconfidence)
+    {
+        $StringContent += "                maxconfidence = `"$($SensitiveInformationHash.maxconfidence)`"`r`n"
+    }
+
+    if ($null -ne $SensitiveInformationHash.minconfidence)
+    {
+        $StringContent += "                minconfidence = `"$($SensitiveInformationHash.minconfidence)`"`r`n"
+    }
+
+    if ($null -ne $SensitiveInformationHash.rulePackId)
+    {
+        $StringContent += "                rulePackId = `"$($SensitiveInformationHash.rulePackId)`"`r`n"
+    }
+
+    if ($null -ne $SensitiveInformationHash.classifiertype)
+    {
+        $StringContent += "                classifiertype = `"$($SensitiveInformationHash.classifiertype)`"`r`n"
+    }
+
+    if ($null -ne $SensitiveInformationHash.mincount)
+    {
+        $StringContent += "                mincount = `"$($SensitiveInformationHash.mincount)`"`r`n"
+    }
+
+    if ($null -ne $SensitiveInformationHash.maxcount)
+    {
+        $StringContent += "                maxcount = `"$($SensitiveInformationHash.maxcount)`"`r`n"
+    }
+
+    $StringContent += "            }"
+    return $StringContent
 }
 
 function Get-SCDLPSensitiveInformation
@@ -487,4 +555,5 @@ function Get-SCDLPSensitiveInformation
     }
     return $result
 }
+
 Export-ModuleMember -Function *-TargetResource
