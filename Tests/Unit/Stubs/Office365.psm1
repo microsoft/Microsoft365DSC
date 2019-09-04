@@ -52,7 +52,11 @@ function Remove-DLPComplianceRule
     param(
         [Parameter()]
         [System.String]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
     )
 }
 
