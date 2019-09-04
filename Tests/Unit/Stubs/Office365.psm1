@@ -9310,11 +9310,11 @@ param()
 
 
 function Get-AzureADDomain {
- [CmdletBinding(DefaultParameterSetName='GetQuery')]
+ [CmdletBinding()]
 param(
-    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${Name})
+    $Name)
 
 
  }
