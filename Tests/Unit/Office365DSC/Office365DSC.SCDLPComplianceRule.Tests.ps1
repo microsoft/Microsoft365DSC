@@ -55,6 +55,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 } -ClientOnly)
                 BlockAccess                         = $False;
                 Name                                = 'TestPolicy'
+                GlobalAdminAccount                  = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-DLPComplianceRule -MockWith {
@@ -91,6 +92,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 } -ClientOnly)
                 BlockAccess                         = $False;
                 Name                                = 'TestPolicy'
+                GlobalAdminAccount                  = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-DLPComplianceRule -MockWith {
@@ -124,6 +126,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 ContentContainsSensitiveInformation = @{maxconfidence = "100"; id = "eefbb00e-8282-433c-8620-8f1da3bffdb2"; minconfidence = "75"; rulePackId = "00000000-0000-0000-0000-000000000000"; classifiertype = "Content"; name = "Argentina National Identity (DNI) Number"; mincount = "1"; maxcount = "9"; };
                 BlockAccess                         = $False;
                 Name                                = 'TestPolicy'
+                GlobalAdminAccount                  = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-DLPComplianceRule -MockWith {
@@ -156,7 +159,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
-                Name               = "Test Policy"
             }
 
             Mock -CommandName Get-DLPComplianceRule -MockWith {
