@@ -14,13 +14,13 @@ Configuration Example
 
     node localhost
     {
-        <#SCDLPComplianceRule Rule
+        SCDLPComplianceRule Rule
         {
             Name               = "MyRule"
             Policy             = "MyPolicy"
             Comment            = "Test Rule"
             Ensure             = "Present"
             GlobalAdminAccount = $credsGlobalAdmin
-        }#>
+        }
     }
 }

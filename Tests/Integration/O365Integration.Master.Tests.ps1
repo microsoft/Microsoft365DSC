@@ -119,7 +119,7 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
         }
 
-        <#SCDLPComplianceRule DLPRule
+        SCDLPComplianceRule DLPRule
         {
             ReportSeverityLevel                 = "Low";
             ContentPropertyContainsWords        = @();
@@ -138,7 +138,7 @@ Configuration Master
             BlockAccess                         = $False;
             Name                                = "MyDLPRule";
             AccessScope                         = "NotInOrganization";
-        }#>
+        }
 
         SCRetentionCompliancePolicy RCPolicy
         {
