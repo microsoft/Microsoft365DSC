@@ -430,13 +430,41 @@ function Get-SCDLPSensitiveInformation
 
     $result = @{
         name           = $SensitiveInformation.name
-        id             = $SensitiveInformation.id
-        maxconfidence  = $SensitiveInformation.maxconfidence
-        minconfidence  = $SensitiveInformation.minconfidence
-        rulePackId     = $SensitiveInformation.rulePackId
-        classifiertype = $SensitiveInformation.classifiertype
-        mincount       = $SensitiveInformation.mincount
-        maxcount       = $SensitiveInformation.maxcount
+    }
+
+    if ($null -ne $SensitiveInformation.id)
+    {
+        $result.Add("id", $SensitiveInformation.id)
+    }
+
+    if ($null -ne $SensitiveInformation.maxconfidence)
+    {
+        $result.Add("maxconfidence", $SensitiveInformation.maxconfidence)
+    }
+
+    if ($null -ne $SensitiveInformation.minconfidence)
+    {
+        $result.Add("minconfidence", $SensitiveInformation.minconfidence)
+    }
+
+    if ($null -ne $SensitiveInformation.rulePackId)
+    {
+        $result.Add("rulePackId", $SensitiveInformation.rulePackId)
+    }
+
+    if ($null -ne $SensitiveInformation.classifiertype)
+    {
+        $result.Add("classifiertype", $SensitiveInformation.classifiertype)
+    }
+
+    if ($null -ne $SensitiveInformation.mincount)
+    {
+        $result.Add("mincount", $SensitiveInformation.mincount)
+    }
+
+    if ($null -ne $SensitiveInformation.maxcount)
+    {
+        $result.Add("maxcount", $SensitiveInformation.maxcount)
     }
     return $result
 }
