@@ -10,7 +10,7 @@ Class MSFT_SCDLPSensitiveInformation
     [Write, Description("")] String mincount;
     [Write, Description("")] String maxcount;
 };
-[ClassVersion("1.0.0.0"), FriendlyName("MSFT_SCDLPComplianceRule")]
+[ClassVersion("1.0.0.0"), FriendlyName("SCDLPComplianceRule")]
 class MSFT_SCDLPComplianceRule : OMI_BaseResource
 {
     [Key, Description("Name of the Rule.")] String Name;

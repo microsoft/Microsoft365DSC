@@ -110,11 +110,6 @@ function Get-TargetResource
     {
         Write-Verbose "Found existing DLPComplianceRule $($Name)"
 
-        $HashContentContainsSensitiveInformation = $null
-        if ($null -ne $PolicyRule.ContentContainsSensitiveInformation)
-        {
-            $HashContentContainsSensitiveInformation = [System.Collections.Hashtable]$PolicyRule.ContentContainsSensitiveInformation[0]
-        }
         $result = @{
             Ensure                              = 'Present'
             Name                                = $PolicyRule.Name
@@ -123,7 +118,7 @@ function Get-TargetResource
             BlockAccess                         = $PolicyRule.BlockAccess
             BlockAccessScope                    = $PolicyRule.BlockAccessScope
             Comment                             = $PolicyRule.Comment
-            ContentContainsSensitiveInformation = $HashContentContainsSensitiveInformation
+            ContentContainsSensitiveInformation = $PolicyRule.ContentContainsSensitiveInformation[0]
             ContentPropertyContainsWords        = $PolicyRule.ContentPropertyContainsWords
             Disabled                            = $PolicyRule.Disabled
             GenerateAlert                       = $PolicyRule.GenerateAlert
