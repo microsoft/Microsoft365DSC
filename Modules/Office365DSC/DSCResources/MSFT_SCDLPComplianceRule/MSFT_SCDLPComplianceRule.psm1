@@ -395,7 +395,8 @@ function Test-TargetResource
                                                     "NotifyPolicyTipCustomText",
                                                     "NotifyUser",
                                                     "ReportSeverityLevel",
-                                                    "RuleErrorAction")
+                                                    "RuleErrorAction",
+                                                    "Ensure")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
