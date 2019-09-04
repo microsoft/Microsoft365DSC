@@ -127,12 +127,9 @@ Configuration Master
             NotifyUser                          = @("LastModifier");
             Disabled                            = $False;
             GenerateAlert                       = @();
-            BlockAccessScope                    = $null;
             NotifyPolicyTipCustomText           = "";
-            IncidentReportContent               = $null;
             GenerateIncidentReport              = @();
             Ensure                              = "Present";
-            RuleErrorAction                     = $null;
             GlobalAdminAccount                  = $GlobalAdmin;
             Comment                             = "";
             ContentContainsSensitiveInformation = MSFT_SCDLPSensitiveInformation
