@@ -1,8 +1,8 @@
 [ClassVersion("1.0.0")]
 Class MSFT_SCDLPSensitiveInformation
 {
-    [Required, Description("Id of the Sensitive Information Content")] String id;
     [Required, Description("Name of the Sensitive Information Content")] String name;
+    [Write, Description("Id of the Sensitive Information Content")] String id;
     [Write, Description("")] String maxconfidence;
     [Write, Description("")] String minconfidence;
     [Write, Description("")] String rulePackId;
