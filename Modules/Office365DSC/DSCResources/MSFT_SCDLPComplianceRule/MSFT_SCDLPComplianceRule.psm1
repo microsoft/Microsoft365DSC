@@ -243,7 +243,7 @@ function Set-TargetResource
         $CreationParams = $PSBoundParameters
         if ($CreationParams.ContentContainsSensitiveInformation -ne $null)
         {
-            $CreationParams.ContentContainsSensitiveInformation = Get-SCDLPSensitiveInformation $CreationParams.ContentContainsSensitiveInformatio
+            $CreationParams.ContentContainsSensitiveInformation = Get-SCDLPSensitiveInformation $CreationParams.ContentContainsSensitiveInformation
         }
 
         $CreationParams.Remove("GlobalAdminAccount")
@@ -396,7 +396,7 @@ function Export-TargetResource
     )
 
     $InformationPreference = "Continue"
-    $rules = Get-DLPComplianceRule
+    $rules = Get-DLPComplianceRule | Where-Object {$_.Mode -ne 'PendingDeletion'}
 
     $i = 1
     $DSCContent = ""
