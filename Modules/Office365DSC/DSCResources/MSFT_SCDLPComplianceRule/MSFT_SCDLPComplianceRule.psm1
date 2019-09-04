@@ -260,6 +260,7 @@ function Set-TargetResource
         $UpdateParams.Remove("GlobalAdminAccount")
         $UpdateParams.Remove("Ensure")
         $UpdateParams.Remove("Name")
+        $UpdateParams.Remove("Policy")
         $UpdateParams.Add("Identity", $Name)
 
         Write-Verbose "Updating Rule with values: $(Convert-O365DscHashtableToString -Hashtable $UpdateParams)"
