@@ -2,6 +2,10 @@
 
 ## UNRELEASED
 
+* Metadata
+  * Updated ReverseDSC dependency
+    to version 1.9.4.5;
+
 ## 1.0.0.846
 
 * Modules
