@@ -2,13 +2,13 @@
 Class MSFT_SCLabelAdvancedSettings
 {
     [Write, Description("Advanced settings key.")] String Key;
-    [Write, Description("Advanced settings value.")] String Value ;
+    [Write, Description("Advanced settings value.")] String Value;
 };
 [ClassVersion("1.0.0")]
 Class MSFT_SCLabelLocaleText
 {
     [Write, Description("Locale")] String Locale;
-    [Write, Description("Text to display.")] String DisplayName ;
+    [Write, Description("Text to display.")] String DisplayName;
 };
 [ClassVersion("1.0.0")]
 Class MSFT_SCLabelLocaleSettings
