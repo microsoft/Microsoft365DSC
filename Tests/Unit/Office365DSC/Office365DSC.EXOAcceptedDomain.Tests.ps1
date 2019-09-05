@@ -96,14 +96,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-AcceptedDomain -MockWith {
                 return @{
                     DomainType         = 'Authoritative'
-                    Identity           = 'different.contoso.com'
+                    Identity           = 'different.tailspin.com'
                     MatchSubDomains    = $false
                     OutboundOnly       = $false
                 }
             }
 
             Mock -CommandName Get-AzureADDomain -MockWith {
-                return $null
+                return @{
+                    Name       = 'contoso.com'
+                    IsVerified = $true
+                }
             }
 
             It "Should return Absent from the Get method" {
