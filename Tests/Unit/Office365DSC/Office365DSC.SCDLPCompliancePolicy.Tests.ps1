@@ -128,6 +128,38 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name "Policy Exists but Need to Update Settings" -Fixture {
+            $testParams = @{
+                Ensure             = 'Absent'
+                GlobalAdminAccount = $GlobalAdminAccount
+                SharePointLocation = @("https://contoso.sharepoint.com/sites/demo", "https://northwind.com")
+                SharePointLocationException = @("https://contoso.sharepoint.com/sites/ex", "https://northwind.com/ex")
+                OneDriveLocation   = @("https://contoso.sharepoint.com/sites/demo", "https://northwind.com")
+                ExchangeLocation    = @("https://owa.contoso.com")
+                OneDriveLocationException   = @("https://tailspin.com/sites/", "https://tailspin.com/od")
+                TeamsLocation               = @("https://contoso.sharepoint.com/sites/demo", "https://northwind.com")
+                TeamsLocationException = @("https://contoso.sharepoint.com/sites/ex", "https://northwind.com/ex")
+                Name               = 'TestPolicy'
+            }
+
+            Mock -CommandName Get-DLPCompliancePolicy -MockWith {
+                return @{
+                    Name = "TestPolicy"
+                    ExchangeLocation            = @("https://owa.tailspin.com")
+                    SharePointLocation          = @("https://contoso.sharepoint.com/sites/demo", "https://tailspin.com")
+                    SharePointLocationException = @("https://contoso.sharepoint.com/od", "https://northwind.com/ex")
+                    OneDriveLocation            = @("https://contoso.sharepoint.com/sites/demo", "https://tailspin.com")
+                    OneDriveLocationException   = @("https://tailspin.com/sites/", "https://tailspin.com")
+                    TeamsLocation            = @("https://contoso.sharepoint.com/sites/demo", "https://tailspin.com")
+                    TeamsLocationException   = @("https://tailspin.com/sites/", "https://tailspin.com")
+                }
+            }
+
+            It 'Should update location from the Set method' {
+                Set-TargetResource @testParams
+            }
+        }
+
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
