@@ -3,12 +3,12 @@ Class MSFT_SCDLPSensitiveInformation
 {
     [Required, Description("Name of the Sensitive Information Content")] String name;
     [Write, Description("Id of the Sensitive Information Content")] String id;
-    [Write, Description("")] String maxconfidence;
-    [Write, Description("")] String minconfidence;
-    [Write, Description("")] String rulePackId;
-    [Write, Description("")] String classifiertype;
-    [Write, Description("")] String mincount;
-    [Write, Description("")] String maxcount;
+    [Write, Description("Maximum Confidence level value for the Sensitive Information")] String maxconfidence;
+    [Write, Description("Minimum Confidence level value for the Sensitive Information")] String minconfidence;
+    [Write, Description("ID of the Rule Pack value for the Sensitive Information")] String rulePackId;
+    [Write, Description("Type of Classifier value for the Sensitive Information")] String classifiertype;
+    [Write, Description("Minimum Count value for the Sensitive Information")] String mincount;
+    [Write, Description("Maximum Count value for the Sensitive Information")] String maxcount;
 };
 [ClassVersion("1.0.0.0"), FriendlyName("SCDLPComplianceRule")]
 class MSFT_SCDLPComplianceRule : OMI_BaseResource

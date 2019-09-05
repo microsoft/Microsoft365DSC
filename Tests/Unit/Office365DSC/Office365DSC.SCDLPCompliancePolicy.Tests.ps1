@@ -128,7 +128,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Policy Exists but Need to Update Settings" -Fixture {
+        Context -Name "Policy Exists but Needs to Update Settings" -Fixture {
             $testParams = @{
                 Ensure             = 'Absent'
                 GlobalAdminAccount = $GlobalAdminAccount

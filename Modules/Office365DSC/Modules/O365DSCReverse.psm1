@@ -826,7 +826,7 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
-    #region "SCDLPComplianceRUle"
+    #region "SCDLPComplianceRule"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCDLPComplianceRule")) -or
         $AllComponents)
