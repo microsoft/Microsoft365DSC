@@ -103,10 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-AzureADDomain -MockWith {
-                return @{
-                    Name       = 'contoso.com'
-                    IsVerified = $true
-                }
+                return $null
             }
 
             It "Should return Absent from the Get method" {
