@@ -1,20 +1,20 @@
 [ClassVersion("1.0.0")]
 Class MSFT_SCLabelAdvancedSettings
 {
-    [Write, Description("Settings key.")] String Key;
-    [Write, Description("Settings value.")] String Value ;
+    [Write, Description("Advanced settings key.")] String Key;
+    [Write, Description("Advanced settings value.")] String Value ;
 };
 [ClassVersion("1.0.0")]
-Class MSFT_SCLabelDisplayNames
+Class MSFT_SCLabelLocaleText
 {
-    [Write, Description("Tooltip language")] String Locale;
-    [Write, Description("Tooltip display name.")] String DisplayName ;
+    [Write, Description("Locale")] String Locale;
+    [Write, Description("Text to display.")] String DisplayName ;
 };
 [ClassVersion("1.0.0")]
 Class MSFT_SCLabelLocaleSettings
 {
-    [Write, Description("The LocaleSettings tooltips"),EmbeddedInstance("MSFT_SCLabelToolTips")] String Toolips[];
-    [Write, Description("The LocaleSettings displayname"),EmbeddedInstance("MSFT_SCLabelDisplayNames")] String DisplayNames[];
+    [Write, Description("Locale key."), ValueMap{"DisplayName","ToolTip"}, Values{"DisplayName","Tooltip"}] String LocaleKey;
+    [Write, Description("The locale settings display names."),EmbeddedInstance("MSFT_SCLabelLocaleText")] String DisplayText[];
 };
 [ClassVersion("1.0.0.0"), FriendlyName("SCSensitivityLabel")]
 Class MSFT_SCSensitivityLabel : OMI_BaseResource
