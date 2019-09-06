@@ -9321,7 +9321,7 @@ function Set-ComplianceCase {
     param(
         [Parameter(Mandatory=$true)]
         [System.String]
-        $Name,
+        $Identity,
 
         [Parameter()]
         [System.String]

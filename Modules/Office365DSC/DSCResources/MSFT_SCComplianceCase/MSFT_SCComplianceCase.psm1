@@ -15,7 +15,7 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet("Active", "Closed")]
         [System.String]
-        $Status,
+        $Status = "Active",
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -78,7 +78,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet("Active", "Closed")]
         [System.String]
-        $Status,
+        $Status = "Active",
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -101,6 +101,7 @@ function Set-TargetResource
     {
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("GlobalAdminAccount")
+        $CreationParams.Remove("Status")
         $CreationParams.Remove("Ensure")
 
         Write-Verbose "Creating new Compliance Case $Name calling the New-ComplianceCase cmdlet."
@@ -109,7 +110,7 @@ function Set-TargetResource
         # There is a possibility that the new case has to be closed to begin with (could be for future re-open);
         if ('Closed' -eq $Status)
         {
-            Set-ComplianceCase -Identity $Status -Close
+            Set-ComplianceCase -Identity $Name -Close
         }
     }
     # Compliance Case exists and it should. Update it.
@@ -157,7 +158,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet("Active", "Closed")]
         [System.String]
-        $Status,
+        $Status = "Active",
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -179,7 +180,7 @@ function Test-TargetResource
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -DesiredValues $PSBoundParameters `
-                                                 -ValuesToCheck $ValuesToCheck.Keys
+                                                  -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

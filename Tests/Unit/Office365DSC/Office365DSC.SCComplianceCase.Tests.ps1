@@ -51,7 +51,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name "Case doesn't already exist and should be Active" -Fixture {
+        Context -Name "Case doesn't already exists and should be Active" -Fixture {
             $testParams = @{
                 Name               = "TestCase"
                 Description        = "This is a test Case"
@@ -166,14 +166,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Case should not exist, but is does" -Fixture {
             $testParams = @{
                 Ensure             = "Absent"
-                Description        = "TestCase"
-                Comment            = "This is a test Case"
+                Name               = "TestCase"
+                Status             = "Active"
+                Description        = "This is a test Case"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-ComplianceCase -MockWith {
                 return @{
                     Name        = "TestCase"
+                    Status      = "Active"
                     Description = "This is a test Case"
                 }
             }
