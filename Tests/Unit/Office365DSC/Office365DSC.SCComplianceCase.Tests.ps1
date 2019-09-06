@@ -77,6 +77,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name "Case is pending closure" -Fixture {
+            $testParams = @{
+                Name               = "TestCase"
+                Description        = "This is a test Case"
+                Status             = "Closed"
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = "Present"
+            }
+
+            Mock -CommandName Get-ComplianceCase -MockWith {
+                return @{
+                    Name              = "TestCase"
+                    Description       = ""
+                    Status            = "Closing"
+                }
+            }
+
+            It 'Should return Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            }
+        }
+
         Context -Name "Case doesn't already exist and should be Closed" -Fixture {
             $testParams = @{
                 Name               = "TestCase"
@@ -196,6 +218,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-ComplianceCase -MockWith {
+                return @{
+                    Name        = "TestCase"
+                    Status      = "Active"
+                    Description = "This is a test Case"
+                }
             }
 
             It "Should Reverse Engineer resource from the Export method" {
