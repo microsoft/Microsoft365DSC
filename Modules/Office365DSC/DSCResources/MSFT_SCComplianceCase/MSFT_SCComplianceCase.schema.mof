@@ -2,7 +2,8 @@
 class MSFT_SCComplianceCase : OMI_BaseResource
 {
     [Key, Description("The Name parameter specifies the unique name of the complaiance tag.")] String Name;
-    [Write, Description("Specify if this rule should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("The description of the case.")] String Description;
+    [Write, Description("Specify if this case should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Status for the case. Can either be 'Active' or 'Closed'"), ValueMap{"Active","Closed"}, Values{"Active","Closed"}] String Status;
     [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };
