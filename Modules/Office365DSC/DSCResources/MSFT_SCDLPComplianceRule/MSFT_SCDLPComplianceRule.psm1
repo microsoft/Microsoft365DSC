@@ -438,7 +438,7 @@ function Export-TargetResource
         $result = Get-TargetResource -Name $rule.Name -Policy $rule.ParentPolicyName -GlobalAdminAccount $GlobalAdminAccount
         $result.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -SensitiveInformationHash $result.ContentContainsSensitiveInformation
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $partialContent = "        SCComplianceRule " + (New-GUID).ToString() + "`r`n"
+        $partialContent = "        SCDLPComplianceRule " + (New-GUID).ToString() + "`r`n"
         $partialContent += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -UseGetTargetResource -Params $result -ModulePath $PSScriptRoot
         $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
