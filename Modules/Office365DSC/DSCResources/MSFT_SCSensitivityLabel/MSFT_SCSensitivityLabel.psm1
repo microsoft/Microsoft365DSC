@@ -13,7 +13,7 @@ function Get-TargetResource
         $Comment,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $AdvancedSettings,
 
         [Parameter()]
@@ -21,7 +21,7 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $LocaleSettings,
 
         [Parameter()]
@@ -103,7 +103,7 @@ function Set-TargetResource
         $Comment,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $AdvancedSettings,
 
         [Parameter()]
@@ -111,7 +111,7 @@ function Set-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $LocaleSettings,
 
         [Parameter()]
@@ -204,7 +204,7 @@ function Test-TargetResource
         $Comment,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $AdvancedSettings,
 
         [Parameter()]
@@ -212,7 +212,7 @@ function Test-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $LocaleSettings,
 
         [Parameter()]
