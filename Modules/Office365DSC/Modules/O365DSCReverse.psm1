@@ -756,6 +756,25 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "SCDLPComplianceCase"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCComplianceCase")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SCComplianceCase..."
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform SecurityComplianceCenter `
+                          -ErrorAction SilentlyContinue
+
+        $SCDLPComplianceCaseModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SCComplianceCase\MSFT_SCComplianceCase.psm1" `
+                                                   -Resolve
+
+        Import-Module $SCDLPComplianceCaseModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "SCComplianceTag"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCComplianceTag")) -or

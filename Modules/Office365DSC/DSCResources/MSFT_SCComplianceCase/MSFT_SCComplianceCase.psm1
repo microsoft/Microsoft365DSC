@@ -1,0 +1,225 @@
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [ValidateSet("Active", "Closed")]
+        [System.String]
+        $Status,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+    Write-Verbose -Message "Getting configuration of SCComplianceCase for $Name"
+
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SecurityComplianceCenter
+
+    $Case = Get-ComplianceCase -Identity $Name -ErrorAction SilentlyContinue
+
+    if ($null -eq $Case)
+    {
+        Write-Verbose -Message "SCComplianceCase $($Name) does not exist."
+        $result = $PSBoundParameters
+        $result.Ensure = 'Absent'
+        return $result
+    }
+    else
+    {
+        Write-Verbose "Found existing SCComplianceCase $($Name)"
+        $Status = $Case.Status
+        if ('Closing' -eq $Status)
+        {
+            $Status = "Closed"
+        }
+        $result = @{
+            Name               = $Case.Name
+            Description        = $Case.Description
+            Status             = $Status
+            GlobalAdminAccount = $GlobalAdminAccount
+            Ensure             = 'Present'
+        }
+
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
+        return $result
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [ValidateSet("Active", "Closed")]
+        [System.String]
+        $Status,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+    Write-Verbose -Message "Setting configuration of SCComplianceCase for $Name"
+
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SecurityComplianceCenter
+
+    $CurrentCase = Get-TargetResource @PSBoundParameters
+
+    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentCase.Ensure))
+    {
+        $CreationParams = $PSBoundParameters
+        $CreationParams.Remove("GlobalAdminAccount")
+        $CreationParams.Remove("Ensure")
+
+        Write-Verbose "Creating new Compliance Case $Name calling the New-ComplianceCase cmdlet."
+        New-ComplianceCase @CreationParams
+
+        # There is a possibility that the new case has to be closed to begin with (could be for future re-open);
+        if ('Closed' -eq $Status)
+        {
+            Set-ComplianceCase -Identity $Status -Close
+        }
+    }
+    # Compliance Case exists and it should. Update it.
+    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
+    {
+        # The only real value we can update is the description;
+        if ($CurrentCase.Description -ne $Description)
+        {
+            Set-ComplianceCase -Identity $Name -Description $Description
+        }
+
+        # Compliance case is currently Active, but should be Closed; Close it.
+        if ('Active' -eq $CurrentCase.Status -and 'Closed' -eq $Status)
+        {
+            Set-ComplianceCase -Identity $Name -Close
+        }
+
+        # Compliance Case is currently Closed, but should be active. Re-open it.
+        if ('Closed' -eq $CurrentCase.Status -and 'Active' -eq $Status)
+        {
+            Set-ComplianceCase -Identity $Name -Reopen
+        }
+    }
+    # Compliance Case exists but it shouldn't. Remove it.
+    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
+    {
+        Remove-ComplianceCase -Identity $Name -Confirm:$false
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [ValidateSet("Active", "Closed")]
+        [System.String]
+        $Status,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+    Write-Verbose -Message "Testing configuration of SCComplianceCase for $Name"
+
+    $CurrentValues = Get-TargetResource @PSBoundParameters
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                 -ValuesToCheck $ValuesToCheck.Keys
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+
+    return $TestResult
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+    $InformationPreference = "Continue"
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SecurityComplianceCenter
+    $Cases = Get-ComplianceCase
+
+    $i = 1
+    foreach ($Case in $Cases)
+    {
+        Write-Information "    - [$i/$($Cases.Length)] $($Case.Name)"
+        $params = @{
+            Name               = $Case.Name
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content = "        SCComplianceCase " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        $i++
+    }
+    return $content
+}
+
+Export-ModuleMember -Function *-TargetResource

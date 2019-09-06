@@ -2,6 +2,12 @@
 
 ## UNRELEASED
 
+* SCComplianceCase
+  * New Resource
+* SCDLPComplianceRule
+  * New Resource;
+* Reverse
+  * Added workload selectors to the GUI interface;
 * Metadata
   * Updated ReverseDSC dependency
     to version 1.9.4.5;
