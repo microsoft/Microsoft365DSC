@@ -462,41 +462,41 @@ function ConvertTo-SCDLPSensitiveInformationString
     )
 
     $StringContent = "MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
-    $StringContent += "                name = `"$($SensitiveInformationHash.name)`"`r`n"
+    $StringContent += "                name = '$($SensitiveInformationHash.name)'`r`n"
 
     if ($null -ne $SensitiveInformationHash.id)
     {
-        $StringContent += "                id = `"$($SensitiveInformationHash.id)`"`r`n"
+        $StringContent += "                id = '$($SensitiveInformationHash.id)'`r`n"
     }
 
     if ($null -ne $SensitiveInformationHash.maxconfidence)
     {
-        $StringContent += "                maxconfidence = `"$($SensitiveInformationHash.maxconfidence)`"`r`n"
+        $StringContent += "                maxconfidence = '$($SensitiveInformationHash.maxconfidence)'`r`n"
     }
 
     if ($null -ne $SensitiveInformationHash.minconfidence)
     {
-        $StringContent += "                minconfidence = `"$($SensitiveInformationHash.minconfidence)`"`r`n"
+        $StringContent += "                minconfidence = '$($SensitiveInformationHash.minconfidence)'`r`n"
     }
 
     if ($null -ne $SensitiveInformationHash.rulePackId)
     {
-        $StringContent += "                rulePackId = `"$($SensitiveInformationHash.rulePackId)`"`r`n"
+        $StringContent += "                rulePackId = '$($SensitiveInformationHash.rulePackId)'`r`n"
     }
 
     if ($null -ne $SensitiveInformationHash.classifiertype)
     {
-        $StringContent += "                classifiertype = `"$($SensitiveInformationHash.classifiertype)`"`r`n"
+        $StringContent += "                classifiertype = '$($SensitiveInformationHash.classifiertype)'`r`n"
     }
 
     if ($null -ne $SensitiveInformationHash.mincount)
     {
-        $StringContent += "                mincount = `"$($SensitiveInformationHash.mincount)`"`r`n"
+        $StringContent += "                mincount = '$($SensitiveInformationHash.mincount)'`r`n"
     }
 
     if ($null -ne $SensitiveInformationHash.maxcount)
     {
-        $StringContent += "                maxcount = `"$($SensitiveInformationHash.maxcount)`"`r`n"
+        $StringContent += "                maxcount = '$($SensitiveInformationHash.maxcount)'`r`n"
     }
 
     $StringContent += "            }"
