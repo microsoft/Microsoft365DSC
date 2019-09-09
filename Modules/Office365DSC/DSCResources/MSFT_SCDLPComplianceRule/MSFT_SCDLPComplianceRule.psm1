@@ -110,6 +110,15 @@ function Get-TargetResource
     {
         Write-Verbose "Found existing DLPComplianceRule $($Name)"
 
+        # Cmdlet returns a string, but in order to properly validate valid values, we need to convert
+        # to a String array
+        $ArrayIncidentReportContent = @()
+
+        if ($null -ne $PolicyRule.IncidentReportContent)
+        {
+            $ArrayIncidentReportContent = $PolicyRule.IncidentReportContent.Replace(' ', '').Split(',')
+        }
+
         $result = @{
             Ensure                              = 'Present'
             Name                                = $PolicyRule.Name
@@ -123,7 +132,7 @@ function Get-TargetResource
             Disabled                            = $PolicyRule.Disabled
             GenerateAlert                       = $PolicyRule.GenerateAlert
             GenerateIncidentReport              = $PolicyRule.GenerateIncidentReport
-            IncidentReportContent               = $PolicyRule.IncidentReportContent
+            IncidentReportContent               = $ArrayIncidentReportContent
             NotifyAllowOverride                 = $PolicyRule.NotifyAllowOverride
             NotifyEmailCustomText               = $PolicyRule.NotifyEmailCustomText
             NotifyPolicyTipCustomText           = $PolicyRule.NotifyPolicyTipCustomText
