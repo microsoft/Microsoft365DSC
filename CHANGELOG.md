@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* SCComplianceSearch
+  * New Resource;
 * Metadata
   * Updated ReverseDSC dependency
     to version 1.9.4.5;

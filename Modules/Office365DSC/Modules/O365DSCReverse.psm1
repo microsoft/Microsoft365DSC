@@ -756,6 +756,32 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+        #region "SCComplianceTag"
+        if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCComplianceSearch")) -or
+        $AllComponents)
+    {
+        try
+        {
+            Write-Information "Extracting SCComplianceSearch..."
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform SecurityComplianceCenter `
+                              -ErrorAction SilentlyContinue
+
+            $SCComplianceTagModulePath = Join-Path -Path $PSScriptRoot `
+                                            -ChildPath "..\DSCResources\MSFT_SCComplianceSearch\MSFT_SCComplianceSearch.psm1" `
+                                            -Resolve
+
+            Import-Module $SCComplianceTagModulePath | Out-Null
+            $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Security and Compliance Center"
+        }
+    }
+    #endregion
+
     #region "SCComplianceTag"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCComplianceTag")) -or
