@@ -51,7 +51,7 @@ function Get-TargetResource
         $GenerateIncidentReport,
 
         [Parameter()]
-        [ValidateSet("All", "Default", "Detections", "DetectionDetails", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title")]
+        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title")]
         [System.String[]]
         $IncidentReportContent,
 
@@ -212,7 +212,7 @@ function Set-TargetResource
         $GenerateIncidentReport,
 
         [Parameter()]
-        [ValidateSet("All", "Default", "Detections", "DetectionDetails", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title")]
+        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title")]
         [System.String[]]
         $IncidentReportContent,
 
@@ -349,7 +349,7 @@ function Test-TargetResource
         $GenerateIncidentReport,
 
         [Parameter()]
-        [ValidateSet("All", "Default", "Detections", "DetectionDetails", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title")]
+        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title")]
         [System.String[]]
         $IncidentReportContent,
 
