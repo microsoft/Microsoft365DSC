@@ -15,5 +15,5 @@ class MSFT_SCComplianceSearch : OMI_BaseResource
     [Write, Description("The SharePointLocation parameter specifies the SharePoint Online sites to include. You identify the site by its URL value, or you can use the value All to include all sites.")] String SharePointLocation[];
     [Write, Description("This parameter specifies the SharePoint Online sites to exclude when you use the value All for the SharePointLocation parameter. You identify the site by its URL value.")] String SharePointLocationExclusion[];
     [Write, Description("Specify if this search should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Required, Description("Credentials of the Global Admin Account"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };
