@@ -52,7 +52,7 @@ function Get-TargetResource
         [System.String[]]
         $SharePointLocation,
 
-        [Parameter[]]
+        [Parameter()]
         [System.String[]]
         $SharePointLocationExclusion,
 
@@ -180,7 +180,7 @@ function Set-TargetResource
         [System.String[]]
         $SharePointLocation,
 
-        [Parameter[]]
+        [Parameter()]
         [System.String[]]
         $SharePointLocationExclusion,
 
@@ -283,7 +283,7 @@ function Test-TargetResource
         [System.String[]]
         $SharePointLocation,
 
-        [Parameter[]]
+        [Parameter()]
         [System.String[]]
         $SharePointLocationExclusion,
 
