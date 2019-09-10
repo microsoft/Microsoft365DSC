@@ -73,11 +73,11 @@ function Get-TargetResource
 
     if ($null -eq $Case)
     {
-        $Search = Get-ComplianceSearch -Identity $Name
+        $Search = Get-ComplianceSearch -Identity $Name -ErrorAction SilentlyContinue
     }
     else
     {
-        $Search = Get-ComplianceSearch -Identity $Name -Case $Case
+        $Search = Get-ComplianceSearch -Identity $Name -Case $Case -ErrorAction SilentlyContinue
     }
 
     if ($null -eq $Search)
