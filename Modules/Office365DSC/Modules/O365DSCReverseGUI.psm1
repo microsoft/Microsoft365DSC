@@ -369,6 +369,7 @@ function Show-O365GUI
         $pnlSC = New-Object System.Windows.Forms.Panel
         $pnlSC.Top = $pnlSPO.Heigth + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 340
         $pnlSC.Left = $SecondColumnLeft
+
         $pnlSC.Height = 180
         $pnlSC.Width = 300
         $pnlSC.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle

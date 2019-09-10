@@ -9285,13 +9285,56 @@ param(
 
  }
 
- function Get-ComplianceCase {
+function Get-ComplianceCase {
     [CmdletBinding()]
    param(
        [Parameter()]
        [System.String]
        $Identity
    )
+}
+
+function Remove-ComplianceCase {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Identity
+   )
+}
+
+function New-ComplianceCase {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Name,
+
+       [Parameter()]
+       [System.String]
+       $Description
+   )
+}
+
+function Set-ComplianceCase {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [Switch]
+        $Close,
+
+        [Parameter()]
+        [Switch]
+        $Reopen
+    )
 }
 
 function Get-AzureADDirectoryRoleMember {
