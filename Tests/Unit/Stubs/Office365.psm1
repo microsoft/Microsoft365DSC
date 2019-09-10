@@ -9297,7 +9297,7 @@ param(
 function Get-AzureADDirectoryRoleMember {
  [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Parameter(Mandatory=$true)]
     [string]
     ${ObjectId},
 
