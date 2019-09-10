@@ -9285,6 +9285,14 @@ param(
 
  }
 
+ function Get-ComplianceCase {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity
+   )
+}
 
 function Get-AzureADDirectoryRoleMember {
  [CmdletBinding()]
@@ -12652,5 +12660,148 @@ function Set-ComplianceTag
     [Parameter()]
     [System.String]
     $EventType
+    )
+}
+
+
+function Get-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Case
+    )
+}
+function Remove-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+function New-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Case,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNotFoundExchangeLocationsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocationExclusion,
+
+        [Parameter()]
+        [System.String[]]
+        $HoldNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeUserAppContent,
+
+        [Parameter()]
+        [System.String]
+        $Language,
+
+        [Parameter()]
+        [System.String[]]
+        $PublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation,
+
+        [Parameter[]]
+        [System.String[]]
+        $SharePointLocationExclusion
+    )
+}
+
+function Set-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Case,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNotFoundExchangeLocationsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocationExclusion,
+
+        [Parameter()]
+        [System.String[]]
+        $HoldNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeUserAppContent,
+
+        [Parameter()]
+        [System.String]
+        $Language,
+
+        [Parameter()]
+        [System.String[]]
+        $PublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation,
+
+        [Parameter[]]
+        [System.String[]]
+        $SharePointLocationExclusion
     )
 }

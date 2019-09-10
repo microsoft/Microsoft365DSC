@@ -16,7 +16,7 @@ Configuration Example
     {
         SCComplianceSearch DemoSearch
         {
-            Case                                  = "Demo Case";
+            Case                                  = "Demo Search";
             HoldNames                             = @();
             Name                                  = "Demo Compliance Search";
             Ensure                                = "Present";

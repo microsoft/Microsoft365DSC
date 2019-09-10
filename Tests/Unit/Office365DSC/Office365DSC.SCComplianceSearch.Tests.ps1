@@ -53,19 +53,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "Search doesn't already exist" -Fixture {
             $testParams = @{
-                Name               = "TestRule"
-                Comment            = "This is a test Rule"
-                RetentionAction    = "Keep"
-                RetentionDuration  = "1025"
-                FilePlanProperty   = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
-                    FilePlanPropertyDepartment = "Legal"
-                } -ClientOnly)
-                GlobalAdminAccount = $GlobalAdminAccount
-                RetentionType      = "ModificationAgeInDays"
-                Ensure             = "Present"
+                Case                                  = "Test Search Case";
+                Name                                  = "Demo Compliance Search";
+                Language                              = "iv";
+                AllowNotFoundExchangeLocationsEnabled = $False;
+                SharePointLocation                    = @("All");
+                GlobalAdminAccount                    = $GlobalAdminAccount
+                Ensure                                = "Present"
             }
 
-            Mock -CommandName Get-ComplianceTag -MockWith {
+            Mock -CommandName Get-ComplianceSearch -MockWith {
                 return $null
             }
 
@@ -82,44 +79,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Rule already exists" -Fixture {
+        Context -Name "Search already exists, but need to update properties" -Fixture {
             $testParams = @{
-                Name               = "TestRule"
-                Comment            = "This is a test Rule"
-                RetentionAction    = "Keep"
-                RetentionDuration  = "1025"
-                FilePlanProperty   = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
-                    FilePlanPropertyDepartment = "DemoDept"
-                    FilePlanPropertyCitation = "DemoCit"
-                    FilePlanPropertyReferenceId = "DemoRef"
-                    FilePlanPropertyAuthority = "DemoAuth"
-                    FilePlanPropertyCategory = "DemoCat"
-                    FilePlanPropertySubcategory = "DemoSub"
-                } -ClientOnly)
-                GlobalAdminAccount = $GlobalAdminAccount
-                RetentionType      = "ModificationAgeInDays"
-                Ensure             = "Present"
+                Case                                  = "Test Search Case";
+                Name                                  = "Demo Compliance Search";
+                Language                              = "iv";
+                AllowNotFoundExchangeLocationsEnabled = $False;
+                SharePointLocation                    = @("https://contoso.com");
+                GlobalAdminAccount                    = $GlobalAdminAccount
+                Ensure                                = "Present"
             }
 
-            Mock -CommandName Get-ComplianceTag -MockWith {
+            Mock -CommandName Get-ComplianceSearch -MockWith {
                 return @{
-                    Name              = "TestRule"
-                    Comment           = "This is a test Rule"
-                    RetentionAction   = "Keep"
-                    RetentionDuration = "1025"
-                    FilePlanMetadata  = '{"Settings":[
-                        {"Key":"FilePlanPropertyDepartment","Value":"DemoDept"},
-                        {"Key":"FilePlanPropertyCitation","Value":"DemoCit"},
-                        {"Key":"FilePlanPropertyReferenceId","Value":"DemoRef"},
-                        {"Key":"FilePlanPropertyAuthority","Value":"DemoAuth"},
-                        {"Key":"FilePlanPropertyCategory","Value":"DemoCat"},
-                        {"Key":"FilePlanPropertySubcategory","Value":"DemoSub"}]}'
-                    RetentionType     = "ModificationAgeInDays"
+                    Name                                  = "Demo Compliance Search";
+                    Case                                  = "Test Search Case"
+                    Language                              = @{
+                        TwoLetterISOLanguageName = "iv";
+                    }
+                    AllowNotFoundExchangeLocationsEnabled = $False;
+                    SharePointLocation = @("https://tailspintoys.com")
                 }
             }
 
-            It 'Should return true from the Test method' {
-                Test-TargetResource @testParams | Should Be $true
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should Be $false
             }
 
             It 'Should update from the Set method' {
@@ -133,41 +117,41 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Rule should not exist" -Fixture {
             $testParams = @{
-                Ensure             = "Absent"
-                Name               = "TestRule"
-                Comment            = "This is a test Rule"
-                RetentionAction    = "Keep"
-                FilePlanProperty   = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
-                    FilePlanPropertyDepartment = "Legal"
-                } -ClientOnly)
-                RetentionDuration  = "1025"
-                GlobalAdminAccount = $GlobalAdminAccount
-                RetentionType      = "ModificationAgeInDays"
+                Case                                  = "Test Search Case";
+                Name                                  = "Demo Compliance Search";
+                Language                              = "iv";
+                AllowNotFoundExchangeLocationsEnabled = $False;
+                SharePointLocation                    = @("All");
+                GlobalAdminAccount                    = $GlobalAdminAccount
+                Ensure                                = "Absent"
             }
 
-            Mock -CommandName Get-ComplianceTag -MockWith {
+            Mock -CommandName Get-ComplianceSearch -MockWith {
                 return @{
-
+                    Name                                  = "Demo Compliance Search";
+                    Language                              = @{
+                        TwoLetterISOLanguageName = "iv";
+                    }
+                    AllowNotFoundExchangeLocationsEnabled = $False;
                 }
             }
 
-            It 'Should return True from the Test method' {
-                Test-TargetResource @testParams | Should Be $True
+            It 'Should return False from the Test method' {
+                Test-TargetResource @testParams | Should Be $False
             }
 
             It 'Should delete from the Set method' {
                 Set-TargetResource @testParams
             }
 
-            It 'Should return Absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
+            It 'Should return Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
-                Name               = "TestRule"
             }
 
             It "Should Reverse Engineer resource from the Export method" {

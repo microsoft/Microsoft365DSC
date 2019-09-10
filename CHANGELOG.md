@@ -5,6 +5,8 @@
 * SCComplianceSearch
   * New Resource;
 * Metadata
+  * Updated MSCloudLoginAssistant dependency
+    to version 0.7;
   * Updated ReverseDSC dependency
     to version 1.9.4.5;
 
