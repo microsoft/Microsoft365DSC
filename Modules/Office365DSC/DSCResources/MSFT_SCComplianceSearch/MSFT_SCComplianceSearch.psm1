@@ -381,6 +381,7 @@ function Export-TargetResource
         }
         $j++
     }
+
     return $DSCContent
 }
 
