@@ -42,9 +42,27 @@ function Start-O365ConfigurationExtract
     $VerbosePreference = "SilentlyContinue"
     $WarningPreference = "SilentlyContinue"
     $AzureAutomation = $false
-    $DSCContent = "Configuration O365TenantConfig `r`n{`r`n"
+
+    $DSCContent = "param (`r`n"
+    $DSCContent += "    [parameter()]`r`n"
+    $DSCContent += "    [System.Management.Automation.PSCredential]`r`n"
+    $DSCContent += "    `$GlobalAdminAccount`r`n"
+    $DSCContent += ")`r`n`r`n"
+    $DSCContent += "Configuration O365TenantConfig `r`n{`r`n"
+    $DSCContent += "    param (`r`n"
+    $DSCContent += "        [parameter()]`r`n"
+    $DSCContent += "        [System.Management.Automation.PSCredential]`r`n"
+    $DSCContent += "        `$GlobalAdminAccount`r`n"
+    $DSCContent += "    )`r`n`r`n"
     $DSCContent += "    Import-DSCResource -ModuleName Office365DSC`r`n`r`n"
-    $DSCContent += "    <# Credentials #>`r`n"
+    $DSCContent += "    if (`$null -eq `$GlobalAdminAccount)`r`n"
+    $DSCContent += "    {`r`n"
+    $DSCContent += "        <# Credentials #>`r`n"
+    $DSCContent += "    }`r`n"
+    $DSCContent += "    else`r`n"
+    $DSCContent += "    {`r`n"
+    $DSCContent += "        `$Credsglobaladmin = `$GlobalAdminAccount`r`n"
+    $DSCContent += "    }`r`n`r`n"
     $DSCContent += "    Node localhost`r`n"
     $DSCContent += "    {`r`n"
 
@@ -116,9 +134,15 @@ function Start-O365ConfigurationExtract
                 $ATPPolicies = Get-AtpPolicyForO365
                 foreach ($atpPolicy in $ATPPolicies)
                 {
-                    $DSCContent += Export-TargetResource -IsSingleInstance "Yes" `
-                                                         -GlobalAdminAccount $GlobalAdminAccount `
-                                                         -Identity $atpPolicy.Identity
+                    $partialContent = Export-TargetResource -IsSingleInstance "Yes" `
+                                                            -GlobalAdminAccount $GlobalAdminAccount `
+                                                            -Identity $atpPolicy.Identity
+
+                    if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+                    {
+                        $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$(`$ConfigurationData.NonNodeData.OrganizationName)"
+                    }
+                    $DSCContent += $partialContent
                 }
             }
             else
@@ -820,6 +844,25 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "SCDLPComplianceRule"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCDLPComplianceRule")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SCDLPComplianceRule..."
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform SecurityComplianceCenter `
+                          -ErrorAction SilentlyContinue
+
+        $SCDLPComplianceRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SCDLPComplianceRule\MSFT_SCDLPComplianceRule.psm1" `
+                                                   -Resolve
+
+        Import-Module $SCDLPComplianceRuleModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "SCRetentionCompliancePolicy"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCRetentionCompliancePolicy")) -or
@@ -1086,7 +1129,7 @@ function Start-O365ConfigurationExtract
 
             if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape($principal + ".sharepoint.com"), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0])-sharepoint.com"
+                $partialContent = $partialContent -ireplace [regex]::Escape($principal + ".sharepoint.com"), "`$(`$ConfigurationData.NonNodeData.OrganizationName.Split('.')[0]).sharepoint.com"
             }
             if($partialContent.ToLower().Contains("@" + $organization.ToLower()))
             {
@@ -1382,7 +1425,7 @@ function Start-O365ConfigurationExtract
                                                  -GlobalAdminAccount $GlobalAdminAccount
             if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$ConfigurationData.NonNodeData.OrganizationName"
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$ConfigurationData.NonNodeData.OrganizationName)"
             }
             $DSCContent += $partialContent
             $i++
@@ -1480,7 +1523,7 @@ function Start-O365ConfigurationExtract
         {
             if (!$AzureAutomation)
             {
-                $credsContent += "    " + (Resolve-Credentials $credential) + " = Get-Credential -Message `"Global Admin credentials`"`r`n"
+                $credsContent += "        " + (Resolve-Credentials $credential) + " = Get-Credential -Message `"Global Admin credentials`""
             }
             else
             {
@@ -1492,7 +1535,7 @@ function Start-O365ConfigurationExtract
     $credsContent += "`r`n"
     $startPosition = $DSCContent.IndexOf("<# Credentials #>") + 19
     $DSCContent = $DSCContent.Insert($startPosition, $credsContent)
-    $DSCContent += "O365TenantConfig -ConfigurationData .\ConfigurationData.psd1"
+    $DSCContent += "O365TenantConfig -ConfigurationData .\ConfigurationData.psd1 -GlobalAdminAccount `$GlobalAdminAccount"
     #endregion
 
     #region Prompt the user for a location to save the extract and generate the files

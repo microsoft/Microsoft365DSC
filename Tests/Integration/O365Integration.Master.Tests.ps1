@@ -119,6 +119,19 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
         }
 
+        SCDLPComplianceRule DLPRule
+        {
+            Name                                = "MyDLPRule";
+            Policy                              = "MyDLPPolicy"
+            BlockAccess                         = $True;
+            Ensure                              = "Present";
+            GlobalAdminAccount                  = $GlobalAdmin;
+            ContentContainsSensitiveInformation = MSFT_SCDLPSensitiveInformation
+                                                  {
+                                                      name = "U.S. Social Security Number (SSN)"
+                                                  };
+        }
+
         SCRetentionCompliancePolicy RCPolicy
         {
             Name               = "MyRCPolicy"
