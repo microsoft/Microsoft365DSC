@@ -6,33 +6,20 @@ function Get-TargetResource
     (
         [Parameter(Mandatory=$true)]
         [System.String]
-        $ActionName,
+        [ValidateSet('Export', 'Purge', 'Retention')]
+        $Action,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $SearchName,
-
-        [Parameter()]
-        [System.Boolean]
-        $Export = $false,
 
         [Parameter()]
         [System.String[]]
         $FileTypeExclusionsForUnindexedItems,
 
         [Parameter()]
-        [Systerm.Boolean]
+        [System.Boolean]
         $EnableDedupe,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('PerUserPst', 'SinglePst', 'SingleFolderPst', 'IndividualMessage', 'PerUserZip', 'SingleZip')]
-        $ExchangeArchiveFormat,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('FxStream', 'Mime', 'Msg')]
-        $Format,
 
         [Parameter()]
         [System.Boolean]
@@ -44,32 +31,8 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $NotifyEmail,
-
-        [Parameter()]
-        [System.String]
-        $NotifyEmailCC,
-
-        [Parameter()]
-        [System.Boolean]
-        $Preview,
-
-        [Parameter()]
-        [System.Boolean]
-        $Purge,
-
-        [Parameter()]
-        [System.String]
         [ValidateSet('SoftDelete', 'HardDelete')]
         $PurgeType,
-
-        [Parameter()]
-        [System.Boolean]
-        $Report,
-
-        [Parameter()]
-        [System.Boolean]
-        $RetentionReport,
 
         [Parameter()]
         [System.Boolean]
@@ -77,18 +40,8 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('AnalyzeWithZoom', 'General', 'GeneralReportsOnly', 'Inventory', 'RetentionReports', 'TriagePreview')]
-        $Scenario,
-
-        [Parameter()]
-        [System.String]
         [ValidateSet('IndexedItemsOnly', 'UnindexedItemsOnly', 'BothIndexedAndUnindexedItems')]
         $Scope,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('IndividualMessage', 'PerUserZip', 'SingleZip')]
-        $SharePointArchiveFormat,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -105,14 +58,9 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
 
-    $action = Get-ComplianceSearchAction -Identity $ActionName
+    $currentAction = Get-ComplianceSearchAction -Details | Where-Object {$_.SearchName -eq $SearchName -and $_.Action -eq $Action}
 
-    if ($null -ne $SearchName)
-    {
-        $action = $action | Where-Object {$_.SearchName -contains $SearchName}
-    }
-
-    if ($null -eq $action)
+    if ($null -eq $currentAction)
     {
         Write-Verbose -Message "SCComplianceSearchAction $ActionName does not exist."
         $result = $PSBoundParameters
@@ -121,36 +69,49 @@ function Get-TargetResource
     }
     else
     {
-        Write-Verbose "Found existing SCComplianceSearchAction $ActionName"
-        $result = @{
-            ActionName                          =
-            SearchName                          =
-            Export                              =
-            FileTypeExclusionsForUnindexedItems =
-            EnableDedupe                        =
-            ExchangeArchiveFormat               =
-            Format                              =
-            IncludeCredential                   =
-            IncludeSharePointDocumentVersions   =
-            NotifyEmail                         =
-            NotifyEmailCC                       =
-            Preview                             =
-            Purge                               =
-            PurgeType                           =
-            Report                              =
-            RetentionReport                     =
-            RetryOnError                        =
-            Scenario                            =
-            Scope                               =
-            SharePointArchiveFormat             =
-            GlobalAdminAccount                  = $GlobalAdminAccount
-            Ensure                              = 'Present'
+        if ('Purge' -ne $Action)
+        {
+            $Scenario = 'GenerateReportsOnly'
+            if ('Retention' -eq $Action)
+            {
+                $Scenario = 'RetentionReports'
+            }
+
+            $currentAction = $currentAction | Where-Object {$_.Results -like "*Scenario: $($Scenario)*"}
+
+            $FileTypeExclusion = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "File type exclusions for unindexed"
+            $EnableDedupe      = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Enable dedupe"
+            $IncludeCreds      = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "SAS token"
+            $IncludeSP         = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Include SharePoint versions"
+            $ScopeValue        = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Scope"
+        }
+        else
+        {
+            $PurgeTP           = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Purge Type"
         }
 
-        if (-not [System.String]::IsNullOrEmpty($tagObject.FilePlanMetadata))
+        if ('<Specify -IncludeCredential parameter to show the SAS token>' -eq $IncludeCreds)
         {
-            $ConvertedFilePlanProperty = Get-SCFilePlanProperty $tagObject.FilePlanMetadata
-            $result.Add("FilePlanProperty", $ConvertedFilePlanProperty)
+            $IncludeCreds = $false
+        }
+        else
+        {
+            $IncludeCreds = $true
+        }
+
+        Write-Verbose "Found existing $Action SCComplianceSearchAction for Search $SearchName"
+        $result = @{
+            Action                              = $currentAction.Action
+            SearchName                          = $currentAction.SearchName
+            FileTypeExclusionsForUnindexedItems = $FileTypeExclusion
+            EnableDedupe                        = $EnableDedupe
+            IncludeCredential                   = $IncludeCreds
+            IncludeSharePointDocumentVersions   = $IncludeSP
+            PurgeType                           = $PurgeTP
+            RetryOnError                        = $currentAction.Retry
+            Scope                               = $ScopeValue
+            GlobalAdminAccount                  = $GlobalAdminAccount
+            Ensure                              = 'Present'
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
@@ -165,33 +126,20 @@ function Set-TargetResource
     (
         [Parameter(Mandatory=$true)]
         [System.String]
-        $ActionName,
+        [ValidateSet('Export', 'Purge', 'Retention')]
+        $Action,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $SearchName,
-
-        [Parameter()]
-        [System.Boolean]
-        $Export = $false,
 
         [Parameter()]
         [System.String[]]
         $FileTypeExclusionsForUnindexedItems,
 
         [Parameter()]
-        [Systerm.Boolean]
+        [System.Boolean]
         $EnableDedupe,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('PerUserPst', 'SinglePst', 'SingleFolderPst', 'IndividualMessage', 'PerUserZip', 'SingleZip')]
-        $ExchangeArchiveFormat,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('FxStream', 'Mime', 'Msg')]
-        $Format,
 
         [Parameter()]
         [System.Boolean]
@@ -203,32 +151,8 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $NotifyEmail,
-
-        [Parameter()]
-        [System.String]
-        $NotifyEmailCC,
-
-        [Parameter()]
-        [System.Boolean]
-        $Preview,
-
-        [Parameter()]
-        [System.Boolean]
-        $Purge,
-
-        [Parameter()]
-        [System.String]
         [ValidateSet('SoftDelete', 'HardDelete')]
         $PurgeType,
-
-        [Parameter()]
-        [System.Boolean]
-        $Report,
-
-        [Parameter()]
-        [System.Boolean]
-        $RetentionReport,
 
         [Parameter()]
         [System.Boolean]
@@ -236,18 +160,8 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('AnalyzeWithZoom', 'General', 'GeneralReportsOnly', 'Inventory', 'RetentionReports', 'TriagePreview')]
-        $Scenario,
-
-        [Parameter()]
-        [System.String]
         [ValidateSet('IndexedItemsOnly', 'UnindexedItemsOnly', 'BothIndexedAndUnindexedItems')]
         $Scope,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('IndividualMessage', 'PerUserZip', 'SingleZip')]
-        $SharePointArchiveFormat,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -348,33 +262,20 @@ function Test-TargetResource
     (
         [Parameter(Mandatory=$true)]
         [System.String]
-        $ActionName,
+        [ValidateSet('Export', 'Purge', 'Retention')]
+        $Action,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $SearchName,
-
-        [Parameter()]
-        [System.Boolean]
-        $Export = $false,
 
         [Parameter()]
         [System.String[]]
         $FileTypeExclusionsForUnindexedItems,
 
         [Parameter()]
-        [Systerm.Boolean]
+        [System.Boolean]
         $EnableDedupe,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('PerUserPst', 'SinglePst', 'SingleFolderPst', 'IndividualMessage', 'PerUserZip', 'SingleZip')]
-        $ExchangeArchiveFormat,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('FxStream', 'Mime', 'Msg')]
-        $Format,
 
         [Parameter()]
         [System.Boolean]
@@ -386,32 +287,8 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $NotifyEmail,
-
-        [Parameter()]
-        [System.String]
-        $NotifyEmailCC,
-
-        [Parameter()]
-        [System.Boolean]
-        $Preview,
-
-        [Parameter()]
-        [System.Boolean]
-        $Purge,
-
-        [Parameter()]
-        [System.String]
         [ValidateSet('SoftDelete', 'HardDelete')]
         $PurgeType,
-
-        [Parameter()]
-        [System.Boolean]
-        $Report,
-
-        [Parameter()]
-        [System.Boolean]
-        $RetentionReport,
 
         [Parameter()]
         [System.Boolean]
@@ -419,18 +296,8 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('AnalyzeWithZoom', 'General', 'GeneralReportsOnly', 'Inventory', 'RetentionReports', 'TriagePreview')]
-        $Scenario,
-
-        [Parameter()]
-        [System.String]
         [ValidateSet('IndexedItemsOnly', 'UnindexedItemsOnly', 'BothIndexedAndUnindexedItems')]
         $Scope,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('IndividualMessage', 'PerUserZip', 'SingleZip')]
-        $SharePointArchiveFormat,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -479,16 +346,73 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $result.FilePlanProperty = Get-SCFilePlanPropertyAsString $result.FilePlanProperty
-    $content = "        SCComplianceTag " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "FilePlanProperty"
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+
+    $InformationPreference = "Continue"
+    Test-MSCloudLogin -Platform SecurityComplianceCenter `
+                      -CloudCredential $GlobalAdminAccount
+
+    $actions = Get-ComplianceSearchAction
+
+    $i = 1
+    $content = ""
+    foreach ($action in $actions)
+    {
+        Write-Information "[$i/$($actions.Length)] $($action.Name)"
+        $params = @{
+            Action             = $action.Action
+            SearchName         = $action.SearchName
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content += "        SCComplianceSearchAction " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        $i++
+    }
     return $content
+}
+
+function Get-ResultProperty
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ResultString,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $PropertyName
+    )
+
+    $start = $ResultString.IndexOf($PropertyName) + $PropertyName.Length + 2
+    $end   = $ResultString.IndexOf(';', $start)
+
+    $result = $null
+    if ($end -gt $start)
+    {
+        $result = $ResultString.SubString($start, $end - $start).Trim()
+
+        if ('<null>' -eq $result)
+        {
+            $result = $null
+        }
+        elseif ('True' -eq $result)
+        {
+            $result = $true
+        }
+        elseif ('False' -eq $result)
+        {
+            $result = $false
+        }
+    }
+
+    return $result
 }
 
 Export-ModuleMember -Function *-TargetResource

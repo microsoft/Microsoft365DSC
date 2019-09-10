@@ -1,26 +1,17 @@
 [ClassVersion("1.0.0.0"), FriendlyName("SCComplianceSearchAction")]
 class MSFT_SCComplianceSearchAction : OMI_BaseResource
 {
-    [Key, Description("The ActionName parameter specifies a name for the content search action. You use this parameter only when you specify multiple content searches in the SearchNames parameter.")] String ActionName;[Write, Description("The SearchName parameter specifies the name of the existing content search to associate with the content search action. You can specify multiple content searches separated by commas.")] String SearchName;
-    [Write, Description("The SearchName parameter specifies the name of the existing content search to associate with the content search action. You can specify multiple content searches separated by commas.")] String SearchName;
-    [Write, Description("This parameter requires the Export role in the Security & Compliance Center. By default, the Export role is assigned only to the eDiscovery Manager role group.")] Boolean Export;
+    [Key, Description("The Action parameter specifies what type of action to define. Accepted values are Export and Purge."), ValueMap{"Export","Purge","Retention"}, Values{"Export","Purge","Retention"}] String Action;
+    [Key, Description("The SearchName parameter specifies the name of the existing content search to associate with the content search action. You can specify multiple content searches separated by commas.")] String SearchName;
     [Write, Description("The FileTypeExclusionsForUnindexedItems specifies the file types to exclude because they can't be indexed. You can specify multiple values separated by commas.")] String FileTypeExclusionsForUnindexedItems[];
     [Write, Description("The EnableDedupe parameter eliminates duplication of messages when you export content search results.")] Boolean EnableDedupe;
-    [Write, Description("The ExchangeArchiveFormat parameter specifies how to export Exchange search results."), ValueMap{"PerUserPst","SinglePst","SingleFolderPst","IndividualMessage","PerUserZip","SingleZip"}, Values{"PerUserPst","SinglePst","SingleFolderPst","IndividualMessage","PerUserZip","SingleZip"}] String ExchangeArchiveFormat;
-    [Write, Description("The Format parameter specifies the format of the search results when you use the Export switch."), ValueMap{"FxStream", "Mime", "Msg"}, Values{""FxStream", "Mime", "Msg""}] String Format;
     [Write, Description("The IncludeCredential switch specifies whether to include the credential in the results.")] Boolean IncludeCredential;
     [Write, Description("The IncludeSharePointDocumentVersions parameter specifies whether to export previous versions of the document when you use the Export switch.")] Boolean IncludeSharePointDocumentVersions;
-    [Write, Description("The NotifyEmail parameter specifies the email address target for the search results when you use the Export switch. The recipient you specify is in the To: field of the message.")] String NotifyEmail;
-    [Write, Description("The NotifyEmailCC parameter specifies the email address target for the search results when you use the Export switch. The recipient you specify is in the Cc: field of the message.")] String NotifyEmailCC;
-    [Write, Description("The Preview switch specifies the action for the content search is to preview the results that match the search criteria. You don't need to specify a value with this switch.")] Boolean Preview;
     [Write, Description("The Purge switch specifies the action for the content search is to remove items that match the search criteria.")] Boolean Purge;
     [Write, Description("The PurgeType parameter specifies how to remove items when the action is Purge."), ValueMap{"SoftDelete","HardDelete"}, Values{"SoftDelete","HardDelete"}] String PurgeType;
-    [Write, Description("The Report switch specifies the action for the content search is to export a report about the results (information about each item instead of the full set of results) that match the search criteria.")] Boolean Report;
     [Write, Description("The RetentionReport switch specifies the action for the content search is to export a retention report. ")] Boolean RetentionReport;
     [Write, Description("The RetryOnError switch specifies whether to retry the action on any items that failed without re-running the entire action all over again.")] Boolean RetryOnError;
-    [Write, Description("n the Security & Compliance Center, this parameter requires the Preview role. By default, the Preview role is assigned only to the eDiscovery Manager role group."), ValueMap{"AnalyzeWithZoom", "General", "GeneralReportsOnly", "Inventory", "RetentionReports", "TriagePreview"}, Values{"AnalyzeWithZoom", "General", "GeneralReportsOnly", "Inventory", "RetentionReports", "TriagePreview"}] String Scenario;
     [Write, Description("The Scope parameter specifies the items to include when the action is Export."), ValueMap{"IndexedItemsOnly", "UnindexedItemsOnly", "BothIndexedAndUnindexedItems"}, Values{"IndexedItemsOnly", "UnindexedItemsOnly", "BothIndexedAndUnindexedItems"}] String Scope;
-    [Write, Description("The SharePointArchiveFormat parameter specifies how to export SharePoint and OneDrive search results."), ValueMap{"IndividualMessage","PerUserZip","SingleZip"}, Values{"IndividualMessage","PerUserZip","SingleZip"}] String SharePointArchiveFormat;
     [Write, Description("Specify if this rule should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };
