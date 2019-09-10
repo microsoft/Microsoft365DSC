@@ -5,16 +5,16 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory=$true)]
-        [System.String[]]
-        $SearchNames,
+        [System.String]
+        $ActionName,
+
+        [Parameter()]
+        [System.String]
+        $SearchName,
 
         [Parameter()]
         [System.Boolean]
         $Export = $false,
-
-        [Parameter()]
-        [System.String]
-        $ActionName,
 
         [Parameter()]
         [System.String[]]
@@ -100,37 +100,51 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of ComplianceTag for $Name"
+    Write-Verbose -Message "Getting configuration of SCComplianceSearchAction for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
 
-    $tagObjects = Get-ComplianceTag
-    $tagObject = $tagObjects | Where-Object { $_.Name -eq $Name }
+    $action = Get-ComplianceSearchAction -Identity $ActionName
 
-    if ($null -eq $tagObject)
+    if ($null -ne $SearchName)
     {
-        Write-Verbose -Message "ComplianceTag $($Name) does not exist."
+        $action = $action | Where-Object {$_.SearchName -contains $SearchName}
+    }
+
+    if ($null -eq $action)
+    {
+        Write-Verbose -Message "SCComplianceSearchAction $ActionName does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
     }
     else
     {
-        Write-Verbose "Found existing ComplianceTag $($Name)"
+        Write-Verbose "Found existing SCComplianceSearchAction $ActionName"
         $result = @{
-            Name               = $tagObject.Name
-            Comment            = $tagObject.Comment
-            RetentionDuration  = $tagObject.RetentionDuration
-            IsRecordLabel      = $tagObject.IsRecordLabel
-            Regulatory         = $tagObject.Regulatory
-            Notes              = $tagObject.Notes
-            ReviewerEmail      = $tagObject.ReviewerEmail
-            RetentionAction    = $tagObject.RetentionAction
-            EventType          = $tagObject.EventType
-            RetentionType      = $tagObject.RetentionType
-            GlobalAdminAccount = $GlobalAdminAccount
-            Ensure             = 'Present'
+            ActionName                          =
+            SearchName                          =
+            Export                              =
+            FileTypeExclusionsForUnindexedItems =
+            EnableDedupe                        =
+            ExchangeArchiveFormat               =
+            Format                              =
+            IncludeCredential                   =
+            IncludeSharePointDocumentVersions   =
+            NotifyEmail                         =
+            NotifyEmailCC                       =
+            Preview                             =
+            Purge                               =
+            PurgeType                           =
+            Report                              =
+            RetentionReport                     =
+            RetryOnError                        =
+            Scenario                            =
+            Scope                               =
+            SharePointArchiveFormat             =
+            GlobalAdminAccount                  = $GlobalAdminAccount
+            Ensure                              = 'Present'
         }
 
         if (-not [System.String]::IsNullOrEmpty($tagObject.FilePlanMetadata))
@@ -150,16 +164,16 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory=$true)]
-        [System.String[]]
-        $SearchNames,
+        [System.String]
+        $ActionName,
+
+        [Parameter()]
+        [System.String]
+        $SearchName,
 
         [Parameter()]
         [System.Boolean]
         $Export = $false,
-
-        [Parameter()]
-        [System.String]
-        $ActionName,
 
         [Parameter()]
         [System.String[]]
@@ -333,16 +347,16 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory=$true)]
-        [System.String[]]
-        $SearchNames,
+        [System.String]
+        $ActionName,
+
+        [Parameter()]
+        [System.String]
+        $SearchName,
 
         [Parameter()]
         [System.Boolean]
         $Export = $false,
-
-        [Parameter()]
-        [System.String]
-        $ActionName,
 
         [Parameter()]
         [System.String[]]

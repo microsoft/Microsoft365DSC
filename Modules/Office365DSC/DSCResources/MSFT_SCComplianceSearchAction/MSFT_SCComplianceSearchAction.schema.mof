@@ -1,9 +1,9 @@
 [ClassVersion("1.0.0.0"), FriendlyName("SCComplianceSearchAction")]
 class MSFT_SCComplianceSearchAction : OMI_BaseResource
 {
-    [Key, Description("The SearchNames parameter specifies the names of the existing content searches to associate with the content search action. You separate the content search names by commas.")] String SearchNames[];
+    [Key, Description("The ActionName parameter specifies a name for the content search action. You use this parameter only when you specify multiple content searches in the SearchNames parameter.")] String ActionName;[Write, Description("The SearchName parameter specifies the name of the existing content search to associate with the content search action. You can specify multiple content searches separated by commas.")] String SearchName;
+    [Write, Description("The SearchName parameter specifies the name of the existing content search to associate with the content search action. You can specify multiple content searches separated by commas.")] String SearchName;
     [Write, Description("This parameter requires the Export role in the Security & Compliance Center. By default, the Export role is assigned only to the eDiscovery Manager role group.")] Boolean Export;
-    [Write, Description("The ActionName parameter specifies a name for the content search action. You use this parameter only when you specify multiple content searches in the SearchNames parameter.")] String ActionName;
     [Write, Description("The FileTypeExclusionsForUnindexedItems specifies the file types to exclude because they can't be indexed. You can specify multiple values separated by commas.")] String FileTypeExclusionsForUnindexedItems[];
     [Write, Description("The EnableDedupe parameter eliminates duplication of messages when you export content search results.")] Boolean EnableDedupe;
     [Write, Description("The ExchangeArchiveFormat parameter specifies how to export Exchange search results."), ValueMap{"PerUserPst","SinglePst","SingleFolderPst","IndividualMessage","PerUserZip","SingleZip"}, Values{"PerUserPst","SinglePst","SingleFolderPst","IndividualMessage","PerUserZip","SingleZip"}] String ExchangeArchiveFormat;
