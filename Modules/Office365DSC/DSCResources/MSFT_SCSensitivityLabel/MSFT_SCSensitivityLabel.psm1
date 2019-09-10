@@ -58,12 +58,9 @@ function Get-TargetResource
 
     $label = Get-Label -Identity $Name -ErrorAction SilentlyContinue
 
-    ### Testing
     $advanced = Convert-CimInstancesToHashtable $AdvancedSettings
-    # $locales = Convert-CimInstancesToHashtable $LocaleSettings
     Write-Verbose -Message "ADVANCED SETTTINGS: $(Convert-O365DscHashtableToString -Hashtable $advanced)"
-    # Write-Verbose -Message "LOCALE SETTTINGS: $(Convert-O365DscHashtableToString -Hashtable $locales)"
-    #####
+
 
     if ($null -eq $label)
     {
@@ -313,60 +310,7 @@ function Export-TargetResource
     return $content
 }
 
-function Get-SCFilePlanPropertyObject
-{
-    [CmdletBinding()]
-    [OutputType([PSCustomObject])]
-    param(
-        [Parameter()]
-        $Properties
-    )
 
-    if ($null -eq $Properties)
-    {
-        return $null
-    }
-
-    $result = [PSCustomObject]@{
-        Settings = @(
-            @{Key = "FilePlanPropertyDepartment"; Value = $properties.FilePlanPropertyDepartment },
-            @{Key = "FilePlanPropertyCategory"; Value = $properties.FilePlanPropertyCategory },
-            @{Key = "FilePlanPropertySubcategory"; Value = $properties.FilePlanPropertySubcategory },
-            @{Key = "FilePlanPropertyCitation"; Value = $properties.FilePlanPropertyCitation },
-            @{Key = "FilePlanPropertyReferenceId"; Value = $properties.FilePlanPropertyReferenceId },
-            @{Key = "FilePlanPropertyAuthority"; Value = $properties.FilePlanPropertyAuthority }
-        )
-    }
-
-    return $result
-}
-
-function Get-SCFilePlanProperty
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Metadata
-    )
-
-    if ($null -eq $Metadata)
-    {
-        return $null
-    }
-    $JSONObject = ConvertFrom-JSON $Metadata
-    $result = @{
-        FilePlanPropertyDepartment  = $JSONObject.Settings["FilePlanPropertyDepartment"].Value
-        FilePlanPropertyCategory    = $JSONObject.Settings["FilePlanPropertyCategory"].Value
-        FilePlanPropertySubcategory = $JSONObject.Settings["FilePlanPropertySubcategory"].Value
-        FilePlanPropertyCitation    = $JSONObject.Settings["FilePlanPropertyCitation"].Value
-        FilePlanPropertyReferenceId = $JSONObject.Settings["FilePlanPropertyReferenceId"].Value
-        FilePlanPropertyAuthority   = $JSONObject.Settings["FilePlanPropertyAuthority"].Value
-    }
-
-    return $result
-}
 
 function Convert-CimInstancesToHashtable([Microsoft.Management.Infrastructure.CimInstance[]] $Pairs)
 {
