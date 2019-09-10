@@ -7,11 +7,9 @@ class MSFT_SCComplianceSearchAction : OMI_BaseResource
     [Write, Description("The EnableDedupe parameter eliminates duplication of messages when you export content search results.")] Boolean EnableDedupe;
     [Write, Description("The IncludeCredential switch specifies whether to include the credential in the results.")] Boolean IncludeCredential;
     [Write, Description("The IncludeSharePointDocumentVersions parameter specifies whether to export previous versions of the document when you use the Export switch.")] Boolean IncludeSharePointDocumentVersions;
-    [Write, Description("The Purge switch specifies the action for the content search is to remove items that match the search criteria.")] Boolean Purge;
     [Write, Description("The PurgeType parameter specifies how to remove items when the action is Purge."), ValueMap{"SoftDelete","HardDelete"}, Values{"SoftDelete","HardDelete"}] String PurgeType;
-    [Write, Description("The RetentionReport switch specifies the action for the content search is to export a retention report. ")] Boolean RetentionReport;
     [Write, Description("The RetryOnError switch specifies whether to retry the action on any items that failed without re-running the entire action all over again.")] Boolean RetryOnError;
-    [Write, Description("The Scope parameter specifies the items to include when the action is Export."), ValueMap{"IndexedItemsOnly", "UnindexedItemsOnly", "BothIndexedAndUnindexedItems"}, Values{"IndexedItemsOnly", "UnindexedItemsOnly", "BothIndexedAndUnindexedItems"}] String Scope;
-    [Write, Description("Specify if this rule should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("The ActionScope parameter specifies the items to include when the action is Export."), ValueMap{"IndexedItemsOnly", "UnindexedItemsOnly", "BothIndexedAndUnindexedItems"}, Values{"IndexedItemsOnly", "UnindexedItemsOnly", "BothIndexedAndUnindexedItems"}] String ActionScope;
+    [Write, Description("Specify if this action should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };

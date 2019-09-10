@@ -41,7 +41,7 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet('IndexedItemsOnly', 'UnindexedItemsOnly', 'BothIndexedAndUnindexedItems')]
-        $Scope,
+        $ActionScope,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -84,35 +84,42 @@ function Get-TargetResource
             $IncludeCreds      = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "SAS token"
             $IncludeSP         = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Include SharePoint versions"
             $ScopeValue        = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Scope"
+
+            $result = @{
+                Action                              = $currentAction.Action
+                SearchName                          = $currentAction.SearchName
+                FileTypeExclusionsForUnindexedItems = $FileTypeExclusion
+                EnableDedupe                        = $EnableDedupe
+                IncludeSharePointDocumentVersions   = $IncludeSP
+                RetryOnError                        = $currentAction.Retry
+                ActionScope                         = $ScopeValue
+                GlobalAdminAccount                  = $GlobalAdminAccount
+                Ensure                              = 'Present'
+            }
         }
         else
         {
             $PurgeTP           = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Purge Type"
+            $result = @{
+                Action                              = $currentAction.Action
+                SearchName                          = $currentAction.SearchName
+                PurgeType                           = $PurgeTP
+                RetryOnError                        = $currentAction.Retry
+                GlobalAdminAccount                  = $GlobalAdminAccount
+                Ensure                              = 'Present'
+            }
         }
 
         if ('<Specify -IncludeCredential parameter to show the SAS token>' -eq $IncludeCreds)
         {
-            $IncludeCreds = $false
+            $result.Add("IncludeCredential", $false)
         }
         else
         {
-            $IncludeCreds = $true
+            $result.Add("IncludeCredential", $true)
         }
 
         Write-Verbose "Found existing $Action SCComplianceSearchAction for Search $SearchName"
-        $result = @{
-            Action                              = $currentAction.Action
-            SearchName                          = $currentAction.SearchName
-            FileTypeExclusionsForUnindexedItems = $FileTypeExclusion
-            EnableDedupe                        = $EnableDedupe
-            IncludeCredential                   = $IncludeCreds
-            IncludeSharePointDocumentVersions   = $IncludeSP
-            PurgeType                           = $PurgeTP
-            RetryOnError                        = $currentAction.Retry
-            Scope                               = $ScopeValue
-            GlobalAdminAccount                  = $GlobalAdminAccount
-            Ensure                              = 'Present'
-        }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
@@ -161,7 +168,7 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet('IndexedItemsOnly', 'UnindexedItemsOnly', 'BothIndexedAndUnindexedItems')]
-        $Scope,
+        $ActionScope,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -297,7 +304,7 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet('IndexedItemsOnly', 'UnindexedItemsOnly', 'BothIndexedAndUnindexedItems')]
-        $Scope,
+        $ActionScope,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -357,7 +364,7 @@ function Export-TargetResource
     $content = ""
     foreach ($action in $actions)
     {
-        Write-Information "[$i/$($actions.Length)] $($action.Name)"
+        Write-Information "    [$i/$($actions.Length)] $($action.Name)"
         $params = @{
             Action             = $action.Action
             SearchName         = $action.SearchName
