@@ -17,10 +17,6 @@ function Get-TargetResource
         $ActionName,
 
         [Parameter()]
-        [System.String]
-        $ArchiveFormat,
-
-        [Parameter()]
         [System.String[]]
         $FileTypeExclusionsForUnindexedItems,
 
@@ -164,10 +160,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $ActionName,
-
-        [Parameter()]
-        [System.String]
-        $ArchiveFormat,
 
         [Parameter()]
         [System.String[]]
@@ -351,10 +343,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $ActionName,
-
-        [Parameter()]
-        [System.String]
-        $ArchiveFormat,
 
         [Parameter()]
         [System.String[]]

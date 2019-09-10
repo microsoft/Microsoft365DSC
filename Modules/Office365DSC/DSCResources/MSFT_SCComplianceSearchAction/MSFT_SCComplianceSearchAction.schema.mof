@@ -1,15 +1,5 @@
-[ClassVersion("1.0.0")]
-Class MSFT_SCFilePlanProperty
-{
-    [Write, Description("File plan department. Can get list by running Get-FilePlanPropertyDepartment.")] String FilePlanPropertyDepartment;
-    [Write, Description("File plan Authority. Can get list by running Get-FilePlanPropertyAuthority.")] String FilePlanPropertyAuthority;
-    [Write, Description("File plan category. Can get a list by running Get-FilePlanPropertyCategory.")] String FilePlanPropertyCategory;
-    [Write, Description("File plan citation. Can get a list by running Get-FilePlanPropertyCitation.")] String FilePlanPropertyCitation;
-    [Write, Description("File plan reference id. Can get a list by running Get-FilePlanPropertyReferenceId.")] String FilePlanPropertyReferenceId;
-    [Write, Description("File plan subcategory. Can get a list by running Get-FilePlanPropertySubCategory.")] String FilePlanPropertySubCategory;
-};
-[ClassVersion("1.0.0.0"), FriendlyName("SCComplianceTag")]
-class MSFT_SCComplianceTag : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("SCComplianceSearchAction")]
+class MSFT_SCComplianceSearchAction : OMI_BaseResource
 {
     [Key, Description("The Name parameter specifies the unique name of the complaiance tag.")] String Name;
     [Write, Description("Specify if this rule should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
