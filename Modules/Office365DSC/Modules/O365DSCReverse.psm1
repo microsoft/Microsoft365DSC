@@ -42,9 +42,27 @@ function Start-O365ConfigurationExtract
     $VerbosePreference = "SilentlyContinue"
     $WarningPreference = "SilentlyContinue"
     $AzureAutomation = $false
-    $DSCContent = "Configuration O365TenantConfig `r`n{`r`n"
+
+    $DSCContent = "param (`r`n"
+    $DSCContent += "    [parameter()]`r`n"
+    $DSCContent += "    [System.Management.Automation.PSCredential]`r`n"
+    $DSCContent += "    `$GlobalAdminAccount`r`n"
+    $DSCContent += ")`r`n`r`n"
+    $DSCContent += "Configuration O365TenantConfig `r`n{`r`n"
+    $DSCContent += "    param (`r`n"
+    $DSCContent += "        [parameter()]`r`n"
+    $DSCContent += "        [System.Management.Automation.PSCredential]`r`n"
+    $DSCContent += "        `$GlobalAdminAccount`r`n"
+    $DSCContent += "    )`r`n`r`n"
     $DSCContent += "    Import-DSCResource -ModuleName Office365DSC`r`n`r`n"
-    $DSCContent += "    <# Credentials #>`r`n"
+    $DSCContent += "    if (`$null -eq `$GlobalAdminAccount)`r`n"
+    $DSCContent += "    {`r`n"
+    $DSCContent += "        <# Credentials #>`r`n"
+    $DSCContent += "    }`r`n"
+    $DSCContent += "    else`r`n"
+    $DSCContent += "    {`r`n"
+    $DSCContent += "        `$Credsglobaladmin = `$GlobalAdminAccount`r`n"
+    $DSCContent += "    }`r`n`r`n"
     $DSCContent += "    Node localhost`r`n"
     $DSCContent += "    {`r`n"
 
@@ -1524,7 +1542,7 @@ function Start-O365ConfigurationExtract
         {
             if (!$AzureAutomation)
             {
-                $credsContent += "    " + (Resolve-Credentials $credential) + " = Get-Credential -Message `"Global Admin credentials`"`r`n"
+                $credsContent += "        " + (Resolve-Credentials $credential) + " = Get-Credential -Message `"Global Admin credentials`""
             }
             else
             {
@@ -1536,7 +1554,7 @@ function Start-O365ConfigurationExtract
     $credsContent += "`r`n"
     $startPosition = $DSCContent.IndexOf("<# Credentials #>") + 19
     $DSCContent = $DSCContent.Insert($startPosition, $credsContent)
-    $DSCContent += "O365TenantConfig -ConfigurationData .\ConfigurationData.psd1"
+    $DSCContent += "O365TenantConfig -ConfigurationData .\ConfigurationData.psd1 -GlobalAdminAccount `$GlobalAdminAccount"
     #endregion
 
     #region Prompt the user for a location to save the extract and generate the files
