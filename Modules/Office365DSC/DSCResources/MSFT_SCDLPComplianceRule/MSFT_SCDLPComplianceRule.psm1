@@ -51,7 +51,7 @@ function Get-TargetResource
         $GenerateIncidentReport,
 
         [Parameter()]
-        [ValidateSet("All", "Default", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "RulesMatched", "Service", "Severity", "Title")]
+        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title")]
         [System.String[]]
         $IncidentReportContent,
 
@@ -110,6 +110,15 @@ function Get-TargetResource
     {
         Write-Verbose "Found existing DLPComplianceRule $($Name)"
 
+        # Cmdlet returns a string, but in order to properly validate valid values, we need to convert
+        # to a String array
+        $ArrayIncidentReportContent = @()
+
+        if ($null -ne $PolicyRule.IncidentReportContent)
+        {
+            $ArrayIncidentReportContent = $PolicyRule.IncidentReportContent.Replace(' ', '').Split(',')
+        }
+
         $result = @{
             Ensure                              = 'Present'
             Name                                = $PolicyRule.Name
@@ -123,7 +132,7 @@ function Get-TargetResource
             Disabled                            = $PolicyRule.Disabled
             GenerateAlert                       = $PolicyRule.GenerateAlert
             GenerateIncidentReport              = $PolicyRule.GenerateIncidentReport
-            IncidentReportContent               = $PolicyRule.IncidentReportContent
+            IncidentReportContent               = $ArrayIncidentReportContent
             NotifyAllowOverride                 = $PolicyRule.NotifyAllowOverride
             NotifyEmailCustomText               = $PolicyRule.NotifyEmailCustomText
             NotifyPolicyTipCustomText           = $PolicyRule.NotifyPolicyTipCustomText
@@ -203,7 +212,7 @@ function Set-TargetResource
         $GenerateIncidentReport,
 
         [Parameter()]
-        [ValidateSet("All", "Default", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "RulesMatched", "Service", "Severity", "Title")]
+        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title")]
         [System.String[]]
         $IncidentReportContent,
 
@@ -340,7 +349,7 @@ function Test-TargetResource
         $GenerateIncidentReport,
 
         [Parameter()]
-        [ValidateSet("All", "Default", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "RulesMatched", "Service", "Severity", "Title")]
+        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title")]
         [System.String[]]
         $IncidentReportContent,
 
@@ -440,7 +449,9 @@ function Export-TargetResource
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $partialContent = "        SCDLPComplianceRule " + (New-GUID).ToString() + "`r`n"
         $partialContent += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -UseGetTargetResource -Params $result -ModulePath $PSScriptRoot
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation"
+
         $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $partialContent += "        }`r`n"
         $DSCContent += $partialContent
@@ -462,41 +473,41 @@ function ConvertTo-SCDLPSensitiveInformationString
     )
 
     $StringContent = "MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
-    $StringContent += "                name = `"$($SensitiveInformationHash.name)`"`r`n"
+    $StringContent += "                name = '$($SensitiveInformationHash.name)'`r`n"
 
     if ($null -ne $SensitiveInformationHash.id)
     {
-        $StringContent += "                id = `"$($SensitiveInformationHash.id)`"`r`n"
+        $StringContent += "                id = '$($SensitiveInformationHash.id)'`r`n"
     }
 
     if ($null -ne $SensitiveInformationHash.maxconfidence)
     {
-        $StringContent += "                maxconfidence = `"$($SensitiveInformationHash.maxconfidence)`"`r`n"
+        $StringContent += "                maxconfidence = '$($SensitiveInformationHash.maxconfidence)'`r`n"
     }
 
     if ($null -ne $SensitiveInformationHash.minconfidence)
     {
-        $StringContent += "                minconfidence = `"$($SensitiveInformationHash.minconfidence)`"`r`n"
+        $StringContent += "                minconfidence = '$($SensitiveInformationHash.minconfidence)'`r`n"
     }
 
     if ($null -ne $SensitiveInformationHash.rulePackId)
     {
-        $StringContent += "                rulePackId = `"$($SensitiveInformationHash.rulePackId)`"`r`n"
+        $StringContent += "                rulePackId = '$($SensitiveInformationHash.rulePackId)'`r`n"
     }
 
     if ($null -ne $SensitiveInformationHash.classifiertype)
     {
-        $StringContent += "                classifiertype = `"$($SensitiveInformationHash.classifiertype)`"`r`n"
+        $StringContent += "                classifiertype = '$($SensitiveInformationHash.classifiertype)'`r`n"
     }
 
     if ($null -ne $SensitiveInformationHash.mincount)
     {
-        $StringContent += "                mincount = `"$($SensitiveInformationHash.mincount)`"`r`n"
+        $StringContent += "                mincount = '$($SensitiveInformationHash.mincount)'`r`n"
     }
 
     if ($null -ne $SensitiveInformationHash.maxcount)
     {
-        $StringContent += "                maxcount = `"$($SensitiveInformationHash.maxcount)`"`r`n"
+        $StringContent += "                maxcount = '$($SensitiveInformationHash.maxcount)'`r`n"
     }
 
     $StringContent += "            }"

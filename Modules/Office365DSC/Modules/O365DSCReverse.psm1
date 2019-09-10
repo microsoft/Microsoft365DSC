@@ -42,9 +42,27 @@ function Start-O365ConfigurationExtract
     $VerbosePreference = "SilentlyContinue"
     $WarningPreference = "SilentlyContinue"
     $AzureAutomation = $false
-    $DSCContent = "Configuration O365TenantConfig `r`n{`r`n"
+
+    $DSCContent = "param (`r`n"
+    $DSCContent += "    [parameter()]`r`n"
+    $DSCContent += "    [System.Management.Automation.PSCredential]`r`n"
+    $DSCContent += "    `$GlobalAdminAccount`r`n"
+    $DSCContent += ")`r`n`r`n"
+    $DSCContent += "Configuration O365TenantConfig `r`n{`r`n"
+    $DSCContent += "    param (`r`n"
+    $DSCContent += "        [parameter()]`r`n"
+    $DSCContent += "        [System.Management.Automation.PSCredential]`r`n"
+    $DSCContent += "        `$GlobalAdminAccount`r`n"
+    $DSCContent += "    )`r`n`r`n"
     $DSCContent += "    Import-DSCResource -ModuleName Office365DSC`r`n`r`n"
-    $DSCContent += "    <# Credentials #>`r`n"
+    $DSCContent += "    if (`$null -eq `$GlobalAdminAccount)`r`n"
+    $DSCContent += "    {`r`n"
+    $DSCContent += "        <# Credentials #>`r`n"
+    $DSCContent += "    }`r`n"
+    $DSCContent += "    else`r`n"
+    $DSCContent += "    {`r`n"
+    $DSCContent += "        `$Credsglobaladmin = `$GlobalAdminAccount`r`n"
+    $DSCContent += "    }`r`n`r`n"
     $DSCContent += "    Node localhost`r`n"
     $DSCContent += "    {`r`n"
 
@@ -753,6 +771,25 @@ function Start-O365ConfigurationExtract
         {
             New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
+    }
+    #endregion
+
+    #region "SCDLPComplianceCase"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCComplianceCase")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SCComplianceCase..."
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform SecurityComplianceCenter `
+                          -ErrorAction SilentlyContinue
+
+        $SCDLPComplianceCaseModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SCComplianceCase\MSFT_SCComplianceCase.psm1" `
+                                                   -Resolve
+
+        Import-Module $SCDLPComplianceCaseModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
 
@@ -1505,7 +1542,7 @@ function Start-O365ConfigurationExtract
         {
             if (!$AzureAutomation)
             {
-                $credsContent += "    " + (Resolve-Credentials $credential) + " = Get-Credential -Message `"Global Admin credentials`"`r`n"
+                $credsContent += "        " + (Resolve-Credentials $credential) + " = Get-Credential -Message `"Global Admin credentials`""
             }
             else
             {
@@ -1517,7 +1554,7 @@ function Start-O365ConfigurationExtract
     $credsContent += "`r`n"
     $startPosition = $DSCContent.IndexOf("<# Credentials #>") + 19
     $DSCContent = $DSCContent.Insert($startPosition, $credsContent)
-    $DSCContent += "O365TenantConfig -ConfigurationData .\ConfigurationData.psd1"
+    $DSCContent += "O365TenantConfig -ConfigurationData .\ConfigurationData.psd1 -GlobalAdminAccount `$GlobalAdminAccount"
     #endregion
 
     #region Prompt the user for a location to save the extract and generate the files
