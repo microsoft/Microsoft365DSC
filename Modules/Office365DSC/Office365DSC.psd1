@@ -56,7 +56,7 @@
                       @{ModuleName = "Microsoft.Online.SharePoint.PowerShell"; RequiredVersion = "16.0.8316.0"; },
                       @{ModuleName = "MicrosoftTeams"; RequiredVersion = "1.0.0"; },
                       @{ModuleName = "AzureAD"; RequiredVersion = "2.0.2.4"; },
-                      @{ModuleName = "MSCloudLoginAssistant"; RequiredVersion = "0.6"; })
+                      @{ModuleName = "MSCloudLoginAssistant"; RequiredVersion = "0.7.0"; })
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()
@@ -125,7 +125,7 @@
   * Updated SharePointPnPPowerShellOnline dependency
     to version 3.12.1908.1;
   * Updated MSCloudLoginAssistant dependency to
-    version 0.6;'
+    version 0.7.0;'
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update
             # RequireLicenseAcceptance = $false
