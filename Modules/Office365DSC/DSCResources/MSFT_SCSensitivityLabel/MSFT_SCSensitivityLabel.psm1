@@ -54,9 +54,16 @@ function Get-TargetResource
 
     Write-Verbose -Message "Calling Test-SecurityAndComplianceConnection function:"
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-    -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $label = Get-Label -Identity $Name -ErrorAction SilentlyContinue
+
+    ### Testing
+    $advanced = Convert-CimInstancesToHashtable $AdvancedSettings
+    # $locales = Convert-CimInstancesToHashtable $LocaleSettings
+    Write-Verbose -Message "ADVANCED SETTTINGS: $(Convert-O365DscHashtableToString -Hashtable $advanced)"
+    # Write-Verbose -Message "LOCALE SETTTINGS: $(Convert-O365DscHashtableToString -Hashtable $locales)"
+    #####
 
     if ($null -eq $label)
     {
@@ -74,7 +81,7 @@ function Get-TargetResource
             Name               = $label.Name
             Comment            = $label.Comment
             ParentId           = $parentLabel.Name
-            AdvancedSettings   = $label.AdvancedSettings
+            AdvancedSettings   = $AdvancedSettings
             DisplayName        = $label.DisplayName
             LocaleSettings     = $label.LocaleSettings
             Priority           = $label.Priority
@@ -143,7 +150,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of Sensitiivity label for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-    -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $label = Get-TargetResource @PSBoundParameters
 
@@ -152,18 +159,24 @@ function Set-TargetResource
         if ($null -ne $label.Priority)
         {
             throw "SCSensitivityLabel can't set Priortity property on " + `
-                  "new label {$Name} to $label.Priority." + `
-                  "You will need to set priority property once label is created."
+                "new label {$Name} to $label.Priority." + `
+                "You will need to set priority property once label is created."
         }
 
         if ($null -ne $label.Disabled)
         {
             throw "SCSensitivityLabel can't set disabled property on " + `
-                  "new label {$Name} to $label.Disabled." + `
-                  "You will need to set disabled property once label is created."
+                "new label {$Name} to $label.Disabled." + `
+                "You will need to set disabled property once label is created."
         }
 
         $CreationParams = $PSBoundParameters
+        if ($PSBoundParameters.ContainsKey("AdvancedSettings"))
+        {
+            $advanced = Convert-CimInstancesToHashtable $AdvancedSettings
+            $CreationParams["AdvancedSettings"] = $advanced
+        }
+
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
         $CreationParams.Remove("Priority")
@@ -175,6 +188,11 @@ function Set-TargetResource
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $label.Ensure))
     {
         $SetParams = $PSBoundParameters
+        if ($PSBoundParameters.ContainsKey("AdvancedSettings"))
+        {
+            $advanced = Convert-CimInstancesToHashtable $AdvancedSettings
+            $SetParams["AdvancedSettings"] = $advanced
+        }
 
         #Remove unused parameters for Set-Label cmdlet
         $SetParams.Remove("GlobalAdminAccount")
@@ -246,10 +264,21 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+    $labelSettings = Convert-CimInstancesToHashtable $AdvancedSettings
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('AdvancedSettings') | Out-Null
 
+    if ($null -ne $labelSettings)
+    {
+        Write-Verbose -Message "Testing advanced settings for Label $Name"
+        $TestAdvancedSettings = Test-AdvancedSettings -DesiredProperty $labelSettings
+        if ($false -eq $TestAdvancedSettings)
+        {
+            return $false
+        }
+    }
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -DesiredValues $PSBoundParameters `
@@ -339,26 +368,47 @@ function Get-SCFilePlanProperty
     return $result
 }
 
-function Test-SCFilePlanProperties
+function Convert-CimInstancesToHashtable([Microsoft.Management.Infrastructure.CimInstance[]] $Pairs)
+{
+    $hash = @{ }
+    foreach ($pair in $Pairs)
+    {
+        $hash[$pair.Key] = $pair.Value
+    }
+
+    return $hash
+}
+
+function Test-AdvancedSettings
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param(
-        [Parameter(Mandatory = $true)] $CurrentProperty,
-        [Parameter(Mandatory = $true)] $DesiredProperty
+        [Parameter (Mandatory = $true)]
+        [Hashtable]
+        $DesiredProperty
     )
 
-    if ($CurrentProperty.FilePlanPropertyDepartment -ne $DesiredProperty.FilePlanPropertyDepartment -or `
-            $CurrentProperty.FilePlanPropertyCategory -ne $DesiredProperty.FilePlanPropertyCategory -or `
-            $CurrentProperty.FilePlanPropertySubcategory -ne $DesiredProperty.FilePlanPropertySubcategory -or `
-            $CurrentProperty.FilePlanPropertyCitation -ne $DesiredProperty.FilePlanPropertyCitation -or `
-            $CurrentProperty.FilePlanPropertyReferenceId -ne $DesiredProperty.FilePlanPropertyReferenceId -or `
-            $CurrentProperty.FilePlanPropertyAuthority -ne $DesiredProperty.FilePlanPropertyAuthority)
+    $foundSetting = $false
+    #Check to see if advanced settings are in Label settings property of current label
+    $label = Get-Label -Identity $Name
+    if ($null -ne $label)
     {
-        return $false
+        foreach ($key in $DesiredProperty.Keys)
+        {
+            foreach ($setting in $label.settings)
+            {
+                if ($setting.contains($key.tolower()) -and $setting.contains($DesiredProperty[$key]))
+                {
+                    $foundSetting = $true
+                    Write-Verbose -Message "Found advanced setting in Label settings with $key and value of $($DesiredProperty[$key])"
+                    break
+                }
+                $foundSetting = $false
+            }
+        }
     }
-
-    return $true
+    return $foundSetting
 }
 
 Export-ModuleMember -Function *-TargetResource
