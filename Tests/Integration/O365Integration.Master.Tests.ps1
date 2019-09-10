@@ -94,6 +94,18 @@ Configuration Master
             DependsOn            = "[O365User]JohnSmith"
         }
 
+        SCComplianceSearch DemoSearch
+        {
+            Case                                  = "Integration Case";
+            HoldNames                             = @();
+            Name                                  = "Integration Compliance Search";
+            Ensure                                = "Present";
+            Language                              = "iv";
+            GlobalAdminAccount                    = $GlobalAdmin;
+            AllowNotFoundExchangeLocationsEnabled = $False;
+            SharePointLocation                    = @("All");
+        }
+
         SCComplianceCase DemoCase
         {
             Name               = "Integration Case"
