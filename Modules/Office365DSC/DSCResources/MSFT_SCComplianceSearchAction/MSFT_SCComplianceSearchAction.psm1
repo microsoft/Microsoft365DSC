@@ -52,7 +52,7 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    Write-Verbose -Message "Getting configuration of SCComplianceSearchAction for $Name"
+    Write-Verbose -Message "Getting configuration of SCComplianceSearchAction for $SearchName - $Action"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
@@ -64,7 +64,6 @@ function Get-TargetResource
         Write-Verbose -Message "SCComplianceSearchAction $ActionName does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
-        return $result
     }
     else
     {
@@ -178,7 +177,7 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of SCComplianceSearchAction for $Name"
+    Write-Verbose -Message "Setting configuration of SCComplianceSearchAction for $SearchName - $Action"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
@@ -213,12 +212,15 @@ function Set-TargetResource
                 $CreationParams.Add("Purge", $true)
                 $CreationParams.Remove("ActionScope")
                 $CreationParams.Remove("Scope")
+                $CreationParams.Add("Confirm", $false)
             }
         }
 
         $CreationParams.Remove("Action")
 
-        Write-Verbose "Creating new Compliance Search Action calling the New-ComplianceSearchAction cmdlet."
+        Write-Verbose -Message "Creating new Compliance Search Action calling the New-ComplianceSearchAction cmdlet"
+
+        Write-Verbose -Message "Set-TargetResource Creation Parameters: `n $(Convert-O365DscHashtableToString -Hashtable $CreationParams)"
         New-ComplianceSearchAction @CreationParams
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
@@ -404,7 +406,6 @@ function Get-CurrentAction
         [ValidateSet('Export', 'Purge', 'Retention')]
         $Action
     )
-
     # For the sake of retrieving the current action, search by Action = Export;
     if ('Retention' -eq $Action)
     {
@@ -415,8 +416,24 @@ function Get-CurrentAction
     {
         $Scenario = "GenerateReports"
     }
+    # Get the case associated with the Search Instance if any;
+    $Cases = Get-ComplianceCase
 
-    $currentAction = Get-ComplianceSearchAction -Details | Where-Object {$_.SearchName -eq $SearchName -and $_.Action -eq $Action}
+    foreach ($Case in $Cases)
+    {
+        $searches = Get-ComplianceSearch -Case $Case.Name | Where-Object {$_.Name -eq $SearchName}
+
+        if ($null -ne $searches)
+        {
+            $currentAction = Get-ComplianceSearchAction -Case $Case.Name
+            break;
+        }
+    }
+
+    if ($null -eq $currentAction)
+    {
+        $currentAction = Get-ComplianceSearchAction -Details | Where-Object {$_.SearchName -eq $SearchName -and $_.Action -eq $Action}
+    }
 
     if ('Purge' -ne $Action -and $null -ne $currentAction)
     {
