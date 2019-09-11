@@ -119,8 +119,8 @@ function Get-TargetResource
         Write-Verbose "Found existing $Action SCComplianceSearchAction for Search $SearchName"
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
-        return $result
     }
+    return $result
 }
 
 function Set-TargetResource

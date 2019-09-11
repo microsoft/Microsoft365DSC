@@ -32,6 +32,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
+        Mock -CommandName Get-ComplianceCase{
+            return @{
+                Name = "Test Compliance Case"
+            }
+        }
+
         Mock -CommandName Remove-ComplianceSearchAction -MockWith {
             return @{
 
@@ -60,6 +66,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-ComplianceSearchAction -MockWith {
+                return $null
+            }
+
+            Mock -CommandName Get-ComplianceSearch -MockWith {
                 return $null
             }
 
@@ -130,7 +140,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Search already exists" -Fixture {
+        Context -Name "Action already exists" -Fixture {
             $testParams = @{
                 IncludeSharePointDocumentVersions   = $False;
                 Action                              = "Retention";
@@ -142,6 +152,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 ActionScope                         = "IndexedItemsOnly";
                 Ensure                              = "Present";
                 EnableDedupe                        = $False;
+            }
+
+
+            Mock -CommandName Get-ComplianceSearch -MockWith {
+                return @{
+                    Name = "Test Search"
+                }
             }
 
             Mock -CommandName Get-ComplianceSearchAction -MockWith {
@@ -177,7 +194,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Search already exists, but need to update properties" -Fixture {
+        Context -Name "Action already exists, but need to update properties" -Fixture {
             $testParams = @{
                 IncludeSharePointDocumentVersions   = $False;
                 Action                              = "Retention";
@@ -189,6 +206,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 ActionScope                         = "IndexedItemsOnly";
                 Ensure                              = "Present";
                 EnableDedupe                        = $True;
+            }
+
+            Mock -CommandName Get-ComplianceSearch -MockWith {
+                return @{
+                    Name = "Test Search"
+                }
             }
 
             Mock -CommandName Get-ComplianceSearchAction -MockWith {
@@ -240,6 +263,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 ActionScope                         = "IndexedItemsOnly";
                 Ensure                              = "Absent";
                 EnableDedupe                        = $True;
+            }
+
+            Mock -CommandName Get-ComplianceSearch -MockWith {
+                return @{
+                    Name = "Test Search"
+                }
             }
 
             Mock -CommandName Get-ComplianceSearchAction -MockWith {

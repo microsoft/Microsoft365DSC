@@ -9294,7 +9294,11 @@ param(
 
        [Parameter()]
        [Switch]
-       $Details
+       $Details,
+
+       [Parameter()]
+       [System.String]
+       $Case
    )
 }
 
