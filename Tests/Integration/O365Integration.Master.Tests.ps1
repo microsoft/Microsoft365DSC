@@ -115,6 +115,8 @@ Configuration Master
             Language                              = "iv";
             GlobalAdminAccount                    = $GlobalAdmin;
             AllowNotFoundExchangeLocationsEnabled = $False;
+            ExchangeLocation                      = @("All")
+            PublicFolderLocation                  = @("All")
         }
 
         SCComplianceSearchAction DemoSearchActionExport
