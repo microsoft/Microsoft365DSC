@@ -50,13 +50,13 @@
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    RequiredModules = @(@{ModuleName = "ReverseDSC"; RequiredVersion = "1.9.4.4"; },
+    RequiredModules = @(@{ModuleName = "ReverseDSC"; RequiredVersion = "1.9.4.5"; },
                       @{ModuleName = "MSOnline"; RequiredVersion = "1.1.183.17"; },
                       @{ModuleName = "SharePointPnPPowerShellOnline"; RequiredVersion = "3.12.1908.1"; },
                       @{ModuleName = "Microsoft.Online.SharePoint.PowerShell"; RequiredVersion = "16.0.8316.0"; },
                       @{ModuleName = "MicrosoftTeams"; RequiredVersion = "1.0.0"; },
                       @{ModuleName = "AzureAD"; RequiredVersion = "2.0.2.4"; },
-                      @{ModuleName = "MSCloudLoginAssistant"; RequiredVersion = "0.6"; })
+                      @{ModuleName = "MSCloudLoginAssistant"; RequiredVersion = "0.7.0"; })
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()

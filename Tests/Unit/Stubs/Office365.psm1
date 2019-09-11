@@ -36,6 +36,194 @@ function Set-AdminAuditLogConfig{
     )
 }
 
+function Get-DLPComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-DLPComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function New-DLPComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
+        [Parameter()]
+        [ValidateSet("InOrganization","NotInOrganization","None")]
+        [System.String[]]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockAccess,
+
+        [Parameter()]
+        [ValidateSet("All", "PerUser")]
+        [System.String]
+        $BlockAccessScope,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.String[]]
+        $ContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [System.String[]]
+        $GenerateAlert,
+
+        [Parameter()]
+        [System.String[]]
+        $GenerateIncidentReport,
+
+        [Parameter()]
+        [ValidateSet("All", "Default", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "RulesMatched", "Service", "Severity", "Title")]
+        [System.String[]]
+        $IncidentReportContent,
+
+        [Parameter()]
+        [ValidateSet("FalsePositive", "WithoutJustification", "WithJustification")]
+        [System.String[]]
+        $NotifyAllowOverride,
+
+        [Parameter()]
+        [System.String]
+        $NotifyEmailCustomText,
+
+        [Parameter()]
+        [System.String]
+        $NotifyPolicyTipCustomText,
+
+        [Parameter()]
+        [System.String[]]
+        $NotifyUser,
+
+        [Parameter()]
+        [ValidateSet("Low", "Medium", "High", "None")]
+        [System.String]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [ValidateSet("Ignore", "RetryThenBlock")]
+        [System.String]
+        $RuleErrorAction
+    )
+}
+
+function Set-DLPComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [ValidateSet("InOrganization","NotInOrganization","None")]
+        [System.String[]]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockAccess,
+
+        [Parameter()]
+        [ValidateSet("All", "PerUser")]
+        [System.String]
+        $BlockAccessScope,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.String[]]
+        $ContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [System.String[]]
+        $GenerateAlert,
+
+        [Parameter()]
+        [System.String[]]
+        $GenerateIncidentReport,
+
+        [Parameter()]
+        [ValidateSet("All", "Default", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "RulesMatched", "Service", "Severity", "Title")]
+        [System.String[]]
+        $IncidentReportContent,
+
+        [Parameter()]
+        [ValidateSet("FalsePositive", "WithoutJustification", "WithJustification")]
+        [System.String[]]
+        $NotifyAllowOverride,
+
+        [Parameter()]
+        [System.String]
+        $NotifyEmailCustomText,
+
+        [Parameter()]
+        [System.String]
+        $NotifyPolicyTipCustomText,
+
+        [Parameter()]
+        [System.String[]]
+        $NotifyUser,
+
+        [Parameter()]
+        [ValidateSet("Low", "Medium", "High", "None")]
+        [System.String]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [ValidateSet("Ignore", "RetryThenBlock")]
+        [System.String]
+        $RuleErrorAction
+    )
+}
+
 function Get-SupervisoryReviewPolicyV2
 {
     [CmdletBinding()]
@@ -9097,11 +9285,62 @@ param(
 
  }
 
+function Get-ComplianceCase {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity
+   )
+}
+
+function Remove-ComplianceCase {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Identity
+   )
+}
+
+function New-ComplianceCase {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Name,
+
+       [Parameter()]
+       [System.String]
+       $Description
+   )
+}
+
+function Set-ComplianceCase {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [Switch]
+        $Close,
+
+        [Parameter()]
+        [Switch]
+        $Reopen
+    )
+}
 
 function Get-AzureADDirectoryRoleMember {
  [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Parameter(Mandatory=$true)]
     [string]
     ${ObjectId},
 
@@ -9122,11 +9361,11 @@ param()
 
 
 function Get-AzureADDomain {
- [CmdletBinding(DefaultParameterSetName='GetQuery')]
+ [CmdletBinding()]
 param(
-    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${Name})
+    $Name)
 
 
  }
@@ -12464,5 +12703,148 @@ function Set-ComplianceTag
     [Parameter()]
     [System.String]
     $EventType
+    )
+}
+
+
+function Get-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Case
+    )
+}
+function Remove-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+function New-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Case,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNotFoundExchangeLocationsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocationExclusion,
+
+        [Parameter()]
+        [System.String[]]
+        $HoldNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeUserAppContent,
+
+        [Parameter()]
+        [System.String]
+        $Language,
+
+        [Parameter()]
+        [System.String[]]
+        $PublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation,
+
+        [Parameter[]]
+        [System.String[]]
+        $SharePointLocationExclusion
+    )
+}
+
+function Set-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Case,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNotFoundExchangeLocationsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocationExclusion,
+
+        [Parameter()]
+        [System.String[]]
+        $HoldNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeUserAppContent,
+
+        [Parameter()]
+        [System.String]
+        $Language,
+
+        [Parameter()]
+        [System.String[]]
+        $PublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation,
+
+        [Parameter[]]
+        [System.String[]]
+        $SharePointLocationExclusion
     )
 }
