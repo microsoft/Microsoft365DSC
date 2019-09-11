@@ -111,7 +111,7 @@ Configuration Master
             IncludeSharePointDocumentVersions   = $False;
             Action                              = "Export";
             SearchName                          = "Integration Compliance Search";
-            GlobalAdminAccount                  = $Credsglobaladmin;
+            GlobalAdminAccount                  = $GlobalAdmin;
             IncludeCredential                   = $False;
             RetryOnError                        = $False;
             ActionScope                         = "IndexedItemsOnly";
@@ -123,7 +123,7 @@ Configuration Master
         {
             Action                              = "Purge";
             SearchName                          = "Integration Compliance Search";
-            GlobalAdminAccount                  = $Credsglobaladmin;
+            GlobalAdminAccount                  = $GlobalAdmin;
             IncludeCredential                   = $False;
             RetryOnError                        = $False;
             Ensure                              = "Present";
