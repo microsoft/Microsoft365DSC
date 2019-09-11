@@ -123,7 +123,7 @@ Configuration Master
         {
             IncludeSharePointDocumentVersions   = $False;
             Action                              = "Export";
-            SearchName                          = "Integration Compliance Search - SPO";
+            SearchName                          = "Integration Compliance Search - EXO";
             GlobalAdminAccount                  = $GlobalAdmin;
             IncludeCredential                   = $False;
             RetryOnError                        = $False;
@@ -136,7 +136,7 @@ Configuration Master
         {
             IncludeSharePointDocumentVersions   = $False;
             Action                              = "Retention";
-            SearchName                          = "Integration Compliance Search - SPO";
+            SearchName                          = "Integration Compliance Search - EXO";
             GlobalAdminAccount                  = $GlobalAdmin;
             IncludeCredential                   = $False;
             RetryOnError                        = $False;
