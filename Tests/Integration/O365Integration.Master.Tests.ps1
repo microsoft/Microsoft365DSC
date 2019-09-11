@@ -106,6 +106,29 @@ Configuration Master
             SharePointLocation                    = @("All");
         }
 
+        SCComplianceSearchAction DemoSearchActionExport
+        {
+            IncludeSharePointDocumentVersions   = $False;
+            Action                              = "Export";
+            SearchName                          = "Integration Compliance Search";
+            GlobalAdminAccount                  = $Credsglobaladmin;
+            IncludeCredential                   = $False;
+            RetryOnError                        = $False;
+            ActionScope                         = "IndexedItemsOnly";
+            Ensure                              = "Present";
+            EnableDedupe                        = $False;
+        }
+
+        SCComplianceSearchAction DemoSearchActionPurge
+        {
+            Action                              = "Purge";
+            SearchName                          = "Integration Compliance Search";
+            GlobalAdminAccount                  = $Credsglobaladmin;
+            IncludeCredential                   = $False;
+            RetryOnError                        = $False;
+            Ensure                              = "Present";
+        }
+
         SCComplianceCase DemoCase
         {
             Name               = "Integration Case"

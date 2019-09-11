@@ -52,7 +52,6 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-
     Write-Verbose -Message "Getting configuration of SCComplianceSearchAction for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
@@ -198,6 +197,27 @@ function Set-TargetResource
             $CreationParams.Remove("ActionScope")
             $CreationParams.Add("Scope", $ActionScope)
         }
+
+        switch($Action)
+        {
+            "Export"
+            {
+                $CreationParams.Add("Report", $true)
+            }
+            "Retention"
+            {
+                $CreationParams.Add("RetentionReport", $true)
+            }
+            "Purge"
+            {
+                $CreationParams.Add("Purge", $true)
+                $CreationParams.Remove("ActionScope")
+                $CreationParams.Remove("Scope")
+            }
+        }
+
+        $CreationParams.Remove("Action")
+
         Write-Verbose "Creating new Compliance Search Action calling the New-ComplianceSearchAction cmdlet."
         New-ComplianceSearchAction @CreationParams
     }

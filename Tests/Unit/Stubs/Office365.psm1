@@ -9285,6 +9285,79 @@ param(
 
  }
 
+ function Get-ComplianceSearchAction {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity,
+
+       [Parameter()]
+       [Switch]
+       $Details
+   )
+}
+
+function Remove-ComplianceSearchAction {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Identity
+   )
+}
+
+function New-ComplianceSearchAction {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SearchName,
+
+        [Parameter()]
+        [System.String[]]
+        $FileTypeExclusionsForUnindexedItems,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableDedupe,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeCredential,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeSharePointDocumentVersions,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('SoftDelete', 'HardDelete')]
+        $PurgeType,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetryOnError,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('IndexedItemsOnly', 'UnindexedItemsOnly', 'BothIndexedAndUnindexedItems')]
+        $Scope,
+
+        [Parameter()]
+        [Switch]
+        $Report,
+
+        [Parameter()]
+        [Switch]
+        $RetentionReport,
+
+        [Parameter()]
+        [Switch]
+        $Purge
+   )
+}
+
 function Get-ComplianceCase {
     [CmdletBinding()]
    param(
