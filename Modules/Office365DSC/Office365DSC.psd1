@@ -125,7 +125,7 @@
   * Updated SharePointPnPPowerShellOnline dependency
     to version 3.12.1908.1;
   * Updated MSCloudLoginAssistant dependency to
-    version 0.7.0;'
+    version 0.6;'
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update
             # RequireLicenseAcceptance = $false

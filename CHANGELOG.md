@@ -2,7 +2,17 @@
 
 ## UNRELEASED
 
+* SCComplianceCase
+  * New Resource
+* SCComplianceSearch
+  * New Resource;
+* SCDLPComplianceRule
+  * New Resource;
+* Reverse
+  * Added workload selectors to the GUI interface;
 * Metadata
+  * Updated MSCloudLoginAssistant dependency
+    to version 0.7.0;
   * Updated ReverseDSC dependency
     to version 1.9.4.5;
 
