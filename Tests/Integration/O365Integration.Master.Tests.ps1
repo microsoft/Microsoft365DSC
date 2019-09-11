@@ -123,7 +123,20 @@ Configuration Master
         {
             IncludeSharePointDocumentVersions   = $False;
             Action                              = "Export";
-            SearchName                          = "Integration Compliance Search - EXO";
+            SearchName                          = "Integration Compliance Search - SPO";
+            GlobalAdminAccount                  = $GlobalAdmin;
+            IncludeCredential                   = $False;
+            RetryOnError                        = $False;
+            ActionScope                         = "IndexedItemsOnly";
+            Ensure                              = "Present";
+            EnableDedupe                        = $False;
+        }
+
+        SCComplianceSearchAction DemoSearchActionRetention
+        {
+            IncludeSharePointDocumentVersions   = $False;
+            Action                              = "Retention";
+            SearchName                          = "Integration Compliance Search - SPO";
             GlobalAdminAccount                  = $GlobalAdmin;
             IncludeCredential                   = $False;
             RetryOnError                        = $False;
@@ -135,7 +148,7 @@ Configuration Master
         SCComplianceSearchAction DemoSearchActionPurge
         {
             Action                              = "Purge";
-            SearchName                          = "Integration Compliance Search";
+            SearchName                          = "Integration Compliance Search - EXO";
             GlobalAdminAccount                  = $GlobalAdmin;
             IncludeCredential                   = $False;
             RetryOnError                        = $False;
