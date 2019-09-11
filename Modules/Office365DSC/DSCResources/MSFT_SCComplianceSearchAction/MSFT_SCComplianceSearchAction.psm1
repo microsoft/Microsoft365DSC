@@ -58,7 +58,7 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
 
-    $currentAction = Get-ComplianceSearchAction -Details | Where-Object {$_.SearchName -eq $SearchName -and $_.Action -eq $Action}
+    $currentAction = Get-CurrentAction -SearchName $SearchName -Action $Action
 
     if ($null -eq $currentAction)
     {
@@ -71,22 +71,21 @@ function Get-TargetResource
     {
         if ('Purge' -ne $Action)
         {
-            $Scenario = 'GenerateReportsOnly'
-            if ('Retention' -eq $Action)
-            {
-                $Scenario = 'RetentionReports'
-            }
-
-            $currentAction = $currentAction | Where-Object {$_.Results -like "*Scenario: $($Scenario)*"}
-
+            $Scenario          = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Scenario"
             $FileTypeExclusion = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "File type exclusions for unindexed"
             $EnableDedupe      = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Enable dedupe"
             $IncludeCreds      = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "SAS token"
             $IncludeSP         = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Include SharePoint versions"
             $ScopeValue        = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Scope"
 
+            $ActionName = "Export"
+            if ('RetentionReports' -eq $Scenario)
+            {
+                $ActionName = "Retention"
+            }
+
             $result = @{
-                Action                              = $currentAction.Action
+                Action                              = $ActionName
                 SearchName                          = $currentAction.SearchName
                 FileTypeExclusionsForUnindexedItems = $FileTypeExclusion
                 EnableDedupe                        = $EnableDedupe
@@ -180,84 +179,34 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of ComplianceTag for $Name"
+    Write-Verbose -Message "Setting configuration of SCComplianceSearchAction for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
 
-    $CurrentTag = Get-TargetResource @PSBoundParameters
+    $CurrentAction = Get-TargetResource @PSBoundParameters
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentTag.Ensure))
+    # Calling the New-ComplianceSearchAction if the action already exists, updates it.
+    if (('Present' -eq $Ensure))
     {
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
 
-        #Convert File plan to JSON before Set
-        if ($FilePlanProperty)
+        if ($null -ne $ActionScope)
         {
-            Write-Verbose -Message "Converting FilePlan to JSON"
-            $FilePlanPropertyJSON = ConvertTo-JSON (Get-SCFilePlanPropertyObject $FilePlanProperty)
-            $CreationParams.FilePlanProperty = $FilePlanPropertyJSON
+            $CreationParams.Remove("ActionScope")
+            $CreationParams.Add("Scope", $ActionScope)
         }
-        Write-Verbose "Creating new Compliance Tag $Name calling the New-ComplianceTag cmdlet."
-        New-ComplianceTag @CreationParams
-    }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
-    {
-        $SetParams = $PSBoundParameters
-
-        #Remove unused parameters for Set-ComplianceTag cmdlet
-        $SetParams.Remove("GlobalAdminAccount")
-        $SetParams.Remove("Ensure")
-        $SetParams.Remove("Name")
-        $SetParams.Remove("IsRecordLabel")
-        $SetParams.Remove("Regulatory")
-        $SetParams.Remove("RetentionAction")
-        $SetParams.Remove("RetentionType")
-
-        # Once set, a label can't be removed;
-        if ($SetParams.IsRecordLabel -eq $false -and $CurrentTag.IsRecordLabel -eq $true)
-        {
-            throw "Can't remove label on the existing Compliance Tag {$Name}. " + `
-                  "You will need to delete the tag and recreate it."
-        }
-
-        if ($null -ne $PsBoundParameters["Regulatory"] -and
-            $Regulatory -ne $CurrentTag.Regulatory)
-        {
-            throw "SPComplianceTag can't change the Regulatory property on " + `
-                  "existing tags {$Name} from $Regulatory to $($CurrentTag.Regulatory)." + `
-                  " You will need to delete the tag and recreate it."
-        }
-
-        if ($RetentionAction -ne $CurrentTag.RetentionAction)
-        {
-            throw "SPComplianceTag can't change the RetentionAction property on " + `
-                  "existing tags {$Name} from $RetentionAction to $($CurrentTag.RetentionAction)." + `
-                  " You will need to delete the tag and recreate it."
-        }
-
-        if ($RetentionType -ne $CurrentTag.RetentionType)
-        {
-            throw "SPComplianceTag can't change the RetentionType property on " + `
-                  "existing tags {$Name} from $RetentionType to $($CurrentTag.RetentionType)." + `
-                  " You will need to delete the tag and recreate it."
-        }
-
-        #Convert File plan to JSON before Set
-        if ($FilePlanProperty)
-        {
-            Write-Verbose -Message "Converting FilePlan properties to JSON"
-            $FilePlanPropertyJSON = ConvertTo-JSON (Get-SCFilePlanPropertyObject $FilePlanProperty)
-            $SetParams["FilePlanProperty"] = $FilePlanPropertyJSON
-        }
-        Set-ComplianceTag @SetParams -Identity $Name
+        Write-Verbose "Creating new Compliance Search Action calling the New-ComplianceSearchAction cmdlet."
+        New-ComplianceSearchAction @CreationParams
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
     {
+        $currentAction = Get-CurrentAction -Action $Action -SearchName $SearchName
+
         # If the Rule exists and it shouldn't, simply remove it;
-        Remove-ComplianceTag -Identity $Name -Confirm:$false
+        Remove-ComplianceSearchAction -Identity $currentAction.Identity -Confirm:$false
     }
 }
 
@@ -316,27 +265,17 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of ComplianceTag for $Name"
+    Write-Verbose -Message "Testing configuration of SCComplianceSearchAction"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
-    $ValuesToCheck.Remove("FilePlanProperty") | Out-Null
-
-    $TestFilePlanProperties = Test-SCFilePlanProperties -CurrentProperty $CurrentValues `
-                                -DesiredProperty $PSBoundParameters
-
-    if ($false -eq $TestFilePlanProperties)
-    {
-        return $false
-    }
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -370,6 +309,14 @@ function Export-TargetResource
             SearchName         = $action.SearchName
             GlobalAdminAccount = $GlobalAdminAccount
         }
+
+        $Scenario = Get-ResultProperty -ResultString $action.Results -PropertyName "Scenario"
+
+        if ('RetentionReports' -eq $Scenario)
+        {
+            $params.Action = "Retention"
+        }
+
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $content += "        SCComplianceSearchAction " + (New-GUID).ToString() + "`r`n"
@@ -420,6 +367,43 @@ function Get-ResultProperty
     }
 
     return $result
+}
+
+function Get-CurrentAction
+{
+    [CmdletBinding()]
+    [OutputType([System.Management.Automation.PSObject])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SearchName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('Export', 'Purge', 'Retention')]
+        $Action
+    )
+
+    # For the sake of retrieving the current action, search by Action = Export;
+    if ('Retention' -eq $Action)
+    {
+        $Action = "Export"
+        $Scenario = "RetentionReports"
+    }
+    elseif ('Export' -eq $Action)
+    {
+        $Scenario = "GenerateReports"
+    }
+
+    $currentAction = Get-ComplianceSearchAction -Details | Where-Object {$_.SearchName -eq $SearchName -and $_.Action -eq $Action}
+
+    if ('Purge' -ne $Action -and $null -ne $currentAction)
+    {
+        $currentAction = $currentAction | Where-Object {$_.Results -like "*Scenario: $($Scenario)*"}
+    }
+
+    return $currentAction
 }
 
 Export-ModuleMember -Function *-TargetResource
