@@ -94,11 +94,11 @@ Configuration Master
             DependsOn            = "[O365User]JohnSmith"
         }
 
-        SCComplianceSearch DemoSearch
+        SCComplianceSearch DemoSearchSPO
         {
             Case                                  = "Integration Case";
             HoldNames                             = @();
-            Name                                  = "Integration Compliance Search";
+            Name                                  = "Integration Compliance Search - SPO";
             Ensure                                = "Present";
             Language                              = "iv";
             GlobalAdminAccount                    = $GlobalAdmin;
@@ -106,11 +106,22 @@ Configuration Master
             SharePointLocation                    = @("All");
         }
 
+        SCComplianceSearch DemoSearchEXO
+        {
+            Case                                  = "Integration Case";
+            HoldNames                             = @();
+            Name                                  = "Integration Compliance Search - EXO";
+            Ensure                                = "Present";
+            Language                              = "iv";
+            GlobalAdminAccount                    = $GlobalAdmin;
+            AllowNotFoundExchangeLocationsEnabled = $False;
+        }
+
         SCComplianceSearchAction DemoSearchActionExport
         {
             IncludeSharePointDocumentVersions   = $False;
             Action                              = "Export";
-            SearchName                          = "Integration Compliance Search";
+            SearchName                          = "Integration Compliance Search - EXO";
             GlobalAdminAccount                  = $GlobalAdmin;
             IncludeCredential                   = $False;
             RetryOnError                        = $False;
