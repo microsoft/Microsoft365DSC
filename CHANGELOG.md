@@ -19,6 +19,8 @@
     to version 1.9.4.5;
   * Updated Microsoft.Online.SharePoint.PowerShell dependency
     to version 16.0.19223.12000
+  * UPdated SharePointPnPPowerShellOnline dependency
+    to version 3.13.1909.0
 
 ## 1.0.0.846
 
