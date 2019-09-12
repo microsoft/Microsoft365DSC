@@ -850,37 +850,129 @@ function Set-SPOSiteConfiguration
         {
             $CurrentParameters = $PSBoundParameters
             Write-Debug "The site $url currently is in Lockstate NoAccess and for that cannot be changed"
-            if ($CurrentParameters.ContainsKey("GlobalAdminAccount")) { $CurrentParameters.Remove("GlobalAdminAccount") }
-            if ($CurrentParameters.ContainsKey("Ensure")) { $CurrentParameters.Remove("Ensure") }
-            if ($CurrentParameters.ContainsKey("AllowSelfServiceUpgrade")) { $CurrentParameters.Remove("AllowSelfServiceUpgrade") }
-            if ($CurrentParameters.ContainsKey("DenyAddAndCustomizePages")) { $CurrentParameters.Remove("DenyAddAndCustomizePages") }
-            if ($CurrentParameters.ContainsKey("ResourceQuotaWarningLevel")) { $CurrentParameters.Remove("ResourceQuotaWarningLevel") }
-            if ($CurrentParameters.ContainsKey("SharingCapability")) { $CurrentParameters.Remove("SharingCapability") }
-            if ($CurrentParameters.ContainsKey("StorageQuotaWarningLevel")) { $CurrentParameters.Remove("StorageQuotaWarningLevel") }
-            if ($CurrentParameters.ContainsKey("CommentsOnSitePagesDisabled")) { $CurrentParameters.Remove("CommentsOnSitePagesDisabled") }
-            if ($CurrentParameters.ContainsKey("SocialBarOnSitePagesDisabled")) { $CurrentParameters.Remove("SocialBarOnSitePagesDisabled") }
-            if ($CurrentParameters.ContainsKey("DisableAppViews")) { $CurrentParameters.Remove("DisableAppViews") }
-            if ($CurrentParameters.ContainsKey("DisableCompanyWideSharingLinks")) { $CurrentParameters.Remove("DisableCompanyWideSharingLinks") }
-            if ($CurrentParameters.ContainsKey("DisableFlows")) { $CurrentParameters.Remove("DisableFlows") }
-            if ($CurrentParameters.ContainsKey("RestrictedToGeo")) { $CurrentParameters.Remove("RestrictedToGeo") }
-            if ($CurrentParameters.ContainsKey("SharingAllowedDomainList")) { $CurrentParameters.Remove("SharingAllowedDomainList") }
-            if ($CurrentParameters.ContainsKey("SharingBlockedDomainList")) { $CurrentParameters.Remove("SharingBlockedDomainList") }
-            if ($CurrentParameters.ContainsKey("SharingDomainRestrictionMode")) { $CurrentParameters.Remove("SharingDomainRestrictionMode") }
-            if ($CurrentParameters.ContainsKey("ShowPeoplePickerSuggestionsForGuestUsers")) { $CurrentParameters.Remove("ShowPeoplePickerSuggestionsForGuestUsers") }
-            if ($CurrentParameters.ContainsKey("DefaultSharingLinkType")) { $CurrentParameters.Remove("DefaultSharingLinkType") }
-            if ($CurrentParameters.ContainsKey("DefaultLinkPermission")) { $CurrentParameters.Remove("DefaultLinkPermission") }
-            if ($CurrentParameters.ContainsKey("CompatibilityLevel")) { $CurrentParameters.Remove("CompatibilityLevel") }
-            if ($CurrentParameters.ContainsKey("Template")) { $CurrentParameters.Remove("Template") }
-            if ($CurrentParameters.ContainsKey("LocaleId")) { $CurrentParameters.Remove("LocaleId") }
-            if ($CurrentParameters.ContainsKey("Url")) { $CurrentParameters.Remove("Url") }
-            if ($CurrentParameters.ContainsKey("Owner")) { $CurrentParameters.Remove("Owner") }
-            if ($CurrentParameters.ContainsKey("StorageQuota")) { $CurrentParameters.Remove("StorageQuota") }
-            if ($CurrentParameters.ContainsKey("Title")) { $CurrentParameters.Remove("Title") }
-            if ($CurrentParameters.ContainsKey("ResourceQuota")) { $CurrentParameters.Remove("ResourceQuota") }
-            if ($CurrentParameters.ContainsKey("TimeZoneId")) { $CurrentParameters.Remove("TimeZoneId") }
-            if ($CurrentParameters.ContainsKey("HubUrl")) { $CurrentParameters.Remove("HubUrl") }
-            if ($CurrentParameters.ContainsKey("AnonymousLinkExpirationInDays")) { $CurrentParameters.Remove("AnonymousLinkExpirationInDays") }
-            if ($CurrentParameters.ContainsKey("OverrideTenantAnonymousLinkExpirationPolicy")) { $CurrentParameters.Remove("OverrideTenantAnonymousLinkExpirationPolicy") }
+            if ($CurrentParameters.ContainsKey("GlobalAdminAccount"))
+            {
+                $CurrentParameters.Remove("GlobalAdminAccount")
+            }
+            if ($CurrentParameters.ContainsKey("Ensure"))
+            {
+                $CurrentParameters.Remove("Ensure")
+            }
+            if ($CurrentParameters.ContainsKey("AllowSelfServiceUpgrade"))
+            {
+                $CurrentParameters.Remove("AllowSelfServiceUpgrade") 
+            }
+            if ($CurrentParameters.ContainsKey("DenyAddAndCustomizePages"))
+            {
+                $CurrentParameters.Remove("DenyAddAndCustomizePages")
+            }
+            if ($CurrentParameters.ContainsKey("ResourceQuotaWarningLevel"))
+            {
+                $CurrentParameters.Remove("ResourceQuotaWarningLevel")
+            }
+            if ($CurrentParameters.ContainsKey("SharingCapability")){
+                $CurrentParameters.Remove("SharingCapability")
+            }
+            if ($CurrentParameters.ContainsKey("StorageQuotaWarningLevel"))
+            {
+                $CurrentParameters.Remove("StorageQuotaWarningLevel")
+            }
+            if ($CurrentParameters.ContainsKey("CommentsOnSitePagesDisabled"))
+            {
+                $CurrentParameters.Remove("CommentsOnSitePagesDisabled")
+            }
+            if ($CurrentParameters.ContainsKey("SocialBarOnSitePagesDisabled"))
+            {
+                $CurrentParameters.Remove("SocialBarOnSitePagesDisabled")
+            }
+            if ($CurrentParameters.ContainsKey("DisableAppViews"))
+            {
+                $CurrentParameters.Remove("DisableAppViews")
+            }
+            if ($CurrentParameters.ContainsKey("DisableCompanyWideSharingLinks"))
+            {
+                $CurrentParameters.Remove("DisableCompanyWideSharingLinks")
+            }
+            if ($CurrentParameters.ContainsKey("DisableFlows"))
+            {
+                $CurrentParameters.Remove("DisableFlows")
+            }
+            if ($CurrentParameters.ContainsKey("RestrictedToGeo"))
+            {
+                $CurrentParameters.Remove("RestrictedToGeo")
+            }
+            if ($CurrentParameters.ContainsKey("SharingAllowedDomainList"))
+            {
+                $CurrentParameters.Remove("SharingAllowedDomainList")
+            }
+            if ($CurrentParameters.ContainsKey("SharingBlockedDomainList"))
+            {
+                $CurrentParameters.Remove("SharingBlockedDomainList")
+            }
+            if ($CurrentParameters.ContainsKey("SharingDomainRestrictionMode"))
+            {
+                $CurrentParameters.Remove("SharingDomainRestrictionMode")
+            }
+            if ($CurrentParameters.ContainsKey("ShowPeoplePickerSuggestionsForGuestUsers"))
+            {
+                $CurrentParameters.Remove("ShowPeoplePickerSuggestionsForGuestUsers")
+            }
+            if ($CurrentParameters.ContainsKey("DefaultSharingLinkType"))
+            {
+                $CurrentParameters.Remove("DefaultSharingLinkType")
+            }
+            if ($CurrentParameters.ContainsKey("DefaultLinkPermission"))
+            {
+                $CurrentParameters.Remove("DefaultLinkPermission")
+            }
+            if ($CurrentParameters.ContainsKey("CompatibilityLevel"))
+            {
+                $CurrentParameters.Remove("CompatibilityLevel")
+            }
+            if ($CurrentParameters.ContainsKey("Template"))
+            {
+                $CurrentParameters.Remove("Template")
+            }
+            if ($CurrentParameters.ContainsKey("LocaleId"))
+            {
+                $CurrentParameters.Remove("LocaleId")
+            }
+            if ($CurrentParameters.ContainsKey("Url"))
+            {
+                $CurrentParameters.Remove("Url")
+            }
+            if ($CurrentParameters.ContainsKey("Owner"))
+            {
+                $CurrentParameters.Remove("Owner")
+            }
+            if ($CurrentParameters.ContainsKey("StorageQuota"))
+            {
+                $CurrentParameters.Remove("StorageQuota")
+            }
+            if ($CurrentParameters.ContainsKey("Title"))
+            {
+                $CurrentParameters.Remove("Title")
+            }
+            if ($CurrentParameters.ContainsKey("ResourceQuota"))
+            {
+                $CurrentParameters.Remove("ResourceQuota")
+            }
+            if ($CurrentParameters.ContainsKey("TimeZoneId"))
+            {
+                $CurrentParameters.Remove("TimeZoneId")
+            }
+            if ($CurrentParameters.ContainsKey("HubUrl"))
+            {
+                $CurrentParameters.Remove("HubUrl")
+            }
+            if ($CurrentParameters.ContainsKey("AnonymousLinkExpirationInDays"))
+            {
+                $CurrentParameters.Remove("AnonymousLinkExpirationInDays")
+            }
+            if ($CurrentParameters.ContainsKey("OverrideTenantAnonymousLinkExpirationPolicy"))
+            {
+                $CurrentParameters.Remove("OverrideTenantAnonymousLinkExpirationPolicy")
+            }
             if ($CurrentParameters.Count -gt 0)
             {
                 Set-SPOSite -Identity $Url @CurrentParameters -NoWait
@@ -920,19 +1012,58 @@ function Set-SPOSiteConfiguration
             #Once a site based on the GROUP#0 template has been created not all properties can be configured as they can be for other sitetemplates for that they will be removed
             if($CurrentParameters.Template -eq "GROUP#0")
             {
-                if ($CurrentParameters.ContainsKey("Title")) { $CurrentParameters.Remove("Title") }
-                if ($CurrentParameters.ContainsKey("CompatibilityLevel")) { $CurrentParameters.Remove("CompatibilityLevel") }
-                if ($CurrentParameters.ContainsKey("LocaleId")) { $CurrentParameters.Remove("LocaleId") }
-                if ($CurrentParameters.ContainsKey("Template")) { $CurrentParameters.Remove("Template") }
-                if ($CurrentParameters.ContainsKey("TimeZoneId")) { $CurrentParameters.Remove("TimeZoneId") }
-                if ($CurrentParameters.ContainsKey("CommentsOnSitePagesDisabled")) { $CurrentParameters.Remove("CommentsOnSitePagesDisabled") }
-                if ($CurrentParameters.ContainsKey("DisableAppViews")) { $CurrentParameters.Remove("DisableAppViews") }
-                if ($CurrentParameters.ContainsKey("DisableFlows")) { $CurrentParameters.Remove("DisableFlows") }
-                if ($CurrentParameters.ContainsKey("RestrictedToGeo")) { $CurrentParameters.Remove("RestrictedToGeo") }
-                if ($CurrentParameters.ContainsKey("SharingAllowedDomainList")) { $CurrentParameters.Remove("SharingAllowedDomainList") }
-                if ($CurrentParameters.ContainsKey("SharingBlockedDomainList")) { $CurrentParameters.Remove("SharingBlockedDomainList") }
-                if ($CurrentParameters.ContainsKey("SharingDomainRestrictionMode")) { $CurrentParameters.Remove("SharingDomainRestrictionMode") }
-                if ($CurrentParameters.ContainsKey("HubUrl")) { $CurrentParameters.Remove("HubUrl") }
+                if ($CurrentParameters.ContainsKey("Title"))
+                {
+                    $CurrentParameters.Remove("Title")
+                }
+                if ($CurrentParameters.ContainsKey("CompatibilityLevel"))
+                {
+                    $CurrentParameters.Remove("CompatibilityLevel")
+                }
+                if ($CurrentParameters.ContainsKey("LocaleId"))
+                {
+                    $CurrentParameters.Remove("LocaleId")
+                }
+                if ($CurrentParameters.ContainsKey("Template"))
+                {
+                    $CurrentParameters.Remove("Template")
+                }
+                if ($CurrentParameters.ContainsKey("TimeZoneId"))
+                {
+                    $CurrentParameters.Remove("TimeZoneId")
+                }
+                if ($CurrentParameters.ContainsKey("CommentsOnSitePagesDisabled"))
+                {
+                    $CurrentParameters.Remove("CommentsOnSitePagesDisabled")
+                }
+                if ($CurrentParameters.ContainsKey("DisableAppViews"))
+                {
+                    $CurrentParameters.Remove("DisableAppViews")
+                }
+                if ($CurrentParameters.ContainsKey("DisableFlows"))
+                {
+                    $CurrentParameters.Remove("DisableFlows")
+                }
+                if ($CurrentParameters.ContainsKey("RestrictedToGeo"))
+                {
+                    $CurrentParameters.Remove("RestrictedToGeo")
+                }
+                if ($CurrentParameters.ContainsKey("SharingAllowedDomainList"))
+                {
+                    $CurrentParameters.Remove("SharingAllowedDomainList")
+                }
+                if ($CurrentParameters.ContainsKey("SharingBlockedDomainList"))
+                {
+                    $CurrentParameters.Remove("SharingBlockedDomainList")
+                }
+                if ($CurrentParameters.ContainsKey("SharingDomainRestrictionMode"))
+                {
+                    $CurrentParameters.Remove("SharingDomainRestrictionMode")
+                }
+                if ($CurrentParameters.ContainsKey("HubUrl"))
+                {
+                    $CurrentParameters.Remove("HubUrl")
+                }
             }
             if ($CurrentParameters.SharingCapability -and $CurrentParameters.DenyAddAndCustomizePages)
             {
@@ -945,46 +1076,82 @@ function Set-SPOSiteConfiguration
             if ($SharingDomainRestrictionMode -eq "")
             {
                 Write-Verbose -Message "SharingDomainRestrictionMode is empty. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
-                if ($CurrentParameters.ContainsKey("ShareingAllowedDomainList")) { $CurrentParameters.Remove("SharingAllowedDomainList") }
-                if ($CurrentParameters.ContainsKey("SharingBlockedDomainList")) { $CurrentParameters.Remove("SharingBlockedDomainList") }
+                if ($CurrentParameters.ContainsKey("ShareingAllowedDomainList"))
+                {
+                    $CurrentParameters.Remove("SharingAllowedDomainList")
+                }
+                if ($CurrentParameters.ContainsKey("SharingBlockedDomainList"))
+                {
+                    $CurrentParameters.Remove("SharingBlockedDomainList")
+                }
             }
             if($SharingDomainRestrictionMode -eq "None")
             {
                 Write-Verbose -Message "SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
-                if ($CurrentParameters.ContainsKey("SharingAllowedDomainList")) { $CurrentParameters.Remove("SharingAllowedDomainList") }
-                if ($CurrentParameters.ContainsKey("SharingBlockedDomainList")) { $CurrentParameters.Remove("SharingBlockedDomainList") }
+                if ($CurrentParameters.ContainsKey("SharingAllowedDomainList"))
+                {
+                    $CurrentParameters.Remove("SharingAllowedDomainList")
+                }
+                if ($CurrentParameters.ContainsKey("SharingBlockedDomainList"))
+                {
+                    $CurrentParameters.Remove("SharingBlockedDomainList")
+                }
             }
             elseif ($SharingDomainRestrictionMode -eq "AllowList")
             {
                 Write-Verbose -Message "SharingDomainRestrictionMode is set to AllowList. For that SharingBlockedDomainList cannot be configured"
-                if ($CurrentParameters.ContainsKey("SharingBlockedDomainList")) { $CurrentParameters.Remove("SharingBlockedDomainList") }
+                if ($CurrentParameters.ContainsKey("SharingBlockedDomainList"))
+                {
+                    $CurrentParameters.Remove("SharingBlockedDomainList")
+                }
                 if ($SharingAllowedDomainList -eq "")
                 {
                     Write-Verbose -Message "No allowed domains specified. Not taking any action"
-                    if ($CurrentParameters.ContainsKey("SharingAllowedDomainList")) { $CurrentParameters.Remove("SharingAllowedDomainList") }
-                    if ($CurrentParameters.ContainsKey("SharingDomainRestrictionMode")) { $CurrentParameters.Remove("SharingDomainRestrictionMode") }
+                    if ($CurrentParameters.ContainsKey("SharingAllowedDomainList"))
+                    {
+                        $CurrentParameters.Remove("SharingAllowedDomainList")
+                    }
+                    if ($CurrentParameters.ContainsKey("SharingDomainRestrictionMode"))
+                    {
+                        $CurrentParameters.Remove("SharingDomainRestrictionMode")
+                    }
                 }
             }
             elseif ($SharingDomainRestrictionMode -eq "BlockList")
             {
                 Write-Verbose -Message "SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured"
-                if ($CurrentParameters.ContainsKey("SharingAllowedDomainList")) { $CurrentParameters.Remove("SharingAllowedDomainList") }
+                if ($CurrentParameters.ContainsKey("SharingAllowedDomainList"))
+                {
+                    $CurrentParameters.Remove("SharingAllowedDomainList")
+                }
                 if ($SharingBlockedDomainList -eq "")
                 {
                     Write-Verbose -Message "No blocked domains specified. Not taking any action"
-                    if ($CurrentParameters.ContainsKey("SharingBlockedDomainList")) { $CurrentParameters.Remove("SharingBlockedDomainList") }
-                    if ($CurrentParameters.ContainsKey("SharingDomainRestrictionMode")) { $CurrentParameters.Remove("SharingDomainRestrictionMode") }
+                    if ($CurrentParameters.ContainsKey("SharingBlockedDomainList"))
+                    {
+                        $CurrentParameters.Remove("SharingBlockedDomainList")
+                    }
+                    if ($CurrentParameters.ContainsKey("SharingDomainRestrictionMode"))
+                    {
+                        $CurrentParameters.Remove("SharingDomainRestrictionMode")
+                    }
                 }
             }
             if (($site.SharingCapability -ne "ExternalUserAndGuestSharing") -or ((Get-SPOTenant).SharingCapability -ne "ExternalUserAndGuestSharing") -and ($DefaultSharingLinkType -eq "AnonymousAccess"))
             {
                 Write-Verbose -Message "Anonymous sharing has to be enabled in the SharingCapability on site and tenant level first before DefaultSharingLinkType can be set to Anonymous Access"
-                if ($CurrentParameters.ContainsKey("DefaultSharingLinkType")) { $CurrentParameters.Remove("DefaultSharingLinkType") }
+                if ($CurrentParameters.ContainsKey("DefaultSharingLinkType"))
+                {
+                    $CurrentParameters.Remove("DefaultSharingLinkType")
+                }
             }
             if ((Get-SPOTenant).showPeoplePickerSuggestionsForGuestUsers -eq $false)
             {
                 Write-Verbose -Message "ShowPeoplePickerSuggestionsForGuestUsers for this site cannot be set since it is set to false on tenant level"
-                if ($CurrentParameters.ContainsKey("showPeoplePickerSuggestionsForGuestUsers")) { $CurrentParameters.Remove("showPeoplePickerSuggestionsForGuestUsers") }
+                if ($CurrentParameters.ContainsKey("showPeoplePickerSuggestionsForGuestUsers"))
+                {
+                    $CurrentParameters.Remove("showPeoplePickerSuggestionsForGuestUsers")
+                }
             }
             if($OverrideTenantAnonymousLinkExpirationPolicy -eq $false)
             {
@@ -992,14 +1159,38 @@ function Set-SPOSiteConfiguration
                 write-verbose -Message "$($OverrideTenantAnonymousLinkExpirationPolicy)"
                 write-verbose -Message "$($AnonymousLinkExpirationInDays)"
             }
-            if ($CurrentParameters.ContainsKey("GlobalAdminAccount")) { $CurrentParameters.Remove("GlobalAdminAccount") }
-            if ($CurrentParameters.ContainsKey("Ensure")) { $CurrentParameters.Remove("Ensure") }
-            if ($CurrentParameters.ContainsKey("Url")) { $CurrentParameters.Remove("Url") }
-            if ($CurrentParameters.ContainsKey("CompatibilityLevel")) { $CurrentParameters.Remove("CompatibilityLevel") }
-            if ($CurrentParameters.ContainsKey("Template")) { $CurrentParameters.Remove("Template") }
-            if ($CurrentParameters.ContainsKey("LocaleId")) { $CurrentParameters.Remove("LocaleId") }
-            if ($CurrentParameters.ContainsKey("HubUrl")) { $CurrentParameters.Remove("HubUrl") }
-            if ($CurrentParameters.ContainsKey("IsSecondTry")) { $CurrentParameters.Remove("IsSecondTry") }
+            if ($CurrentParameters.ContainsKey("GlobalAdminAccount"))
+            {
+                $CurrentParameters.Remove("GlobalAdminAccount")
+            }
+            if ($CurrentParameters.ContainsKey("Ensure"))
+            {
+                $CurrentParameters.Remove("Ensure")
+            }
+            if ($CurrentParameters.ContainsKey("Url"))
+            {
+                $CurrentParameters.Remove("Url")
+            }
+            if ($CurrentParameters.ContainsKey("CompatibilityLevel"))
+            {
+                $CurrentParameters.Remove("CompatibilityLevel")
+            }
+            if ($CurrentParameters.ContainsKey("Template"))
+            {
+                $CurrentParameters.Remove("Template")
+            }
+            if ($CurrentParameters.ContainsKey("LocaleId"))
+            {
+                $CurrentParameters.Remove("LocaleId")
+            }
+            if ($CurrentParameters.ContainsKey("HubUrl"))
+            {
+                $CurrentParameters.Remove("HubUrl")
+            }
+            if ($CurrentParameters.ContainsKey("IsSecondTry"))
+            {
+                $CurrentParameters.Remove("IsSecondTry")
+            }
             if ($CurrentParameters.Count -gt 0)
             {
                 Set-SPOSite -Identity $Url @CurrentParameters -NoWait
