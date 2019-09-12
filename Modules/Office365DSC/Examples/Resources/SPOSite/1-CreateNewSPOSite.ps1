@@ -41,6 +41,8 @@ Configuration Example
             ShowPeoplePickerSuggestionsForGuestUsers    = $false
             DefaultSharingLinkType                      = "None"
             DefaultLinkPermission                       = "None"
+            AnonymousLinkExpirationInDays               = "12"
+            OverrideTenantAnonymousLinkExpirationPolicy = $true
         }
         SPOSite ecd9c36d-d67b-46e6-801d-6faf145fd1d5
         {
@@ -69,6 +71,8 @@ Configuration Example
             ShowPeoplePickerSuggestionsForGuestUsers    = $false
             DefaultSharingLinkType                      = "None"
             DefaultLinkPermission                       = "None"
+            AnonymousLinkExpirationInDays               = "0"
+            OverrideTenantAnonymousLinkExpirationPolicy = $true
         }
         SPOSite 6603245d-2cf0-45fa-b2ce-46060b2ffaca
         {
@@ -97,6 +101,8 @@ Configuration Example
             ShowPeoplePickerSuggestionsForGuestUsers    = $false
             DefaultSharingLinkType                      = "None"
             DefaultLinkPermission                       = "None"
+            AnonymousLinkExpirationInDays               = "30"
+            OverrideTenantAnonymousLinkExpirationPolicy = $true
         }
         SPOSite ff3f784a-5611-4f61-81a4-4e17b1ee382b
         {
@@ -125,6 +131,8 @@ Configuration Example
             ShowPeoplePickerSuggestionsForGuestUsers    = $false
             DefaultSharingLinkType                      = "None"
             DefaultLinkPermission                       = "None"
+            AnonymousLinkExpirationInDays               = "12"
+            OverrideTenantAnonymousLinkExpirationPolicy = $true
         }
         SPOSite dedbecc0-f869-4e8b-8518-f4d15e6257d7
         {
@@ -153,6 +161,8 @@ Configuration Example
             ShowPeoplePickerSuggestionsForGuestUsers    = $false
             DefaultSharingLinkType                      = "None"
             DefaultLinkPermission                       = "None"
+            AnonymousLinkExpirationInDays               = "12"
+            OverrideTenantAnonymousLinkExpirationPolicy = $false
         }
     }
 }

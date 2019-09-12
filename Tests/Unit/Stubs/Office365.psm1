@@ -5526,8 +5526,17 @@ param(
 
     [Parameter(ParameterSetName='ParamSet1')]
     #[System.Nullable[object]]
-    ${DefaultLinkPermission})
+    ${DefaultLinkPermission},
 
+    [Parameter(ParameterSetName='ParamSet1')]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    ${AnonymousLinkExpirationInDays},
+
+    [Parameter(ParameterSetName='ParamSet1')]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    ${OverrideTenantAnonymousLinkExpirationPolicy})
 
  }
 
