@@ -9285,11 +9285,143 @@ param(
 
  }
 
+ function Get-ComplianceSearchAction {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity,
+
+       [Parameter()]
+       [Switch]
+       $Details,
+
+       [Parameter()]
+       [System.String]
+       $Case
+   )
+}
+
+function Remove-ComplianceSearchAction {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Identity
+   )
+}
+
+function New-ComplianceSearchAction {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SearchName,
+
+        [Parameter()]
+        [System.String[]]
+        $FileTypeExclusionsForUnindexedItems,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableDedupe,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeCredential,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeSharePointDocumentVersions,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('SoftDelete', 'HardDelete')]
+        $PurgeType,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetryOnError,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('IndexedItemsOnly', 'UnindexedItemsOnly', 'BothIndexedAndUnindexedItems')]
+        $Scope,
+
+        [Parameter()]
+        [Switch]
+        $Report,
+
+        [Parameter()]
+        [Switch]
+        $RetentionReport,
+
+        [Parameter()]
+        [Switch]
+        $Purge,
+
+        [Parameter()]
+        [Switch]
+        $Confirm
+   )
+}
+
+function Get-ComplianceCase {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity
+   )
+}
+
+function Remove-ComplianceCase {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Identity
+   )
+}
+
+function New-ComplianceCase {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Name,
+
+       [Parameter()]
+       [System.String]
+       $Description
+   )
+}
+
+function Set-ComplianceCase {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [Switch]
+        $Close,
+
+        [Parameter()]
+        [Switch]
+        $Reopen
+    )
+}
 
 function Get-AzureADDirectoryRoleMember {
  [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Parameter(Mandatory=$true)]
     [string]
     ${ObjectId},
 
@@ -12652,5 +12784,148 @@ function Set-ComplianceTag
     [Parameter()]
     [System.String]
     $EventType
+    )
+}
+
+
+function Get-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Case
+    )
+}
+function Remove-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+function New-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Case,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNotFoundExchangeLocationsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocationExclusion,
+
+        [Parameter()]
+        [System.String[]]
+        $HoldNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeUserAppContent,
+
+        [Parameter()]
+        [System.String]
+        $Language,
+
+        [Parameter()]
+        [System.String[]]
+        $PublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation,
+
+        [Parameter[]]
+        [System.String[]]
+        $SharePointLocationExclusion
+    )
+}
+
+function Set-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Case,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNotFoundExchangeLocationsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocationExclusion,
+
+        [Parameter()]
+        [System.String[]]
+        $HoldNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeUserAppContent,
+
+        [Parameter()]
+        [System.String]
+        $Language,
+
+        [Parameter()]
+        [System.String[]]
+        $PublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation,
+
+        [Parameter[]]
+        [System.String[]]
+        $SharePointLocationExclusion
     )
 }

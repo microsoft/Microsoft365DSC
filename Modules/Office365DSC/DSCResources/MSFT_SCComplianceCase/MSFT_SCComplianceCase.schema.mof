@@ -1,0 +1,9 @@
+[ClassVersion("1.0.0.0"), FriendlyName("SCComplianceCase")]
+class MSFT_SCComplianceCase : OMI_BaseResource
+{
+    [Key, Description("The Name parameter specifies the unique name of the compliance case.")] String Name;
+    [Write, Description("The description of the case.")] String Description;
+    [Write, Description("Specify if this case should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Status for the case. Can either be 'Active' or 'Closed'"), ValueMap{"Active","Closed"}, Values{"Active","Closed"}] String Status;
+    [Required, Description("Credentials of the Global Admin Account"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};
