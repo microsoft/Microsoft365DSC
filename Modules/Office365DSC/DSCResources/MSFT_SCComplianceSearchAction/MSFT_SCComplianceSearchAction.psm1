@@ -107,11 +107,11 @@ function Get-TargetResource
             }
         }
 
-        if ('<Specify -IncludeCredential parameter to show the SAS token>' -eq $IncludeCreds)
+        if ('<Specify -IncludeCredential parameter to show the SAS token>' -eq $IncludeCreds -or 'Purge' -eq $Action)
         {
             $result.Add("IncludeCredential", $false)
         }
-        else
+        elseif ('Purge' -ne $Action)
         {
             $result.Add("IncludeCredential", $true)
         }
