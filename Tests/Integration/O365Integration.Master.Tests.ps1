@@ -94,16 +94,65 @@ Configuration Master
             DependsOn            = "[O365User]JohnSmith"
         }
 
-        SCComplianceSearch DemoSearch
+        SCComplianceSearch DemoSearchSPO
         {
             Case                                  = "Integration Case";
             HoldNames                             = @();
-            Name                                  = "Integration Compliance Search";
+            Name                                  = "Integration Compliance Search - SPO";
             Ensure                                = "Present";
             Language                              = "iv";
             GlobalAdminAccount                    = $GlobalAdmin;
             AllowNotFoundExchangeLocationsEnabled = $False;
             SharePointLocation                    = @("All");
+        }
+
+        SCComplianceSearch DemoSearchEXO
+        {
+            Case                                  = "Integration Case";
+            HoldNames                             = @();
+            Name                                  = "Integration Compliance Search - EXO";
+            Ensure                                = "Present";
+            Language                              = "iv";
+            GlobalAdminAccount                    = $GlobalAdmin;
+            AllowNotFoundExchangeLocationsEnabled = $False;
+            ExchangeLocation                      = @("All")
+            PublicFolderLocation                  = @("All")
+        }
+
+        SCComplianceSearchAction DemoSearchActionExport
+        {
+            IncludeSharePointDocumentVersions   = $False;
+            Action                              = "Export";
+            SearchName                          = "Integration Compliance Search - EXO";
+            GlobalAdminAccount                  = $GlobalAdmin;
+            IncludeCredential                   = $False;
+            RetryOnError                        = $False;
+            ActionScope                         = "IndexedItemsOnly";
+            Ensure                              = "Present";
+            EnableDedupe                        = $False;
+        }
+
+        SCComplianceSearchAction DemoSearchActionRetention
+        {
+            IncludeSharePointDocumentVersions   = $False;
+            Action                              = "Retention";
+            SearchName                          = "Integration Compliance Search - EXO";
+            GlobalAdminAccount                  = $GlobalAdmin;
+            IncludeCredential                   = $False;
+            RetryOnError                        = $False;
+            ActionScope                         = "IndexedItemsOnly";
+            Ensure                              = "Present";
+            EnableDedupe                        = $False;
+        }
+
+        SCComplianceSearchAction DemoSearchActionPurge
+        {
+            Action                              = "Purge";
+            SearchName                          = "Integration Compliance Search - EXO";
+            GlobalAdminAccount                  = $GlobalAdmin;
+            IncludeCredential                   = $False;
+            RetryOnError                        = $False;
+            Ensure                              = "Present";
         }
 
         SCComplianceCase DemoCase
