@@ -774,7 +774,7 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
-    #region "SCDLPComplianceCase"
+    #region "SCComplianceCase"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCComplianceCase")) -or
         $AllComponents)
@@ -784,11 +784,49 @@ function Start-O365ConfigurationExtract
                           -Platform SecurityComplianceCenter `
                           -ErrorAction SilentlyContinue
 
-        $SCDLPComplianceCaseModulePath = Join-Path -Path $PSScriptRoot `
+        $SCComplianceCaseModulePath = Join-Path -Path $PSScriptRoot `
                                                    -ChildPath "..\DSCResources\MSFT_SCComplianceCase\MSFT_SCComplianceCase.psm1" `
                                                    -Resolve
 
-        Import-Module $SCDLPComplianceCaseModulePath | Out-Null
+        Import-Module $SCComplianceCaseModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "SCComplianceSearch"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCComplianceSearch")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SCComplianceSearch..."
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform SecurityComplianceCenter `
+                          -ErrorAction SilentlyContinue
+
+        $SCComplianceCSearchModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SCComplianceSearch\MSFT_SCComplianceSearch.psm1" `
+                                                   -Resolve
+
+        Import-Module $SCComplianceCSearchModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "SCComplianceSearchAction"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCComplianceSearchAction")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SCComplianceSearchAction..."
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform SecurityComplianceCenter `
+                          -ErrorAction SilentlyContinue
+
+        $SCComplianceCSearchActionModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SCComplianceSearchAction\MSFT_SCComplianceSearchAction.psm1" `
+                                                   -Resolve
+
+        Import-Module $SCComplianceCSearchActionModulePath | Out-Null
         $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
