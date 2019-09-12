@@ -439,6 +439,10 @@ function Get-CurrentAction
     {
         $currentAction = $currentAction | Where-Object {$_.Results -like "*Scenario: $($Scenario)*"}
     }
+    elseif ('Purge' -eq $Action)
+    {
+        $currentAction = $currentAction | Where-Object {$_.Action -eq 'Purge'}
+    }
 
     return $currentAction
 }

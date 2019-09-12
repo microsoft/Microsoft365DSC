@@ -9358,7 +9358,11 @@ function New-ComplianceSearchAction {
 
         [Parameter()]
         [Switch]
-        $Purge
+        $Purge,
+
+        [Parameter()]
+        [Switch]
+        $Confirm
    )
 }
 
