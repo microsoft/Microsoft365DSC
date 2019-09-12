@@ -6,6 +6,8 @@
   * New Resource
 * SCComplianceSearch
   * New Resource;
+* SCComplianceSearchAction
+  * New Resource;
 * SCDLPComplianceRule
   * New Resource;
 * Reverse
