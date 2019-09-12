@@ -15,6 +15,8 @@
     to version 0.7.0;
   * Updated ReverseDSC dependency
     to version 1.9.4.5;
+  * Updated Microsoft.Online.SharePoint.PowerShell dependency
+    to version 16.0.19223.12000
 
 ## 1.0.0.846
 
