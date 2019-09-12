@@ -185,7 +185,7 @@ function Set-TargetResource
     $CurrentAction = Get-TargetResource @PSBoundParameters
 
     # Calling the New-ComplianceSearchAction if the action already exists, updates it.
-    if (('Present' -eq $Ensure))
+    if ('Present' -eq $Ensure)
     {
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("GlobalAdminAccount")
