@@ -422,63 +422,19 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Yes")]
-        [System.String]
-        $IsSingleInstance,
-
-        [Parameter()]
-        [System.UInt32]
-        $OneDriveStorageQuota,
-
-        [Parameter()]
-        [System.UInt32]
-        $OrphanedPersonalSitesRetentionPeriod,
-
-        [Parameter()]
-        [System.Boolean]
-        $OneDriveForGuestsEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $NotifyOwnersWhenInvitationsAccepted,
-
-        [Parameter()]
-        [System.Boolean]
-        $NotificationsInOneDriveForBusinessEnabled,
-
-        [Parameter()]
-        [System.String]
-        $ODBMembersCanShare,
-
-        [Parameter()]
-        [System.String]
-        $ODBAccessRequests,
-
-        [Parameter()]
-        [System.Boolean]
-        $BlockMacSync,
-
-        [Parameter()]
-        [System.Boolean]
-        $DisableReportProblemDialog,
-
-        [Parameter()]
-        [System.String]
-        $DomainGuids,
-
-        [Parameter()]
-        [System.String[]]
-        $ExcludedFileExtensions,
-
-        [Parameter()]
-        [System.String]
-        $GrooveBlockOption,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
+    $InformationPReference = 'Continue'
+    Write-Information "Extracting ODSettings..."
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+                      -Platform SharePointOnline `
+                      -ErrorAction SilentlyContinue
+    $Params = @{
+        IsSingleInstance   = 'Yes'
+        GlobalAdminAccount = $GlobalAdminAccount
+    }
+    $result = Get-TargetResource @Params
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        ODSettings " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

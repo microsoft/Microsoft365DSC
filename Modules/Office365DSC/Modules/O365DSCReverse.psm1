@@ -48,7 +48,7 @@ function Start-O365ConfigurationExtract
     $DSCContent += "    [System.Management.Automation.PSCredential]`r`n"
     $DSCContent += "    `$GlobalAdminAccount`r`n"
     $DSCContent += ")`r`n`r`n"
-    $DSCContent += "Configuration O365TenantConfig `r`n{`r`n"
+    $DSCContent += "Configuration O365TenantConfig`r`n{`r`n"
     $DSCContent += "    param (`r`n"
     $DSCContent += "        [parameter()]`r`n"
     $DSCContent += "        [System.Management.Automation.PSCredential]`r`n"
@@ -742,30 +742,15 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckODSettings")) -or
         $AllComponents)
     {
-        Write-Information "Extracting ODSettings..."
         try
         {
-            Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                              -O365Credential $GlobalAdminAccount `
-                              -Platform SharePointOnline `
-                              -ErrorAction SilentlyContinue
 
             $ODSettingsModulePath = Join-Path -Path $PSScriptRoot `
                                             -ChildPath "..\DSCResources\MSFT_ODSettings\MSFT_ODSettings.psm1" `
                                             -Resolve
 
             Import-Module $ODSettingsModulePath | Out-Null
-            $partialContent = ""
-            if ($centralAdminUrl)
-            {
-                $partialContent = Export-TargetResource -IsSingleInstance "Yes" `
-                                                        -GlobalAdminAccount $GlobalAdminAccount
-                if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
-                {
-                    $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
-                }
-                $DSCContent += $partialContent
-            }
+            $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
         }
         catch
         {
