@@ -989,8 +989,6 @@ function Set-SPOSiteConfiguration
             if($OverrideTenantAnonymousLinkExpirationPolicy -eq $false)
             {
                 Write-Verbose -Message "As long as property <OverrideTenantAnonymousLinkExpirationPolicy> is set to false property <AnonymousLinkExpirationInDays> will not take any effect."
-                #Write-Verbose -Message "If property <OverrideTenantAnonymousLinkExpirationPolicy> is set to false property <AnonymousLinkExpirationInDays> cannot be configured"
-                #if ($CurrentParameters.ContainsKey("AnonymousLinkExpirationInDays")) { $CurrentParameters.Remove("AnonymousLinkExpirationInDays") }
                 write-verbose -Message "$($OverrideTenantAnonymousLinkExpirationPolicy)"
                 write-verbose -Message "$($AnonymousLinkExpirationInDays)"
             }
