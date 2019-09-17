@@ -125,11 +125,11 @@ function Set-TargetResource
         $rule = Get-CaseHoldRule -Policy $Policy | Where-Object { $_.Name -eq $Name}
         $UpdateParams = @{
             Identity          = $rule.Identity
-            Content           = $ContentMatchQuery
+            Comment           = $Comment
             Disabled          = $Disabled
             ContentMatchQuery = $ContentMatchQuery
         }
-
+        Write-Verbose "Updating Case Hold Rule $Name by calling the Set-CaseHoldRule cmdlet."
         Set-CaseHoldRule @UpdateParams
     }
     # Compliance Case exists but it shouldn't. Remove it.
