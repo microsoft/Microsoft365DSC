@@ -9377,7 +9377,7 @@ function New-ComplianceSearchAction {
 
 function Get-CaseHoldPolicy {
     [CmdletBinding()]
-   param(
+    param(
        [Parameter()]
        [System.String]
        $Identity,
@@ -9386,6 +9386,30 @@ function Get-CaseHoldPolicy {
        [System.String]
        $Case
    )
+}
+
+function Get-PnPAuditing
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Connection
+    )
+}
+
+function Set-PnPAuditing
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Switch]
+        $EnableAll,
+
+        [Parameter()]
+        [Switch]
+        $DisableAll
+    )
 }
 
 function Get-CaseHoldRule {
