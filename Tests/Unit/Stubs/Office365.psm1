@@ -9398,6 +9398,16 @@ function Get-PnPAuditing
     )
 }
 
+fuction Get-PnPTenantSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Connection
+    )
+}
+
 function Set-PnPAuditing
 {
     [CmdletBinding()]
