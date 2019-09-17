@@ -34,7 +34,7 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of SCComplianceCase for $Name"
+    Write-Verbose -Message "Getting configuration of SCCaseHoldRule for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
