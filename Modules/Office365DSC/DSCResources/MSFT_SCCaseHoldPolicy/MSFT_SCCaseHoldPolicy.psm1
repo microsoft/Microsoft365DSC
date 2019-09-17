@@ -42,7 +42,7 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of DLPCompliancePolicy for $Name"
+    Write-Verbose -Message "Getting configuration of SCCaseHoldPolicy for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
