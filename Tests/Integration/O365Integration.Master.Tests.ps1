@@ -172,7 +172,7 @@ Configuration Master
             Disabled           = $false
             ContentMatchQuery  = "filename:2016 budget filetype:xlsx"
             Ensure             = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
+            GlobalAdminAccount = $GlobalAdmin
         }
 
         SCComplianceTag DemoRule
