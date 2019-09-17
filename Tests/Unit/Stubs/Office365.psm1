@@ -9398,7 +9398,7 @@ function Get-PnPAuditing
     )
 }
 
-fuction Get-PnPTenantSite
+function Get-PnPTenantSite
 {
     [CmdletBinding()]
     param(
