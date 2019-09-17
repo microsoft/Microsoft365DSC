@@ -166,7 +166,7 @@ Configuration Master
 
         SCCaseHoldRule DemoHoldRule
         {
-            Name               = "Integration Rule"
+            Name               = "Integration Hold"
             Policy             = "Integration Hold"
             Comment            = "This is a demo rule"
             Disabled           = $false
