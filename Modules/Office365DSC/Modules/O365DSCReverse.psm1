@@ -778,6 +778,25 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "SCCaseHoldRule"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCCaseHoldRule")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SCCaseHoldRule..."
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform SecurityComplianceCenter `
+                          -ErrorAction SilentlyContinue
+
+        $SCCaseHoldRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SCCaseHoldRule\MSFT_SCCaseHoldRule.psm1" `
+                                                   -Resolve
+
+        Import-Module $SCCaseHoldRuleModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "SCComplianceSearch"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCComplianceSearch")) -or

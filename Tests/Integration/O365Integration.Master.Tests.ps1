@@ -164,6 +164,17 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
         }
 
+        SCCaseHoldRule DemoHoldRule
+        {
+            Name               = "Integration Rule"
+            Policy             = "Integration Policy"
+            Comment            = "This is a demo rule"
+            Disabled           = $false
+            ContentMatchQuery  = "filename:2016 budget filetype:xlsx"
+            Ensure             = "Present"
+            GlobalAdminAccount = $credsGlobalAdmin
+        }
+
         SCComplianceTag DemoRule
         {
             Name               = "DemoTag"

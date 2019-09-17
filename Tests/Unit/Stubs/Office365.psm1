@@ -9375,6 +9375,87 @@ function New-ComplianceSearchAction {
    )
 }
 
+function Get-CaseHoldPolicy {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity,
+
+       [Parameter()]
+       [System.String]
+       $Case
+   )
+}
+
+function Get-CaseHoldRule {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity,
+
+       [Parameter()]
+       [System.String]
+       $Policy
+   )
+}
+
+function Remove-CaseHoldRule {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Identity
+   )
+}
+
+function New-CaseHoldRule {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Name,
+
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Policy,
+
+       [Parameter()]
+       [System.String]
+       $Comment,
+
+       [Parameter()]
+       [System.Boolean]
+       $Disabled,
+
+       [Parameter()]
+       [System.String]
+       $ContentMatchQuery
+   )
+}
+
+function Set-CaseHoldRule {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery
+    )
+}
+
 function Get-ComplianceCase {
     [CmdletBinding()]
    param(

@@ -1,0 +1,234 @@
+function Get-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled = $false,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+    Write-Verbose -Message "Getting configuration of SCComplianceCase for $Name"
+
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SecurityComplianceCenter
+
+    $Rules = Get-CaseHoldRule -Policy $Policy -ErrorAction 'SilentlyContinue'
+    $Rule = $Rules | Where-Object { $_.Name -eq $Name}
+
+    if ($null -eq $Rule)
+    {
+        Write-Verbose -Message "SCCaseHoldRule $($Name) does not exist."
+        $result = $PSBoundParameters
+        $result.Ensure = 'Absent'
+        return $result
+    }
+    else
+    {
+        Write-Verbose "Found existing SCCaseHoldRule $($Name)"
+
+        $result = @{
+            Name               = $Rule.Name
+            Policy             = $Policy
+            Comment            = $Rule.Comment
+            Disabled           = $Rule.Disabled
+            ContentMatchQuery  = $Rule.ContentMatchQuery
+            GlobalAdminAccount = $GlobalAdminAccount
+            Ensure             = 'Present'
+        }
+
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
+        return $result
+    }
+}
+
+function Set-TargetResource
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled = $false,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+    Write-Verbose -Message "Setting configuration of SCCaseHoldRule for $Name"
+
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SecurityComplianceCenter
+
+    $CurrentRule = Get-TargetResource @PSBoundParameters
+
+    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentRule.Ensure))
+    {
+        $CreationParams = $PSBoundParameters
+        $CreationParams.Remove("GlobalAdminAccount")
+        $CreationParams.Remove("Ensure")
+
+        Write-Verbose "Creating new Case Hold Rule $Name calling the New-CaseHoldRule cmdlet."
+        New-CaseHoldRule @CreationParams
+    }
+    # Compliance Case exists and it should. Update it.
+    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
+    {
+        $rule = Get-CaseHoldRule -Identity $Name -Policy $Policy
+        $UpdateParams = @{
+            Identity          = $rule.Identity
+            Content           = $ContentMatchQuery
+            Disabled          = $Disabled
+            ContentMatchQuery = $ContentMatchQuery
+        }
+
+        Set-CaseHoldRule @UpdateParams
+    }
+    # Compliance Case exists but it shouldn't. Remove it.
+    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
+    {
+        $rule = Get-CaseHoldRule -Identity $Name -Policy $Policy
+        Remove-CaseHOldRule -Identity $rule.Identity -Confirm:$false
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled = $false,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+    Write-Verbose -Message "Testing configuration of SCCaseHoldRule for $Name"
+
+    $CurrentValues = Get-TargetResource @PSBoundParameters
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+
+    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck $ValuesToCheck.Keys
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+
+    return $TestResult
+}
+
+function Export-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+    $InformationPreference = "Continue"
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SecurityComplianceCenter
+    $Rules = Get-CaseHoldRule
+
+    $i = 1
+    foreach ($Rule in $Rules)
+    {
+        Write-Information "    - [$i/$($Rules.Length)] $($Rule.Name)"
+        $policy = Get-CaseHoldPolicy -Identity $Rule.Policy
+        $params = @{
+            Name               = $Rule.Name
+            Policy             = $policy.Name
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content = "        SCCaseHoldRule " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        $i++
+    }
+    return $content
+}
+
+Export-ModuleMember -Function *-TargetResource
