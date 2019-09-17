@@ -101,8 +101,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                OneDriveStorageQuota = 1024
-                IsSingleInstance = "Yes"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

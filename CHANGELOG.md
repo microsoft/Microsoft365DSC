@@ -2,8 +2,10 @@
 
 ## UNRELEASED
 
+* SCCaseHoldPolicy
+  * New Resource;
 * SCComplianceCase
-  * New Resource
+  * New Resource;
 * SCComplianceSearch
   * New Resource;
 * SCComplianceSearchAction
