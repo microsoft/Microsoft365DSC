@@ -43,12 +43,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Get-PnPTenantSite -MockWith {
+                return @{
+                    Url = "https://contoso.com/sites/fakesite"
+                }
+            }
+
             It "Should return absent from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
-            It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $true
+            It "Should set settings from the Set method" {
+                Set-TargetResource @testParams
             }
 
             It "Should return false from the Test method" {
