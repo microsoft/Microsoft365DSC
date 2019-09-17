@@ -167,7 +167,7 @@ Configuration Master
         SCCaseHoldRule DemoHoldRule
         {
             Name               = "Integration Rule"
-            Policy             = "Integration Policy"
+            Policy             = "Integration Hold"
             Comment            = "This is a demo rule"
             Disabled           = $false
             ContentMatchQuery  = "filename:2016 budget filetype:xlsx"
