@@ -57,11 +57,6 @@ function Get-TargetResource
         -Platform SecurityComplianceCenter
 
     $label = Get-Label -Identity $Name -ErrorAction SilentlyContinue
-
-    $advanced = Convert-CimInstancesToHashtable $AdvancedSettings
-    Write-Verbose -Message "ADVANCED SETTTINGS: $(Convert-O365DscHashtableToString -Hashtable $advanced)"
-
-
     if ($null -eq $label)
     {
         Write-Verbose -Message "Sensitiivity label $($Name) does not exist."
@@ -317,7 +312,15 @@ function Convert-CimInstancesToHashtable([Microsoft.Management.Infrastructure.Ci
     $hash = @{ }
     foreach ($pair in $Pairs)
     {
-        $hash[$pair.Key] = $pair.Value
+        try
+        {
+            $hash[$pair.Key] = $pair.Value
+        }
+        catch
+        {
+            Write-Verbose -Message "Error enumerating CIM instance"
+        }
+
     }
 
     return $hash
