@@ -9508,6 +9508,102 @@ function Set-ComplianceCase {
     )
 }
 
+function Get-CaseHoldPolicy {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity,
+
+       [Parameter()]
+       [System.String]
+       $Case
+   )
+}
+
+function Remove-CaseHoldPolicy {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Identity
+   )
+}
+
+function New-CaseHoldPolicy {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Case,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $PublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation
+   )
+}
+
+function Set-CaseHoldPolicy {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddPublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemovePublicFolderLocation
+    )
+}
+
 function Get-AzureADDirectoryRoleMember {
  [CmdletBinding()]
 param(

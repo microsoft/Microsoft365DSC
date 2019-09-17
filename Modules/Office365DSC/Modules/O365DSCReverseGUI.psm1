@@ -370,9 +370,18 @@ function Show-O365GUI
         $pnlSC.Top = $pnlSPO.Heigth + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 340
         $pnlSC.Left = $SecondColumnLeft
 
+
         $pnlSC.Height = 240
         $pnlSC.Width = 300
         $pnlSC.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+
+        $chckSCCaseHoldPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckSCCaseHoldPolicy.Top = 0
+        $chckSCCaseHoldPolicy.AutoSize = $true;
+        $chckSCCaseHoldPolicy.Name = "chckSCCaseHoldPolicy"
+        $chckSCCaseHoldPolicy.Checked = $true
+        $chckSCCaseHoldPolicy.Text = "Case Hold Policy"
+        $pnlSC.Controls.Add($chckSCCaseHoldPolicy)
 
         $chckSCCaseHoldRule = New-Object System.Windows.Forms.CheckBox
         $chckSCCaseHoldRule.Top = 20
