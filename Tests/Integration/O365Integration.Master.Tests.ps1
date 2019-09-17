@@ -297,7 +297,7 @@ Configuration Master
             SiteUrl            = "https://o365dsc.sharepoint.com/sites/Classic"
             AuditFlags         = "All"
             Ensure             = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
+            GlobalAdminAccount = $GlobalAdmin
         }
 
         <#SPOStorageEntity SiteEntity1

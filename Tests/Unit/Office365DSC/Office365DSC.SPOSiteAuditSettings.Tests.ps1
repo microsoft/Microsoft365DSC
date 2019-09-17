@@ -51,8 +51,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $true
             }
 
-            It "Should return update settings from the Set method" {
-                Test-TargetResource @testParams | Should Be $true
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
             }
         }
 
