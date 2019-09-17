@@ -122,7 +122,7 @@ function Set-TargetResource
     # Compliance Case exists and it should. Update it.
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
-        $rule = Get-CaseHoldRule -Identity $Name -Policy $Policy
+        $rule = Get-CaseHoldRule -Policy $Policy | Where-Object { $_.Name -eq $Name}
         $UpdateParams = @{
             Identity          = $rule.Identity
             Content           = $ContentMatchQuery
@@ -135,7 +135,7 @@ function Set-TargetResource
     # Compliance Case exists but it shouldn't. Remove it.
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
     {
-        $rule = Get-CaseHoldRule -Identity $Name -Policy $Policy
+        $rule = Get-CaseHoldRule -Policy $Policy | Where-Object { $_.Name -eq $Name}
         Remove-CaseHOldRule -Identity $rule.Identity -Confirm:$false
     }
 }
