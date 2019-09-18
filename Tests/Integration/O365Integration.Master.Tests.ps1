@@ -314,6 +314,20 @@ Configuration Master
             Ensure             = "Present"
         }#>
 
+        SPOUserProfileProperty AdminFavoriteColor
+        {
+            UserName           = "adminnonmfa@$Domain"
+            Properties         = @(
+                MSFT_SPOUserProfilePropertyInstance
+                {
+                    Key   = "FavoriteColor"
+                    Value = "Green"
+                }
+            )
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+        }
+
         TeamsTeam TeamAlpha
         {
             DisplayName          = "Alpha Team"

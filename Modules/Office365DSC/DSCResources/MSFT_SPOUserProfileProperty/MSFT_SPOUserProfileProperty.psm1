@@ -12,7 +12,7 @@ function Get-TargetResource
         $Properties,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 
@@ -75,7 +75,7 @@ function Set-TargetResource
         $Properties,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 
@@ -84,53 +84,16 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration for SPO Sharing settings"
+    Write-Verbose -Message "Setting Profile Properties for user {$UserName}"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+                      -Platform PnP
 
-    $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("GlobalAdminAccount")
-    $CurrentParameters.Remove("Verbose")
-    $CurrentParameters.Remove("IsSingleInstance")
-
-    if ($null -eq $SignInAccelerationDomain)
+    foreach ($property in $Properties)
     {
-        $CurrentParameters.Remove("SignInAccelerationDomain")
-        $CurrentParameters.Remove("EnableGuestSignInAcceleration")#removing EnableGuestSignInAcceleration since it can only be configured with a configured SignINAccerlation domain
+        Write-Verbose "Setting Profile Property {$($property.Key)} as {$($property.Value)}"
+        Set-PnPUserProfileProperty -Account $UserName -PropertyName $property.Key -Value $property.Value
     }
-    if ($SharingCapability -ne "ExternalUserAndGuestSharing")
-    {
-        Write-Verbose -Message "The sharing capabilities for the tenant are not configured to be ExternalUserAndGuestSharing for that the RequireAnonymousLinksExpireInDays property cannot be configured"
-        $CurrentParameters.Remove("RequireAnonymousLinksExpireInDays")
-    }
-    if ($RequireAcceptingAccountMatchInvitedAccount -eq $false)
-    {
-        Write-Verbose -Message "RequireAcceptingAccountMatchInvitedAccount is set to be false. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
-        $CurrentParameters.Remove("SharingAllowedDomainList")
-        $CurrentParameters.Remove("SharingBlockedDomainList")
-    }
-    if ($SharingDomainRestrictionMode -eq "None")
-    {
-        Write-Verbose -Message "SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
-        $CurrentParameters.Remove("SharingAllowedDomainList")
-        $CurrentParameters.Remove("SharingBlockedDomainList")
-    }
-    elseif ($SharingDomainRestrictionMode -eq "AllowList")
-    {
-        Write-Verbose -Message "SharingDomainRestrictionMode is set to AllowList. For that SharingBlockedDomainList cannot be configured"
-        $CurrentParameters.Remove("SharingBlockedDomainList")
-    }
-    elseif ($SharingDomainRestrictionMode -eq "BlockList")
-    {
-        Write-Verbose -Message "SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured"
-        $CurrentParameters.Remove("SharingAllowedDomainList")
-    }
-    foreach ($value in $CurrentParameters.GetEnumerator())
-    {
-        Write-verbose -Message "Configuring Tenant with: $value"
-    }
-    Set-SPOTenant @CurrentParameters | Out-Null
 }
 function Test-TargetResource
 {
@@ -146,7 +109,7 @@ function Test-TargetResource
         $Properties,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 
@@ -159,32 +122,10 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("IsSingleInstance", `
-                                                                   "SharingCapability", `
-                                                                   "ShowEveryoneClaim", `
-                                                                   "ShowAllUsersClaim", `
-                                                                   "ShowEveryoneExceptExternalUsersClaim", `
-                                                                   "ProvisionSharedWithEveryoneFolder", `
-                                                                   "EnableGuestSignInAcceleration", `
-                                                                   "BccExternalSharingInvitations", `
-                                                                   "BccExternalSharingInvitationsList", `
-                                                                   "RequireAnonymousLinksExpireInDays", `
-                                                                   "SharingAllowedDomainList", `
-                                                                   "SharingBlockedDomainList", `
-                                                                   "SharingDomainRestrictionMode", `
-                                                                   "DefaultSharingLinkType", `
-                                                                   "PreventExternalUsersFromResharing", `
-                                                                   "ShowPeoplePickerSuggestionsForGuestUsers", `
-                                                                   "FileAnonymousLinkType", `
-                                                                   "FolderAnonymousLinkType", `
-                                                                   "NotifyOwnersWhenItemsReshared", `
-                                                                   "RequireAcceptingAccountMatchInvitedAccount", `
-                                                                   "DefaultLinkPermission")
+    $TestResult = Test-SPOUserProfilePropertyInstance -DesiredProperties $Properties `
+                                                      -CurrentProperties $CurrentValues.Properties
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -219,16 +160,47 @@ function Export-TargetResource
             GlobalAdminAccount = $GlobalAdminAccount
         }
         $result = Get-TargetResource @params
+        $result.Properties = ConvertTo-SPOUserProfilePropertyInstanceString -Properties $result.Properties
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "SPOUserProfileProperty " + (New-GUID).ToString() + "`r`n"
-        $content += "{`r`n"
-        $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += "}`r`n"
+        $content += "        SPOUserProfileProperty " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Properties" -IsCIMArray $true
+        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += $currentDSCBlock
+        $content += "        }`r`n"
 
         $i++
     }
 
     return $content
+}
+
+function Test-SPOUserProfilePropertyInstance
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $DesiredProperties,
+
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $CurrentProperties
+    )
+
+    foreach ($property in $DesiredProperties)
+    {
+        $currentProperty = $CurrentProperties | Where-Object {$_.Key -eq $property.Key}
+
+        if ($null -eq $currentProperty -or $currentProperty.Value -ne $property.Value)
+        {
+            return $false
+        }
+        return $true
+    }
 }
 
 function Get-SPOUserProfilePropertyInstance
@@ -256,22 +228,23 @@ function Get-SPOUserProfilePropertyInstance
 function ConvertTo-SPOUserProfilePropertyInstanceString
 {
     [CmdletBinding()]
-    [OutputType([System.String])]
+    [OutputType([System.String[]])]
     param(
         [Parameter(Mandatory = $true)]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [System.Object[]]
         $Properties
     )
 
-    $content = ""
-    foreach ($property in $properties)
+    $results = @()
+    foreach ($property in $Properties)
     {
-        content += "            MSFT_SPOUserProfilePropertyInstance`r`n            {`r`n"
-        content += "                Key   = `"$(property.Key)`"`r`n"
-        content += "                Value = `"$($property.Value)`"`r`n"
-        content += "            }`r`n"
+        $content = "MSFT_SPOUserProfilePropertyInstance`r`n            {`r`n"
+        $content += "                Key   = '$($property.Key)'`r`n"
+        $content += "                Value = '$($property.Value)'`r`n"
+        $content += "            }`r`n"
+        $results += $content
     }
-    return $content
+    return $results
 }
 
 Export-ModuleMember -Function *-TargetResource

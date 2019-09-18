@@ -18,7 +18,7 @@
   * Updated MSCloudLoginAssistant dependency
     to version 0.7.0;
   * Updated ReverseDSC dependency
-    to version 1.9.4.5;
+    to version 1.9.4.6;
   * Updated Microsoft.Online.SharePoint.PowerShell dependency
     to version 16.0.19223.12000
   * UPdated SharePointPnPPowerShellOnline dependency
