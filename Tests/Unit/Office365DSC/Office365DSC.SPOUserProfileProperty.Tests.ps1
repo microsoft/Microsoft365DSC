@@ -87,13 +87,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                UserName           = "john.smith@contoso.com"
-                Properties         = (New-CimInstance -ClassName MSFT_SPOUserProfileProperty -Property @{
-                    Key   = "MyNewKey"
-                    Value = "MyValue"
-                } -ClientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
-                Ensure             = "Present"
             }
 
             Mock -CommandName Get-PnPUserProfileProperty -MockWith {
