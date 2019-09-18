@@ -256,7 +256,7 @@ function Show-O365GUI
         $pnlSPO = New-Object System.Windows.Forms.Panel
         $pnlSPO.Top = 88 + $topBannerHeight
         $pnlSPO.Left = $SecondColumnLeft
-        $pnlSPO.Height = 220
+        $pnlSPO.Height = 290
         $pnlSPO.Width = 300
         $pnlSPO.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -348,6 +348,15 @@ function Show-O365GUI
         $chckSPOTheme.Text = "Themes"
         $pnlSPO.Controls.Add($chckSPOTheme)
 
+
+        $chckSPOUserProfileProperty = New-Object System.Windows.Forms.CheckBox
+        $chckSPOUserProfileProperty.Top = 220
+        $chckSPOUserProfileProperty.AutoSize = $true;
+        $chckSPOUserProfileProperty.Name = "chckSPOUserProfileProperty"
+        $chckSPOUserProfileProperty.Checked = $true
+        $chckSPOUserProfileProperty.Text = "User Profile Properties"
+        $pnlSPO.Controls.Add($chckSPOUserProfileProperty)
+
         $chckAllSharePoint = New-Object System.Windows.Forms.CheckBox
         $chckAllSharePoint.Left = $SecondColumnLeft + 280
         $chckAllSharePoint.Top = $topBannerHeight + 40
@@ -362,7 +371,7 @@ function Show-O365GUI
         $imagePath = $PSScriptRoot + "\..\Dependencies\Images\SecurityAndCompliance.png"
         $imgSC.ImageLocation = $imagePath
         $imgSC.Left = $SecondColumnLeft
-        $imgSC.Top = $topBannerHeight + $pnlSPO.Height + $imgSPO.Height + 75
+        $imgSC.Top = $topBannerHeight + $pnlSPO.Height + $imgSPO.Height + 175
         $imgSC.AutoSize = $true
         $pnlMain.Controls.Add($imgSC)
 
