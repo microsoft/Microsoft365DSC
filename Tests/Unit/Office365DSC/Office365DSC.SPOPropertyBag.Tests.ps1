@@ -25,11 +25,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Mock -CommandName Set-PnPPropertyBag -MockWith {
+        Mock -CommandName Set-PnPPropertyBagValue -MockWith {
 
         }
 
-        Mock -CommandName Remove-PnpPropertyBag -MockWith {
+        Mock -CommandName Remove-PnpPropertyBagValue -MockWith {
 
         }
 

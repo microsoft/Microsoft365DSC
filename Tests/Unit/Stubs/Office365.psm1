@@ -9456,7 +9456,7 @@ function Set-CaseHoldRule {
     )
 }
 
-function Remove-PnPPropertyBag {
+function Remove-PnPPropertyBagValue {
     [CmdletBinding()]
    param(
        [Parameter(Mandatory=$true)]
@@ -9465,7 +9465,7 @@ function Remove-PnPPropertyBag {
    )
 }
 
-function Set-PnPPropertyBag {
+function Set-PnPPropertyBagValue {
     [CmdletBinding()]
    param(
        [Parameter(Mandatory=$true)]
