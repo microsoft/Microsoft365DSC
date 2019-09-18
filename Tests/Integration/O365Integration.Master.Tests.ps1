@@ -320,8 +320,8 @@ Configuration Master
             Properties         = @(
                 MSFT_SPOUserProfilePropertyInstance
                 {
-                    Key   = "FavoriteColor"
-                    Value = "Green"
+                    Key   = "FavoriteFood"
+                    Value = "Pasta"
                 }
             )
             GlobalAdminAccount = $GlobalAdmin
