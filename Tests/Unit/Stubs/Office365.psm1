@@ -9106,8 +9106,12 @@ param(
        $Account,
 
        [Parameter()]
-       [System.Object[]]
-       $Properties
+       [System.String]
+       $PropertyName,
+
+       [Parameter()]
+       [System.String]
+       $Value
    )
 }
 
