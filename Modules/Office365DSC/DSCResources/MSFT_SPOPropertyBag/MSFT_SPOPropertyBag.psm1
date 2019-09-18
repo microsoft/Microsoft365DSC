@@ -188,6 +188,7 @@ function Export-TargetResource
                 GlobalAdminAccount = $GlobalAdminAccount
             }
             $result = Get-TargetResource @params
+            $result.Value = [System.String]$result.Value
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
             $content += "        SPOPropertyBag " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
