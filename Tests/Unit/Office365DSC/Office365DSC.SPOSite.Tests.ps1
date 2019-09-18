@@ -53,6 +53,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DefaultSharingLinkType                      = "None"
                 DefaultLinkPermission                       = "None"
                 HubUrl                                      = "https://contoso.sharepoint.com/sites/hub"
+                AnonymousLinkExpirationInDays               = "12"
+                OverrideTenantAnonymousLinkExpirationPolicy = $true
             }
 
             Mock -CommandName New-SPOSite -MockWith {
@@ -153,6 +155,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DefaultSharingLinkType                      = "None"
                 DefaultLinkPermission                       = "None"
                 HubUrl                                      = "https://contoso.sharepoint.com/sites/hub"
+                AnonymousLinkExpirationInDays               = "12"
+                OverrideTenantAnonymousLinkExpirationPolicy = $true
             }
 
             Mock -CommandName Get-SPOSite -MockWith {
@@ -182,6 +186,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultSharingLinkType                      = "None"
                     DefaultLinkPermission                       = "None"
                     HubSiteId                                   = "fcc3c848-6d2f-4821-a56c-980eea7990c5"
+                    AnonymousLinkExpirationInDays               = "12"
+                    OverrideTenantAnonymousLinkExpirationPolicy = $true
                 }
             }
 
@@ -254,6 +260,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DefaultSharingLinkType                      = "None"
                 DefaultLinkPermission                       = "None"
                 HubUrl                                      = "https://contoso.sharepoint.com/sites/hub"
+                AnonymousLinkExpirationInDays               = "12"
+                OverrideTenantAnonymousLinkExpirationPolicy = $true
             }
 
             Mock -CommandName Get-SPOSite -MockWith {
@@ -282,6 +290,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultSharingLinkType                      = "None"
                     DefaultLinkPermission                       = "None"
                     HubSiteId                                   = "fcc3c848-6d2f-4821-a56c-980eea7990c5"
+                    AnonymousLinkExpirationInDays               = "12"
+                    OverrideTenantAnonymousLinkExpirationPolicy = $true
                 }
             }
 
@@ -357,6 +367,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DefaultSharingLinkType                      = "None"
                 DefaultLinkPermission                       = "None"
                 HubUrl                                      = "https://contoso.sharepoint.com/sites/hub"
+                AnonymousLinkExpirationInDays               = "12"
+                OverrideTenantAnonymousLinkExpirationPolicy = $true
             }
 
             Mock -CommandName Set-SPOSite -MockWith { }
@@ -387,6 +399,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultSharingLinkType                      = "None"
                     DefaultLinkPermission                       = "None"
                     HubSiteId                                   = "ecc3c848-6d2f-4821-a56c-980eea7990c6"
+                    AnonymousLinkExpirationInDays               = "12"
+                    OverrideTenantAnonymousLinkExpirationPolicy = $true
                 }
             }
 
@@ -490,6 +504,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DefaultSharingLinkType                      = "None"
                 DefaultLinkPermission                       = "None"
                 HubUrl                                      = ""
+                AnonymousLinkExpirationInDays               = "12"
+                OverrideTenantAnonymousLinkExpirationPolicy = $true
             }
 
             Mock -CommandName Set-SPOSite -MockWith { }
@@ -520,6 +536,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultSharingLinkType                      = "None"
                     DefaultLinkPermission                       = "None"
                     HubSiteId                                   = "ecc3c848-6d2f-4821-a56c-980eea7990c6"
+                    AnonymousLinkExpirationInDays               = "12"
+                    OverrideTenantAnonymousLinkExpirationPolicy = $true
                 }
             }
 
@@ -826,6 +844,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 ShowPeoplePickerSuggestionsForGuestUsers = $false
                 DefaultSharingLinkType                   = "None"
                 DefaultLinkPermission                    = "None"
+                AnonymousLinkExpirationInDays               = "12"
+                OverrideTenantAnonymousLinkExpirationPolicy = $true
             }
 
             Mock -CommandName Set-SPOSite -MockWith { }
@@ -874,6 +894,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 ShowPeoplePickerSuggestionsForGuestUsers = $false
                 DefaultSharingLinkType                   = "None"
                 DefaultLinkPermission                    = "None"
+                AnonymousLinkExpirationInDays               = "12"
+                OverrideTenantAnonymousLinkExpirationPolicy = $true
             }
 
             Mock -CommandName Get-SPOSite -MockWith {
@@ -903,6 +925,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DefaultSharingLinkType                      = "None"
                 DefaultLinkPermission                       = "None"
                 HubSiteId                                   = "00000000-0000-0000-0000-000000000000"
+                AnonymousLinkExpirationInDays               = "12"
+                OverrideTenantAnonymousLinkExpirationPolicy = $true
                 }
             }
 
@@ -956,6 +980,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultSharingLinkType                      = "None"
                     DefaultLinkPermission                       = "None"
                     HubSiteId                                   = "cf4d2dbe-1d04-439a-8ba8-77c563a7e630"
+                    AnonymousLinkExpirationInDays               = "12"
+                    OverrideTenantAnonymousLinkExpirationPolicy = $true
                 }
             }
 

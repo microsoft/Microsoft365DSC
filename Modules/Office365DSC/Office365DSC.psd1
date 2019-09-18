@@ -11,7 +11,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion     = '1.0.0.846'
+    ModuleVersion     = '1.0.0.952'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -52,8 +52,8 @@
     # Modules that must be imported into the global environment prior to importing this module
     RequiredModules = @(@{ModuleName = "ReverseDSC"; RequiredVersion = "1.9.4.5"; },
                       @{ModuleName = "MSOnline"; RequiredVersion = "1.1.183.17"; },
-                      @{ModuleName = "SharePointPnPPowerShellOnline"; RequiredVersion = "3.12.1908.1"; },
-                      @{ModuleName = "Microsoft.Online.SharePoint.PowerShell"; RequiredVersion = "16.0.8316.0"; },
+                      @{ModuleName = "SharePointPnPPowerShellOnline"; RequiredVersion = "3.13.1909.0"; },
+                      @{ModuleName = "Microsoft.Online.SharePoint.PowerShell"; RequiredVersion = "16.0.19223.12000"; },
                       @{ModuleName = "MicrosoftTeams"; RequiredVersion = "1.0.0"; },
                       @{ModuleName = "AzureAD"; RequiredVersion = "2.0.2.4"; },
                       @{ModuleName = "MSCloudLoginAssistant"; RequiredVersion = "0.7.0"; })
