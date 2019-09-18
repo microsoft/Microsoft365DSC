@@ -111,6 +111,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
+        [Parameter(Mandatory = $true)]
         [System.String]
         $WebUrl,
 
