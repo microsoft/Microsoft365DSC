@@ -9098,6 +9098,28 @@ param(
 
 
  }
+ function Set-SPOUserProfileProperty {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Account,
+
+       [Parameter()]
+       [System.Object[]]
+       $Properties
+   )
+}
+
+function Get-SPOUserProfileProperty {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Account
+   )
+}
+
 
 
 function Get-AzureADContactManager {
