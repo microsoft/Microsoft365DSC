@@ -56,7 +56,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Return ensure is Absent from the Get method" {
-                (Get-TargetResource @testParams) | Should be 'Absent'
+                (Get-TargetResource @testParams).Ensure | Should be 'Absent'
             }
         }
 
@@ -87,7 +87,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Return ensure is Absent from the Get method" {
-                (Get-TargetResource @testParams) | Should be 'Present'
+                (Get-TargetResource @testParams).Ensure | Should be 'Present'
             }
         }
 

@@ -32,7 +32,7 @@ function Get-TargetResource
                       -ConnectionUrl $WebUrl `
                       -Platform PnP
 
-    $property = Get-PnPPropertyBag -Key $Key
+    $property = Get-PnPPropertyBag | Where-Object { $_.Key -eq $Key }
 
     if ($null -eq $property)
     {
@@ -86,7 +86,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of SPOPropertyBag property for $Key at {$WebUrl}"
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -ConnectionUrl $WebUrl
+                      -ConnectionUrl $WebUrl `
                       -Platform PnP
 
     $currentProperty = Get-TargetResource @PSBoundParameters
