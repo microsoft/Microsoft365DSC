@@ -9098,7 +9098,7 @@ param(
 
 
  }
- function Set-SPOUserProfileProperty {
+ function Set-PnPUserProfileProperty {
     [CmdletBinding()]
    param(
        [Parameter()]
@@ -9111,7 +9111,7 @@ param(
    )
 }
 
-function Get-SPOUserProfileProperty {
+function Get-PnPUserProfileProperty {
     [CmdletBinding()]
    param(
        [Parameter()]
