@@ -30,7 +30,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name "Set SPOSiteAuditSettings" -Fixture {
+        Context -Name "Set SPOSiteAuditSettings to All" -Fixture {
             $testParams = @{
                 SiteUrl            = "https://contoso.com/sites/fakesite"
                 AuditFlags         = "All"
@@ -62,6 +62,38 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name "Set SPOSiteAuditSettings to None" -Fixture {
+            $testParams = @{
+                SiteUrl            = "https://contoso.com/sites/fakesite"
+                AuditFlags         = "None"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-PnPAuditing -MockWith {
+                return @{
+                    AuditFlags = "All"
+                }
+            }
+
+            Mock -CommandName Get-PnPTenantSite -MockWith {
+                return @{
+                    Url = "https://contoso.com/sites/fakesite"
+                }
+            }
+
+            It "Should return absent from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            }
+
+            It "Should set settings from the Set method" {
+                Set-TargetResource @testParams
+            }
+
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
+            }
+        }
+
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
@@ -70,6 +102,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPAuditing -MockWith {
                 return @{
                     AuditFlags = "None"
+                }
+            }
+
+            Mock -CommandName Get-PnPTenantSite -MockWith {
+                return @{
+                    Url = "https://contoso.com/sites/fakesite"
                 }
             }
 
