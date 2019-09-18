@@ -16,7 +16,7 @@ Configuration Example
     {
         SPOPropertyBag MyKey
         {
-            Webrl              = "https://office365dsc.sharepoint.com/sites/Marketing"
+            WebUrl              = "https://office365dsc.sharepoint.com/sites/Marketing"
             Key                = "MyKey"
             Value              = "MyValue"
             Ensure             = "Present"
