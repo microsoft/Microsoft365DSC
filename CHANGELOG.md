@@ -12,6 +12,8 @@
   * New Resource;
 * SCDLPComplianceRule
   * New Resource;
+* SPOPropertyBag
+  * New Resource;
 * Reverse
   * Added workload selectors to the GUI interface;
 * Metadata

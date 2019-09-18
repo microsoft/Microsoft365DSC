@@ -9456,6 +9456,37 @@ function Set-CaseHoldRule {
     )
 }
 
+function Remove-PnPPropertyBag {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Key
+   )
+}
+
+function Set-PnPPropertyBag {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Key,
+
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Value
+   )
+}
+
+function Get-PnPPropertyBag {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Key
+   )
+}
+
 function Get-ComplianceCase {
     [CmdletBinding()]
    param(

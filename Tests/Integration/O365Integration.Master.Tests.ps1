@@ -292,6 +292,15 @@ Configuration Master
             Ensure               = "Present"
         }
 
+        SPOPropertyBag MyKey
+        {
+            WebUrl             = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+            Key                = "MyKey"
+            Value              = "MyValue#3"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+        }
+
         <#SPOStorageEntity SiteEntity1
         {
             Key                = "SiteEntity1"
