@@ -13,7 +13,7 @@ function Get-TargetResource
         $AuditFlags,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 
@@ -68,7 +68,7 @@ function Set-TargetResource
         $AuditFlags,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 
@@ -109,7 +109,7 @@ function Test-TargetResource
         $AuditFlags,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present")]
         [System.String]
         $Ensure = "Present",
 
