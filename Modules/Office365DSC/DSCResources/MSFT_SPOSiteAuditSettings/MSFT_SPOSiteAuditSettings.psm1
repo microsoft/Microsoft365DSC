@@ -1,4 +1,3 @@
-@@ -0,0 +1,163 @@
 function Get-TargetResource
 {
     [CmdletBinding()]
