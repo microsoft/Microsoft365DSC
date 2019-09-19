@@ -9403,7 +9403,7 @@ function New-ComplianceSearchAction {
 
 function Get-CaseHoldPolicy {
     [CmdletBinding()]
-   param(
+    param(
        [Parameter()]
        [System.String]
        $Identity,
@@ -9412,6 +9412,40 @@ function Get-CaseHoldPolicy {
        [System.String]
        $Case
    )
+}
+
+function Get-PnPAuditing
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Connection
+    )
+}
+
+function Get-PnPTenantSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Connection
+    )
+}
+
+function Set-PnPAuditing
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Switch]
+        $EnableAll,
+
+        [Parameter()]
+        [Switch]
+        $DisableAll
+    )
 }
 
 function Get-CaseHoldRule {
@@ -9480,6 +9514,37 @@ function Set-CaseHoldRule {
         [System.String]
         $ContentMatchQuery
     )
+}
+
+function Remove-PnPPropertyBagValue {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Key
+   )
+}
+
+function Set-PnPPropertyBagValue {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Key,
+
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Value
+   )
+}
+
+function Get-PnPPropertyBag {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Key
+   )
 }
 
 function Get-ComplianceCase {

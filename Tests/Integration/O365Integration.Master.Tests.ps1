@@ -286,10 +286,26 @@ Configuration Master
         {
             Title                = "Modern Site"
             Url                  = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
-            Owner                = "admin@$Domain"
+            Owner                = "adminnonmfa@$Domain"
             Template             = "STS#3"
             GlobalAdminAccount   = $GlobalAdmin
             Ensure               = "Present"
+        }
+
+        SPOPropertyBag MyKey
+        {
+            Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+            Key                = "MyKey"
+            Value              = "MyValue#3"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+        }
+
+        SPOSiteAuditSettings MyStorageEntity
+        {
+            Url                = "https://o365dsc.sharepoint.com/sites/Classic"
+            AuditFlags         = "All"
+            GlobalAdminAccount = $GlobalAdmin
         }
 
         <#SPOStorageEntity SiteEntity1

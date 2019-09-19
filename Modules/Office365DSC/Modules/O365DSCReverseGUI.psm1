@@ -256,7 +256,7 @@ function Show-O365GUI
         $pnlSPO = New-Object System.Windows.Forms.Panel
         $pnlSPO.Top = 88 + $topBannerHeight
         $pnlSPO.Left = $SecondColumnLeft
-        $pnlSPO.Height = 290
+        $pnlSPO.Height = 280
         $pnlSPO.Width = 300
         $pnlSPO.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -284,8 +284,16 @@ function Show-O365GUI
         $chckSPOHubSite.Text = "Hub Sites"
         $pnlSPO.Controls.Add($chckSPOHubSite)
 
+        $chckSPOPropertyBag= New-Object System.Windows.Forms.CheckBox
+        $chckSPOPropertyBag.Top = 60
+        $chckSPOPropertyBag.AutoSize = $true;
+        $chckSPOPropertyBag.Name = "chckSPOPropertyBag"
+        $chckSPOPropertyBag.Checked = $true
+        $chckSPOPropertyBag.Text = "Property Bags"
+        $pnlSPO.Controls.Add($chckSPOPropertyBag)
+
         $chckSPOSearchManagedProperty = New-Object System.Windows.Forms.CheckBox
-        $chckSPOSearchManagedProperty.Top = 60
+        $chckSPOSearchManagedProperty.Top = 80
         $chckSPOSearchManagedProperty.AutoSize = $true;
         $chckSPOSearchManagedProperty.Name = "chckSPOSearchManagedProperty"
         $chckSPOSearchManagedProperty.Checked = $true
@@ -293,7 +301,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOSearchManagedProperty)
 
         $chckSPOSearchResultSource = New-Object System.Windows.Forms.CheckBox
-        $chckSPOSearchResultSource.Top = 80
+        $chckSPOSearchResultSource.Top = 100
         $chckSPOSearchResultSource.AutoSize = $true;
         $chckSPOSearchResultSource.Name = "chckSPOSearchResultSource"
         $chckSPOSearchResultSource.Checked = $true
@@ -301,7 +309,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOSearchResultSource)
 
         $chckSPOSharingSettings = New-Object System.Windows.Forms.CheckBox
-        $chckSPOSharingSettings.Top = 100
+        $chckSPOSharingSettings.Top = 120
         $chckSPOSharingSettings.AutoSize = $true;
         $chckSPOSharingSettings.Name = "chckSPOSharingSettings"
         $chckSPOSharingSettings.Checked = $true
@@ -309,15 +317,23 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOSharingSettings)
 
         $chckSPOSite = New-Object System.Windows.Forms.CheckBox
-        $chckSPOSite.Top = 120
+        $chckSPOSite.Top = 140
         $chckSPOSite.AutoSize = $true;
         $chckSPOSite.Name = "chckSPOSite"
         $chckSPOSite.Checked = $true
         $chckSPOSite.Text = "Site Collections"
         $pnlSPO.Controls.Add($chckSPOSite)
 
+        $chckSPOSiteAuditSettings = New-Object System.Windows.Forms.CheckBox
+        $chckSPOSiteAuditSettings.Top = 160
+        $chckSPOSiteAuditSettings.AutoSize = $true;
+        $chckSPOSiteAuditSettings.Name = "chckSPOSiteAuditSettings"
+        $chckSPOSiteAuditSettings.Checked = $true
+        $chckSPOSiteAuditSettings.Text = "Site Audit Settings"
+        $pnlSPO.Controls.Add($chckSPOSiteAuditSettings)
+
         $chckSPOSiteDesignRights = New-Object System.Windows.Forms.CheckBox
-        $chckSPOSiteDesignRights.Top = 140
+        $chckSPOSiteDesignRights.Top = 180
         $chckSPOSiteDesignRights.AutoSize = $true;
         $chckSPOSiteDesignRights.Name = "chckSPOSiteDesignRights"
         $chckSPOSiteDesignRights.Checked = $true
@@ -325,7 +341,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOSiteDesignRights)
 
         $chckSPOStorageEntity= New-Object System.Windows.Forms.CheckBox
-        $chckSPOStorageEntity.Top = 160
+        $chckSPOStorageEntity.Top = 200
         $chckSPOStorageEntity.AutoSize = $true;
         $chckSPOStorageEntity.Name = "chckSPOStorageEntity"
         $chckSPOStorageEntity.Checked = $true
@@ -333,7 +349,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOStorageEntity)
 
         $chckSPOTenantSettings = New-Object System.Windows.Forms.CheckBox
-        $chckSPOTenantSettings.Top = 180
+        $chckSPOTenantSettings.Top = 220
         $chckSPOTenantSettings.AutoSize = $true;
         $chckSPOTenantSettings.Name = "chckSPOTenantSettings"
         $chckSPOTenantSettings.Checked = $true
@@ -341,7 +357,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOTenantSettings)
 
         $chckSPOTheme = New-Object System.Windows.Forms.CheckBox
-        $chckSPOTheme.Top = 200
+        $chckSPOTheme.Top = 240
         $chckSPOTheme.AutoSize = $true;
         $chckSPOTheme.Name = "chckSPOTheme"
         $chckSPOTheme.Checked = $true
@@ -350,7 +366,7 @@ function Show-O365GUI
 
 
         $chckSPOUserProfileProperty = New-Object System.Windows.Forms.CheckBox
-        $chckSPOUserProfileProperty.Top = 220
+        $chckSPOUserProfileProperty.Top = 260
         $chckSPOUserProfileProperty.AutoSize = $true;
         $chckSPOUserProfileProperty.Name = "chckSPOUserProfileProperty"
         $chckSPOUserProfileProperty.Checked = $true
@@ -371,14 +387,13 @@ function Show-O365GUI
         $imagePath = $PSScriptRoot + "\..\Dependencies\Images\SecurityAndCompliance.png"
         $imgSC.ImageLocation = $imagePath
         $imgSC.Left = $SecondColumnLeft
-        $imgSC.Top = $topBannerHeight + $pnlSPO.Height + $imgSPO.Height + 175
+        $imgSC.Top = $topBannerHeight + $pnlSPO.Height + $imgSPO.Height + 75
         $imgSC.AutoSize = $true
         $pnlMain.Controls.Add($imgSC)
 
         $pnlSC = New-Object System.Windows.Forms.Panel
-        $pnlSC.Top = $pnlSPO.Heigth + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 340
+        $pnlSC.Top = $pnlSPO.Height + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 125
         $pnlSC.Left = $SecondColumnLeft
-
 
         $pnlSC.Height = 240
         $pnlSC.Width = 300
@@ -482,7 +497,7 @@ function Show-O365GUI
 
         $chckAllSC = New-Object System.Windows.Forms.CheckBox
         $chckAllSC.Left = $SecondColumnLeft + 280
-        $chckAllSC.Top = $topBannerHeight + 380
+        $chckAllSC.Top = $topBannerHeight + 440
         $chckAllSC.Checked = $true
         $chckAllSC.AutoSize = $true
         $chckAllSC.Add_CheckedChanged({SectionChanged -Control $chckAllSC -Panel $pnlSC})

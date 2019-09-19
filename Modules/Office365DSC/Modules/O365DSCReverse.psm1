@@ -1177,6 +1177,25 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region SPOPropertyBag
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOPropertyBag")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SPOPropertyBag..."
+
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform SecurityComplianceCenter `
+                          -ErrorAction SilentlyContinue
+
+        $SPOPropertyBagModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SPOPropertyBag\MSFT_SPOPropertyBag.psm1" `
+                                                   -Resolve
+
+        Import-Module $SPOPropertyBagModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
     #region "SPOSite"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOSite")) -or
@@ -1360,6 +1379,22 @@ function Start-O365ConfigurationExtract
             $DSCContent += $partialContent
             $i++
         }
+    }
+    #endregion
+
+    #region SPOSiteAuditSetting
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOSiteAuditSettings")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SPOSiteAuditSettings..."
+
+        $SPOSiteAuditSettingModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SPOSiteAuditSettings\MSFT_SPOSiteAuditSettings.psm1" `
+                                                   -Resolve
+
+        Import-Module $SPOSiteAuditSettingModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
 
