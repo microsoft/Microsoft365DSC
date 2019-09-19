@@ -1,3 +1,4 @@
+@@ -0,0 +1,163 @@
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -11,11 +12,6 @@ function Get-TargetResource
         [ValidateSet('All','None')]
         [System.String]
         $AuditFlags,
-
-        [Parameter()]
-        [ValidateSet("Present")]
-        [System.String]
-        $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -40,7 +36,6 @@ function Get-TargetResource
             Url                = $Url
             AuditFlags         = $auditSettings.AuditFlags.ToString()
             GlobalAdminAccount = $GlobalAdminAccount
-            Ensure             ="Present"
         }
     }
     catch
@@ -65,11 +60,6 @@ function Set-TargetResource
         [ValidateSet('All','None')]
         [System.String]
         $AuditFlags,
-
-        [Parameter()]
-        [ValidateSet("Present")]
-        [System.String]
-        $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -107,11 +97,6 @@ function Test-TargetResource
         [System.String]
         $AuditFlags,
 
-        [Parameter()]
-        [ValidateSet("Present")]
-        [System.String]
-        $Ensure = "Present",
-
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
@@ -124,7 +109,7 @@ function Test-TargetResource
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", "AuditFlags")
+                                                  -ValuesToCheck @("AuditFlags")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
