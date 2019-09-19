@@ -18,7 +18,6 @@ Configuration Example
         {
             Url                = "https://contoso.sharepoint.com/sites/DemoSite"
             AuditFlags         = "All"
-            Ensure             = "Present"
             GlobalAdminAccount = $credsGlobalAdmin
         }
     }

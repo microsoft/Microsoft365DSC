@@ -296,7 +296,6 @@ Configuration Master
         {
             Url                = "https://o365dsc.sharepoint.com/sites/Classic"
             AuditFlags         = "All"
-            Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }
 
