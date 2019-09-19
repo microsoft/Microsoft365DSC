@@ -26,7 +26,7 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of SCCaseHoldPolicy for $Name"
+    Write-Verbose -Message "Getting configuration of SPOPropertyBag for $Name"
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                       -ConnectionUrl $Url `
