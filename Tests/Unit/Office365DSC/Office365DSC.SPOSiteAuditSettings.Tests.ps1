@@ -49,8 +49,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            It "Should return the current resource from the Get method" {
+                (Get-TargetResource @testParams).Url | Should Be "https://contoso.com/sites/fakesite"
             }
 
             It "Should set settings from the Set method" {
@@ -81,8 +81,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            It "Should return the current resource from the Get method" {
+                (Get-TargetResource @testParams).Url | Should Be "https://contoso.com/sites/fakesite"
             }
 
             It "Should set settings from the Set method" {
