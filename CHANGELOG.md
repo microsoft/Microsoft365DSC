@@ -12,6 +12,8 @@
   * New Resource;
 * SCDLPComplianceRule
   * New Resource;
+* SPOPropertyBag
+  * New Resource;
 * SPOSiteAuditSettings
   * New Resource;
 * Reverse
