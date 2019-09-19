@@ -14,6 +14,8 @@
   * New Resource;
 * SPOPropertyBag
   * New Resource;
+* SPOSiteAuditSettings
+  * New Resource;
 * Reverse
   * Added workload selectors to the GUI interface;
 * Metadata

@@ -324,6 +324,14 @@ function Show-O365GUI
         $chckSPOSite.Text = "Site Collections"
         $pnlSPO.Controls.Add($chckSPOSite)
 
+        $chckSPOSiteAuditSettings = New-Object System.Windows.Forms.CheckBox
+        $chckSPOSiteAuditSettings.Top = 140
+        $chckSPOSiteAuditSettings.AutoSize = $true;
+        $chckSPOSiteAuditSettings.Name = "chckSPOSiteAuditSettings"
+        $chckSPOSiteAuditSettings.Checked = $true
+        $chckSPOSiteAuditSettings.Text = "Site Audit Settings"
+        $pnlSPO.Controls.Add($chckSPOSiteAuditSettings)
+
         $chckSPOSiteDesignRights = New-Object System.Windows.Forms.CheckBox
         $chckSPOSiteDesignRights.Top = 160
         $chckSPOSiteDesignRights.AutoSize = $true;
@@ -375,7 +383,7 @@ function Show-O365GUI
         $pnlMain.Controls.Add($imgSC)
 
         $pnlSC = New-Object System.Windows.Forms.Panel
-        $pnlSC.Top = $pnlSPO.Heigth + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 340
+        $pnlSC.Top = $pnlSPO.Height + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 125
         $pnlSC.Left = $SecondColumnLeft
 
 

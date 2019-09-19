@@ -1,0 +1,7 @@
+[ClassVersion("1.0.0.0"), FriendlyName("SPOSiteAuditSettings")]
+class MSFT_SPOSiteAuditSettings : OMI_BaseResource
+{
+    [Key, Description("URL of the site collection to configure.")] String Url;
+    [Required, Description("Audit flag for the site collection. Can be 'All' or 'None'."), ValueMap{"All","None"}, Values{"All","None"}] String AuditFlags;
+    [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+};

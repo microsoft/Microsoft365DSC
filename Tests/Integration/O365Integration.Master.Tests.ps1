@@ -301,6 +301,13 @@ Configuration Master
             Ensure             = "Present"
         }
 
+        SPOSiteAuditSettings MyStorageEntity
+        {
+            Url                = "https://o365dsc.sharepoint.com/sites/Classic"
+            AuditFlags         = "All"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
         <#SPOStorageEntity SiteEntity1
         {
             Key                = "SiteEntity1"

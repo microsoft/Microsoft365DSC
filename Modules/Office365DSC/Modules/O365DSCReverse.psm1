@@ -1382,6 +1382,22 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region SPOSiteAuditSetting
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOSiteAuditSettings")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SPOSiteAuditSettings..."
+
+        $SPOSiteAuditSettingModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SPOSiteAuditSettings\MSFT_SPOSiteAuditSettings.psm1" `
+                                                   -Resolve
+
+        Import-Module $SPOSiteAuditSettingModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region SPOSiteDesign
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOSiteDesign")) -or
