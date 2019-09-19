@@ -294,7 +294,7 @@ Configuration Master
 
         SPOSiteAuditSettings MyStorageEntity
         {
-            SiteUrl            = "https://o365dsc.sharepoint.com/sites/Classic"
+            Url                = "https://o365dsc.sharepoint.com/sites/Classic"
             AuditFlags         = "All"
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin

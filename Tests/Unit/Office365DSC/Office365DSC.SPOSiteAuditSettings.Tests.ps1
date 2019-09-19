@@ -32,7 +32,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "Set SPOSiteAuditSettings to All" -Fixture {
             $testParams = @{
-                SiteUrl            = "https://contoso.com/sites/fakesite"
+                Url                = "https://contoso.com/sites/fakesite"
                 AuditFlags         = "All"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -64,7 +64,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Set SPOSiteAuditSettings to None" -Fixture {
             $testParams = @{
-                SiteUrl            = "https://contoso.com/sites/fakesite"
+                Url                = "https://contoso.com/sites/fakesite"
                 AuditFlags         = "None"
                 GlobalAdminAccount = $GlobalAdminAccount
             }

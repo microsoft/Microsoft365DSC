@@ -16,7 +16,7 @@ Configuration Example
     {
         SPOSiteAuditSettings MyStorageEntity
         {
-            SiteUrl            = "https://contoso.sharepoint.com/sites/DemoSite"
+            Url                = "https://contoso.sharepoint.com/sites/DemoSite"
             AuditFlags         = "All"
             Ensure             = "Present"
             GlobalAdminAccount = $credsGlobalAdmin

@@ -5,7 +5,7 @@ function Get-TargetResource
     param (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $SiteUrl,
+        $Url,
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('All','None')]
@@ -22,23 +22,22 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting SPOSiteAuditSettings for {$SiteUrl}"
+    Write-Verbose -Message "Getting SPOSiteAuditSettings for {$Url}"
 
     $nullReturn = @{
-        SiteUrl            = $SiteUrl
-        AuditFlags         = $AuditFlags
+        Url                = $Url
+        AuditFlags         = $null
         GlobalAdminAccount = $GlobalAdminAccount
-        Ensure             ="Absent"
     }
 
     try
     {
         Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform PnP `
-                          -ConnectionUrl $SiteUrl -ErrorAction SilentlyContinue
+                          -ConnectionUrl $Url -ErrorAction SilentlyContinue
         $auditSettings = Get-PnPAuditing
         return @{
-            SiteUrl            = $SiteUrl
+            Url                = $Url
             AuditFlags         = $auditSettings.AuditFlags.ToString()
             GlobalAdminAccount = $GlobalAdminAccount
             Ensure             ="Present"
@@ -60,7 +59,7 @@ function Set-TargetResource
     param (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $SiteUrl,
+        $Url,
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('All','None')]
@@ -77,11 +76,11 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting Audit settings for {$SiteUrl}"
+    Write-Verbose -Message "Setting Audit settings for {$Url}"
 
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -ConnectionUrl $SiteUrl `
+                      -ConnectionUrl $Url `
                       -Platform PnP
 
     if ($AuditFlags -eq 'All')
@@ -101,7 +100,7 @@ function Test-TargetResource
     param (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $SiteUrl,
+        $Url,
 
         [Parameter(Mandatory = $true)]
         [ValidateSet('All','None')]
@@ -118,7 +117,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing audit settings for {$SiteUrl}"
+    Write-Verbose -Message "Testing audit settings for {$Url}"
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -156,7 +155,7 @@ function Export-TargetResource
         {
             Write-Information "    [$i/$($sites.Length)] Audit Settings for {$($site.Url)}"
             $params = @{
-                SiteUrl            = $site.Url
+                Url                = $site.Url
                 AuditFlags         = 'None'
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -170,7 +169,7 @@ function Export-TargetResource
         }
         catch
         {
-            Write-Verbose "There was an issue retrieving Audit Settings for $SiteUrl"
+            Write-Verbose "There was an issue retrieving Audit Settings for $Url"
         }
         $i++
     }
