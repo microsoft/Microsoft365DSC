@@ -330,7 +330,7 @@ Configuration Master
             Ensure             = "Present"
         }#>
 
-        SPOUserProfileProperty AdminFavoriteColor
+        SPOUserProfileProperty AdminFavoriteFood
         {
             UserName           = "adminnonmfa@$Domain"
             Properties         = @(

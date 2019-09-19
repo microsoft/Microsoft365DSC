@@ -57,7 +57,6 @@ function Get-TargetResource
     }
     catch
     {
-        throw $_
         return $nullReturn
     }
 
@@ -89,10 +88,15 @@ function Set-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform PnP
 
+    $currentProperties = Get-TargetResource @PSBoundParameters
+
     foreach ($property in $Properties)
     {
-        Write-Verbose "Setting Profile Property {$($property.Key)} as {$($property.Value)}"
-        Set-PnPUserProfileProperty -Account $UserName -PropertyName $property.Key -Value $property.Value
+        if ($currentProperties.Properties[$property.Key] -ne $property.Value)
+        {
+            Write-Verbose "Setting Profile Property {$($property.Key)} as {$($property.Value)}"
+            Set-PnPUserProfileProperty -Account $UserName -PropertyName $property.Key -Value $property.Value
+        }
     }
 }
 function Test-TargetResource
@@ -138,7 +142,6 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
