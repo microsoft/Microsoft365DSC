@@ -294,7 +294,7 @@ Configuration Master
 
         SPOPropertyBag MyKey
         {
-            WebUrl             = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+            Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
             Key                = "MyKey"
             Value              = "MyValue#3"
             GlobalAdminAccount = $GlobalAdmin

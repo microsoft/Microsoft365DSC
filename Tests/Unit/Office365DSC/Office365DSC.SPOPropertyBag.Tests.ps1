@@ -36,7 +36,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "Need to Configure New Key" -Fixture {
             $testParams = @{
-                WebUrl             = "https://contoso.sharepoint.com"
+                Url                = "https://contoso.sharepoint.com"
                 Key                = "MyKey"
                 Value              = "MyValue"
                 GlobalAdminAccount = $GlobalAdminAccount
@@ -62,7 +62,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Need to remove the Key" -Fixture {
             $testParams = @{
-                WebUrl             = "https://contoso.sharepoint.com"
+                Url                = "https://contoso.sharepoint.com"
                 Key                = "MyKey"
                 Value              = "MyValue"
                 GlobalAdminAccount = $GlobalAdminAccount

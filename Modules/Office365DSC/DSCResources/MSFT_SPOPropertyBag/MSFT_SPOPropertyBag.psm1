@@ -6,7 +6,7 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $WebUrl,
+        $Url,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -29,7 +29,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of SCCaseHoldPolicy for $Name"
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -ConnectionUrl $WebUrl `
+                      -ConnectionUrl $Url `
                       -Platform PnP
 
     $property = Get-PnPPropertyBag | Where-Object { $_.Key -eq $Key }
@@ -46,7 +46,7 @@ function Get-TargetResource
         Write-Verbose "Found existing SPOPropertyBag Key $Key at {$Url}"
         $result = @{
             Ensure             = 'Present'
-            WebUrl             = $WebUrl
+            Url                = $Url
             Key                = $property.Key
             Value              = $property.Value
             GlobalAdminAccount = $GlobalAdminAccount
@@ -64,7 +64,7 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $WebUrl,
+        $Url,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -84,15 +84,15 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of SPOPropertyBag property for $Key at {$WebUrl}"
+    Write-Verbose -Message "Setting configuration of SPOPropertyBag property for $Key at {$Url}"
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -ConnectionUrl $WebUrl `
+                      -ConnectionUrl $Url `
                       -Platform PnP
 
     $currentProperty = Get-TargetResource @PSBoundParameters
 
-    if (('Present' -eq $Ensure))
+    if ('Present' -eq $Ensure)
     {
         $CreationParams = @{
             Key   = $Key
@@ -114,7 +114,7 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $WebUrl,
+        $Url,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -134,7 +134,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of SPOPropertyBag for $Key at {$webUrl}"
+    Write-Verbose -Message "Testing configuration of SPOPropertyBag for $Key at {$Url}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -182,7 +182,7 @@ function Export-TargetResource
         {
             Write-Information "        [$j/$($properties.Count)] $($property.Key)"
             $params = @{
-                WebUrl             = $site.Url
+                Url               = $site.Url
                 Key                = $property.Key
                 Value              = '*'
                 GlobalAdminAccount = $GlobalAdminAccount
