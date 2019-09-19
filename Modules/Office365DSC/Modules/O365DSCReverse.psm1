@@ -1514,6 +1514,22 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region SPOUserProfileProperty
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOUserProfileProperty")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SPOUserProfileProperty..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SPOUserProfileProperty\MSFT_SPOUserProfileProperty.psm1" `
+                                                   -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "TeamsTeam"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckTeamsTeam")) -or
