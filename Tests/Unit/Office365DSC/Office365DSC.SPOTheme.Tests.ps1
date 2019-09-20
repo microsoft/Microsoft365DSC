@@ -103,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                            "neutralSecondary": "#858585",
                                            "neutralPrimaryAlt": "#4b4b4b",
                                            "neutralPrimary": "#333",
-                                           "neutralDark": "#272727",
+                                           "neutralDark": "#777777",
                                            "black": "#1d1d1d",
                                            "white": "#fff",
                                            "bodyBackground": "#0078d4",
@@ -116,7 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-SPOTheme -MockWith {
                 return @{
                     Name               = "TestTheme"
-                    IsInverted         = $false
+                    IsInverted         = $true
                     Palette            = '{
                                                 "themePrimary": "#0078d4",
                                                 "themeLighterAlt": "#eff6fc",
@@ -147,6 +147,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure             = "Present"
 
                 }
+            }
+
+            It "Should update the Theme from the Set method" {
+                Set-TargetResource @testParams
             }
 
             It "Should return present from the Get method" {
