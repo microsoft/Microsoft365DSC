@@ -257,6 +257,7 @@ function Show-O365GUI
         $pnlSPO.Top = 88 + $topBannerHeight
         $pnlSPO.Left = $SecondColumnLeft
         $pnlSPO.Height = 260
+        $pnlSPO.Height = 280
         $pnlSPO.Width = 300
         $pnlSPO.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -364,6 +365,15 @@ function Show-O365GUI
         $chckSPOTheme.Text = "Themes"
         $pnlSPO.Controls.Add($chckSPOTheme)
 
+
+        $chckSPOUserProfileProperty = New-Object System.Windows.Forms.CheckBox
+        $chckSPOUserProfileProperty.Top = 260
+        $chckSPOUserProfileProperty.AutoSize = $true;
+        $chckSPOUserProfileProperty.Name = "chckSPOUserProfileProperty"
+        $chckSPOUserProfileProperty.Checked = $true
+        $chckSPOUserProfileProperty.Text = "User Profile Properties"
+        $pnlSPO.Controls.Add($chckSPOUserProfileProperty)
+
         $chckAllSharePoint = New-Object System.Windows.Forms.CheckBox
         $chckAllSharePoint.Left = $SecondColumnLeft + 280
         $chckAllSharePoint.Top = $topBannerHeight + 40
@@ -385,7 +395,6 @@ function Show-O365GUI
         $pnlSC = New-Object System.Windows.Forms.Panel
         $pnlSC.Top = $pnlSPO.Height + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 125
         $pnlSC.Left = $SecondColumnLeft
-
 
         $pnlSC.Height = 240
         $pnlSC.Width = 300
@@ -489,7 +498,7 @@ function Show-O365GUI
 
         $chckAllSC = New-Object System.Windows.Forms.CheckBox
         $chckAllSC.Left = $SecondColumnLeft + 280
-        $chckAllSC.Top = $topBannerHeight + 380
+        $chckAllSC.Top = $topBannerHeight + 440
         $chckAllSC.Checked = $true
         $chckAllSC.AutoSize = $true
         $chckAllSC.Add_CheckedChanged({SectionChanged -Control $chckAllSC -Panel $pnlSC})
