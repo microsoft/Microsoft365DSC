@@ -256,7 +256,7 @@ function Show-O365GUI
         $pnlSPO = New-Object System.Windows.Forms.Panel
         $pnlSPO.Top = 88 + $topBannerHeight
         $pnlSPO.Left = $SecondColumnLeft
-        $pnlSPO.Height = 240
+        $pnlSPO.Height = 260
         $pnlSPO.Width = 300
         $pnlSPO.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -325,7 +325,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOSite)
 
         $chckSPOSiteAuditSettings = New-Object System.Windows.Forms.CheckBox
-        $chckSPOSiteAuditSettings.Top = 140
+        $chckSPOSiteAuditSettings.Top = 160
         $chckSPOSiteAuditSettings.AutoSize = $true;
         $chckSPOSiteAuditSettings.Name = "chckSPOSiteAuditSettings"
         $chckSPOSiteAuditSettings.Checked = $true
@@ -333,7 +333,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOSiteAuditSettings)
 
         $chckSPOSiteDesignRights = New-Object System.Windows.Forms.CheckBox
-        $chckSPOSiteDesignRights.Top = 160
+        $chckSPOSiteDesignRights.Top = 180
         $chckSPOSiteDesignRights.AutoSize = $true;
         $chckSPOSiteDesignRights.Name = "chckSPOSiteDesignRights"
         $chckSPOSiteDesignRights.Checked = $true
@@ -341,7 +341,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOSiteDesignRights)
 
         $chckSPOStorageEntity= New-Object System.Windows.Forms.CheckBox
-        $chckSPOStorageEntity.Top = 180
+        $chckSPOStorageEntity.Top = 200
         $chckSPOStorageEntity.AutoSize = $true;
         $chckSPOStorageEntity.Name = "chckSPOStorageEntity"
         $chckSPOStorageEntity.Checked = $true
@@ -349,7 +349,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOStorageEntity)
 
         $chckSPOTenantSettings = New-Object System.Windows.Forms.CheckBox
-        $chckSPOTenantSettings.Top = 200
+        $chckSPOTenantSettings.Top = 220
         $chckSPOTenantSettings.AutoSize = $true;
         $chckSPOTenantSettings.Name = "chckSPOTenantSettings"
         $chckSPOTenantSettings.Checked = $true
@@ -357,7 +357,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOTenantSettings)
 
         $chckSPOTheme = New-Object System.Windows.Forms.CheckBox
-        $chckSPOTheme.Top = 220
+        $chckSPOTheme.Top = 240
         $chckSPOTheme.AutoSize = $true;
         $chckSPOTheme.Name = "chckSPOTheme"
         $chckSPOTheme.Checked = $true

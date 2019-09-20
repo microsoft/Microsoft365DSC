@@ -1184,10 +1184,6 @@ function Start-O365ConfigurationExtract
     {
         Write-Information "Extracting SPOPropertyBag..."
 
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform SecurityComplianceCenter `
-                          -ErrorAction SilentlyContinue
-
         $SPOPropertyBagModulePath = Join-Path -Path $PSScriptRoot `
                                                    -ChildPath "..\DSCResources\MSFT_SPOPropertyBag\MSFT_SPOPropertyBag.psm1" `
                                                    -Resolve
