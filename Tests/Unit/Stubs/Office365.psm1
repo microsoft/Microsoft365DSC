@@ -9100,6 +9100,32 @@ param(
 
 
  }
+ function Set-PnPUserProfileProperty {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Account,
+
+       [Parameter()]
+       [System.String]
+       $PropertyName,
+
+       [Parameter()]
+       [System.String]
+       $Value
+   )
+}
+
+function Get-PnPUserProfileProperty {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Account
+   )
+}
+
 
 
 function Get-AzureADContactManager {
