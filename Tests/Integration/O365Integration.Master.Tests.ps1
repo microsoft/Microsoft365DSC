@@ -330,6 +330,20 @@ Configuration Master
             Ensure             = "Present"
         }#>
 
+        SPOUserProfileProperty AdminFavoriteFood
+        {
+            UserName           = "adminnonmfa@$Domain"
+            Properties         = @(
+                MSFT_SPOUserProfilePropertyInstance
+                {
+                    Key   = "FavoriteFood"
+                    Value = "Pasta"
+                }
+            )
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+        }
+
         TeamsTeam TeamAlpha
         {
             DisplayName          = "Alpha Team"
