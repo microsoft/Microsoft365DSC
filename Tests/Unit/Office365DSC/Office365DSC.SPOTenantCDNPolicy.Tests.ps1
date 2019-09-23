@@ -25,7 +25,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Mock -CommandName Set-PnPTenantCDNPolicies -MockWith {
+        Mock -CommandName Set-PnPTenantCDNPolicy -MockWith {
 
         }
 
