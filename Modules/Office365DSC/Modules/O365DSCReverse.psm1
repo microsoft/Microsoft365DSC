@@ -48,7 +48,7 @@ function Start-O365ConfigurationExtract
     $DSCContent += "    [System.Management.Automation.PSCredential]`r`n"
     $DSCContent += "    `$GlobalAdminAccount`r`n"
     $DSCContent += ")`r`n`r`n"
-    $DSCContent += "Configuration O365TenantConfig `r`n{`r`n"
+    $DSCContent += "Configuration O365TenantConfig`r`n{`r`n"
     $DSCContent += "    param (`r`n"
     $DSCContent += "        [parameter()]`r`n"
     $DSCContent += "        [System.Management.Automation.PSCredential]`r`n"
@@ -742,30 +742,15 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckODSettings")) -or
         $AllComponents)
     {
-        Write-Information "Extracting ODSettings..."
         try
         {
-            Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                              -O365Credential $GlobalAdminAccount `
-                              -Platform SharePointOnline `
-                              -ErrorAction SilentlyContinue
 
             $ODSettingsModulePath = Join-Path -Path $PSScriptRoot `
                                             -ChildPath "..\DSCResources\MSFT_ODSettings\MSFT_ODSettings.psm1" `
                                             -Resolve
 
             Import-Module $ODSettingsModulePath | Out-Null
-            $partialContent = ""
-            if ($centralAdminUrl)
-            {
-                $partialContent = Export-TargetResource -IsSingleInstance "Yes" `
-                                                        -GlobalAdminAccount $GlobalAdminAccount
-                if ($partialContent.ToLower().Contains($centralAdminUrl.ToLower()))
-                {
-                    $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $centralAdminUrl + "`""), "`$ConfigurationData.NonNodeData.OrganizationName + `"-admin.sharepoint.com`""
-                }
-                $DSCContent += $partialContent
-            }
+            $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
         }
         catch
         {
@@ -792,6 +777,40 @@ function Start-O365ConfigurationExtract
         $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
+
+    #region SCCaseHoldPolicy
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCCaseHoldPolicy")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SCCaseHoldPolicy..."
+
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform SecurityComplianceCenter `
+                          -ErrorAction SilentlyContinue
+
+        $SCCaseHoldPolicyModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SCCaseHoldPolicy\MSFT_SCCaseHoldPolicy.psm1" `
+                                                   -Resolve
+
+        Import-Module $SCCaseHoldPolicyModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "SCCaseHoldRule"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCCaseHoldRule")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SCCaseHoldRule..."
+        $SCCaseHoldRuleModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SCCaseHoldRule\MSFT_SCCaseHoldRule.psm1" `
+                                                   -Resolve
+
+        Import-Module $SCCaseHoldRuleModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
 
     #region "SCComplianceSearch"
     if (($null -ne $ComponentsToExtract -and
@@ -1158,6 +1177,25 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region SPOPropertyBag
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOPropertyBag")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SPOPropertyBag..."
+
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform SecurityComplianceCenter `
+                          -ErrorAction SilentlyContinue
+
+        $SPOPropertyBagModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SPOPropertyBag\MSFT_SPOPropertyBag.psm1" `
+                                                   -Resolve
+
+        Import-Module $SPOPropertyBagModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
     #region "SPOSite"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOSite")) -or
@@ -1344,6 +1382,22 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region SPOSiteAuditSetting
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOSiteAuditSettings")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SPOSiteAuditSettings..."
+
+        $SPOSiteAuditSettingModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SPOSiteAuditSettings\MSFT_SPOSiteAuditSettings.psm1" `
+                                                   -Resolve
+
+        Import-Module $SPOSiteAuditSettingModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region SPOSiteDesign
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOSiteDesign")) -or
@@ -1457,6 +1511,22 @@ function Start-O365ConfigurationExtract
 
         $DSCContent += Export-TargetResource -IsSingleInstance 'Yes' `
                                              -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region SPOUserProfileProperty
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOUserProfileProperty")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SPOUserProfileProperty..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SPOUserProfileProperty\MSFT_SPOUserProfileProperty.psm1" `
+                                                   -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
 

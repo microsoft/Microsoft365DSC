@@ -5526,8 +5526,17 @@ param(
 
     [Parameter(ParameterSetName='ParamSet1')]
     #[System.Nullable[object]]
-    ${DefaultLinkPermission})
+    ${DefaultLinkPermission},
 
+    [Parameter(ParameterSetName='ParamSet1')]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    ${AnonymousLinkExpirationInDays},
+
+    [Parameter(ParameterSetName='ParamSet1')]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    ${OverrideTenantAnonymousLinkExpirationPolicy})
 
  }
 
@@ -9089,6 +9098,32 @@ param(
 
 
  }
+ function Set-PnPUserProfileProperty {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Account,
+
+       [Parameter()]
+       [System.String]
+       $PropertyName,
+
+       [Parameter()]
+       [System.String]
+       $Value
+   )
+}
+
+function Get-PnPUserProfileProperty {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Account
+   )
+}
+
 
 
 function Get-AzureADContactManager {
@@ -9366,6 +9401,152 @@ function New-ComplianceSearchAction {
    )
 }
 
+function Get-CaseHoldPolicy {
+    [CmdletBinding()]
+    param(
+       [Parameter()]
+       [System.String]
+       $Identity,
+
+       [Parameter()]
+       [System.String]
+       $Case
+   )
+}
+
+function Get-PnPAuditing
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Connection
+    )
+}
+
+function Get-PnPTenantSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Connection
+    )
+}
+
+function Set-PnPAuditing
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Switch]
+        $EnableAll,
+
+        [Parameter()]
+        [Switch]
+        $DisableAll
+    )
+}
+
+function Get-CaseHoldRule {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity,
+
+       [Parameter()]
+       [System.String]
+       $Policy
+   )
+}
+
+function Remove-CaseHoldRule {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Identity
+   )
+}
+
+function New-CaseHoldRule {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Name,
+
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Policy,
+
+       [Parameter()]
+       [System.String]
+       $Comment,
+
+       [Parameter()]
+       [System.Boolean]
+       $Disabled,
+
+       [Parameter()]
+       [System.String]
+       $ContentMatchQuery
+   )
+}
+
+function Set-CaseHoldRule {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery
+    )
+}
+
+function Remove-PnPPropertyBagValue {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Key
+   )
+}
+
+function Set-PnPPropertyBagValue {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Key,
+
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Value
+   )
+}
+
+function Get-PnPPropertyBag {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Key
+   )
+}
+
 function Get-ComplianceCase {
     [CmdletBinding()]
    param(
@@ -9415,6 +9596,102 @@ function Set-ComplianceCase {
         [Parameter()]
         [Switch]
         $Reopen
+    )
+}
+
+function Get-CaseHoldPolicy {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity,
+
+       [Parameter()]
+       [System.String]
+       $Case
+   )
+}
+
+function Remove-CaseHoldPolicy {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Identity
+   )
+}
+
+function New-CaseHoldPolicy {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Case,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $PublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation
+   )
+}
+
+function Set-CaseHoldPolicy {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddPublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemovePublicFolderLocation
     )
 }
 

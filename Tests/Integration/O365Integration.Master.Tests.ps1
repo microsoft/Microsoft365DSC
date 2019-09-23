@@ -164,6 +164,29 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
         }
 
+        SCCaseHoldPolicy DemoCaseHoldPolicy
+        {
+            Case                 = "Integration Case";
+            ExchangeLocation     = "SharePointConference2019@o365dsc.onmicrosoft.com";
+            Name                 = "Integration Hold";
+            PublicFolderLocation = "All";
+            Comment              = "This is a test for integration";
+            Ensure               = "Present";
+            Enabled              = $True;
+            GlobalAdminAccount   = $GlobalAdmin;
+        }
+
+        SCCaseHoldRule DemoHoldRule
+        {
+            Name               = "Integration Hold"
+            Policy             = "Integration Hold"
+            Comment            = "This is a demo rule"
+            Disabled           = $false
+            ContentMatchQuery  = "filename:2016 budget filetype:xlsx"
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
         SCComplianceTag DemoRule
         {
             Name               = "DemoTag"
@@ -263,10 +286,26 @@ Configuration Master
         {
             Title                = "Modern Site"
             Url                  = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
-            Owner                = "admin@$Domain"
+            Owner                = "adminnonmfa@$Domain"
             Template             = "STS#3"
             GlobalAdminAccount   = $GlobalAdmin
             Ensure               = "Present"
+        }
+
+        SPOPropertyBag MyKey
+        {
+            Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+            Key                = "MyKey"
+            Value              = "MyValue#3"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+        }
+
+        SPOSiteAuditSettings MyStorageEntity
+        {
+            Url                = "https://o365dsc.sharepoint.com/sites/Classic"
+            AuditFlags         = "All"
+            GlobalAdminAccount = $GlobalAdmin
         }
 
         <#SPOStorageEntity SiteEntity1
@@ -290,6 +329,20 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
         }#>
+
+        SPOUserProfileProperty AdminFavoriteFood
+        {
+            UserName           = "adminnonmfa@$Domain"
+            Properties         = @(
+                MSFT_SPOUserProfilePropertyInstance
+                {
+                    Key   = "FavoriteFood"
+                    Value = "Pasta"
+                }
+            )
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+        }
 
         TeamsTeam TeamAlpha
         {
