@@ -49,7 +49,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return $false for the ExcludeIfNoScriptDisabled for the  from the Get method" {
-                (Get-TargetResource @testParams).ExcludeIfNoScriptDisabled | Should Be $false
+                (Get-TargetResource @testParams).ExcludeIfNoScriptDisabled | Should Be $true
             }
 
             It "Should return false from the Test method" {
@@ -80,7 +80,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return $false for the ExcludeIfNoScriptDisabled for the  from the Get method" {
-                (Get-TargetResource @testParams).ExcludeIfNoScriptDisabled | Should Be $true
+                (Get-TargetResource @testParams).ExcludeIfNoScriptDisabled | Should Be $false
             }
 
             It "Should return false from the Test method" {
@@ -95,7 +95,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Policies are already in the desired state" -Fixture {
             $testParams = @{
                 CDNType                              = "Public"
-                ExcludeIfNoScriptDisabled            = $true
+                ExcludeIfNoScriptDisabled            = $false
                 ExcludeRestrictedSiteClassifications = @('Secured')
                 IncludeFileExtensions                = @('.php')
                 GlobalAdminAccount                   = $GlobalAdminAccount
@@ -110,7 +110,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It "Should return false from the Test method" {
+            It "Should return true from the Test method" {
                 Test-TargetResource @testParams | Should Be $true
             }
 
@@ -121,10 +121,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                CDNType                              = "Public"
-                ExcludeIfNoScriptDisabled            = $true
-                ExcludeRestrictedSiteClassifications = @('Secured')
-                IncludeFileExtensions                = @('.php')
                 GlobalAdminAccount                   = $GlobalAdminAccount
             }
 
