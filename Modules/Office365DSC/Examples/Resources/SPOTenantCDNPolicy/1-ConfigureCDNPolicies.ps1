@@ -17,7 +17,6 @@ Configuration Example
         SPOTenantCDNPolicy PublicCDNPolicy
         {
             IncludeFileExtensions                = @('.jpg', '.png');
-            ExcludeIfNoScriptDisabled            = "False";
             GlobalAdminAccount                   = $credsGlobalAdmin
             CDNType                              = "Public";
             ExcludeRestrictedSiteClassifications = @();
@@ -25,7 +24,6 @@ Configuration Example
         SPOTenantCDNPolicy PrivateCDNPolicy
         {
             IncludeFileExtensions                = @('.gif');
-            ExcludeIfNoScriptDisabled            = "False";
             GlobalAdminAccount                   = $credsGlobalAdmin
             CDNType                              = "Private";
             ExcludeRestrictedSiteClassifications = @();

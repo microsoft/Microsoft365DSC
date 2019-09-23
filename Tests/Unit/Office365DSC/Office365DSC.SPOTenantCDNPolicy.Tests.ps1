@@ -33,7 +33,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Update existing Public Policies" -Fixture {
             $testParams = @{
                 CDNType                              = "Public"
-                ExcludeIfNoScriptDisabled            = $false
                 ExcludeRestrictedSiteClassifications = @('Sensitive')
                 IncludeFileExtensions                = @('.gif')
                 GlobalAdminAccount                   = $GlobalAdminAccount
@@ -64,7 +63,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Update existing Private Policies" -Fixture {
             $testParams = @{
                 CDNType                              = "Private"
-                ExcludeIfNoScriptDisabled            = $true
                 ExcludeRestrictedSiteClassifications = @('Sensitive')
                 IncludeFileExtensions                = @('.gif')
                 GlobalAdminAccount                   = $GlobalAdminAccount
@@ -95,7 +93,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Policies are already in the desired state" -Fixture {
             $testParams = @{
                 CDNType                              = "Public"
-                ExcludeIfNoScriptDisabled            = $false
                 ExcludeRestrictedSiteClassifications = @('Secured')
                 IncludeFileExtensions                = @('.php')
                 GlobalAdminAccount                   = $GlobalAdminAccount

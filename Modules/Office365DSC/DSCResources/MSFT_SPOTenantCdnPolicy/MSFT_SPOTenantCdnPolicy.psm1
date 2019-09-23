@@ -10,10 +10,6 @@ function Get-TargetResource
         $CdnType,
 
         [Parameter()]
-        [System.Boolean]
-        $ExcludeIfNoScriptDisabled = $false,
-
-        [Parameter()]
         [System.String[]]
         $ExcludeRestrictedSiteClassifications,
 
@@ -35,7 +31,6 @@ function Get-TargetResource
 
     return @{
         CDNType                              = $CDNType
-        ExcludeIfNoScriptDisabled            = [System.Boolean]$Policies["ExcludeIfNoScriptDisabled"]
         ExcludeRestrictedSiteClassifications = $Policies["ExcludeRestrictedSiteClassifications"].Split(',')
         IncludeFileExtensions                = $Policies["IncludeFileExtensions"].Split(',')
         GlobalAdminAccount                   = $GlobalAdminAccount
@@ -76,11 +71,7 @@ function Set-TargetResource
 
     $curPolicies = Get-TargetResource @PSBoundParameters
 
-    $setParams = @{
-        CDNType = $CDNType
-    }
-
-    if ($null -ne  `
+    if ($null -ne `
         (Compare-Object -ReferenceObject $curPolicies.IncludeFileExtensions -DifferenceObject $IncludeFileExtensions))
     {
         Write-Verbose "Found difference in IncludeFileExtensions"
@@ -97,7 +88,7 @@ function Set-TargetResource
     }
 
     if ($null -ne (Compare-Object -ReferenceObject $curPolicies.ExcludeRestrictedSiteClassifications `
-                    -DifferenceObject $ExcludeRestrictedSiteClassifications))
+                                  -DifferenceObject $ExcludeRestrictedSiteClassifications))
     {
         Write-Verbose "Found difference in ExcludeRestrictedSiteClassifications"
 
@@ -105,14 +96,6 @@ function Set-TargetResource
         Set-PnPTenantCdnPolicy -CDNType $CDNType `
                                -PolicyType 'ExcludeRestrictedSiteClassifications' `
                                -PolicyValue $stringValue
-    }
-
-    if ($ExcludeIfNoScriptDisabled -ne $curPolicies["ExcludeIfNoScriptDisabled"])
-    {
-        Write-Verbose "Found difference in ExcludeIfNoScriptDisabled"
-        Set-PnPTenantCdnPolicy -CDNType $CDNType `
-                               -PolicyType 'ExcludeIfNoScriptDisabled' `
-                               -PolicyValue $ExcludeIfNoScriptDisabled.ToString()
     }
 }
 
@@ -126,10 +109,6 @@ function Test-TargetResource
         [ValidateSet('Private','Public')]
         [System.String]
         $CdnType,
-
-        [Parameter()]
-        [System.Boolean]
-        $ExcludeIfNoScriptDisabled = $false,
 
         [Parameter()]
         [System.String[]]
@@ -154,7 +133,6 @@ function Test-TargetResource
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck @("CDNType", `
-                                                                   "ExcludeIfNoScriptDisabled", `
                                                                    "ExcludeRestrictedSiteClassifications", `
                                                                    "IncludeFileExtensions")
 
