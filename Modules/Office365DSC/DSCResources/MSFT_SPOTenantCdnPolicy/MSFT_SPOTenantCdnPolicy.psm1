@@ -84,18 +84,27 @@ function Set-TargetResource
         (Compare-Object -ReferenceObject $curPolicies.IncludeFileExtensions -DifferenceObject $IncludeFileExtensions))
     {
         Write-Verbose "Found difference in IncludeFileExtensions"
+
+        $stringValue = ""
+        foreach ($entry in $IncludeFileExtensions.Split(','))
+        {
+            $stringValue += $entry + ","
+        }
+        $stringValue = $stringValue.Remove($stringValue.Length -1, 1)
         Set-PnPTenantCdnPolicy -CDNType $CDNType `
                                -PolicyType 'IncludeFileExtensions' `
-                               -PolicyValue $IncludeFileExtensions
+                               -PolicyValue $stringValue
     }
 
     if ($null -ne (Compare-Object -ReferenceObject $curPolicies.ExcludeRestrictedSiteClassifications `
                     -DifferenceObject $ExcludeRestrictedSiteClassifications))
     {
         Write-Verbose "Found difference in ExcludeRestrictedSiteClassifications"
+
+
         Set-PnPTenantCdnPolicy -CDNType $CDNType `
                                -PolicyType 'ExcludeRestrictedSiteClassifications' `
-                               -PolicyValue $ExcludeRestrictedSiteClassifications
+                               -PolicyValue $stringValue
     }
 
     if ($ExcludeIfNoScriptDisabled -ne $curPolicies["ExcludeIfNoScriptDisabled"])
@@ -103,7 +112,7 @@ function Set-TargetResource
         Write-Verbose "Found difference in ExcludeIfNoScriptDisabled"
         Set-PnPTenantCdnPolicy -CDNType $CDNType `
                                -PolicyType 'ExcludeIfNoScriptDisabled' `
-                               -PolicyValue $ExcludeIfNoScriptDisabled
+                               -PolicyValue $ExcludeIfNoScriptDisabled.ToString()
     }
 }
 

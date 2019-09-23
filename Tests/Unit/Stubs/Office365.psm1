@@ -9143,8 +9143,8 @@ function Set-PnPTenantCDNPolicies {
         $CdnType,
 
         [Parameter()]
-        [System.Boolean]
-        $PolicyType = $false,
+        [System.String]
+        $PolicyType,
 
         [Parameter()]
         [System.String]
