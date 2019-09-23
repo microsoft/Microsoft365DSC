@@ -9134,7 +9134,7 @@ function Get-PnPTenantCDNPolicies {
    )
 }
 
-function Set-PnPTenantCDNPolicies {
+function Set-PnPTenantCDNPolicy {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
