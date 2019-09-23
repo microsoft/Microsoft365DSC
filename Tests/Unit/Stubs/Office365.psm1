@@ -9144,15 +9144,11 @@ function Set-PnPTenantCDNPolicies {
 
         [Parameter()]
         [System.Boolean]
-        $ExcludeIfNoScriptDisabled = $false,
+        $PolicyType = $false,
 
         [Parameter()]
-        [System.String[]]
-        $ExcludeRestrictedSiteClassifications,
-
-        [Parameter()]
-        [System.String[]]
-        $IncludeFileExtensions
+        [System.String]
+        $PolicyValue
     )
 }
 

@@ -80,34 +80,30 @@ function Set-TargetResource
         CDNType = $CDNType
     }
 
-    $deltaFound = $false
     if ($null -ne  `
         (Compare-Object -ReferenceObject $curPolicies.IncludeFileExtensions -DifferenceObject $IncludeFileExtensions))
     {
         Write-Verbose "Found difference in IncludeFileExtensions"
-        $setParams.Add("IncludeFileExtensions", $IncludeFileExtensions)
-        $deltaFound = $true
+        Set-PnPTenantCdnPolicy -CDNType $CDNType `
+                               -PolicyType 'IncludeFileExtensions' `
+                               -PolicyValue $IncludeFileExtensions
     }
 
     if ($null -ne (Compare-Object -ReferenceObject $curPolicies.ExcludeRestrictedSiteClassifications `
                     -DifferenceObject $ExcludeRestrictedSiteClassifications))
     {
         Write-Verbose "Found difference in ExcludeRestrictedSiteClassifications"
-        $setParams.Add("ExcludeRestrictedSiteClassifications", $ExcludeRestrictedSiteClassifications)
-        $deltaFound = $true
+        Set-PnPTenantCdnPolicy -CDNType $CDNType `
+                               -PolicyType 'ExcludeRestrictedSiteClassifications' `
+                               -PolicyValue $ExcludeRestrictedSiteClassifications
     }
 
     if ($ExcludeIfNoScriptDisabled -ne $curPolicies["ExcludeIfNoScriptDisabled"])
     {
         Write-Verbose "Found difference in ExcludeIfNoScriptDisabled"
-        $setParams.Add("ExcludeIfNoScriptDisabled", $ExcludeIfNoScriptDisabled)
-        $deltaFound = $true
-    }
-
-    if ($delta)
-    {
-        Write-Verbose "Proceeding to setting new values"
-        Set-PnPTenantCDNPolicy @$setParams
+        Set-PnPTenantCdnPolicy -CDNType $CDNType `
+                               -PolicyType 'ExcludeIfNoScriptDisabled' `
+                               -PolicyValue $ExcludeIfNoScriptDisabled
     }
 }
 
