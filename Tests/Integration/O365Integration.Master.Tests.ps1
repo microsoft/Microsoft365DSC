@@ -330,6 +330,24 @@ Configuration Master
             Ensure             = "Present"
         }#>
 
+        SPOTenantCDNPolicy PublicCDNPolicies
+        {
+            IncludeFileExtensions                = @('.jpg', '.png');
+            ExcludeIfNoScriptDisabled            = "False";
+            GlobalAdminAccount                   = $credsGlobalAdmin
+            CDNType                              = "Public";
+            ExcludeRestrictedSiteClassifications = @();
+        }
+
+        SPOTenantCDNPolicy PrivateCDNPolicies
+        {
+            IncludeFileExtensions                = @('.gif');
+            ExcludeIfNoScriptDisabled            = "False";
+            GlobalAdminAccount                   = $credsGlobalAdmin
+            CDNType                              = "Private";
+            ExcludeRestrictedSiteClassifications = @();
+        }
+
         SPOUserProfileProperty AdminFavoriteFood
         {
             UserName           = "adminnonmfa@$Domain"

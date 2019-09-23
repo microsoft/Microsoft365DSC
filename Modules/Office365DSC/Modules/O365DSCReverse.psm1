@@ -1497,6 +1497,22 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region SPOTenantCDNPolicy
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOTenantCDNPolicy")) -or
+        $AllComponents)
+    {
+        Write-Information "Extracting SPOTenantCDNPolicy..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SPOTenantCDNPolicy\MSFT_SPOTenantCDNPolicy.psm1" `
+                                                   -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region SPOTenantSettings
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOTenantSettings")) -or

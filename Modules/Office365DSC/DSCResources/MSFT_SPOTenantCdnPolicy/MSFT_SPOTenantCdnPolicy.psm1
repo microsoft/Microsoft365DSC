@@ -168,9 +168,30 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
+    $InformationPreference = 'Continue'
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+                      -Platform PnP
+
+    $params = @{
+        CDNType            = 'Public'
+        GlobalAdminAccount = $GlobalAdminAccount
+    }
+    $result = Get-TargetResource @params
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        SPOStorageEntity " + (New-Guid).ToString() + "`r`n"
+    $content = "        SPOTenantCDNPolicy " + (New-Guid).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += "        }`r`n"
+
+
+    $params = @{
+        CDNType            = 'Private'
+        GlobalAdminAccount = $GlobalAdminAccount
+    }
+    $result = Get-TargetResource @params
+    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    $content += "        SPOTenantCDNPolicy " + (New-Guid).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"

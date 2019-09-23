@@ -9124,7 +9124,37 @@ function Get-PnPUserProfileProperty {
    )
 }
 
+function Get-PnPTenantCDNPolicies {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [ValidateSet('Private', 'Public')]
+       [System.String]
+       $CDNType
+   )
+}
 
+function Set-PnPTenantCDNPolicies {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Private','Public')]
+        [System.String]
+        $CdnType,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExcludeIfNoScriptDisabled = $false,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludeRestrictedSiteClassifications,
+
+        [Parameter()]
+        [System.String[]]
+        $IncludeFileExtensions
+    )
+}
 
 function Get-AzureADContactManager {
  [CmdletBinding()]

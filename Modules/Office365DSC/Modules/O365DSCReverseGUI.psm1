@@ -256,7 +256,7 @@ function Show-O365GUI
         $pnlSPO = New-Object System.Windows.Forms.Panel
         $pnlSPO.Top = 88 + $topBannerHeight
         $pnlSPO.Left = $SecondColumnLeft
-        $pnlSPO.Height = 280
+        $pnlSPO.Height = 300
         $pnlSPO.Width = 300
         $pnlSPO.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -348,8 +348,16 @@ function Show-O365GUI
         $chckSPOStorageEntity.Text = "Storage Entity"
         $pnlSPO.Controls.Add($chckSPOStorageEntity)
 
+        $chckSPOTenantCDNPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckSPOTenantCDNPolicy.Top = 220
+        $chckSPOTenantCDNPolicy.AutoSize = $true;
+        $chckSPOTenantCDNPolicy.Name = "chckSPOTenantCDNPolicy"
+        $chckSPOTenantCDNPolicy.Checked = $true
+        $chckSPOTenantCDNPolicy.Text = "Tenant CDN Policies"
+        $pnlSPO.Controls.Add($chckSPOTenantCDNPolicy)
+
         $chckSPOTenantSettings = New-Object System.Windows.Forms.CheckBox
-        $chckSPOTenantSettings.Top = 220
+        $chckSPOTenantSettings.Top = 240
         $chckSPOTenantSettings.AutoSize = $true;
         $chckSPOTenantSettings.Name = "chckSPOTenantSettings"
         $chckSPOTenantSettings.Checked = $true
@@ -357,16 +365,15 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOTenantSettings)
 
         $chckSPOTheme = New-Object System.Windows.Forms.CheckBox
-        $chckSPOTheme.Top = 240
+        $chckSPOTheme.Top = 260
         $chckSPOTheme.AutoSize = $true;
         $chckSPOTheme.Name = "chckSPOTheme"
         $chckSPOTheme.Checked = $true
         $chckSPOTheme.Text = "Themes"
         $pnlSPO.Controls.Add($chckSPOTheme)
 
-
         $chckSPOUserProfileProperty = New-Object System.Windows.Forms.CheckBox
-        $chckSPOUserProfileProperty.Top = 260
+        $chckSPOUserProfileProperty.Top = 280
         $chckSPOUserProfileProperty.AutoSize = $true;
         $chckSPOUserProfileProperty.Name = "chckSPOUserProfileProperty"
         $chckSPOUserProfileProperty.Checked = $true
