@@ -333,7 +333,7 @@ Configuration Master
         SPOTenantCDNPolicy PublicCDNPolicies
         {
             IncludeFileExtensions                = @('.jpg', '.png');
-            ExcludeIfNoScriptDisabled            = "False";
+            ExcludeIfNoScriptDisabled            = $False;
             GlobalAdminAccount                   = $credsGlobalAdmin
             CDNType                              = "Public";
             ExcludeRestrictedSiteClassifications = @();
@@ -342,7 +342,7 @@ Configuration Master
         SPOTenantCDNPolicy PrivateCDNPolicies
         {
             IncludeFileExtensions                = @('.gif');
-            ExcludeIfNoScriptDisabled            = "False";
+            ExcludeIfNoScriptDisabled            = $False;
             GlobalAdminAccount                   = $credsGlobalAdmin
             CDNType                              = "Private";
             ExcludeRestrictedSiteClassifications = @();

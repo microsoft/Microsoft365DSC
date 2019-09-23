@@ -35,7 +35,7 @@ function Get-TargetResource
 
     return @{
         CDNType                              = $CDNType
-        ExcludeIfNoScriptDisabled            = $Policies["ExcludeIfNoScriptDisabled"]
+        ExcludeIfNoScriptDisabled            = [System.Boolean]$Policies["ExcludeIfNoScriptDisabled"]
         ExcludeRestrictedSiteClassifications = $Policies["ExcludeRestrictedSiteClassifications"].Split(',')
         IncludeFileExtensions                = $Policies["IncludeFileExtensions"].Split(',')
         GlobalAdminAccount                   = $GlobalAdminAccount
