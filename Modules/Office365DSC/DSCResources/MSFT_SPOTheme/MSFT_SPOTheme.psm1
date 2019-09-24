@@ -39,28 +39,20 @@ function Get-TargetResource
         GlobalAdminAccount  = $GlobalAdminAccount
     }
 
-    try
-    {
-        Write-Verbose -Message "Getting theme $Name"
-        $theme = Get-SPOTheme -Name $Name
-        if ($null -eq $theme)
-        {
-            Write-Verbose -Message "The specified theme doesn't exist."
-            return $nullReturn
-        }
-
-        return @{
-            Name                = $theme.Name
-            IsInverted          = $theme.IsInverted
-            Palette             = $theme.Palette
-            GlobalAdminAccount  = $GlobalAdminAccount
-            Ensure              = "Present"
-        }
-    }
-    catch
+    Write-Verbose -Message "Getting theme $Name"
+    $theme = Get-SPOTheme -Name $Name -ErrorAction SilentlyContinue
+    if ($null -eq $theme)
     {
         Write-Verbose -Message "The specified theme doesn't exist."
         return $nullReturn
+    }
+
+    return @{
+        Name                = $theme.Name
+        IsInverted          = $theme.IsInverted
+        Palette             = $theme.Palette
+        GlobalAdminAccount  = $GlobalAdminAccount
+        Ensure              = "Present"
     }
 }
 
