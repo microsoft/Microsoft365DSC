@@ -49,7 +49,7 @@ function Get-TargetResource
     }
     else
     {
-        $property = $property | Where-Object { $_.Key -eq $Key }
+        $property = $property | Where-Object -FilterScript { $_.Key -eq $Key }
         Write-Verbose "Found existing SPOPropertyBag Key $Key at {$Url}"
         $result = @{
             Ensure             = 'Present'
@@ -210,7 +210,7 @@ function Export-TargetResource
         }
         catch
         {
-            Write-Warning "        The specified GlobalAdminAccount doesn't have access to site {$($site.Url)}"
+            Write-Warning -Message "        The specified GlobalAdminAccount doesn't have access to site {$($site.Url)}"
             $i++
         }
     }
