@@ -1548,6 +1548,22 @@ function Export-O365Configuration
     }
 }
 
+function Convert-ExistingThemePaletteToHashTable
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object]
+        $existingTheme
+    )
+    $themeHash = @{ }
+    foreach($entry in $existingTheme.Palette.GetEnumerator())
+    {
+        $themeHash[$entry.Key] = $entry.Value
+    }
+    return $themeHash
+}
 function Compare-SPOTheme
 {
     [CmdletBinding()]

@@ -89,16 +89,16 @@ function Get-TargetResource
             Ensure                                = 'Present'
             Name                                  = $PolicyObject.Name
             Comment                               = $PolicyObject.Comment
-            ExchangeLocation                      = $PolicyObject.ExchangeLocation
+            ExchangeLocation                      = $PolicyObject.ExchangeLocation.Name
             ExchangeSenderMemberOf                = $PolicyObject.ExchangeSenderMemberOf
             ExchangeSenderMemberOfException       = $PolicyObject.ExchangeSenderMemberOfException
             Mode                                  = $PolicyObject.Mode
-            OneDriveLocation                      = $PolicyObject.OneDriveLocation
+            OneDriveLocation                      = $PolicyObject.OneDriveLocation.Name
             OneDriveLocationException             = $PolicyObject.OneDriveLocationException
             Priority                              = $PolicyObject.Priority
             SharePointLocation                    = $PolicyObject.SharePointLocation.Name
             SharePointLocationException           = $PolicyObject.SharePointLocationException
-            TeamsLocation                         = $PolicyObject.TeamsLocation
+            TeamsLocation                         = $PolicyObject.TeamsLocation.Name
             TeamsLocationException                = $PolicyObject.TeamsLocationException
         }
 
