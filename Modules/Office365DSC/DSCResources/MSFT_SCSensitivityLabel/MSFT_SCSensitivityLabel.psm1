@@ -67,15 +67,22 @@ function Get-TargetResource
     else
     {
         $parentLabel = Get-Label -Identity $label.ParentId -ErrorAction SilentlyContinue
+        $parentLabelID = $null
+        if ($null -ne $parentLabel)
+        {
+            $parentLabelID = $parentLabel.Name
+        }
 
+        $localeSettingsValue = Convert-JSONToLocaleSettings -JSONLocalSettings $label.LocaleSettings
+        $advancedSettingsValue = Convert-StringToAdvancedSettings -AdvancedSettings $label.Settings
         Write-Verbose "Found existing Sensitiivity Label $($Name)"
         $result = @{
             Name               = $label.Name
             Comment            = $label.Comment
-            ParentId           = $parentLabel.Name
-            AdvancedSettings   = $AdvancedSettings
+            ParentId           = $parentLabelID
+            AdvancedSettings   = $advancedSettingsValue
             DisplayName        = $label.DisplayName
-            LocaleSettings     = $label.LocaleSettings
+            LocaleSettings     = $localeSettingsValue
             Priority           = $label.Priority
             Tooltip            = $label.Tooltip
             Disabled           = $label.Disabled
@@ -288,42 +295,92 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        SCSensitivityLabel " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    $InformationPreference = 'Continue'
+
+    Test-MSCloudLogin -Platform 'SecurityComplianceCenter' `
+                      -CloudCredential $GlobalAdminAccount
+
+    $labels = Get-Label
+
+    $content = ""
+    foreach ($label in $labels)
+    {
+        $params = @{
+            Name               = $label.Name
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content += "        SCSensitivityLabel " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+    }
     return $content
 }
 
-
-
-function Convert-CimInstancesToHashtable([Microsoft.Management.Infrastructure.CimInstance[]] $Pairs)
+function Convert-JSONToLocaleSettings
 {
-    $hash = @{ }
-    foreach ($pair in $Pairs)
-    {
-        try
-        {
-            $hash[$pair.Key] = $pair.Value
-        }
-        catch
-        {
-            Write-Verbose -Message "Error enumerating CIM instance"
-        }
+    [CmdletBinding()]
+    [OutputType([Microsoft.Management.Infrastructure.CimInstance[]])]
+    Param(
+        [parameter(Mandatory = $true)]
+        [System.String]
+        $JSONLocalSettings
+    )
+    $localeSettings = ConvertFrom-Json -InputObject $JSONLocalSettings
 
+    $result = @{
+        localeKey = $localeSettings.LocaleKey
     }
 
-    return $hash
+    $settings = @()
+    foreach ($setting in $localeSettings.Settings)
+    {
+        $entry = @{
+            Key   = $setting.Key
+            Value = $setting.Value
+        }
+
+        $settings += $entry
+    }
+    $result.Add("Settings", $settings)
+    return $result
+}
+
+function Convert-StringToAdvancedSettings
+{
+    [CmdletBinding()]
+    [OutputType([Microsoft.Management.Infrastructure.CimInstance[]])]
+    Param(
+        [parameter(Mandatory = $true)]
+        [System.String[]]
+        $AdvancedSettings
+    )
+    $settings = @()
+    foreach ($setting in $AdvancedSettings)
+    {
+        $settingString = $setting.Replace("[","").Replace("]","")
+        $settingKey    = $settingString.Split(",")[0]
+
+        if ($settingKey -ne 'displayname')
+        {
+            $startPos      = $settingString.IndexOf(",", 0) + 1
+            $valueString   = $settingString.Substring($startPos, $settingString.Length - $startPos).Trim()
+            $values        = $valueString.Split(",")
+
+            $entry = @{
+                Key   = $settingKey
+                Value = $values
+            }
+            $settings += $entry
+        }
+    }
+    return $settings
 }
 
 function Test-AdvancedSettings
