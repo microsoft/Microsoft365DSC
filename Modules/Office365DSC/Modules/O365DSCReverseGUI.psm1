@@ -396,7 +396,7 @@ function Show-O365GUI
         $pnlSC.Top = $pnlSPO.Height + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 125
         $pnlSC.Left = $SecondColumnLeft
 
-        $pnlSC.Height = 240
+        $pnlSC.Height = 260
         $pnlSC.Width = 300
         $pnlSC.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -480,8 +480,16 @@ function Show-O365GUI
         $chckSCRetentionComplianceRule.Text = "Retention Compliance Rule"
         $pnlSC.Controls.Add($chckSCRetentionComplianceRule)
 
+        $chckSCSensitivityLabel = New-Object System.Windows.Forms.CheckBox
+        $chckSCSensitivityLabel.Top = 200
+        $chckSCSensitivityLabel.AutoSize = $true;
+        $chckSCSensitivityLabel.Name = "chckSCSensitivityLabel"
+        $chckSCSensitivityLabel.Checked = $true
+        $chckSCSensitivityLabel.Text = "Sensitivity Labels"
+        $pnlSC.Controls.Add($chckSCSensitivityLabel)
+
         $chckSCSupervisoryReviewPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSCSupervisoryReviewPolicy.Top = 200
+        $chckSCSupervisoryReviewPolicy.Top = 220
         $chckSCSupervisoryReviewPolicy.AutoSize = $true;
         $chckSCSupervisoryReviewPolicy.Name = "chckSCSupervisoryReviewPolicy"
         $chckSCSupervisoryReviewPolicy.Checked = $true
@@ -489,7 +497,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCSupervisoryReviewPolicy)
 
         $chckSCSupervisoryReviewRule = New-Object System.Windows.Forms.CheckBox
-        $chckSCSupervisoryReviewRule.Top = 220
+        $chckSCSupervisoryReviewRule.Top = 240
         $chckSCSupervisoryReviewRule.AutoSize = $true;
         $chckSCSupervisoryReviewRule.Name = "chckSCSupervisoryReviewRule"
         $chckSCSupervisoryReviewRule.Checked = $true
