@@ -1524,6 +1524,22 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region SPOTheme
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOTheme")) -or
+        $AllComponents -or $Workloads.Contains("SPO"))
+    {
+        Write-Information "Extracting SPOTheme..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_SPOTheme\MSFT_SPOTheme.psm1" `
+                                -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region SPOUserProfileProperty
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOUserProfileProperty")) -or
