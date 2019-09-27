@@ -330,7 +330,7 @@ Configuration Master
             Ensure             = "Present"
         }#>
 
-        SPOTenantCDNPolicy PublicCDNPolicies
+        <#SPOTenantCDNPolicy PublicCDNPolicies
         {
             IncludeFileExtensions                = @('.jpg', '.png');
             GlobalAdminAccount                   = $GlobalAdmin
@@ -344,7 +344,7 @@ Configuration Master
             GlobalAdminAccount                   = $GlobalAdmin
             CDNType                              = "Private";
             ExcludeRestrictedSiteClassifications = @();
-        }
+        }#>
 
         SPOUserProfileProperty AdminFavoriteFood
         {
