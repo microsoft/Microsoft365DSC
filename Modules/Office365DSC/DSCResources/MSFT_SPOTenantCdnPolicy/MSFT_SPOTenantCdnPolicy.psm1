@@ -48,10 +48,6 @@ function Set-TargetResource
         $CdnType,
 
         [Parameter()]
-        [System.Boolean]
-        $ExcludeIfNoScriptDisabled = $false,
-
-        [Parameter()]
         [System.String[]]
         $ExcludeRestrictedSiteClassifications,
 
