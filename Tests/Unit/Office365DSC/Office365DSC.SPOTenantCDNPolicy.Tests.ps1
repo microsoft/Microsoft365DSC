@@ -41,14 +41,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPTenantCDNPolicies -MockWith {
                 return @{
                     CDNType                              = "Public"
-                    ExcludeIfNoScriptDisabled            = $true
                     ExcludeRestrictedSiteClassifications = @('Secured')
                     IncludeFileExtensions                = @('.php')
                 }
             }
 
             It "Should return $false for the ExcludeIfNoScriptDisabled for the  from the Get method" {
-                (Get-TargetResource @testParams).ExcludeIfNoScriptDisabled | Should Be $true
+                (Get-TargetResource @testParams).ExcludeRestrictedSiteClassifications | Should Be @('Secured')
             }
 
             It "Should return false from the Test method" {
@@ -78,7 +77,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return $false for the ExcludeIfNoScriptDisabled for the  from the Get method" {
-                (Get-TargetResource @testParams).ExcludeIfNoScriptDisabled | Should Be $false
+                (Get-TargetResource @testParams).ExcludeRestrictedSiteClassifications | Should Be @('Secured')
             }
 
             It "Should return false from the Test method" {
