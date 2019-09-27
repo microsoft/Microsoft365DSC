@@ -732,11 +732,11 @@ function SelectComponentsForMode($panelMain, $mode){
     {
         $components = $defaultComponents
     }
-    foreach($panel in $panelMain.Controls)
+    foreach($parent in $panelMain.Controls)
     {
-        if($panel.GetType().ToString() -eq "System.Windows.Forms.Panel")
+        if($parent.GetType().ToString() -eq "System.Windows.Forms.Panel")
         {
-            foreach($control in ([System.Windows.Forms.Panel]$panel).Controls){
+            foreach($control in ([System.Windows.Forms.Panel]$parent).Controls){
                 try{
                     if($mode -ne 3)
                     {
@@ -749,9 +749,13 @@ function SelectComponentsForMode($panelMain, $mode){
                 }
                 catch
                 {
-
+                    Write-Verbose $_
                 }
             }
+        }
+        elseif($parent.GetType().ToString() -eq "System.Windows.Forms.Checkbox")
+        {
+            ([System.Windows.Forms.Checkbox]$parent).Checked = $false
         }
     }
     foreach($control in $components)
