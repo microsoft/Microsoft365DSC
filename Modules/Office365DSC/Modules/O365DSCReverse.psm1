@@ -17,7 +17,12 @@ function Start-O365ConfigurationExtract
 
         [Parameter()]
         [System.String]
-        $Path
+        $Path,
+
+        [Parameter()]
+        [ValidateSet('SPO','EXO','SC','OD','O365','TEAMS')]
+        [System.String[]]
+        $Workloads
     )
 
     $organization = ""
@@ -77,7 +82,7 @@ function Start-O365ConfigurationExtract
     #region "O365AdminAuditLogConfig"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckO365AdminAuditLogConfig")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("O365"))
     {
         Write-Information "Extracting O365AdminAuditLogConfig..."
         try
@@ -111,7 +116,7 @@ function Start-O365ConfigurationExtract
     #region "EXOAtpPolicyForO365"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOAtpPolicyForO365")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("EXO"))
     {
         try
         {
@@ -157,7 +162,7 @@ function Start-O365ConfigurationExtract
     #region "EXOCASMailboxPlan"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOCASMailboxPlan")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("EXO"))
     {
         Write-Information "Extracting EXOCASMailboxPlan..."
         try
@@ -188,7 +193,7 @@ function Start-O365ConfigurationExtract
     #region "EXOClientAccessRule"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOClientAccessRule")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("EXO"))
     {
         Write-Information "Extracting EXOClientAccessRule..."
         try
@@ -218,7 +223,7 @@ function Start-O365ConfigurationExtract
     #region "EXODkimSigningConfig"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXODkimSigningConfig")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("EXO"))
     {
         Write-Information "Extracting EXODkimSigningConfig..."
         try
@@ -261,7 +266,7 @@ function Start-O365ConfigurationExtract
     #region "EXOHostedConnectionFilterPolicy"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOHostedConnectionFilterPolicy")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("EXO"))
     {
         Write-Information "Extracting EXOHostedConnectionFilterPolicy..."
         try
@@ -291,7 +296,7 @@ function Start-O365ConfigurationExtract
     #region "EXOHostedContentFilterPolicy"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOHostedContentFilterPolicy")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("EXO"))
     {
         Write-Information "Extracting EXOHostedContentFilterPolicy..."
         try
@@ -320,7 +325,7 @@ function Start-O365ConfigurationExtract
     #region "EXOHostedContentFilterRule"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOHostedContentFilterRule")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("EXO"))
     {
         Write-Information "Extracting EXOHostedContentFilterRule..."
         try
@@ -350,7 +355,7 @@ function Start-O365ConfigurationExtract
     #region "EXOHostedOutboundSpamFilterPolicy"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOHostedOutboundSpamFilterPolicy")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("EXO"))
     {
         Write-Information "Extracting EXOHostedOutboundSpamFilterPolicy..."
         try
@@ -376,7 +381,7 @@ function Start-O365ConfigurationExtract
     #region "EXOSafeAttachmentPolicy"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOSafeAttachmentPolicy")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("EXO"))
     {
         try
         {
@@ -413,7 +418,7 @@ function Start-O365ConfigurationExtract
     #region "EXOSafeAttachmentRule"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOSafeAttachmentRule")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("EXO"))
     {
         try
         {
@@ -450,7 +455,7 @@ function Start-O365ConfigurationExtract
     #region "EXOSafeLinksPolicy"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOSafeLinksPolicy")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("EXO"))
     {
         try
         {
@@ -487,7 +492,7 @@ function Start-O365ConfigurationExtract
     #region "EXOSafeLinksRule"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOSafeLinksRule")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("EXO"))
     {
         try
         {
@@ -524,7 +529,7 @@ function Start-O365ConfigurationExtract
     #region "EXOMailTips"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOMailTips")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("EXO"))
     {
         Write-Information "Extracting EXOMailTips..."
         try
@@ -566,7 +571,7 @@ function Start-O365ConfigurationExtract
     #region "EXOSharedMailbox"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOSharedMailbox")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("EXO"))
     {
         Write-Information "Extracting EXOSharedMailbox..."
         try
@@ -617,7 +622,7 @@ function Start-O365ConfigurationExtract
     #region "O365User"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckO365User")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("O365"))
     {
         Write-Information "Extracting O365User..."
         $O365UserModulePath = Join-Path -Path $PSScriptRoot `
@@ -657,7 +662,7 @@ function Start-O365ConfigurationExtract
     #region "O365Group"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckO365Group")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("O365"))
     {
         Write-Information "Extracting O365Group..."
         $O365GroupModulePath = Join-Path -Path $PSScriptRoot `
@@ -699,7 +704,7 @@ function Start-O365ConfigurationExtract
     #region "EXOMailboxSettings"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOMailboxSettings")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("EXO"))
     {
         Write-Information "Extracting EXOMailboxSettings..."
         $EXOMailboxSettingsModulePath = Join-Path -Path $PSScriptRoot `
@@ -737,7 +742,7 @@ function Start-O365ConfigurationExtract
     #region "ODSettings"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckODSettings")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("OD"))
     {
         try
         {
@@ -759,12 +764,9 @@ function Start-O365ConfigurationExtract
     #region "SCComplianceCase"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCComplianceCase")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SC"))
     {
         Write-Information "Extracting SCComplianceCase..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform SecurityComplianceCenter `
-                          -ErrorAction SilentlyContinue
 
         $SCComplianceCaseModulePath = Join-Path -Path $PSScriptRoot `
                                                    -ChildPath "..\DSCResources\MSFT_SCComplianceCase\MSFT_SCComplianceCase.psm1" `
@@ -778,13 +780,9 @@ function Start-O365ConfigurationExtract
     #region SCCaseHoldPolicy
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCCaseHoldPolicy")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SC"))
     {
         Write-Information "Extracting SCCaseHoldPolicy..."
-
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform SecurityComplianceCenter `
-                          -ErrorAction SilentlyContinue
 
         $SCCaseHoldPolicyModulePath = Join-Path -Path $PSScriptRoot `
                                                    -ChildPath "..\DSCResources\MSFT_SCCaseHoldPolicy\MSFT_SCCaseHoldPolicy.psm1" `
@@ -798,7 +796,7 @@ function Start-O365ConfigurationExtract
     #region "SCCaseHoldRule"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCCaseHoldRule")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SC"))
     {
         Write-Information "Extracting SCCaseHoldRule..."
         $SCCaseHoldRuleModulePath = Join-Path -Path $PSScriptRoot `
@@ -812,7 +810,7 @@ function Start-O365ConfigurationExtract
     #region "SCComplianceSearch"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCComplianceSearch")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SC"))
     {
         Write-Information "Extracting SCComplianceSearch..."
         Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
@@ -831,7 +829,7 @@ function Start-O365ConfigurationExtract
     #region "SCComplianceSearchAction"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCComplianceSearchAction")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SC"))
     {
         Write-Information "Extracting SCComplianceSearchAction..."
         Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
@@ -850,7 +848,7 @@ function Start-O365ConfigurationExtract
     #region "SCComplianceTag"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCComplianceTag")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SC"))
     {
         try
         {
@@ -885,7 +883,7 @@ function Start-O365ConfigurationExtract
     #region "SCDLPCompliancePolicy"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCDLPCompliancePolicy")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SC"))
     {
         try
         {
@@ -920,7 +918,7 @@ function Start-O365ConfigurationExtract
     #region "SCDLPComplianceRule"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCDLPComplianceRule")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SC"))
     {
         Write-Information "Extracting SCDLPComplianceRule..."
         Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
@@ -939,7 +937,7 @@ function Start-O365ConfigurationExtract
     #region "SCRetentionCompliancePolicy"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCRetentionCompliancePolicy")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SC"))
     {
         try
         {
@@ -974,7 +972,7 @@ function Start-O365ConfigurationExtract
     #region "SCRetentionComplianceRule"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCRetentionComplianceRule")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SC"))
     {
         try
         {
@@ -1026,7 +1024,7 @@ function Start-O365ConfigurationExtract
     #region "SCSupervisoryReviewPolicy"
     if (($null -ne $ComponentsToExtract -and
     $ComponentsToExtract.Contains("chckSCSupervisoryReviewPolicy")) -or
-    $AllComponents)
+    $AllComponents -or $Workloads.Contains("SC"))
     {
         try
         {
@@ -1061,7 +1059,7 @@ function Start-O365ConfigurationExtract
     #region "SCSupervisoryReviewRule"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCSupervisoryReviewRule")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SC"))
     {
         try
         {
@@ -1096,7 +1094,7 @@ function Start-O365ConfigurationExtract
     #region SPOApp
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOApp")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SPO"))
     {
         Write-Information "Extracting SPOApp..."
         $SPOAppModulePath = Join-Path -Path $PSScriptRoot `
@@ -1177,7 +1175,7 @@ function Start-O365ConfigurationExtract
     #region SPOPropertyBag
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOPropertyBag")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SPO"))
     {
         Write-Information "Extracting SPOPropertyBag..."
 
@@ -1192,7 +1190,7 @@ function Start-O365ConfigurationExtract
     #region "SPOSite"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOSite")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SPO"))
     {
         Write-Information "Extracting SPOSite..."
         $SPOSiteModulePath = Join-Path -Path $PSScriptRoot `
@@ -1236,7 +1234,7 @@ function Start-O365ConfigurationExtract
     #region "SPOHubSite"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOHubSite")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SPO"))
     {
         Write-Information "Extracting SPOHubSite..."
         $SPOHubSiteModulePath = Join-Path -Path $PSScriptRoot `
@@ -1273,7 +1271,7 @@ function Start-O365ConfigurationExtract
     #region "SPOSearchResultSource"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOSearchResultSource")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SPO"))
     {
         $InfoMapping = @(
         @{
@@ -1342,7 +1340,7 @@ function Start-O365ConfigurationExtract
     #region "SPOSearchManagedProperty"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOSearchManagedProperty")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SPO"))
     {
         Write-Information "Extracting SPOSearchManagedProperty..."
         $SPOSearchManagedPropertyModulePath = Join-Path -Path $PSScriptRoot `
@@ -1378,7 +1376,7 @@ function Start-O365ConfigurationExtract
     #region SPOSiteAuditSetting
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOSiteAuditSettings")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SPO"))
     {
         Write-Information "Extracting SPOSiteAuditSettings..."
 
@@ -1394,7 +1392,7 @@ function Start-O365ConfigurationExtract
     #region SPOSiteDesign
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOSiteDesign")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SPO"))
     {
         Write-Information "Extracting SPOSiteDesign..."
         $SPOSiteDesignModulePath = Join-Path -Path $PSScriptRoot `
@@ -1424,7 +1422,7 @@ function Start-O365ConfigurationExtract
     #region SPOSiteDesignRights
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOSiteDesignRights")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SPO"))
     {
         Write-Information "Extracting SPOSiteDesignRights..."
         $SPOSiteDesignModulePath = Join-Path -Path $PSScriptRoot `
@@ -1454,7 +1452,7 @@ function Start-O365ConfigurationExtract
     #region SPOStorageEntity
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOStorageEntity")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SPO"))
     {
         Write-Information "Extracting SPOStorageEntity..."
         $SPOModulePath = Join-Path -Path $PSScriptRoot `
@@ -1490,10 +1488,26 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region SPOTenantCDNPolicy
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOTenantCDNPolicy")) -or
+        $AllComponents -or $Workloads.Contains("SPO"))
+    {
+        Write-Information "Extracting SPOTenantCDNPolicy..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SPOTenantCDNPolicy\MSFT_SPOTenantCDNPolicy.psm1" `
+                                                   -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region SPOTenantSettings
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOTenantSettings")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SPO"))
     {
         Write-Information "Extracting SPOTenantSettings..."
         $SPOModulePath = Join-Path -Path $PSScriptRoot `
@@ -1507,10 +1521,26 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region SPOTheme
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOTheme")) -or
+        $AllComponents -or $Workloads.Contains("SPO"))
+    {
+        Write-Information "Extracting SPOTheme..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_SPOTheme\MSFT_SPOTheme.psm1" `
+                                -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region SPOUserProfileProperty
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOUserProfileProperty")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("SPO"))
     {
         Write-Information "Extracting SPOUserProfileProperty..."
 
@@ -1526,7 +1556,7 @@ function Start-O365ConfigurationExtract
     #region "TeamsTeam"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckTeamsTeam")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("TEAMS"))
     {
         Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                           -Platform MicrosoftTeams
@@ -1556,7 +1586,7 @@ function Start-O365ConfigurationExtract
     #region "TeamsChannel"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckTeamsChannel")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("TEAMS"))
     {
         Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                           -Platform MicrosoftTeams
@@ -1589,7 +1619,7 @@ function Start-O365ConfigurationExtract
     #region "TeamsUser"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckTeamsUser")) -or
-        $AllComponents)
+        $AllComponents -or $Workloads.Contains("TEAMS"))
     {
         Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                           -Platform MicrosoftTeams

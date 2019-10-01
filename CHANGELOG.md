@@ -16,6 +16,8 @@
   * New Resource;
 * SPOSiteAuditSettings
   * New Resource;
+* SPOTenantCDNPolicy
+  * New Resource;
 * Reverse
   * Added workload selectors to the GUI interface;
 * Metadata

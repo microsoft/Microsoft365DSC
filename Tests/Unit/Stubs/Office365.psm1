@@ -9124,7 +9124,33 @@ function Get-PnPUserProfileProperty {
    )
 }
 
+function Get-PnPTenantCDNPolicies {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [ValidateSet('Private', 'Public')]
+       [System.String]
+       $CDNType
+   )
+}
 
+function Set-PnPTenantCdnPolicy {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Private','Public')]
+        [System.String]
+        $CdnType,
+
+        [Parameter()]
+        [System.String]
+        $PolicyType,
+
+        [Parameter()]
+        [System.String]
+        $PolicyValue
+    )
+}
 
 function Get-AzureADContactManager {
  [CmdletBinding()]

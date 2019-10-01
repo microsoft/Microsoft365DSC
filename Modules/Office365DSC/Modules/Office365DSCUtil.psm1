@@ -1532,6 +1532,11 @@ function Export-O365Configuration
         $Path,
 
         [Parameter()]
+        [ValidateSet('SPO','EXO','SC','OD','O365','TEAMS')]
+        [System.String[]]
+        $Workloads,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -1542,9 +1547,18 @@ function Export-O365Configuration
     }
     else
     {
-        Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
-                                       -AllComponents `
-                                       -Path $Path
+        if ($null -ne $Workloads)
+        {
+            Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                                           -Workloads $Workloads `
+                                           -Path $Path
+        }
+        else
+        {
+            Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                                           -AllComponents `
+                                           -Path $Path
+        }
     }
 }
 

@@ -211,19 +211,27 @@ function Export-TargetResource
     foreach ($Rule in $Rules)
     {
         Write-Information "    - [$i/$($Rules.Length)] $($Rule.Name)"
-        $policy = Get-CaseHoldPolicy -Identity $Rule.Policy
-        $params = @{
-            Name               = $Rule.Name
-            Policy             = $policy.Name
-            GlobalAdminAccount = $GlobalAdminAccount
+        try
+        {
+            $policy = Get-CaseHoldPolicy -Identity $Rule.Policy -ErrorAction Stop
+
+            $params = @{
+                Name               = $Rule.Name
+                Policy             = $policy.Name
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content = "        SCCaseHoldRule " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
         }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content = "        SCCaseHoldRule " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
+        catch
+        {
+            Write-Information "You are not authorized to access Case Hold Policy {$($Rule.Policy)}"
+        }
         $i++
     }
     return $content
