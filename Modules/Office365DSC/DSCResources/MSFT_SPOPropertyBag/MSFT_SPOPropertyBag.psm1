@@ -182,8 +182,8 @@ function Export-TargetResource
         try
         {
             Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                            -ConnectionUrl $site.Url `
-                            -Platform PnP
+                              -ConnectionUrl $site.Url `
+                              -Platform PnP
             $properties = Get-PnPPropertyBag
 
             $j = 1

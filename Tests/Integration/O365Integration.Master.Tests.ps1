@@ -303,7 +303,7 @@ Configuration Master
 
         SPOSiteAuditSettings MyStorageEntity
         {
-            Url                = "https://o365dsc.sharepoint.com/sites/Classic"
+            Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
             AuditFlags         = "All"
             GlobalAdminAccount = $GlobalAdmin
         }
@@ -328,6 +328,22 @@ Configuration Master
             SiteUrl            = "https://o365dsc-admin.sharepoint.com/"
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
+        }#>
+
+        <#SPOTenantCDNPolicy PublicCDNPolicies
+        {
+            IncludeFileExtensions                = @('.jpg', '.png');
+            GlobalAdminAccount                   = $GlobalAdmin
+            CDNType                              = "Public";
+            ExcludeRestrictedSiteClassifications = @();
+        }
+
+        SPOTenantCDNPolicy PrivateCDNPolicies
+        {
+            IncludeFileExtensions                = @('.gif');
+            GlobalAdminAccount                   = $GlobalAdmin
+            CDNType                              = "Private";
+            ExcludeRestrictedSiteClassifications = @();
         }#>
 
         SPOUserProfileProperty AdminFavoriteFood
