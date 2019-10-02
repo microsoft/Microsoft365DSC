@@ -1562,67 +1562,6 @@ function Export-O365Configuration
     }
 }
 
-function Convert-ExistingThemePaletteToHashTable
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Object]
-        $existingTheme
-    )
-    $themeHash = @{ }
-    foreach($entry in $existingTheme.Palette.GetEnumerator())
-    {
-        $themeHash[$entry.Key] = $entry.Value
-    }
-    return $themeHash
-}
-function Compare-SPOTheme
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Object]
-        $existingThemePalette,
-        [Parameter(Mandatory = $true)]
-        [System.Object]
-        $configThemePalette
-    )
-
-    $existingThemePalette = $existingThemePalette.GetEnumerator() | Sort-Object -Property Name
-    $configThemePalette = $configThemePalette.GetEnumerator() | Sort-Object -Property Name
-
-    $existingThemePaletteCount = 0
-    $configThemePaletteCount = 0
-
-    foreach($val in $existingThemePalette.Value)
-    {
-        if($configThemePalette.Value.Contains($val))
-        {
-            $configThemePaletteCount++
-        }
-    }
-
-    foreach($val in $configThemePalette.Value)
-    {
-        if($existingThemePalette.value.Contains($val))
-        {
-            $existingThemePaletteCount++
-        }
-    }
-
-    if(($existingThemePalette.Count -eq $configThemePaletteCount) -and ($configThemePalette.Count -eq $existingThemePaletteCount))
-    {
-        return "Themes are identical"
-    }
-    else
-    {
-        return "Themes are not identical"
-    }
-}
-
 function Get-SPOAdministrationUrl
 {
     [CmdletBinding()]
