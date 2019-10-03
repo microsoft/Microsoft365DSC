@@ -37,11 +37,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Absent"
             }
 
-            Mock -CommandName Add-SPOTheme -MockWith {
+            Mock -CommandName Add-PnPTenantTheme -MockWith {
                 return @{Name = $null}
             }
 
-            Mock -CommandName Get-SPOTheme -MockWith {
+            Mock -CommandName Get-PnPTenantTheme -MockWith {
                 return $null
             }
 
@@ -69,7 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Present"
             }
 
-            Mock -CommandName Get-SPOTheme -MockWith {
+            Mock -CommandName Get-PnPTenantTheme -MockWith {
                 return @{
                     Name               = "TestTheme"
                     IsInverted         = $true
@@ -127,18 +127,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Present"
             }
 
-            Mock -CommandName Get-SPOTheme -MockWith {
+            Mock -CommandName Get-PnPTenantTheme -MockWith {
                 return @{
                     Name = "TestTheme"
                 }
             }
 
-            Mock -CommandName Remove-SPOTheme -MockWith {
+            Mock -CommandName Remove-PnPTenantTheme -MockWith {
                 return "Theme has been successfully removed"
             }
 
             It "Should remove the Theme successfully" {
-                Remove-SPOTheme -Name $testParams.Name -Confirm:$false | Should Be  "Theme has been successfully removed"
+                Set-TargetResource @testParams
             }
         }
 
@@ -147,7 +147,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount  = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-SPOTheme -MockWith {
+            Mock -CommandName Get-PnPTenantTheme -MockWith {
                 return @{
                     Name               = "TestTheme"
                     IsInverted         = $false

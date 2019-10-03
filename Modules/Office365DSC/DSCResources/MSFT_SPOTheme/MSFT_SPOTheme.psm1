@@ -29,7 +29,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration for SPO Theme $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+                      -Platform PnP
 
     $nullReturn = @{
         Name                = $Name
@@ -40,7 +40,7 @@ function Get-TargetResource
     }
 
     Write-Verbose -Message "Getting theme $Name"
-    $theme = Get-SPOTheme | Where-Object -FilterScript {$_.Name -eq $Name}
+    $theme = Get-PnPTenantTheme | Where-Object -FilterScript {$_.Name -eq $Name}
     if ($null -eq $theme)
     {
         Write-Verbose -Message "The specified theme doesn't exist."
@@ -87,7 +87,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration for SPO Theme $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+                      -Platform PnP
 
     $CurrentPalette = Get-TargetResource @PSBoundParameters
     if ($Ensure -eq "Present")
@@ -102,7 +102,7 @@ function Set-TargetResource
 
         try
         {
-            $existingTheme = Get-SPOTheme -Name $Name
+            $existingTheme = Get-PnPTenantTheme -Name $Name
         }
         catch
         {
@@ -117,7 +117,7 @@ function Set-TargetResource
         else
         {
             Write-Verbose -Message "Theme {$Name} already exists. Updating it"
-            Add-SPOTheme @AddParameters -Overwrite
+            Add-PnPTenantTheme @AddParameters -Overwrite
         }
     }
     elseif ($Ensure -eq 'Absent' -and $CurrentPalette.Ensure -eq 'Present')
@@ -125,7 +125,7 @@ function Set-TargetResource
         Write-Verbose -Message "Removing theme $($Name)"
         try
         {
-            Remove-SPOTheme -Identity $Name -Confirm:$false
+            Remove-PnPTenantTheme -Identity $Name -Confirm:$false
         }
         catch
         {
@@ -198,7 +198,7 @@ function Export-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SharePointOnline
 
-    $themes = Get-SPOTheme
+    $themes = Get-PnPTenantTheme
     $content = ""
     $i = 1
     foreach ($theme in $themes)

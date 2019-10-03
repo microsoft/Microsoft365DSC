@@ -9115,6 +9115,45 @@ param(
    )
 }
 
+function Get-PnPTenantTheme {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity
+   )
+}
+
+function Remove-PnPTenantTheme {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity
+   )
+}
+
+function Add-PnPTenantTheme {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory = $true)]
+       [System.String]
+       $Name,
+
+       [Parameter()]
+       [System.Boolean]
+       $IsInverted,
+
+       [Parameter()]
+       [System.Collections.Hashtable]
+       $Palette,
+
+       [Parameter()]
+       [System.Boolean]
+       $Overwrite
+   )
+}
+
 function Get-PnPUserProfileProperty {
     [CmdletBinding()]
    param(
