@@ -13,7 +13,7 @@ function Get-TargetResource
         $IsInverted,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $Palette,
 
         [Parameter()]
@@ -29,7 +29,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration for SPO Theme $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+                      -Platform PnP
 
     $nullReturn = @{
         Name                = $Name
@@ -40,17 +40,18 @@ function Get-TargetResource
     }
 
     Write-Verbose -Message "Getting theme $Name"
-    $theme = Get-SPOTheme -Name $Name -ErrorAction SilentlyContinue
+    $theme = Get-PnPTenantTheme | Where-Object -FilterScript {$_.Name -eq $Name}
     if ($null -eq $theme)
     {
         Write-Verbose -Message "The specified theme doesn't exist."
         return $nullReturn
     }
+    $convertedPalette = Convert-ExistingThemePaletteToHashTable -Palette ([System.Collections.Hashtable]$theme.Palette)
 
     return @{
         Name                = $theme.Name
         IsInverted          = $theme.IsInverted
-        Palette             = $theme.Palette
+        Palette             = $convertedPalette
         GlobalAdminAccount  = $GlobalAdminAccount
         Ensure              = "Present"
     }
@@ -70,7 +71,7 @@ function Set-TargetResource
         $IsInverted,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $Palette,
 
         [Parameter()]
@@ -86,26 +87,22 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration for SPO Theme $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+                      -Platform PnP
 
+    $CurrentPalette = Get-TargetResource @PSBoundParameters
     if ($Ensure -eq "Present")
     {
-        $PaletteHash = @{ }
-        $PaletteObj = $Palette | ConvertFrom-Json
-        foreach ($entry in $PaletteObj.Psobject.Properties)
-        {
-            $PaletteHash[$Entry.Name] = $entry.Value
+        Write-Verbose "Converting Received Palette Values into Hashtable"
+        $HashPalette = Convert-NewThemePaletteToHashTable -Palette $Palette
+        $AddParameters = @{
+            Name       = $Name
+            IsInverted = $IsInverted
+            Palette    = $HashPalette
         }
-        $CurrentParameters = $PSBoundParameters
-        $CurrentParameters.Remove("Palette")
-        $CurrentParameters.Remove("Ensure")
-        $CurrentParameters.Remove("GlobalAdminAccount")
-        $CurrentParameters.Add("Palette", $PaletteHash)
 
         try
         {
-            $existingTheme = Get-SPOTheme -Name $Name
-            Write-Verbose -Message " theme exists $existingTheme"
+            $existingTheme = Get-PnPTenantTheme -Name $Name
         }
         catch
         {
@@ -114,31 +111,21 @@ function Set-TargetResource
 
         if ($null -eq $existingTheme)
         {
-            Add-SPOTheme @CurrentParameters
+            Write-Verbose -Message "Theme {$Name} doesn't already exist. Creating it."
+            Add-SPOTheme @AddParameters
         }
         else
         {
-            $ThemeHashTable = Convert-ExistingThemePaletteToHashTable -existingTheme $existingTheme
-            $compareOutput = Compare-SPOTheme -existingThemePalette $ThemeHashTable `
-                                              -configThemePalette $currentParameters.Palette
-            if (($compareOutput -eq "Themes are identical") -and `
-                ($existingTheme.IsInverted -eq $CurrentParameters.isInverted))
-            {
-                Write-verbose -Message "Theme $($Name) already exists and is configured as specified."
-            }
-            else
-            {
-                Write-Verbose -Message "Theme $($Name) already exists but is not configured as specified. Overwriting it."
-                Add-SPOTheme @CurrentParameters -Overwrite
-            }
+            Write-Verbose -Message "Theme {$Name} already exists. Updating it"
+            Add-PnPTenantTheme @AddParameters -Overwrite
         }
     }
-    elseif ($Ensure -eq "Absent")
+    elseif ($Ensure -eq 'Absent' -and $CurrentPalette.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing theme $($Name)"
         try
         {
-            Remove-SPOTheme -Identity $Name -Confirm:$false
+            Remove-PnPTenantTheme -Identity $Name -Confirm:$false
         }
         catch
         {
@@ -164,7 +151,7 @@ function Test-TargetResource
         $IsInverted,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $Palette,
 
         [Parameter()]
@@ -211,7 +198,7 @@ function Export-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SharePointOnline
 
-    $themes = Get-SPOTheme
+    $themes = Get-PnPTenantTheme
     $content = ""
     $i = 1
     foreach ($theme in $themes)
@@ -222,14 +209,121 @@ function Export-TargetResource
         }
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $result.Palette = ConvertTo-SPOThemePalettePropertyString -Palette $result.Palette
         $content += "        SPOTheme " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Palette"
+        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += $currentDSCBlock
         $content += "        }`r`n"
         $i++
     }
     return $content
+}
+
+function Convert-ExistingThemePaletteToHashTable
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Palette
+    )
+    $themeHash = @{ }
+    foreach($entry in $Palette.GetEnumerator())
+    {
+        $themeHash[$entry.Key] = $entry.Value
+    }
+    return $themeHash
+}
+
+function Convert-NewThemePaletteToHashTable
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Palette
+    )
+
+    $results = @{}
+    foreach ($entry in $Palette)
+    {
+        $results.Add($entry.Property, $entry.Value)
+    }
+    return $results
+}
+
+function ConvertTo-SPOThemePalettePropertyString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Palette
+    )
+
+    $StringContent = "@("
+    foreach ($property in $Palette.Keys)
+    {
+        $StringContent += "            MSFT_SPOThemePaletteProperty`r`n            {`r`n"
+        $StringContent += "                Property = '$($property)'`r`n"
+        $StringContent += "                Value    = '$($Palette[$property])'`r`n"
+        $StringContent += "            }`r`n"
+    }
+    $StringCOntent += "            )`r`n"
+    return $StringContent
+}
+
+
+function Compare-SPOTheme
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object]
+        $existingThemePalette,
+        [Parameter(Mandatory = $true)]
+        [System.Object]
+        $configThemePalette
+    )
+
+    $existingThemePalette = $existingThemePalette.GetEnumerator() | Sort-Object -Property Name
+    $configThemePalette = $configThemePalette.GetEnumerator() | Sort-Object -Property Name
+
+    $existingThemePaletteCount = 0
+    $configThemePaletteCount = 0
+
+    foreach($val in $existingThemePalette.Value)
+    {
+        if($configThemePalette.Value.Contains($val))
+        {
+            $configThemePaletteCount++
+        }
+    }
+
+    foreach($val in $configThemePalette.Value)
+    {
+        if($existingThemePalette.value.Contains($val))
+        {
+            $existingThemePaletteCount++
+        }
+    }
+
+    if(($existingThemePalette.Count -eq $configThemePaletteCount) -and ($configThemePalette.Count -eq $existingThemePaletteCount))
+    {
+        return "Themes are identical"
+    }
+    else
+    {
+        return "Themes are not identical"
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource
