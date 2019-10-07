@@ -490,11 +490,6 @@ function ConvertTo-SCDLPSensitiveInformationString
         $StringContent += "                minconfidence = '$($SensitiveInformationHash.minconfidence)'`r`n"
     }
 
-    if ($null -ne $SensitiveInformationHash.rulePackId)
-    {
-        $StringContent += "                rulePackId = '$($SensitiveInformationHash.rulePackId)'`r`n"
-    }
-
     if ($null -ne $SensitiveInformationHash.classifiertype)
     {
         $StringContent += "                classifiertype = '$($SensitiveInformationHash.classifiertype)'`r`n"

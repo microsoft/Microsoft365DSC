@@ -196,7 +196,7 @@ function Export-TargetResource
     $InformationPreference = 'Continue'
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+                      -Platform PnP
 
     $themes = Get-PnPTenantTheme
     $content = ""
