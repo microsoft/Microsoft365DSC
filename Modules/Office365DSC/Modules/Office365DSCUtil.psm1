@@ -1616,6 +1616,8 @@ function Invoke-O365DSCCommand
     )
 
     $InformationPreference = 'Continue'
+    $WarningPreference     = 'Continue'
+    $ErrorActionPreference = 'Stop'
     try
     {
         if (-not [System.String]::IsNullOrEmpty($InvokationPath))
@@ -1635,17 +1637,24 @@ function Invoke-O365DSCCommand
     }
     catch
     {
-        if ($Backoff -le 256)
+        if ($_.Exception -like '*O365DSC100*')
         {
-            $NewBackoff = $Backoff * 2
-            Write-Verbose "    * Throttling detected. Waiting for {$NewBackoff seconds}"
-            Write-Verbose -Message $_.Exception
-            Start-Sleep -Seconds $NewBackoff
-            return Invoke-O365DSCCommand -ScriptBlock $ScriptBlock -Backoff $NewBackoff -Arguments $Arguments -InvokationPath $InvokationPath
+            Write-Warning -Message $_.Exception
         }
         else
         {
-            throw $_
+            if ($Backoff -le 128)
+            {
+                $NewBackoff = $Backoff * 2
+                Write-Warning "    * Throttling detected. Waiting for {$NewBackoff seconds}"
+                Write-Verbose -Message $_.Exception
+                Start-Sleep -Seconds $NewBackoff
+                return Invoke-O365DSCCommand -ScriptBlock $ScriptBlock -Backoff $NewBackoff -Arguments $Arguments -InvokationPath $InvokationPath
+            }
+            else
+            {
+                Write-Warning $_
+            }
         }
     }
 }

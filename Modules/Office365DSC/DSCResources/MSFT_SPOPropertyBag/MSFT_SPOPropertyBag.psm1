@@ -31,10 +31,13 @@ function Get-TargetResource
         $params = $args[0]
         try
         {
+            Write-Verbose -Message "Connecting to PnP from the Get method"
             Test-MSCloudLogin -CloudCredential $params.GlobalAdminAccount `
                             -ConnectionUrl $params.Url `
                             -Platform PnP
+            Write-Verbose -Message "Obtaining all properties from the Get method for url {$($params.Url)}"
             $property = Get-PnPPropertyBag
+            Write-Verbose -Message "Properties obtained correctly"
         }
         catch
         {
@@ -172,58 +175,70 @@ function Export-TargetResource
     )
     $InformationPreference = "Continue"
     $PSBoundParameters.Add("ScriptRoot", $PSScriptRoot)
-    $result = Invoke-O365DSCCommand -Arguments $PSBoundParameters -InvokationPath $PSScriptRoot -ScriptBlock {
-        $params = $args[0]
-        Test-MSCloudLogin -CloudCredential $params.GlobalAdminAccount `
+    $result = ""
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform PnP
-
-        $sites = Get-PnPTenantSite
-        $i = 1
-        $content = ""
-        foreach ($site in $sites)
-        {
-            Write-Information "    [$i/$($sites.Count)] Scanning Properties in PropertyBag for site {$($site.Url)}"
+    $returnValue = ""
+    $sites = Get-PnPTenantSite
+    $i = 1
+    foreach ($site in $sites)
+    {
+        Write-Information "    [$i/$($sites.Count)] Scanning Properties in PropertyBag for site {$($site.Url)}"
+        $PSBoundParameters.Add("SiteUrl", $site.Url)
+        $returnValue += Invoke-O365DSCCommand -Arguments $PSBoundParameters -InvokationPath $PSScriptRoot -ScriptBlock {
+            $params = $args[0]
 
             try
             {
+                Write-Verbose -Message "Connecting to PnP from the Export method"
                 Test-MSCloudLogin -CloudCredential $params.GlobalAdminAccount `
-                                -ConnectionUrl $site.Url `
-                                -Platform PnP
-                $properties = Get-PnPPropertyBag
+                                    -ConnectionUrl $params.SiteUrl `
+                                    -Platform PnP
+                Write-Verbose -Message "Successfully connected"
+            }
+            catch
+            {
+                throw $_
+            }
 
+            try
+            {
+                Write-Verbose -Message "Getting all properties from the Export method"
+                $properties = Get-PnPPropertyBag
+                Write-Verbose -Message "Properties were retrieved successfully from the Export method."
                 $j = 1
                 foreach($property in $properties)
                 {
-                    Write-Information "        [$j/$($properties.Count)] $($property.Key)"
+                    Write-Information "        {$j/$($properties.Count)} $($property.Key)"
                     $getValues = @{
-                        Url               = $site.Url
+                        Url               = $params.SiteUrl
                         Key                = $property.Key
                         Value              = '*'
                         GlobalAdminAccount = $params.GlobalAdminAccount
                     }
+                    Write-Verbose -Message "Calling into Get-TargetResource from Export-TargetResource"
                     $result = Get-TargetResource @getValues
                     $result.Value = [System.String]$result.Value
                     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                    $content += "        SPOPropertyBag " + (New-GUID).ToString() + "`r`n"
+                    $content = "        SPOPropertyBag " + (New-GUID).ToString() + "`r`n"
                     $content += "        {`r`n"
                     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
                     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
                     $content += "        }`r`n"
                     $j++
                 }
-                $i++
             }
             catch
             {
-                Write-Warning -Message "        The specified GlobalAdminAccount doesn't have access to site {$($site.Url)}"
-                $i++
+                throw $_
             }
+            return $content
         }
-
-        return $content
+        $PSBoundParameters.Remove("SiteUrl")
+        $i++
     }
 
-    return $result
+    return $resultValue
 }
 
 Export-ModuleMember -Function *-TargetResource
