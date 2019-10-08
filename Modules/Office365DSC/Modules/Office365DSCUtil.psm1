@@ -1592,3 +1592,60 @@ function Get-SPOAdministrationUrl
     Write-Verbose -Message "SharePoint Online admin URL is $global:AdminUrl"
     return $global:AdminUrl
 }
+
+function Invoke-O365DSCCommand
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [ScriptBlock]
+        $ScriptBlock,
+
+        [Parameter()]
+        [System.String]
+        $InvokationPath,
+
+        [Parameter()]
+        [Object[]]
+        $Arguments,
+
+        [Parameter()]
+        [System.UInt32]
+        $Backoff = 2
+    )
+
+    $InformationPreference = 'Continue'
+    try
+    {
+        if (-not [System.String]::IsNullOrEmpty($InvokationPath))
+        {
+            $baseScript = "Import-Module '$InvokationPath\*.psm1' -Force;"
+        }
+
+        $invokeArgs = @{
+            ScriptBlock = [ScriptBlock]::Create($baseScript + $ScriptBlock.ToString())
+        }
+        if ($null -ne $Arguments)
+        {
+            $invokeArgs.Add("ArgumentList", $Arguments)
+        }
+        Write-Verbose "Ready to Invoke"
+        return Invoke-Command @invokeArgs
+    }
+    catch
+    {
+        if ($Backoff -le 256)
+        {
+            $NewBackoff = $Backoff * 2
+            Write-Verbose "    * Throttling detected. Waiting for {$NewBackoff seconds}"
+            Write-Verbose -Message $_.Exception
+            Start-Sleep -Seconds $NewBackoff
+            return Invoke-O365DSCCommand -ScriptBlock $ScriptBlock -Backoff $NewBackoff -Arguments $Arguments -InvokationPath $InvokationPath
+        }
+        else
+        {
+            throw $_
+        }
+    }
+}

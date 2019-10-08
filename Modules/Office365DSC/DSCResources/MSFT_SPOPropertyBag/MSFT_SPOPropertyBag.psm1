@@ -26,41 +26,43 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of SPOPropertyBag for $Name"
-
-    try
-    {
-        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                          -ConnectionUrl $Url `
-                          -Platform PnP
-        $property = Get-PnPPropertyBag -ErrorAction SilentlyContinue
-    }
-    catch
-    {
-        Write-Verbose "GlobalAdminAccount specified does not have admin access to site {$Url}"
-    }
-
-    if ($null -eq $property)
-    {
-        Write-Verbose -Message "SPOPropertyBag $($Key) does not exist at {$Url}."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        $property = $property | Where-Object -FilterScript { $_.Key -eq $Key }
-        Write-Verbose "Found existing SPOPropertyBag Key $Key at {$Url}"
-        $result = @{
-            Ensure             = 'Present'
-            Url                = $Url
-            Key                = $property.Key
-            Value              = $property.Value
-            GlobalAdminAccount = $GlobalAdminAccount
+    Write-Verbose -Message "Getting configuration of SPOPropertyBag for $Key"
+    Invoke-O365DSCCommand -Arguments $PSBoundParameters -InvokationPath $PSScriptRoot -ScriptBlock {
+        $params = $args[0]
+        try
+        {
+            Test-MSCloudLogin -CloudCredential $params.GlobalAdminAccount `
+                            -ConnectionUrl $params.Url `
+                            -Platform PnP
+            $property = Get-PnPPropertyBag
+        }
+        catch
+        {
+            Write-Verbose "GlobalAdminAccount specified does not have admin access to site {$params.Url}"
         }
 
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
-        return $result
+        if ($null -eq $property)
+        {
+            Write-Verbose -Message "SPOPropertyBag $($params.Key) does not exist at {$($params.Url)}."
+            $result = $params
+            $result.Ensure = 'Absent'
+            return $result
+        }
+        else
+        {
+            $property = $property | Where-Object -FilterScript { $_.Key -eq $params.Key }
+            Write-Verbose "Found existing SPOPropertyBag Key $($params.Key) at {$($params.Url)}"
+            $result = @{
+                Ensure             = 'Present'
+                Url                = $params.Url
+                Key                = $property.Key
+                Value              = $property.Value
+                GlobalAdminAccount = $params.GlobalAdminAccount
+            }
+
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
     }
 }
 
@@ -169,53 +171,59 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = "Continue"
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform PnP
+    $PSBoundParameters.Add("ScriptRoot", $PSScriptRoot)
+    $result = Invoke-O365DSCCommand -Arguments $PSBoundParameters -InvokationPath $PSScriptRoot -ScriptBlock {
+        $params = $args[0]
+        Test-MSCloudLogin -CloudCredential $params.GlobalAdminAccount `
+                          -Platform PnP
 
-    $sites = Get-PnPTenantSite
-    $i = 1
-    $content = ""
-    foreach ($site in $sites)
-    {
-        Write-Information "    [$i/$($sites.Count)] Scanning Properties in PropertyBag for site {$($site.Url)}"
-
-        try
+        $sites = Get-PnPTenantSite
+        $i = 1
+        $content = ""
+        foreach ($site in $sites)
         {
-            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                              -ConnectionUrl $site.Url `
-                              -Platform PnP
-            $properties = Get-PnPPropertyBag
+            Write-Information "    [$i/$($sites.Count)] Scanning Properties in PropertyBag for site {$($site.Url)}"
 
-            $j = 1
-            foreach($property in $properties)
+            try
             {
-                Write-Information "        [$j/$($properties.Count)] $($property.Key)"
-                $params = @{
-                    Url               = $site.Url
-                    Key                = $property.Key
-                    Value              = '*'
-                    GlobalAdminAccount = $GlobalAdminAccount
+                Test-MSCloudLogin -CloudCredential $params.GlobalAdminAccount `
+                                -ConnectionUrl $site.Url `
+                                -Platform PnP
+                $properties = Get-PnPPropertyBag
+
+                $j = 1
+                foreach($property in $properties)
+                {
+                    Write-Information "        [$j/$($properties.Count)] $($property.Key)"
+                    $getValues = @{
+                        Url               = $site.Url
+                        Key                = $property.Key
+                        Value              = '*'
+                        GlobalAdminAccount = $params.GlobalAdminAccount
+                    }
+                    $result = Get-TargetResource @getValues
+                    $result.Value = [System.String]$result.Value
+                    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                    $content += "        SPOPropertyBag " + (New-GUID).ToString() + "`r`n"
+                    $content += "        {`r`n"
+                    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
+                    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                    $content += "        }`r`n"
+                    $j++
                 }
-                $result = Get-TargetResource @params
-                $result.Value = [System.String]$result.Value
-                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                $content += "        SPOPropertyBag " + (New-GUID).ToString() + "`r`n"
-                $content += "        {`r`n"
-                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-                $content += "        }`r`n"
-                $j++
+                $i++
             }
-            $i++
+            catch
+            {
+                Write-Warning -Message "        The specified GlobalAdminAccount doesn't have access to site {$($site.Url)}"
+                $i++
+            }
         }
-        catch
-        {
-            Write-Warning -Message "        The specified GlobalAdminAccount doesn't have access to site {$($site.Url)}"
-            $i++
-        }
+
+        return $content
     }
 
-    return $content
+    return $result
 }
 
 Export-ModuleMember -Function *-TargetResource
