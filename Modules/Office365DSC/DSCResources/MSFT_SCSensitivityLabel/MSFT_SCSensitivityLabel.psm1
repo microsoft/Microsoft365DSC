@@ -170,11 +170,15 @@ function Set-TargetResource
         }
 
         $CreationParams = $PSBoundParameters
+
         if ($PSBoundParameters.ContainsKey("AdvancedSettings"))
         {
-            $advanced = Convert-CimInstancesToHashtable $AdvancedSettings
+            $advanced = Convert-CIMToAdvancedSettings $AdvancedSettings
             $CreationParams["AdvancedSettings"] = $advanced
+            Write-Verbose -Message "Advanced Settings Values: $(Convert-O365DscHashtableToString -Hashtable $advanced)"
         }
+
+
 
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
@@ -187,12 +191,20 @@ function Set-TargetResource
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $label.Ensure))
     {
         $SetParams = $PSBoundParameters
+
         if ($PSBoundParameters.ContainsKey("AdvancedSettings"))
         {
-            $advanced = Convert-CimInstancesToHashtable $AdvancedSettings
+            $advanced = Convert-CIMToAdvancedSettings  $AdvancedSettings
             $SetParams["AdvancedSettings"] = $advanced
+            Write-Verbose -Message "Advanced Settings Values: $(Convert-O365DscHashtableToString -Hashtable $advanced)"
         }
-
+        <#
+        if ($PSBoundParameters.ContainsKey("LocaleSettings"))
+        {
+            $locale = Convert-JSONToLocaleSettings $LocaleSettings
+            $SetParams["LocaleSettings"] = $locale
+        }
+        #>
         #Remove unused parameters for Set-Label cmdlet
         $SetParams.Remove("GlobalAdminAccount")
         $SetParams.Remove("Ensure")
@@ -263,7 +275,8 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
-    $labelSettings = Convert-CimInstancesToHashtable $AdvancedSettings
+
+    $labelSettings = Convert-CIMToAdvancedSettings $AdvancedSettings
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
@@ -301,7 +314,7 @@ function Export-TargetResource
     $InformationPreference = 'Continue'
 
     Test-MSCloudLogin -Platform 'SecurityComplianceCenter' `
-                      -CloudCredential $GlobalAdminAccount
+        -CloudCredential $GlobalAdminAccount
 
     $labels = Get-Label
 
@@ -332,8 +345,8 @@ function Convert-JSONToLocaleSettings
         [System.String]
         $JSONLocalSettings
     )
-    $localeSettings = ConvertFrom-Json -InputObject $JSONLocalSettings
-
+    #$localeSettings = ConvertFrom-Json -InputObject $JSONLocalSettings
+    $localeSettings =  $JSONLocalSettings
     $result = @{
         localeKey = $localeSettings.LocaleKey
     }
@@ -364,14 +377,14 @@ function Convert-StringToAdvancedSettings
     $settings = @()
     foreach ($setting in $AdvancedSettings)
     {
-        $settingString = $setting.Replace("[","").Replace("]","")
-        $settingKey    = $settingString.Split(",")[0]
+        $settingString = $setting.Replace("[", "").Replace("]", "")
+        $settingKey = $settingString.Split(",")[0]
 
         if ($settingKey -ne 'displayname')
         {
-            $startPos      = $settingString.IndexOf(",", 0) + 1
-            $valueString   = $settingString.Substring($startPos, $settingString.Length - $startPos).Trim()
-            $values        = $valueString.Split(",")
+            $startPos = $settingString.IndexOf(",", 0) + 1
+            $valueString = $settingString.Substring($startPos, $settingString.Length - $startPos).Trim()
+            $values = $valueString.Split(",")
 
             $entry = @{
                 Key   = $settingKey
@@ -382,6 +395,34 @@ function Convert-StringToAdvancedSettings
     }
     return $settings
 }
+function Convert-CIMToAdvancedSettings
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    Param(
+        [parameter(Mandatory = $true)]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AdvancedSettings
+    )
+
+    $entry = @{ }
+    foreach ($obj in $AdvancedSettings)
+    {
+        $settingsValues = ""
+        foreach ($objVal in $obj.Value)
+        {
+            Write-Verbose ('Key: {0}, Value: {1}' -f $obj.Key, $objVal)
+            $settingsValues += $objVal
+            $settingsValues += ","
+        }
+        $entry[$obj.Key] = $settingsValues.Substring(0,($settingsValues.Length-1))
+    }
+
+
+    return $entry
+}
+
+
 
 function Test-AdvancedSettings
 {
