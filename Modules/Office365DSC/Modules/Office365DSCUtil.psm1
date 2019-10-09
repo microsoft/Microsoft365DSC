@@ -1643,7 +1643,7 @@ function Invoke-O365DSCCommand
         }
         else
         {
-            if ($Backoff -le 128)
+            <#if ($Backoff -le 128)
             {
                 $NewBackoff = $Backoff * 2
                 Write-Warning "    * Throttling detected. Waiting for {$NewBackoff seconds}"
@@ -1654,7 +1654,7 @@ function Invoke-O365DSCCommand
             else
             {
                 Write-Warning $_
-            }
+            }#>
         }
     }
 }
