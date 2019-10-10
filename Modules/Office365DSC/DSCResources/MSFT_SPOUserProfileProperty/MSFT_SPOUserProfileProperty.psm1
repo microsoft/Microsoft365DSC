@@ -95,7 +95,14 @@ function Set-TargetResource
         if ($currentProperties.Properties[$property.Key] -ne $property.Value)
         {
             Write-Verbose "Setting Profile Property {$($property.Key)} as {$($property.Value)}"
-            Set-PnPUserProfileProperty -Account $UserName -PropertyName $property.Key -Value $property.Value
+            try
+            {
+                Set-PnPUserProfileProperty -Account $UserName -PropertyName $property.Key -Value $property.Value -ErrorAction Stop
+            }
+            catch
+            {
+                Write-Warning "Cannot update property {$($property.Key)}. This value of that key cannot be modified."
+            }
         }
     }
 }

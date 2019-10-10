@@ -50,7 +50,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration for SPO SiteDesign for $Title"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+                      -Platform PnP
     $nullReturn = @{
         Title               = $Title
         SiteScriptNames     = $SiteScriptNames
@@ -156,7 +156,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration for SPO SiteDesign for $Title"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+                      -Platform PnP
 
     $curSiteDesign = Get-TargetResource @PSBoundParameters
 

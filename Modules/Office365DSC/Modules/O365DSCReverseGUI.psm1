@@ -256,8 +256,7 @@ function Show-O365GUI
         $pnlSPO = New-Object System.Windows.Forms.Panel
         $pnlSPO.Top = 88 + $topBannerHeight
         $pnlSPO.Left = $SecondColumnLeft
-        $pnlSPO.Height = 260
-        $pnlSPO.Height = 280
+        $pnlSPO.Height = 300
         $pnlSPO.Width = 300
         $pnlSPO.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -349,8 +348,16 @@ function Show-O365GUI
         $chckSPOStorageEntity.Text = "Storage Entity"
         $pnlSPO.Controls.Add($chckSPOStorageEntity)
 
+        $chckSPOTenantCDNPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckSPOTenantCDNPolicy.Top = 220
+        $chckSPOTenantCDNPolicy.AutoSize = $true;
+        $chckSPOTenantCDNPolicy.Name = "chckSPOTenantCDNPolicy"
+        $chckSPOTenantCDNPolicy.Checked = $true
+        $chckSPOTenantCDNPolicy.Text = "Tenant CDN Policies"
+        $pnlSPO.Controls.Add($chckSPOTenantCDNPolicy)
+
         $chckSPOTenantSettings = New-Object System.Windows.Forms.CheckBox
-        $chckSPOTenantSettings.Top = 220
+        $chckSPOTenantSettings.Top = 240
         $chckSPOTenantSettings.AutoSize = $true;
         $chckSPOTenantSettings.Name = "chckSPOTenantSettings"
         $chckSPOTenantSettings.Checked = $true
@@ -358,16 +365,15 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOTenantSettings)
 
         $chckSPOTheme = New-Object System.Windows.Forms.CheckBox
-        $chckSPOTheme.Top = 240
+        $chckSPOTheme.Top = 260
         $chckSPOTheme.AutoSize = $true;
         $chckSPOTheme.Name = "chckSPOTheme"
         $chckSPOTheme.Checked = $true
         $chckSPOTheme.Text = "Themes"
         $pnlSPO.Controls.Add($chckSPOTheme)
 
-
         $chckSPOUserProfileProperty = New-Object System.Windows.Forms.CheckBox
-        $chckSPOUserProfileProperty.Top = 260
+        $chckSPOUserProfileProperty.Top = 280
         $chckSPOUserProfileProperty.AutoSize = $true;
         $chckSPOUserProfileProperty.Name = "chckSPOUserProfileProperty"
         $chckSPOUserProfileProperty.Checked = $true
@@ -734,11 +740,11 @@ function SelectComponentsForMode($panelMain, $mode){
     {
         $components = $defaultComponents
     }
-    foreach($panel in $panelMain.Controls)
+    foreach($parent in $panelMain.Controls)
     {
-        if($panel.GetType().ToString() -eq "System.Windows.Forms.Panel")
+        if($parent.GetType().ToString() -eq "System.Windows.Forms.Panel")
         {
-            foreach($control in ([System.Windows.Forms.Panel]$panel).Controls){
+            foreach($control in ([System.Windows.Forms.Panel]$parent).Controls){
                 try{
                     if($mode -ne 3)
                     {
@@ -751,9 +757,13 @@ function SelectComponentsForMode($panelMain, $mode){
                 }
                 catch
                 {
-
+                    Write-Verbose $_
                 }
             }
+        }
+        elseif($parent.GetType().ToString() -eq "System.Windows.Forms.Checkbox")
+        {
+            ([System.Windows.Forms.Checkbox]$parent).Checked = $false
         }
     }
     foreach($control in $components)

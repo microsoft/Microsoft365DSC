@@ -144,6 +144,11 @@ function Export-TargetResource
                 GlobalAdminAccount = $GlobalAdminAccount
             }
             $result = Get-TargetResource @params
+
+            if ([System.String]::IsNullOrEmpty($result.AuditFlags))
+            {
+                $result.AuditFlags = 'None'
+            }
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
             $content += "        SPOSiteAuditSettings " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"

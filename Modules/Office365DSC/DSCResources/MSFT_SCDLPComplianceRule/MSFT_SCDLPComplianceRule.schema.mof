@@ -5,7 +5,6 @@ Class MSFT_SCDLPSensitiveInformation
     [Write, Description("Id of the Sensitive Information Content")] String id;
     [Write, Description("Maximum Confidence level value for the Sensitive Information")] String maxconfidence;
     [Write, Description("Minimum Confidence level value for the Sensitive Information")] String minconfidence;
-    [Write, Description("ID of the Rule Pack value for the Sensitive Information")] String rulePackId;
     [Write, Description("Type of Classifier value for the Sensitive Information")] String classifiertype;
     [Write, Description("Minimum Count value for the Sensitive Information")] String mincount;
     [Write, Description("Maximum Count value for the Sensitive Information")] String maxcount;

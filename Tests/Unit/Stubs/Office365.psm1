@@ -9117,6 +9117,45 @@ param(
    )
 }
 
+function Get-PnPTenantTheme {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity
+   )
+}
+
+function Remove-PnPTenantTheme {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity
+   )
+}
+
+function Add-PnPTenantTheme {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory = $true)]
+       [System.String]
+       $Name,
+
+       [Parameter()]
+       [System.Boolean]
+       $IsInverted,
+
+       [Parameter()]
+       [System.Collections.Hashtable]
+       $Palette,
+
+       [Parameter()]
+       [System.Boolean]
+       $Overwrite
+   )
+}
+
 function Get-PnPUserProfileProperty {
     [CmdletBinding()]
    param(
@@ -9126,7 +9165,33 @@ function Get-PnPUserProfileProperty {
    )
 }
 
+function Get-PnPTenantCDNPolicies {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [ValidateSet('Private', 'Public')]
+       [System.String]
+       $CDNType
+   )
+}
 
+function Set-PnPTenantCdnPolicy {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Private','Public')]
+        [System.String]
+        $CdnType,
+
+        [Parameter()]
+        [System.String]
+        $PolicyType,
+
+        [Parameter()]
+        [System.String]
+        $PolicyValue
+    )
+}
 
 function Get-AzureADContactManager {
  [CmdletBinding()]
