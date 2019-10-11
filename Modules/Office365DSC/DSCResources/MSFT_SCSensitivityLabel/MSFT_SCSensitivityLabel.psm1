@@ -180,8 +180,7 @@ function Set-TargetResource
 
         if ($PSBoundParameters.ContainsKey("LocaleSettings"))
         {
-            $locale = ConvertTo-JSON(Convert-CIMToLocaleSettings $LocaleSettings)
-            Write-Verbose -Message "Locale Settings: $locale"
+            $locale = ConvertTo-JSON(Convert-CIMToLocaleSettings $LocaleSettings) -Depth 4
             $CreationParams["LocaleSettings"] = $locale
         }
 
@@ -201,13 +200,11 @@ function Set-TargetResource
         {
             $advanced = Convert-CIMToAdvancedSettings  $AdvancedSettings
             $SetParams["AdvancedSettings"] = $advanced
-            Write-Verbose -Message "Advanced Settings Values: $(Convert-O365DscHashtableToString -Hashtable $advanced)"
         }
 
         if ($PSBoundParameters.ContainsKey("LocaleSettings"))
         {
-            $locale = ConvertTo-JSON(Convert-CIMToLocaleSettings $LocaleSettings)
-            Write-Verbose -Message "Locale Settings: $locale"
+            $locale = ConvertTo-JSON(Convert-CIMToLocaleSettings $LocaleSettings) -Depth 4
             $SetParams["LocaleSettings"] = $locale
         }
 
@@ -441,21 +438,23 @@ function Convert-CIMToLocaleSettings
         $localeEntries = [ordered]@{
             localeKey = $localKey.LocaleKey
         }
-        $localeSettings = @()
+        $settings = @()
         foreach ($setting in $localKey.Settings)
         {
             $settingEntry = @{
                 Key   = $setting.Key
                 Value = $setting.Value
             }
-
-            $localeSettings += $settingEntry
+            $settings += $settingEntry
         }
-        $localeEntries.Add("Settings",$localeSettings)
+        $localeEntries.Add("Settings",$settings)
         $entry += $localeEntries
         $localeEntries = @{}
     }
-    Write-Verbose -Message "LocaleHashTable: $(Convert-O365DscHashtableToString -Hashtable $entry)"
+
+    $jsonDebug = Convertto-json -InputObject $entry -Depth 4
+    Write-Verbose -Message $jsonDebug
+
     return $entry
 }
 
