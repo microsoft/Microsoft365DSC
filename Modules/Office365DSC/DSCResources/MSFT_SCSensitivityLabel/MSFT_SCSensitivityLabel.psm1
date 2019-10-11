@@ -178,7 +178,12 @@ function Set-TargetResource
             Write-Verbose -Message "Advanced Settings Values: $(Convert-O365DscHashtableToString -Hashtable $advanced)"
         }
 
-
+        if ($PSBoundParameters.ContainsKey("LocaleSettings"))
+        {
+            $locale = ConvertTo-JSON(Convert-CIMToLocaleSettings $LocaleSettings)
+            Write-Verbose -Message "Locale Settings: $locale"
+            $CreationParams["LocaleSettings"] = $locale
+        }
 
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
@@ -198,13 +203,14 @@ function Set-TargetResource
             $SetParams["AdvancedSettings"] = $advanced
             Write-Verbose -Message "Advanced Settings Values: $(Convert-O365DscHashtableToString -Hashtable $advanced)"
         }
-        <#
+
         if ($PSBoundParameters.ContainsKey("LocaleSettings"))
         {
-            $locale = Convert-JSONToLocaleSettings $LocaleSettings
+            $locale = ConvertTo-JSON(Convert-CIMToLocaleSettings $LocaleSettings)
+            Write-Verbose -Message "Locale Settings: $locale"
             $SetParams["LocaleSettings"] = $locale
         }
-        #>
+
         #Remove unused parameters for Set-Label cmdlet
         $SetParams.Remove("GlobalAdminAccount")
         $SetParams.Remove("Ensure")
@@ -284,7 +290,7 @@ function Test-TargetResource
 
     if ($null -ne $labelSettings)
     {
-        Write-Verbose -Message "Testing advanced settings for Label $Name"
+        Write-Verbose -Message "AdvancedSettings Values: $(Convert-O365DscHashtableToString -Hashtable $labelSettings)"
         $TestAdvancedSettings = Test-AdvancedSettings -DesiredProperty $labelSettings
         if ($false -eq $TestAdvancedSettings)
         {
@@ -346,7 +352,7 @@ function Convert-JSONToLocaleSettings
         $JSONLocalSettings
     )
     #$localeSettings = ConvertFrom-Json -InputObject $JSONLocalSettings
-    $localeSettings =  $JSONLocalSettings
+    $localeSettings = $JSONLocalSettings
     $result = @{
         localeKey = $localeSettings.LocaleKey
     }
@@ -411,17 +417,47 @@ function Convert-CIMToAdvancedSettings
         $settingsValues = ""
         foreach ($objVal in $obj.Value)
         {
-            Write-Verbose ('Key: {0}, Value: {1}' -f $obj.Key, $objVal)
             $settingsValues += $objVal
             $settingsValues += ","
         }
-        $entry[$obj.Key] = $settingsValues.Substring(0,($settingsValues.Length-1))
+        $entry[$obj.Key] = $settingsValues.Substring(0, ($settingsValues.Length - 1))
     }
-
 
     return $entry
 }
 
+function Convert-CIMToLocaleSettings
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    Param(
+        [parameter(Mandatory = $true)]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $localeSettings
+    )
+    $entry = @()
+    foreach ($localKey in $localeSettings)
+    {
+        $localeEntries = [ordered]@{
+            localeKey = $localKey.LocaleKey
+        }
+        $localeSettings = @()
+        foreach ($setting in $localKey.Settings)
+        {
+            $settingEntry = @{
+                Key   = $setting.Key
+                Value = $setting.Value
+            }
+
+            $localeSettings += $settingEntry
+        }
+        $localeEntries.Add("Settings",$localeSettings)
+        $entry += $localeEntries
+        $localeEntries = @{}
+    }
+    Write-Verbose -Message "LocaleHashTable: $(Convert-O365DscHashtableToString -Hashtable $entry)"
+    return $entry
+}
 
 
 function Test-AdvancedSettings
@@ -436,23 +472,26 @@ function Test-AdvancedSettings
 
     $foundSetting = $false
     #Check to see if advanced settings are in Label settings property of current label
-    $label = Get-Label -Identity $Name
-    if ($null -ne $label)
+    $label = Get-Label -Identity $Name -ErrorAction Ignore
+    if ($null -eq $label)
     {
-        foreach ($key in $DesiredProperty.Keys)
+        return $false
+    }
+
+    foreach ($key in $DesiredProperty.Keys)
+    {
+        foreach ($setting in $label.settings)
         {
-            foreach ($setting in $label.settings)
+            if ($setting.contains($key.tolower()) -and $setting.contains($DesiredProperty[$key]))
             {
-                if ($setting.contains($key.tolower()) -and $setting.contains($DesiredProperty[$key]))
-                {
-                    $foundSetting = $true
-                    Write-Verbose -Message "Found advanced setting in Label settings with $key and value of $($DesiredProperty[$key])"
-                    break
-                }
-                $foundSetting = $false
+                $foundSetting = $true
+                Write-Verbose -Message "Found advanced setting in Label settings with $key and value of $($DesiredProperty[$key])"
+                break
             }
+            $foundSetting = $false
         }
     }
+
     return $foundSetting
 }
 
