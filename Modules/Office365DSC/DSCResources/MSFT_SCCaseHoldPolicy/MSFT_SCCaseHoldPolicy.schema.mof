@@ -1,0 +1,13 @@
+[ClassVersion("1.0.0.0"), FriendlyName("SCCaseHoldPolicy")]
+class MSFT_SCCaseHoldPolicy : OMI_BaseResource
+{
+    [Key, Description("The Name parameter specifies the unique name of the case hold policy.")] String Name;
+    [Key, Description("The Case parameter specifies the eDiscovery case that you want to associate with the case hold policy.")] String Case;
+    [Write, Description("The Comment parameter specifies an optional comment.")] String Comment;
+    [Write, Description("The Enabled parameter specifies whether the policy is enabled or disabled.")] Boolean Enabled;
+    [Write, Description("The ExchangeLocation parameter specifies the mailboxes to include in the policy.")] String ExchangeLocation[];
+    [Write, Description("The PublicFolderLocation parameter specifies that you want to include all public folders in the case hold policy. You use the value All for this parameter.")] String PublicFolderLocation[];
+    [Write, Description("The SharePointLocation parameter specifies the SharePoint Online and OneDrive for Business sites to include. You identify a site by its URL value.")] String SharePointLocation[];
+    [Write, Description("Specify if this policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Required, Description("Credentials of the Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};

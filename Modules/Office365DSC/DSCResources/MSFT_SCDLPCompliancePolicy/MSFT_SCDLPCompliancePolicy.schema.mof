@@ -1,0 +1,19 @@
+[ClassVersion("1.0.0.0"), FriendlyName("SCDLPCompliancePolicy")]
+class MSFT_SCDLPCompliancePolicy : OMI_BaseResource
+{
+    [Key, Description("The Name parameter specifies the unique name of the DLP policy. If the value contains spaces, enclose the value in quotation marks.")] String Name;
+    [Write, Description("The Comment parameter specifies an optional comment.")] String Comment;
+    [Write, Description("The ExchangeLocation parameter specifies Exchange Online mailboxes to include in the DLP policy. You can only use the value All for this parameter to include all mailboxes.")] String ExchangeLocation[];
+    [Write, Description("Exchange members to include.")] String ExchangeSenderMemberOf[];
+    [Write, Description("Exchange members to exclude.")] String ExchangeSenderMemberOfException[];
+    [Write, Description("The Mode parameter specifies the action and notification level of the DLP policy. Valid values are: Enable, TestWithNotifications, TestWithoutNotifications, Disable and PendingDeletion."), ValueMap{"Enable","TestWithNotifications","TestWithoutNotifications","Disable","PendingDeletion"}, Values{"Enable","TestWithNotifications","TestWithoutNotifications","Disable","PendingDeletion"}] String Mode;
+    [Write, Description("The OneDriveLocation parameter specifies the OneDrive for Business sites to include. You identify the site by its URL value, or you can use the value All to include all sites.")] String OneDriveLocation[];
+    [Write, Description("This parameter specifies the OneDrive for Business sites to exclude when you use the value All for the OneDriveLocation parameter. You identify the site by its URL value.")] String OneDriveLocationException[];
+    [Write, Description("Priority for the Policy.")] UInt32 Priority;
+    [Write, Description("The SharePointLocation parameter specifies the SharePoint Online sites to include. You identify the site by its URL value, or you can use the value All to include all sites.")] String SharePointLocation[];
+    [Write, Description("This parameter specifies the SharePoint Online sites to exclude when you use the value All for the SharePointLocation parameter. You identify the site by its URL value.")] String SharePointLocationException[];
+    [Write, Description("Teams locations to include")] String TeamsLocation[];
+    [Write, Description("Teams locations to exclude.")] String TeamsLocationException[];
+    [Write, Description("Specify if this policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};

@@ -1,6 +1,54 @@
 # Change log for Office365Dsc
 
-## Unreleased
+## UNRELEASED
+
+* SCCaseHoldPolicy
+  * New Resource;
+* SCComplianceCase
+  * New Resource;
+* SCComplianceSearch
+  * New Resource;
+* SCComplianceSearchAction
+  * New Resource;
+* SCDLPComplianceRule
+  * New Resource;
+* SPOPropertyBag
+  * New Resource;
+* SPOSiteAuditSettings
+  * New Resource;
+* SPOTenantCDNPolicy
+  * New Resource;
+* Reverse
+  * Added workload selectors to the GUI interface;
+* Metadata
+  * Updated MSCloudLoginAssistant dependency
+    to version 0.7.5;
+  * Updated ReverseDSC dependency
+    to version 1.9.4.6;
+  * Updated Microsoft.Online.SharePoint.PowerShell dependency
+    to version 16.0.19223.12000
+  * UPdated SharePointPnPPowerShellOnline dependency
+    to version 3.14.1910.0
+
+## 1.0.0.846
+
+* Modules
+  * ReverseDSC
+    * Added all missing Security and Compliance items;
+* EXOATPPolicyForO365
+  * Fixed issue where we now extract any policy,
+    not just default;
+* SCDLPCompliancePolicy
+  * New Resource;
+* SCRetentionCompliancePolicy
+  * Changed logic to update existing Policy;
+* Metadata
+  * Updated SharePointPnPPowerShellOnline dependency
+    to version 3.12.1908.1;
+  * Updated MSCloudLoginAssistant dependency to
+    version 0.6;
+
+## 1.0.0.776
 
 * BREAKING CHANGES
   * ODSettings

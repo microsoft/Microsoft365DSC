@@ -78,11 +78,9 @@ function Get-TargetResource
     else
     {
         Write-Verbose "Found existing ComplianceTag $($Name)"
-        $ConvertedFilePlanProperty = Get-SCFilePlanProperty $tagObject.FilePlanMetadata
         $result = @{
             Name               = $tagObject.Name
             Comment            = $tagObject.Comment
-            FilePlanProperty   = $ConvertedFilePlanProperty
             RetentionDuration  = $tagObject.RetentionDuration
             IsRecordLabel      = $tagObject.IsRecordLabel
             Regulatory         = $tagObject.Regulatory
@@ -93,6 +91,12 @@ function Get-TargetResource
             RetentionType      = $tagObject.RetentionType
             GlobalAdminAccount = $GlobalAdminAccount
             Ensure             = 'Present'
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($tagObject.FilePlanMetadata))
+        {
+            $ConvertedFilePlanProperty = Get-SCFilePlanProperty $tagObject.FilePlanMetadata
+            $result.Add("FilePlanProperty", $ConvertedFilePlanProperty)
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
@@ -347,9 +351,11 @@ function Export-TargetResource
     )
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    $result.FilePlanProperty = Get-SCFilePlanPropertyAsString $result.FilePlanProperty
     $content = "        SCComplianceTag " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "FilePlanProperty"
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
     $content += "        }`r`n"
     return $content
@@ -407,6 +413,17 @@ function Get-SCFilePlanProperty
     }
 
     return $result
+}
+
+function Get-SCFilePlanPropertyAsString($params)
+{
+    $currentProperty = "MSFT_SCFilePlanProperty{`r`n"
+    foreach($key in $params.Keys)
+    {
+        $currentProperty += "                " + $key + " = '" + $params[$key] + "'`r`n"
+    }
+    $currentProperty += "            }"
+    return $currentProperty
 }
 
 function Test-SCFilePlanProperties

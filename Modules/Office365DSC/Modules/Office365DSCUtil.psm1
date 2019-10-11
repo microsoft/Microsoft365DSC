@@ -1183,7 +1183,6 @@ function Set-EXOAntiPhishPolicy
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
     }
 }
-
 function Set-EXOHostedContentFilterRule
 {
     param (
@@ -1318,7 +1317,7 @@ function Test-Office365DSCParameterState
         [Array]
         $ValuesToCheck
     )
-    $VerbosePreference = 'SilentlyContinue'
+    $VerbosePreference = "SilentlyContinue"
     $WarningPreference = "SilentlyContinue"
     $returnValue = $true
 
@@ -1533,6 +1532,11 @@ function Export-O365Configuration
         $Path,
 
         [Parameter()]
+        [ValidateSet('SPO','EXO','SC','OD','O365','TEAMS')]
+        [System.String[]]
+        $Workloads,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -1543,54 +1547,18 @@ function Export-O365Configuration
     }
     else
     {
-        Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
-                                       -AllComponents `
-                                       -Path $Path
-    }
-}
-
-function Compare-SPOTheme
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Object]
-        $existingThemePalette,
-        [Parameter(Mandatory = $true)]
-        [System.Object]
-        $configThemePalette
-    )
-
-    $existingThemePalette = $existingThemePalette.GetEnumerator() | Sort-Object -Property Name
-    $configThemePalette = $configThemePalette.GetEnumerator() | Sort-Object -Property Name
-
-    $existingThemePaletteCount = 0
-    $configThemePaletteCount = 0
-
-    foreach($val in $existingThemePalette.Value)
-    {
-        if($configThemePalette.Value.Contains($val))
+        if ($null -ne $Workloads)
         {
-            $configThemePaletteCount++
+            Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                                           -Workloads $Workloads `
+                                           -Path $Path
         }
-    }
-
-    foreach($val in $configThemePalette.Value)
-    {
-        if($existingThemePalette.value.Contains($val))
+        else
         {
-            $existingThemePaletteCount++
+            Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                                           -AllComponents `
+                                           -Path $Path
         }
-    }
-
-    if(($existingThemePalette.Count -eq $configThemePaletteCount) -and ($configThemePalette.Count -eq $existingThemePaletteCount))
-    {
-        return "Themes are identical"
-    }
-    else
-    {
-        return "Themes are not identical"
     }
 }
 

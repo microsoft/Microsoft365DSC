@@ -36,6 +36,194 @@ function Set-AdminAuditLogConfig{
     )
 }
 
+function Get-DLPComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-DLPComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function New-DLPComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Policy,
+
+        [Parameter()]
+        [ValidateSet("InOrganization","NotInOrganization","None")]
+        [System.String[]]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockAccess,
+
+        [Parameter()]
+        [ValidateSet("All", "PerUser")]
+        [System.String]
+        $BlockAccessScope,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.String[]]
+        $ContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [System.String[]]
+        $GenerateAlert,
+
+        [Parameter()]
+        [System.String[]]
+        $GenerateIncidentReport,
+
+        [Parameter()]
+        [ValidateSet("All", "Default", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "RulesMatched", "Service", "Severity", "Title")]
+        [System.String[]]
+        $IncidentReportContent,
+
+        [Parameter()]
+        [ValidateSet("FalsePositive", "WithoutJustification", "WithJustification")]
+        [System.String[]]
+        $NotifyAllowOverride,
+
+        [Parameter()]
+        [System.String]
+        $NotifyEmailCustomText,
+
+        [Parameter()]
+        [System.String]
+        $NotifyPolicyTipCustomText,
+
+        [Parameter()]
+        [System.String[]]
+        $NotifyUser,
+
+        [Parameter()]
+        [ValidateSet("Low", "Medium", "High", "None")]
+        [System.String]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [ValidateSet("Ignore", "RetryThenBlock")]
+        [System.String]
+        $RuleErrorAction
+    )
+}
+
+function Set-DLPComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [ValidateSet("InOrganization","NotInOrganization","None")]
+        [System.String[]]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockAccess,
+
+        [Parameter()]
+        [ValidateSet("All", "PerUser")]
+        [System.String]
+        $BlockAccessScope,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.String[]]
+        $ContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [System.String[]]
+        $GenerateAlert,
+
+        [Parameter()]
+        [System.String[]]
+        $GenerateIncidentReport,
+
+        [Parameter()]
+        [ValidateSet("All", "Default", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "RulesMatched", "Service", "Severity", "Title")]
+        [System.String[]]
+        $IncidentReportContent,
+
+        [Parameter()]
+        [ValidateSet("FalsePositive", "WithoutJustification", "WithJustification")]
+        [System.String[]]
+        $NotifyAllowOverride,
+
+        [Parameter()]
+        [System.String]
+        $NotifyEmailCustomText,
+
+        [Parameter()]
+        [System.String]
+        $NotifyPolicyTipCustomText,
+
+        [Parameter()]
+        [System.String[]]
+        $NotifyUser,
+
+        [Parameter()]
+        [ValidateSet("Low", "Medium", "High", "None")]
+        [System.String]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [ValidateSet("Ignore", "RetryThenBlock")]
+        [System.String]
+        $RuleErrorAction
+    )
+}
+
 function Get-SupervisoryReviewPolicyV2
 {
     [CmdletBinding()]
@@ -146,6 +334,152 @@ function Get-SupervisoryReviewRule
     )
 }
 
+function New-DLPCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeSenderMemberOf,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeSenderMemberOfException,
+
+        [Parameter()]
+        [ValidateSet('Enable','TestWithNotifications','TestWithoutNotifications','Disable','PendingDeletion')]
+        [System.String]
+        $Mode,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $OneDriveLocationException,
+
+        [Parameter()]
+        [System.UInt32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $TeamsLocationException
+    )
+}
+
+function Set-DLPCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeSenderMemberOf,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeSenderMemberOfException,
+
+        [Parameter()]
+        [ValidateSet('Enable','TestWithNotifications','TestWithoutNotifications','Disable','PendingDeletion')]
+        [System.String]
+        $Mode,
+
+        [Parameter()]
+        [System.String[]]
+        $AddOneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveOneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddOneDriveLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveOneDriveLocationException,
+
+        [Parameter()]
+        [System.UInt32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $AddTeamsLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveTeamsLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddTeamsLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveTeamsLocationException
+    )
+}
+
 function New-RetentionComplianceRule
 {
     [CmdletBinding()]
@@ -191,7 +525,72 @@ function New-RetentionComplianceRule
     )
 }
 
+function Set-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Policy,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedItemClasses,
+
+        [Parameter()]
+        [System.String]
+        $RetentionDuration,
+
+        [Parameter()]
+        [ValidateSet("Days", "Months", "Years")]
+        [System.String]
+        $RetentionDurationDisplayHint,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [ValidateSet("CreationAgeInDays", "ModificationAgeInDays")]
+        [System.String]
+        $ExpirationDateOption,
+
+        [Parameter()]
+        [ValidateSet("Delete","Keep","KeepAndDelete")]
+        [System.String]
+        $RetentionComplianceAction
+    )
+}
+
 function Get-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Get-DLPCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-DLPCompliancePolicy
 {
     [CmdletBinding()]
     param(
@@ -293,6 +692,115 @@ function New-RetentionCompliancePolicy{
         [Parameter()]
         [System.String[]]
         $TeamsChatLocationException
+    )
+}
+
+function Set-RetentionCompliancePolicy{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddExchangeLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveExchangeLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $AddModernGroupLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveModernGroupLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddModernGroupLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveModernGroupLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $AddOneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveOneDriveLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddOneDriveLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveOneDriveLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $AddPublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemovePublicFolderLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $RestrictiveRetention = $true,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSharePointLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSkypeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSkypeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSkypeLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSkypeLocationException
     )
 }
 
@@ -609,6 +1117,10 @@ function New-UnifiedGroup
         [Parameter(Mandatory=$true)]
         [string]
         $DisplayName,
+
+        [Parameter()]
+        [string]
+        $Name,
 
         [Parameter()]
         [string]
@@ -5014,8 +5526,17 @@ param(
 
     [Parameter(ParameterSetName='ParamSet1')]
     #[System.Nullable[object]]
-    ${DefaultLinkPermission})
+    ${DefaultLinkPermission},
 
+    [Parameter(ParameterSetName='ParamSet1')]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    ${AnonymousLinkExpirationInDays},
+
+    [Parameter(ParameterSetName='ParamSet1')]
+    [ValidateNotNullOrEmpty()]
+    [string]
+    ${OverrideTenantAnonymousLinkExpirationPolicy})
 
  }
 
@@ -8577,7 +9098,98 @@ param(
 
 
  }
+ function Set-PnPUserProfileProperty {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Account,
 
+       [Parameter()]
+       [System.String]
+       $PropertyName,
+
+       [Parameter()]
+       [System.String]
+       $Value
+   )
+}
+
+function Get-PnPTenantTheme {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity
+   )
+}
+
+function Remove-PnPTenantTheme {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity
+   )
+}
+
+function Add-PnPTenantTheme {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory = $true)]
+       [System.String]
+       $Name,
+
+       [Parameter()]
+       [System.Boolean]
+       $IsInverted,
+
+       [Parameter()]
+       [System.Collections.Hashtable]
+       $Palette,
+
+       [Parameter()]
+       [System.Boolean]
+       $Overwrite
+   )
+}
+
+function Get-PnPUserProfileProperty {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Account
+   )
+}
+
+function Get-PnPTenantCDNPolicies {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [ValidateSet('Private', 'Public')]
+       [System.String]
+       $CDNType
+   )
+}
+
+function Set-PnPTenantCdnPolicy {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Private','Public')]
+        [System.String]
+        $CdnType,
+
+        [Parameter()]
+        [System.String]
+        $PolicyType,
+
+        [Parameter()]
+        [System.String]
+        $PolicyValue
+    )
+}
 
 function Get-AzureADContactManager {
  [CmdletBinding()]
@@ -8773,11 +9385,385 @@ param(
 
  }
 
+ function Get-ComplianceSearchAction {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity,
+
+       [Parameter()]
+       [Switch]
+       $Details,
+
+       [Parameter()]
+       [System.String]
+       $Case
+   )
+}
+
+function Remove-ComplianceSearchAction {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Identity
+   )
+}
+
+function New-ComplianceSearchAction {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SearchName,
+
+        [Parameter()]
+        [System.String[]]
+        $FileTypeExclusionsForUnindexedItems,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableDedupe,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeCredential,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeSharePointDocumentVersions,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('SoftDelete', 'HardDelete')]
+        $PurgeType,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetryOnError,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('IndexedItemsOnly', 'UnindexedItemsOnly', 'BothIndexedAndUnindexedItems')]
+        $Scope,
+
+        [Parameter()]
+        [Switch]
+        $Report,
+
+        [Parameter()]
+        [Switch]
+        $RetentionReport,
+
+        [Parameter()]
+        [Switch]
+        $Purge,
+
+        [Parameter()]
+        [Switch]
+        $Confirm
+   )
+}
+
+function Get-CaseHoldPolicy {
+    [CmdletBinding()]
+    param(
+       [Parameter()]
+       [System.String]
+       $Identity,
+
+       [Parameter()]
+       [System.String]
+       $Case
+   )
+}
+
+function Get-PnPAuditing
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Connection
+    )
+}
+
+function Get-PnPTenantSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Connection
+    )
+}
+
+function Set-PnPAuditing
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Switch]
+        $EnableAll,
+
+        [Parameter()]
+        [Switch]
+        $DisableAll
+    )
+}
+
+function Get-CaseHoldRule {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity,
+
+       [Parameter()]
+       [System.String]
+       $Policy
+   )
+}
+
+function Remove-CaseHoldRule {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Identity
+   )
+}
+
+function New-CaseHoldRule {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Name,
+
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Policy,
+
+       [Parameter()]
+       [System.String]
+       $Comment,
+
+       [Parameter()]
+       [System.Boolean]
+       $Disabled,
+
+       [Parameter()]
+       [System.String]
+       $ContentMatchQuery
+   )
+}
+
+function Set-CaseHoldRule {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery
+    )
+}
+
+function Remove-PnPPropertyBagValue {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Key
+   )
+}
+
+function Set-PnPPropertyBagValue {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Key,
+
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Value
+   )
+}
+
+function Get-PnPPropertyBag {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Key
+   )
+}
+
+function Get-ComplianceCase {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity
+   )
+}
+
+function Remove-ComplianceCase {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Identity
+   )
+}
+
+function New-ComplianceCase {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Name,
+
+       [Parameter()]
+       [System.String]
+       $Description
+   )
+}
+
+function Set-ComplianceCase {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [Switch]
+        $Close,
+
+        [Parameter()]
+        [Switch]
+        $Reopen
+    )
+}
+
+function Get-CaseHoldPolicy {
+    [CmdletBinding()]
+   param(
+       [Parameter()]
+       [System.String]
+       $Identity,
+
+       [Parameter()]
+       [System.String]
+       $Case
+   )
+}
+
+function Remove-CaseHoldPolicy {
+    [CmdletBinding()]
+   param(
+       [Parameter(Mandatory=$true)]
+       [System.String]
+       $Identity
+   )
+}
+
+function New-CaseHoldPolicy {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Case,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $PublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation
+   )
+}
+
+function Set-CaseHoldPolicy {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddPublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemovePublicFolderLocation
+    )
+}
 
 function Get-AzureADDirectoryRoleMember {
  [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Parameter(Mandatory=$true)]
     [string]
     ${ObjectId},
 
@@ -8798,11 +9784,11 @@ param()
 
 
 function Get-AzureADDomain {
- [CmdletBinding(DefaultParameterSetName='GetQuery')]
+ [CmdletBinding()]
 param(
-    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Parameter()]
     [string]
-    ${Name})
+    $Name)
 
 
  }
@@ -12140,5 +13126,148 @@ function Set-ComplianceTag
     [Parameter()]
     [System.String]
     $EventType
+    )
+}
+
+
+function Get-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Case
+    )
+}
+function Remove-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+function New-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Case,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNotFoundExchangeLocationsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocationExclusion,
+
+        [Parameter()]
+        [System.String[]]
+        $HoldNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeUserAppContent,
+
+        [Parameter()]
+        [System.String]
+        $Language,
+
+        [Parameter()]
+        [System.String[]]
+        $PublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation,
+
+        [Parameter[]]
+        [System.String[]]
+        $SharePointLocationExclusion
+    )
+}
+
+function Set-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Case,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNotFoundExchangeLocationsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocationExclusion,
+
+        [Parameter()]
+        [System.String[]]
+        $HoldNames,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeUserAppContent,
+
+        [Parameter()]
+        [System.String]
+        $Language,
+
+        [Parameter()]
+        [System.String[]]
+        $PublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation,
+
+        [Parameter[]]
+        [System.String[]]
+        $SharePointLocationExclusion
     )
 }

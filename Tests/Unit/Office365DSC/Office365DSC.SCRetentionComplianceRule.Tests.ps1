@@ -82,9 +82,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Policy                    = 'TestPolicy'
             }
 
+            Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
+                return @{
+                    Name = "TestPolicy"
+                }
+            }
+
             Mock -CommandName Get-RetentionComplianceRule -MockWith {
                 return @{
-                    Name = "TestRule"
+                    Name                      = "TestRule"
+                    Comment                   = "This is a Demo Rule"
+                    RetentionComplianceAction = "Keep"
+                    RetentionDuration         = "Unlimited"
                 }
             }
 
@@ -112,6 +121,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Policy                    = 'TestPolicy'
             }
 
+            Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
+                return @{
+                    Name = "TestPolicy"
+                }
+            }
+
             Mock -CommandName Get-RetentionComplianceRule -MockWith {
                 return @{
                     Name = "TestRule"
@@ -136,6 +151,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
                 Policy             = "TestPolicy"
                 Name               = "TestRule"
+            }
+
+            Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
+                return @{
+                    Name = "TestPolicy"
+                }
             }
 
             It "Should Reverse Engineer resource from the Export method" {
