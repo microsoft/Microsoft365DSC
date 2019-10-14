@@ -175,12 +175,11 @@ function Set-TargetResource
         {
             $advanced = Convert-CIMToAdvancedSettings $AdvancedSettings
             $CreationParams["AdvancedSettings"] = $advanced
-            Write-Verbose -Message "Advanced Settings Values: $(Convert-O365DscHashtableToString -Hashtable $advanced)"
         }
 
         if ($PSBoundParameters.ContainsKey("LocaleSettings"))
         {
-            $locale = ConvertTo-JSON(Convert-CIMToLocaleSettings $LocaleSettings) -Depth 4
+            $locale = Convert-CIMToLocaleSettings $LocaleSettings
             $CreationParams["LocaleSettings"] = $locale
         }
 
@@ -204,7 +203,7 @@ function Set-TargetResource
 
         if ($PSBoundParameters.ContainsKey("LocaleSettings"))
         {
-            $locale = ConvertTo-JSON(Convert-CIMToLocaleSettings $LocaleSettings) -Depth 4
+            $locale = Convert-CIMToLocaleSettings $LocaleSettings
             $SetParams["LocaleSettings"] = $locale
         }
 
@@ -290,6 +289,16 @@ function Test-TargetResource
         Write-Verbose -Message "AdvancedSettings Values: $(Convert-O365DscHashtableToString -Hashtable $labelSettings)"
         $TestAdvancedSettings = Test-AdvancedSettings -DesiredProperty $labelSettings
         if ($false -eq $TestAdvancedSettings)
+        {
+            return $false
+        }
+    }
+
+    if ($null -ne $LocaleSettings)
+    {
+        $localeArray = Convert-CIMToLocaleSettings $LocaleSettings
+        $localeSettingsSame = Test-LocaleSettings $localeArray
+        if ($false -eq $localeSettingsSame)
         {
             return $false
         }
@@ -426,38 +435,41 @@ function Convert-CIMToAdvancedSettings
 function Convert-CIMToLocaleSettings
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
+    [OutputType([System.Collections.ArrayList])]
     Param(
         [parameter(Mandatory = $true)]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $localeSettings
     )
-    $entry = @()
+    $entry = [System.Collections.ArrayList]@()
+    $setting = $null
     foreach ($localKey in $localeSettings)
     {
-        $localeEntries = [ordered]@{
-            localeKey = $localKey.LocaleKey
+
+        if ($localKey.localeKey -eq "displayName")
+        {
+            $settings = '{"LocaleKey":"displayName","Settings":['
         }
-        $settings = @()
+        else
+        {
+            $settings = '{"LocaleKey":"Tooltip","Settings":['
+        }
+
         foreach ($setting in $localKey.Settings)
         {
-            $settingEntry = @{
-                Key   = $setting.Key
-                Value = $setting.Value
-            }
-            $settings += $settingEntry
+            $settings += '{'
+            $settings += '"Key":"{0}","Value":"{1}"' -f $setting.Key, $($setting.Value.Replace(",", "''"))
+            $settings += '},'
         }
-        $localeEntries.Add("Settings",$settings)
-        $entry += $localeEntries
-        $localeEntries = @{}
+        $localeString = $settings.Substring(0, ($settings.Length - 1))
+        $localeString += ']}'
+        $entry.Add($localeString) | Out-Null
+        $localeString = $null
+        $setting = $null
     }
-
-    $jsonDebug = Convertto-json -InputObject $entry -Depth 4
-    Write-Verbose -Message $jsonDebug
 
     return $entry
 }
-
 
 function Test-AdvancedSettings
 {
@@ -492,6 +504,35 @@ function Test-AdvancedSettings
     }
 
     return $foundSetting
+}
+
+function Test-LocaleSettings
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [Parameter (Mandatory = $true)]
+        [System.Collections.ArrayList]
+        $DesiredProperty
+    )
+
+    $label = Get-Label -identity $Name
+
+    if (($null -ne $label) -or ($null -ne $label.LocaleSettings))
+    {
+        $arrayCompare = Compare-Object -ReferenceObject $DesiredProperty `
+            -DifferenceObject $label.$LocaleSettings
+
+        if ($null -ne $arrayCompare)
+        {
+            return $false
+        }
+        return $true
+    }
+    else
+    {
+        return $false
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource
