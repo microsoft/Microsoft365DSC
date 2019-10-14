@@ -15,7 +15,11 @@ function SectionChanged
     {
         if ($pnlControl.GetType().ToString() -eq "System.Windows.Forms.Checkbox")
         {
-            $pnlControl.Checked = $Control.Checked
+            # TODO remove exception after the SPO Management Shell bug is fixed;
+            if ($pnlControl.Name -ne 'chckSPOSite' -and $pnlControl.Name -ne 'chckSPOHubSite' -and $pnlControl.Name -ne 'chckSPOSharingSettings')
+            {
+                $pnlControl.Checked = $Control.Checked
+            }
         }
     }
 }
@@ -280,7 +284,8 @@ function Show-O365GUI
         $chckSPOHubSite.Top = 40
         $chckSPOHubSite.AutoSize = $true;
         $chckSPOHubSite.Name = "chckSPOHubSite"
-        $chckSPOHubSite.Checked = $true
+        $chckSPOHubSite.Checked = $false #TODO enable after SPO Mgmt Shell bug is fixed
+        $chckSPOHubSite.Enabled = $false #TODO enable after SPO Mgmt Shell bug is fixed
         $chckSPOHubSite.Text = "Hub Sites"
         $pnlSPO.Controls.Add($chckSPOHubSite)
 
@@ -312,7 +317,8 @@ function Show-O365GUI
         $chckSPOSharingSettings.Top = 120
         $chckSPOSharingSettings.AutoSize = $true;
         $chckSPOSharingSettings.Name = "chckSPOSharingSettings"
-        $chckSPOSharingSettings.Checked = $true
+        $chckSPOSharingSettings.Checked = $false #TODO enable after SPO Mgmt Shell bug is fixed
+        $chckSPOSharingSettings.Enabled = $false #TODO enable after SPO Mgmt Shell bug is fixed
         $chckSPOSharingSettings.Text = "Sharing Settings"
         $pnlSPO.Controls.Add($chckSPOSharingSettings)
 
@@ -320,7 +326,8 @@ function Show-O365GUI
         $chckSPOSite.Top = 140
         $chckSPOSite.AutoSize = $true;
         $chckSPOSite.Name = "chckSPOSite"
-        $chckSPOSite.Checked = $true
+        $chckSPOSite.Checked = $false #TODO enable after SPO Mgmt Shell bug is fixed
+        $chckSPOSite.Enabled = $false #TODO enable after SPO Mgmt Shell bug is fixed
         $chckSPOSite.Text = "Site Collections"
         $pnlSPO.Controls.Add($chckSPOSite)
 
@@ -589,14 +596,16 @@ function Show-O365GUI
         $chckODSettings.Top = 0
         $chckODSettings.AutoSize = $true;
         $chckODSettings.Name = "chckODSettings"
-        $chckODSettings.Checked = $true
+        $chckODSettings.Checked = $false #TODO - Reactivate after SPO Mgmt Shell bug fix
+        $chckODSettings.Enabled = $false #TODO - Reactivate after SPO Mgmt Shell bug fix
         $chckODSettings.Text = "OneDrive Settings"
         $pnlOD.Controls.Add($chckODSettings)
 
         $chckAllOD = New-Object System.Windows.Forms.CheckBox
         $chckAllOD.Left = $fourthColumnLeft + 280
         $chckAllOD.Top = $topBannerHeight + 40
-        $chckAllOD.Checked = $true
+        $chckAllOD.Enabled = $false #TODO - Reactivate after SPO Mgmt Shell bug fix
+        $chckAllOD.Checked = $false #TODO - Reactivate after SPO Mgmt Shell bug fix
         $chckAllOD.AutoSize = $true
         $chckAllOD.Add_CheckedChanged({SectionChanged -Control $chckAllOD -Panel $pnlOD})
         $pnlMain.Controls.Add($chckAllOD)
