@@ -296,8 +296,7 @@ function Test-TargetResource
 
     if ($null -ne $LocaleSettings)
     {
-        $localeArray = Convert-CIMToLocaleSettings $LocaleSettings
-        $localeSettingsSame = Test-LocaleSettings $localeArray
+        $localeSettingsSame = Test-LocaleSettings $LocaleSettings
         if ($false -eq $localeSettingsSame)
         {
             return $false
@@ -354,11 +353,10 @@ function Convert-JSONToLocaleSettings
     [OutputType([Microsoft.Management.Infrastructure.CimInstance[]])]
     Param(
         [parameter(Mandatory = $true)]
-        [System.String]
+        [System.Collections.ArrayList]
         $JSONLocalSettings
     )
-    #$localeSettings = ConvertFrom-Json -InputObject $JSONLocalSettings
-    $localeSettings = $JSONLocalSettings
+    $localeSettings = ConvertTO-Json -InputObject $JSONLocalSettings
     $result = @{
         localeKey = $localeSettings.LocaleKey
     }
@@ -458,14 +456,13 @@ function Convert-CIMToLocaleSettings
                 Value = $setting.Value
             }
             $settings += $settingEntry
-            Write-Verbose -Message "SettingsEntry $settingEntry"
         }
         $localeEntries.Add("Settings", $settings)
-        [void]$entry.Add(($localeEntries|ConvertTo-Json))
+        [void]$entry.Add(($localeEntries | ConvertTo-Json))
         $localeEntries = @{ }
         $settings = @( )
     }
-    Write-Verbose -Message "LocalArrayList $entry"
+
     return $entry
 }
 
@@ -510,28 +507,45 @@ function Test-LocaleSettings
     [OutputType([System.Boolean])]
     param(
         [Parameter (Mandatory = $true)]
-        [System.Collections.ArrayList]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $DesiredProperty
     )
 
+    $foundSettings = $true
     $label = Get-Label -identity $Name -ErrorAction Ignore
     if ($null -eq $label)
     {
         return $false
     }
 
-    $currentLocaleSettings = $label.LocaleSettings
+    $currentLocaleSettings = $label.LocaleSettings | ConvertFrom-Json
 
-    Write-Verbose -Message "Desired Prop:$DesiredProperty"
-    Write-Verbose -Message "Label Prop:$currentLocaleSettings"
-    $arrayCompare = Compare-Object -ReferenceObject $DesiredProperty -DifferenceObject $currentLocaleSettings
-    if ($null -eq $arrayCompare)
+    foreach ($desiredSetting in $DesiredProperty.localeKey)
     {
-        return $true
-    }
-    Write-Verbose -Message "Locale Settings different $arrayCompare"
-    return $false
+        $foundKey = $currentLocaleSettings | Where-Object { $_.LocaleKey -eq $desiredSetting}
+        Write-Verbose -Message "Found locale key in Label: $foundKey"
+        foreach ($setting in $desiredSetting.Settings)
+        {
+            if ($null -ne $foundKey)
+            {
+                $myLabel = $foundKey.Settings | Where-Object { $_.Key -eq $setting.Key -and $_.Value -eq $setting.Value}
+                Write-Verbose -Message "Found locale setting in Label: $myLabel"
+                if ($null -eq $myLabel)
+                {
+                    $foundSettings = $false
+                    break;
+                }
+            }
+            else
+            {
+                $foundSettings = $false
+                break;
 
+            }
+        }
+
+    }
+    Write-Verbose -Message "Found Setting:$foundSettings"
 }
 
 Export-ModuleMember -Function *-TargetResource
