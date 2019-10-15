@@ -278,14 +278,14 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $labelSettings = Convert-CIMToAdvancedSettings $AdvancedSettings
-
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('AdvancedSettings') | Out-Null
+    $ValuesToCheck.Remove('LocaleSettings') | Out-Null
 
-    if ($null -ne $labelSettings)
+    if ($null -ne $AdvancedSettings)
     {
+        $labelSettings = Convert-CIMToAdvancedSettings $AdvancedSettings
         Write-Verbose -Message "AdvancedSettings Values: $(Convert-O365DscHashtableToString -Hashtable $labelSettings)"
         $TestAdvancedSettings = Test-AdvancedSettings -DesiredProperty $labelSettings
         if ($false -eq $TestAdvancedSettings)
@@ -374,6 +374,8 @@ function Convert-JSONToLocaleSettings
         $settings += $entry
     }
     $result.Add("Settings", $settings)
+
+    Write-Verbose -Message "ConvertLocaleSettings Values: $(Convert-O365DscHashtableToString -Hashtable $result)"
     return $result
 }
 
@@ -432,6 +434,7 @@ function Convert-CIMToAdvancedSettings
     return $entry
 }
 
+
 function Convert-CIMToLocaleSettings
 {
     [CmdletBinding()]
@@ -442,32 +445,27 @@ function Convert-CIMToLocaleSettings
         $localeSettings
     )
     $entry = [System.Collections.ArrayList]@()
-    $setting = $null
-    foreach ($localKey in $localeSettings)
+    foreach ($localset in $localeSettings)
     {
-
-        if ($localKey.localeKey -eq "displayName")
-        {
-            $settings = '{"LocaleKey":"displayName","Settings":['
+        $localeEntries = [ordered]@{
+            localeKey = $localset.LocaleKey
         }
-        else
+        $settings = @()
+        foreach ($setting in $localset.Settings)
         {
-            $settings = '{"LocaleKey":"Tooltip","Settings":['
+            $settingEntry = @{
+                Key   = $setting.Key
+                Value = $setting.Value
+            }
+            $settings += $settingEntry
+            Write-Verbose -Message "SettingsEntry $settingEntry"
         }
-
-        foreach ($setting in $localKey.Settings)
-        {
-            $settings += '{'
-            $settings += '"Key":"{0}","Value":"{1}"' -f $setting.Key, $($setting.Value.Replace(",", "''"))
-            $settings += '},'
-        }
-        $localeString = $settings.Substring(0, ($settings.Length - 1))
-        $localeString += ']}'
-        $entry.Add($localeString) | Out-Null
-        $localeString = $null
-        $setting = $null
+        $localeEntries.Add("Settings", $settings)
+        [void]$entry.Add(($localeEntries|ConvertTo-Json))
+        $localeEntries = @{ }
+        $settings = @( )
     }
-
+    Write-Verbose -Message "LocalArrayList $entry"
     return $entry
 }
 
@@ -516,23 +514,24 @@ function Test-LocaleSettings
         $DesiredProperty
     )
 
-    $label = Get-Label -identity $Name
-
-    if (($null -ne $label) -or ($null -ne $label.LocaleSettings))
-    {
-        $arrayCompare = Compare-Object -ReferenceObject $DesiredProperty `
-            -DifferenceObject $label.$LocaleSettings
-
-        if ($null -ne $arrayCompare)
-        {
-            return $false
-        }
-        return $true
-    }
-    else
+    $label = Get-Label -identity $Name -ErrorAction Ignore
+    if ($null -eq $label)
     {
         return $false
     }
+
+    $currentLocaleSettings = $label.LocaleSettings
+
+    Write-Verbose -Message "Desired Prop:$DesiredProperty"
+    Write-Verbose -Message "Label Prop:$currentLocaleSettings"
+    $arrayCompare = Compare-Object -ReferenceObject $DesiredProperty -DifferenceObject $currentLocaleSettings
+    if ($null -eq $arrayCompare)
+    {
+        return $true
+    }
+    Write-Verbose -Message "Locale Settings different $arrayCompare"
+    return $false
+
 }
 
 Export-ModuleMember -Function *-TargetResource
