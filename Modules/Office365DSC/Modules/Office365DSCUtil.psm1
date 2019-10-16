@@ -1593,6 +1593,25 @@ function Get-SPOAdministrationUrl
     return $global:AdminUrl
 }
 
+function Split-Array
+{
+    [OutputType([System.Object[]])]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $Array,
+
+        [Parameter(Mandatory = $true)]
+        [System.Uint32]
+        $BatchSize
+    )
+    for ($i = 0; $i -lt $Array.Count; $i += $BatchSize)
+    {
+       $NewArray += ,@($Array[$i..($i+($BatchSize-1))]);
+    }
+    return $NewArray
+}
+
 function Invoke-O365DSCCommand
 {
     [CmdletBinding()]
@@ -1637,9 +1656,9 @@ function Invoke-O365DSCCommand
     }
     catch
     {
-        if ($_.Exception -like '*O365DSC100*')
+        if ($_.Exception -like '*O365DSC - *')
         {
-            Write-Warning -Message $_.Exception
+            Write-Warning $_.Exception
         }
         else
         {

@@ -27,45 +27,42 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SPOPropertyBag for $Key"
-    Invoke-O365DSCCommand -Arguments $PSBoundParameters -InvokationPath $PSScriptRoot -ScriptBlock {
-        $params = $args[0]
-        try
-        {
-            Write-Verbose -Message "Connecting to PnP from the Get method"
-            Test-MSCloudLogin -CloudCredential $params.GlobalAdminAccount `
-                            -ConnectionUrl $params.Url `
+    try
+    {
+        Write-Verbose -Message "Connecting to PnP from the Get method"
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+                            -ConnectionUrl $Url `
                             -Platform PnP
-            Write-Verbose -Message "Obtaining all properties from the Get method for url {$($params.Url)}"
-            $property = Get-PnPPropertyBag
-            Write-Verbose -Message "Properties obtained correctly"
-        }
-        catch
-        {
-            Write-Verbose "GlobalAdminAccount specified does not have admin access to site {$params.Url}"
+        Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
+        $property = Get-PnPPropertyBag
+        Write-Verbose -Message "Properties obtained correctly"
+    }
+    catch
+    {
+        Write-Verbose "GlobalAdminAccount specified does not have admin access to site {$Url}"
+    }
+
+    if ($null -eq $property)
+    {
+        Write-Verbose -Message "SPOPropertyBag $Key does not exist at {$Url}."
+        $result = $PSBoundParameters
+        $result.Ensure = 'Absent'
+        return $result
+    }
+    else
+    {
+        $property = $property | Where-Object -FilterScript { $_.Key -eq $Key }
+        Write-Verbose "Found existing SPOPropertyBag Key $Key at {$Url}"
+        $result = @{
+            Ensure             = 'Present'
+            Url                = $Url
+            Key                = $property.Key
+            Value              = $property.Value
+            GlobalAdminAccount = $GlobalAdminAccount
         }
 
-        if ($null -eq $property)
-        {
-            Write-Verbose -Message "SPOPropertyBag $($params.Key) does not exist at {$($params.Url)}."
-            $result = $params
-            $result.Ensure = 'Absent'
-            return $result
-        }
-        else
-        {
-            $property = $property | Where-Object -FilterScript { $_.Key -eq $params.Key }
-            Write-Verbose "Found existing SPOPropertyBag Key $($params.Key) at {$($params.Url)}"
-            $result = @{
-                Ensure             = 'Present'
-                Url                = $params.Url
-                Key                = $property.Key
-                Value              = $property.Value
-                GlobalAdminAccount = $params.GlobalAdminAccount
-            }
-
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
-            return $result
-        }
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
+        return $result
     }
 }
 
@@ -174,71 +171,117 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = "Continue"
-    $PSBoundParameters.Add("ScriptRoot", $PSScriptRoot)
-    $result = ""
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                          -Platform PnP
-    $returnValue = ""
+                      -Platform PnP
+    $result = ""
+
+    # Get all Site Collections in tenant;
     $sites = Get-PnPTenantSite
+
+    # Split the complete list of site collections into batches of 8 items;
+    $sites = Split-Array -Array $sites -BatchSize 8
+
+    # Define the Path of the Util module. This is due to the fact that inside the Start-Job
+    # the module is not imported and simply doing Import-Module Office365DSC doesn't work.
+    # Therefore, in order to be able to call into Invoke-O365DSCCommand we need to implicitly
+    # load the module.
+    $UtilModulePath = $PSScriptRoot + "\..\..\Modules\Office365DSCUtil.psm1"
+
+    # For each batch of 8 items, start and asynchronous background PowerShell job. Each
+    # job will be given the name of the current resource followed by its ID;
     $i = 1
-    foreach ($site in $sites)
+    foreach ($batch in $sites)
     {
-        Write-Information "    [$i/$($sites.Count)] Scanning Properties in PropertyBag for site {$($site.Url)}"
-        $PSBoundParameters.Add("SiteUrl", $site.Url)
-        $returnValue += Invoke-O365DSCCommand -Arguments $PSBoundParameters -InvokationPath $PSScriptRoot -ScriptBlock {
-            $params = $args[0]
+        Start-Job -Name "SPOPropertyBag$i" -ScriptBlock {
+            Param(
+                [Parameter(Mandatory = $true)]
+                [System.Object[]]
+                $sites,
 
-            try
-            {
-                Write-Verbose -Message "Connecting to PnP from the Export method"
-                Test-MSCloudLogin -CloudCredential $params.GlobalAdminAccount `
-                                    -ConnectionUrl $params.SiteUrl `
-                                    -Platform PnP
-                Write-Verbose -Message "Successfully connected"
-            }
-            catch
-            {
-                throw $_
-            }
+                [Parameter(Mandatory = $true)]
+                [System.String]
+                $ScriptRoot,
 
-            try
-            {
-                Write-Verbose -Message "Getting all properties from the Export method"
-                $properties = Get-PnPPropertyBag
-                Write-Verbose -Message "Properties were retrieved successfully from the Export method."
-                $j = 1
-                foreach($property in $properties)
+                [Parameter(Mandatory = $true)]
+                [System.String]
+                $UtilModulePath,
+
+                [Parameter(Mandatory = $true)]
+                [System.Management.Automation.PSCredential]
+                $GlobalAdminAccount
+            )
+
+            # Implicitly load the Office365DSCUtil.psm1 module in order to be able to call
+            # into the Invoke-O36DSCCommand cmdlet;
+            Import-Module $UtilModulePath -Force
+
+            # Invoke the logic that extracts the all the Property Bag values of the current site using the
+            # the invokation wrapper that handles throttling;
+            $returnValue = ""
+            $returnValue += Invoke-O365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
+                $params = $args[0]
+                $content = ""
+                foreach ($item in $params.sites)
                 {
-                    Write-Information "        {$j/$($properties.Count)} $($property.Key)"
-                    $getValues = @{
-                        Url               = $params.SiteUrl
-                        Key                = $property.Key
-                        Value              = '*'
-                        GlobalAdminAccount = $params.GlobalAdminAccount
+                    foreach ($site in $item)
+                    {
+                        $siteUrl = $site.Url
+                        try
+                        {
+                            Test-MSCloudLogin -CloudCredential $params.GlobalAdminAccount `
+                                              -ConnectionUrl $siteUrl `
+                                              -Platform PnP
+                        }
+                        catch
+                        {
+                            throw "O365DSC - Failed to connect to PnP {$siteUrl}: " + $_
+                        }
+
+                        try
+                        {
+                            $properties = Get-PnPPropertyBag
+                            foreach($property in $properties)
+                            {
+                                $getValues = @{
+                                    Url                = $siteUrl
+                                    Key                = $property.Key
+                                    Value              = '*'
+                                    GlobalAdminAccount = $params.GlobalAdminAccount
+                                }
+
+                                $CurrentModulePath = $params.ScriptRoot + "\MSFT_SPOPropertyBag.psm1"
+                                Import-Module $CurrentModulePath -Force
+                                $result = Get-TargetResource @getValues
+                                $result.Value = [System.String]$result.Value
+                                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                                $content += "        SPOPropertyBag " + (New-GUID).ToString() + "`r`n"
+                                $content += "        {`r`n"
+                                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
+                                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                                $content += "        }`r`n"
+                            }
+                        }
+                        catch
+                        {
+                            throw "Failed to Get-PnPPropertyBag {$siteUrl}: " + $_
+                        }
                     }
-                    Write-Verbose -Message "Calling into Get-TargetResource from Export-TargetResource"
-                    $result = Get-TargetResource @getValues
-                    $result.Value = [System.String]$result.Value
-                    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                    $content = "        SPOPropertyBag " + (New-GUID).ToString() + "`r`n"
-                    $content += "        {`r`n"
-                    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
-                    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-                    $content += "        }`r`n"
-                    $j++
                 }
+                return $content
             }
-            catch
-            {
-                throw $_
-            }
-            return $content
-        }
-        $PSBoundParameters.Remove("SiteUrl")
+            return $returnValue
+        } -ArgumentList @(, $batch, $PSScriptRoot, $UtilModulePath, $GlobalAdminAccount) | out-null
         $i++
     }
 
-    return $resultValue
+    $i = 1
+    foreach ($batch in $sites)
+    {
+        $result += Receive-Job -Name "SPOPropertyBag$i" -Wait -Force
+        $i++
+    }
+
+    return $result
 }
 
 Export-ModuleMember -Function *-TargetResource
