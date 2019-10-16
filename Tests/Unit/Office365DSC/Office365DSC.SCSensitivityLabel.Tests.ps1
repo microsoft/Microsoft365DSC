@@ -55,57 +55,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Name               = "TestLabel"
                 Comment            = "This is a test label"
-                ToolTip            = "Test tool tip"
+                Tooltip            = "Test tool tip"
                 DisplayName        = "Test label"
                 ParentId           = "TestLabel"
-                Priority           = 0
-                Disabled           = $false
-                AdvancedSettings = @(
-                    MSFT_SCLabelSetting
-                    {
-                        Key = "AllowedLevel"
-                        Value = @("Sensitive", "Classified")
-                    }
-                    MSFT_SCLabelSetting
-                    {
+                #Priority           = 0
+                #Disabled           = $false
+                AdvancedSettings = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
+
                         Key = "LabelStatus"
                         Value = "Enabled"
-                    }
-                )
-                LocaleSettings = @(
-                MSFT_SCLabelLocaleSettings
-                {
-                    LocaleKey = "DisplayName"
-                    Settings  = @(
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "en-us"
-                                    Value = "English Display Name"
-                                }
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "fr-fr"
-                                    Value = "Nom daffichage francais"
-                                }
-                    )
-                }
-                MSFT_SCLabelLocaleSettings
-                {
-                    LocaleKey = "StopColor"
-                    Settings  = @(
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "en-us"
-                                    Value = "Red"
-                                }
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "fr-fr"
-                                    Value = "Rouge"
-                                }
-                    )
-                }
-            )
+                    } -clientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Present"
             }
@@ -136,52 +95,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 ParentId           = "TestLabel"
                 Priority           = 0
                 Disabled           = $false
-                AdvancedSettings = @(
-                    MSFT_SCLabelSetting
-                    {
-                        Key = "AllowedLevel"
-                        Value = @("Sensitive", "Classified")
-                    }
-                    MSFT_SCLabelSetting
-                    {
-                        Key = "LabelStatus"
-                        Value = "Enabled"
-                    }
-                )
-                LocaleSettings = @(
-                MSFT_SCLabelLocaleSettings
-                {
-                    LocaleKey = "DisplayName"
-                    Settings  = @(
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "en-us"
-                                    Value = "English Display Name"
-                                }
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "fr-fr"
-                                    Value = "Nom daffichage francais"
-                                }
-                    )
-                }
-                MSFT_SCLabelLocaleSettings
-                {
-                    LocaleKey = "StopColor"
-                    Settings  = @(
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "en-us"
-                                    Value = "Red"
-                                }
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "fr-fr"
-                                    Value = "Rouge"
-                                }
-                    )
-                }
-            )
+                AdvancedSettings = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
+                    Key = "LabelStatus"
+                    Value = "Enabled"
+                } -clientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Present"
             }
@@ -195,52 +112,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 ParentId           = "TestLabel"
                 Priority           = 0
                 Disabled           = $false
-                AdvancedSettings = @(
-                    MSFT_SCLabelSetting
-                    {
-                        Key = "AllowedLevel"
-                        Value = @("Sensitive", "Classified")
-                    }
-                    MSFT_SCLabelSetting
-                    {
+                  AdvancedSettings = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
+
                         Key = "LabelStatus"
                         Value = "Enabled"
-                    }
-                )
-                LocaleSettings = @(
-                MSFT_SCLabelLocaleSettings
-                {
-                    LocaleKey = "DisplayName"
-                    Settings  = @(
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "en-us"
-                                    Value = "English Display Name"
-                                }
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "fr-fr"
-                                    Value = "Nom daffichage francais"
-                                }
-                    )
-                }
-                MSFT_SCLabelLocaleSettings
-                {
-                    LocaleKey = "StopColor"
-                    Settings  = @(
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "en-us"
-                                    Value = "Red"
-                                }
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "fr-fr"
-                                    Value = "Rouge"
-                                }
-                    )
-                }
-            )
+                    } -clientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Present"
                 }
@@ -268,52 +144,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 ParentId           = "TestLabel"
                 Priority           = 0
                 Disabled           = $false
-                AdvancedSettings = @(
-                    MSFT_SCLabelSetting
-                    {
-                        Key = "AllowedLevel"
-                        Value = @("Sensitive", "Classified")
-                    }
-                    MSFT_SCLabelSetting
-                    {
-                        Key = "LabelStatus"
-                        Value = "Enabled"
-                    }
-                )
-                LocaleSettings = @(
-                MSFT_SCLabelLocaleSettings
-                {
-                    LocaleKey = "DisplayName"
-                    Settings  = @(
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "en-us"
-                                    Value = "English Display Name"
-                                }
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "fr-fr"
-                                    Value = "Nom daffichage francais"
-                                }
-                    )
-                }
-                MSFT_SCLabelLocaleSettings
-                {
-                    LocaleKey = "StopColor"
-                    Settings  = @(
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "en-us"
-                                    Value = "Red"
-                                }
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "fr-fr"
-                                    Value = "Rouge"
-                                }
-                    )
-                }
-            )
+                AdvancedSettings = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
+                    Key = "LabelStatus"
+                    Value = "Enabled"
+                } -clientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Present"
             }

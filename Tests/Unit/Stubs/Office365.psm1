@@ -13165,7 +13165,23 @@ function New-Label{
 
         [Parameter()]
         [System.String]
-        $LocaleSettings
+        $LocaleSettings,
+
+        [Parameter()]
+        [uint32]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $Tooltip,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [System.String]
+        $ParentId
     )
 }
 function Set-Label{

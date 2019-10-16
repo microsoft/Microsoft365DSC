@@ -72,9 +72,14 @@ function Get-TargetResource
         {
             $parentLabelID = $parentLabel.Name
         }
-
-        $localeSettingsValue = Convert-JSONToLocaleSettings -JSONLocalSettings $label.LocaleSettings
-        $advancedSettingsValue = Convert-StringToAdvancedSettings -AdvancedSettings $label.Settings
+        if ($null -ne $label.LocaleSettings)
+        {
+            $localeSettingsValue = Convert-JSONToLocaleSettings -JSONLocalSettings $label.LocaleSettings
+        }
+        if ($null -ne $label.Settings)
+        {
+            $advancedSettingsValue = Convert-StringToAdvancedSettings -AdvancedSettings $label.Settings
+        }
         Write-Verbose "Found existing Sensitiivity Label $($Name)"
         $result = @{
             Name               = $label.Name
@@ -286,7 +291,6 @@ function Test-TargetResource
     if ($null -ne $AdvancedSettings)
     {
         $labelSettings = Convert-CIMToAdvancedSettings $AdvancedSettings
-        Write-Verbose -Message "AdvancedSettings Values: $(Convert-O365DscHashtableToString -Hashtable $labelSettings)"
         $TestAdvancedSettings = Test-AdvancedSettings -DesiredProperty $labelSettings
         if ($false -eq $TestAdvancedSettings)
         {
@@ -356,25 +360,31 @@ function Convert-JSONToLocaleSettings
         [System.Collections.ArrayList]
         $JSONLocalSettings
     )
+    $entries = @()
     $localeSettings = ConvertTO-Json -InputObject $JSONLocalSettings
-    $result = @{
-        localeKey = $localeSettings.LocaleKey
-    }
 
-    $settings = @()
-    foreach ($setting in $localeSettings.Settings)
+    foreach ($localeSetting in $localeSettings)
     {
-        $entry = @{
-            Key   = $setting.Key
-            Value = $setting.Value
+        $result = @{
+            localeKey = $localeSettings.LocaleKey
         }
 
-        $settings += $entry
-    }
-    $result.Add("Settings", $settings)
+        $settings = @()
+        foreach ($setting in $localeSetting.Settings)
+        {
+            $entry = @{
+                Key   = $setting.Key
+                Value = $setting.Value
+            }
 
-    Write-Verbose -Message "ConvertLocaleSettings Values: $(Convert-O365DscHashtableToString -Hashtable $result)"
-    return $result
+            $settings += $entry
+        }
+        $result.Add("Settings", $settings)
+        $entries += $result
+        $result = @{ }
+
+    }
+    return $entries
 }
 
 function Convert-StringToAdvancedSettings
@@ -519,17 +529,14 @@ function Test-LocaleSettings
     }
 
     $currentLocaleSettings = $label.LocaleSettings | ConvertFrom-Json
-
-    foreach ($desiredSetting in $DesiredProperty.localeKey)
+    foreach ($desiredSetting in $DesiredProperty)
     {
-        $foundKey = $currentLocaleSettings | Where-Object { $_.LocaleKey -eq $desiredSetting}
-        Write-Verbose -Message "Found locale key in Label: $foundKey"
+        $foundKey = $currentLocaleSettings | Where-Object { $_.LocaleKey -eq $desiredSetting.localeKey }
         foreach ($setting in $desiredSetting.Settings)
         {
             if ($null -ne $foundKey)
             {
-                $myLabel = $foundKey.Settings | Where-Object { $_.Key -eq $setting.Key -and $_.Value -eq $setting.Value}
-                Write-Verbose -Message "Found locale setting in Label: $myLabel"
+                $myLabel = $foundKey.Settings | Where-Object { $_.Key -eq $setting.Key -and $_.Value -eq $setting.Value }
                 if ($null -eq $myLabel)
                 {
                     $foundSettings = $false
@@ -545,7 +552,8 @@ function Test-LocaleSettings
         }
 
     }
-    Write-Verbose -Message "Found Setting:$foundSettings"
+
+    return $foundSettings
 }
 
 Export-ModuleMember -Function *-TargetResource
