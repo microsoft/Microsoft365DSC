@@ -22,7 +22,7 @@
   * Added workload selectors to the GUI interface;
 * Metadata
   * Updated MSCloudLoginAssistant dependency
-    to version 0.7.1;
+    to version 0.7.5;
   * Updated ReverseDSC dependency
     to version 1.9.4.6;
   * Updated Microsoft.Online.SharePoint.PowerShell dependency

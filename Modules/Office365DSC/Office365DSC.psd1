@@ -11,7 +11,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion     = '1.0.0.952'
+    ModuleVersion     = '1.0.0.1048'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -56,7 +56,7 @@
                       @{ModuleName = "Microsoft.Online.SharePoint.PowerShell"; RequiredVersion = "16.0.19223.12000"; },
                       @{ModuleName = "MicrosoftTeams"; RequiredVersion = "1.0.0"; },
                       @{ModuleName = "AzureAD"; RequiredVersion = "2.0.2.4"; },
-                      @{ModuleName = "MSCloudLoginAssistant"; RequiredVersion = "0.7.1"; })
+                      @{ModuleName = "MSCloudLoginAssistant"; RequiredVersion = "0.7.5"; })
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()
