@@ -270,14 +270,14 @@ function Export-TargetResource
                 return $content
             }
             return $returnValue
-        } -ArgumentList @(, $batch, $PSScriptRoot, $UtilModulePath, $GlobalAdminAccount) | out-null
+        } -ArgumentList @(, $batch, $PSScriptRoot, $UtilModulePath, $GlobalAdminAccount) | Out-Null
         $i++
     }
 
     $i = 1
     foreach ($batch in $sites)
     {
-        $result += Receive-Job -Name "SPOPropertyBag$i" -Wait -Force
+        $result += Receive-Job -Name "SPOPropertyBag$i" -NoRecurse -Wait -Force
         $i++
     }
 
