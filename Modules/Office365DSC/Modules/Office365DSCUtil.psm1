@@ -1532,6 +1532,10 @@ function Export-O365Configuration
         $Path,
 
         [Parameter()]
+        [System.String[]]
+        $ComponentsToExtract,
+
+        [Parameter()]
         [ValidateSet('SPO','EXO','SC','OD','O365','TEAMS')]
         [System.String[]]
         $Workloads,
@@ -1551,6 +1555,12 @@ function Export-O365Configuration
         {
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                                            -Workloads $Workloads `
+                                           -Path $Path
+        }
+        elseif ($null -ne $ComponentsToExtract)
+        {
+            Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                                           -ComponentsToExtract $ComponentsToExtract `
                                            -Path $Path
         }
         else
