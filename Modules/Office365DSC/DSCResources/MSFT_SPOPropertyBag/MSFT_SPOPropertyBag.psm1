@@ -179,7 +179,7 @@ function Export-TargetResource
     $sites = Get-PnPTenantSite
 
     # Split the complete list of site collections into batches of 8 items;
-    $sites = Split-Array -Array $sites -BatchSize 8
+    $sites = Split-Array -Array $sites -BatchSize 4
 
     # Define the Path of the Util module. This is due to the fact that inside the Start-Job
     # the module is not imported and simply doing Import-Module Office365DSC doesn't work.
@@ -274,12 +274,28 @@ function Export-TargetResource
         $i++
     }
 
-    $i = 1
-    foreach ($batch in $sites)
+    Write-Information "    Broke extraction process down into {$($sites.Length)} jobs "
+    $totalJobs = $sites.Length
+    $jobsCompleted = 0
+    $status = "Running..."
+    do
     {
-        $result += Receive-Job -Name "SPOPropertyBag$i" -NoRecurse -Wait -Force
-        $i++
-    }
+        $jobs = Get-Job | Where-Object -FilterScript {$_.Name -like '*SPOPropertyBag*'}
+        $count = $jobs.Length
+        foreach ($job in $jobs)
+        {
+            if ($job.JobStateInfo.State -eq "Complete")
+            {
+                $result += Receive-Job -name $job.name
+                Remove-Job -name $job.name
+                $jobsCompleted++
+                $status =  "Completed $jobsCompleted/$totalJobs jobs"
+            }
+
+            $percentCompleted = $jobsCompleted/$totalJobs * 100
+            Write-Progress -Activity "SPOPropertyBag Extraction" -PercentComplete $percentCompleted -Status $status
+        }
+    } while ($count -ne 0)
 
     return $result
 }

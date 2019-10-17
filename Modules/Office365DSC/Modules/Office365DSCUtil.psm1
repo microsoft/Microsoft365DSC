@@ -1676,6 +1676,7 @@ function Invoke-O365DSCCommand
             {
                 $NewBackoff = $Backoff * 2
                 Write-Warning "    * Throttling detected. Waiting for {$NewBackoff seconds}"
+                Write-Warning $_.Exception
                 Write-Verbose -Message $_.Exception
                 Start-Sleep -Seconds $NewBackoff
                 return Invoke-O365DSCCommand -ScriptBlock $ScriptBlock -Backoff $NewBackoff -Arguments $Arguments -InvokationPath $InvokationPath
