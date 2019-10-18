@@ -968,6 +968,12 @@ function Start-O365ConfigurationExtract
             {
                 Write-Information "    - [$i/$($policies.Length)] $($policy.Name)"
                 $partialContent = Export-TargetResource -Name $policy.Name -GlobalAdminAccount $GlobalAdminAccount
+
+                if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+                $partialContent.ToLower().Contains($principal.ToLower()))
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+                }
                 $DSCContent += $partialContent
                 $i++
             }
@@ -1018,6 +1024,11 @@ function Start-O365ConfigurationExtract
                 {
                     Write-Information "        - [$i/$($rulesLength)] $($rule.Name)"
                     $partialContent = Export-TargetResource -Name $rule.Name -Policy $rule.Policy -GlobalAdminAccount $GlobalAdminAccount
+                    if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+                    $partialContent.ToLower().Contains($principal.ToLower()))
+                    {
+                        $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+                    }
                     $DSCContent += $partialContent
                     $i++
                 }
@@ -1060,6 +1071,12 @@ function Start-O365ConfigurationExtract
             {
                 Write-Information "    - [$i/$($totalPolicies)] $($policy.Name)"
                 $partialContent = Export-TargetResource -Name $policy.Name -Reviewers "ReverseDSC" -GlobalAdminAccount $GlobalAdminAccount
+
+                if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+                $partialContent.ToLower().Contains($principal.ToLower()))
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+                }
                 $DSCContent += $partialContent
                 $i++
             }
@@ -1100,6 +1117,11 @@ function Start-O365ConfigurationExtract
             {
                 Write-Information "    - [$i/$totalRules] $($rule.Name)"
                 $partialContent = Export-TargetResource -Name $rule.Name -Policy $rule.Policy -GlobalAdminAccount $GlobalAdminAccount
+                if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+                    $partialContent.ToLower().Contains($principal.ToLower()))
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+                }
                 $DSCContent += $partialContent
                 $i++
             }
@@ -1264,7 +1286,14 @@ function Start-O365ConfigurationExtract
                                                    -Resolve
 
         Import-Module $SPOPropertyBagModulePath | Out-Null
-        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+            $partialContent.ToLower().Contains($principal.ToLower()))
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
+            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+        }
+        $DSCContent += $partialContent
     }
     #endregion
 
@@ -1586,7 +1615,14 @@ function Start-O365ConfigurationExtract
                                                    -Resolve
 
         Import-Module $ModulePath | Out-Null
-        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+        $partialContent.ToLower().Contains($principal.ToLower()))
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
+            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+        }
+        $DSCContent += $partialContent
     }
     #endregion
 
