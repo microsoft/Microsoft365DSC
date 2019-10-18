@@ -1381,8 +1381,8 @@ function Test-Office365DSCParameterState
                         {
                             $arrayCompare = Compare-Object -ReferenceObject $CurrentValues.$fieldName `
                                 -DifferenceObject $DesiredValues.$fieldName
-                            if ($null -ne $arrayCompare -and 
-                                -not [System.String]::IsNullOrEmpty($arrayCompare.InputObject.Trim()))
+                            if ($null -ne $arrayCompare -and
+                                -not [System.String]::IsNullOrEmpty($arrayCompare.InputObject))
                             {
                                 Write-Verbose -Message ("Found an array for property $fieldName " + `
                                         "in the current values, but this array " + `
