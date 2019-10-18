@@ -392,11 +392,11 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    if ($result.MaxCompatibilityLevel -eq 0)
+    if ($null -eq $result.MaxCompatibilityLevel)
     {
         $result.Remove("MaxCompatibilityLevel")
     }
-    if ($result.MinCompatibilityLevel -eq 0)
+    if ($null -eq $result.MinCompatibilityLevel)
     {
         $result.Remove("MinCompatibilityLevel")
     }
