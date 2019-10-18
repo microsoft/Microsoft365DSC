@@ -392,6 +392,15 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
+    if ($result.MaxCompatibilityLevel -eq 0)
+    {
+        $result.Remove("MaxCompatibilityLevel")
+    }
+    if ($result.MinCompatibilityLevel -eq 0)
+    {
+        $result.Remove("MinCompatibilityLevel")
+    }
+
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        SPOTenantSettings " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

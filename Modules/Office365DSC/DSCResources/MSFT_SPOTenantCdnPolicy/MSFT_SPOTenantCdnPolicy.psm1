@@ -7,7 +7,7 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [ValidateSet('Private','Public')]
         [System.String]
-        $CdnType,
+        $CDNType,
 
         [Parameter()]
         [System.String[]]
@@ -45,7 +45,7 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [ValidateSet('Private','Public')]
         [System.String]
-        $CdnType,
+        $CDNType,
 
         [Parameter()]
         [System.String[]]
@@ -104,7 +104,7 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [ValidateSet('Private','Public')]
         [System.String]
-        $CdnType,
+        $CDNType,
 
         [Parameter()]
         [System.String[]]

@@ -178,8 +178,16 @@ function Export-TargetResource
     # Get all Site Collections in tenant;
     $sites = Get-PnPTenantSite
 
-    # Split the complete list of site collections into batches of 8 items;
-    $sites = Split-Array -Array $sites -BatchSize 4
+    # Split the complete list of site collections into batches for a maximum of 8 concurrent jobs;
+    if ($sites.Length -ge 16)
+    {
+        $batchSize = $sites.Length / 16
+        $sites = Split-Array -Array $sites -BatchSize $batchSize
+    }
+    else
+    {
+        $batchSize = 1
+    }
 
     # Define the Path of the Util module. This is due to the fact that inside the Start-Job
     # the module is not imported and simply doing Import-Module Office365DSC doesn't work.
@@ -263,7 +271,7 @@ function Export-TargetResource
                         }
                         catch
                         {
-                            throw "Failed to Get-PnPPropertyBag {$siteUrl}: " + $_
+                            throw "O365DSC - Failed to Get-PnPPropertyBag {$siteUrl}: " + $_
                         }
                     }
                 }
@@ -274,10 +282,11 @@ function Export-TargetResource
         $i++
     }
 
-    Write-Information "    Broke extraction process down into {$($sites.Length)} jobs "
+    Write-Information "    Broke extraction process down into {$($sites.Length)} jobs of {$($sites[0].Length)} item(s) each"
     $totalJobs = $sites.Length
     $jobsCompleted = 0
     $status = "Running..."
+    $elapsedTime = 0
     do
     {
         $jobs = Get-Job | Where-Object -FilterScript {$_.Name -like '*SPOPropertyBag*'}
@@ -289,14 +298,16 @@ function Export-TargetResource
                 $result += Receive-Job -name $job.name
                 Remove-Job -name $job.name
                 $jobsCompleted++
-                $status =  "Completed $jobsCompleted/$totalJobs jobs"
             }
 
+            $status =  "Completed $jobsCompleted/$totalJobs jobs in $elapsedTime seconds"
             $percentCompleted = $jobsCompleted/$totalJobs * 100
             Write-Progress -Activity "SPOPropertyBag Extraction" -PercentComplete $percentCompleted -Status $status
         }
+        $elapsedTime ++
+        Start-Sleep -Seconds 1
     } while ($count -ne 0)
-
+    Write-Progress -Activity "SPOPropertyBag Extraction" -PercentComplete 100 -Status "Completed" -Completed
     return $result
 }
 

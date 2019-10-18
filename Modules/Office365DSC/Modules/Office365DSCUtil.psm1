@@ -1381,7 +1381,8 @@ function Test-Office365DSCParameterState
                         {
                             $arrayCompare = Compare-Object -ReferenceObject $CurrentValues.$fieldName `
                                 -DifferenceObject $DesiredValues.$fieldName
-                            if ($null -ne $arrayCompare)
+                            if ($null -ne $arrayCompare -and 
+                                -not [System.String]::IsNullOrEmpty($arrayCompare.InputObject.Trim()))
                             {
                                 Write-Verbose -Message ("Found an array for property $fieldName " + `
                                         "in the current values, but this array " + `
@@ -1661,7 +1662,6 @@ function Invoke-O365DSCCommand
         {
             $invokeArgs.Add("ArgumentList", $Arguments)
         }
-        Write-Verbose "Ready to Invoke"
         return Invoke-Command @invokeArgs
     }
     catch
@@ -1676,8 +1676,6 @@ function Invoke-O365DSCCommand
             {
                 $NewBackoff = $Backoff * 2
                 Write-Warning "    * Throttling detected. Waiting for {$NewBackoff seconds}"
-                Write-Warning $_.Exception
-                Write-Verbose -Message $_.Exception
                 Start-Sleep -Seconds $NewBackoff
                 return Invoke-O365DSCCommand -ScriptBlock $ScriptBlock -Backoff $NewBackoff -Arguments $Arguments -InvokationPath $InvokationPath
             }

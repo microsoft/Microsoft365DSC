@@ -16,7 +16,7 @@ function SectionChanged
         if ($pnlControl.GetType().ToString() -eq "System.Windows.Forms.Checkbox")
         {
             # TODO remove exception after the SPO Management Shell bug is fixed;
-            if ($pnlControl.Name -ne 'chckSPOSite' -and $pnlControl.Name -ne 'chckSPOHubSite' -and $pnlControl.Name -ne 'chckSPOSharingSettings')
+            if ($pnlControl.Name -ne 'chckSPOSite' -and $pnlControl.Name -ne 'chckSPOHubSite')
             {
                 $pnlControl.Checked = $Control.Checked
             }
@@ -317,8 +317,8 @@ function Show-O365GUI
         $chckSPOSharingSettings.Top = 120
         $chckSPOSharingSettings.AutoSize = $true;
         $chckSPOSharingSettings.Name = "chckSPOSharingSettings"
-        $chckSPOSharingSettings.Checked = $false #TODO enable after SPO Mgmt Shell bug is fixed
-        $chckSPOSharingSettings.Enabled = $false #TODO enable after SPO Mgmt Shell bug is fixed
+        $chckSPOSharingSettings.Checked = $true
+        $chckSPOSharingSettings.Enabled = $true
         $chckSPOSharingSettings.Text = "Sharing Settings"
         $pnlSPO.Controls.Add($chckSPOSharingSettings)
 
