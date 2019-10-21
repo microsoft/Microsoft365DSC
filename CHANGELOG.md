@@ -2,6 +2,12 @@
 
 ## UNRELEASED
 
+* SPOPropertyBag
+  * Added multithreading;
+
+
+## 1.0.0.1048
+
 * SCCaseHoldPolicy
   * New Resource;
 * SCComplianceCase
