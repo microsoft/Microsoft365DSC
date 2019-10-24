@@ -299,6 +299,12 @@ function Export-TargetResource
                 Remove-Job -name $job.name
                 $jobsCompleted++
             }
+            elseif ($job.JobStateInfo.State -eq 'Failed')
+            {
+                Remove-Job -name $job.name
+                Write-Warning "{$($job.name)} failed"
+                break
+            }
 
             $status =  "Completed $jobsCompleted/$totalJobs jobs in $elapsedTime seconds"
             $percentCompleted = $jobsCompleted/$totalJobs * 100
