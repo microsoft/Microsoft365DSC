@@ -95,31 +95,24 @@ function Get-TargetResource
     else
     {
         $result = @{
-            Ensure = 'Present'
+            Identity                             = $Identity
+            Action                               = $ClientAccessRule.Action
+            AnyOfAuthenticationTypes             = $ClientAccessRule.AnyOfAuthenticationTypes
+            AnyOfClientIPAddressesOrRanges       = $ClientAccessRule.AnyOfClientIPAddressesOrRanges
+            AnyOfProtocols                       = $ClientAccessRule.AnyOfProtocols
+            Enabled                              = $ClientAccessRule.Enabled
+            ExceptAnyOfAuthenticationTypes       = $ClientAccessRule.ExceptAnyOfAuthenticationTypes
+            ExceptAnyOfClientIPAddressesOrRanges = $ClientAccessRule.ExceptAnyOfClientIPAddressesOrRanges
+            ExceptAnyOfProtocols                 = $ClientAccessRule.ExceptAnyOfProtocols
+            ExceptUsernameMatchesAnyOfPatterns   = $ClientAccessRule.ExceptUsernameMatchesAnyOfPatterns
+            Priority                             = $ClientAccessRule.Priority
+            RuleScope                            = $ClientAccessRule.RuleScope
+            UserRecipientFilter                  = $ClientAccessRule.UserRecipientFilter
+            UsernameMatchesAnyOfPatterns         = $ClientAccessRule.UsernameMatchesAnyOfPatterns
+            Ensure                               = 'Present'
+            GlobalAdminAccount                   = $GlobalAdminAccount
         }
 
-        $PSBoundParameters += @{
-            Scope = $RuleScope
-        }
-
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-        {
-            if ($null -ne $ClientAccessRule.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $ClientAccessRule.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
-
-        }
-
-        $result.Remove('Scope') | Out-Null
         Write-Verbose -Message "Found ClientAccessRule $($Identity)"
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
