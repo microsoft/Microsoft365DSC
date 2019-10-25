@@ -136,23 +136,33 @@ function Get-TargetResource
     else
     {
         $result = @{
+            Identity                              = $Identity
+            AdminDisplayName                      = $AntiPhishPolicy.AdminDisplayName
+            AuthenticationFailAction              = $AntiPhishPolicy.AuthenticationFailAction
+            Enabled                               = $AntiPhishPolicy.Enabled
+            EnableAntispoofEnforcement            = $AntiPhishPolicy.EnableAntispoofEnforcement
+            EnableAuthenticationSafetyTip         = $AntiPhishPolicy.EnableAuthenticationSafetyTip
+            EnableAuthenticationSoftPassSafetyTip = $AntiPhishPolicy.EnableAuthenticationSoftPassSafetyTip
+            EnableMailboxIntelligence             = $AntiPhishPolicy.EnableMailboxIntelligence
+            EnableOrganizationDomainsProtection   = $AntiPhishPolicy.EnableOrganizationDomainsProtection
+            EnableSimilarDomainsSafetyTips        = $AntiPhishPolicy.EnableSimilarDomainsSafetyTips
+            EnableSimilarUsersSafetyTips          = $AntiPhishPolicy.EnableSimilarUsersSafetyTips
+            EnableTargetedDomainsProtection       = $AntiPhishPolicy.EnableTargetedDomainsProtection
+            EnableTargetedUserProtection          = $AntiPhishPolicy.EnableTargetedUserProtection
+            EnableUnusualCharactersSafetyTips     = $AntiPhishPolicy.EnableUnusualCharactersSafetyTips
+            ExcludedDomains                       = $AntiPhishPolicy.ExcludedDomains
+            ExcludedSenders                       = $AntiPhishPolicy.ExcludedSenders
+            MakeDefault                           = $AntiPhishPolicy.MakeDefault
+            PhishThresholdLevel                   = $AntiPhishPolicy.PhishThresholdLevel
+            TargetedDomainActionRecipients        = $AntiPhishPolicy.TargetedDomainActionRecipients
+            TargetedDomainProtectionAction        = $AntiPhishPolicy.TargetedDomainProtectionAction
+            TargetedDomainsToProtect              = $AntiPhishPolicy.TargetedDomainsToProtect
+            TargetedUserActionRecipients          = $AntiPhishPolicy.TargetedUserActionRecipients
+            TargetedUserProtectionAction          = $AntiPhishPolicy.TargetedUserProtectionAction
+            TargetedUsersToProtect                = $AntiPhishPolicy.TargetedUsersToProtect
+            TreatSoftPassAsAuthenticated          = $AntiPhishPolicy.TreatSoftPassAsAuthenticated
+            GlobalAdminAccount                    = $GlobalAdminAccount
             Ensure = 'Present'
-        }
-
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-        {
-            if ($null -ne $AntiPhishPolicy.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $AntiPhishPolicy.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
         }
 
         Write-Verbose -Message "Found AntiPhishPolicy $($Identity)"
