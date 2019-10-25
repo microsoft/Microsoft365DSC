@@ -36,6 +36,10 @@ function Get-TargetResource
     try
     {
         $currentProperties = Get-PnPUserProfileProperty -Account $UserName
+        if ($null -eq $currentProperties.AccountName)
+        {
+            return $nullReturn
+        }
         $currentProperties = $currentProperties.UserProfileProperties
 
         $propertiesValue = @()
@@ -170,15 +174,19 @@ function Export-TargetResource
             GlobalAdminAccount = $GlobalAdminAccount
         }
         $result = Get-TargetResource @params
-        $result.Properties = ConvertTo-SPOUserProfilePropertyInstanceString -Properties $result.Properties
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        SPOUserProfileProperty " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Properties" -IsCIMArray $true
-        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += $currentDSCBlock
-        $content += "        }`r`n"
+
+        if ($result.Ensure -eq "Present")
+        {
+            $result.Properties = ConvertTo-SPOUserProfilePropertyInstanceString -Properties $result.Properties
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        SPOUserProfileProperty " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Properties" -IsCIMArray $true
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += $currentDSCBlock
+            $content += "        }`r`n"
+        }
 
         $i++
     }

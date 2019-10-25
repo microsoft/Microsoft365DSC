@@ -1381,7 +1381,8 @@ function Test-Office365DSCParameterState
                         {
                             $arrayCompare = Compare-Object -ReferenceObject $CurrentValues.$fieldName `
                                 -DifferenceObject $DesiredValues.$fieldName
-                            if ($null -ne $arrayCompare)
+                            if ($null -ne $arrayCompare -and
+                                -not [System.String]::IsNullOrEmpty($arrayCompare.InputObject))
                             {
                                 Write-Verbose -Message ("Found an array for property $fieldName " + `
                                         "in the current values, but this array " + `
@@ -1596,9 +1597,100 @@ function Get-SPOAdministrationUrl
     Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
     Test-MSCloudLogin -Platform "AzureAD" -o365Credential $GlobalAdminAccount | Out-Null
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
-    $defaultDomain = Get-AzureADDomain | Where-Object {$_.Name -like "*.onmicrosoft.com" -and $_.IsInitial -eq $true} # We don't use IsDefault here because the default could be a custom domain
-    $global:tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.com",""
+    $defaultDomain = Get-AzureADDomain | Where-Object {($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true} # We don't use IsDefault here because the default could be a custom domain
+
+    if ($defaultDomain[0].Name -like '*.onmicrosoft.com*')
+    {
+        $global:tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.com",""
+    }
+    elseif ($defaultDomain[0].Name -like '*.onmicrosoft.de*')
+    {
+        $global:tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.de",""
+    }
     $global:AdminUrl = "https://$global:tenantName-admin.sharepoint.com"
     Write-Verbose -Message "SharePoint Online admin URL is $global:AdminUrl"
     return $global:AdminUrl
+}
+
+function Split-Array
+{
+    [OutputType([System.Object[]])]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $Array,
+
+        [Parameter(Mandatory = $true)]
+        [System.Uint32]
+        $BatchSize
+    )
+    for ($i = 0; $i -lt $Array.Count; $i += $BatchSize)
+    {
+       $NewArray += ,@($Array[$i..($i+($BatchSize-1))]);
+    }
+    return $NewArray
+}
+
+function Invoke-O365DSCCommand
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [ScriptBlock]
+        $ScriptBlock,
+
+        [Parameter()]
+        [System.String]
+        $InvokationPath,
+
+        [Parameter()]
+        [Object[]]
+        $Arguments,
+
+        [Parameter()]
+        [System.UInt32]
+        $Backoff = 2
+    )
+
+    $InformationPreference = 'Continue'
+    $WarningPreference     = 'Continue'
+    $ErrorActionPreference = 'Stop'
+    try
+    {
+        if (-not [System.String]::IsNullOrEmpty($InvokationPath))
+        {
+            $baseScript = "Import-Module '$InvokationPath\*.psm1' -Force;"
+        }
+
+        $invokeArgs = @{
+            ScriptBlock = [ScriptBlock]::Create($baseScript + $ScriptBlock.ToString())
+        }
+        if ($null -ne $Arguments)
+        {
+            $invokeArgs.Add("ArgumentList", $Arguments)
+        }
+        return Invoke-Command @invokeArgs
+    }
+    catch
+    {
+        if ($_.Exception -like '*O365DSC - *')
+        {
+            Write-Warning $_.Exception
+        }
+        else
+        {
+            if ($Backoff -le 128)
+            {
+                $NewBackoff = $Backoff * 2
+                Write-Warning "    * Throttling detected. Waiting for {$NewBackoff seconds}"
+                Start-Sleep -Seconds $NewBackoff
+                return Invoke-O365DSCCommand -ScriptBlock $ScriptBlock -Backoff $NewBackoff -Arguments $Arguments -InvokationPath $InvokationPath
+            }
+            else
+            {
+                Write-Warning $_
+            }
+        }
+    }
 }

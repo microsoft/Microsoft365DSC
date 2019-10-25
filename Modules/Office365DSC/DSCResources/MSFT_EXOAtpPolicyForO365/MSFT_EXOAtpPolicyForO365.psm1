@@ -48,32 +48,40 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform ExchangeOnline
 
-    $AtpPolicies = Get-AtpPolicyForO365
+    try
+    {
+        $nullReturn =$PSBoundParameters
+        $nullReturn.Ensure = 'Absent'
+        $AtpPolicies = Get-AtpPolicyForO365
 
-    $AtpPolicyForO365 = $AtpPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    if (-not $AtpPolicyForO365)
-    {
-        Write-Verbose -Message "AtpPolicyForO365 $($Identity) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        $result = @{
-            IsSingleInstance = "Yes"
-            Identity                  = $AtpPolicyForO365.Identity
-            AllowClickThrough         = $AtpPolicyForO365.AllowClickThrough
-            BlockUrls                 = $AtpPolicyForO365.BlockUrls
-            EnableATPForSPOTeamsODB   = $AtpPolicyForO365.EnableATPForSPOTeamsODB
-            EnableSafeLinksForClients = $AtpPolicyForO365.EnableSafeLinksForClients
-            TrackClicks               = $AtpPolicyForO365.TrackClicks
-            Ensure                    = 'Present'
+        $AtpPolicyForO365 = $AtpPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        if (-not $AtpPolicyForO365)
+        {
+            Write-Verbose -Message "AtpPolicyForO365 $($Identity) does not exist."
+            return $nullResult
         }
+        else
+        {
+            $result = @{
+                IsSingleInstance = "Yes"
+                Identity                  = $AtpPolicyForO365.Identity
+                AllowClickThrough         = $AtpPolicyForO365.AllowClickThrough
+                BlockUrls                 = $AtpPolicyForO365.BlockUrls
+                EnableATPForSPOTeamsODB   = $AtpPolicyForO365.EnableATPForSPOTeamsODB
+                EnableSafeLinksForClients = $AtpPolicyForO365.EnableSafeLinksForClients
+                TrackClicks               = $AtpPolicyForO365.TrackClicks
+                Ensure                    = 'Present'
+            }
 
-        Write-Verbose -Message "Found AtpPolicyForO365 $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
-        return $result
+            Write-Verbose -Message "Found AtpPolicyForO365 $($Identity)"
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Warning $_.Exception
+        return $nullResult
     }
 }
 
