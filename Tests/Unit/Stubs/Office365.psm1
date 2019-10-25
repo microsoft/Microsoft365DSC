@@ -9138,7 +9138,7 @@ function Add-PnPTenantTheme {
    param(
        [Parameter(Mandatory = $true)]
        [System.String]
-       $Name,
+       $Identity,
 
        [Parameter()]
        [System.Boolean]
