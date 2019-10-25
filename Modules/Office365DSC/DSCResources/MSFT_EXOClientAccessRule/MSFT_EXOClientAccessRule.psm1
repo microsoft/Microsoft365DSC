@@ -106,11 +106,15 @@ function Get-TargetResource
             ExceptAnyOfProtocols                 = $ClientAccessRule.ExceptAnyOfProtocols
             ExceptUsernameMatchesAnyOfPatterns   = $ClientAccessRule.ExceptUsernameMatchesAnyOfPatterns
             Priority                             = $ClientAccessRule.Priority
-            RuleScope                            = $ClientAccessRule.RuleScope
             UserRecipientFilter                  = $ClientAccessRule.UserRecipientFilter
             UsernameMatchesAnyOfPatterns         = $ClientAccessRule.UsernameMatchesAnyOfPatterns
             Ensure                               = 'Present'
             GlobalAdminAccount                   = $GlobalAdminAccount
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($ClientAccessRule.RuleScope))
+        {
+            $result.Add("RuleScope", $ClientAccessRule.RuleScope)
         }
 
         Write-Verbose -Message "Found ClientAccessRule $($Identity)"
