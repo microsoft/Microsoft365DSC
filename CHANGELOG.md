@@ -2,8 +2,17 @@
 
 ## UNRELEASED
 
+* EXOClientAccessRule
+  * Fixed issue with Get-TargetResource not
+    returning all values;
 * SPOPropertyBag
   * Added multithreading;
+* SPOTheme
+  * Fixed an issue with the Set-TargetResource
+    still using SPO management shell cmdlets instead of PnP;
+* Metadata
+  * Updated SharePointPnPPowerShellOnline dependency
+    to version 3.14.1910.1;
 
 ## 1.0.0.1048
 

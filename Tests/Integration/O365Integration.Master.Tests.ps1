@@ -68,6 +68,25 @@ Configuration Master
             Ensure                  = "Present"
         }#>
 
+        EXOClientAccessRule ClientAccessRule
+        {
+            Ensure                               = "Present";
+            Action                               = "AllowAccess";
+            GlobalAdminAccount                   = $GlobalAdmin;
+            UserRecipientFilter                  = $null;
+            ExceptAnyOfAuthenticationTypes       = @();
+            ExceptUsernameMatchesAnyOfPatterns   = @();
+            AnyOfAuthenticationTypes             = @();
+            UsernameMatchesAnyOfPatterns         = @();
+            Identity                             = "Always Allow Remote PowerShell";
+            Priority                             = 1;
+            AnyOfProtocols                       = @("RemotePowerShell");
+            Enabled                              = $True;
+            ExceptAnyOfProtocols                 = @();
+            ExceptAnyOfClientIPAddressesOrRanges = @();
+            AnyOfClientIPAddressesOrRanges       = @();
+        }
+
         O365User JohnSmith
         {
             UserPrincipalName  = "John.Smith@$Domain"
