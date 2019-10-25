@@ -170,12 +170,17 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck @("Ensure", `
                                                                    "Name", `
-                                                                   "IsInverted", `
-                                                                   "Palette")
+                                                                   "IsInverted")
+
+    if ($TestResult)
+    {
+        $TestResult = Compare-SPOTheme -existingThemePalette $currentValues.Palette -configThemePalette $Palette
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
