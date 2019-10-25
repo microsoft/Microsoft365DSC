@@ -308,6 +308,21 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
         }
 
+        SPOTheme SPTheme01
+        {
+                GlobalAdminAccount  = $GlobalAdmin
+                Name                = "Integration Palette"
+                Palette             = @(MSFT_SPOThemePaletteProperty{
+                                            Property = "themePrimary"
+                                            Value = "#0078d4"
+                                      }
+                                      MSFT_SPOThemePaletteProperty{
+                                          Property = "themeLighterAlt"
+                                          Value = "#eff6fc"
+                                      }
+                )
+        }
+
         <#SPOStorageEntity SiteEntity1
         {
             Key                = "SiteEntity1"

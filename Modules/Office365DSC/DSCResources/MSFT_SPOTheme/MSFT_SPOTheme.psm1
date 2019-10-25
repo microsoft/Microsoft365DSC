@@ -95,14 +95,14 @@ function Set-TargetResource
         Write-Verbose "Converting Received Palette Values into Hashtable"
         $HashPalette = Convert-NewThemePaletteToHashTable -Palette $Palette
         $AddParameters = @{
-            Name       = $Name
+            Identity       = $Name
             IsInverted = $IsInverted
             Palette    = $HashPalette
         }
 
         try
         {
-            $existingTheme = Get-PnPTenantTheme -Name $Name
+            $existingTheme = Get-PnPTenantTheme -Name $Name -ErrorAction SilentlyContinue
         }
         catch
         {
@@ -112,7 +112,7 @@ function Set-TargetResource
         if ($null -eq $existingTheme)
         {
             Write-Verbose -Message "Theme {$Name} doesn't already exist. Creating it."
-            Add-SPOTheme @AddParameters
+            Add-PnPTenantTheme @AddParameters
         }
         else
         {
