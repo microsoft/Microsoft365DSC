@@ -153,7 +153,7 @@ function Get-TargetResource
             ExcludedDomains                       = $AntiPhishPolicy.ExcludedDomains
             ExcludedSenders                       = $AntiPhishPolicy.ExcludedSenders
             MakeDefault                           = $AntiPhishPolicy.MakeDefault
-            PhishThresholdLevel                   = $AntiPhishPolicy.PhishThresholdLevel
+            PhishThresholdLevel                   = $PhishThresholdLevel
             TargetedDomainActionRecipients        = $AntiPhishPolicy.TargetedDomainActionRecipients
             TargetedDomainProtectionAction        = $AntiPhishPolicy.TargetedDomainProtectionAction
             TargetedDomainsToProtect              = $AntiPhishPolicy.TargetedDomainsToProtect
