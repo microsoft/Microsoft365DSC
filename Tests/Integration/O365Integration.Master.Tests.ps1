@@ -58,6 +58,54 @@ Configuration Master
             DependsOn          = "[O365Group]O365DSCCoreTeam"
         }
 
+        EXOAntiPhishPolicy AntiphishPolicy
+        {
+            MakeDefault                           = $null;
+            PhishThresholdLevel                   = $null;
+            EnableTargetedDomainsProtection       = $null;
+            Identity                              = "Our Rule";
+            TreatSoftPassAsAuthenticated          = $True;
+            Enabled                               = $null;
+            TargetedDomainsToProtect              = $null;
+            EnableSimilarUsersSafetyTips          = $null;
+            ExcludedDomains                       = $null;
+            EnableAuthenticationSafetyTip         = $False;
+            Ensure                                = "Present";
+            TargetedDomainActionRecipients        = $null;
+            EnableMailboxIntelligence             = $null;
+            EnableSimilarDomainsSafetyTips        = $null;
+            TargetedDomainProtectionAction        = $null;
+            AdminDisplayName                      = "";
+            AuthenticationFailAction              = "MoveToJmf";
+            GlobalAdminAccount                    = $GlobalAdmin;
+            TargetedUserProtectionAction          = $null;
+            TargetedUsersToProtect                = $null;
+            EnableTargetedUserProtection          = $null;
+            ExcludedSenders                       = $null;
+            EnableAuthenticationSoftPassSafetyTip = $False;
+            EnableOrganizationDomainsProtection   = $null;
+            EnableUnusualCharactersSafetyTips     = $null;
+            TargetedUserActionRecipients          = $null;
+            EnableAntispoofEnforcement            = $True;
+        }
+
+        EXOAntiPhishRule AntiPhishRule
+        {
+            ExceptIfSentToMemberOf    = $null;
+            GlobalAdminAccount        = $GlobalAdmin;
+            ExceptIfSentTo            = $null;
+            SentTo                    = $null;
+            ExceptIfRecipientDomainIs = $null;
+            Identity                  = "Test Rule";
+            Comments                  = $null;
+            AntiPhishPolicy           = "Our Rule";
+            RecipientDomainIs         = $null;
+            Ensure                    = "Present";
+            Enabled                   = $True;
+            SentToMemberOf            = @("msteams_bb15d4@$Domain");
+            Priority                  = 1;
+        }
+
         <#EXOAtpPolicyForO365 AntiPhishPolicy
         {
             IsSingleInstance        = "Yes"

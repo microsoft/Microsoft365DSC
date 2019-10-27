@@ -113,6 +113,38 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "EXOAntiPhishPolicy"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOAntiPhishPolicy")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("EXO")))
+    {
+        Write-Information "Extracting EXOAntiPhishPolicy..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_EXOAntiPhishPolicy\MSFT_EXOAntiPhishPolicy.psm1" `
+                                -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "EXOAntiPhishRule"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOAntiPhishRule")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("EXO")))
+    {
+        Write-Information "Extracting EXOAntiPhishRule..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_EXOAntiPhishRule\MSFT_EXOAntiPhishRule.psm1" `
+                                -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "EXOAtpPolicyForO365"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOAtpPolicyForO365")) -or

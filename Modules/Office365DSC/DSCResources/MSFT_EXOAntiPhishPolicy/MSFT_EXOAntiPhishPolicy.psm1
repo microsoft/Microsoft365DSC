@@ -464,20 +464,34 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        EXOAntiPhishPolicy " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    $InformationPreference = "Continue"
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline `
+                      -ErrorAction SilentlyContinue
+
+    $AntiPhishPolicies = Get-AntiPhishPolicy
+    $content = ""
+    $i = 1
+    foreach ($Policy in $AntiPhishPolicies)
+    {
+        Write-Information "    [$i/$($AntiPhishPolicies.Length)] $($Policy.Identity)"
+
+        $Params = @{
+            Identity           = $Policy.Identity
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @Params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content += "        EXOAntiPhishPolicy " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        $i++
+    }
     return $content
 }
 
