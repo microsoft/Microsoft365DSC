@@ -41,7 +41,7 @@ Configuration Master
         EXOAntiPhishPolicy AntiphishPolicy
         {
             MakeDefault                           = $null;
-            PhishThresholdLevel                   = $null;
+            PhishThresholdLevel                   = 1;
             EnableTargetedDomainsProtection       = $null;
             Identity                              = "Our Rule";
             TreatSoftPassAsAuthenticated          = $True;
