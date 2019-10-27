@@ -155,7 +155,7 @@ function Get-TargetResource
             MakeDefault                           = $AntiPhishPolicy.MakeDefault
             PhishThresholdLevel                   = $PhishThresholdLevel
             TargetedDomainActionRecipients        = $AntiPhishPolicy.TargetedDomainActionRecipients
-            TargetedDomainProtectionAction        = $AntiPhishPolicy.TargetedDomainProtectionAction
+            TargetedDomainProtectionAction        = $TargetedDomainProtectionAction
             TargetedDomainsToProtect              = $AntiPhishPolicy.TargetedDomainsToProtect
             TargetedUserActionRecipients          = $AntiPhishPolicy.TargetedUserActionRecipients
             TargetedUserProtectionAction          = $AntiPhishPolicy.TargetedUserProtectionAction

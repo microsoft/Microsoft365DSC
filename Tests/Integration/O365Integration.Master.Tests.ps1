@@ -54,7 +54,7 @@ Configuration Master
             TargetedDomainActionRecipients        = $null;
             EnableMailboxIntelligence             = $null;
             EnableSimilarDomainsSafetyTips        = $null;
-            TargetedDomainProtectionAction        = $null;
+            TargetedDomainProtectionAction        = "No Action";
             AdminDisplayName                      = "";
             AuthenticationFailAction              = "MoveToJmf";
             GlobalAdminAccount                    = $GlobalAdmin;
