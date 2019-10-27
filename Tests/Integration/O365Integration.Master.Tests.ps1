@@ -58,7 +58,7 @@ Configuration Master
             AdminDisplayName                      = "";
             AuthenticationFailAction              = "MoveToJmf";
             GlobalAdminAccount                    = $GlobalAdmin;
-            TargetedUserProtectionAction          = $null;
+            TargetedUserProtectionAction          = "NoAction";
             TargetedUsersToProtect                = $null;
             EnableTargetedUserProtection          = $null;
             ExcludedSenders                       = $null;

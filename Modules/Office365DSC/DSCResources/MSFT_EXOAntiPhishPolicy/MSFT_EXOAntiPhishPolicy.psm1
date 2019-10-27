@@ -158,7 +158,7 @@ function Get-TargetResource
             TargetedDomainProtectionAction        = $TargetedDomainProtectionAction
             TargetedDomainsToProtect              = $AntiPhishPolicy.TargetedDomainsToProtect
             TargetedUserActionRecipients          = $AntiPhishPolicy.TargetedUserActionRecipients
-            TargetedUserProtectionAction          = $AntiPhishPolicy.TargetedUserProtectionAction
+            TargetedUserProtectionAction          = $TargetedUserProtectionAction
             TargetedUsersToProtect                = $AntiPhishPolicy.TargetedUsersToProtect
             TreatSoftPassAsAuthenticated          = $AntiPhishPolicy.TreatSoftPassAsAuthenticated
             GlobalAdminAccount                    = $GlobalAdminAccount
