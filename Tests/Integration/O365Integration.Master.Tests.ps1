@@ -38,26 +38,6 @@ Configuration Master
             Ensure             = "Present"
         }
 
-        EXOAntiPhishPolicy AntiPhishPolicy
-        {
-            Identity                 = "Test AntiPhish Policy"
-            AdminDisplayName         = "Default Monitoring Policy"
-            AuthenticationFailAction = "Quarantine"
-            GlobalAdminAccount       = $GlobalAdmin
-            Ensure                   = "Present"
-        }
-
-        EXOAntiPhishRule AntiPhishRule
-        {
-            Identity           = "Test AntiPhish Rule"
-            AntiPhishPolicy    = "Test AntiPhish Policy"
-            Comments           = "This is a test Rule"
-            SentToMemberOf     = @("O365DSCCore@$Domain")
-            GlobalAdminAccount = $GlobalAdmin
-            Ensure             = "Present"
-            DependsOn          = "[O365Group]O365DSCCoreTeam"
-        }
-
         EXOAntiPhishPolicy AntiphishPolicy
         {
             MakeDefault                           = $null;
