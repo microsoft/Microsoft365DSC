@@ -21,7 +21,7 @@ Configuration Example
             GlobalAdminAccount = $credsGlobalAdmin
         }
 
-        SCAuditConfigurationPolicy SharePointAuditPolicy
+        SCAuditConfigurationPolicy OneDriveAuditPolicy
         {
             Workload           = "OneDriveForBusiness"
             Ensure             = "Present"
