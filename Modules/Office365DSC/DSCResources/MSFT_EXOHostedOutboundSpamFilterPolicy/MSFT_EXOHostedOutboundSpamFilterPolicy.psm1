@@ -66,23 +66,15 @@ function Get-TargetResource
     else
     {
         $result = @{
-            Ensure = 'Present'
-        }
-
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-        {
-            if ($null -ne $HostedOutboundSpamFilterPolicy.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $HostedOutboundSpamFilterPolicy.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
+            Ensure                                    = 'Present'
+            IsSingleInstance                          = 'Yes'
+            Identity                                  = $Identity
+            AdminDisplayName                          = $HostedOutboundSpamFilterPolicy.AdminDisplayName
+            BccSuspiciousOutboundAdditionalRecipients = $HostedOutboundSpamFilterPolicy.BccSuspiciousOutboundAdditionalRecipients
+            BccSuspiciousOutboundMail                 = $HostedOutboundSpamFilterPolicy.BccSuspiciousOutboundMail
+            NotifyOutboundSpamRecipients              = $HostedOutboundSpamFilterPolicy.NotifyOutboundSpamRecipients
+            NotifyOutboundSpam                        = $HostedOutboundSpamFilterPolicy.NotifyOutboundSpam
+            GlobalAdminAccount                        = $GlobalAdminAccount
         }
 
         Write-Verbose -Message "Found HostedOutboundSpamFilterPolicy $($Identity)"

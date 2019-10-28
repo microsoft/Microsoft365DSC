@@ -96,6 +96,17 @@ Configuration Master
             Ensure                  = "Present"
         }#>
 
+        EXOCASMailboxPlan CASMailboxPlan
+        {
+            ActiveSyncEnabled    = $True;
+            OwaMailboxPolicy     = "OwaMailboxPolicy-Default";
+            GlobalAdminAccount   = $GlobalAdmin;
+            PopEnabled           = $True;
+            Identity             = "ExchangeOnlineEssentials-759100cd-4fb6-46db-80ae-bb0ef4bd92b0";
+            Ensure               = "Present";
+            ImapEnabled          = $True;
+        }
+
         EXOClientAccessRule ClientAccessRule
         {
             Ensure                               = "Present";
@@ -113,6 +124,18 @@ Configuration Master
             ExceptAnyOfProtocols                 = @();
             ExceptAnyOfClientIPAddressesOrRanges = @();
             AnyOfClientIPAddressesOrRanges       = @();
+        }
+
+        EXODkimSigningConfig DKIMSigning
+        {
+            KeySize                = $null;
+            GlobalAdminAccount     = $GlobalAdmin;
+            Identity               = $Domain;
+            HeaderCanonicalization = "Relaxed";
+            Enabled                = $True;
+            Ensure                 = "Present";
+            BodyCanonicalization   = "Relaxed";
+            AdminDisplayName       = "";
         }
 
         O365User JohnSmith

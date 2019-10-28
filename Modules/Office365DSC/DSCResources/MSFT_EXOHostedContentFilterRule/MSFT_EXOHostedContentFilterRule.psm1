@@ -87,24 +87,21 @@ function Get-TargetResource
     else
     {
         $result = @{
-            Ensure = 'Present'
+            Ensure                    = 'Present'
+            Identity                  = $Identity
+            HostedContentFilterPolicy = $HostedContentFilterRule.HostedContentFilterPolicy
+            Comments                  = $HostedContentFilterRule.Comments
+            Enabled                   = $false
+            ExceptIfRecipientDomainIs = $HostedContentFilterRule.ExceptIfRecipientDomainIs
+            ExceptIfSentTo            = $HostedContentFilterRule.ExceptIfSentTo
+            ExceptIfSentToMemberOf    = $HostedContentFilterRule.ExceptIfSentToMemberOf
+            Priority                  = $HostedContentFilterRule.Priority
+            RecipientDomainIs         = $HostedContentFilterRule.RecipientDomainIs
+            SentTo                    = $HostedContentFilterRule.SentTo
+            SentToMemberOf            = $HostedContentFilterRule.SentToMemberOf
+            GlobalAdminAccount        = $GlobalAdminAccount
         }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-        {
-            if ($null -ne $HostedContentFilterRule.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $HostedContentFilterRule.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
 
-        }
         if ('Enabled' -eq $HostedContentFilterRule.State)
         {
             # Accounts for Get-HostedContentFilterRule returning 'State' instead of 'Enabled' used by New/Set

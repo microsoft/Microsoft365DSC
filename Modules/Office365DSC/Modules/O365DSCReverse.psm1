@@ -181,7 +181,7 @@ function Start-O365ConfigurationExtract
             }
             else
             {
-                Write-Information "The specified Tenant is not registered for ATP, and therefore can't extract policies"
+                Write-Warning "The specified Tenant is not registered for ATP, and therefore can't extract policies"
             }
         }
         catch
