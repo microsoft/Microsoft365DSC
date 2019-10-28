@@ -302,13 +302,16 @@ function Set-TargetResource
     if (('Present' -eq $Ensure ) -and (-not $AntiPhishPolicy))
     {
         New-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
-        Start-Sleep -Seconds 1
-        Set-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
     }
 
     if (('Present' -eq $Ensure ) -and ($AntiPhishPolicy))
     {
-        Set-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
+        # The Set-AntiphishPolicy cmdlet doesn't account for more than 80% of the parameters
+        # defined by the New-AntiphishPolicy one. Therefore we need to delete the existing
+        # policy and recreate it in order to make sure the parameters all match the desired
+        # state specified;
+        Remove-AntiPhishPolicy -Identity $Identity -Confirm:$false -Force
+        New-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
     }
 
     if (('Absent' -eq $Ensure ) -and ($AntiPhishPolicy))
