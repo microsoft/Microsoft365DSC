@@ -5,6 +5,8 @@
 * EXOClientAccessRule
   * Fixed issue with Get-TargetResource not
     returning all values;
+* SCAuditConfigurationSettings
+  * Initial release;
 * SPOPropertyBag
   * Added multithreading;
 * SPOTheme
