@@ -13140,7 +13140,11 @@ function Remove-Label{
 
         [Parameter()]
         [System.Boolean]
-        $Confirm
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $ForceDeletion
     )
 }
 
@@ -13229,6 +13233,11 @@ function Get-Label{
     param(
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Name
+
     )
 }

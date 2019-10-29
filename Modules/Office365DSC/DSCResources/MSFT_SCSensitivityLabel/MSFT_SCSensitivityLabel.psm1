@@ -221,7 +221,8 @@ function Set-TargetResource
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $label.Ensure))
     {
         # If the label exists and it shouldn't, simply remove it;
-        Remove-Label -Identity $Name -Confirm:$false
+        Write-Verbose -message "Deleteing Sensitiivity label $Name."
+        Remove-Label -Identity $Name -Confirm:$false -forcedeletion:$true
     }
 }
 
@@ -290,8 +291,8 @@ function Test-TargetResource
 
     if ($null -ne $AdvancedSettings)
     {
-        $labelSettings = Convert-CIMToAdvancedSettings $AdvancedSettings
-        $TestAdvancedSettings = Test-AdvancedSettings -DesiredProperty $labelSettings
+        #$labelSettings = Convert-CIMToAdvancedSettings $AdvancedSettings
+        $TestAdvancedSettings = Test-AdvancedSettings2 -DesiredProperty $AdvancedSettings -CurrentProperty $CurrentValues.AdvancedSettings
         if ($false -eq $TestAdvancedSettings)
         {
             return $false
@@ -300,7 +301,7 @@ function Test-TargetResource
 
     if ($null -ne $LocaleSettings)
     {
-        $localeSettingsSame = Test-LocaleSettings $LocaleSettings
+        $localeSettingsSame = Test-LocaleSettings -DesiredProperty $LocaleSettings -CurrentProperty $CurrentValues.LocaleSettings
         if ($false -eq $localeSettingsSame)
         {
             return $false
@@ -357,18 +358,17 @@ function Convert-JSONToLocaleSettings
     [OutputType([Microsoft.Management.Infrastructure.CimInstance[]])]
     Param(
         [parameter(Mandatory = $true)]
-        [System.Collections.ArrayList]
         $JSONLocalSettings
     )
+
     $entries = @()
-    $localeSettings = ConvertTO-Json -InputObject $JSONLocalSettings
+    $localeSettings = $JSONLocalSettings | ConvertTo-Json
 
     foreach ($localeSetting in $localeSettings)
     {
         $result = @{
-            localeKey = $localeSettings.LocaleKey
+            localeKey = $localeSetting.LocaleKey
         }
-
         $settings = @()
         foreach ($setting in $localeSetting.Settings)
         {
@@ -376,7 +376,6 @@ function Convert-JSONToLocaleSettings
                 Key   = $setting.Key
                 Value = $setting.Value
             }
-
             $settings += $entry
         }
         $result.Add("Settings", $settings)
@@ -483,20 +482,25 @@ function Test-AdvancedSettings
     param(
         [Parameter (Mandatory = $true)]
         [Hashtable]
-        $DesiredProperty
+        $DesiredProperty,
+
+        [Parameter (Mandatory = $true)]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $CurrentProperty
     )
 
     $foundSetting = $false
     #Check to see if advanced settings are in Label settings property of current label
+    <#
     $label = Get-Label -Identity $Name -ErrorAction Ignore
     if ($null -eq $label)
     {
         return $false
     }
-
+    #>
     foreach ($key in $DesiredProperty.Keys)
     {
-        foreach ($setting in $label.settings)
+        foreach ($setting in $CurrentProperty)
         {
             if ($setting.contains($key.tolower()) -and $setting.contains($DesiredProperty[$key]))
             {
@@ -511,27 +515,57 @@ function Test-AdvancedSettings
     return $foundSetting
 }
 
+function Test-AdvancedSettings2
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [Parameter (Mandatory = $true)]
+        $DesiredProperty,
+
+        [Parameter (Mandatory = $true)]
+        $CurrentProperty
+    )
+
+    $foundSettings = $true
+    foreach ($desiredSetting in $DesiredProperty)
+    {
+        $foundKey = $CurrentProperty | Where-Object { $_.Key -eq $desiredSetting.Key }
+        if ($null -ne $foundKey)
+        {
+            if ($foundKey.Value.ToString() -ne $desiredSetting.Value.ToString())
+            {
+                $foundSettings = $false
+                break;
+            }
+        }
+    }
+
+    Write-Verbose -Message "Test AdvancedSettings  returns $foundSettings"
+    return $foundSettings
+}
+
 function Test-LocaleSettings
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param(
         [Parameter (Mandatory = $true)]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $DesiredProperty
+        $DesiredProperty,
+        [Parameter (Mandatory = $true)]
+        $CurrentProperty
+
     )
 
     $foundSettings = $true
-    $label = Get-Label -identity $Name -ErrorAction Ignore
-    if ($null -eq $label)
-    {
-        return $false
-    }
+    #$currentLocaleSettings = $label.LocaleSettings | ConvertFrom-Json
 
-    $currentLocaleSettings = $label.LocaleSettings | ConvertFrom-Json
+    Write-Verbose -Message "Current Settings $CurrentProperty"
+
     foreach ($desiredSetting in $DesiredProperty)
     {
-        $foundKey = $currentLocaleSettings | Where-Object { $_.LocaleKey -eq $desiredSetting.localeKey }
+        $foundKey = $CurrentProperty | Where-Object { $_.LocaleKey -eq $desiredSetting.localeKey }
+
         foreach ($setting in $desiredSetting.Settings)
         {
             if ($null -ne $foundKey)
@@ -552,7 +586,7 @@ function Test-LocaleSettings
         }
 
     }
-
+    Write-Verbose -Message "Test LocaleSettings returns $foundSettings"
     return $foundSettings
 }
 
