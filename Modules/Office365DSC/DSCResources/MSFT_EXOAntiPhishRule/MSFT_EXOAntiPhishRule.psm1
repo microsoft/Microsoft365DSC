@@ -91,7 +91,7 @@ function Get-TargetResource
                 Identity                  = $Identity
                 AntiPhishPolicy           = $AntiPhishRule.AntiPhishPolicy
                 Comments                  = $AntiPhishRule.Comments
-                Enabled                   = $RuleEnabled
+                Enabled                   = $AntiPhishRule.RuleEnabled
                 ExceptIfRecipientDomainIs = $AntiPhishRule.ExceptIfRecipientDomainIs
                 ExceptIfSentTo            = $AntiPhishRule.ExceptIfSentTo
                 ExceptIfSentToMemberOf    = $AntiPhishRule.ExceptIfSentToMemberOf
