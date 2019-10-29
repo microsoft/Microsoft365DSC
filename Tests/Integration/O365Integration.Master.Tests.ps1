@@ -87,6 +87,72 @@ Configuration Master
             AnyOfClientIPAddressesOrRanges       = @();
         }
 
+        EXOOrganizationConfig EXOOrganizationConfig
+        {
+            ElcProcessingDisabled                                     = $False;
+            IsSingleInstance                                          = "Yes";
+            DefaultPublicFolderProhibitPostQuota                      = "2 GB (2,147,483,648 bytes)";
+            VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
+            BookingsEnabled                                           = $True;
+            ExchangeNotificationRecipients                            = @();
+            EwsEnabled                                                = $null;
+            LinkPreviewEnabled                                        = $True;
+            FocusedInboxOn                                            = $null;
+            AsyncSendEnabled                                          = $True;
+            EwsAllowEntourage                                         = $null;
+            RemotePublicFolderMailboxes                               = @();
+            AuditDisabled                                             = $False;
+            EwsAllowMacOutlook                                        = $null;
+            ConnectorsEnabledForTeams                                 = $True;
+            DefaultPublicFolderIssueWarningQuota                      = "1.7 GB (1,825,361,920 bytes)";
+            MailTipsMailboxSourcedTipsEnabled                         = $True;
+            EndUserDLUpgradeFlowsDisabled                             = $False;
+            DistributionGroupDefaultOU                                = $null;
+            OutlookPayEnabled                                         = $True;
+            EwsAllowOutlook                                           = $null;
+            DefaultAuthenticationPolicy                               = $null;
+            DistributionGroupNameBlockedWordsList                     = @();
+            ConnectorsEnabled                                         = $True;
+            DefaultPublicFolderAgeLimit                               = $null;
+            OutlookMobileGCCRestrictionsEnabled                       = $False;
+            ActivityBasedAuthenticationTimeoutEnabled                 = $True;
+            GlobalAdminAccount                                        = $GlobalAdmin;
+            ConnectorsEnabledForYammer                                = $True;
+            HierarchicalAddressBookRoot                               = $null;
+            DefaultPublicFolderMaxItemSize                            = "Unlimited";
+            MailTipsLargeAudienceThreshold                            = 25;
+            ConnectorsActionableMessagesEnabled                       = $True;
+            ExchangeNotificationEnabled                               = $True;
+            ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled = $True;
+            DirectReportsGroupAutoCreationEnabled                     = $False;
+            OAuth2ClientProfileEnabled                                = $True;
+            AppsForOfficeEnabled                                      = $True;
+            PublicFoldersEnabled                                      = "Local";
+            WebPushNotificationsDisabled                              = $False;
+            MailTipsGroupMetricsEnabled                               = $True;
+            DefaultPublicFolderMovedItemRetention                     = "7.00:00:00";
+            DistributionGroupNamingPolicy                             = "";
+            DefaultPublicFolderDeletedItemRetention                   = "30.00:00:00";
+            MailTipsAllTipsEnabled                                    = $True;
+            LeanPopoutEnabled                                         = $False;
+            PublicComputersDetectionEnabled                           = $False;
+            ByteEncoderTypeFor7BitCharsets                            = 0;
+            ConnectorsEnabledForOutlook                               = $True;
+            WebSuggestedRepliesDisabled                               = $False;
+            PublicFolderShowClientControl                             = $False;
+            ActivityBasedAuthenticationTimeoutInterval                = "06:00:00";
+            BookingsSocialSharingRestricted                           = $False;
+            DefaultGroupAccessType                                    = "Private";
+            IPListBlocked                                             = @();
+            SmtpActionableMessagesEnabled                             = $True;
+            SiteMailboxCreationURL                                    = $null;
+            BookingsPaymentsEnabled                                   = $False;
+            MailTipsExternalRecipientsTipsEnabled                     = $False;
+            AutoExpandingArchive                                      = $null;
+            ConnectorsEnabledForSharepoint                            = $True;
+            ReadTrackingEnabled                                       = $False;
+        }
+
         O365User JohnSmith
         {
             UserPrincipalName  = "John.Smith@$Domain"
