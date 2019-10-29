@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* EXOOrganizationConfig
+  * Initial Release;
 * EXOClientAccessRule
   * Fixed issue with Get-TargetResource not
     returning all values;
