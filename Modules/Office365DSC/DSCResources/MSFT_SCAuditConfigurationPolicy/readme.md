@@ -2,5 +2,5 @@
 
 ## Description
 
-This resource configures an Audit COnfigurationPolicy
+This resource configures an Audit ConfigurationPolicy
 in Security and Compliance Center.
