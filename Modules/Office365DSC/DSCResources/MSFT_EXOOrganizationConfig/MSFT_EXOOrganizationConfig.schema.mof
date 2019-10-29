@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("EXOOrganizationConfig")]
 class MSFT_EXOOrganizationConfig : OMI_BaseResource
 {
-    [Key, Description("Only valid value is 'Yes'.")] String IsSingleInstance;
+    [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write, Description("The ActivityBasedAuthenticationTimeoutEnabled parameter specifies whether the timed logoff feature is enabled. The default value is $true")] Boolean ActivityBasedAuthenticationTimeoutEnabled;
     [Write, Description("The ActivityBasedAuthenticationTimeoutInterval parameter specifies the time span for logoff. You enter this value as a time span: hh:mm:ss where hh = hours, mm = minutes and ss = seconds. Valid values for this parameter are from 00:05:00 to 08:00:00 (5 minutes to 8 hours). The default value is 06:00:00 (6 hours).")] String ActivityBasedAuthenticationTimeoutInterval;
     [Write, Description("The ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled parameter specifies whether to keep single sign-on enabled. The default value is $true.")] Boolean ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled;

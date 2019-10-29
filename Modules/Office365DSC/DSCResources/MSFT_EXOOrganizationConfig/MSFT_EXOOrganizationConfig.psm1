@@ -151,7 +151,7 @@ function Get-TargetResource
         $EwsAllowOutlook,
 
         [Parameter()]
-        [ValidateSet('EnforeAllowList', 'EnforceBlockList')]
+        [ValidateSet('EnforceAllowList', 'EnforceBlockList')]
         [System.String]
         $EwsApplicationAccessPolicy,
 
@@ -518,7 +518,7 @@ function Set-TargetResource
         $EwsAllowOutlook,
 
         [Parameter()]
-        [ValidateSet('EnforeAllowList', 'EnforceBlockList')]
+        [ValidateSet('EnforceAllowList', 'EnforceBlockList')]
         [System.String]
         $EwsApplicationAccessPolicy,
 
@@ -807,7 +807,7 @@ function Test-TargetResource
         $EwsAllowOutlook,
 
         [Parameter()]
-        [ValidateSet('EnforeAllowList', 'EnforceBlockList')]
+        [ValidateSet('EnforceAllowList', 'EnforceBlockList')]
         [System.String]
         $EwsApplicationAccessPolicy,
 
