@@ -348,6 +348,11 @@ function Get-TargetResource
         GlobalAdminAccount                                        = $GlobalAdminAccount
     }
 
+    if ($null -eq $ConfigSettings.AutoExpandingArchive)
+    {
+        $results.AutoExpandingArchive = $false
+    }
+
     if ([System.String]::IsNullOrEmpty($results.EwsApplicationAccessPolicy))
     {
         $results.Remove("EwsApplicationAccessPolicy")
