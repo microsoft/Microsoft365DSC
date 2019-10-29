@@ -220,8 +220,9 @@ function Set-TargetResource
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $label.Ensure))
     {
-        # If the label exists and it shouldn't, simply remove it;
+        # If the label exists and it shouldn't, simply remove it;Need to force deletoion 
         Write-Verbose -message "Deleteing Sensitiivity label $Name."
+        Remove-Label -Identity $Name -Confirm:$false
         Remove-Label -Identity $Name -Confirm:$false -forcedeletion:$true
     }
 }
@@ -292,7 +293,7 @@ function Test-TargetResource
     if ($null -ne $AdvancedSettings)
     {
         #$labelSettings = Convert-CIMToAdvancedSettings $AdvancedSettings
-        $TestAdvancedSettings = Test-AdvancedSettings2 -DesiredProperty $AdvancedSettings -CurrentProperty $CurrentValues.AdvancedSettings
+        $TestAdvancedSettings = Test-AdvancedSettings -DesiredProperty $AdvancedSettings -CurrentProperty $CurrentValues.AdvancedSettings
         if ($false -eq $TestAdvancedSettings)
         {
             return $false
@@ -360,16 +361,15 @@ function Convert-JSONToLocaleSettings
         [parameter(Mandatory = $true)]
         $JSONLocalSettings
     )
+    $localeSettings = $JSONLocalSettings | Convertfrom-Json
 
     $entries = @()
-    $localeSettings = $JSONLocalSettings | ConvertTo-Json
-
+    $settings = @()
     foreach ($localeSetting in $localeSettings)
     {
         $result = @{
             localeKey = $localeSetting.LocaleKey
         }
-        $settings = @()
         foreach ($setting in $localeSetting.Settings)
         {
             $entry = @{
@@ -379,6 +379,7 @@ function Convert-JSONToLocaleSettings
             $settings += $entry
         }
         $result.Add("Settings", $settings)
+        $settings = @()
         $entries += $result
         $result = @{ }
 
@@ -481,46 +482,6 @@ function Test-AdvancedSettings
     [OutputType([System.Boolean])]
     param(
         [Parameter (Mandatory = $true)]
-        [Hashtable]
-        $DesiredProperty,
-
-        [Parameter (Mandatory = $true)]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $CurrentProperty
-    )
-
-    $foundSetting = $false
-    #Check to see if advanced settings are in Label settings property of current label
-    <#
-    $label = Get-Label -Identity $Name -ErrorAction Ignore
-    if ($null -eq $label)
-    {
-        return $false
-    }
-    #>
-    foreach ($key in $DesiredProperty.Keys)
-    {
-        foreach ($setting in $CurrentProperty)
-        {
-            if ($setting.contains($key.tolower()) -and $setting.contains($DesiredProperty[$key]))
-            {
-                $foundSetting = $true
-                Write-Verbose -Message "Found advanced setting in Label settings with $key and value of $($DesiredProperty[$key])"
-                break
-            }
-            $foundSetting = $false
-        }
-    }
-
-    return $foundSetting
-}
-
-function Test-AdvancedSettings2
-{
-    [CmdletBinding()]
-    [OutputType([System.Boolean])]
-    param(
-        [Parameter (Mandatory = $true)]
         $DesiredProperty,
 
         [Parameter (Mandatory = $true)]
@@ -554,23 +515,19 @@ function Test-LocaleSettings
         $DesiredProperty,
         [Parameter (Mandatory = $true)]
         $CurrentProperty
-
     )
 
     $foundSettings = $true
     #$currentLocaleSettings = $label.LocaleSettings | ConvertFrom-Json
-
-    Write-Verbose -Message "Current Settings $CurrentProperty"
-
     foreach ($desiredSetting in $DesiredProperty)
     {
         $foundKey = $CurrentProperty | Where-Object { $_.LocaleKey -eq $desiredSetting.localeKey }
-
         foreach ($setting in $desiredSetting.Settings)
         {
             if ($null -ne $foundKey)
             {
                 $myLabel = $foundKey.Settings | Where-Object { $_.Key -eq $setting.Key -and $_.Value -eq $setting.Value }
+
                 if ($null -eq $myLabel)
                 {
                     $foundSettings = $false
@@ -584,7 +541,6 @@ function Test-LocaleSettings
 
             }
         }
-
     }
     Write-Verbose -Message "Test LocaleSettings returns $foundSettings"
     return $foundSettings
