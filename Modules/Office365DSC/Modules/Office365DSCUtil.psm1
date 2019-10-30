@@ -1315,11 +1315,17 @@ function Test-Office365DSCParameterState
 
         [Parameter(, Position = 3)]
         [Array]
-        $ValuesToCheck
+        $ValuesToCheck,
+
+        [Parameter(, Position = 4)]
+        [System.String]
+        $Source = 'Generic'
     )
     $VerbosePreference = "SilentlyContinue"
     $WarningPreference = "SilentlyContinue"
     $returnValue = $true
+
+    $DriftedParameters = @{}
 
     if (($DesiredValues.GetType().Name -ne "HashTable") `
             -and ($DesiredValues.GetType().Name -ne "CimInstance") `
@@ -1375,6 +1381,7 @@ function Test-Office365DSCParameterState
                                     "values, but it was either not present or " + `
                                     "was null. This has caused the test method " + `
                                     "to return false.")
+                            $DriftedParameters.Add($fieldName, '')
                             $returnValue = $false
                         }
                         else
@@ -1391,6 +1398,9 @@ function Test-Office365DSCParameterState
                                 $arrayCompare | ForEach-Object -Process {
                                     Write-Verbose -Message "$($_.InputObject) - $($_.SideIndicator)"
                                 }
+
+                                $EventValue = "{$($CurrentValues.$fieldName)} | Should be {$($DesiredValues.$fieldName)}"
+                                $DriftedParameters.Add($fieldName, $EventValue)
                                 $returnValue = $false
                             }
                         }
@@ -1413,6 +1423,8 @@ function Test-Office365DSCParameterState
                                             "'$($CurrentValues.$fieldName)' " + `
                                             "and desired state is " + `
                                             "'$($DesiredValues.$fieldName)'")
+                                    $EventValue = "{$($CurrentValues.$fieldName)} | Should be {$($DesiredValues.$fieldName)}"
+                                    $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
                             }
@@ -1430,6 +1442,8 @@ function Test-Office365DSCParameterState
                                             "'$($CurrentValues.$fieldName)' " + `
                                             "and desired state is " + `
                                             "'$($DesiredValues.$fieldName)'")
+                                    $EventValue = "{$($CurrentValues.$fieldName)} | Should be {$($DesiredValues.$fieldName)}"
+                                    $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
                             }
@@ -1447,6 +1461,8 @@ function Test-Office365DSCParameterState
                                             "'$($CurrentValues.$fieldName)' " + `
                                             "and desired state is " + `
                                             "'$($DesiredValues.$fieldName)'")
+                                    $EventValue = "{$($CurrentValues.$fieldName)} | Should be {$($DesiredValues.$fieldName)}"
+                                    $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
                             }
@@ -1460,6 +1476,8 @@ function Test-Office365DSCParameterState
                                             "'$($CurrentValues.$fieldName)' " + `
                                             "and desired state is " + `
                                             "'$($DesiredValues.$fieldName)'")
+                                    $EventValue = "{$($CurrentValues.$fieldName)} | Should be {$($DesiredValues.$fieldName)}"
+                                    $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
                             }
@@ -1477,6 +1495,8 @@ function Test-Office365DSCParameterState
                                             "'$($CurrentValues.$fieldName)' " + `
                                             "and desired state is " + `
                                             "'$($DesiredValues.$fieldName)'")
+                                    $EventValue = "{$($CurrentValues.$fieldName)} | Should be {$($DesiredValues.$fieldName)}"
+                                    $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
                             }
@@ -1486,6 +1506,8 @@ function Test-Office365DSCParameterState
                                         "as the type ($($desiredType.Name)) is " + `
                                         "not handled by the " + `
                                         "Test-SPDscParameterState cmdlet")
+                                $EventValue = "{$($CurrentValues.$fieldName)} | Should be {$($DesiredValues.$fieldName)}"
+                                $DriftedParameters.Add($fieldName, $EventValue)
                                 $returnValue = $false
                             }
                         }
@@ -1493,6 +1515,19 @@ function Test-Office365DSCParameterState
                 }
             }
         }
+    }
+
+    if ($returnValue -eq $false)
+    {
+        $EventMessage = "A Configuration Drift has been detected on $Source. `r `n"
+        $EventMessage += "Parameters below had a configuration drift:`r`n"
+
+        foreach ($key in $DriftedParameters.Keys)
+        {
+            $EventMessage += "    " + $key + " = " + $DriftedParameters.$key
+        }
+
+        Add-O365DSCEvent -Message $EventMessage -EntryType 'Error' -EventID 1 -Source $Source
     }
     return $returnValue
 }
