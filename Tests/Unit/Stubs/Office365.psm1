@@ -9115,27 +9115,30 @@ param(
    )
 }
 
-function Get-PnPTenantTheme {
+function Get-PnPTenantTheme
+{
     [CmdletBinding()]
-   param(
+    param(
        [Parameter()]
        [System.String]
        $Identity
    )
 }
 
-function Remove-PnPTenantTheme {
+function Remove-PnPTenantTheme
+{
     [CmdletBinding()]
-   param(
+    param(
        [Parameter()]
        [System.String]
        $Identity
    )
 }
 
-function Add-PnPTenantTheme {
+function Add-PnPTenantTheme
+{
     [CmdletBinding()]
-   param(
+    param(
        [Parameter(Mandatory = $true)]
        [System.String]
        $Identity,
@@ -9161,7 +9164,7 @@ function Get-OrganizationConfig
 }
 
 function Set-OrganizationConfig
-{}
+{
     [CmdletBinding()]
     param(
         [Parameter()]
@@ -9433,6 +9436,8 @@ function New-AuditConfigurationPolicy
 
 function Get-AuditConfigurationPolicy
 {
+    [CmdletBinding()]
+    param(
         [System.String]
         $Identity
     )
