@@ -112,7 +112,7 @@
     to version 3.11.1907.0
 * BREAKING CHANGES
   * O365Group
-    * ManagedBy is now a mandatory property
+    * ManagedBy is now a mandatory property;
   * SPOSite
     * Owner is now a mandatory property
 * Modules
