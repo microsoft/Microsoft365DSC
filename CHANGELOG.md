@@ -15,6 +15,7 @@
 * Metadata
   * Updated SharePointPnPPowerShellOnline dependency
     to version 3.14.1910.1;
+  * Updated ReverseDSC dependency to version 1.9.5.1;
 
 ## 1.0.0.1048
 
