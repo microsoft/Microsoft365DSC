@@ -113,6 +113,27 @@ Configuration Master
             DependsOn            = "[O365User]JohnSmith"
         }
 
+        SCAuditConfigurationPolicy SharePointAuditPolicy
+        {
+            Workload           = "SharePoint"
+            Ensure             = "Present";
+            GlobalAdminAccount = $GlobalAdmin;
+        }
+
+        SCAuditConfigurationPolicy OneDriveAuditPolicy
+        {
+            Workload           = "OneDriveForBusiness"
+            Ensure             = "Present";
+            GlobalAdminAccount = $GlobalAdmin;
+        }
+
+        SCAuditConfigurationPolicy ExchangeAuditPolicy
+        {
+            Workload           = "Exchange"
+            Ensure             = "Present";
+            GlobalAdminAccount = $GlobalAdmin;
+        }
+
         SCComplianceSearch DemoSearchSPO
         {
             Case                                  = "Integration Case";
