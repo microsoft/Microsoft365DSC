@@ -860,7 +860,7 @@ function Set-SPOSiteConfiguration
             }
             if ($CurrentParameters.ContainsKey("AllowSelfServiceUpgrade"))
             {
-                $CurrentParameters.Remove("AllowSelfServiceUpgrade") 
+                $CurrentParameters.Remove("AllowSelfServiceUpgrade")
             }
             if ($CurrentParameters.ContainsKey("DenyAddAndCustomizePages"))
             {
@@ -1228,6 +1228,5 @@ function Set-SPOSiteConfiguration
                 throw "There was an error trying to create SPOSite $Url"
             }
         }
-        
     }
 }

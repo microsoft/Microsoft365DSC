@@ -761,6 +761,22 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region SCAuditConfigurationPolicy
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCAuditConfigurationPolicy")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
+    {
+        Write-Information "Extracting SCAuditConfigurationPolicy..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SCAuditConfigurationPolicy\MSFT_SCAuditConfigurationPolicy.psm1" `
+                                                   -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "SCComplianceCase"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCComplianceCase")) -or
@@ -864,10 +880,15 @@ function Start-O365ConfigurationExtract
             Import-Module $SCComplianceTagModulePath | Out-Null
             $tags = Get-ComplianceTag
 
+            $totalTags = $tags.Length
+            if ($null -eq $totalTags)
+            {
+                $totalTags = 1
+            }
             $i = 1
             foreach ($tag in $tags)
             {
-                Write-Information "    - [$i/$($tags.Length)] $($tag.Name)"
+                Write-Information "    - [$i/$($totalTags)] $($tag.Name)"
                 $partialContent = Export-TargetResource -Name $tag.Name -GlobalAdminAccount $GlobalAdminAccount
                 $DSCContent += $partialContent
                 $i++
@@ -899,10 +920,15 @@ function Start-O365ConfigurationExtract
             Import-Module $SCDLPCompliancePolicyModulePath | Out-Null
             $policies = Get-DLPCompliancePolicy | Where-Object -FilterScript {$_.Mode -ne 'PendingDeletion'}
 
+            $totalPolicies = $policies.Length
+            if ($null -eq $totalPolicies)
+            {
+                $totalPolicies = 1
+            }
             $i = 1
             foreach ($policy in $policies)
             {
-                Write-Information "    - [$i/$($policies.Length)] $($policy.Name)"
+                Write-Information "    - [$i/$($totalPolicies)] $($policy.Name)"
                 $partialContent = Export-TargetResource -Name $policy.Name -GlobalAdminAccount $GlobalAdminAccount
                 $DSCContent += $partialContent
                 $i++
@@ -977,6 +1003,12 @@ function Start-O365ConfigurationExtract
             {
                 Write-Information "    - [$i/$($policies.Length)] $($policy.Name)"
                 $partialContent = Export-TargetResource -Name $policy.Name -GlobalAdminAccount $GlobalAdminAccount
+
+                if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+                $partialContent.ToLower().Contains($principal.ToLower()))
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+                }
                 $DSCContent += $partialContent
                 $i++
             }
@@ -1027,6 +1059,11 @@ function Start-O365ConfigurationExtract
                 {
                     Write-Information "        - [$i/$($rulesLength)] $($rule.Name)"
                     $partialContent = Export-TargetResource -Name $rule.Name -Policy $rule.Policy -GlobalAdminAccount $GlobalAdminAccount
+                    if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+                    $partialContent.ToLower().Contains($principal.ToLower()))
+                    {
+                        $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+                    }
                     $DSCContent += $partialContent
                     $i++
                 }
@@ -1059,11 +1096,22 @@ function Start-O365ConfigurationExtract
             Import-Module $SCSCSupervisoryReviewPolicyModulePath | Out-Null
             $policies = Get-SupervisoryReviewPolicyV2
 
+            $totalPolicies = $policies.$Length
+            if ($null -eq $totalPolicies)
+            {
+                $totalPolicies = 1
+            }
             $i = 1
             foreach ($policy in $policies)
             {
-                Write-Information "    - [$i/$($policies.Length)] $($policy.Name)"
+                Write-Information "    - [$i/$($totalPolicies)] $($policy.Name)"
                 $partialContent = Export-TargetResource -Name $policy.Name -Reviewers "ReverseDSC" -GlobalAdminAccount $GlobalAdminAccount
+
+                if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+                $partialContent.ToLower().Contains($principal.ToLower()))
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+                }
                 $DSCContent += $partialContent
                 $i++
             }
@@ -1094,11 +1142,21 @@ function Start-O365ConfigurationExtract
             Import-Module $SCSupervisoryReviewRuleModulePath | Out-Null
             $rules = Get-SupervisoryReviewRule
 
+            $totalRules = $rules.Length
+            if ($null -eq $totalRules)
+            {
+                $totalRules = 1
+            }
             $i = 1
             foreach ($rule in $rules)
             {
-                Write-Information "    - [$i/$($rules.Length)] $($rule.Name)"
+                Write-Information "    - [$i/$totalRules] $($rule.Name)"
                 $partialContent = Export-TargetResource -Name $rule.Name -Policy $rule.Policy -GlobalAdminAccount $GlobalAdminAccount
+                if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+                    $partialContent.ToLower().Contains($principal.ToLower()))
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+                }
                 $DSCContent += $partialContent
                 $i++
             }
@@ -1235,6 +1293,22 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region SPOSharingSettings
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSPOSharingSettings")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SPO")))
+    {
+        Write-Information "Extracting SPOSharingSettings..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SPOSharingSettings\MSFT_SPOSharingSettings.psm1" `
+                                                   -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region SPOPropertyBag
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOPropertyBag")) -or
@@ -1247,7 +1321,14 @@ function Start-O365ConfigurationExtract
                                                    -Resolve
 
         Import-Module $SPOPropertyBagModulePath | Out-Null
-        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+            $partialContent.ToLower().Contains($principal.ToLower()))
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
+            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+        }
+        $DSCContent += $partialContent
     }
     #endregion
 
@@ -1376,7 +1457,7 @@ function Start-O365ConfigurationExtract
         $partialContent = ""
         $i = 1
         $propertiesLength = $properties.Length
-        if ($null -eq $sourcesLength)
+        if ($null -eq $propertiesLength)
         {
             $propertiesLength = 1
         }
@@ -1569,7 +1650,14 @@ function Start-O365ConfigurationExtract
                                                    -Resolve
 
         Import-Module $ModulePath | Out-Null
-        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+        $partialContent.ToLower().Contains($principal.ToLower()))
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
+            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+        }
+        $DSCContent += $partialContent
     }
     #endregion
 

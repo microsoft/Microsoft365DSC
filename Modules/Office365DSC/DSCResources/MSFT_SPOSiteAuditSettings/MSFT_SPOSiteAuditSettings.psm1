@@ -21,7 +21,7 @@ function Get-TargetResource
 
     $nullReturn = @{
         Url                = $Url
-        AuditFlags         = $null
+        AuditFlags         = 'None'
         GlobalAdminAccount = $GlobalAdminAccount
     }
 
@@ -31,9 +31,14 @@ function Get-TargetResource
                           -Platform PnP `
                           -ConnectionUrl $Url -ErrorAction SilentlyContinue
         $auditSettings = Get-PnPAuditing
+        $auditFlag = $auditSettings.AuditFlags
+        if ($null -eq $auditFlag)
+        {
+            $auditFlag = 'None'
+        }
         return @{
             Url                = $Url
-            AuditFlags         = $auditSettings.AuditFlags.ToString()
+            AuditFlags         = $auditFlag
             GlobalAdminAccount = $GlobalAdminAccount
         }
     }
@@ -104,6 +109,7 @@ function Test-TargetResource
     Write-Verbose -Message "Testing audit settings for {$Url}"
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `

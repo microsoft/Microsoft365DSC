@@ -38,7 +38,14 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform ExchangeOnline
 
-    $mailboxSettings = Get-MailboxRegionalConfiguration -Identity $DisplayName
+    try
+    {
+        $mailboxSettings = Get-MailboxRegionalConfiguration -Identity $DisplayName -ErrorAction Stop
+    }
+    catch
+    {
+        return $nullReturn
+    }
 
     if ($null -eq $mailboxSettings)
     {
@@ -172,13 +179,18 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $modulePath = $PSScriptRoot + "\MSFT_EXOMailboxSettings.psm1"
-    $content = "        EXOMailboxSettings " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath -UseGetTargetResource
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+
+    $content = ""
+    if ($result.Ensure -eq "Present")
+    {
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $modulePath = $PSScriptRoot + "\MSFT_EXOMailboxSettings.psm1"
+        $content = "        EXOMailboxSettings " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath -UseGetTargetResource
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+    }
     return $content
 }
 

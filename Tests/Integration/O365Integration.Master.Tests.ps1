@@ -68,6 +68,25 @@ Configuration Master
             Ensure                  = "Present"
         }#>
 
+        EXOClientAccessRule ClientAccessRule
+        {
+            Ensure                               = "Present";
+            Action                               = "AllowAccess";
+            GlobalAdminAccount                   = $GlobalAdmin;
+            UserRecipientFilter                  = $null;
+            ExceptAnyOfAuthenticationTypes       = @();
+            ExceptUsernameMatchesAnyOfPatterns   = @();
+            AnyOfAuthenticationTypes             = @();
+            UsernameMatchesAnyOfPatterns         = @();
+            Identity                             = "Always Allow Remote PowerShell";
+            Priority                             = 1;
+            AnyOfProtocols                       = @("RemotePowerShell");
+            Enabled                              = $True;
+            ExceptAnyOfProtocols                 = @();
+            ExceptAnyOfClientIPAddressesOrRanges = @();
+            AnyOfClientIPAddressesOrRanges       = @();
+        }
+
         O365User JohnSmith
         {
             UserPrincipalName  = "John.Smith@$Domain"
@@ -92,6 +111,27 @@ Configuration Master
             GlobalAdminAccount   = $GlobalAdmin
             Ensure               = "Present"
             DependsOn            = "[O365User]JohnSmith"
+        }
+
+        SCAuditConfigurationPolicy SharePointAuditPolicy
+        {
+            Workload           = "SharePoint"
+            Ensure             = "Present";
+            GlobalAdminAccount = $GlobalAdmin;
+        }
+
+        SCAuditConfigurationPolicy OneDriveAuditPolicy
+        {
+            Workload           = "OneDriveForBusiness"
+            Ensure             = "Present";
+            GlobalAdminAccount = $GlobalAdmin;
+        }
+
+        SCAuditConfigurationPolicy ExchangeAuditPolicy
+        {
+            Workload           = "Exchange"
+            Ensure             = "Present";
+            GlobalAdminAccount = $GlobalAdmin;
         }
 
         SCComplianceSearch DemoSearchSPO
@@ -306,6 +346,21 @@ Configuration Master
             Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
             AuditFlags         = "All"
             GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SPOTheme SPTheme01
+        {
+                GlobalAdminAccount  = $GlobalAdmin
+                Name                = "Integration Palette"
+                Palette             = @(MSFT_SPOThemePaletteProperty{
+                                            Property = "themePrimary"
+                                            Value = "#0078d4"
+                                      }
+                                      MSFT_SPOThemePaletteProperty{
+                                          Property = "themeLighterAlt"
+                                          Value = "#eff6fc"
+                                      }
+                )
         }
 
         <#SPOStorageEntity SiteEntity1
