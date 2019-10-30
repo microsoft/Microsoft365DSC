@@ -179,6 +179,27 @@ Configuration Master
             DependsOn            = "[O365User]JohnSmith"
         }
 
+        SCAuditConfigurationPolicy SharePointAuditPolicy
+        {
+            Workload           = "SharePoint"
+            Ensure             = "Present";
+            GlobalAdminAccount = $GlobalAdmin;
+        }
+
+        SCAuditConfigurationPolicy OneDriveAuditPolicy
+        {
+            Workload           = "OneDriveForBusiness"
+            Ensure             = "Present";
+            GlobalAdminAccount = $GlobalAdmin;
+        }
+
+        SCAuditConfigurationPolicy ExchangeAuditPolicy
+        {
+            Workload           = "Exchange"
+            Ensure             = "Present";
+            GlobalAdminAccount = $GlobalAdmin;
+        }
+
         SCComplianceSearch DemoSearchSPO
         {
             Case                                  = "Integration Case";
@@ -391,6 +412,21 @@ Configuration Master
             Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
             AuditFlags         = "All"
             GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SPOTheme SPTheme01
+        {
+                GlobalAdminAccount  = $GlobalAdmin
+                Name                = "Integration Palette"
+                Palette             = @(MSFT_SPOThemePaletteProperty{
+                                            Property = "themePrimary"
+                                            Value = "#0078d4"
+                                      }
+                                      MSFT_SPOThemePaletteProperty{
+                                          Property = "themeLighterAlt"
+                                          Value = "#eff6fc"
+                                      }
+                )
         }
 
         <#SPOStorageEntity SiteEntity1

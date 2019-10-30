@@ -417,12 +417,20 @@ function Show-O365GUI
         $pnlSC.Top = $pnlSPO.Height + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 125
         $pnlSC.Left = $SecondColumnLeft
 
-        $pnlSC.Height = 240
+        $pnlSC.Height = 260
         $pnlSC.Width = 300
         $pnlSC.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
+        $chckSCAuditConfigurationPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckSCAuditConfigurationPolicy.Top = 0
+        $chckSCAuditConfigurationPolicy.AutoSize = $true;
+        $chckSCAuditConfigurationPolicy.Name = "chckSCAuditConfigurationPolicy"
+        $chckSCAuditConfigurationPolicy.Checked = $true
+        $chckSCAuditConfigurationPolicy.Text = "Audit Configuration Policies"
+        $pnlSC.Controls.Add($chckSCAuditConfigurationPolicy)
+
         $chckSCCaseHoldPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSCCaseHoldPolicy.Top = 0
+        $chckSCCaseHoldPolicy.Top = 20
         $chckSCCaseHoldPolicy.AutoSize = $true;
         $chckSCCaseHoldPolicy.Name = "chckSCCaseHoldPolicy"
         $chckSCCaseHoldPolicy.Checked = $true
@@ -430,7 +438,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCCaseHoldPolicy)
 
         $chckSCCaseHoldRule = New-Object System.Windows.Forms.CheckBox
-        $chckSCCaseHoldRule.Top = 20
+        $chckSCCaseHoldRule.Top = 40
         $chckSCCaseHoldRule.AutoSize = $true;
         $chckSCCaseHoldRule.Name = "chckSCCaseHoldRule"
         $chckSCCaseHoldRule.Checked = $true
@@ -438,7 +446,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCCaseHoldRule)
 
         $chckSCComplianceCase = New-Object System.Windows.Forms.CheckBox
-        $chckSCComplianceCase.Top = 40
+        $chckSCComplianceCase.Top = 60
         $chckSCComplianceCase.AutoSize = $true;
         $chckSCComplianceCase.Name = "chckSCComplianceCase"
         $chckSCComplianceCase.Checked = $true
@@ -446,7 +454,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCComplianceCase)
 
         $chckSCComplianceSearch = New-Object System.Windows.Forms.CheckBox
-        $chckSCComplianceSearch.Top = 60
+        $chckSCComplianceSearch.Top = 80
         $chckSCComplianceSearch.AutoSize = $true;
         $chckSCComplianceSearch.Name = "chckSCComplianceSearch"
         $chckSCComplianceSearch.Checked = $true
@@ -454,7 +462,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCComplianceSearch)
 
         $chckSCComplianceSearchAction = New-Object System.Windows.Forms.CheckBox
-        $chckSCComplianceSearchAction.Top = 80
+        $chckSCComplianceSearchAction.Top = 100
         $chckSCComplianceSearchAction.AutoSize = $true;
         $chckSCComplianceSearchAction.Name = "chckSCComplianceSearchAction"
         $chckSCComplianceSearchAction.Checked = $true
@@ -462,7 +470,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCComplianceSearchAction)
 
         $chckSCComplianceTag = New-Object System.Windows.Forms.CheckBox
-        $chckSCComplianceTag.Top = 100
+        $chckSCComplianceTag.Top = 120
         $chckSCComplianceTag.AutoSize = $true;
         $chckSCComplianceTag.Name = "chckSCComplianceTag"
         $chckSCComplianceTag.Checked = $true
@@ -470,7 +478,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCComplianceTag)
 
         $chckSCDLPCompliancePolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSCDLPCompliancePolicy.Top = 120
+        $chckSCDLPCompliancePolicy.Top = 140
         $chckSCDLPCompliancePolicy.AutoSize = $true;
         $chckSCDLPCompliancePolicy.Name = "chckSCDLPCompliancePolicy"
         $chckSCDLPCompliancePolicy.Checked = $true
@@ -478,7 +486,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCDLPCompliancePolicy)
 
         $chckSCDLPComplianceRule = New-Object System.Windows.Forms.CheckBox
-        $chckSCDLPComplianceRule.Top = 140
+        $chckSCDLPComplianceRule.Top = 160
         $chckSCDLPComplianceRule.AutoSize = $true;
         $chckSCDLPComplianceRule.Name = "chckSCDLPComplianceRule"
         $chckSCDLPComplianceRule.Checked = $true
@@ -486,7 +494,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCDLPComplianceRule)
 
         $chckSCRetentionCompliancePolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSCRetentionCompliancePolicy.Top = 160
+        $chckSCRetentionCompliancePolicy.Top = 180
         $chckSCRetentionCompliancePolicy.AutoSize = $true;
         $chckSCRetentionCompliancePolicy.Name = "chckSCRetentionCompliancePolicy"
         $chckSCRetentionCompliancePolicy.Checked = $true
@@ -494,7 +502,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCRetentionCompliancePolicy)
 
         $chckSCRetentionComplianceRule = New-Object System.Windows.Forms.CheckBox
-        $chckSCRetentionComplianceRule.Top = 180
+        $chckSCRetentionComplianceRule.Top = 200
         $chckSCRetentionComplianceRule.AutoSize = $true;
         $chckSCRetentionComplianceRule.Name = "chckSCRetentionComplianceRule"
         $chckSCRetentionComplianceRule.Checked = $true
@@ -502,7 +510,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCRetentionComplianceRule)
 
         $chckSCSupervisoryReviewPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSCSupervisoryReviewPolicy.Top = 200
+        $chckSCSupervisoryReviewPolicy.Top = 220
         $chckSCSupervisoryReviewPolicy.AutoSize = $true;
         $chckSCSupervisoryReviewPolicy.Name = "chckSCSupervisoryReviewPolicy"
         $chckSCSupervisoryReviewPolicy.Checked = $true
@@ -510,7 +518,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCSupervisoryReviewPolicy)
 
         $chckSCSupervisoryReviewRule = New-Object System.Windows.Forms.CheckBox
-        $chckSCSupervisoryReviewRule.Top = 220
+        $chckSCSupervisoryReviewRule.Top = 240
         $chckSCSupervisoryReviewRule.AutoSize = $true;
         $chckSCSupervisoryReviewRule.Name = "chckSCSupervisoryReviewRule"
         $chckSCSupervisoryReviewRule.Checked = $true

@@ -9138,7 +9138,7 @@ function Add-PnPTenantTheme {
    param(
        [Parameter(Mandatory = $true)]
        [System.String]
-       $Name,
+       $Identity,
 
        [Parameter()]
        [System.Boolean]
@@ -9161,7 +9161,7 @@ function Get-OrganizationConfig
 }
 
 function Set-OrganizationConfig
-{
+{}
     [CmdletBinding()]
     param(
         [Parameter()]
@@ -9418,6 +9418,33 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Boolean]
         $WebSuggestedRepliesDisabled
+    )
+}
+
+function New-AuditConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Workload
+    )
+}
+
+function Get-AuditConfigurationPolicy
+{
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-AuditConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
     )
 }
 
