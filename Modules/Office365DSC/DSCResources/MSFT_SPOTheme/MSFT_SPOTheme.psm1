@@ -95,14 +95,14 @@ function Set-TargetResource
         Write-Verbose "Converting Received Palette Values into Hashtable"
         $HashPalette = Convert-NewThemePaletteToHashTable -Palette $Palette
         $AddParameters = @{
-            Name       = $Name
+            Identity       = $Name
             IsInverted = $IsInverted
             Palette    = $HashPalette
         }
 
         try
         {
-            $existingTheme = Get-PnPTenantTheme -Name $Name
+            $existingTheme = Get-PnPTenantTheme -Name $Name -ErrorAction SilentlyContinue
         }
         catch
         {
@@ -112,7 +112,7 @@ function Set-TargetResource
         if ($null -eq $existingTheme)
         {
             Write-Verbose -Message "Theme {$Name} doesn't already exist. Creating it."
-            Add-SPOTheme @AddParameters
+            Add-PnPTenantTheme @AddParameters
         }
         else
         {
@@ -170,12 +170,17 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck @("Ensure", `
                                                                    "Name", `
-                                                                   "IsInverted", `
-                                                                   "Palette")
+                                                                   "IsInverted")
+
+    if ($TestResult)
+    {
+        $TestResult = Compare-SPOTheme -existingThemePalette $currentValues.Palette -configThemePalette $Palette
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

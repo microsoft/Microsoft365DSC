@@ -9138,7 +9138,7 @@ function Add-PnPTenantTheme {
    param(
        [Parameter(Mandatory = $true)]
        [System.String]
-       $Name,
+       $Identity,
 
        [Parameter()]
        [System.Boolean]
@@ -9154,9 +9154,39 @@ function Add-PnPTenantTheme {
    )
 }
 
+function New-AuditConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Workload
+    )
+}
+
+function Get-AuditConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-AuditConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
 function Get-PnPUserProfileProperty {
     [CmdletBinding()]
-   param(
+    param(
        [Parameter()]
        [System.String]
        $Account

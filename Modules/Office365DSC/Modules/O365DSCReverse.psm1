@@ -793,6 +793,22 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region SCAuditConfigurationPolicy
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCAuditConfigurationPolicy")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
+    {
+        Write-Information "Extracting SCAuditConfigurationPolicy..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                                   -ChildPath "..\DSCResources\MSFT_SCAuditConfigurationPolicy\MSFT_SCAuditConfigurationPolicy.psm1" `
+                                                   -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "SCComplianceCase"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCComplianceCase")) -or
