@@ -9115,27 +9115,30 @@ param(
    )
 }
 
-function Get-PnPTenantTheme {
+function Get-PnPTenantTheme
+{
     [CmdletBinding()]
-   param(
+    param(
        [Parameter()]
        [System.String]
        $Identity
    )
 }
 
-function Remove-PnPTenantTheme {
+function Remove-PnPTenantTheme
+{
     [CmdletBinding()]
-   param(
+    param(
        [Parameter()]
        [System.String]
        $Identity
    )
 }
 
-function Add-PnPTenantTheme {
+function Add-PnPTenantTheme
+{
     [CmdletBinding()]
-   param(
+    param(
        [Parameter(Mandatory = $true)]
        [System.String]
        $Identity,
@@ -9154,6 +9157,273 @@ function Add-PnPTenantTheme {
    )
 }
 
+function Get-OrganizationConfig
+{
+    [CmdletBinding()]
+    param()
+}
+
+function Set-OrganizationConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $ActivityBasedAuthenticationTimeoutEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ActivityBasedAuthenticationTimeoutInterval,
+
+        [Parameter()]
+        [System.Boolean]
+        $ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AppsForOfficeEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AsyncSendEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AuditDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AutoExpandingArchive,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsPaymentsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsSocialSharingRestricted,
+
+        [Parameter()]
+        [System.UInt32]
+        $ByteEncoderTypeFor7BitCharsets,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectorsActionableMessagesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectorsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectorsEnabledForOutlook,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectorsEnabledForSharepoint,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectorsEnabledForTeams,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectorsEnabledForYammer,
+
+        [Parameter()]
+        [System.String]
+        $DefaultAuthenticationPolicy,
+
+        [Parameter()]
+        [ValidateSet('Private', 'Public')]
+        [System.String]
+        $DefaultGroupAccessType,
+
+        [Parameter()]
+        [System.String]
+        $DefaultPublicFolderAgeLimit,
+
+        [Parameter()]
+        [System.String]
+        $DefaultPublicFolderDeletedItemRetention,
+
+        [Parameter()]
+        [System.String]
+        $DefaultPublicFolderIssueWarningQuota,
+
+        [Parameter()]
+        [System.String]
+        $DefaultPublicFolderMaxItemSize,
+
+        [Parameter()]
+        [System.String]
+        $DefaultPublicFolderMovedItemRetention,
+
+        [Parameter()]
+        [System.String]
+        $DefaultPublicFolderProhibitPostQuota,
+
+        [Parameter()]
+        [System.Boolean]
+        $DirectReportsGroupAutoCreationEnabled,
+
+        [Parameter()]
+        [System.String]
+        $DistributionGroupDefaultOU,
+
+        [Parameter()]
+        [System.String[]]
+        $DistributionGroupNameBlockedWordsList,
+
+        [Parameter()]
+        [System.String]
+        $DistributionGroupNamingPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $ElcProcessingDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EndUserDLUpgradeFlowsDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EwsAllowEntourage,
+
+        [Parameter()]
+        [System.String[]]
+        $EwsAllowList,
+
+        [Parameter()]
+        [System.Boolean]
+        $EwsAllowMacOutlook,
+
+        [Parameter()]
+        [System.Boolean]
+        $EwsAllowOutlook,
+
+        [Parameter()]
+        [ValidateSet('EnforeAllowList', 'EnforceBlockList')]
+        [System.String]
+        $EwsApplicationAccessPolicy,
+
+        [Parameter()]
+        [System.String[]]
+        $EwsBlockList,
+
+        [Parameter()]
+        [System.Boolean]
+        $EwsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExchangeNotificationEnabled,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeNotificationRecipients,
+
+        [Parameter()]
+        [System.Boolean]
+        $FocusedInboxOn,
+
+        [Parameter()]
+        [System.String]
+        $HierarchicalAddressBookRoot,
+
+        [Parameter()]
+        [System.String[]]
+        $IPListBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $LeanPopoutEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $LinkPreviewEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MailTipsAllTipsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MailTipsExternalRecipientsTipsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MailTipsGroupMetricsEnabled,
+
+        [Parameter()]
+        [System.UInt32]
+        $MailTipsLargeAudienceThreshold,
+
+        [Parameter()]
+        [System.Boolean]
+        $MailTipsMailboxSourcedTipsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OAuth2ClientProfileEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OutlookMobileGCCRestrictionsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OutlookPayEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $PublicComputersDetectionEnabled,
+
+        [Parameter()]
+        [ValidateSet('None', 'Local', 'Remote')]
+        [System.String]
+        $PublicFoldersEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $PublicFolderShowClientControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $ReadTrackingEnabled,
+
+        [Parameter()]
+        [System.String[]]
+        $RemotePublicFolderMailboxes,
+
+        [Parameter()]
+        [System.String]
+        $SiteMailboxCreationURL,
+
+        [Parameter()]
+        [System.Boolean]
+        $SmtpActionableMessagesEnabled,
+
+        [Parameter()]
+        [System.String]
+        $VisibleMeetingUpdateProperties,
+
+        [Parameter()]
+        [System.Boolean]
+        $WebPushNotificationsDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $WebSuggestedRepliesDisabled
+    )
+}
+
 function New-AuditConfigurationPolicy
 {
     [CmdletBinding()]
@@ -9168,7 +9438,6 @@ function Get-AuditConfigurationPolicy
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
         [System.String]
         $Identity
     )

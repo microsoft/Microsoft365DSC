@@ -207,6 +207,14 @@ function Show-O365GUI
         $chckEXOMailTips.Text = "Mail Tips"
         $pnlExo.Controls.Add($chckEXOMailTips);
 
+        $chckEXOOrganizationConfig = New-Object System.Windows.Forms.CheckBox
+        $chckEXOOrganizationConfig.Top = 180
+        $chckEXOOrganizationConfig.AutoSize = $true;
+        $chckEXOOrganizationConfig.Name = "chckEXOOrganizationConfig"
+        $chckEXOOrganizationConfig.Checked = $true
+        $chckEXOOrganizationConfig.Text = "Organization Config"
+        $pnlExo.Controls.Add($chckEXOOrganizationConfig);
+
         $chckEXOOutboundSpamFilterPolicy = New-Object System.Windows.Forms.CheckBox
         $chckEXOOutboundSpamFilterPolicy.Top = 220
         $chckEXOOutboundSpamFilterPolicy.AutoSize = $true;

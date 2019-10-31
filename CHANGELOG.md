@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* EXOOrganizationConfig
+  * Initial Release;
 * EXOClientAccessRule
   * Fixed issue with Get-TargetResource not
     returning all values;
@@ -15,6 +17,7 @@
 * Metadata
   * Updated SharePointPnPPowerShellOnline dependency
     to version 3.14.1910.1;
+  * Updated ReverseDSC dependency to version 2.0.0.0;
 
 ## 1.0.0.1048
 
@@ -42,7 +45,7 @@
   * Updated ReverseDSC dependency
     to version 1.9.4.6;
   * Updated Microsoft.Online.SharePoint.PowerShell dependency
-    to version 16.0.19223.12000
+    to version 16.0.19223.12000;
   * UPdated SharePointPnPPowerShellOnline dependency
     to version 3.14.1910.0
 
@@ -109,7 +112,7 @@
     to version 3.11.1907.0
 * BREAKING CHANGES
   * O365Group
-    * ManagedBy is now a mandatory property
+    * ManagedBy is now a mandatory property;
   * SPOSite
     * Owner is now a mandatory property
 * Modules
