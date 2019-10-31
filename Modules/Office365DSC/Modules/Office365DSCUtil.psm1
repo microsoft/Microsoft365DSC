@@ -1297,9 +1297,6 @@ function Set-EXOSafeLinksRule
     }
 }
 
-
-
-
 function Test-Office365DSCParameterState
 {
     [CmdletBinding()]
@@ -1519,13 +1516,27 @@ function Test-Office365DSCParameterState
 
     if ($returnValue -eq $false)
     {
-        $EventMessage = "A Configuration Drift has been detected on $Source. `r `n"
+        $EventMessage = "A Configuration Drift has been detected on $Source. `r`n"
         $EventMessage += "Parameters below had a configuration drift:`r`n"
 
         foreach ($key in $DriftedParameters.Keys)
         {
-            $EventMessage += "    " + $key + " = " + $DriftedParameters.$key
+            $EventMessage += "    " + $key + " = " + $DriftedParameters.$key + "`r`n"
         }
+
+        $EventMessage += "`r`n----------------------------------------------------------`r`n"
+        $EventMessage += "Desired Values:`r`n`r`n"
+        $EventMessage += "    @{`r`n"
+        foreach ($Key in $DesiredValues.Keys)
+        {
+            $Value = $DesiredValues.$Key
+            if ([System.String]::IsNullOrEmpty($Value))
+            {
+                $Value = "`$null"
+            }
+            $EventMessage += "        $key = $Value`r`n"
+        }
+        $EventMessage += "    }"
 
         Add-O365DSCEvent -Message $EventMessage -EntryType 'Error' -EventID 1 -Source $Source
     }
