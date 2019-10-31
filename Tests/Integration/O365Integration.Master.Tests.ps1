@@ -91,7 +91,7 @@ Configuration Master
         {
             ElcProcessingDisabled                                     = $False;
             IsSingleInstance                                          = "Yes";
-            DefaultPublicFolderProhibitPostQuota                      = "2 GB (2,147,483,648 bytes)";
+            DefaultPublicFolderProhibitPostQuota                      = "12345";
             VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
             BookingsEnabled                                           = $True;
             ExchangeNotificationRecipients                            = @();
@@ -104,7 +104,7 @@ Configuration Master
             AuditDisabled                                             = $False;
             EwsAllowMacOutlook                                        = $null;
             ConnectorsEnabledForTeams                                 = $True;
-            DefaultPublicFolderIssueWarningQuota                      = "1.7 GB (1,825,361,920 bytes)";
+            DefaultPublicFolderIssueWarningQuota                      = "12345";
             MailTipsMailboxSourcedTipsEnabled                         = $True;
             EndUserDLUpgradeFlowsDisabled                             = $False;
             DistributionGroupDefaultOU                                = $null;
@@ -119,7 +119,7 @@ Configuration Master
             GlobalAdminAccount                                        = $GlobalAdmin;
             ConnectorsEnabledForYammer                                = $True;
             HierarchicalAddressBookRoot                               = $null;
-            DefaultPublicFolderMaxItemSize                            = "Unlimited";
+            DefaultPublicFolderMaxItemSize                            = "12345";
             MailTipsLargeAudienceThreshold                            = 25;
             ConnectorsActionableMessagesEnabled                       = $True;
             ExchangeNotificationEnabled                               = $True;
