@@ -34,7 +34,6 @@ function New-Office365DSCLogEntry
     $LogContent | Out-File $LogFileName -Append
 }
 
-
 function Add-O365DSCEvent
 {
     [CmdletBinding()]
@@ -57,15 +56,13 @@ function Add-O365DSCEvent
         $EventID = 1
     )
 
-    $CurrentLog = Get-EventLog -LogName 'Office365DSC' -Source $Source -ErrorAction SilentlyContinue
-
-    if ($null -eq $CurrentLog)
-    {
-        $CurrentLog = New-EventLog -LogName 'Office365DSC' -Source $Source -ErrorAction SilentlyContinue
-    }
-
     try
     {
+        $CurrentLog = Get-EventLog -LogName 'Office365DSC' -Source $Source -ErrorAction SilentlyContinue
+        if ($null -eq $CurrentLog)
+        {
+            $CurrentLog = New-EventLog -LogName 'Office365DSC' -Source $Source -ErrorAction SilentlyContinue
+        }
         [System.Diagnostics.EventLog]::CreateEventSource($Source, "Office365DSC")
     }
     catch
