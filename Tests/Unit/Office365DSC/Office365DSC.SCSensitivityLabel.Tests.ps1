@@ -55,12 +55,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Tooltip            = "Test tool tip"
                 DisplayName        = "Test label"
                 ParentId           = "TestLabel"
-                #Priority           = 0
-                #Disabled           = $false
                 AdvancedSettings   = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
-
                         Key   = "LabelStatus"
                         Value = "Enabled"
+                    } -clientOnly)
+                LocaleSettings     = (New-CimInstance -ClassName MSFT_SCLabelLocaleSettings -Property @{
+                        LocaleKey = "DisplayName"
+                        Settings  = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
+                                Key   = "en-us"
+                                Value = "English DisplayName"
+                            } -ClientOnly)
                     } -clientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Present"
@@ -89,10 +93,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Comment            = "This is a test label"
                 ToolTip            = "Test tool tip"
                 DisplayName        = "Test label"
-                ParentId           = "ParentLabel"
+                ParentId           = "MyLabel"
                 AdvancedSettings   = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
                         Key   = "LabelStatus"
                         Value = "Enabled"
+                    } -clientOnly)
+                LocaleSettings     = (New-CimInstance -ClassName MSFT_SCLabelLocaleSettings -Property @{
+                        LocaleKey = "DisplayName"
+                        Settings  = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
+                                Key   = "en-us"
+                                Value = "English DisplayName"
+                            } -ClientOnly)
                     } -clientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Present"
@@ -101,19 +112,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-Label -MockWith {
                 return @{
                     Name             = "TestLabel"
-                    Comment          = "This is a test label"
+                    Comment          = "Updated comment"
                     ToolTip          = "Test tool tip"
                     DisplayName      = "Test label"
-                    ParentId         = "ParentLabel"
-                    AdvancedSettings = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
-                            Key   = "LabelStatus"
-                            Value = "Enabled"
-                        } -clientOnly)
+                    ParentId         = "MyLabel"
+                    Priority         = "2"
+                    AdvancedSettings = '[{"Key":"LabelStatus", "Value":"Enabled"}]'
+                    LocaleSettings   = '{"LocaleKey":"DisplayName",
+                                         "Settings":[
+                                         {"Key":"en-us","Value":"English Display Names"}]}'
                 }
             }
 
-            It 'Should return true from the Test method' {
-                Test-TargetResource @testParams | Should Be $true
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should Be $false
             }
 
             It 'Should update from the Set method' {
@@ -124,6 +136,38 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
         }
+
+        Context -Name "Label should not exist" -Fixture {
+            $testParams = @{
+                Name               = "TestLabel"
+                ParentId           = "MyLabel"
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = "Absent"
+            }
+
+            Mock -CommandName Get-Label -MockWith {
+                return @{
+                    ParentId = "MyLabel"
+                }
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should Be $false
+            }
+
+            Mock -CommandName Get-Label -MockWith {
+                $null
+            }
+
+            It 'Should delete from the Set method' {
+                Set-TargetResource @testParams
+            }
+
+            It 'Should return Absent from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
+            }
+        }
+
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
