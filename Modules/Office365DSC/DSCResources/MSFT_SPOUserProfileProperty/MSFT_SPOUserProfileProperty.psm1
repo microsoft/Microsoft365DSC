@@ -140,6 +140,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-SPOUserProfilePropertyInstance -DesiredProperties $Properties `
+                                                      -Source $($MyInvocation.MyCommand.Source) `
                                                       -CurrentProperties $CurrentValues.Properties
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"

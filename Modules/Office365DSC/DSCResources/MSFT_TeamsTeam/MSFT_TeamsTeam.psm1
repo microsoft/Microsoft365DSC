@@ -483,6 +483,7 @@ function Test-TargetResource
     }
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -Source $($MyInvocation.MyCommand.Source) `
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck $ValuesToCheck.Keys
 
