@@ -103,7 +103,7 @@ function Get-TargetResource
         $DefaultPublicFolderIssueWarningQuota,
 
         [Parameter()]
-        [System.System.UInt64]
+        [System.UInt64]
         [ValidateRange(0,2199023254529)]
         $DefaultPublicFolderMaxItemSize,
 
@@ -113,7 +113,7 @@ function Get-TargetResource
         $DefaultPublicFolderMovedItemRetention,
 
         [Parameter()]
-        [System.System.UInt64]
+        [System.UInt64]
         [ValidateRange(0,2199023254529)]
         $DefaultPublicFolderProhibitPostQuota,
 
@@ -477,12 +477,12 @@ function Set-TargetResource
         $DefaultPublicFolderDeletedItemRetention,
 
         [Parameter()]
-        [System.System.UInt64]
+        [System.UInt64]
         [ValidateRange(0,2199023254529)]
         $DefaultPublicFolderIssueWarningQuota,
 
         [Parameter()]
-        [System.System.UInt64]
+        [System.UInt64]
         [ValidateRange(0,2199023254529)]
         $DefaultPublicFolderMaxItemSize,
 
@@ -492,7 +492,7 @@ function Set-TargetResource
         $DefaultPublicFolderMovedItemRetention,
 
         [Parameter()]
-        [System.System.UInt64]
+        [System.UInt64]
         [ValidateRange(0,2199023254529)]
         $DefaultPublicFolderProhibitPostQuota,
 
@@ -773,12 +773,12 @@ function Test-TargetResource
         $DefaultPublicFolderDeletedItemRetention,
 
         [Parameter()]
-        [System.System.UInt64]
+        [System.UInt64]
         [ValidateRange(0,2199023254529)]
         $DefaultPublicFolderIssueWarningQuota,
 
         [Parameter()]
-        [System.System.UInt64]
+        [System.UInt64]
         [ValidateRange(0,2199023254529)]
         $DefaultPublicFolderMaxItemSize,
 
@@ -788,7 +788,7 @@ function Test-TargetResource
         $DefaultPublicFolderMovedItemRetention,
 
         [Parameter()]
-        [System.System.UInt64]
+        [System.UInt64]
         [ValidateRange(0,2199023254529)]
         $DefaultPublicFolderProhibitPostQuota,
 
