@@ -8,7 +8,7 @@ param
     [System.String]
     $GlobalAdminPassword,
 
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [System.String]
     $Domain
 )
@@ -17,11 +17,11 @@ Configuration Master
 {
     param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdmin,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Domain
     )
@@ -103,14 +103,14 @@ Configuration Master
 
         O365Group O365DSCCoreTeam
         {
-            DisplayName          = "Office365DSC Core Team"
-            MailNickName         = "O365DSCCore"
-            ManagedBy            = "admin@$Domain"
-            Description          = "Group for all the Core Team members"
-            Members              = @("John.Smith@$Domain")
-            GlobalAdminAccount   = $GlobalAdmin
-            Ensure               = "Present"
-            DependsOn            = "[O365User]JohnSmith"
+            DisplayName        = "Office365DSC Core Team"
+            MailNickName       = "O365DSCCore"
+            ManagedBy          = "admin@$Domain"
+            Description        = "Group for all the Core Team members"
+            Members            = @("John.Smith@$Domain")
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+            DependsOn          = "[O365User]JohnSmith"
         }
 
         SCAuditConfigurationPolicy SharePointAuditPolicy
@@ -161,38 +161,38 @@ Configuration Master
 
         SCComplianceSearchAction DemoSearchActionExport
         {
-            IncludeSharePointDocumentVersions   = $False;
-            Action                              = "Export";
-            SearchName                          = "Integration Compliance Search - EXO";
-            GlobalAdminAccount                  = $GlobalAdmin;
-            IncludeCredential                   = $False;
-            RetryOnError                        = $False;
-            ActionScope                         = "IndexedItemsOnly";
-            Ensure                              = "Present";
-            EnableDedupe                        = $False;
+            IncludeSharePointDocumentVersions = $False;
+            Action                            = "Export";
+            SearchName                        = "Integration Compliance Search - EXO";
+            GlobalAdminAccount                = $GlobalAdmin;
+            IncludeCredential                 = $False;
+            RetryOnError                      = $False;
+            ActionScope                       = "IndexedItemsOnly";
+            Ensure                            = "Present";
+            EnableDedupe                      = $False;
         }
 
         SCComplianceSearchAction DemoSearchActionRetention
         {
-            IncludeSharePointDocumentVersions   = $False;
-            Action                              = "Retention";
-            SearchName                          = "Integration Compliance Search - EXO";
-            GlobalAdminAccount                  = $GlobalAdmin;
-            IncludeCredential                   = $False;
-            RetryOnError                        = $False;
-            ActionScope                         = "IndexedItemsOnly";
-            Ensure                              = "Present";
-            EnableDedupe                        = $False;
+            IncludeSharePointDocumentVersions = $False;
+            Action                            = "Retention";
+            SearchName                        = "Integration Compliance Search - EXO";
+            GlobalAdminAccount                = $GlobalAdmin;
+            IncludeCredential                 = $False;
+            RetryOnError                      = $False;
+            ActionScope                       = "IndexedItemsOnly";
+            Ensure                            = "Present";
+            EnableDedupe                      = $False;
         }
 
         SCComplianceSearchAction DemoSearchActionPurge
         {
-            Action                              = "Purge";
-            SearchName                          = "Integration Compliance Search - EXO";
-            GlobalAdminAccount                  = $GlobalAdmin;
-            IncludeCredential                   = $False;
-            RetryOnError                        = $False;
-            Ensure                              = "Present";
+            Action             = "Purge";
+            SearchName         = "Integration Compliance Search - EXO";
+            GlobalAdminAccount = $GlobalAdmin;
+            IncludeCredential  = $False;
+            RetryOnError       = $False;
+            Ensure             = "Present";
         }
 
         SCComplianceCase DemoCase
@@ -234,9 +234,10 @@ Configuration Master
             RetentionAction    = "Keep"
             RetentionDuration  = "1025"
             RetentionType      = "ModificationAgeInDays"
-            FilePlanProperty   = MSFT_SCFilePlanProperty{
+            FilePlanProperty   = MSFT_SCFilePlanProperty
+            {
                 FilePlanPropertyDepartment = "Human resources"
-                FilePlanPropertyCategory = "Accounts receivable"
+                FilePlanPropertyCategory   = "Accounts receivable"
             }
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
@@ -260,9 +261,9 @@ Configuration Master
             Ensure                              = "Present";
             GlobalAdminAccount                  = $GlobalAdmin;
             ContentContainsSensitiveInformation = MSFT_SCDLPSensitiveInformation
-                                                  {
-                                                      name = "U.S. Social Security Number (SSN)"
-                                                  };
+            {
+                name = "U.S. Social Security Number (SSN)"
+            };
         }
 
         SCRetentionCompliancePolicy RCPolicy
@@ -304,66 +305,124 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
         }
 
-        SPOSearchManagedProperty ManagedProp1
+        SCSensitivityLabel SCSenLabel
         {
-            Name               = "Gilles"
-            Type               = "Text"
+            Name               = "Demo Label"
+            Comment            = "Demo label comment"
+            ToolTip            = "Demo tool tip"
+            DisplayName        = "Demo label"
+
+            LocaleSettings     = @(
+                MSFT_SCLabelLocaleSettings
+                {
+                    LocaleKey = "DisplayName"
+                    Settings  = @(
+                        MSFT_SCLabelSetting
+                        {
+                            Key   = "en-us"
+                            Value = "English Display Names"
+                        }
+                        MSFT_SCLabelSetting
+                        {
+                            Key   = "fr-fr"
+                            Value = "Nom da'ffichage francais"
+                        }
+                    )
+                }
+                MSFT_SCLabelLocaleSettings
+                {
+                    LocaleKey = "StopColor"
+                    Settings  = @(
+                        MSFT_SCLabelSetting
+                        {
+                            Key   = "en-us"
+                            Value = "RedGreen"
+                        }
+                        MSFT_SCLabelSetting
+                        {
+                            Key   = "fr-fr"
+                            Value = "Rouge"
+                        }
+                    )
+                }
+            )
+            AdvancedSettings   = @(
+                MSFT_SCLabelSetting
+                {
+                    Key   = "AllowedLevel"
+                    Value = @("Sensitive", "Classified")
+                }
+                MSFT_SCLabelSetting
+                {
+                    Key   = "LabelStatus"
+                    Value = "Enabled"
+                }
+            )
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
         }
+    }
 
-        SPOSite ClassicSite
-        {
-            Title                = "Classic Site"
-            Url                  = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
-            Owner                = "adminnonMFA@$Domain"
-            Template             = "STS#0"
-            GlobalAdminAccount   = $GlobalAdmin
-            Ensure               = "Present"
-        }
+    SPOSearchManagedProperty ManagedProp1
+    {
+        Name               = "Gilles"
+        Type               = "Text"
+        GlobalAdminAccount = $GlobalAdmin
+        Ensure             = "Present"
+    }
 
-        SPOSite ModernSite
-        {
-            Title                = "Modern Site"
-            Url                  = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
-            Owner                = "adminnonmfa@$Domain"
-            Template             = "STS#3"
-            GlobalAdminAccount   = $GlobalAdmin
-            Ensure               = "Present"
-        }
+    SPOSite ClassicSite
+    {
+        Title              = "Classic Site"
+        Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
+        Owner              = "adminnonMFA@$Domain"
+        Template           = "STS#0"
+        GlobalAdminAccount = $GlobalAdmin
+        Ensure             = "Present"
+    }
 
-        SPOPropertyBag MyKey
-        {
-            Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
-            Key                = "MyKey"
-            Value              = "MyValue#3"
-            GlobalAdminAccount = $GlobalAdmin
-            Ensure             = "Present"
-        }
+    SPOSite ModernSite
+    {
+        Title              = "Modern Site"
+        Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+        Owner              = "adminnonmfa@$Domain"
+        Template           = "STS#3"
+        GlobalAdminAccount = $GlobalAdmin
+        Ensure             = "Present"
+    }
 
-        SPOSiteAuditSettings MyStorageEntity
-        {
-            Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
-            AuditFlags         = "All"
-            GlobalAdminAccount = $GlobalAdmin
-        }
+    SPOPropertyBag MyKey
+    {
+        Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+        Key                = "MyKey"
+        Value              = "MyValue#3"
+        GlobalAdminAccount = $GlobalAdmin
+        Ensure             = "Present"
+    }
 
-        SPOTheme SPTheme01
-        {
-                GlobalAdminAccount  = $GlobalAdmin
-                Name                = "Integration Palette"
-                Palette             = @(MSFT_SPOThemePaletteProperty{
-                                            Property = "themePrimary"
-                                            Value = "#0078d4"
-                                      }
-                                      MSFT_SPOThemePaletteProperty{
-                                          Property = "themeLighterAlt"
-                                          Value = "#eff6fc"
-                                      }
-                )
-        }
+    SPOSiteAuditSettings MyStorageEntity
+    {
+        Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
+        AuditFlags         = "All"
+        GlobalAdminAccount = $GlobalAdmin
+    }
 
-        <#SPOStorageEntity SiteEntity1
+    SPOTheme SPTheme01
+    {
+        GlobalAdminAccount = $GlobalAdmin
+        Name               = "Integration Palette"
+        Palette            = @(MSFT_SPOThemePaletteProperty {
+                Property = "themePrimary"
+                Value    = "#0078d4"
+            }
+            MSFT_SPOThemePaletteProperty {
+                Property = "themeLighterAlt"
+                Value    = "#eff6fc"
+            }
+        )
+    }
+
+    <#SPOStorageEntity SiteEntity1
         {
             Key                = "SiteEntity1"
             Value              = "Modern Value"
@@ -385,7 +444,7 @@ Configuration Master
             Ensure             = "Present"
         }#>
 
-        <#SPOTenantCDNPolicy PublicCDNPolicies
+    <#SPOTenantCDNPolicy PublicCDNPolicies
         {
             IncludeFileExtensions                = @('.jpg', '.png');
             GlobalAdminAccount                   = $GlobalAdmin
@@ -401,48 +460,48 @@ Configuration Master
             ExcludeRestrictedSiteClassifications = @();
         }#>
 
-        SPOUserProfileProperty AdminFavoriteFood
-        {
-            UserName           = "adminnonmfa@$Domain"
-            Properties         = @(
-                MSFT_SPOUserProfilePropertyInstance
-                {
-                    Key   = "FavoriteFood"
-                    Value = "Pasta"
-                }
-            )
-            GlobalAdminAccount = $GlobalAdmin
-            Ensure             = "Present"
-        }
-
-        TeamsTeam TeamAlpha
-        {
-            DisplayName          = "Alpha Team"
-            AllowAddRemoveApps   = $true
-            AllowChannelMentions = $false
-            GlobalAdminAccount   = $GlobalAdmin
-            Ensure               = "Present"
-        }
-
-        TeamsChannel ChannelAlpha1
-        {
-            DisplayName        = "Channel Alpha"
-            Description        = "Test Channel"
-            TeamName           = "Alpha Team"
-            GlobalAdminAccount = $GlobalAdmin
-            Ensure             = "Present"
-            DependsON          = "[TeamsTeam]TeamAlpha"
-        }
-
-        TeamsUser MemberJohn
-        {
-            TeamName           = "Alpha Team"
-            User               = "John.Smith@$($Domain)"
-            GlobalAdminAccount = $GlobalAdmin
-            Ensure             = "Present"
-            DependsON          = @("[O365User]JohnSmith","[TeamsTeam]TeamAlpha")
-        }
+    SPOUserProfileProperty AdminFavoriteFood
+    {
+        UserName           = "adminnonmfa@$Domain"
+        Properties         = @(
+            MSFT_SPOUserProfilePropertyInstance
+            {
+                Key   = "FavoriteFood"
+                Value = "Pasta"
+            }
+        )
+        GlobalAdminAccount = $GlobalAdmin
+        Ensure             = "Present"
     }
+
+    TeamsTeam TeamAlpha
+    {
+        DisplayName          = "Alpha Team"
+        AllowAddRemoveApps   = $true
+        AllowChannelMentions = $false
+        GlobalAdminAccount   = $GlobalAdmin
+        Ensure               = "Present"
+    }
+
+    TeamsChannel ChannelAlpha1
+    {
+        DisplayName        = "Channel Alpha"
+        Description        = "Test Channel"
+        TeamName           = "Alpha Team"
+        GlobalAdminAccount = $GlobalAdmin
+        Ensure             = "Present"
+        DependsON          = "[TeamsTeam]TeamAlpha"
+    }
+
+    TeamsUser MemberJohn
+    {
+        TeamName           = "Alpha Team"
+        User               = "John.Smith@$($Domain)"
+        GlobalAdminAccount = $GlobalAdmin
+        Ensure             = "Present"
+        DependsON          = @("[O365User]JohnSmith", "[TeamsTeam]TeamAlpha")
+    }
+}
 }
 
 $ConfigurationData = @{

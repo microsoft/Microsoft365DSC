@@ -16,10 +16,60 @@ Configuration Example
     {
         SCSensitivityLabel DemoRule
         {
-            Name               = "DemoTag"
-            Comment            = "This is a Demo Tag"
+            Name               = "DemoLabel"
+            Comment            = "Demo Label comment"
+            ToolTip            = "Demo tool tip"
+            DisplayName        = "Demo Label"
+
+            LocaleSettings = @(
+                MSFT_SCLabelLocaleSettings
+                {
+                    LocaleKey = "DisplayName"
+                    Settings  = @(
+                                MSFT_SCLabelSetting
+                                {
+                                    Key = "en-us"
+                                    Value = "English Display Names"
+                                }
+                                MSFT_SCLabelSetting
+                                {
+                                    Key = "fr-fr"
+                                    Value = "Nom da'ffichage francais"
+                                }
+                    )
+                }
+                MSFT_SCLabelLocaleSettings
+                {
+                    LocaleKey = "StopColor"
+                    Settings  = @(
+                                MSFT_SCLabelSetting
+                                {
+                                    Key = "en-us"
+                                    Value = "RedGreen"
+                                }
+                                MSFT_SCLabelSetting
+                                {
+                                    Key = "fr-fr"
+                                    Value = "Rouge"
+                                }
+                    )
+                }
+            )
+            AdvancedSettings = @(
+                MSFT_SCLabelSetting
+                {
+                    Key = "AllowedLevel"
+                    Value = @("Sensitive", "Classified")
+                }
+                MSFT_SCLabelSetting
+                {
+                    Key = "LabelStatus"
+                    Value = "Enabled"
+                }
+            )
+            ParentId           = "Personal"
+            GlobalAdminAccount = $GlobalAdminAccount
             Ensure             = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
         }
     }
 }
