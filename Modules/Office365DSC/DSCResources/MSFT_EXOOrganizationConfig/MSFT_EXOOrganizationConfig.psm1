@@ -89,12 +89,12 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderAgeLimit,
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderDeletedItemRetention,
 
         [Parameter()]
@@ -109,7 +109,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderMovedItemRetention,
 
         [Parameter()]
@@ -287,6 +287,33 @@ function Get-TargetResource
         throw 'There was an error retrieving values from the Get function in EXOOrganizationConfig.'
     }
 
+    # DefaultPublicFolderIssueWarningQuota
+    $startPos = $ConfigSettings.DefaultPublicFolderIssueWarningQuota.IndexOf('(') + 1
+    if ($startPos -gt 0)
+    {
+        $endPos = $ConfigSettings.DefaultPublicFolderIssueWarningQuota.IndexOf(')')
+        $sub = $ConfigSettings.DefaultPublicFolderIssueWarningQuota.SubstringOf($startPos, $endPos - $startPos)
+        $ValueDefaultPublicFolderIssueWarningQuota = $sub.Split(' ')[0].Replace(",", "")
+    }
+
+    # DefaultPublicFolderProhibitPostQuota
+    $startPos = $ConfigSettings.DefaultPublicFolderProhibitPostQuota.IndexOf('(') + 1
+    if ($startPos -gt 0)
+    {
+        $endPos = $ConfigSettings.DefaultPublicFolderProhibitPostQuota.IndexOf(')')
+        $sub = $ConfigSettings.DefaultPublicFolderProhibitPostQuota.SubstringOf($startPos, $endPos - $startPos)
+        $ValueDefaultPublicFolderProhibitPostQuota = $sub.Split(' ')[0].Replace(",", "")
+    }
+
+    # DefaultPublicFolderMaxItemSize
+    $startPos = $ConfigSettings.DefaultPublicFolderMaxItemSize.IndexOf('(') + 1
+    if ($startPos -gt 0)
+    {
+        $endPos = $ConfigSettings.DefaultPublicFolderMaxItemSize.IndexOf(')')
+        $sub = $ConfigSettings.DefaultPublicFolderMaxItemSize.SubstringOf($startPos, $endPos - $startPos)
+        $ValueDefaultPublicFolderMaxItemSize = $sub.Split(' ')[0].Replace(",", "")
+    }
+
     $results = @{
         IsSingleInstance                                          = 'Yes'
         ActivityBasedAuthenticationTimeoutEnabled                 = $ConfigSettings.ActivityBasedAuthenticationTimeoutEnabled
@@ -310,10 +337,10 @@ function Get-TargetResource
         DefaultGroupAccessType                                    = $ConfigSettings.DefaultGroupAccessType
         DefaultPublicFolderAgeLimit                               = $ConfigSettings.DefaultPublicFolderAgeLimit
         DefaultPublicFolderDeletedItemRetention                   = $ConfigSettings.DefaultPublicFolderDeletedItemRetention
-        DefaultPublicFolderIssueWarningQuota                      = $ConfigSettings.DefaultPublicFolderIssueWarningQuota
-        DefaultPublicFolderMaxItemSize                            = $ConfigSettings.DefaultPublicFolderMaxItemSize
+        DefaultPublicFolderIssueWarningQuota                      = $ValueDefaultPublicFolderIssueWarningQuota
+        DefaultPublicFolderMaxItemSize                            = $ValueDefaultPublicFolderMaxItemSize
         DefaultPublicFolderMovedItemRetention                     = $ConfigSettings.DefaultPublicFolderMovedItemRetention
-        DefaultPublicFolderProhibitPostQuota                      = $ConfigSettings.DefaultPublicFolderProhibitPostQuota
+        DefaultPublicFolderProhibitPostQuota                      = $ValueDefaultPublicFolderProhibitPostQuota
         DirectReportsGroupAutoCreationEnabled                     = $ConfigSettings.DirectReportsGroupAutoCreationEnabled
         DistributionGroupDefaultOU                                = $ConfigSettings.DistributionGroupDefaultOU
         DistributionGroupNameBlockedWordsList                     = $ConfigSettings.DistributionGroupNameBlockedWordsList
@@ -468,12 +495,12 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderAgeLimit,
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderDeletedItemRetention,
 
         [Parameter()]
@@ -488,7 +515,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderMovedItemRetention,
 
         [Parameter()]
@@ -764,12 +791,12 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderAgeLimit,
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderDeletedItemRetention,
 
         [Parameter()]
@@ -784,7 +811,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderMovedItemRetention,
 
         [Parameter()]
