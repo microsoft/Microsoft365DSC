@@ -292,7 +292,7 @@ function Get-TargetResource
     if ($startPos -gt 0)
     {
         $endPos = $ConfigSettings.DefaultPublicFolderIssueWarningQuota.IndexOf(')')
-        $sub = $ConfigSettings.DefaultPublicFolderIssueWarningQuota.SubstringOf($startPos, $endPos - $startPos)
+        $sub = $ConfigSettings.DefaultPublicFolderIssueWarningQuota.Substring($startPos, $endPos - $startPos)
         $ValueDefaultPublicFolderIssueWarningQuota = $sub.Split(' ')[0].Replace(",", "")
     }
 
@@ -301,7 +301,7 @@ function Get-TargetResource
     if ($startPos -gt 0)
     {
         $endPos = $ConfigSettings.DefaultPublicFolderProhibitPostQuota.IndexOf(')')
-        $sub = $ConfigSettings.DefaultPublicFolderProhibitPostQuota.SubstringOf($startPos, $endPos - $startPos)
+        $sub = $ConfigSettings.DefaultPublicFolderProhibitPostQuota.Substring($startPos, $endPos - $startPos)
         $ValueDefaultPublicFolderProhibitPostQuota = $sub.Split(' ')[0].Replace(",", "")
     }
 
@@ -310,7 +310,7 @@ function Get-TargetResource
     if ($startPos -gt 0)
     {
         $endPos = $ConfigSettings.DefaultPublicFolderMaxItemSize.IndexOf(')')
-        $sub = $ConfigSettings.DefaultPublicFolderMaxItemSize.SubstringOf($startPos, $endPos - $startPos)
+        $sub = $ConfigSettings.DefaultPublicFolderMaxItemSize.Substring($startPos, $endPos - $startPos)
         $ValueDefaultPublicFolderMaxItemSize = $sub.Split(' ')[0].Replace(",", "")
     }
 
