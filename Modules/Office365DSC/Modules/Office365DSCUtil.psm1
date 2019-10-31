@@ -1516,17 +1516,17 @@ function Test-Office365DSCParameterState
 
     if ($returnValue -eq $false)
     {
-        $EventMessage = "A Configuration Drift has been detected on $Source. `r`n"
-        $EventMessage += "Parameters below had a configuration drift:`r`n"
+        $EventMessage = "<O365DSCEvent>`r`n"
+        $EventMessage += "    <ConfigurationDrift Source=`"$Source`">`r`n"
 
+        $EventMessage += "        <ParametersNotInDesiredState>`r`n"
         foreach ($key in $DriftedParameters.Keys)
         {
-            $EventMessage += "    " + $key + " = " + $DriftedParameters.$key + "`r`n"
+            $EventMessage += "            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n"
         }
-
-        $EventMessage += "`r`n----------------------------------------------------------`r`n"
-        $EventMessage += "Desired Values:`r`n`r`n"
-        $EventMessage += "    @{`r`n"
+        $EventMessage += "        </ParametersNotInDesiredState>`r`n"
+        $EventMessage += "    </ConfigurationDrift>`r`n"
+        $EventMessage += "    <DesiredValues>`r`n"
         foreach ($Key in $DesiredValues.Keys)
         {
             $Value = $DesiredValues.$Key
@@ -1534,9 +1534,11 @@ function Test-Office365DSCParameterState
             {
                 $Value = "`$null"
             }
-            $EventMessage += "        $key = $Value`r`n"
+            $EventMessage += "        <Param Name =`"$key`">$Value</Param>`r`n"
         }
         $EventMessage += "    }"
+        $EventMessage += "    </DesiredValues>`r`n"
+        $EventMessage += "</O365DSCEvent>"
 
         Add-O365DSCEvent -Message $EventMessage -EntryType 'Error' -EventID 1 -Source $Source
     }
