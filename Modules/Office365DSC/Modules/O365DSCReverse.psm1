@@ -113,6 +113,28 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "EXOOrganizationConfig"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOOrganizationConfig")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("EXO")))
+    {
+        Write-Information "Extracting EXOOrganizationConfig..."
+        try
+        {
+            $ModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_EXOOrganizationConfig\MSFT_EXOOrganizationConfig.psm1" `
+                                    -Resolve
+
+            Import-Module $ModulePath | Out-Null
+            $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+        }
+    }
+    #endregion
+
     #region "EXOAtpPolicyForO365"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOAtpPolicyForO365")) -or
