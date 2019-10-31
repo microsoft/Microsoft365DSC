@@ -231,8 +231,8 @@ function ConvertTo-SPOUserProfilePropertyInstanceString
     foreach ($property in $Properties)
     {
         $content = "MSFT_SPOUserProfilePropertyInstance`r`n            {`r`n"
-        $content += "                Key   = '$($property.Key)'`r`n"
-        $content += "                Value = '$($property.Value)'`r`n"
+        $content += "                Key   = `"$($property.Key)`"`r`n"
+        $content += "                Value = `"$($property.Value)`"`r`n"
         $content += "            }`r`n"
         $results += $content
     }
