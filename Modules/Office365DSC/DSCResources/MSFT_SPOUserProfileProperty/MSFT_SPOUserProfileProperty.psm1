@@ -139,9 +139,9 @@ function Test-TargetResource
 
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $TestResult = Test-SPOUserProfilePropertyInstance -DesiredProperties $Properties `
-                                                      -Source $($MyInvocation.MyCommand.Source) `
-                                                      -CurrentProperties $CurrentValues.Properties
+    $TestResult = Test-Office365DSCParameterState  -DesiredValues $PSBoundParameters `
+                                                   -Source $($MyInvocation.MyCommand.Source) `
+                                                   -CurrentValues $CurrentValues
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -193,33 +193,6 @@ function Export-TargetResource
     }
 
     return $content
-}
-
-function Test-SPOUserProfilePropertyInstance
-{
-    [CmdletBinding()]
-    [OutputType([System.Boolean])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $DesiredProperties,
-
-        [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $CurrentProperties
-    )
-
-    foreach ($property in $DesiredProperties)
-    {
-        $currentProperty = $CurrentProperties | Where-Object {$_.Key -eq $property.Key}
-
-        if ($null -eq $currentProperty -or $currentProperty.Value -ne $property.Value)
-        {
-            return $false
-        }
-        return $true
-    }
 }
 
 function Get-SPOUserProfilePropertyInstance

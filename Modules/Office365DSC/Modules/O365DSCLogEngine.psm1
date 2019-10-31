@@ -57,11 +57,11 @@ function Add-O365DSCEvent
         $EventID = 1
     )
 
-    $CurrentLog = Get-EventLog -LogName 'Office365DSC' -Source 'FalloutApp' -ErrorAction SilentlyContinue
+    $CurrentLog = Get-EventLog -LogName 'Office365DSC' -Source $Source -ErrorAction SilentlyContinue
 
     if ($null -eq $CurrentLog)
     {
-        $CurrentLog = New-EventLog -LogName 'Office365DSC' -Source 'FalloutApp'
+        $CurrentLog = New-EventLog -LogName 'Office365DSC' -Source $Source -ErrorAction SilentlyContinue
     }
 
     try
