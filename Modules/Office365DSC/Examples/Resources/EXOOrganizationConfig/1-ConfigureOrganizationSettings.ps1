@@ -18,7 +18,7 @@ Configuration Example
         {
             ElcProcessingDisabled                                     = $False;
             IsSingleInstance                                          = "Yes";
-            DefaultPublicFolderProhibitPostQuota                      = "12345";
+            DefaultPublicFolderProhibitPostQuota                      = 12345;
             VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
             BookingsEnabled                                           = $True;
             ExchangeNotificationRecipients                            = @();
@@ -31,7 +31,7 @@ Configuration Example
             AuditDisabled                                             = $False;
             EwsAllowMacOutlook                                        = $null;
             ConnectorsEnabledForTeams                                 = $True;
-            DefaultPublicFolderIssueWarningQuota                      = "12345";
+            DefaultPublicFolderIssueWarningQuota                      = 12345;
             MailTipsMailboxSourcedTipsEnabled                         = $True;
             EndUserDLUpgradeFlowsDisabled                             = $False;
             DistributionGroupDefaultOU                                = $null;
@@ -46,7 +46,7 @@ Configuration Example
             GlobalAdminAccount                                        = $credsGlobalAdmin;
             ConnectorsEnabledForYammer                                = $True;
             HierarchicalAddressBookRoot                               = $null;
-            DefaultPublicFolderMaxItemSize                            = "12345";
+            DefaultPublicFolderMaxItemSize                            = 12345;
             MailTipsLargeAudienceThreshold                            = 25;
             ConnectorsActionableMessagesEnabled                       = $True;
             ExchangeNotificationEnabled                               = $True;

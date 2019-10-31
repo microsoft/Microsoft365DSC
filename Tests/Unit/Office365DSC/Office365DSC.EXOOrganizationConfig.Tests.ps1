@@ -44,17 +44,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Values are already in the desired state" -Fixture {
             $testParams = @{
                 IsSingleInstance                                          = "Yes";
-                DefaultPublicFolderProhibitPostQuota                      = "2 GB (2,147,483,648 bytes)";
+                DefaultPublicFolderProhibitPostQuota                      = 12345;
                 VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
-                DefaultPublicFolderIssueWarningQuota                      = "1.7 GB (1,825,361,920 bytes)";
+                DefaultPublicFolderIssueWarningQuota                      = 12345;
                 GlobalAdminAccount                                        = $GlobalAdminAccount;
                 ConnectorsEnabledForYammer                                = $True;
-                DefaultPublicFolderMaxItemSize                            = "Unlimited";
+                DefaultPublicFolderMaxItemSize                            = 12345;
                 MailTipsLargeAudienceThreshold                            = 25;
                 PublicFoldersEnabled                                      = "Local";
                 WebPushNotificationsDisabled                              = $False;
                 MailTipsGroupMetricsEnabled                               = $True;
-                DefaultPublicFolderMovedItemRetention                     = "7.00:00:00";
+                DefaultPublicFolderMovedItemRetention                     = "07.00:00:00";
                 DefaultPublicFolderDeletedItemRetention                   = "30.00:00:00";
                 ByteEncoderTypeFor7BitCharsets                            = 0;
                 ActivityBasedAuthenticationTimeoutInterval                = "06:00:00";
@@ -63,16 +63,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
                 return @{
-                    DefaultPublicFolderProhibitPostQuota                      = "2 GB (2,147,483,648 bytes)";
+                    DefaultPublicFolderProhibitPostQuota                      = 12345;
                     VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
-                    DefaultPublicFolderIssueWarningQuota                      = "1.7 GB (1,825,361,920 bytes)";
+                    DefaultPublicFolderIssueWarningQuota                      = 12345;
                     ConnectorsEnabledForYammer                                = $True;
-                    DefaultPublicFolderMaxItemSize                            = "Unlimited";
+                    DefaultPublicFolderMaxItemSize                            = 12345;
                     MailTipsLargeAudienceThreshold                            = 25;
                     PublicFoldersEnabled                                      = "Local";
                     WebPushNotificationsDisabled                              = $False;
                     MailTipsGroupMetricsEnabled                               = $True;
-                    DefaultPublicFolderMovedItemRetention                     = "7.00:00:00";
+                    DefaultPublicFolderMovedItemRetention                     = "07.00:00:00";
                     DefaultPublicFolderDeletedItemRetention                   = "30.00:00:00";
                     ByteEncoderTypeFor7BitCharsets                            = 0;
                     ActivityBasedAuthenticationTimeoutInterval                = "06:00:00";
@@ -98,17 +98,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Values are not in the desired state" -Fixture {
             $testParams = @{
                 IsSingleInstance                                          = "Yes";
-                DefaultPublicFolderProhibitPostQuota                      = "2 GB (2,147,483,648 bytes)";
+                DefaultPublicFolderProhibitPostQuota                      = 12345;
                 VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
-                DefaultPublicFolderIssueWarningQuota                      = "1.7 GB (1,825,361,920 bytes)";
+                DefaultPublicFolderIssueWarningQuota                      = 12345;
                 GlobalAdminAccount                                        = $GlobalAdminAccount;
                 ConnectorsEnabledForYammer                                = $False;
-                DefaultPublicFolderMaxItemSize                            = "Unlimited";
+                DefaultPublicFolderMaxItemSize                            = 12345;
                 MailTipsLargeAudienceThreshold                            = 25;
                 PublicFoldersEnabled                                      = "Local";
                 WebPushNotificationsDisabled                              = $False;
                 MailTipsGroupMetricsEnabled                               = $False;
-                DefaultPublicFolderMovedItemRetention                     = "7.00:00:00";
+                DefaultPublicFolderMovedItemRetention                     = "07.00:00:00";
                 DefaultPublicFolderDeletedItemRetention                   = "30.00:00:00";
                 ByteEncoderTypeFor7BitCharsets                            = 0;
                 ActivityBasedAuthenticationTimeoutInterval                = "06:00:00";
@@ -117,16 +117,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
                 return @{
-                    DefaultPublicFolderProhibitPostQuota                      = "2 GB (2,147,483,648 bytes)";
+                    DefaultPublicFolderProhibitPostQuota                      = 1234;
                     VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
-                    DefaultPublicFolderIssueWarningQuota                      = "1.7 GB (1,825,361,920 bytes)";
+                    DefaultPublicFolderIssueWarningQuota                      = 1234;
                     ConnectorsEnabledForYammer                                = $True;
-                    DefaultPublicFolderMaxItemSize                            = "Unlimited";
+                    DefaultPublicFolderMaxItemSize                            = 1234;
                     MailTipsLargeAudienceThreshold                            = 25;
                     PublicFoldersEnabled                                      = "Local";
                     WebPushNotificationsDisabled                              = $False;
                     MailTipsGroupMetricsEnabled                               = $True;
-                    DefaultPublicFolderMovedItemRetention                     = "7.00:00:00";
+                    DefaultPublicFolderMovedItemRetention                     = "07.00:00:00";
                     DefaultPublicFolderDeletedItemRetention                   = "30.00:00:00";
                     ByteEncoderTypeFor7BitCharsets                            = 0;
                     ActivityBasedAuthenticationTimeoutInterval                = "06:00:00";
@@ -152,17 +152,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Invalid properties are passed" -Fixture {
             $testParams = @{
                 IsSingleInstance                                          = "Yes";
-                DefaultPublicFolderProhibitPostQuota                      = "2 GB (2,147,483,648 bytes)";
+                DefaultPublicFolderProhibitPostQuota                      = 12345;
                 VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
-                DefaultPublicFolderIssueWarningQuota                      = "1.7 GB (1,825,361,920 bytes)";
+                DefaultPublicFolderIssueWarningQuota                      = 12345;
                 GlobalAdminAccount                                        = $GlobalAdminAccount;
                 ConnectorsEnabledForYammer                                = $False;
-                DefaultPublicFolderMaxItemSize                            = "Unlimited";
+                DefaultPublicFolderMaxItemSize                            = 12345;
                 MailTipsLargeAudienceThreshold                            = 25;
                 PublicFoldersEnabled                                      = "Local";
                 WebPushNotificationsDisabled                              = $False;
                 MailTipsGroupMetricsEnabled                               = $False;
-                DefaultPublicFolderMovedItemRetention                     = "7.00:00:00";
+                DefaultPublicFolderMovedItemRetention                     = "07.00:00:00";
                 DefaultPublicFolderDeletedItemRetention                   = "30.00:00:00";
                 ByteEncoderTypeFor7BitCharsets                            = 0;
                 ActivityBasedAuthenticationTimeoutInterval                = "06:00:00";
@@ -183,16 +183,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
                 return @{
-                    DefaultPublicFolderProhibitPostQuota                      = "2 GB (2,147,483,648 bytes)";
+                    DefaultPublicFolderProhibitPostQuota                      = 12345;
                     VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
-                    DefaultPublicFolderIssueWarningQuota                      = "1.7 GB (1,825,361,920 bytes)";
+                    DefaultPublicFolderIssueWarningQuota                      = 12345;
                     ConnectorsEnabledForYammer                                = $True;
-                    DefaultPublicFolderMaxItemSize                            = "Unlimited";
+                    DefaultPublicFolderMaxItemSize                            = 12345;
                     MailTipsLargeAudienceThreshold                            = 25;
                     PublicFoldersEnabled                                      = "Local";
                     WebPushNotificationsDisabled                              = $False;
                     MailTipsGroupMetricsEnabled                               = $True;
-                    DefaultPublicFolderMovedItemRetention                     = "7.00:00:00";
+                    DefaultPublicFolderMovedItemRetention                     = "07.00:00:00";
                     DefaultPublicFolderDeletedItemRetention                   = "30.00:00:00";
                     ByteEncoderTypeFor7BitCharsets                            = 0;
                     ActivityBasedAuthenticationTimeoutInterval                = "06:00:00";
