@@ -98,13 +98,11 @@ function Get-TargetResource
         $DefaultPublicFolderDeletedItemRetention,
 
         [Parameter()]
-        [System.UInt64]
-        [ValidateRange(0,2199023254529)]
+        [System.String]
         $DefaultPublicFolderIssueWarningQuota,
 
         [Parameter()]
-        [System.UInt64]
-        [ValidateRange(0,2199023254529)]
+        [System.String]
         $DefaultPublicFolderMaxItemSize,
 
         [Parameter()]
@@ -113,8 +111,7 @@ function Get-TargetResource
         $DefaultPublicFolderMovedItemRetention,
 
         [Parameter()]
-        [System.UInt64]
-        [ValidateRange(0,2199023254529)]
+        [System.String]
         $DefaultPublicFolderProhibitPostQuota,
 
         [Parameter()]
@@ -287,33 +284,6 @@ function Get-TargetResource
         throw 'There was an error retrieving values from the Get function in EXOOrganizationConfig.'
     }
 
-    # DefaultPublicFolderIssueWarningQuota
-    $startPos = $ConfigSettings.DefaultPublicFolderIssueWarningQuota.IndexOf('(') + 1
-    if ($startPos -gt 0)
-    {
-        $endPos = $ConfigSettings.DefaultPublicFolderIssueWarningQuota.IndexOf(')')
-        $sub = $ConfigSettings.DefaultPublicFolderIssueWarningQuota.Substring($startPos, $endPos - $startPos)
-        $ValueDefaultPublicFolderIssueWarningQuota = $sub.Split(' ')[0].Replace(",", "")
-    }
-
-    # DefaultPublicFolderProhibitPostQuota
-    $startPos = $ConfigSettings.DefaultPublicFolderProhibitPostQuota.IndexOf('(') + 1
-    if ($startPos -gt 0)
-    {
-        $endPos = $ConfigSettings.DefaultPublicFolderProhibitPostQuota.IndexOf(')')
-        $sub = $ConfigSettings.DefaultPublicFolderProhibitPostQuota.Substring($startPos, $endPos - $startPos)
-        $ValueDefaultPublicFolderProhibitPostQuota = $sub.Split(' ')[0].Replace(",", "")
-    }
-
-    # DefaultPublicFolderMaxItemSize
-    $startPos = $ConfigSettings.DefaultPublicFolderMaxItemSize.IndexOf('(') + 1
-    if ($startPos -gt 0)
-    {
-        $endPos = $ConfigSettings.DefaultPublicFolderMaxItemSize.IndexOf(')')
-        $sub = $ConfigSettings.DefaultPublicFolderMaxItemSize.Substring($startPos, $endPos - $startPos)
-        $ValueDefaultPublicFolderMaxItemSize = $sub.Split(' ')[0].Replace(",", "")
-    }
-
     $results = @{
         IsSingleInstance                                          = 'Yes'
         ActivityBasedAuthenticationTimeoutEnabled                 = $ConfigSettings.ActivityBasedAuthenticationTimeoutEnabled
@@ -337,10 +307,10 @@ function Get-TargetResource
         DefaultGroupAccessType                                    = $ConfigSettings.DefaultGroupAccessType
         DefaultPublicFolderAgeLimit                               = $ConfigSettings.DefaultPublicFolderAgeLimit
         DefaultPublicFolderDeletedItemRetention                   = $ConfigSettings.DefaultPublicFolderDeletedItemRetention
-        DefaultPublicFolderIssueWarningQuota                      = $ValueDefaultPublicFolderIssueWarningQuota
-        DefaultPublicFolderMaxItemSize                            = $ValueDefaultPublicFolderMaxItemSize
+        DefaultPublicFolderIssueWarningQuota                      = $ConfigSettings.DefaultPublicFolderIssueWarningQuota
+        DefaultPublicFolderMaxItemSize                            = $ConfigSettings.DefaultPublicFolderMaxItemSize
         DefaultPublicFolderMovedItemRetention                     = $ConfigSettings.DefaultPublicFolderMovedItemRetention
-        DefaultPublicFolderProhibitPostQuota                      = $ValueDefaultPublicFolderProhibitPostQuota
+        DefaultPublicFolderProhibitPostQuota                      = $ConfigSettings.DefaultPublicFolderProhibitPostQuota
         DirectReportsGroupAutoCreationEnabled                     = $ConfigSettings.DirectReportsGroupAutoCreationEnabled
         DistributionGroupDefaultOU                                = $ConfigSettings.DistributionGroupDefaultOU
         DistributionGroupNameBlockedWordsList                     = $ConfigSettings.DistributionGroupNameBlockedWordsList
