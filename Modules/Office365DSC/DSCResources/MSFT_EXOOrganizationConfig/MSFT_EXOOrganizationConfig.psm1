@@ -15,6 +15,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        [ValidatePattern('^(0[0-7]:[0-5][0-9]:[0-5][0-9]|08:00:00)$')]
         $ActivityBasedAuthenticationTimeoutInterval,
 
         [Parameter()]
@@ -88,26 +89,32 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
         $DefaultPublicFolderAgeLimit,
 
         [Parameter()]
         [System.String]
+        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
         $DefaultPublicFolderDeletedItemRetention,
 
         [Parameter()]
-        [System.String]
+        [System.UInt64]
+        [ValidateRange(0,2199023254529)]
         $DefaultPublicFolderIssueWarningQuota,
 
         [Parameter()]
-        [System.String]
+        [System.System.UInt64]
+        [ValidateRange(0,2199023254529)]
         $DefaultPublicFolderMaxItemSize,
 
         [Parameter()]
         [System.String]
+        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
         $DefaultPublicFolderMovedItemRetention,
 
         [Parameter()]
-        [System.String]
+        [System.System.UInt64]
+        [ValidateRange(0,2199023254529)]
         $DefaultPublicFolderProhibitPostQuota,
 
         [Parameter()]
@@ -387,6 +394,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        [ValidatePattern('^(0[0-7]:[0-5][0-9]:[0-5][0-9]|08:00:00)$')]
         $ActivityBasedAuthenticationTimeoutInterval,
 
         [Parameter()]
@@ -460,26 +468,32 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
         $DefaultPublicFolderAgeLimit,
 
         [Parameter()]
         [System.String]
+        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
         $DefaultPublicFolderDeletedItemRetention,
 
         [Parameter()]
-        [System.String]
+        [System.System.UInt64]
+        [ValidateRange(0,2199023254529)]
         $DefaultPublicFolderIssueWarningQuota,
 
         [Parameter()]
-        [System.String]
+        [System.System.UInt64]
+        [ValidateRange(0,2199023254529)]
         $DefaultPublicFolderMaxItemSize,
 
         [Parameter()]
         [System.String]
+        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
         $DefaultPublicFolderMovedItemRetention,
 
         [Parameter()]
-        [System.String]
+        [System.System.UInt64]
+        [ValidateRange(0,2199023254529)]
         $DefaultPublicFolderProhibitPostQuota,
 
         [Parameter()]
@@ -676,6 +690,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        [ValidatePattern('^(0[0-7]:[0-5][0-9]:[0-5][0-9]|08:00:00)$')]
         $ActivityBasedAuthenticationTimeoutInterval,
 
         [Parameter()]
@@ -749,26 +764,32 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
         $DefaultPublicFolderAgeLimit,
 
         [Parameter()]
         [System.String]
+        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
         $DefaultPublicFolderDeletedItemRetention,
 
         [Parameter()]
-        [System.String]
+        [System.System.UInt64]
+        [ValidateRange(0,2199023254529)]
         $DefaultPublicFolderIssueWarningQuota,
 
         [Parameter()]
-        [System.String]
+        [System.System.UInt64]
+        [ValidateRange(0,2199023254529)]
         $DefaultPublicFolderMaxItemSize,
 
         [Parameter()]
         [System.String]
+        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
         $DefaultPublicFolderMovedItemRetention,
 
         [Parameter()]
-        [System.String]
+        [System.System.UInt64]
+        [ValidateRange(0,2199023254529)]
         $DefaultPublicFolderProhibitPostQuota,
 
         [Parameter()]
@@ -930,7 +951,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of EXOOrganizationSettings"
+    Write-Verbose -Message "Testing configuration of EXOOrganizationConfig"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
