@@ -18,7 +18,7 @@ Configuration Example
         {
             ElcProcessingDisabled                                     = $False;
             IsSingleInstance                                          = "Yes";
-            DefaultPublicFolderProhibitPostQuota                      = "2 GB (2,147,483,648 bytes)";
+            DefaultPublicFolderProhibitPostQuota                      = "12345";
             VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
             BookingsEnabled                                           = $True;
             ExchangeNotificationRecipients                            = @();
@@ -31,7 +31,7 @@ Configuration Example
             AuditDisabled                                             = $False;
             EwsAllowMacOutlook                                        = $null;
             ConnectorsEnabledForTeams                                 = $True;
-            DefaultPublicFolderIssueWarningQuota                      = "1.7 GB (1,825,361,920 bytes)";
+            DefaultPublicFolderIssueWarningQuota                      = "12345";
             MailTipsMailboxSourcedTipsEnabled                         = $True;
             EndUserDLUpgradeFlowsDisabled                             = $False;
             DistributionGroupDefaultOU                                = $null;
@@ -46,7 +46,7 @@ Configuration Example
             GlobalAdminAccount                                        = $credsGlobalAdmin;
             ConnectorsEnabledForYammer                                = $True;
             HierarchicalAddressBookRoot                               = $null;
-            DefaultPublicFolderMaxItemSize                            = "Unlimited";
+            DefaultPublicFolderMaxItemSize                            = "12345";
             MailTipsLargeAudienceThreshold                            = 25;
             ConnectorsActionableMessagesEnabled                       = $True;
             ExchangeNotificationEnabled                               = $True;
@@ -57,7 +57,7 @@ Configuration Example
             PublicFoldersEnabled                                      = "Local";
             WebPushNotificationsDisabled                              = $False;
             MailTipsGroupMetricsEnabled                               = $True;
-            DefaultPublicFolderMovedItemRetention                     = "7.00:00:00";
+            DefaultPublicFolderMovedItemRetention                     = "07.00:00:00";
             DistributionGroupNamingPolicy                             = "";
             DefaultPublicFolderDeletedItemRetention                   = "30.00:00:00";
             MailTipsAllTipsEnabled                                    = $True;
