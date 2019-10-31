@@ -1396,7 +1396,8 @@ function Test-Office365DSCParameterState
                                     Write-Verbose -Message "$($_.InputObject) - $($_.SideIndicator)"
                                 }
 
-                                $EventValue = "{$($CurrentValues.$fieldName)} | Should be {$($DesiredValues.$fieldName)}"
+                                $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
                                 $DriftedParameters.Add($fieldName, $EventValue)
                                 $returnValue = $false
                             }
@@ -1420,7 +1421,8 @@ function Test-Office365DSCParameterState
                                             "'$($CurrentValues.$fieldName)' " + `
                                             "and desired state is " + `
                                             "'$($DesiredValues.$fieldName)'")
-                                    $EventValue = "{$($CurrentValues.$fieldName)} | Should be {$($DesiredValues.$fieldName)}"
+                                            $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                            $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
                                     $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
@@ -1439,7 +1441,8 @@ function Test-Office365DSCParameterState
                                             "'$($CurrentValues.$fieldName)' " + `
                                             "and desired state is " + `
                                             "'$($DesiredValues.$fieldName)'")
-                                    $EventValue = "{$($CurrentValues.$fieldName)} | Should be {$($DesiredValues.$fieldName)}"
+                                            $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                            $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
                                     $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
@@ -1458,7 +1461,8 @@ function Test-Office365DSCParameterState
                                             "'$($CurrentValues.$fieldName)' " + `
                                             "and desired state is " + `
                                             "'$($DesiredValues.$fieldName)'")
-                                    $EventValue = "{$($CurrentValues.$fieldName)} | Should be {$($DesiredValues.$fieldName)}"
+                                            $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                            $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
                                     $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
@@ -1473,7 +1477,8 @@ function Test-Office365DSCParameterState
                                             "'$($CurrentValues.$fieldName)' " + `
                                             "and desired state is " + `
                                             "'$($DesiredValues.$fieldName)'")
-                                    $EventValue = "{$($CurrentValues.$fieldName)} | Should be {$($DesiredValues.$fieldName)}"
+                                            $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                            $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
                                     $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
@@ -1492,7 +1497,8 @@ function Test-Office365DSCParameterState
                                             "'$($CurrentValues.$fieldName)' " + `
                                             "and desired state is " + `
                                             "'$($DesiredValues.$fieldName)'")
-                                    $EventValue = "{$($CurrentValues.$fieldName)} | Should be {$($DesiredValues.$fieldName)}"
+                                    $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                    $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
                                     $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
@@ -1503,7 +1509,8 @@ function Test-Office365DSCParameterState
                                         "as the type ($($desiredType.Name)) is " + `
                                         "not handled by the " + `
                                         "Test-SPDscParameterState cmdlet")
-                                $EventValue = "{$($CurrentValues.$fieldName)} | Should be {$($DesiredValues.$fieldName)}"
+                                        $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                        $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
                                 $DriftedParameters.Add($fieldName, $EventValue)
                                 $returnValue = $false
                             }
