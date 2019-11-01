@@ -1611,7 +1611,15 @@ function Start-O365ConfigurationExtract
                                                  -GlobalAdminAccount $GlobalAdminAccount
             if ($partialContent.ToLower().Contains("https://" + $principal.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape("https://" + $principal.ToLower()), "`$(`$OrganizationName.Split('.')[0])-admin.sharepoint.com"
+                # If we are already looking at the Admin Center URL, don't replace the full path;
+                if ($partialContent.ToLower().Contains("https://" + $principal.ToLower() + "-admin.sharepoint.com"))
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape("https://" + $principal.ToLower() + "-admin.sharepoint.com"), "https://`$(`$OrganizationName.Split('.')[0])-admin.sharepoint.com"
+                }
+                else
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape("https://" + $principal.ToLower()), "`$(`$OrganizationName.Split('.')[0])-admin.sharepoint.com"
+                }
             }
             if($partialContent.ToLower().Contains($principal.ToLower()))
             {

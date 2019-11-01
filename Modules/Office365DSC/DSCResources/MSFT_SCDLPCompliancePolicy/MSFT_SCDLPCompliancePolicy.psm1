@@ -38,7 +38,6 @@ function Get-TargetResource
         $OneDriveLocationException,
 
         [Parameter()]
-        [ValidateRange(0,1)]
         [System.UInt32]
         $Priority,
 
@@ -148,7 +147,6 @@ function Set-TargetResource
 
         [Parameter()]
         [System.UInt32]
-        [ValidateRange(0,1)]
         $Priority,
 
         [Parameter()]
@@ -397,7 +395,6 @@ function Test-TargetResource
         $OneDriveLocationException,
 
         [Parameter()]
-        [ValidateRange(0,1)]
         [System.UInt32]
         $Priority,
 
@@ -438,6 +435,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -Source $($MyInvocation.MyCommand.Source) `
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck $ValuesToCheck.Keys
 
