@@ -1297,6 +1297,60 @@ function Set-EXOSafeLinksRule
     }
 }
 
+function Compare-PSCustomObjectArrays
+{
+    [CmdletBinding()]
+    [OutputType([System.Object[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $DesiredValues,
+
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $CurrentValues
+    )
+
+    $DriftedProperties = @()
+    foreach ($DesiredEntry in $DesiredValues)
+    {
+        $Properties = $DesiredEntry.PSObject.Properties
+        $KeyProperty = $Properties.Name[0]
+
+        $EquivalentEntryInCurrent = $CurrentValues | Where-Object -FilterScript {$_.$KeyProperty -eq $DesiredEntry.$KeyProperty}
+        if ($null -eq $EquivalentEntryInCurrent)
+        {
+            $result = @{
+                        Property     = $DesiredEntry
+                        PropertyName = $KeyProperty
+                        Desired      = $DesiredEntry.$KeyProperty
+                        Current      = $null
+                      }
+            $DriftedProperties += $DesiredEntry
+        }
+        else
+        {
+            foreach ($property in $Properties)
+            {
+                $propertyName = $property.Name
+
+                if ($DesiredEntry.$PropertyName -ne $EquivalentEntryInCurrent.$PropertyName)
+                {
+                    $result = @{
+                        Property     = $DesiredEntry
+                        PropertyName = $PropertyName
+                        Desired      = $DesiredEntry.$PropertyName
+                        Current      = $EquivalentEntryInCurrent.$PropertyName
+                    }
+                    $DriftedProperties += $result
+                }
+            }
+        }
+    }
+
+    return $DriftedProperties
+}
+
 function Test-Office365DSCParameterState
 {
     [CmdletBinding()]
@@ -1318,7 +1372,7 @@ function Test-Office365DSCParameterState
         [System.String]
         $Source = 'Generic'
     )
-    $VerbosePreference = "SilentlyContinue"
+    $VerbosePreference = "Continue"
     $WarningPreference = "SilentlyContinue"
     $returnValue = $true
 
@@ -1395,22 +1449,16 @@ function Test-Office365DSCParameterState
                                 $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
                             }
 
-                            $arrayCompare = Compare-Object -ReferenceObject $CurrentValues.$fieldName `
-                                -DifferenceObject $AllDesiredValuesAsArray
-                            if ($null -ne $arrayCompare -and
-                                -not [System.String]::IsNullOrEmpty($arrayCompare.InputObject))
+                            $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
+                                -DesiredValues $AllDesiredValuesAsArray
+                            if ($null -ne $arrayCompare)
                             {
-                                Write-Verbose -Message ("Found an array for property $fieldName " + `
-                                        "in the current values, but this array " + `
-                                        "does not match the desired state. " + `
-                                        "Details of the changes are below.")
-                                $arrayCompare | ForEach-Object -Process {
-                                    Write-Verbose -Message "$($_.InputObject) - $($_.SideIndicator)"
+                                foreach ($item in $arrayCompare)
+                                {
+                                    $EventValue = "<CurrentValue>[$($item.PropertyName)]$($item.CurrentValue)</CurrentValue>"
+                                    $EventValue += "<DesiredValue>[$($item.PropertyName)]$($item.DesiredValue)</DesiredValue>"
+                                    $DriftedParameters.Add($fieldName, $EventValue)
                                 }
-
-                                $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
-                                $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
-                                $DriftedParameters.Add($fieldName, $EventValue)
                                 $returnValue = $false
                             }
                         }
