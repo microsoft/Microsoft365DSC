@@ -1381,6 +1381,39 @@ function Test-Office365DSCParameterState
                             $DriftedParameters.Add($fieldName, '')
                             $returnValue = $false
                         }
+                        elseif ($desiredType.Name -eq 'ciminstance[]')
+                        {
+                            Write-Verbose "The current property {$_} is a CimInstance[]"
+                            $AllDesiredValuesAsArray = @()
+                            foreach ($item in $DesiredValues.$_)
+                            {
+                                $currentEntry = @{}
+                                foreach ($prop in $item.CIMInstanceProperties)
+                                {
+                                    $currentEntry.Add($prop.Name, $prop.Value)
+                                }
+                                $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
+                            }
+
+                            $arrayCompare = Compare-Object -ReferenceObject $CurrentValues.$fieldName `
+                                -DifferenceObject $AllDesiredValuesAsArray
+                            if ($null -ne $arrayCompare -and
+                                -not [System.String]::IsNullOrEmpty($arrayCompare.InputObject))
+                            {
+                                Write-Verbose -Message ("Found an array for property $fieldName " + `
+                                        "in the current values, but this array " + `
+                                        "does not match the desired state. " + `
+                                        "Details of the changes are below.")
+                                $arrayCompare | ForEach-Object -Process {
+                                    Write-Verbose -Message "$($_.InputObject) - $($_.SideIndicator)"
+                                }
+
+                                $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                $DriftedParameters.Add($fieldName, $EventValue)
+                                $returnValue = $false
+                            }
+                        }
                         else
                         {
                             $arrayCompare = Compare-Object -ReferenceObject $CurrentValues.$fieldName `
