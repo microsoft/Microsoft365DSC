@@ -115,7 +115,7 @@ function Show-O365GUI
         $pnlExo = New-Object System.Windows.Forms.Panel
         $pnlExo.Top = 388 + $topBannerHeight
         $pnlExo.Left = $firstColumnLeft
-        $pnlExo.Height = 300
+        $pnlExo.Height = 320
         $pnlExo.Width = 300
         $pnlExo.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -191,8 +191,16 @@ function Show-O365GUI
         $chckEXOMailTips.Text = "Mail Tips"
         $pnlExo.Controls.Add($chckEXOMailTips);
 
+        $chckEXOOrganizationConfig = New-Object System.Windows.Forms.CheckBox
+        $chckEXOOrganizationConfig.Top = 180
+        $chckEXOOrganizationConfig.AutoSize = $true;
+        $chckEXOOrganizationConfig.Name = "chckEXOOrganizationConfig"
+        $chckEXOOrganizationConfig.Checked = $true
+        $chckEXOOrganizationConfig.Text = "Organization Config"
+        $pnlExo.Controls.Add($chckEXOOrganizationConfig);
+
         $chckEXOOutboundSpamFilterPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckEXOOutboundSpamFilterPolicy.Top = 180
+        $chckEXOOutboundSpamFilterPolicy.Top = 200
         $chckEXOOutboundSpamFilterPolicy.AutoSize = $true;
         $chckEXOOutboundSpamFilterPolicy.Name = "chckEXOOutboundSpamFilterPolicy"
         $chckEXOOutboundSpamFilterPolicy.Checked = $true
@@ -200,7 +208,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOOutboundSpamFilterPolicy)
 
         $chckEXOSafeAttachmentPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckEXOSafeAttachmentPolicy.Top = 200
+        $chckEXOSafeAttachmentPolicy.Top = 220
         $chckEXOSafeAttachmentPolicy.AutoSize = $true;
         $chckEXOSafeAttachmentPolicy.Name = "chckEXOSafeAttachmentPolicy"
         $chckEXOSafeAttachmentPolicy.Checked = $true
@@ -208,7 +216,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOSafeAttachmentPolicy)
 
         $chckEXOSafeAttachmentRule = New-Object System.Windows.Forms.CheckBox
-        $chckEXOSafeAttachmentRule.Top = 220
+        $chckEXOSafeAttachmentRule.Top = 240
         $chckEXOSafeAttachmentRule.AutoSize = $true;
         $chckEXOSafeAttachmentRule.Name = "chckEXOSafeAttachmentRule"
         $chckEXOSafeAttachmentRule.Checked = $true
@@ -216,7 +224,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOSafeAttachmentRule)
 
         $chckEXOSafeLinksPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckEXOSafeLinksPolicy.Top = 240
+        $chckEXOSafeLinksPolicy.Top = 260
         $chckEXOSafeLinksPolicy.AutoSize = $true;
         $chckEXOSafeLinksPolicy.Name = "chckEXOSafeLinksPolicy"
         $chckEXOSafeLinksPolicy.Checked = $true
@@ -224,7 +232,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOSafeLinksPolicy)
 
         $chckEXOSafeLinksRule = New-Object System.Windows.Forms.CheckBox
-        $chckEXOSafeLinksRule.Top = 260
+        $chckEXOSafeLinksRule.Top = 280
         $chckEXOSafeLinksRule.AutoSize = $true;
         $chckEXOSafeLinksRule.Name = "chckEXOSafeLinksRule"
         $chckEXOSafeLinksRule.Checked = $true
@@ -232,7 +240,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOSafeLinksRule)
 
         $chckEXOSharedMailbox = New-Object System.Windows.Forms.CheckBox
-        $chckEXOSharedMailbox.Top = 280
+        $chckEXOSharedMailbox.Top = 300
         $chckEXOSharedMailbox.AutoSize = $true;
         $chckEXOSharedMailbox.Name = "chckEXOSharedMailbox"
         $chckEXOSharedMailbox.Checked = $true

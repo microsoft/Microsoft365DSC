@@ -127,6 +127,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -Source $($MyInvocation.MyCommand.Source) `
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck @("CDNType", `
                                                                    "ExcludeRestrictedSiteClassifications", `

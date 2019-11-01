@@ -203,6 +203,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+                                                  -Source $($MyInvocation.MyCommand.Source) `
                                                   -DesiredValues $PSBoundParameters `
                                                   -ValuesToCheck @("Ensure", `
                                                                    "DisplayName", `
@@ -233,7 +234,7 @@ function Export-TargetResource
     $modulePath = $PSScriptRoot + "\MSFT_EXOSharedMailbox.psm1"
     $content = "        EXOSharedMailbox " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath -UseGetTargetResource
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
     $content += "        }`r`n"
     return $content

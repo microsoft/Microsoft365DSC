@@ -113,6 +113,28 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "EXOOrganizationConfig"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOOrganizationConfig")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("EXO")))
+    {
+        Write-Information "Extracting EXOOrganizationConfig..."
+        try
+        {
+            $ModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_EXOOrganizationConfig\MSFT_EXOOrganizationConfig.psm1" `
+                                    -Resolve
+
+            Import-Module $ModulePath | Out-Null
+            $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+        }
+    }
+    #endregion
+
     #region "EXOAtpPolicyForO365"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOAtpPolicyForO365")) -or
@@ -1577,7 +1599,15 @@ function Start-O365ConfigurationExtract
                                                  -GlobalAdminAccount $GlobalAdminAccount
             if ($partialContent.ToLower().Contains("https://" + $principal.ToLower()))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape("https://" + $principal.ToLower()), "`$(`$OrganizationName.Split('.')[0])-admin.sharepoint.com"
+                # If we are already looking at the Admin Center URL, don't replace the full path;
+                if ($partialContent.ToLower().Contains("https://" + $principal.ToLower() + "-admin.sharepoint.com"))
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape("https://" + $principal.ToLower() + "-admin.sharepoint.com"), "https://`$(`$OrganizationName.Split('.')[0])-admin.sharepoint.com"
+                }
+                else
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape("https://" + $principal.ToLower()), "`$(`$OrganizationName.Split('.')[0])-admin.sharepoint.com"
+                }
             }
             if($partialContent.ToLower().Contains($principal.ToLower()))
             {
