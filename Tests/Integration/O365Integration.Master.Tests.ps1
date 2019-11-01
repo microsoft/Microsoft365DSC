@@ -407,6 +407,16 @@ Configuration Master
             Ensure             = "Present"
         }
 
+        SPOSearchResultSource SearchMP
+        {
+            Name               = "MyResultSource"
+            Description        = "Description of item"
+            Protocol           = "Local"
+            Type               = "SharePoint"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+        }
+
         SPOSiteAuditSettings MyStorageEntity
         {
             Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
