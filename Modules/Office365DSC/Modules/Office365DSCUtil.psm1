@@ -1372,7 +1372,7 @@ function Test-Office365DSCParameterState
         [System.String]
         $Source = 'Generic'
     )
-    $VerbosePreference = "Continue"
+    $VerbosePreference = "SilentlyContinue"
     $WarningPreference = "SilentlyContinue"
     $returnValue = $true
 
