@@ -130,7 +130,7 @@ Configuration Master
             PublicFoldersEnabled                                      = "Local";
             WebPushNotificationsDisabled                              = $False;
             MailTipsGroupMetricsEnabled                               = $True;
-            DefaultPublicFolderMovedItemRetention                     = "07.00:00:00";
+            DefaultPublicFolderMovedItemRetention                     = "7.00:00:00";
             DistributionGroupNamingPolicy                             = "";
             DefaultPublicFolderDeletedItemRetention                   = "30.00:00:00";
             MailTipsAllTipsEnabled                                    = $True;
