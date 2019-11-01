@@ -319,7 +319,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove("FilePlanProperty") | Out-Null
 
     $TestFilePlanProperties = Test-SCFilePlanProperties -CurrentProperty $CurrentValues `
-                                -DesiredProperty $PSBoundParameters
+                                                        -DesiredProperty $PSBoundParameters
 
     if ($false -eq $TestFilePlanProperties)
     {
@@ -327,8 +327,9 @@ function Test-TargetResource
     }
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+                                                  -Source $($MyInvocation.MyCommand.Source) `
+                                                  -DesiredValues $PSBoundParameters `
+                                                  -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

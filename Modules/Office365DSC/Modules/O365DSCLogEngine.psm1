@@ -33,3 +33,51 @@ function New-Office365DSCLogEntry
     # Write the error content into the log file;
     $LogContent | Out-File $LogFileName -Append
 }
+
+function Add-O365DSCEvent
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Message,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Source = 'Generic',
+
+        [Parameter()]
+        [ValidateSet('Error', 'Information', 'FailureAudit', 'SuccessAudit', 'Warning')]
+        [System.String]
+        $EntryType = 'Information',
+
+        [Parameter()]
+        [System.UInt32]
+        $EventID = 1
+    )
+
+    try
+    {
+        $CurrentLog = Get-EventLog -LogName 'Office365DSC' -Source $Source -ErrorAction SilentlyContinue
+        if ($null -eq $CurrentLog)
+        {
+            $CurrentLog = New-EventLog -LogName 'Office365DSC' -Source $Source -ErrorAction SilentlyContinue
+        }
+        [System.Diagnostics.EventLog]::CreateEventSource($Source, "Office365DSC")
+    }
+    catch
+    {
+        Write-Verbose $_
+    }
+
+    try
+    {
+        Write-EventLog -LogName 'Office365DSC' -Source $Source `
+                       -EventID $EventID -Message $Message -EntryType $EntryType `
+                       -ErrorAction SilentlyContinue
+    }
+    catch
+    {
+        Write-Verbose $_
+    }
+}

@@ -44,12 +44,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Values are already in the desired state" -Fixture {
             $testParams = @{
                 IsSingleInstance                                          = "Yes";
-                DefaultPublicFolderProhibitPostQuota                      = 12345;
+                DefaultPublicFolderProhibitPostQuota                      = "13 KB (13,312 bytes)";
                 VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
-                DefaultPublicFolderIssueWarningQuota                      = 12345;
+                DefaultPublicFolderIssueWarningQuota                      = "13 KB (13,312 bytes)";
                 GlobalAdminAccount                                        = $GlobalAdminAccount;
                 ConnectorsEnabledForYammer                                = $True;
-                DefaultPublicFolderMaxItemSize                            = 12345;
+                DefaultPublicFolderMaxItemSize                            = "13 KB (13,312 bytes)";
                 MailTipsLargeAudienceThreshold                            = 25;
                 PublicFoldersEnabled                                      = "Local";
                 WebPushNotificationsDisabled                              = $False;
@@ -63,11 +63,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
                 return @{
-                    DefaultPublicFolderProhibitPostQuota                      = 12345;
+                    DefaultPublicFolderProhibitPostQuota                      = "13 KB (13,312 bytes)";
                     VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
-                    DefaultPublicFolderIssueWarningQuota                      = 12345;
+                    DefaultPublicFolderIssueWarningQuota                      = "13 KB (13,312 bytes)";
                     ConnectorsEnabledForYammer                                = $True;
-                    DefaultPublicFolderMaxItemSize                            = 12345;
+                    DefaultPublicFolderMaxItemSize                            = "13 KB (13,312 bytes)";
                     MailTipsLargeAudienceThreshold                            = 25;
                     PublicFoldersEnabled                                      = "Local";
                     WebPushNotificationsDisabled                              = $False;
@@ -98,12 +98,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Values are not in the desired state" -Fixture {
             $testParams = @{
                 IsSingleInstance                                          = "Yes";
-                DefaultPublicFolderProhibitPostQuota                      = 12345;
+                DefaultPublicFolderProhibitPostQuota                      = "13 KB (13,312 bytes)";
                 VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
-                DefaultPublicFolderIssueWarningQuota                      = 12345;
+                DefaultPublicFolderIssueWarningQuota                      = "13 KB (13,312 bytes)";
                 GlobalAdminAccount                                        = $GlobalAdminAccount;
                 ConnectorsEnabledForYammer                                = $False;
-                DefaultPublicFolderMaxItemSize                            = 12345;
+                DefaultPublicFolderMaxItemSize                            = "13 KB (13,312 bytes)";
                 MailTipsLargeAudienceThreshold                            = 25;
                 PublicFoldersEnabled                                      = "Local";
                 WebPushNotificationsDisabled                              = $False;
@@ -117,11 +117,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
                 return @{
-                    DefaultPublicFolderProhibitPostQuota                      = 1234;
+                    DefaultPublicFolderProhibitPostQuota                      = "13 KB (13,312 bytes)";
                     VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
-                    DefaultPublicFolderIssueWarningQuota                      = 1234;
+                    DefaultPublicFolderIssueWarningQuota                      = "13 KB (13,312 bytes)";
                     ConnectorsEnabledForYammer                                = $True;
-                    DefaultPublicFolderMaxItemSize                            = 1234;
+                    DefaultPublicFolderMaxItemSize                            = "13 KB (13,312 bytes)";
                     MailTipsLargeAudienceThreshold                            = 25;
                     PublicFoldersEnabled                                      = "Local";
                     WebPushNotificationsDisabled                              = $False;
@@ -152,12 +152,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Invalid properties are passed" -Fixture {
             $testParams = @{
                 IsSingleInstance                                          = "Yes";
-                DefaultPublicFolderProhibitPostQuota                      = 12345;
+                DefaultPublicFolderProhibitPostQuota                      = "13 KB (13,312 bytes)";
                 VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
-                DefaultPublicFolderIssueWarningQuota                      = 12345;
+                DefaultPublicFolderIssueWarningQuota                      = "13 KB (13,312 bytes)";
                 GlobalAdminAccount                                        = $GlobalAdminAccount;
                 ConnectorsEnabledForYammer                                = $False;
-                DefaultPublicFolderMaxItemSize                            = 12345;
+                DefaultPublicFolderMaxItemSize                            = "13 KB (13,312 bytes)";
                 MailTipsLargeAudienceThreshold                            = 25;
                 PublicFoldersEnabled                                      = "Local";
                 WebPushNotificationsDisabled                              = $False;
@@ -183,11 +183,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
                 return @{
-                    DefaultPublicFolderProhibitPostQuota                      = 12345;
+                    DefaultPublicFolderProhibitPostQuota                      = "13 KB (13,312 bytes)";
                     VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
-                    DefaultPublicFolderIssueWarningQuota                      = 12345;
+                    DefaultPublicFolderIssueWarningQuota                      = "13 KB (13,312 bytes)";
                     ConnectorsEnabledForYammer                                = $True;
-                    DefaultPublicFolderMaxItemSize                            = 12345;
+                    DefaultPublicFolderMaxItemSize                            = "13 KB (13,312 bytes)";
                     MailTipsLargeAudienceThreshold                            = 25;
                     PublicFoldersEnabled                                      = "Local";
                     WebPushNotificationsDisabled                              = $False;

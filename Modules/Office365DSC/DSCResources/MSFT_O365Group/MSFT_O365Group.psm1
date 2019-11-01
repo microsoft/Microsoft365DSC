@@ -12,7 +12,7 @@ function Get-TargetResource
         [System.String]
         $DisplayName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String[]]
         $ManagedBy,
 
@@ -130,7 +130,7 @@ function Set-TargetResource
         [System.String]
         $DisplayName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String[]]
         $ManagedBy,
 
@@ -286,7 +286,7 @@ function Test-TargetResource
         [System.String]
         $DisplayName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String[]]
         $ManagedBy,
 
@@ -316,12 +316,8 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "DisplayName", `
-                                                                   "MailNickName", `
-                                                                   "Description", `
-                                                                   "Members")
+                                                  -Source $($MyInvocation.MyCommand.Source) `
+                                                  -DesiredValues $PSBoundParameters
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

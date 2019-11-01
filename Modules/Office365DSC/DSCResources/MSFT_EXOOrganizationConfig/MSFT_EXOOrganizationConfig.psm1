@@ -89,32 +89,29 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderAgeLimit,
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderDeletedItemRetention,
 
         [Parameter()]
-        [System.UInt64]
-        [ValidateRange(0,2199023254529)]
+        [System.String]
         $DefaultPublicFolderIssueWarningQuota,
 
         [Parameter()]
-        [System.UInt64]
-        [ValidateRange(0,2199023254529)]
+        [System.String]
         $DefaultPublicFolderMaxItemSize,
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderMovedItemRetention,
 
         [Parameter()]
-        [System.UInt64]
-        [ValidateRange(0,2199023254529)]
+        [System.String]
         $DefaultPublicFolderProhibitPostQuota,
 
         [Parameter()]
@@ -468,32 +465,29 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderAgeLimit,
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderDeletedItemRetention,
 
         [Parameter()]
-        [System.UInt64]
-        [ValidateRange(0,2199023254529)]
+        [System.String]
         $DefaultPublicFolderIssueWarningQuota,
 
         [Parameter()]
-        [System.UInt64]
-        [ValidateRange(0,2199023254529)]
+        [System.String]
         $DefaultPublicFolderMaxItemSize,
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderMovedItemRetention,
 
         [Parameter()]
-        [System.UInt64]
-        [ValidateRange(0,2199023254529)]
+        [System.String]
         $DefaultPublicFolderProhibitPostQuota,
 
         [Parameter()]
@@ -764,32 +758,29 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderAgeLimit,
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderDeletedItemRetention,
 
         [Parameter()]
-        [System.UInt64]
-        [ValidateRange(0,2199023254529)]
+        [System.String]
         $DefaultPublicFolderIssueWarningQuota,
 
         [Parameter()]
-        [System.UInt64]
-        [ValidateRange(0,2199023254529)]
+        [System.String]
         $DefaultPublicFolderMaxItemSize,
 
         [Parameter()]
         [System.String]
-        [ValidatePattern('[0-9][0-9].[0-9][0-9]:[0-9][0-9]:[0-9][0-9]')]
+        [ValidatePattern('^([0-9][0-9]|[0-9]).[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')]
         $DefaultPublicFolderMovedItemRetention,
 
         [Parameter()]
-        [System.UInt64]
-        [ValidateRange(0,2199023254529)]
+        [System.String]
         $DefaultPublicFolderProhibitPostQuota,
 
         [Parameter()]
