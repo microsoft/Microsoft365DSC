@@ -128,7 +128,7 @@ Configuration Master
 
         EXODkimSigningConfig DKIMSigning
         {
-            KeySize                = $null;
+            KeySize                = 1024;
             GlobalAdminAccount     = $GlobalAdmin;
             Identity               = $Domain;
             HeaderCanonicalization = "Relaxed";
