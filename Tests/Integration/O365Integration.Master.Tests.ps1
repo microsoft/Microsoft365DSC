@@ -126,7 +126,7 @@ Configuration Master
             AnyOfClientIPAddressesOrRanges       = @();
         }
 
-        EXODkimSigningConfig DKIMSigning
+        <#EXODkimSigningConfig DKIMSigning
         {
             KeySize                = 1024;
             GlobalAdminAccount     = $GlobalAdmin;
@@ -136,7 +136,7 @@ Configuration Master
             Ensure                 = "Present";
             BodyCanonicalization   = "Relaxed";
             AdminDisplayName       = "";
-        }
+        }#>
 
         EXOOrganizationConfig EXOOrganizationConfig
         {
