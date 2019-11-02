@@ -80,15 +80,7 @@ function Get-TargetResource
 
         if ($AntiPhishRule.IsDefault)
         {
-            $result += @{
-                MakeDefault = $true
-            }
-        }
-        else
-        {
-            $result += @{
-                MakeDefault = $false
-            }
+            $result.MakeDefault = $true
         }
 
         Write-Verbose -Message "Found HostedConnectionFilterPolicy $($Identity)"

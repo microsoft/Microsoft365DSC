@@ -299,15 +299,7 @@ function Get-TargetResource
 
         if ($HostedContentFilterPolicy.IsDefault)
         {
-            $result += @{
-                MakeDefault = $true
-            }
-        }
-        else
-        {
-            $result += @{
-                MakeDefault = $false
-            }
+            $result.MakeDefault = $true
         }
 
         Write-Verbose -Message "Found HostedContentFilterPolicy $($Identity)"
