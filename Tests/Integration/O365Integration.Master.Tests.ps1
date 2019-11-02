@@ -37,7 +37,7 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
         }
-
+<#
         EXOAntiPhishPolicy AntiphishPolicy
         {
             MakeDefault                           = $null;
@@ -86,7 +86,7 @@ Configuration Master
             Priority                  = 1;
         }
 
-        <#EXOAtpPolicyForO365 AntiPhishPolicy
+        EXOAtpPolicyForO365 AntiPhishPolicy
         {
             IsSingleInstance        = "Yes"
             AllowClickThrough       = $false
