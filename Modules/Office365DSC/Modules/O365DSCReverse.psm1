@@ -135,6 +135,37 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "EXOAcceptedDomain"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOAcceptedDomain")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("EXO")))
+    {
+        Write-Information "Extracting EXOAcceptedDomain..."
+        try
+        {
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform ExchangeOnline `
+                              -ErrorAction SilentlyContinue
+
+            $AcceptedDomains = Get-AcceptedDomain
+            $EXOAcceptedDomainModulePath = Join-Path -Path $PSScriptRoot `
+                                                    -ChildPath "..\DSCResources\MSFT_EXOAcceptedDomain\MSFT_EXOAcceptedDomain.psm1" `
+                                                    -Resolve
+
+            Import-Module $EXOAcceptedDomainModulePath | Out-Null
+
+            foreach ($acceptedDomain in $AcceptedDomains)
+            {
+                $DSCContent += Export-TargetResource -Identity $acceptedDomain.Identity -GlobalAdminAccount $GlobalAdminAccount
+            }
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+        }
+    }
+    #endregion
+
     #region "EXOAtpPolicyForO365"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOAtpPolicyForO365")) -or
