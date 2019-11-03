@@ -144,7 +144,7 @@ function Start-O365ConfigurationExtract
         try
         {
             $ModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_EXOAntiPhishPolicy\MSFT_EXOAntiPhishPolicy.psm1" `
+                                    -ChildPath "..\DSCResources\MSFT_EXOAcceptedDomain\MSFT_EXOAcceptedDomain.psm1" `
                                     -Resolve
 
             Import-Module $ModulePath | Out-Null
