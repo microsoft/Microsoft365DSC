@@ -141,14 +141,12 @@ function Start-O365ConfigurationExtract
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("EXO")))
     {
         Write-Information "Extracting EXOAcceptedDomain..."
-        try
-        {
-            $ModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_EXOAcceptedDomain\MSFT_EXOAcceptedDomain.psm1" `
-                                    -Resolve
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_EXOAcceptedDomain\MSFT_EXOAcceptedDomain.psm1" `
+                                -Resolve
 
-            Import-Module $ModulePath | Out-Null
-            $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
 
