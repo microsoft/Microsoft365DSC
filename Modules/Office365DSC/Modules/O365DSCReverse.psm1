@@ -143,85 +143,12 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting EXOAcceptedDomain..."
         try
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                              -Platform ExchangeOnline `
-                              -ErrorAction SilentlyContinue
+            $ModulePath = Join-Path -Path $PSScriptRoot `
+                                    -ChildPath "..\DSCResources\MSFT_EXOAntiPhishPolicy\MSFT_EXOAntiPhishPolicy.psm1" `
+                                    -Resolve
 
-            $AcceptedDomains = Get-AcceptedDomain
-            $EXOAcceptedDomainModulePath = Join-Path -Path $PSScriptRoot `
-                                                    -ChildPath "..\DSCResources\MSFT_EXOAcceptedDomain\MSFT_EXOAcceptedDomain.psm1" `
-                                                    -Resolve
-
-            Import-Module $EXOAcceptedDomainModulePath | Out-Null
-
-            foreach ($acceptedDomain in $AcceptedDomains)
-            {
-                $DSCContent += Export-TargetResource -Identity $acceptedDomain.Identity -GlobalAdminAccount $GlobalAdminAccount
-            }
-        }
-        catch
-        {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
-        }
-    }
-    #endregion
-
-    #region "EXOAntiPhishPolicy"
-    if (($null -ne $ComponentsToExtract -and
-        $ComponentsToExtract.Contains("chckEXOAntiPhishPolicy")) -or
-        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("EXO")))
-    {
-        Write-Information "Extracting EXOAntiPhishPolicy..."
-        try
-        {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                              -Platform ExchangeOnline `
-                              -ErrorAction SilentlyContinue
-            $AntiPhishPolicies = Get-AntiPhishPolicy
-            $EXOAntiPhishPolicyModulePath = Join-Path -Path $PSScriptRoot `
-                                                -ChildPath "..\DSCResources\MSFT_EXOAntiPhishPolicy\MSFT_EXOAntiPhishPolicy.psm1" `
-                                                -Resolve
-
-            Import-Module $EXOAntiPhishPolicyModulePath | Out-Null
-            foreach ($antiPhishPolicy in $AntiPhishPolicies)
-            {
-                $DSCContent += Export-TargetResource -Identity $antiPhishPolicy.Identity -GlobalAdminAccount $GlobalAdminAccount
-            }
-        }
-        catch
-        {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
-        }
-    }
-    #endregion
-
-    #region "EXOAntiPhishRule"
-    if (($null -ne $ComponentsToExtract -and
-        $ComponentsToExtract.Contains("chckEXOAntiPhishRule")) -or
-        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("EXO")))
-    {
-        Write-Information "Extracting EXOAntiPhishRule..."
-        try
-        {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                              -Platform ExchangeOnline `
-                              -ErrorAction SilentlyContinue
-
-            $AntiPhishRules = Get-AntiPhishRule
-            $EXOAntiPhishRuleModulePath = Join-Path -Path $PSScriptRoot `
-                                              -ChildPath "..\DSCResources\MSFT_EXOAntiPhishRule\MSFT_EXOAntiPhishRule.psm1" `
-                                              -Resolve
-
-            Import-Module $EXOAntiPhishRuleModulePath | Out-Null
-            foreach ($antiPhishRule in $AntiPhishRules)
-            {
-                $DSCContent += Export-TargetResource -Identity $antiPhishRule.Identity -HostedContentFilterPolicy $HostedContentFilterRule.HostedContentFilterPolicy -GlobalAdminAccount $GlobalAdminAccount
-            }
-        }
-        catch
-        {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
-        }
+            Import-Module $ModulePath | Out-Null
+            $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
 
