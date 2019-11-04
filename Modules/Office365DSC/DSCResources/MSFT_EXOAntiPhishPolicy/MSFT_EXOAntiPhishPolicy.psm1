@@ -136,10 +136,17 @@ function Get-TargetResource
     else
     {
         $PhishThresholdLevelValue = $AntiPhishPolicy.PhishThresholdLevel
-        if ($null -eq $PhishThresholdLevelValue)
+        if ([System.String]::IsNullOrEmpty($PhishThresholdLevelValue))
         {
             $PhishThresholdLevelValue = '1'
         }
+
+        $TargetedUserProtectionActionValue = $AntiPhishPolicy.TargetedUserProtectionAction
+        if ([System.String]::IsNullOrEmpty($TargetedUserProtectionActionValue))
+        {
+            $TargetedUserProtectionActionValue = 'NoAction'
+        }
+
         $result = @{
             Identity                              = $Identity
             AdminDisplayName                      = $AntiPhishPolicy.AdminDisplayName
@@ -163,7 +170,7 @@ function Get-TargetResource
             TargetedDomainProtectionAction        = $TargetedDomainProtectionAction
             TargetedDomainsToProtect              = $AntiPhishPolicy.TargetedDomainsToProtect
             TargetedUserActionRecipients          = $AntiPhishPolicy.TargetedUserActionRecipients
-            TargetedUserProtectionAction          = $AntiPhishPolicy.TargetedUserProtectionAction
+            TargetedUserProtectionAction          = $TargetedUserProtectionActionValue
             TargetedUsersToProtect                = $AntiPhishPolicy.TargetedUsersToProtect
             TreatSoftPassAsAuthenticated          = $AntiPhishPolicy.TreatSoftPassAsAuthenticated
             GlobalAdminAccount                    = $GlobalAdminAccount
