@@ -1579,8 +1579,7 @@ function Start-O365ConfigurationExtract
 
         Import-Module $SPOModulePath | Out-Null
 
-        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                          -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                           -Platform PnP
 
         $storageEntities = Get-PnPStorageEntity
