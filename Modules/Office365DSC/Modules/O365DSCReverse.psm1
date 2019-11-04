@@ -891,30 +891,13 @@ function Start-O365ConfigurationExtract
         try
         {
             Write-Information "Extracting SCComplianceTag..."
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                              -Platform SecurityComplianceCenter `
-                              -ErrorAction SilentlyContinue
 
-            $SCComplianceTagModulePath = Join-Path -Path $PSScriptRoot `
+            $ModulePath = Join-Path -Path $PSScriptRoot `
                                             -ChildPath "..\DSCResources\MSFT_SCComplianceTag\MSFT_SCComplianceTag.psm1" `
                                             -Resolve
 
-            Import-Module $SCComplianceTagModulePath | Out-Null
-            $tags = Get-ComplianceTag
-
-            $totalTags = $tags.Length
-            if ($null -eq $totalTags)
-            {
-                $totalTags = 1
-            }
-            $i = 1
-            foreach ($tag in $tags)
-            {
-                Write-Information "    - [$i/$($totalTags)] $($tag.Name)"
-                $partialContent = Export-TargetResource -Name $tag.Name -GlobalAdminAccount $GlobalAdminAccount
-                $DSCContent += $partialContent
-                $i++
-            }
+            Import-Module $ModulePath | Out-Null
+            $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
         }
         catch
         {

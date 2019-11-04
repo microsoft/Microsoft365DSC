@@ -393,10 +393,8 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "Name",
-                                                                   "Type")
+                                                  -Source $($MyInvocation.MyCommand.Source) `
+                                                  -DesiredValues $PSBoundParameters
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
