@@ -76,7 +76,7 @@ function Get-TargetResource
             BodyCanonicalization   = $DkimSigningConfig.BodyCanonicalization
             Enabled                = $DkimSigningConfig.Enabled
             HeaderCanonicalization = $DkimSigningConfig.HeaderCanonicalization
-            KeySize                = $DkimSigningConfig.KeySize
+            KeySize                = 1024
             GlobalAdminAccount     = $GlobalAdminAccount
         }
 
