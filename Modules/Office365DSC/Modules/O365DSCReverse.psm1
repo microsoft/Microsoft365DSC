@@ -20,6 +20,10 @@ function Start-O365ConfigurationExtract
         $Path,
 
         [Parameter()]
+        [System.String]
+        $FileName,
+
+        [Parameter()]
         [ValidateSet('SPO','EXO','SC','OD','O365','TEAMS')]
         [System.String[]]
         $Workloads
@@ -49,7 +53,14 @@ function Start-O365ConfigurationExtract
     $DSCContent += "    [System.Management.Automation.PSCredential]`r`n"
     $DSCContent += "    `$GlobalAdminAccount`r`n"
     $DSCContent += ")`r`n`r`n"
-    $DSCContent += "Configuration O365TenantConfig`r`n{`r`n"
+
+    $ConfigName = "O365TenantConfig"
+    if (-not [System.String]::IsNullOrEmpty($FileName))
+    {
+        $FileParts = $FileName.Split('.')
+        $ConfigName = $FileName.Replace('.' + $FileParts[$FileParts.Length -1], "")
+    }
+    $DSCContent += "Configuration $ConfigName`r`n{`r`n"
     $DSCContent += "    param (`r`n"
     $DSCContent += "        [parameter()]`r`n"
     $DSCContent += "        [System.Management.Automation.PSCredential]`r`n"
@@ -1804,7 +1815,7 @@ function Start-O365ConfigurationExtract
     $credsContent += "`r`n"
     $startPosition = $DSCContent.IndexOf("<# Credentials #>") + 19
     $DSCContent = $DSCContent.Insert($startPosition, $credsContent)
-    $DSCContent += "O365TenantConfig -ConfigurationData .\ConfigurationData.psd1 -GlobalAdminAccount `$GlobalAdminAccount"
+    $DSCContent += "$ConfigName -ConfigurationData .\ConfigurationData.psd1 -GlobalAdminAccount `$GlobalAdminAccount"
     #endregion
 
     #region Prompt the user for a location to save the extract and generate the files
@@ -1851,7 +1862,14 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
-    $outputDSCFile = $OutputDSCPath + "Office365TenantConfig.ps1"
+    if (-not [System.String]::IsNullOrEmpty($FileName))
+    {
+        $outputDSCFile = $OutputDSCPath + $FileName
+    }
+    else
+    {
+        $outputDSCFile = $OutputDSCPath + "Office365TenantConfig.ps1"
+    }
     $DSCContent | Out-File $outputDSCFile
 
     if (!$AzureAutomation)

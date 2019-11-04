@@ -1588,6 +1588,10 @@ function Export-O365Configuration
         $Path,
 
         [Parameter()]
+        [System.String]
+        $FileName,
+
+        [Parameter()]
         [System.String[]]
         $ComponentsToExtract,
 
@@ -1611,19 +1615,19 @@ function Export-O365Configuration
         {
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                                            -Workloads $Workloads `
-                                           -Path $Path
+                                           -Path $Path -FileName $FileName
         }
         elseif ($null -ne $ComponentsToExtract)
         {
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                                            -ComponentsToExtract $ComponentsToExtract `
-                                           -Path $Path
+                                           -Path $Path -FileName $FileName
         }
         else
         {
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                                            -AllComponents `
-                                           -Path $Path
+                                           -Path $Path -FileName $FileName
         }
     }
 }
