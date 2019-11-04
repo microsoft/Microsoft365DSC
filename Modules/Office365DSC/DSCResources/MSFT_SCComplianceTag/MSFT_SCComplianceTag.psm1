@@ -343,22 +343,40 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $result.FilePlanProperty = Get-SCFilePlanPropertyAsString $result.FilePlanProperty
-    $content = "        SCComplianceTag " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "FilePlanProperty"
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    $InformationPreference = 'Continue'
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform SecurityComplianceCenter `
+                      -ErrorAction SilentlyContinue
+    $tags = Get-ComplianceTag
+
+    $totalTags = $tags.Length
+    if ($null -eq $totalTags)
+    {
+        $totalTags = 1
+    }
+    $i = 1
+    $content = ''
+    foreach ($tag in $tags)
+    {
+        Write-Information "    - [$i/$($totalTags)] $($tag.Name)"
+        $Params = @{
+            Name               = $tag.Name
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @Params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $result.FilePlanProperty = Get-SCFilePlanPropertyAsString $result.FilePlanProperty
+        $content += "        SCComplianceTag " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "FilePlanProperty"
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        $i++
+    }
     return $content
 }
 
@@ -418,6 +436,10 @@ function Get-SCFilePlanProperty
 
 function Get-SCFilePlanPropertyAsString($params)
 {
+    if ($null -eq $params)
+    {
+        return $null
+    }
     $currentProperty = "MSFT_SCFilePlanProperty{`r`n"
     foreach($key in $params.Keys)
     {
