@@ -135,6 +135,11 @@ function Get-TargetResource
     }
     else
     {
+        $PhishThresholdLevelValue = $AntiPhishPolicy.PhishThresholdLevel
+        if ($null -eq $PhishThresholdLevelValue)
+        {
+            $PhishThresholdLevelValue = '1'
+        }
         $result = @{
             Identity                              = $Identity
             AdminDisplayName                      = $AntiPhishPolicy.AdminDisplayName
@@ -153,7 +158,7 @@ function Get-TargetResource
             ExcludedDomains                       = $AntiPhishPolicy.ExcludedDomains
             ExcludedSenders                       = $AntiPhishPolicy.ExcludedSenders
             MakeDefault                           = $AntiPhishPolicy.MakeDefault
-            PhishThresholdLevel                   = $AntiPhishPolicy.PhishThresholdLevel
+            PhishThresholdLevel                   = $PhishThresholdLevelValue
             TargetedDomainActionRecipients        = $AntiPhishPolicy.TargetedDomainActionRecipients
             TargetedDomainProtectionAction        = $TargetedDomainProtectionAction
             TargetedDomainsToProtect              = $AntiPhishPolicy.TargetedDomainsToProtect
