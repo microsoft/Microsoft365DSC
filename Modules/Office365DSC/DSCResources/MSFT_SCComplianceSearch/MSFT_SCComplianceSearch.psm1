@@ -351,6 +351,7 @@ function Export-TargetResource
         $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $partialContent += "        }`r`n"
         $DSCContent += $partialContent
+        $i++
     }
 
     $cases = Get-ComplianceCase
@@ -379,6 +380,7 @@ function Export-TargetResource
             $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $partialContent += "        }`r`n"
             $DSCContent += $partialContent
+            $i++
         }
         $j++
     }

@@ -1297,6 +1297,60 @@ function Set-EXOSafeLinksRule
     }
 }
 
+function Compare-PSCustomObjectArrays
+{
+    [CmdletBinding()]
+    [OutputType([System.Object[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $DesiredValues,
+
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $CurrentValues
+    )
+
+    $DriftedProperties = @()
+    foreach ($DesiredEntry in $DesiredValues)
+    {
+        $Properties = $DesiredEntry.PSObject.Properties
+        $KeyProperty = $Properties.Name[0]
+
+        $EquivalentEntryInCurrent = $CurrentValues | Where-Object -FilterScript {$_.$KeyProperty -eq $DesiredEntry.$KeyProperty}
+        if ($null -eq $EquivalentEntryInCurrent)
+        {
+            $result = @{
+                        Property     = $DesiredEntry
+                        PropertyName = $KeyProperty
+                        Desired      = $DesiredEntry.$KeyProperty
+                        Current      = $null
+                      }
+            $DriftedProperties += $DesiredEntry
+        }
+        else
+        {
+            foreach ($property in $Properties)
+            {
+                $propertyName = $property.Name
+
+                if ($DesiredEntry.$PropertyName -ne $EquivalentEntryInCurrent.$PropertyName)
+                {
+                    $result = @{
+                        Property     = $DesiredEntry
+                        PropertyName = $PropertyName
+                        Desired      = $DesiredEntry.$PropertyName
+                        Current      = $EquivalentEntryInCurrent.$PropertyName
+                    }
+                    $DriftedProperties += $result
+                }
+            }
+        }
+    }
+
+    return $DriftedProperties
+}
+
 function Test-Office365DSCParameterState
 {
     [CmdletBinding()]
@@ -1380,6 +1434,33 @@ function Test-Office365DSCParameterState
                                     "to return false.")
                             $DriftedParameters.Add($fieldName, '')
                             $returnValue = $false
+                        }
+                        elseif ($desiredType.Name -eq 'ciminstance[]')
+                        {
+                            Write-Verbose "The current property {$_} is a CimInstance[]"
+                            $AllDesiredValuesAsArray = @()
+                            foreach ($item in $DesiredValues.$_)
+                            {
+                                $currentEntry = @{}
+                                foreach ($prop in $item.CIMInstanceProperties)
+                                {
+                                    $currentEntry.Add($prop.Name, $prop.Value)
+                                }
+                                $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
+                            }
+
+                            $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
+                                -DesiredValues $AllDesiredValuesAsArray
+                            if ($null -ne $arrayCompare)
+                            {
+                                foreach ($item in $arrayCompare)
+                                {
+                                    $EventValue = "<CurrentValue>[$($item.PropertyName)]$($item.CurrentValue)</CurrentValue>"
+                                    $EventValue += "<DesiredValue>[$($item.PropertyName)]$($item.DesiredValue)</DesiredValue>"
+                                    $DriftedParameters.Add($fieldName, $EventValue)
+                                }
+                                $returnValue = $false
+                            }
                         }
                         else
                         {

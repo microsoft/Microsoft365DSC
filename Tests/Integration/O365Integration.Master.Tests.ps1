@@ -91,7 +91,7 @@ Configuration Master
         {
             ElcProcessingDisabled                                     = $False;
             IsSingleInstance                                          = "Yes";
-            DefaultPublicFolderProhibitPostQuota                      = 12345;
+            DefaultPublicFolderProhibitPostQuota                      = "13 KB (13,312 bytes)";
             VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
             BookingsEnabled                                           = $True;
             ExchangeNotificationRecipients                            = @();
@@ -104,7 +104,7 @@ Configuration Master
             AuditDisabled                                             = $False;
             EwsAllowMacOutlook                                        = $null;
             ConnectorsEnabledForTeams                                 = $True;
-            DefaultPublicFolderIssueWarningQuota                      = 12345;
+            DefaultPublicFolderIssueWarningQuota                      = "13 KB (13,312 bytes)";
             MailTipsMailboxSourcedTipsEnabled                         = $True;
             EndUserDLUpgradeFlowsDisabled                             = $False;
             DistributionGroupDefaultOU                                = $null;
@@ -119,7 +119,7 @@ Configuration Master
             GlobalAdminAccount                                        = $GlobalAdmin;
             ConnectorsEnabledForYammer                                = $True;
             HierarchicalAddressBookRoot                               = $null;
-            DefaultPublicFolderMaxItemSize                            = 12345;
+            DefaultPublicFolderMaxItemSize                            = "13 KB (13,312 bytes)";
             MailTipsLargeAudienceThreshold                            = 25;
             ConnectorsActionableMessagesEnabled                       = $True;
             ExchangeNotificationEnabled                               = $True;
@@ -130,7 +130,7 @@ Configuration Master
             PublicFoldersEnabled                                      = "Local";
             WebPushNotificationsDisabled                              = $False;
             MailTipsGroupMetricsEnabled                               = $True;
-            DefaultPublicFolderMovedItemRetention                     = "07.00:00:00";
+            DefaultPublicFolderMovedItemRetention                     = "7.00:00:00";
             DistributionGroupNamingPolicy                             = "";
             DefaultPublicFolderDeletedItemRetention                   = "30.00:00:00";
             MailTipsAllTipsEnabled                                    = $True;
@@ -407,6 +407,16 @@ Configuration Master
             Ensure             = "Present"
         }
 
+        SPOSearchResultSource SearchMP
+        {
+            Name               = "MyResultSource"
+            Description        = "Description of item"
+            Protocol           = "Local"
+            Type               = "SharePoint"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+        }
+
         SPOSiteAuditSettings MyStorageEntity
         {
             Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
@@ -467,7 +477,7 @@ Configuration Master
             ExcludeRestrictedSiteClassifications = @();
         }#>
 
-        SPOUserProfileProperty AdminFavoriteFood
+        SPOUserProfileProperty SPOUserProfileProperty
         {
             UserName           = "adminnonmfa@$Domain"
             Properties         = @(

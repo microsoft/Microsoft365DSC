@@ -38,7 +38,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         <d4p1:Source>
         <d4p1:ConnectionUrlTemplate></d4p1:ConnectionUrlTemplate>
         <d4p1:CreatedDate>2019-03-01T09:18:13.00</d4p1:CreatedDate>
-        <d4p1:Description></d4p1:Description>
+        <d4p1:Description>New Result Source</d4p1:Description>
         <d4p1:Id>4483418f-8ccc-4628-b9de-0a89be1e14e8</d4p1:Id>
         <d4p1:Name>This is a Test</d4p1:Name>
         <d4p1:ProviderId>fa947043-6046-4f97-9714-40d4c113963d</d4p1:ProviderId>
@@ -89,6 +89,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Name               = "TestRS"
                 Description        = "New Result Source"
                 Protocol           = "Local"
+                SourceURL          = ""
                 Type               = "SharePoint"
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
