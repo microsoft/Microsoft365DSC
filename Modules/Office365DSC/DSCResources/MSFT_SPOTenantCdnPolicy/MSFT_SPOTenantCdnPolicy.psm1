@@ -27,13 +27,20 @@ function Get-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                       -Platform PnP
 
-    $Policies = Get-PnPTenantCdnPolicies -CDNType $CDNType
+    try
+    {
+        $Policies = Get-PnPTenantCdnPolicies -CDNType $CDNType -ErrorAction Stop
 
-    return @{
-        CDNType                              = $CDNType
-        ExcludeRestrictedSiteClassifications = $Policies["ExcludeRestrictedSiteClassifications"].Split(',')
-        IncludeFileExtensions                = $Policies["IncludeFileExtensions"].Split(',')
-        GlobalAdminAccount                   = $GlobalAdminAccount
+        return @{
+            CDNType                              = $CDNType
+            ExcludeRestrictedSiteClassifications = $Policies["ExcludeRestrictedSiteClassifications"].Split(',')
+            IncludeFileExtensions                = $Policies["IncludeFileExtensions"].Split(',')
+            GlobalAdminAccount                   = $GlobalAdminAccount
+        }
+    }
+    catch
+    {
+        return $null
     }
 }
 
@@ -157,12 +164,16 @@ function Export-TargetResource
         GlobalAdminAccount = $GlobalAdminAccount
     }
     $result = Get-TargetResource @params
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        SPOTenantCDNPolicy " + (New-Guid).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    $content = ""
+    if ($null -ne $result)
+    {
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content += "        SPOTenantCDNPolicy " + (New-Guid).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+    }
 
 
     $params = @{
@@ -170,12 +181,15 @@ function Export-TargetResource
         GlobalAdminAccount = $GlobalAdminAccount
     }
     $result = Get-TargetResource @params
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content += "        SPOTenantCDNPolicy " + (New-Guid).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    if ($null -ne $result)
+    {
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content += "        SPOTenantCDNPolicy " + (New-Guid).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+    }
     return $content
 }
 
