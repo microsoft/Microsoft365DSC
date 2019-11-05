@@ -61,23 +61,15 @@ function Get-TargetResource
     else
     {
         $result = @{
-            Ensure = 'Present'
-        }
-
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-        {
-            if ($null -ne $SafeAttachmentPolicy.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $SafeAttachmentPolicy.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
+            Ensure             = 'Present'
+            Identity           = $Identity
+            Action             = $SafeAttachmentPolicy.Action
+            ActionOnError      = $SafeAttachmentPolicy.ActionOnError
+            AdminDisplayName   = $SafeAttachmentPolicy.AdminDisplayName
+            Enable             = $SafeAttachmentPolicy.Enable
+            Redirect           = $SafeAttachmentPolicy.Redirect
+            RedirectAddress    = $SafeAttachmentPolicy.RedirectAddress
+            GlobalAdminAccount = $GlobalAdminAccount
         }
 
         Write-Verbose -Message "Found SafeAttachmentPolicy $($Identity)"

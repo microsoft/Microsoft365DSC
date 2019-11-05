@@ -37,28 +37,56 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
         }
-
-        EXOAntiPhishPolicy AntiPhishPolicy
+<#
+        EXOAntiPhishPolicy AntiphishPolicy
         {
-            Identity                 = "Test AntiPhish Policy"
-            AdminDisplayName         = "Default Monitoring Policy"
-            AuthenticationFailAction = "Quarantine"
-            GlobalAdminAccount       = $GlobalAdmin
-            Ensure                   = "Present"
+            MakeDefault                           = $null;
+            PhishThresholdLevel                   = 1;
+            EnableTargetedDomainsProtection       = $null;
+            Identity                              = "Our Rule";
+            TreatSoftPassAsAuthenticated          = $True;
+            Enabled                               = $null;
+            TargetedDomainsToProtect              = $null;
+            EnableSimilarUsersSafetyTips          = $null;
+            ExcludedDomains                       = $null;
+            EnableAuthenticationSafetyTip         = $False;
+            Ensure                                = "Present";
+            TargetedDomainActionRecipients        = $null;
+            EnableMailboxIntelligence             = $null;
+            EnableSimilarDomainsSafetyTips        = $null;
+            TargetedDomainProtectionAction        = "NoAction";
+            AdminDisplayName                      = "";
+            AuthenticationFailAction              = "MoveToJmf";
+            GlobalAdminAccount                    = $GlobalAdmin;
+            TargetedUserProtectionAction          = "NoAction";
+            TargetedUsersToProtect                = $null;
+            EnableTargetedUserProtection          = $null;
+            ExcludedSenders                       = $null;
+            EnableAuthenticationSoftPassSafetyTip = $False;
+            EnableOrganizationDomainsProtection   = $null;
+            EnableUnusualCharactersSafetyTips     = $null;
+            TargetedUserActionRecipients          = $null;
+            EnableAntispoofEnforcement            = $True;
         }
 
         EXOAntiPhishRule AntiPhishRule
         {
-            Identity           = "Test AntiPhish Rule"
-            AntiPhishPolicy    = "Test AntiPhish Policy"
-            Comments           = "This is a test Rule"
-            SentToMemberOf     = @("O365DSCCore@$Domain")
-            GlobalAdminAccount = $GlobalAdmin
-            Ensure             = "Present"
-            DependsOn          = "[O365Group]O365DSCCoreTeam"
+            ExceptIfSentToMemberOf    = $null;
+            GlobalAdminAccount        = $GlobalAdmin;
+            ExceptIfSentTo            = $null;
+            SentTo                    = $null;
+            ExceptIfRecipientDomainIs = $null;
+            Identity                  = "Test Rule";
+            Comments                  = $null;
+            AntiPhishPolicy           = "Our Rule";
+            RecipientDomainIs         = $null;
+            Ensure                    = "Present";
+            Enabled                   = $True;
+            SentToMemberOf            = @("msteams_bb15d4@$Domain");
+            Priority                  = 1;
         }
 
-        <#EXOAtpPolicyForO365 AntiPhishPolicy
+        EXOAtpPolicyForO365 AntiPhishPolicy
         {
             IsSingleInstance        = "Yes"
             AllowClickThrough       = $false
@@ -67,6 +95,17 @@ Configuration Master
             GlobalAdminAccount      = $GlobalAdmin
             Ensure                  = "Present"
         }#>
+
+        EXOCASMailboxPlan CASMailboxPlan
+        {
+            ActiveSyncEnabled    = $True;
+            OwaMailboxPolicy     = "OwaMailboxPolicy-Default";
+            GlobalAdminAccount   = $GlobalAdmin;
+            PopEnabled           = $True;
+            Identity             = "ExchangeOnlineEssentials-759100cd-4fb6-46db-80ae-bb0ef4bd92b0";
+            Ensure               = "Present";
+            ImapEnabled          = $True;
+        }
 
         EXOClientAccessRule ClientAccessRule
         {
@@ -86,6 +125,18 @@ Configuration Master
             ExceptAnyOfClientIPAddressesOrRanges = @();
             AnyOfClientIPAddressesOrRanges       = @();
         }
+
+        <#EXODkimSigningConfig DKIMSigning
+        {
+            KeySize                = 1024;
+            GlobalAdminAccount     = $GlobalAdmin;
+            Identity               = $Domain;
+            HeaderCanonicalization = "Relaxed";
+            Enabled                = $True;
+            Ensure                 = "Present";
+            BodyCanonicalization   = "Relaxed";
+            AdminDisplayName       = "";
+        }#>
 
         EXOOrganizationConfig EXOOrganizationConfig
         {

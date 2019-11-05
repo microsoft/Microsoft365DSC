@@ -63,14 +63,14 @@ function Get-TargetResource
     }
 
     $result = @{
-        Organization = $Organization
-        MailTipsAllTipsEnabled = $OrgConfig.MailTipsAllTipsEnabled
-        MailTipsGroupMetricsEnabled = $OrgConfig.MailTipsGroupMetricsEnabled
-        MailTipsLargeAudienceThreshold = $OrgConfig.MailTipsLargeAudienceThreshold
-        MailTipsMailboxSourcedTipsEnabled = $OrgConfig.MailTipsMailboxSourcedTipsEnabled
+        Organization                          = $Organization
+        MailTipsAllTipsEnabled                = $OrgConfig.MailTipsAllTipsEnabled
+        MailTipsGroupMetricsEnabled           = $OrgConfig.MailTipsGroupMetricsEnabled
+        MailTipsLargeAudienceThreshold        = $OrgConfig.MailTipsLargeAudienceThreshold
+        MailTipsMailboxSourcedTipsEnabled     = $OrgConfig.MailTipsMailboxSourcedTipsEnabled
         MailTipsExternalRecipientsTipsEnabled = $OrgConfig.MailTipsExternalRecipientsTipsEnabled
-        Ensure = "Present"
-        GlobalAdminAccount = $GlobalAdminAccount
+        Ensure                                = "Present"
+        GlobalAdminAccount                    = $GlobalAdminAccount
     }
 
     Write-Verbose -Message "Found configuration of the Mailtips for $($Organization)"

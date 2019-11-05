@@ -246,36 +246,60 @@ function Get-TargetResource
     else
     {
         $result = @{
-            Ensure = 'Present'
-        }
-
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -inotmatch 'Ensure|MakeDefault' }))
-        {
-            if ($null -ne $HostedContentFilterPolicy.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $HostedContentFilterPolicy.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
+            Ensure                                   = 'Present'
+            Identity                                 = $Identity
+            AddXHeaderValue                          = $HostedContentFilterPolicy.AddXHeaderValue
+            AdminDisplayName                         = $HostedContentFilterPolicy.AdminDisplayName
+            AllowedSenderDomains                     = $HostedContentFilterPolicy.AllowedSenderDomains
+            AllowedSenders                           = $HostedContentFilterPolicy.AllowedSenders
+            BlockedSenderDomains                     = $HostedContentFilterPolicy.BlockedSenderDomains
+            BlockedSenders                           = $HostedContentFilterPolicy.BlockedSenders
+            BulkSpamAction                           = $HostedContentFilterPolicy.BulkSpamAction
+            BulkThreshold                            = $HostedContentFilterPolicy.BulkThreshold
+            DownloadLink                             = $HostedContentFilterPolicy.DownloadLink
+            EnableEndUserSpamNotifications           = $HostedContentFilterPolicy.EnableEndUserSpamNotifications
+            EnableLanguageBlockList                  = $HostedContentFilterPolicy.EnableLanguageBlockList
+            EnableRegionBlockList                    = $HostedContentFilterPolicy.EnableRegionBlockList
+            EndUserSpamNotificationCustomFromAddress = $HostedContentFilterPolicy.EndUserSpamNotificationCustomFromAddress
+            EndUserSpamNotificationCustomFromName    = $HostedContentFilterPolicy.EndUserSpamNotificationCustomFromName
+            EndUserSpamNotificationCustomSubject     = $HostedContentFilterPolicy.EndUserSpamNotificationCustomSubject
+            EndUserSpamNotificationFrequency         = $HostedContentFilterPolicy.EndUserSpamNotificationFrequency
+            EndUserSpamNotificationLanguage          = $HostedContentFilterPolicy.EndUserSpamNotificationLanguage
+            HighConfidenceSpamAction                 = $HostedContentFilterPolicy.HighConfidenceSpamAction
+            InlineSafetyTipsEnabled                  = $HostedContentFilterPolicy.InlineSafetyTipsEnabled
+            IncreaseScoreWithBizOrInfoUrls           = $HostedContentFilterPolicy.IncreaseScoreWithBizOrInfoUrls
+            IncreaseScoreWithImageLinks              = $HostedContentFilterPolicy.IncreaseScoreWithImageLinks
+            IncreaseScoreWithNumericIps              = $HostedContentFilterPolicy.IncreaseScoreWithNumericIps
+            IncreaseScoreWithRedirectToOtherPort     = $HostedContentFilterPolicy.IncreaseScoreWithRedirectToOtherPort
+            LanguageBlockList                        = $HostedContentFilterPolicy.LanguageBlockList
+            MakeDefault                              = $false
+            MarkAsSpamBulkMail                       = $HostedContentFilterPolicy.MarkAsSpamBulkMail
+            MarkAsSpamEmbedTagsInHtml                = $HostedContentFilterPolicy.MarkAsSpamEmbedTagsInHtml
+            MarkAsSpamEmptyMessages                  = $HostedContentFilterPolicy.MarkAsSpamEmptyMessages
+            MarkAsSpamFormTagsInHtml                 = $HostedContentFilterPolicy.MarkAsSpamFormTagsInHtml
+            MarkAsSpamFramesInHtml                   = $HostedContentFilterPolicy.MarkAsSpamFramesInHtml
+            MarkAsSpamFromAddressAuthFail            = $HostedContentFilterPolicy.MarkAsSpamFromAddressAuthFail
+            MarkAsSpamJavaScriptInHtml               = $HostedContentFilterPolicy.MarkAsSpamJavaScriptInHtml
+            MarkAsSpamNdrBackscatter                 = $HostedContentFilterPolicy.MarkAsSpamNdrBackscatter
+            MarkAsSpamObjectTagsInHtml               = $HostedContentFilterPolicy.MarkAsSpamObjectTagsInHtml
+            MarkAsSpamSensitiveWordList              = $HostedContentFilterPolicy.MarkAsSpamSensitiveWordList
+            MarkAsSpamSpfRecordHardFail              = $HostedContentFilterPolicy.MarkAsSpamSpfRecordHardFail
+            MarkAsSpamWebBugsInHtml                  = $HostedContentFilterPolicy.MarkAsSpamWebBugsInHtml
+            ModifySubjectValue                       = $HostedContentFilterPolicy.ModifySubjectValue
+            PhishSpamAction                          = $HostedContentFilterPolicy.PhishSpamAction
+            QuarantineRetentionPeriod                = $HostedContentFilterPolicy.QuarantineRetentionPeriod
+            RedirectToRecipients                     = $HostedContentFilterPolicy.RedirectToRecipients
+            RegionBlockList                          = $HostedContentFilterPolicy.RegionBlockList
+            SpamAction                               = $HostedContentFilterPolicy.SpamAction
+            TestModeAction                           = $HostedContentFilterPolicy.TestModeAction
+            TestModeBccToRecipients                  = $HostedContentFilterPolicy.TestModeBccToRecipients
+            ZapEnabled                               = $HostedContentFilterPolicy.ZapEnabled
+            GlobalAdminAccount                       = $GlobalAdminAccount
         }
 
         if ($HostedContentFilterPolicy.IsDefault)
         {
-            $result += @{
-                MakeDefault = $true
-            }
-        }
-        else
-        {
-            $result += @{
-                MakeDefault = $false
-            }
+            $result.MakeDefault = $true
         }
 
         Write-Verbose -Message "Found HostedContentFilterPolicy $($Identity)"

@@ -51,7 +51,7 @@ function Get-TargetResource
     }
     else
     {
-        $property = $property | Where-Object -FilterScript { $_.Key -eq $Key }
+        $property = $property | Where-Object -FilterScript { $_.Key -ceq $Key }
         Write-Verbose "Found existing SPOPropertyBag Key $Key at {$Url}"
         $result = @{
             Ensure             = 'Present'

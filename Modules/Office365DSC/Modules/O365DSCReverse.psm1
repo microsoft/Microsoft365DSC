@@ -124,6 +124,38 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "EXOAntiPhishPolicy"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOAntiPhishPolicy")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("EXO")))
+    {
+        Write-Information "Extracting EXOAntiPhishPolicy..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_EXOAntiPhishPolicy\MSFT_EXOAntiPhishPolicy.psm1" `
+                                -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "EXOAntiPhishRule"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOAntiPhishRule")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("EXO")))
+    {
+        Write-Information "Extracting EXOAntiPhishRule..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_EXOAntiPhishRule\MSFT_EXOAntiPhishRule.psm1" `
+                                -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "EXOOrganizationConfig"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOOrganizationConfig")) -or
@@ -144,7 +176,6 @@ function Start-O365ConfigurationExtract
             New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
-    #endregion
 
     #region "EXOAtpPolicyForO365"
     if (($null -ne $ComponentsToExtract -and
@@ -182,7 +213,7 @@ function Start-O365ConfigurationExtract
             }
             else
             {
-                Write-Information "The specified Tenant is not registered for ATP, and therefore can't extract policies"
+                Write-Warning "The specified Tenant is not registered for ATP, and therefore can't extract policies"
             }
         }
         catch
@@ -1230,8 +1261,8 @@ function Start-O365ConfigurationExtract
                 foreach ($file in $allFiles)
                 {
                     $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
-                    $fileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length -1]
-                    Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $fileName -AsFile | Out-Null
+                    $appFileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length -1]
+                    Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $appFileName -AsFile | Out-Null
                 }
             }
             else
@@ -1559,8 +1590,7 @@ function Start-O365ConfigurationExtract
 
         Import-Module $SPOModulePath | Out-Null
 
-        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                          -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                           -Platform PnP
 
         $storageEntities = Get-PnPStorageEntity
