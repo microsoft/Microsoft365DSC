@@ -1261,8 +1261,8 @@ function Start-O365ConfigurationExtract
                 foreach ($file in $allFiles)
                 {
                     $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
-                    $fileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length -1]
-                    Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $fileName -AsFile | Out-Null
+                    $appFileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length -1]
+                    Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $appFileName -AsFile | Out-Null
                 }
             }
             else
