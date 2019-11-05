@@ -964,7 +964,7 @@ function Get-TeamByName
         {
             Start-Sleep 5
         }
-        $loopCounter +=1
+        $loopCounter += 1
         if ($loopCounter -gt 5)
         {
             break
@@ -1005,7 +1005,8 @@ function Convert-O365DscHashtableToString
                 {
                     $str = "$($pair.Key)=`$null"
                 }
-                else {
+                else
+                {
                     $str = "$($pair.Key)=$($pair.Value)"
                 }
             }
@@ -1317,15 +1318,15 @@ function Compare-PSCustomObjectArrays
         $Properties = $DesiredEntry.PSObject.Properties
         $KeyProperty = $Properties.Name[0]
 
-        $EquivalentEntryInCurrent = $CurrentValues | Where-Object -FilterScript {$_.$KeyProperty -eq $DesiredEntry.$KeyProperty}
+        $EquivalentEntryInCurrent = $CurrentValues | Where-Object -FilterScript { $_.$KeyProperty -eq $DesiredEntry.$KeyProperty }
         if ($null -eq $EquivalentEntryInCurrent)
         {
             $result = @{
-                        Property     = $DesiredEntry
-                        PropertyName = $KeyProperty
-                        Desired      = $DesiredEntry.$KeyProperty
-                        Current      = $null
-                      }
+                Property     = $DesiredEntry
+                PropertyName = $KeyProperty
+                Desired      = $DesiredEntry.$KeyProperty
+                Current      = $null
+            }
             $DriftedProperties += $DesiredEntry
         }
         else
@@ -1364,11 +1365,11 @@ function Test-Office365DSCParameterState
         [Object]
         $DesiredValues,
 
-        [Parameter(, Position = 3)]
+        [Parameter(Position = 3)]
         [Array]
         $ValuesToCheck,
 
-        [Parameter(, Position = 4)]
+        [Parameter(Position = 4)]
         [System.String]
         $Source = 'Generic'
     )
@@ -1376,7 +1377,7 @@ function Test-Office365DSCParameterState
     $WarningPreference = "SilentlyContinue"
     $returnValue = $true
 
-    $DriftedParameters = @{}
+    $DriftedParameters = @{ }
 
     if (($DesiredValues.GetType().Name -ne "HashTable") `
             -and ($DesiredValues.GetType().Name -ne "CimInstance") `
@@ -1441,7 +1442,7 @@ function Test-Office365DSCParameterState
                             $AllDesiredValuesAsArray = @()
                             foreach ($item in $DesiredValues.$_)
                             {
-                                $currentEntry = @{}
+                                $currentEntry = @{ }
                                 foreach ($prop in $item.CIMInstanceProperties)
                                 {
                                     $currentEntry.Add($prop.Name, $prop.Value)
@@ -1502,8 +1503,8 @@ function Test-Office365DSCParameterState
                                             "'$($CurrentValues.$fieldName)' " + `
                                             "and desired state is " + `
                                             "'$($DesiredValues.$fieldName)'")
-                                            $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
-                                            $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                    $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                    $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
                                     $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
@@ -1522,8 +1523,8 @@ function Test-Office365DSCParameterState
                                             "'$($CurrentValues.$fieldName)' " + `
                                             "and desired state is " + `
                                             "'$($DesiredValues.$fieldName)'")
-                                            $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
-                                            $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                    $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                    $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
                                     $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
@@ -1542,8 +1543,8 @@ function Test-Office365DSCParameterState
                                             "'$($CurrentValues.$fieldName)' " + `
                                             "and desired state is " + `
                                             "'$($DesiredValues.$fieldName)'")
-                                            $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
-                                            $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                    $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                    $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
                                     $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
@@ -1558,8 +1559,8 @@ function Test-Office365DSCParameterState
                                             "'$($CurrentValues.$fieldName)' " + `
                                             "and desired state is " + `
                                             "'$($DesiredValues.$fieldName)'")
-                                            $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
-                                            $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                    $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                    $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
                                     $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
@@ -1590,8 +1591,8 @@ function Test-Office365DSCParameterState
                                         "as the type ($($desiredType.Name)) is " + `
                                         "not handled by the " + `
                                         "Test-SPDscParameterState cmdlet")
-                                        $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
-                                        $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
+                                $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
                                 $DriftedParameters.Add($fieldName, $EventValue)
                                 $returnValue = $false
                             }
@@ -1677,7 +1678,7 @@ function Export-O365Configuration
         $ComponentsToExtract,
 
         [Parameter()]
-        [ValidateSet('SPO','EXO','SC','OD','O365','TEAMS')]
+        [ValidateSet('SPO', 'EXO', 'SC', 'OD', 'O365', 'TEAMS')]
         [System.String[]]
         $Workloads,
 
@@ -1725,7 +1726,7 @@ function Get-SPOAdministrationUrl
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [switch]
         $UseMFA,
 
@@ -1735,24 +1736,24 @@ function Get-SPOAdministrationUrl
     )
     if ($UseMFA)
     {
-        $UseMFASwitch = @{UseMFA = $true}
+        $UseMFASwitch = @{UseMFA = $true }
     }
     else
     {
-        $UseMFASwitch = @{}
+        $UseMFASwitch = @{ }
     }
     Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
     Test-MSCloudLogin -Platform "AzureAD" -o365Credential $GlobalAdminAccount | Out-Null
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
-    $defaultDomain = Get-AzureADDomain | Where-Object {($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true} # We don't use IsDefault here because the default could be a custom domain
+    $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
     if ($defaultDomain[0].Name -like '*.onmicrosoft.com*')
     {
-        $global:tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.com",""
+        $global:tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.com", ""
     }
     elseif ($defaultDomain[0].Name -like '*.onmicrosoft.de*')
     {
-        $global:tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.de",""
+        $global:tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.de", ""
     }
     $global:AdminUrl = "https://$global:tenantName-admin.sharepoint.com"
     Write-Verbose -Message "SharePoint Online admin URL is $global:AdminUrl"
@@ -1773,7 +1774,7 @@ function Split-ArrayByBatchSize
     )
     for ($i = 0; $i -lt $Array.Count; $i += $BatchSize)
     {
-       $NewArray += ,@($Array[$i..($i+($BatchSize-1))]);
+        $NewArray += , @($Array[$i..($i + ($BatchSize - 1))]);
     }
     return $NewArray
 }
@@ -1837,7 +1838,7 @@ function Invoke-O365DSCCommand
     )
 
     $InformationPreference = 'Continue'
-    $WarningPreference     = 'Continue'
+    $WarningPreference = 'Continue'
     $ErrorActionPreference = 'Stop'
     try
     {

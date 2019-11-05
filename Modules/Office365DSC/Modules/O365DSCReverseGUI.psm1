@@ -86,6 +86,14 @@ function Show-O365GUI
         $chckO365Group.Text = "Groups"
         $pnlO365.Controls.Add($chckO365Group);
 
+        $chckO365OrgCustomizationSetting = New-Object System.Windows.Forms.CheckBox
+        $chckO365OrgCustomizationSetting.Top = 20
+        $chckO365OrgCustomizationSetting.AutoSize = $true;
+        $chckO365OrgCustomizationSetting.Name = "chckO365OrgCustomizationSetting"
+        $chckO365OrgCustomizationSetting.Checked = $true
+        $chckO365OrgCustomizationSetting.Text = "Office 365 Organization Customization Setting"
+        $pnlO365.Controls.Add($chckO365OrgCustomizationSetting);
+
         $chckO365User = New-Object System.Windows.Forms.CheckBox
         $chckO365User.Top = 40
         $chckO365User.AutoSize = $true;

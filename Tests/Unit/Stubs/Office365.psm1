@@ -9160,12 +9160,6 @@ function Add-PnPTenantTheme
    )
 }
 
-function Get-OrganizationConfig
-{
-    [CmdletBinding()]
-    param()
-}
-
 function Set-OrganizationConfig
 {
     [CmdletBinding()]
@@ -13970,5 +13964,12 @@ function Set-CsTeamsClientConfiguration
         [Parameter()]
         [System.String[]]
         $RestrictedSenderList
+        )
+}
+
+function Enable-OrganizationCustomization
+{
+    [CmdletBinding()]
+    param(
     )
 }
