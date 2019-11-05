@@ -491,9 +491,14 @@ function Export-TargetResource
     $AntiPhishPolicies = Get-AntiPhishPolicy
     $content = ""
     $i = 1
+    $PolicyCount = $AntiPhishPolicies.Length
+    if ($null -eq $PolicyCount)
+    {
+        $PolicyCount = 1
+    }
     foreach ($Policy in $AntiPhishPolicies)
     {
-        Write-Information "    [$i/$($AntiPhishPolicies.Length)] $($Policy.Identity)"
+        Write-Information "    [$i/$PolicyCount] $($Policy.Identity)"
 
         $Params = @{
             Identity           = $Policy.Identity
