@@ -665,7 +665,7 @@ function Start-O365ConfigurationExtract
                 $mailboxName = $mailbox.Name
                 if ($mailboxName)
                 {
-                    $partialContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+                    $partialContent = Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
                     if ($partialContent.ToLower().IndexOf("@" + $organization.ToLower()) -gt 0)
                     {
                         $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
