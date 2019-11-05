@@ -1124,7 +1124,7 @@ function Start-O365ConfigurationExtract
             Import-Module $SCSCSupervisoryReviewPolicyModulePath | Out-Null
             $policies = Get-SupervisoryReviewPolicyV2
 
-            $totalPolicies = $policies.$Length
+            $totalPolicies = $policies.Length
             if ($null -eq $totalPolicies)
             {
                 $totalPolicies = 1
@@ -1704,7 +1704,7 @@ function Start-O365ConfigurationExtract
         try
         {
             Write-Information "Extracting TeamsTeam..."
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform MicrosoftTeams
             $TeamsModulePath = Join-Path -Path $PSScriptRoot `
                                         -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
