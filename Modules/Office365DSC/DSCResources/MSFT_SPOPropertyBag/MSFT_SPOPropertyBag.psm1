@@ -12,7 +12,7 @@ function Get-TargetResource
         [System.String]
         $Key,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Value,
 
@@ -79,7 +79,7 @@ function Set-TargetResource
         [System.String]
         $Key,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Value,
 
@@ -129,7 +129,7 @@ function Test-TargetResource
         [System.String]
         $Key,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Value,
 
