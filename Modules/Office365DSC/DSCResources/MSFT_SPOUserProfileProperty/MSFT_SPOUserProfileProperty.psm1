@@ -35,7 +35,7 @@ function Get-TargetResource
 
     try
     {
-        $currentProperties = Get-PnPUserProfileProperty -Account $UserName
+        $currentProperties = Get-PnPUserProfileProperty -Account $UserName -
         if ($null -eq $currentProperties.AccountName)
         {
             return $nullReturn
@@ -162,7 +162,7 @@ function Export-TargetResource
     $InformationPreference = 'Continue'
     Test-MSCloudLogin -Platform MSOnline -O365Credential $GlobalAdminAccount
 
-    $users = Get-MsolUser
+    $users = Get-MsolUser -All
     $content = ""
 
     $i = 1
