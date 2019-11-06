@@ -7096,7 +7096,11 @@ function Get-MsolUser {
 param(
     [Parameter(ParameterSetName='GetUserByUpn__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
-    ${UserPrincipalName}
+    ${UserPrincipalName},
+
+    [Parameter()]
+    [switch]
+    $All
 )
  }
 

@@ -22,7 +22,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting SPO Profile Properties for user {$UserName}"
-
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform PnP
 
@@ -35,13 +34,13 @@ function Get-TargetResource
 
     try
     {
-        $currentProperties = Get-PnPUserProfileProperty -Account $UserName -
+        $currentProperties = Get-PnPUserProfileProperty -Account $UserName
+
         if ($null -eq $currentProperties.AccountName)
         {
             return $nullReturn
         }
         $currentProperties = $currentProperties.UserProfileProperties
-
         $propertiesValue = @()
 
         foreach ($key in $currentProperties.Keys)

@@ -1799,15 +1799,22 @@ function Start-O365ConfigurationExtract
                     Write-Information "    > [$j/$($Teams.Length)] Team {$($team.DisplayName)}"
                     foreach ($user in $users)
                     {
-                        Write-Information "        - [$i/$($users.Length)] $($user.User)"
-                        $partialContent = Export-TargetResource -TeamName $team.DisplayName `
-                                                            -User $user.User `
-                                                            -GlobalAdminAccount $GlobalAdminAccount
-                        if ($partialContent.ToLower().Contains($principal.ToLower()))
+                        try
                         {
-                            $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
+                            Write-Information "        - [$i/$($users.Length)] $($user.User)"
+                            $partialContent = Export-TargetResource -TeamName $team.DisplayName `
+                                                                -User $user.User `
+                                                                -GlobalAdminAccount $GlobalAdminAccount
+                            if ($partialContent.ToLower().Contains($principal.ToLower()))
+                            {
+                                $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
+                            }
+                            $DSCContent += $partialContent
                         }
-                        $DSCContent += $partialContent
+                        catch
+                        {
+                            Write-Warning -Message $_
+                        }
                         $i++
                     }
                 }
