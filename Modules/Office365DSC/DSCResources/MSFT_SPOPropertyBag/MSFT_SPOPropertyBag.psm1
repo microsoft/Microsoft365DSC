@@ -208,7 +208,7 @@ function Export-TargetResource
             Param(
                 [Parameter(Mandatory = $true)]
                 [System.Object[]]
-                $instances,
+                $Instances,
 
                 [Parameter(Mandatory = $true)]
                 [System.String]
