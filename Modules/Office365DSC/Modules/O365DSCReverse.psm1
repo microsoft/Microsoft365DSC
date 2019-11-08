@@ -24,6 +24,10 @@ function Start-O365ConfigurationExtract
         $FileName,
 
         [Parameter()]
+        [ValidateRange(1,100)]
+        $MaxProcesses,
+
+        [Parameter()]
         [ValidateSet('SPO','EXO','SC','OD','O365','TEAMS')]
         [System.String[]]
         $Workloads
@@ -1349,7 +1353,7 @@ function Start-O365ConfigurationExtract
                                                    -Resolve
 
         Import-Module $SPOPropertyBagModulePath | Out-Null
-        $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount -MaxProcesses $MaxProcesses
         if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
             $partialContent.ToLower().Contains($principal.ToLower()))
         {
@@ -1685,7 +1689,7 @@ function Start-O365ConfigurationExtract
                                                    -Resolve
 
         Import-Module $ModulePath | Out-Null
-        $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount -MaxProcesses $MaxProcesses
         if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
         $partialContent.ToLower().Contains($principal.ToLower()))
         {

@@ -1682,6 +1682,10 @@ function Export-O365Configuration
         $Workloads,
 
         [Parameter()]
+        [ValidateRange(1,100)]
+        $MaxProcesses,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -1696,19 +1700,22 @@ function Export-O365Configuration
         {
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                                            -Workloads $Workloads `
-                                           -Path $Path -FileName $FileName
+                                           -Path $Path -FileName $FileName `
+                                           -MaxProcesses $MaxProcesses
         }
         elseif ($null -ne $ComponentsToExtract)
         {
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                                            -ComponentsToExtract $ComponentsToExtract `
-                                           -Path $Path -FileName $FileName
+                                           -Path $Path -FileName $FileName `
+                                           -MaxProcesses $MaxProcesses
         }
         else
         {
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                                            -AllComponents `
-                                           -Path $Path -FileName $FileName
+                                           -Path $Path -FileName $FileName `
+                                           -MaxProcesses $MaxProcesses
         }
     }
 }
@@ -1752,7 +1759,7 @@ function Get-SPOAdministrationUrl
     return $global:AdminUrl
 }
 
-function Split-Array
+function Split-ArrayByBatchSize
 {
     [OutputType([System.Object[]])]
     Param(
@@ -1769,6 +1776,42 @@ function Split-Array
        $NewArray += ,@($Array[$i..($i+($BatchSize-1))]);
     }
     return $NewArray
+}
+
+function Split-ArrayByParts
+{
+    [OutputType([System.Object[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $Array,
+
+        [Parameter(Mandatory = $true)]
+        [System.Uint32]
+        $Parts
+    )
+
+    if ($Parts)
+    {
+        $PartSize = [Math]::Ceiling($Array.Count / $Parts)
+    }
+    $outArray = New-Object 'System.Collections.Generic.List[PSObject]'
+
+    for ($i = 1; $i -le $Parts; $i++)
+    {
+        $start = (($i-1) * $PartSize)
+
+        if ($start -lt $Array.Count)
+        {
+            $end   = (($i) * $PartSize) -1
+            if ($end -ge $Array.count)
+            {
+                $end = $Array.count -1
+            }
+            $outArray.Add(@($Array[$start..$end]))
+        }
+    }
+    return ,$outArray
 }
 
 function Invoke-O365DSCCommand
@@ -1833,4 +1876,48 @@ function Invoke-O365DSCCommand
             }
         }
     }
+}
+
+function Get-SPOUserProfilePropertyInstance
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Key,
+
+        [Parameter()]
+        [System.String]
+        $Value
+    )
+
+    $result = [PSCustomObject]@{
+        Key   = $Key
+        Value = $Value
+    }
+
+    return $result
+}
+
+function ConvertTo-SPOUserProfilePropertyInstanceString
+{
+    [CmdletBinding()]
+    [OutputType([System.String[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $Properties
+    )
+
+    $results = @()
+    foreach ($property in $Properties)
+    {
+        $content = "             MSFT_SPOUserProfilePropertyInstance`r`n            {`r`n"
+        $content += "                Key   = `"$($property.Key)`"`r`n"
+        $content += "                Value = `"$($property.Value)`"`r`n"
+        $content += "            }`r`n"
+        $results += $content
+    }
+    return $results
 }

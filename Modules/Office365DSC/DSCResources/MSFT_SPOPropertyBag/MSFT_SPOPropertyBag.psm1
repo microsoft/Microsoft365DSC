@@ -167,6 +167,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [ValidateRange(1,100)]
+        $MaxProcesses,
+
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
@@ -177,16 +181,15 @@ function Export-TargetResource
     $result = ""
 
     # Get all Site Collections in tenant;
-    $sites = Get-PnPTenantSite
-
-    # Split the complete list of site collections into batches for a maximum of 8 concurrent jobs;
-    if ($sites.Length -ge 16)
+    $instances = Get-PnPTenantSite
+    if ($instances.Length -ge $MaxProcesses)
     {
-        $batchSize = $sites.Length / 16
-        $sites = Split-Array -Array $sites -BatchSize $batchSize
+        $instances = Split-ArrayByParts -Array $instances -Parts $MaxProcesses
+        $batchSize = $instances[0].Length
     }
     else
     {
+        $MaxProcesses = $instances.Length
         $batchSize = 1
     }
 
@@ -199,13 +202,13 @@ function Export-TargetResource
     # For each batch of 8 items, start and asynchronous background PowerShell job. Each
     # job will be given the name of the current resource followed by its ID;
     $i = 1
-    foreach ($batch in $sites)
+    foreach ($batch in $instances)
     {
         Start-Job -Name "SPOPropertyBag$i" -ScriptBlock {
             Param(
                 [Parameter(Mandatory = $true)]
                 [System.Object[]]
-                $sites,
+                $instances,
 
                 [Parameter(Mandatory = $true)]
                 [System.String]
@@ -230,7 +233,7 @@ function Export-TargetResource
             $returnValue += Invoke-O365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
                 $params = $args[0]
                 $content = ""
-                foreach ($item in $params.sites)
+                foreach ($item in $params.instances)
                 {
                     foreach ($site in $item)
                     {
@@ -283,8 +286,8 @@ function Export-TargetResource
         $i++
     }
 
-    Write-Information "    Broke extraction process down into {$($sites.Length)} jobs of {$($sites[0].Length)} item(s) each"
-    $totalJobs = $sites.Length
+    Write-Information "    Broke extraction process down into {$MaxProcesses} jobs of {$($instances[0].Length)} item(s) each"
+    $totalJobs = $MaxProcesses
     $jobsCompleted = 0
     $status = "Running..."
     $elapsedTime = 0
