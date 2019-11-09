@@ -206,7 +206,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     $result = ""
 
     # Get all Site Collections in tenant;
@@ -233,8 +232,7 @@ function Export-TargetResource
     $i = 1
     foreach ($batch in $instances)
     {
-        Write-Information "Started Job #$i"
-        Start-Job -Name "SPOPropertyBag$i" -ScriptBlock {
+        Start-Job -Name "TeamsUser$i" -ScriptBlock {
             Param(
                 [Parameter(Mandatory = $true)]
                 [System.Object[]]
@@ -263,7 +261,21 @@ function Export-TargetResource
                 $params = $args[0]
                 $content = ""
                 $j = 1
-                foreach ($item in $params.instances)
+                Test-MSCloudLogin -CloudCredential $params.GlobalAdminAccount `
+                                  -Platform MicrosoftTeams
+
+                $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
+                if ($GlobalAdminAccount.UserName.Contains("@"))
+                {
+                    $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+                    if ($organization.IndexOf(".") -gt 0)
+                    {
+                        $principal = $organization.Split(".")[0]
+                    }
+                }
+                $InformationPreference = 'Continue'
+                foreach ($item in $params.Instances)
                 {
                     foreach ($team in $item)
                     {
@@ -271,14 +283,19 @@ function Export-TargetResource
                         {
                             $users = Get-TeamUser -GroupId $team.GroupId
                             $i = 1
-                            Write-Information "    > [$j/$($Teams.Length)] Team {$($team.DisplayName)}"
+                            $totalCount = $item.Count
+                            if ($null -eq $totalCount)
+                            {
+                                $totalCount = 1
+                            }
+                            Write-Information "    > [$j/$totalCount] Team {$($team.DisplayName)}"
                             foreach ($user in $users)
                             {
                                 Write-Information "        - [$i/$($users.Length)] $($user.User)"
                                 $getParams = @{
                                     TeamName           = $team.DisplayName
                                     User               = $user.User
-                                    GlobalAdminAccount = $GlobalAdminAccount
+                                    GlobalAdminAccount = $params.GlobalAdminAccount
                                 }
                                 $CurrentModulePath = $params.ScriptRoot + "\MSFT_TeamsUser.psm1"
                                 Import-Module $CurrentModulePath -Force
@@ -286,12 +303,12 @@ function Export-TargetResource
                                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
                                 $partialContent = "        TeamsUser " + (New-GUID).ToString() + "`r`n"
                                 $partialContent += "        {`r`n"
-                                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.PSScriptRoot
+                                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
                                 $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
                                 $partialContent += "        }`r`n"
                                 if ($partialContent.ToLower().Contains($principal.ToLower()))
                                 {
-                                    $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
+                                    $partialContent = $partialContent -ireplace [regex]::Escape($principal), "`$OrganizationName"
                                 }
                                 $content += $partialContent
                                 $i++
@@ -299,13 +316,15 @@ function Export-TargetResource
                         }
                         catch
                         {
+                            Write-Information $_
                             Write-Information "The current User doesn't have the required permissions to extract Users for Team {$($team.DisplayName)}."
                         }
                         $j++
                     }
                 }
+                return $content
             }
-            return $content
+            return $returnValue
         } -ArgumentList @(, $batch, $PSScriptRoot, $UtilModulePath, $GlobalAdminAccount) | Out-Null
         $i++
     }
@@ -318,13 +337,14 @@ function Export-TargetResource
     $elapsedTime = 0
     do
     {
-        $jobs = Get-Job | Where-Object -FilterScript {$_.Name -like '*SPOPropertyBag*'}
+        $jobs = Get-Job | Where-Object -FilterScript {$_.Name -like '*TeamsUser*'}
         $count = $jobs.Length
         foreach ($job in $jobs)
         {
             if ($job.JobStateInfo.State -eq "Complete")
             {
-                $result += Receive-Job -name $job.name
+                $partialResult = Receive-Job -name $job.name
+                $result += $partialResult
                 Remove-Job -name $job.name
                 $jobsCompleted++
             }
@@ -342,7 +362,7 @@ function Export-TargetResource
         $elapsedTime ++
         Start-Sleep -Seconds 1
     } while ($count -ne 0)
-    Write-Progress -Activity "SPOPropertyBag Extraction" -PercentComplete 100 -Status "Completed" -Completed
+    Write-Progress -Activity "TeamsUser Extraction" -PercentComplete 100 -Status "Completed" -Completed
     return $result
 }
 
