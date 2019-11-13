@@ -282,7 +282,7 @@ function Export-TargetResource
                 return $content
             }
             return $returnValue
-        } -ArgumentList @(, $batch, $PSScriptRoot, $UtilModulePath, $GlobalAdminAccount) | Out-Null
+        } -ArgumentList @($batch, $PSScriptRoot, $UtilModulePath, $GlobalAdminAccount) | Out-Null
         $i++
     }
 
