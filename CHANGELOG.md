@@ -37,6 +37,10 @@
   * New Resource;
 * SPOTenantCDNPolicy
   * New Resource;
+* SPOUserProfileProperty
+  * Introduced Multi-Threading;
+* TeamsUser
+  * Introduced Multi-Threading;
 * Reverse
   * Added workload selectors to the GUI interface;
 * Metadata
