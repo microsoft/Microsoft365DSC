@@ -51,16 +51,12 @@ function Get-TargetResource
             $propertiesValue += $convertedProperty
         }
 
-
-        "Nik" | out-FIle "C:\dsc\Flag1a.txt"
         $result =  @{
             UserName           = $UserName
             Properties         = $propertiesValue
             GlobalAdminAccount = $GlobalAdminAccount
             Ensure             = "Present"
         }
-
-        "Nik" | out-FIle "C:\dsc\Flag1b.txt"
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
 
@@ -238,25 +234,17 @@ function Export-TargetResource
                         $CurrentModulePath = $params.ScriptRoot + "\MSFT_SPOUserProfileProperty.psm1"
                         Import-Module $CurrentModulePath -Force | Out-Null
 
-                        "Nik" | out-FIle "C:\dsc\Flag0.txt"
                         $result = Get-TargetResource @getValues
 
-                        "Nik" | out-FIle "C:\dsc\Flag1.txt"
                         if ($result.Ensure -eq "Present")
                         {
-                            "Nik" | out-FIle "C:\dsc\Flag2.txt"
                             Import-Module $params.UtilModulePath -Force | Out-Null
-                            "Nik" | out-FIle "C:\dsc\Flag3.txt"
                             $result.Properties = ConvertTo-SPOUserProfilePropertyInstanceString -Properties $result.Properties
-                            "Nik" | out-FIle "C:\dsc\Flag4.txt"
                             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
                             $content += "        SPOUserProfileProperty " + (New-GUID).ToString() + "`r`n"
                             $content += "        {`r`n"
 
-                            "Nik" | out-FIle "C:\dsc\Flag4.txt"
                             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
-
-                            $currentDSCBlock | out-FIle "C:\dsc\Flag6.txt"
                             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Properties" -IsCIMArray $true
                             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
                             $content += $currentDSCBlock
