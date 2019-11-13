@@ -1683,7 +1683,7 @@ function Export-O365Configuration
 
         [Parameter()]
         [ValidateRange(1,100)]
-        $MaxProcesses,
+        $MaxProcesses = 16,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
