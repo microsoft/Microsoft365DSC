@@ -24,6 +24,10 @@ function Start-O365ConfigurationExtract
         $FileName,
 
         [Parameter()]
+        [ValidateRange(1,100)]
+        $MaxProcesses,
+
+        [Parameter()]
         [ValidateSet('SPO','EXO','SC','OD','O365','TEAMS')]
         [System.String[]]
         $Workloads
@@ -1349,7 +1353,7 @@ function Start-O365ConfigurationExtract
                                                    -Resolve
 
         Import-Module $SPOPropertyBagModulePath | Out-Null
-        $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount -MaxProcesses $MaxProcesses
         if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
             $partialContent.ToLower().Contains($principal.ToLower()))
         {
@@ -1685,7 +1689,7 @@ function Start-O365ConfigurationExtract
                                                    -Resolve
 
         Import-Module $ModulePath | Out-Null
-        $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount -MaxProcesses $MaxProcesses
         if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
         $partialContent.ToLower().Contains($principal.ToLower()))
         {
@@ -1778,57 +1782,17 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckTeamsUser")) -or
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
     {
-        try
-        {
-            Write-Information "Extracting TeamsUser..."
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                            -Platform MicrosoftTeams
-            $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                            -ChildPath "..\DSCResources\MSFT_TeamsUser\MSFT_TeamsUser.psm1" `
-                                            -Resolve
 
-            Import-Module $TeamsModulePath | Out-Null
-            $teams = Get-Team
-            $j = 1
-            foreach ($team in $Teams)
-            {
-                try
-                {
-                    $users = Get-TeamUser -GroupId $team.GroupId
-                    $i = 1
-                    Write-Information "    > [$j/$($Teams.Length)] Team {$($team.DisplayName)}"
-                    foreach ($user in $users)
-                    {
-                        try
-                        {
-                            Write-Information "        - [$i/$($users.Length)] $($user.User)"
-                            $partialContent = Export-TargetResource -TeamName $team.DisplayName `
-                                                                -User $user.User `
-                                                                -GlobalAdminAccount $GlobalAdminAccount
-                            if ($partialContent.ToLower().Contains($principal.ToLower()))
-                            {
-                                $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
-                            }
-                            $DSCContent += $partialContent
-                        }
-                        catch
-                        {
-                            Write-Warning -Message $_
-                        }
-                        $i++
-                    }
-                }
-                catch
-                {
-                    Write-Information "The current User doesn't have the required permissions to extract Users for Team {$($team.DisplayName)}."
-                }
-                $j++
-            }
-        }
-        catch
-        {
-            Write-Verbose $_
-        }
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform MicrosoftTeams
+        Write-Information "Extracting TeamsUser..."
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_TeamsUser\MSFT_TeamsUser.psm1" `
+                                        -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -MaxProcesses $MaxProcesses `
+                                             -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
 

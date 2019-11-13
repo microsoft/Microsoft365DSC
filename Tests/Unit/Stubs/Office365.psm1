@@ -1025,7 +1025,7 @@ function Remove-Mailbox{
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]
-        [string]
+        [System.String]
         $Identity,
 
         [Parameter()]
@@ -1038,7 +1038,6 @@ function Get-OrganizationConfig
 {
     [CmdletBinding()]
     param(
-
     )
 }
 
@@ -7099,7 +7098,7 @@ param(
     ${UserPrincipalName},
 
     [Parameter()]
-    [switch]
+    [Switch]
     $All
 )
  }
