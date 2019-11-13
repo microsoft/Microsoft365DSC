@@ -49,7 +49,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPUserProfileProperty -MockWith {
                 return @{
                     AccountName           = "john.smith@contoso.com"
-                    UserProfileProperties = @{"MyKey"="MyValue";}
+                    UserProfileProperties = @{'MyOldKey'='MyValue'}
                 }
             }
 
@@ -72,7 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPUserProfileProperty -MockWith {
                 return @{
                     AccountName           = "john.smith@contoso.com"
-                    UserProfileProperties = @{"MyOldKey"="MyValue";}
+                    UserProfileProperties = @{'MyOldKey'='MyValue'}
                 }
             }
 
@@ -93,7 +93,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPUserProfileProperty -MockWith {
                 return @{
                     AccountName           = "john.smith@contoso.com"
-                    UserProfileProperties = @{"MyOldKey"="MyValue";}
+                    UserProfileProperties = @{MyOldKey=MyValue}
                 }
             }
 

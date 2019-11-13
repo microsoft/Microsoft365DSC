@@ -54,7 +54,7 @@
                       @{ModuleName = "MSOnline"; RequiredVersion = "1.1.183.17"; },
                       @{ModuleName = "SharePointPnPPowerShellOnline"; RequiredVersion = "3.14.1910.1"; },
                       @{ModuleName = "Microsoft.Online.SharePoint.PowerShell"; RequiredVersion = "16.0.19223.12000"; },
-                      @{ModuleName = "MicrosoftTeams"; RequiredVersion = "1.0.0"; },
+                      @{ModuleName = "MicrosoftTeams"; RequiredVersion = "1.0.2"; },
                       @{ModuleName = "AzureAD"; RequiredVersion = "2.0.2.4"; },
                       @{ModuleName = "MSCloudLoginAssistant"; RequiredVersion = "0.7.6"; })
 

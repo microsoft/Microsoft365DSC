@@ -669,7 +669,7 @@ function Start-O365ConfigurationExtract
                 $mailboxName = $mailbox.Name
                 if ($mailboxName)
                 {
-                    $partialContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+                    $partialContent = Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
                     if ($partialContent.ToLower().IndexOf("@" + $organization.ToLower()) -gt 0)
                     {
                         $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
@@ -1128,7 +1128,7 @@ function Start-O365ConfigurationExtract
             Import-Module $SCSCSupervisoryReviewPolicyModulePath | Out-Null
             $policies = Get-SupervisoryReviewPolicyV2
 
-            $totalPolicies = $policies.$Length
+            $totalPolicies = $policies.Length
             if ($null -eq $totalPolicies)
             {
                 $totalPolicies = 1
@@ -1705,27 +1705,34 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckTeamsTeam")) -or
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
     {
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform MicrosoftTeams
-        Write-Information "Extracting TeamsTeam..."
-        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
-                                    -Resolve
-
-        Import-Module $TeamsModulePath | Out-Null
-        $teams = Get-Team
-        $i = 1
-        foreach ($team in $teams)
+        try
         {
-            Write-Information "    - [$i/$($teams.Length)] $($team.DisplayName)"
-            $partialContent = Export-TargetResource -DisplayName $team.DisplayName `
-                                                 -GlobalAdminAccount $GlobalAdminAccount
-            if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+            Write-Information "Extracting TeamsTeam..."
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+                          -Platform MicrosoftTeams
+            $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
+                                        -Resolve
+
+            Import-Module $TeamsModulePath | Out-Null
+            $teams = Get-Team
+            $i = 1
+            foreach ($team in $teams)
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+                Write-Information "    - [$i/$($teams.Length)] $($team.DisplayName)"
+                $partialContent = Export-TargetResource -DisplayName $team.DisplayName `
+                                                    -GlobalAdminAccount $GlobalAdminAccount
+                if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+                }
+                $DSCContent += $partialContent
+                $i++
             }
-            $DSCContent += $partialContent
-            $i++
+        }
+        catch
+        {
+            Write-Verbose $_
         }
     }
     #endregion
@@ -1735,30 +1742,37 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckTeamsChannel")) -or
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
     {
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform MicrosoftTeams
-        Write-Information "Extracting TeamsChannel..."
-        $TeamsChannelModulePath = Join-Path -Path $PSScriptRoot `
-                                        -ChildPath "..\DSCResources\MSFT_TeamsChannel\MSFT_TeamsChannel.psm1" `
-                                        -Resolve
-
-        Import-Module $TeamsChannelModulePath | Out-Null
-        $teams = Get-Team
-        $j = 1
-        foreach ($team in $Teams)
+        try
         {
-            $channels = Get-TeamChannel -GroupId $team.GroupId
-            $i = 1
-            Write-Information "    > [$j/$($Teams.Length)] Team {$($team.DisplayName)}"
-            foreach ($channel in $channels)
+            Write-Information "Extracting TeamsChannel..."
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform MicrosoftTeams
+            $TeamsChannelModulePath = Join-Path -Path $PSScriptRoot `
+                                            -ChildPath "..\DSCResources\MSFT_TeamsChannel\MSFT_TeamsChannel.psm1" `
+                                            -Resolve
+
+            Import-Module $TeamsChannelModulePath | Out-Null
+            $teams = Get-Team
+            $j = 1
+            foreach ($team in $Teams)
             {
-                Write-Information "        - [$i/$($channels.Length)] $($channel.DisplayName)"
-                $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
-                                                     -DisplayName $channel.DisplayName `
-                                                     -GlobalAdminAccount $GlobalAdminAccount
-                $i++
+                $channels = Get-TeamChannel -GroupId $team.GroupId
+                $i = 1
+                Write-Information "    > [$j/$($Teams.Length)] Team {$($team.DisplayName)}"
+                foreach ($channel in $channels)
+                {
+                    Write-Information "        - [$i/$($channels.Length)] $($channel.DisplayName)"
+                    $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
+                                                        -DisplayName $channel.DisplayName `
+                                                        -GlobalAdminAccount $GlobalAdminAccount
+                    $i++
+                }
+                $j++
             }
-            $j++
+        }
+        catch
+        {
+            Write-Verbose $_
         }
     }
     #endregion
@@ -1768,6 +1782,7 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckTeamsUser")) -or
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
     {
+
         Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                           -Platform MicrosoftTeams
         Write-Information "Extracting TeamsUser..."
