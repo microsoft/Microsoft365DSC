@@ -119,6 +119,7 @@ function Get-TargetResource
             $ArrayIncidentReportContent = $PolicyRule.IncidentReportContent.Replace(' ', '').Split(',')
         }
 
+        $NewNotifyAllowOverride = $PolicyRule.NotifyAllowOverride.Split(',')
         $result = @{
             Ensure                              = 'Present'
             Name                                = $PolicyRule.Name
@@ -133,7 +134,7 @@ function Get-TargetResource
             GenerateAlert                       = $PolicyRule.GenerateAlert
             GenerateIncidentReport              = $PolicyRule.GenerateIncidentReport
             IncidentReportContent               = $ArrayIncidentReportContent
-            NotifyAllowOverride                 = $PolicyRule.NotifyAllowOverride
+            NotifyAllowOverride                 = $NewNotifyAllowOverride
             NotifyEmailCustomText               = $PolicyRule.NotifyEmailCustomText
             NotifyPolicyTipCustomText           = $PolicyRule.NotifyPolicyTipCustomText
             NotifyUser                          = $PolicyRule.NotifyUser
