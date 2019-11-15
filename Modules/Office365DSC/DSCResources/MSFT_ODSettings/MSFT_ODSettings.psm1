@@ -144,6 +144,11 @@ function Get-TargetResource
             $FixedAllowedDomainList = @()
         }
 
+        $ODBMembersCanShareValue = $tenant.ODBMembersCanShare
+        if ($null -eq $ODBMembersCanShareValue)
+        {
+            $ODBMembersCanShareValue = 'Unspecified'
+        }
         return @{
             IsSingleInstance                          = "Yes"
             BlockMacSync                              = $tenantRestrictions.BlockMacSync
@@ -155,7 +160,7 @@ function Get-TargetResource
             OrphanedPersonalSitesRetentionPeriod      = $tenant.OrphanedPersonalSitesRetentionPeriod
             OneDriveForGuestsEnabled                  = $tenant.OneDriveForGuestsEnabled
             ODBAccessRequests                         = $tenant.ODBAccessRequests
-            ODBMembersCanShare                        = $tenant.ODBMembersCanShare
+            ODBMembersCanShare                        = $ODBMembersCanShareValue
             NotifyOwnersWhenInvitationsAccepted       = $tenant.NotifyOwnersWhenInvitationsAccepted
             NotificationsInOneDriveForBusinessEnabled = $tenant.NotificationsInOneDriveForBusinessEnabled
             Ensure                                    = "Present"
