@@ -145,7 +145,7 @@ function Get-TargetResource
         }
 
         $ODBMembersCanShareValue = $tenant.ODBMembersCanShare
-        if ($null -eq $ODBMembersCanShareValue)
+        if ([System.String]::IsNullOrEmpty($ODBMembersCanShareValue))
         {
             $ODBMembersCanShareValue = 'Unspecified'
         }
