@@ -9456,6 +9456,58 @@ function Remove-AuditConfigurationPolicy
     )
 }
 
+function New-FilePlanPropertyCitation
+{
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $CitationUrl,
+
+        [Parameter()]
+        [System.String]
+        $CitationJurisdiction
+    )
+}
+
+function Get-FilePlanPropertyCitation
+{
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-FilePlanPropertyCitation
+{
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function Set-FilePlanPropertyCitation
+{
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $CitationUrl,
+
+        [Parameter()]
+        [System.String]
+        $CitationJurisdiction
+    )
+}
+
 function Get-PnPUserProfileProperty {
     [CmdletBinding()]
     param(

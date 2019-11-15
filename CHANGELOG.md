@@ -9,6 +9,8 @@
     returning all values;
 * SCAuditConfigurationSettings
   * Initial release;
+* SCFilePlanPropertyCitation
+  * Initial release;
 * SPOPropertyBag
   * Added multithreading;
 * SPOTheme

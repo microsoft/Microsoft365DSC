@@ -382,6 +382,15 @@ Configuration Master
                                                   };
         }
 
+        SCFilePlanPropertyCitation IntegrationCitation
+        {
+            Name                 = "Integration Citation"
+            CitationURL          = "https://contoso.com"
+            CitationJurisdiction = "Federal"
+            Ensure               = "Present";
+            GlobalAdminAccount   = $GlobalAdmin;
+        }
+
         SCRetentionCompliancePolicy RCPolicy
         {
             Name               = "MyRCPolicy"
