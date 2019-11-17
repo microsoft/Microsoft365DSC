@@ -68,9 +68,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure               = "Present"
             }
 
-            Mock -CommandName Get-FilePlanPropertyCitation -MockWith {
+            Mock -CommandName Get-FilePlanPropertyAuthority -MockWith {
                 return @{
-                    Name                 = "Demo Authority"
+                    Name = "Demo Authority"
                 }
             }
 
@@ -94,7 +94,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure               = "Absent"
             }
 
-            Mock -CommandName Get-FilePlanPropertyCitation -MockWith {
+            Mock -CommandName Get-FilePlanPropertyAuthority -MockWith {
                 return @{
                     Name = "Demo Authority"
                 }
