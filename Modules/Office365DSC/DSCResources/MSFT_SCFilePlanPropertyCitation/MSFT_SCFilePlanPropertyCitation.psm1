@@ -31,7 +31,7 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
 
-    $property = Get-FilePlanPropertyCitation -Identity $Name -ErrorAction SilentlyContinue
+    $property = Get-FilePlanPropertyCitation | Where-Object -FilterScript {$_.Name -eq $Name}
 
     if ($null -eq $property)
     {
@@ -172,6 +172,7 @@ function Export-TargetResource
     $Properties = Get-FilePlanPropertyCitation
 
     $i = 1
+    $content = ""
     foreach ($Property in $Properties)
     {
         Write-Information "    - [$i/$($Properties.Length)] $($Property.Name)"
@@ -181,7 +182,7 @@ function Export-TargetResource
         }
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content = "        SCFilePlanPropertyCitation " + (New-GUID).ToString() + "`r`n"
+        $content += "        SCFilePlanPropertyCitation " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
