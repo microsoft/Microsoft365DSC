@@ -1,4 +1,4 @@
-# SCFilePlanCitation
+# SCFilePlanPropertyCitation
 
 ## Description
 
