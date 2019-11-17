@@ -9,14 +9,6 @@ function Get-TargetResource
         $Name,
 
         [Parameter()]
-        [System.String]
-        $CitationUrl,
-
-        [Parameter()]
-        [System.String]
-        $CitationJurisdiction,
-
-        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -26,28 +18,26 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of SCFilePlanPropertyCitation for $Name"
+    Write-Verbose -Message "Getting configuration of SCFilePlanPropertyAuthority for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
 
-    $property = Get-FilePlanPropertyCitation | Where-Object -FilterScript {$_.Name -eq $Name}
+    $property = Get-FilePlanPropertyAuthority | Where-Object -FilterScript {$_.DisplayName -eq $Name}
 
     if ($null -eq $property)
     {
-        Write-Verbose -Message "SCFilePlanPropertyCitation $($Name) does not exist."
+        Write-Verbose -Message "SCFilePlanPropertyAuthority $($Name) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
     }
     else
     {
-        Write-Verbose "Found existing SCFilePlanPropertyCitation $($Name)"
+        Write-Verbose "Found existing SCFilePlanPropertyAuthority $($Name)"
 
         $result = @{
             Name                 = $property.Name
-            CitationUrl          = $property.CitationUrl
-            CitationJurisdiction = $property.CitationJurisdiction
             GlobalAdminAccount   = $GlobalAdminAccount
             Ensure               = 'Present'
         }
@@ -67,14 +57,6 @@ function Set-TargetResource
         $Name,
 
         [Parameter()]
-        [System.String]
-        $CitationUrl,
-
-        [Parameter()]
-        [System.String]
-        $CitationJurisdiction,
-
-        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -84,7 +66,7 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of SCFilePlanPropertyCitation for $Name"
+    Write-Verbose -Message "Setting configuration of SCFilePlanPropertyAuthority for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
@@ -97,11 +79,11 @@ function Set-TargetResource
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
 
-        New-FilePlanPropertyCitation @CreationParams
+        New-FilePlanPropertyAuthority @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $Current.Ensure))
     {
-        Set-FilePlanPropertyCitation -Name $Name -CitationUrl $CitationUrl -CitationJurisdiction $CitationJurisdiction
+        # Do Nothing
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
     {
@@ -120,14 +102,6 @@ function Test-TargetResource
         $Name,
 
         [Parameter()]
-        [System.String]
-        $CitationUrl,
-
-        [Parameter()]
-        [System.String]
-        $CitationJurisdiction,
-
-        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -137,7 +111,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of SCFilePlanPropertyCitation for $Name"
+    Write-Verbose -Message "Testing configuration of SCFilePlanPropertyAuthority for $Name"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -169,7 +143,7 @@ function Export-TargetResource
     $InformationPreference = "Continue"
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
-    $Properties = Get-FilePlanPropertyCitation
+    $Properties = Get-FilePlanPropertyAuthority
 
     $i = 1
     $content = ""
@@ -182,7 +156,7 @@ function Export-TargetResource
         }
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        SCFilePlanPropertyCitation " + (New-GUID).ToString() + "`r`n"
+        $content += "        SCFilePlanPropertyAuthority " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
