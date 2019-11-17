@@ -10076,6 +10076,43 @@ param(
 
  }
 
+function Get-FilePlanPropertyAuthority
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function New-FilePlanPropertyAuthority
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name
+    )
+}
+
+function Remove-FilePlanPropertyAuthority
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
 
 function Get-AzureADDirectoryRoleTemplate {
  [CmdletBinding()]
