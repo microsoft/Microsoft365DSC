@@ -386,7 +386,7 @@ Configuration Master
         {
             Name               = "My Category"
             Ensure             = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
+            GlobalAdminAccount = $GlobalAdmin
         }
 
         SCRetentionCompliancePolicy RCPolicy
