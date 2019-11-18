@@ -37,7 +37,7 @@ function Get-TargetResource
         Write-Verbose "Found existing SCFilePlanPropertyCategory $($Name)"
 
         $result = @{
-            Name                 = $property.Name
+            Name                 = $property.DisplayName
             GlobalAdminAccount   = $GlobalAdminAccount
             Ensure               = 'Present'
         }
