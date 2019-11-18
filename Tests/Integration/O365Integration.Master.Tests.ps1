@@ -375,7 +375,7 @@ Configuration Master
             Policy                              = "MyDLPPolicy"
             BlockAccess                         = $True;
             Ensure                              = "Present";
-            GlobalAdminAccount                  = $GlobalAdmin;
+            GlobalAdminAccount                  = $GlobalAdmin
             ContentContainsSensitiveInformation = MSFT_SCDLPSensitiveInformation
                                                   {
                                                       name = "U.S. Social Security Number (SSN)"
