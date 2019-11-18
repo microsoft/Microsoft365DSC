@@ -37,7 +37,7 @@ function Get-TargetResource
         Write-Verbose "Found existing SCFilePlanPropertyAuthority $($Name)"
 
         $result = @{
-            Name                 = $property.Name
+            Name                 = $property.DisplayName
             GlobalAdminAccount   = $GlobalAdminAccount
             Ensure               = 'Present'
         }
@@ -151,7 +151,7 @@ function Export-TargetResource
     {
         Write-Information "    - [$i/$($Properties.Length)] $($Property.Name)"
         $params = @{
-            Name               = $Property.Name
+            Name               = $Property.DisplayName
             GlobalAdminAccount = $GlobalAdminAccount
         }
         $result = Get-TargetResource @params

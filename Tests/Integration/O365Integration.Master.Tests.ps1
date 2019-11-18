@@ -382,6 +382,13 @@ Configuration Master
                                                   };
         }
 
+        SCFilePlanPropertyAuthority FilePlanPropertyAuthority
+        {
+            Name               = "My Authority"
+            Ensure             = "Present"
+            GlobalAdminAccount = $credsGlobalAdmin
+        }
+
         SCRetentionCompliancePolicy RCPolicy
         {
             Name               = "MyRCPolicy"
