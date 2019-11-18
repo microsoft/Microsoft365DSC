@@ -27,14 +27,14 @@ function Get-TargetResource
 
     if ($null -eq $property)
     {
-        Write-Verbose -Message "SCFilePlanPropertyAuthority $($Name) does not exist."
+        Write-Verbose -Message "SCFilePlanPropertyCategory $($Name) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
     }
     else
     {
-        Write-Verbose "Found existing SCFilePlanPropertyAuthority $($Name)"
+        Write-Verbose "Found existing SCFilePlanPropertyCategory $($Name)"
 
         $result = @{
             Name                 = $property.Name
@@ -66,7 +66,7 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of SCFilePlanPropertyAuthority for $Name"
+    Write-Verbose -Message "Setting configuration of SCFilePlanPropertyCategory for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
@@ -79,7 +79,7 @@ function Set-TargetResource
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
 
-        New-FilePlanPropertyAuthority @CreationParams
+        New-FilePlanPropertyCategory @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $Current.Ensure))
     {
@@ -87,7 +87,7 @@ function Set-TargetResource
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
     {
-        Remove-FilePlanPropertyCitation -Identity $Name -Confirm:$false
+        Remove-FilePlanPropertyCategory -Identity $Name -Confirm:$false
     }
 }
 
@@ -111,7 +111,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of SCFilePlanPropertyAuthority for $Name"
+    Write-Verbose -Message "Testing configuration of SCFilePlanPropertyCategory for $Name"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -143,7 +143,7 @@ function Export-TargetResource
     $InformationPreference = "Continue"
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
-    $Properties = Get-FilePlanPropertyAuthority
+    $Properties = Get-FilePlanPropertyCategory
 
     $i = 1
     $content = ""
@@ -156,7 +156,7 @@ function Export-TargetResource
         }
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        SCFilePlanPropertyAuthority " + (New-GUID).ToString() + "`r`n"
+        $content += "        SCFilePlanPropertyCategory " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
