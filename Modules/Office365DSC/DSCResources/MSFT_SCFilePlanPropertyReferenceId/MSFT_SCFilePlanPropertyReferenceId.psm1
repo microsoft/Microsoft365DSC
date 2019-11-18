@@ -151,7 +151,7 @@ function Export-TargetResource
     {
         Write-Information "    - [$i/$($Properties.Length)] $($Property.Name)"
         $params = @{
-            Name               = $Property.Name
+            Name               = $Property.DisplayName
             GlobalAdminAccount = $GlobalAdminAccount
         }
         $result = Get-TargetResource @params
