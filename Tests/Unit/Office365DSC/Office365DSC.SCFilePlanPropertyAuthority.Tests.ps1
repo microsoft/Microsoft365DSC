@@ -70,7 +70,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-FilePlanPropertyAuthority -MockWith {
                 return @{
-                    Name = "Demo Authority"
+                    DisplayName = "Demo Authority"
                 }
             }
 
@@ -96,7 +96,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-FilePlanPropertyAuthority -MockWith {
                 return @{
-                    Name = "Demo Authority"
+                    DisplayName = "Demo Authority"
                 }
             }
 
@@ -116,6 +116,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-FilePlanPropertyAuthority -MockWith {
+                return @{
+                    DisplayName = "Demo Authority"
+                }
             }
 
             It "Should Reverse Engineer resource from the Export method" {
