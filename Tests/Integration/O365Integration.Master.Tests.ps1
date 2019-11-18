@@ -327,7 +327,7 @@ Configuration Master
             ExchangeLocation     = "SharePointConference2019@o365dsc.onmicrosoft.com";
             Name                 = "Integration Hold";
             PublicFolderLocation = "All";
-            Comment              = "This is a test for integration";
+            Comment              = "This is a test for integration"
             Ensure               = "Present";
             Enabled              = $True;
             GlobalAdminAccount   = $GlobalAdmin;
