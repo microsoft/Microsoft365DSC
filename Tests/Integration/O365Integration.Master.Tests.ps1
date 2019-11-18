@@ -387,8 +387,8 @@ Configuration Master
             Name                 = "Integration Citation"
             CitationURL          = "https://contoso.com"
             CitationJurisdiction = "Federal"
-            Ensure               = "Present";
-            GlobalAdminAccount   = $GlobalAdmin;
+            Ensure               = "Present"
+            GlobalAdminAccount   = $GlobalAdmin
         }
 
         SCRetentionCompliancePolicy RCPolicy
