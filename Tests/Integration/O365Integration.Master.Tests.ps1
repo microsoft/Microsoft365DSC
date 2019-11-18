@@ -382,6 +382,13 @@ Configuration Master
                                                   };
         }
 
+        SCFilePlanPropertyDepartment FilePlanPropertyDepartment
+        {
+            Name               = "Demo Department"
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
         SCRetentionCompliancePolicy RCPolicy
         {
             Name               = "MyRCPolicy"

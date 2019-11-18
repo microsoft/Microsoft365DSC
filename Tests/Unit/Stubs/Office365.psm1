@@ -13573,3 +13573,31 @@ function Set-ComplianceSearch
         $SharePointLocationExclusion
     )
 }
+
+
+function Get-FilePlanPropertyDepartment
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function New-FilePlanPropertyDepartment
+{
+    Param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Name
+    )
+}
+
+function Remove-FilePlanPropertyDepartment
+{
+    Param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Identity
+    )
+}
