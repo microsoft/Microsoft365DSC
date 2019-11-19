@@ -76,8 +76,8 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $Current.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("GlobalAdminAccount")
-        $CreationParams.Remove("Ensure")
+        $CreationParams.Remove("GlobalAdminAccount") | Out-Null
+        $CreationParams.Remove("Ensure") | Out-Null
 
         New-FilePlanPropertyDepartment @CreationParams
     }
@@ -117,7 +117,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount')
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -Source $($MyInvocation.MyCommand.Source) `
