@@ -76,8 +76,8 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $Current.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("GlobalAdminAccount")
-        $CreationParams.Remove("Ensure")
+        $CreationParams.Remove("GlobalAdminAccount") | Out-Null
+        $CreationParams.Remove("Ensure") | Out-Null
 
         New-FilePlanPropertyReferenceId @CreationParams
     }
