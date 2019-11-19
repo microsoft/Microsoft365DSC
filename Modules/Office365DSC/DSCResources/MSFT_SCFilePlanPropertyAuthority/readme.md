@@ -2,5 +2,5 @@
 
 ## Description
 
-This resource configures a citation entry for Security and
+This resource configures an authority entry for Security and
 Compliance File Plans.
