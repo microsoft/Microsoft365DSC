@@ -127,7 +127,7 @@
 * Modules
   * Added embedded Log Engine
 * SCRetentionCompliancePolicy
-  * Initial Release
+  * Initial Release;
 * SCRetentionComplianceRule
   * Initial Release
 * SCSupervisoryReviewPolicy
