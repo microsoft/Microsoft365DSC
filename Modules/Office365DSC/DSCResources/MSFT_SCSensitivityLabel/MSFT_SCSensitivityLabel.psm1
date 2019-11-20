@@ -349,9 +349,10 @@ function Export-TargetResource
         $content += "        SCSensitivityLabel " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AdvancedSettings"
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "LocaleSettings"
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AdvancedSettings"
+        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "LocaleSettings"
+        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += $currentDSCBlock
         $content += "        }`r`n"
     }
     return $content
@@ -560,11 +561,11 @@ function ConvertTo-AdvancedSettingString
     )
 
     $StringContent = "@("
-    foreach ($advancedSetting in $AdvancedSettings.Keys)
+    foreach ($advancedSetting in $AdvancedSettings)
     {
         $StringContent += "             MSFT_SCLabelSetting`r`n            {`r`n"
-        $StringContent += "                Key = '$($advancedSetting)'`r`n"
-        $StringContent += "                Value    = '$($AdvancedSettings[$advancedSetting])'`r`n"
+        $StringContent += "                Key = '$($advancedSetting.Key)'`r`n"
+        $StringContent += "                Value    = '$($advancedSetting.Value)'`r`n"
         $StringContent += "            }`r`n"
     }
     $StringContent += "            )`r`n"
