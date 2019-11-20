@@ -11,7 +11,11 @@
   * Initial release;
 * SCDLPComplianceRule
   * Fixed issue with the extraction of NotifyAllowOverride;
+* SCFilePlanPropertyAuthority
+  * Initial Release;
 * SCFilePlanPropertyCategory
+  * Initial Release;
+* SCFilePlanPropertyReferenceID
   * Initial Release;
 * SPOPropertyBag
   * Added multithreading;
@@ -127,7 +131,7 @@
 * Modules
   * Added embedded Log Engine
 * SCRetentionCompliancePolicy
-  * Initial Release
+  * Initial Release;
 * SCRetentionComplianceRule
   * Initial Release
 * SCSupervisoryReviewPolicy

@@ -10076,6 +10076,43 @@ param(
 
  }
 
+function Get-FilePlanPropertyAuthority
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function New-FilePlanPropertyAuthority
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name
+    )
+}
+
+function Remove-FilePlanPropertyAuthority
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
 
 function Get-AzureADDirectoryRoleTemplate {
  [CmdletBinding()]
@@ -13576,7 +13613,16 @@ function Set-ComplianceSearch
 
 function Get-FilePlanPropertyCategory
 {
-    param(
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Get-FilePlanPropertyReferenceId
+{
+    Param(
         [Parameter()]
         [System.String]
         $Identity
@@ -13585,7 +13631,16 @@ function Get-FilePlanPropertyCategory
 
 function New-FilePlanPropertyCategory
 {
-    param(
+    Param(
+    [Parameter()]
+    [System.String]
+    $Identity
+    )
+}
+
+function New-FilePlanPropertyReferenceId
+{
+    Param(
         [Parameter(Mandatory=$true)]
         [System.String]
         $Name
@@ -13594,7 +13649,16 @@ function New-FilePlanPropertyCategory
 
 function Remove-FilePlanPropertyCategory
 {
-    param(
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-FilePlanPropertyReferenceId
+{
+    Param(
         [Parameter(Mandatory=$true)]
         [System.String]
         $Identity
