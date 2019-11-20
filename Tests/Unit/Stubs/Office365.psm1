@@ -13584,6 +13584,15 @@ function Get-FilePlanPropertyDepartment
     )
 }
 
+function Get-FilePlanPropertyReferenceId
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
 function New-FilePlanPropertyDepartment
 {
     Param(
@@ -13593,7 +13602,25 @@ function New-FilePlanPropertyDepartment
     )
 }
 
+function New-FilePlanPropertyReferenceId
+{
+    Param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Name
+    )
+}
+
 function Remove-FilePlanPropertyDepartment
+{
+    Param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-FilePlanPropertyReferenceId
 {
     Param(
         [Parameter(Mandatory=$true)]
