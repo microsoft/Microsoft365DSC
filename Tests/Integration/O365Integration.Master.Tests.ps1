@@ -382,10 +382,17 @@ Configuration Master
                                                   };
         }
 
-
         SCFilePlanPropertyAuthority FilePlanPropertyAuthority
         {
             Name               = "My Authority"
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
+
+        SCFilePlanPropertyCategory FilePlanPropertyCategory
+        {
+            Name               = "My Category"
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }

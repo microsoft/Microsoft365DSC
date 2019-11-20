@@ -13,15 +13,17 @@
   * Fixed issue with the extraction of NotifyAllowOverride;
 * SCFilePlanPropertyAuthority
   * Initial Release;
+* SCFilePlanPropertyCategory
+  * Initial Release;
 * SCFilePlanPropertyReferenceID
   * Initial Release;
 * SPOPropertyBag
   * Added multithreading;
 * SPOTheme
   * Fixed an issue with the Set-TargetResource
-    still using SPO management shell cmdlets instead of PnP;
+    still using SPO management shell cmdlets instead of PnP
 * SPOUserProfileProperty
-  * Introduced Multi-Threading;
+  * Introduced Multi-Threading
 * TeamsUser
   * Introduced Multi-Threading;
 * Metadata

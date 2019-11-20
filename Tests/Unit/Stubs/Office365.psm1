@@ -13611,6 +13611,15 @@ function Set-ComplianceSearch
     )
 }
 
+function Get-FilePlanPropertyCategory
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
 function Get-FilePlanPropertyReferenceId
 {
     Param(
@@ -13620,12 +13629,30 @@ function Get-FilePlanPropertyReferenceId
     )
 }
 
+function New-FilePlanPropertyCategory
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Name
+    )
+}
+
 function New-FilePlanPropertyReferenceId
 {
     Param(
         [Parameter(Mandatory=$true)]
         [System.String]
         $Name
+    )
+}
+
+function Remove-FilePlanPropertyCategory
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
     )
 }
 
