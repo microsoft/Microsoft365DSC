@@ -382,6 +382,13 @@ Configuration Master
                                                   };
         }
 
+        SCFilePlanPropertyReferenceId FilePlanPropertyReferenceId
+        {
+            Name               = "My Reference ID"
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
         SCRetentionCompliancePolicy RCPolicy
         {
             Name               = "MyRCPolicy"
