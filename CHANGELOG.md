@@ -11,6 +11,12 @@
   * Initial release;
 * SCDLPComplianceRule
   * Fixed issue with the extraction of NotifyAllowOverride;
+* SCFilePlanPropertyAuthority
+  * Initial Release;
+* SCFilePlanPropertyCategory
+  * Initial Release;
+* SCFilePlanPropertyCitation
+  * Initial release;
 * SCFilePlanPropertyDepartment
   * Initial Release;
 * SCFilePlanPropertyReferenceID
@@ -19,9 +25,9 @@
   * Added multithreading;
 * SPOTheme
   * Fixed an issue with the Set-TargetResource
-    still using SPO management shell cmdlets instead of PnP;
+    still using SPO management shell cmdlets instead of PnP
 * SPOUserProfileProperty
-  * Introduced Multi-Threading;
+  * Introduced Multi-Threading
 * TeamsUser
   * Introduced Multi-Threading;
 * Metadata
@@ -129,7 +135,7 @@
 * Modules
   * Added embedded Log Engine
 * SCRetentionCompliancePolicy
-  * Initial Release
+  * Initial Release;
 * SCRetentionComplianceRule
   * Initial Release
 * SCSupervisoryReviewPolicy
@@ -137,5 +143,5 @@
 * SCSupervisoryReviewRule
   * Initial Release
 * SPOSite
-  * Added default value for Storage Quota
+  * Added default value for Storage Quota;
   * Fixed an issue with site creation that could result in infinite loops;

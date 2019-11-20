@@ -325,9 +325,9 @@ Configuration Master
         {
             Case                 = "Integration Case";
             ExchangeLocation     = "SharePointConference2019@o365dsc.onmicrosoft.com";
-            Name                 = "Integration Hold";
+            Name                 = "Integration Hold"
             PublicFolderLocation = "All";
-            Comment              = "This is a test for integration";
+            Comment              = "This is a test for integration"
             Ensure               = "Present";
             Enabled              = $True;
             GlobalAdminAccount   = $GlobalAdmin;
@@ -375,11 +375,34 @@ Configuration Master
             Policy                              = "MyDLPPolicy"
             BlockAccess                         = $True;
             Ensure                              = "Present";
-            GlobalAdminAccount                  = $GlobalAdmin;
+            GlobalAdminAccount                  = $GlobalAdmin
             ContentContainsSensitiveInformation = MSFT_SCDLPSensitiveInformation
                                                   {
                                                       name = "U.S. Social Security Number (SSN)"
                                                   };
+        }
+
+        SCFilePlanPropertyAuthority FilePlanPropertyAuthority
+        {
+            Name               = "My Authority"
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SCFilePlanPropertyCategory FilePlanPropertyCategory
+        {
+            Name               = "My Category"
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SCFilePlanPropertyCitation IntegrationCitation
+        {
+            Name                 = "Integration Citation"
+            CitationURL          = "https://contoso.com"
+            CitationJurisdiction = "Federal"
+            Ensure               = "Present"
+            GlobalAdminAccount   = $GlobalAdmin
         }
 
         SCFilePlanPropertyDepartment FilePlanPropertyDepartment
