@@ -325,9 +325,9 @@ Configuration Master
         {
             Case                 = "Integration Case";
             ExchangeLocation     = "SharePointConference2019@o365dsc.onmicrosoft.com";
-            Name                 = "Integration Hold";
+            Name                 = "Integration Hold"
             PublicFolderLocation = "All";
-            Comment              = "This is a test for integration";
+            Comment              = "This is a test for integration"
             Ensure               = "Present";
             Enabled              = $True;
             GlobalAdminAccount   = $GlobalAdmin;
@@ -380,6 +380,14 @@ Configuration Master
                                                   {
                                                       name = "U.S. Social Security Number (SSN)"
                                                   };
+        }
+
+
+        SCFilePlanPropertyAuthority FilePlanPropertyAuthority
+        {
+            Name               = "My Authority"
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
         }
 
         SCFilePlanPropertyReferenceId FilePlanPropertyReferenceId
