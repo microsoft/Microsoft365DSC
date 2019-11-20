@@ -405,6 +405,13 @@ Configuration Master
             GlobalAdminAccount   = $GlobalAdmin
         }
 
+        SCFilePlanPropertyDepartment FilePlanPropertyDepartment
+        {
+            Name               = "Demo Department"
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
         SCFilePlanPropertyReferenceId FilePlanPropertyReferenceId
         {
             Name               = "My Reference ID"

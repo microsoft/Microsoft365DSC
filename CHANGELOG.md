@@ -17,6 +17,8 @@
   * Initial Release;
 * SCFilePlanPropertyCitation
   * Initial release;
+* SCFilePlanPropertyDepartment
+  * Initial Release;
 * SCFilePlanPropertyReferenceID
   * Initial Release;
 * SPOPropertyBag
