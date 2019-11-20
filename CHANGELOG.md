@@ -15,6 +15,8 @@
   * Initial Release;
 * SCFilePlanPropertyCategory
   * Initial Release;
+* SCFilePlanPropertyCitation
+  * Initial release;
 * SCFilePlanPropertyReferenceID
   * Initial Release;
 * SPOPropertyBag
@@ -139,5 +141,5 @@
 * SCSupervisoryReviewRule
   * Initial Release
 * SPOSite
-  * Added default value for Storage Quota
+  * Added default value for Storage Quota;
   * Fixed an issue with site creation that could result in infinite loops;

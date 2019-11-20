@@ -1011,6 +1011,25 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "SCFilePlanProperty"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCFilePlanPropertyCitation")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
+    {
+        Write-Information "Extracting SCFilePlanPropertyCitation..."
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform SecurityComplianceCenter `
+                          -ErrorAction SilentlyContinue
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_SCFilePlanPropertyCitation\MSFT_SCFilePlanPropertyCitation.psm1" `
+                                -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "SCRetentionCompliancePolicy"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCRetentionCompliancePolicy")) -or

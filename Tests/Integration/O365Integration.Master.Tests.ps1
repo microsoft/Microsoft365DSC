@@ -375,7 +375,7 @@ Configuration Master
             Policy                              = "MyDLPPolicy"
             BlockAccess                         = $True;
             Ensure                              = "Present";
-            GlobalAdminAccount                  = $GlobalAdmin;
+            GlobalAdminAccount                  = $GlobalAdmin
             ContentContainsSensitiveInformation = MSFT_SCDLPSensitiveInformation
                                                   {
                                                       name = "U.S. Social Security Number (SSN)"
@@ -389,12 +389,20 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
         }
 
-
         SCFilePlanPropertyCategory FilePlanPropertyCategory
         {
             Name               = "My Category"
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SCFilePlanPropertyCitation IntegrationCitation
+        {
+            Name                 = "Integration Citation"
+            CitationURL          = "https://contoso.com"
+            CitationJurisdiction = "Federal"
+            Ensure               = "Present"
+            GlobalAdminAccount   = $GlobalAdmin
         }
 
         SCFilePlanPropertyReferenceId FilePlanPropertyReferenceId
