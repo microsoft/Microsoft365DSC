@@ -220,7 +220,7 @@ function Set-TargetResource
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $label.Ensure))
     {
-        # If the label exists and it shouldn't, simply remove it;Need to force deletoion 
+        # If the label exists and it shouldn't, simply remove it;Need to force deletoion
         Write-Verbose -message "Deleteing Sensitiivity label $Name."
         Remove-Label -Identity $Name -Confirm:$false
         Remove-Label -Identity $Name -Confirm:$false -forcedeletion:$true
@@ -344,9 +344,13 @@ function Export-TargetResource
         }
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $result.AdvancedSettings = ConvertTo-AdvancedSettingString -AdvancedSettings $result.AdvancedSettings
+        $result.LocaleSettings = ConvertTo-LocaleSettingsString -LocaleSettings $result.LocaleSettings
         $content += "        SCSensitivityLabel " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AdvancedSettings"
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "LocaleSettings"
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
     }
@@ -518,7 +522,6 @@ function Test-LocaleSettings
     )
 
     $foundSettings = $true
-    #$currentLocaleSettings = $label.LocaleSettings | ConvertFrom-Json
     foreach ($desiredSetting in $DesiredProperty)
     {
         $foundKey = $CurrentProperty | Where-Object { $_.LocaleKey -eq $desiredSetting.localeKey }
@@ -544,6 +547,56 @@ function Test-LocaleSettings
     }
     Write-Verbose -Message "Test LocaleSettings returns $foundSettings"
     return $foundSettings
+}
+
+function ConvertTo-AdvancedSettingString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        $AdvancedSettings
+    )
+
+    $StringContent = "@("
+    foreach ($advancedSetting in $AdvancedSettings.Keys)
+    {
+        $StringContent += "             MSFT_SCLabelSetting`r`n            {`r`n"
+        $StringContent += "                Key = '$($advancedSetting)'`r`n"
+        $StringContent += "                Value    = '$($AdvancedSettings[$advancedSetting])'`r`n"
+        $StringContent += "            }`r`n"
+    }
+    $StringContent += "            )`r`n"
+    return $StringContent
+}
+
+function ConvertTo-LocaleSettingsString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        $LocaleSettings
+    )
+
+    $StringContent = "@("
+    foreach ($LocaleSetting in $LocaleSettings)
+    {
+        $StringContent += "             MSFT_SCLabelLocaleSettings`r`n            {`r`n"
+        $StringContent += "                LocaleKey = '$($LocaleSetting.LocaleKey)'`r`n"
+        foreach ($Setting in $LocaleSetting.Settings)
+        {
+            $StringContent += "             Settings = @(MSFT_SCLabelSetting`r`n            {`r`n"
+            $StringContent += "                Key = '$($Setting.Key)'`r`n"
+            $StringContent += "                Value    = '$($Setting.Value)'`r`n"
+            $StringContent += "            })`r`n"
+        }
+        $StringContent += "            }`r`n"
+    }
+    $StringContent += "            )`r`n"
+    return $StringContent
 }
 
 Export-ModuleMember -Function *-TargetResource
