@@ -1025,7 +1025,7 @@ function Remove-Mailbox{
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]
-        [string]
+        [System.String]
         $Identity,
 
         [Parameter()]
@@ -1038,7 +1038,6 @@ function Get-OrganizationConfig
 {
     [CmdletBinding()]
     param(
-
     )
 }
 
@@ -7096,7 +7095,11 @@ function Get-MsolUser {
 param(
     [Parameter(ParameterSetName='GetUserByUpn__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
-    ${UserPrincipalName}
+    ${UserPrincipalName},
+
+    [Parameter()]
+    [Switch]
+    $All
 )
  }
 

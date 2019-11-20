@@ -30,7 +30,7 @@ function Get-TargetResource
         Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform PnP `
                           -ConnectionUrl $Url -ErrorAction SilentlyContinue
-        $auditSettings = Get-PnPAuditing
+        $auditSettings = Get-PnPAuditing -ErrorAction Stop
         $auditFlag = $auditSettings.AuditFlags
         if ($null -eq $auditFlag)
         {

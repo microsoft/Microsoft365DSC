@@ -37,28 +37,56 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
         }
-
-        EXOAntiPhishPolicy AntiPhishPolicy
+<#
+        EXOAntiPhishPolicy AntiphishPolicy
         {
-            Identity                 = "Test AntiPhish Policy"
-            AdminDisplayName         = "Default Monitoring Policy"
-            AuthenticationFailAction = "Quarantine"
-            GlobalAdminAccount       = $GlobalAdmin
-            Ensure                   = "Present"
+            MakeDefault                           = $null;
+            PhishThresholdLevel                   = 1;
+            EnableTargetedDomainsProtection       = $null;
+            Identity                              = "Our Rule";
+            TreatSoftPassAsAuthenticated          = $True;
+            Enabled                               = $null;
+            TargetedDomainsToProtect              = $null;
+            EnableSimilarUsersSafetyTips          = $null;
+            ExcludedDomains                       = $null;
+            EnableAuthenticationSafetyTip         = $False;
+            Ensure                                = "Present";
+            TargetedDomainActionRecipients        = $null;
+            EnableMailboxIntelligence             = $null;
+            EnableSimilarDomainsSafetyTips        = $null;
+            TargetedDomainProtectionAction        = "NoAction";
+            AdminDisplayName                      = "";
+            AuthenticationFailAction              = "MoveToJmf";
+            GlobalAdminAccount                    = $GlobalAdmin;
+            TargetedUserProtectionAction          = "NoAction";
+            TargetedUsersToProtect                = $null;
+            EnableTargetedUserProtection          = $null;
+            ExcludedSenders                       = $null;
+            EnableAuthenticationSoftPassSafetyTip = $False;
+            EnableOrganizationDomainsProtection   = $null;
+            EnableUnusualCharactersSafetyTips     = $null;
+            TargetedUserActionRecipients          = $null;
+            EnableAntispoofEnforcement            = $True;
         }
 
         EXOAntiPhishRule AntiPhishRule
         {
-            Identity           = "Test AntiPhish Rule"
-            AntiPhishPolicy    = "Test AntiPhish Policy"
-            Comments           = "This is a test Rule"
-            SentToMemberOf     = @("O365DSCCore@$Domain")
-            GlobalAdminAccount = $GlobalAdmin
-            Ensure             = "Present"
-            DependsOn          = "[O365Group]O365DSCCoreTeam"
+            ExceptIfSentToMemberOf    = $null;
+            GlobalAdminAccount        = $GlobalAdmin;
+            ExceptIfSentTo            = $null;
+            SentTo                    = $null;
+            ExceptIfRecipientDomainIs = $null;
+            Identity                  = "Test Rule";
+            Comments                  = $null;
+            AntiPhishPolicy           = "Our Rule";
+            RecipientDomainIs         = $null;
+            Ensure                    = "Present";
+            Enabled                   = $True;
+            SentToMemberOf            = @("msteams_bb15d4@$Domain");
+            Priority                  = 1;
         }
 
-        <#EXOAtpPolicyForO365 AntiPhishPolicy
+        EXOAtpPolicyForO365 AntiPhishPolicy
         {
             IsSingleInstance        = "Yes"
             AllowClickThrough       = $false
@@ -67,6 +95,17 @@ Configuration Master
             GlobalAdminAccount      = $GlobalAdmin
             Ensure                  = "Present"
         }#>
+
+        EXOCASMailboxPlan CASMailboxPlan
+        {
+            ActiveSyncEnabled    = $True;
+            OwaMailboxPolicy     = "OwaMailboxPolicy-Default";
+            GlobalAdminAccount   = $GlobalAdmin;
+            PopEnabled           = $True;
+            Identity             = "ExchangeOnlineEssentials-759100cd-4fb6-46db-80ae-bb0ef4bd92b0";
+            Ensure               = "Present";
+            ImapEnabled          = $True;
+        }
 
         EXOClientAccessRule ClientAccessRule
         {
@@ -87,11 +126,23 @@ Configuration Master
             AnyOfClientIPAddressesOrRanges       = @();
         }
 
+        <#EXODkimSigningConfig DKIMSigning
+        {
+            KeySize                = 1024;
+            GlobalAdminAccount     = $GlobalAdmin;
+            Identity               = $Domain;
+            HeaderCanonicalization = "Relaxed";
+            Enabled                = $True;
+            Ensure                 = "Present";
+            BodyCanonicalization   = "Relaxed";
+            AdminDisplayName       = "";
+        }#>
+
         EXOOrganizationConfig EXOOrganizationConfig
         {
             ElcProcessingDisabled                                     = $False;
             IsSingleInstance                                          = "Yes";
-            DefaultPublicFolderProhibitPostQuota                      = 12345;
+            DefaultPublicFolderProhibitPostQuota                      = "13 KB (13,312 bytes)";
             VisibleMeetingUpdateProperties                            = "Location,AllProperties:15";
             BookingsEnabled                                           = $True;
             ExchangeNotificationRecipients                            = @();
@@ -104,7 +155,7 @@ Configuration Master
             AuditDisabled                                             = $False;
             EwsAllowMacOutlook                                        = $null;
             ConnectorsEnabledForTeams                                 = $True;
-            DefaultPublicFolderIssueWarningQuota                      = 12345;
+            DefaultPublicFolderIssueWarningQuota                      = "13 KB (13,312 bytes)";
             MailTipsMailboxSourcedTipsEnabled                         = $True;
             EndUserDLUpgradeFlowsDisabled                             = $False;
             DistributionGroupDefaultOU                                = $null;
@@ -119,7 +170,7 @@ Configuration Master
             GlobalAdminAccount                                        = $GlobalAdmin;
             ConnectorsEnabledForYammer                                = $True;
             HierarchicalAddressBookRoot                               = $null;
-            DefaultPublicFolderMaxItemSize                            = 12345;
+            DefaultPublicFolderMaxItemSize                            = "13 KB (13,312 bytes)";
             MailTipsLargeAudienceThreshold                            = 25;
             ConnectorsActionableMessagesEnabled                       = $True;
             ExchangeNotificationEnabled                               = $True;
@@ -130,7 +181,7 @@ Configuration Master
             PublicFoldersEnabled                                      = "Local";
             WebPushNotificationsDisabled                              = $False;
             MailTipsGroupMetricsEnabled                               = $True;
-            DefaultPublicFolderMovedItemRetention                     = "07.00:00:00";
+            DefaultPublicFolderMovedItemRetention                     = "7.00:00:00";
             DistributionGroupNamingPolicy                             = "";
             DefaultPublicFolderDeletedItemRetention                   = "30.00:00:00";
             MailTipsAllTipsEnabled                                    = $True;
@@ -457,14 +508,22 @@ Configuration Master
         Ensure             = "Present"
     }
 
-    SPOPropertyBag MyKey
-    {
-        Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
-        Key                = "MyKey"
-        Value              = "MyValue#3"
-        GlobalAdminAccount = $GlobalAdmin
-        Ensure             = "Present"
-    }
+        SPOSearchResultSource SearchMP
+        {
+            Name               = "MyResultSource"
+            Description        = "Description of item"
+            Protocol           = "Local"
+            Type               = "SharePoint"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+        }
+
+        SPOSiteAuditSettings MyStorageEntity
+        {
+            Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
+            AuditFlags         = "All"
+            GlobalAdminAccount = $GlobalAdmin
+        }
 
     SPOSiteAuditSettings MyStorageEntity
     {
@@ -526,19 +585,19 @@ Configuration Master
             ExcludeRestrictedSiteClassifications = @();
         }#>
 
-    SPOUserProfileProperty AdminFavoriteFood
-    {
-        UserName           = "adminnonmfa@$Domain"
-        Properties         = @(
-            MSFT_SPOUserProfilePropertyInstance
-            {
-                Key   = "FavoriteFood"
-                Value = "Pasta"
-            }
-        )
-        GlobalAdminAccount = $GlobalAdmin
-        Ensure             = "Present"
-    }
+        SPOUserProfileProperty SPOUserProfileProperty
+        {
+            UserName           = "adminnonmfa@$Domain"
+            Properties         = @(
+                MSFT_SPOUserProfilePropertyInstance
+                {
+                    Key   = "FavoriteFood"
+                    Value = "Pasta"
+                }
+            )
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+        }
 
     TeamsTeam TeamAlpha
     {

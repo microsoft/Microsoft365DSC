@@ -1297,6 +1297,60 @@ function Set-EXOSafeLinksRule
     }
 }
 
+function Compare-PSCustomObjectArrays
+{
+    [CmdletBinding()]
+    [OutputType([System.Object[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $DesiredValues,
+
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $CurrentValues
+    )
+
+    $DriftedProperties = @()
+    foreach ($DesiredEntry in $DesiredValues)
+    {
+        $Properties = $DesiredEntry.PSObject.Properties
+        $KeyProperty = $Properties.Name[0]
+
+        $EquivalentEntryInCurrent = $CurrentValues | Where-Object -FilterScript {$_.$KeyProperty -eq $DesiredEntry.$KeyProperty}
+        if ($null -eq $EquivalentEntryInCurrent)
+        {
+            $result = @{
+                        Property     = $DesiredEntry
+                        PropertyName = $KeyProperty
+                        Desired      = $DesiredEntry.$KeyProperty
+                        Current      = $null
+                      }
+            $DriftedProperties += $DesiredEntry
+        }
+        else
+        {
+            foreach ($property in $Properties)
+            {
+                $propertyName = $property.Name
+
+                if ($DesiredEntry.$PropertyName -ne $EquivalentEntryInCurrent.$PropertyName)
+                {
+                    $result = @{
+                        Property     = $DesiredEntry
+                        PropertyName = $PropertyName
+                        Desired      = $DesiredEntry.$PropertyName
+                        Current      = $EquivalentEntryInCurrent.$PropertyName
+                    }
+                    $DriftedProperties += $result
+                }
+            }
+        }
+    }
+
+    return $DriftedProperties
+}
+
 function Test-Office365DSCParameterState
 {
     [CmdletBinding()]
@@ -1380,6 +1434,33 @@ function Test-Office365DSCParameterState
                                     "to return false.")
                             $DriftedParameters.Add($fieldName, '')
                             $returnValue = $false
+                        }
+                        elseif ($desiredType.Name -eq 'ciminstance[]')
+                        {
+                            Write-Verbose "The current property {$_} is a CimInstance[]"
+                            $AllDesiredValuesAsArray = @()
+                            foreach ($item in $DesiredValues.$_)
+                            {
+                                $currentEntry = @{}
+                                foreach ($prop in $item.CIMInstanceProperties)
+                                {
+                                    $currentEntry.Add($prop.Name, $prop.Value)
+                                }
+                                $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
+                            }
+
+                            $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
+                                -DesiredValues $AllDesiredValuesAsArray
+                            if ($null -ne $arrayCompare)
+                            {
+                                foreach ($item in $arrayCompare)
+                                {
+                                    $EventValue = "<CurrentValue>[$($item.PropertyName)]$($item.CurrentValue)</CurrentValue>"
+                                    $EventValue += "<DesiredValue>[$($item.PropertyName)]$($item.DesiredValue)</DesiredValue>"
+                                    $DriftedParameters.Add($fieldName, $EventValue)
+                                }
+                                $returnValue = $false
+                            }
                         }
                         else
                         {
@@ -1588,6 +1669,10 @@ function Export-O365Configuration
         $Path,
 
         [Parameter()]
+        [System.String]
+        $FileName,
+
+        [Parameter()]
         [System.String[]]
         $ComponentsToExtract,
 
@@ -1595,6 +1680,10 @@ function Export-O365Configuration
         [ValidateSet('SPO','EXO','SC','OD','O365','TEAMS')]
         [System.String[]]
         $Workloads,
+
+        [Parameter()]
+        [ValidateRange(1,100)]
+        $MaxProcesses = 16,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -1611,19 +1700,22 @@ function Export-O365Configuration
         {
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                                            -Workloads $Workloads `
-                                           -Path $Path
+                                           -Path $Path -FileName $FileName `
+                                           -MaxProcesses $MaxProcesses
         }
         elseif ($null -ne $ComponentsToExtract)
         {
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                                            -ComponentsToExtract $ComponentsToExtract `
-                                           -Path $Path
+                                           -Path $Path -FileName $FileName `
+                                           -MaxProcesses $MaxProcesses
         }
         else
         {
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                                            -AllComponents `
-                                           -Path $Path
+                                           -Path $Path -FileName $FileName `
+                                           -MaxProcesses $MaxProcesses
         }
     }
 }
@@ -1667,7 +1759,7 @@ function Get-SPOAdministrationUrl
     return $global:AdminUrl
 }
 
-function Split-Array
+function Split-ArrayByBatchSize
 {
     [OutputType([System.Object[]])]
     Param(
@@ -1684,6 +1776,42 @@ function Split-Array
        $NewArray += ,@($Array[$i..($i+($BatchSize-1))]);
     }
     return $NewArray
+}
+
+function Split-ArrayByParts
+{
+    [OutputType([System.Object[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $Array,
+
+        [Parameter(Mandatory = $true)]
+        [System.Uint32]
+        $Parts
+    )
+
+    if ($Parts)
+    {
+        $PartSize = [Math]::Ceiling($Array.Count / $Parts)
+    }
+    $outArray = New-Object 'System.Collections.Generic.List[PSObject]'
+
+    for ($i = 1; $i -le $Parts; $i++)
+    {
+        $start = (($i-1) * $PartSize)
+
+        if ($start -lt $Array.Count)
+        {
+            $end   = (($i) * $PartSize) -1
+            if ($end -ge $Array.count)
+            {
+                $end = $Array.count -1
+            }
+            $outArray.Add(@($Array[$start..$end]))
+        }
+    }
+    return ,$outArray
 }
 
 function Invoke-O365DSCCommand
@@ -1748,4 +1876,48 @@ function Invoke-O365DSCCommand
             }
         }
     }
+}
+
+function Get-SPOUserProfilePropertyInstance
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Key,
+
+        [Parameter()]
+        [System.String]
+        $Value
+    )
+
+    $result = [PSCustomObject]@{
+        Key   = $Key
+        Value = $Value
+    }
+
+    return $result
+}
+
+function ConvertTo-SPOUserProfilePropertyInstanceString
+{
+    [CmdletBinding()]
+    [OutputType([System.String[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $Properties
+    )
+
+    $results = @()
+    foreach ($property in $Properties)
+    {
+        $content = "             MSFT_SPOUserProfilePropertyInstance`r`n            {`r`n"
+        $content += "                Key   = `"$($property.Key)`"`r`n"
+        $content += "                Value = `"$($property.Value)`"`r`n"
+        $content += "            }`r`n"
+        $results += $content
+    }
+    return $results
 }

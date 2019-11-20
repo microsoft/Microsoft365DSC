@@ -20,6 +20,14 @@ function Start-O365ConfigurationExtract
         $Path,
 
         [Parameter()]
+        [System.String]
+        $FileName,
+
+        [Parameter()]
+        [ValidateRange(1,100)]
+        $MaxProcesses,
+
+        [Parameter()]
         [ValidateSet('SPO','EXO','SC','OD','O365','TEAMS')]
         [System.String[]]
         $Workloads
@@ -49,7 +57,14 @@ function Start-O365ConfigurationExtract
     $DSCContent += "    [System.Management.Automation.PSCredential]`r`n"
     $DSCContent += "    `$GlobalAdminAccount`r`n"
     $DSCContent += ")`r`n`r`n"
-    $DSCContent += "Configuration O365TenantConfig`r`n{`r`n"
+
+    $ConfigName = "O365TenantConfig"
+    if (-not [System.String]::IsNullOrEmpty($FileName))
+    {
+        $FileParts = $FileName.Split('.')
+        $ConfigName = $FileName.Replace('.' + $FileParts[$FileParts.Length -1], "")
+    }
+    $DSCContent += "Configuration $ConfigName`r`n{`r`n"
     $DSCContent += "    param (`r`n"
     $DSCContent += "        [parameter()]`r`n"
     $DSCContent += "        [System.Management.Automation.PSCredential]`r`n"
@@ -113,6 +128,38 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "EXOAntiPhishPolicy"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOAntiPhishPolicy")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("EXO")))
+    {
+        Write-Information "Extracting EXOAntiPhishPolicy..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_EXOAntiPhishPolicy\MSFT_EXOAntiPhishPolicy.psm1" `
+                                -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "EXOAntiPhishRule"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOAntiPhishRule")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("EXO")))
+    {
+        Write-Information "Extracting EXOAntiPhishRule..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_EXOAntiPhishRule\MSFT_EXOAntiPhishRule.psm1" `
+                                -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "EXOOrganizationConfig"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOOrganizationConfig")) -or
@@ -133,7 +180,6 @@ function Start-O365ConfigurationExtract
             New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
     }
-    #endregion
 
     #region "EXOAtpPolicyForO365"
     if (($null -ne $ComponentsToExtract -and
@@ -171,7 +217,7 @@ function Start-O365ConfigurationExtract
             }
             else
             {
-                Write-Information "The specified Tenant is not registered for ATP, and therefore can't extract policies"
+                Write-Warning "The specified Tenant is not registered for ATP, and therefore can't extract policies"
             }
         }
         catch
@@ -623,7 +669,7 @@ function Start-O365ConfigurationExtract
                 $mailboxName = $mailbox.Name
                 if ($mailboxName)
                 {
-                    $partialContent += Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
+                    $partialContent = Export-TargetResource -DisplayName $mailboxName -GlobalAdminAccount $GlobalAdminAccount
                     if ($partialContent.ToLower().IndexOf("@" + $organization.ToLower()) -gt 0)
                     {
                         $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
@@ -891,30 +937,13 @@ function Start-O365ConfigurationExtract
         try
         {
             Write-Information "Extracting SCComplianceTag..."
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                              -Platform SecurityComplianceCenter `
-                              -ErrorAction SilentlyContinue
 
-            $SCComplianceTagModulePath = Join-Path -Path $PSScriptRoot `
+            $ModulePath = Join-Path -Path $PSScriptRoot `
                                             -ChildPath "..\DSCResources\MSFT_SCComplianceTag\MSFT_SCComplianceTag.psm1" `
                                             -Resolve
 
-            Import-Module $SCComplianceTagModulePath | Out-Null
-            $tags = Get-ComplianceTag
-
-            $totalTags = $tags.Length
-            if ($null -eq $totalTags)
-            {
-                $totalTags = 1
-            }
-            $i = 1
-            foreach ($tag in $tags)
-            {
-                Write-Information "    - [$i/$($totalTags)] $($tag.Name)"
-                $partialContent = Export-TargetResource -Name $tag.Name -GlobalAdminAccount $GlobalAdminAccount
-                $DSCContent += $partialContent
-                $i++
-            }
+            Import-Module $ModulePath | Out-Null
+            $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
         }
         catch
         {
@@ -1118,7 +1147,7 @@ function Start-O365ConfigurationExtract
             Import-Module $SCSCSupervisoryReviewPolicyModulePath | Out-Null
             $policies = Get-SupervisoryReviewPolicyV2
 
-            $totalPolicies = $policies.$Length
+            $totalPolicies = $policies.Length
             if ($null -eq $totalPolicies)
             {
                 $totalPolicies = 1
@@ -1255,8 +1284,8 @@ function Start-O365ConfigurationExtract
                 foreach ($file in $allFiles)
                 {
                     $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
-                    $fileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length -1]
-                    Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $fileName -AsFile | Out-Null
+                    $appFileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length -1]
+                    Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $appFileName -AsFile | Out-Null
                 }
             }
             else
@@ -1343,7 +1372,7 @@ function Start-O365ConfigurationExtract
                                                    -Resolve
 
         Import-Module $SPOPropertyBagModulePath | Out-Null
-        $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount -MaxProcesses $MaxProcesses
         if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
             $partialContent.ToLower().Contains($principal.ToLower()))
         {
@@ -1584,8 +1613,7 @@ function Start-O365ConfigurationExtract
 
         Import-Module $SPOModulePath | Out-Null
 
-        Test-MSCloudLogin -ConnectionUrl $CentralAdminUrl `
-                          -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                           -Platform PnP
 
         $storageEntities = Get-PnPStorageEntity
@@ -1680,7 +1708,7 @@ function Start-O365ConfigurationExtract
                                                    -Resolve
 
         Import-Module $ModulePath | Out-Null
-        $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount -MaxProcesses $MaxProcesses
         if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
         $partialContent.ToLower().Contains($principal.ToLower()))
         {
@@ -1696,27 +1724,34 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckTeamsTeam")) -or
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
     {
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform MicrosoftTeams
-        Write-Information "Extracting TeamsTeam..."
-        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
-                                    -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
-                                    -Resolve
-
-        Import-Module $TeamsModulePath | Out-Null
-        $teams = Get-Team
-        $i = 1
-        foreach ($team in $teams)
+        try
         {
-            Write-Information "    - [$i/$($teams.Length)] $($team.DisplayName)"
-            $partialContent = Export-TargetResource -DisplayName $team.DisplayName `
-                                                 -GlobalAdminAccount $GlobalAdminAccount
-            if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+            Write-Information "Extracting TeamsTeam..."
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+                          -Platform MicrosoftTeams
+            $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
+                                        -Resolve
+
+            Import-Module $TeamsModulePath | Out-Null
+            $teams = Get-Team
+            $i = 1
+            foreach ($team in $teams)
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+                Write-Information "    - [$i/$($teams.Length)] $($team.DisplayName)"
+                $partialContent = Export-TargetResource -DisplayName $team.DisplayName `
+                                                    -GlobalAdminAccount $GlobalAdminAccount
+                if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+                }
+                $DSCContent += $partialContent
+                $i++
             }
-            $DSCContent += $partialContent
-            $i++
+        }
+        catch
+        {
+            Write-Verbose $_
         }
     }
     #endregion
@@ -1726,30 +1761,37 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckTeamsChannel")) -or
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
     {
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform MicrosoftTeams
-        Write-Information "Extracting TeamsChannel..."
-        $TeamsChannelModulePath = Join-Path -Path $PSScriptRoot `
-                                        -ChildPath "..\DSCResources\MSFT_TeamsChannel\MSFT_TeamsChannel.psm1" `
-                                        -Resolve
-
-        Import-Module $TeamsChannelModulePath | Out-Null
-        $teams = Get-Team
-        $j = 1
-        foreach ($team in $Teams)
+        try
         {
-            $channels = Get-TeamChannel -GroupId $team.GroupId
-            $i = 1
-            Write-Information "    > [$j/$($Teams.Length)] Team {$($team.DisplayName)}"
-            foreach ($channel in $channels)
+            Write-Information "Extracting TeamsChannel..."
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                              -Platform MicrosoftTeams
+            $TeamsChannelModulePath = Join-Path -Path $PSScriptRoot `
+                                            -ChildPath "..\DSCResources\MSFT_TeamsChannel\MSFT_TeamsChannel.psm1" `
+                                            -Resolve
+
+            Import-Module $TeamsChannelModulePath | Out-Null
+            $teams = Get-Team
+            $j = 1
+            foreach ($team in $Teams)
             {
-                Write-Information "        - [$i/$($channels.Length)] $($channel.DisplayName)"
-                $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
-                                                     -DisplayName $channel.DisplayName `
-                                                     -GlobalAdminAccount $GlobalAdminAccount
-                $i++
+                $channels = Get-TeamChannel -GroupId $team.GroupId
+                $i = 1
+                Write-Information "    > [$j/$($Teams.Length)] Team {$($team.DisplayName)}"
+                foreach ($channel in $channels)
+                {
+                    Write-Information "        - [$i/$($channels.Length)] $($channel.DisplayName)"
+                    $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
+                                                        -DisplayName $channel.DisplayName `
+                                                        -GlobalAdminAccount $GlobalAdminAccount
+                    $i++
+                }
+                $j++
             }
-            $j++
+        }
+        catch
+        {
+            Write-Verbose $_
         }
     }
     #endregion
@@ -1759,43 +1801,17 @@ function Start-O365ConfigurationExtract
         $ComponentsToExtract.Contains("chckTeamsUser")) -or
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
     {
+
         Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                           -Platform MicrosoftTeams
         Write-Information "Extracting TeamsUser..."
-        $TeamsModulePath = Join-Path -Path $PSScriptRoot `
+        $ModulePath = Join-Path -Path $PSScriptRoot `
                                         -ChildPath "..\DSCResources\MSFT_TeamsUser\MSFT_TeamsUser.psm1" `
                                         -Resolve
 
-        Import-Module $TeamsModulePath | Out-Null
-        $teams = Get-Team
-        $j = 1
-        foreach ($team in $Teams)
-        {
-            try
-            {
-                $users = Get-TeamUser -GroupId $team.GroupId
-                $i = 1
-                Write-Information "    > [$j/$($Teams.Length)] Team {$($team.DisplayName)}"
-                foreach ($user in $users)
-                {
-                    Write-Information "        - [$i/$($users.Length)] $($user.User)"
-                    $partialContent = Export-TargetResource -TeamName $team.DisplayName `
-                                                        -User $user.User `
-                                                        -GlobalAdminAccount $GlobalAdminAccount
-                    if ($partialContent.ToLower().Contains($principal.ToLower()))
-                    {
-                        $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
-                    }
-                    $DSCContent += $partialContent
-                    $i++
-                }
-            }
-            catch
-            {
-                Write-Information "The current User doesn't have the required permissions to extract Users for Team {$($team.DisplayName)}."
-            }
-            $j++
-        }
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -MaxProcesses $MaxProcesses `
+                                             -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
 
@@ -1823,7 +1839,7 @@ function Start-O365ConfigurationExtract
     $credsContent += "`r`n"
     $startPosition = $DSCContent.IndexOf("<# Credentials #>") + 19
     $DSCContent = $DSCContent.Insert($startPosition, $credsContent)
-    $DSCContent += "O365TenantConfig -ConfigurationData .\ConfigurationData.psd1 -GlobalAdminAccount `$GlobalAdminAccount"
+    $DSCContent += "$ConfigName -ConfigurationData .\ConfigurationData.psd1 -GlobalAdminAccount `$GlobalAdminAccount"
     #endregion
 
     #region Prompt the user for a location to save the extract and generate the files
@@ -1870,7 +1886,14 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
-    $outputDSCFile = $OutputDSCPath + "Office365TenantConfig.ps1"
+    if (-not [System.String]::IsNullOrEmpty($FileName))
+    {
+        $outputDSCFile = $OutputDSCPath + $FileName
+    }
+    else
+    {
+        $outputDSCFile = $OutputDSCPath + "Office365TenantConfig.ps1"
+    }
     $DSCContent | Out-File $outputDSCFile
 
     if (!$AzureAutomation)

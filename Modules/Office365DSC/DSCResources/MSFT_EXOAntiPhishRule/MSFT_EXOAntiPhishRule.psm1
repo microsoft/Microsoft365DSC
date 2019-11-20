@@ -88,32 +88,24 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Ensure = 'Present'
-            }
-            foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-            {
-                if ($null -ne $AntiPhishRule.$KeyName)
-                {
-                    $result += @{
-                        $KeyName = $AntiPhishRule.$KeyName
-                    }
-                }
-                else
-                {
-                    $result += @{
-                        $KeyName = $PSBoundParameters[$KeyName]
-                    }
-                }
-
+                Identity                  = $Identity
+                AntiPhishPolicy           = $AntiPhishRule.AntiPhishPolicy
+                Comments                  = $AntiPhishRule.Comments
+                Enabled                   = $AntiPhishRule.RuleEnabled
+                ExceptIfRecipientDomainIs = $AntiPhishRule.ExceptIfRecipientDomainIs
+                ExceptIfSentTo            = $AntiPhishRule.ExceptIfSentTo
+                ExceptIfSentToMemberOf    = $AntiPhishRule.ExceptIfSentToMemberOf
+                Priority                  = $AntiPhishRule.Priority
+                RecipientDomainIs         = $AntiPhishRule.RecipientDomainIs
+                SentTo                    = $AntiPhishRule.SentTo
+                SentToMemberOf            = $AntiPhishRule.SentToMemberOf
+                Ensure                    = 'Present'
+                GlobalAdminAccount        = $GlobalAdminAccount
             }
             if ('Enabled' -eq $AntiPhishRule.State)
             {
                 # Accounts for Get-AntiPhishRule returning 'State' instead of 'Enabled' used by New/Set
                 $result.Enabled = $true
-            }
-            else
-            {
-                $result.Enabled = $false
             }
 
             Write-Verbose -Message "Found AntiPhishRule $($Identity)"
@@ -319,24 +311,35 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $AntiPhishPolicy,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        EXOAntiPhishRule " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    $InformationPreference = "Continue"
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline `
+                      -ErrorAction SilentlyContinue
+
+    $AntiPhishRules = Get-AntiphishRule
+    $content = ""
+    $i = 1
+    foreach ($Rule in $AntiPhishRules)
+    {
+        Write-Information "    [$i/$($AntiPhishRules.Length)] $($Rule.Identity)"
+
+        $Params = @{
+            Identity           = $Rule.Identity
+            AntiPhishPolicy    = $Rule.AntiPhishPolicy
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @Params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content += "        EXOAntiPhishRule " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        $i++
+    }
     return $content
 }
 

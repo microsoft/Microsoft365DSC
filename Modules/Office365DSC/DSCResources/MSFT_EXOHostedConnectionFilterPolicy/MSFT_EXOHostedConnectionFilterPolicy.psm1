@@ -68,37 +68,19 @@ function Get-TargetResource
     else
     {
         $result = @{
-            Ensure = 'Present'
-        }
-
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -inotmatch 'Ensure|MakeDefault' }))
-        {
-            if ($null -ne $HostedConnectionFilterPolicy.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $HostedConnectionFilterPolicy.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
-
+            Ensure             = 'Present'
+            Identity           = $Identity
+            AdminDisplayName   = $HostedConnectionFilterPolicy.AdminDisplayName
+            EnableSafeList     = $HostedConnectionFilterPolicy.EnableSafeList
+            IPAllowList        = $HostedConnectionFilterPolicy.IPAllowList
+            IPBlockList        = $HostedConnectionFilterPolicy.IPBlockList
+            MakeDefault        = $false
+            GlobalAdminAccount = $GlobalAdminAccount
         }
 
         if ($AntiPhishRule.IsDefault)
         {
-            $result += @{
-                MakeDefault = $true
-            }
-        }
-        else
-        {
-            $result += @{
-                MakeDefault = $false
-            }
+            $result.MakeDefault = $true
         }
 
         Write-Verbose -Message "Found HostedConnectionFilterPolicy $($Identity)"

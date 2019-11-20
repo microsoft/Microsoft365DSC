@@ -135,24 +135,46 @@ function Get-TargetResource
     }
     else
     {
-        $result = @{
-            Ensure = 'Present'
+        $PhishThresholdLevelValue = $AntiPhishPolicy.PhishThresholdLevel
+        if ([System.String]::IsNullOrEmpty($PhishThresholdLevelValue))
+        {
+            $PhishThresholdLevelValue = '1'
         }
 
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
+        $TargetedUserProtectionActionValue = $AntiPhishPolicy.TargetedUserProtectionAction
+        if ([System.String]::IsNullOrEmpty($TargetedUserProtectionActionValue))
         {
-            if ($null -ne $AntiPhishPolicy.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $AntiPhishPolicy.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
+            $TargetedUserProtectionActionValue = 'NoAction'
+        }
+
+        $result = @{
+            Identity                              = $Identity
+            AdminDisplayName                      = $AntiPhishPolicy.AdminDisplayName
+            AuthenticationFailAction              = $AntiPhishPolicy.AuthenticationFailAction
+            Enabled                               = $AntiPhishPolicy.Enabled
+            EnableAntispoofEnforcement            = $AntiPhishPolicy.EnableAntispoofEnforcement
+            EnableAuthenticationSafetyTip         = $AntiPhishPolicy.EnableAuthenticationSafetyTip
+            EnableAuthenticationSoftPassSafetyTip = $AntiPhishPolicy.EnableAuthenticationSoftPassSafetyTip
+            EnableMailboxIntelligence             = $AntiPhishPolicy.EnableMailboxIntelligence
+            EnableOrganizationDomainsProtection   = $AntiPhishPolicy.EnableOrganizationDomainsProtection
+            EnableSimilarDomainsSafetyTips        = $AntiPhishPolicy.EnableSimilarDomainsSafetyTips
+            EnableSimilarUsersSafetyTips          = $AntiPhishPolicy.EnableSimilarUsersSafetyTips
+            EnableTargetedDomainsProtection       = $AntiPhishPolicy.EnableTargetedDomainsProtection
+            EnableTargetedUserProtection          = $AntiPhishPolicy.EnableTargetedUserProtection
+            EnableUnusualCharactersSafetyTips     = $AntiPhishPolicy.EnableUnusualCharactersSafetyTips
+            ExcludedDomains                       = $AntiPhishPolicy.ExcludedDomains
+            ExcludedSenders                       = $AntiPhishPolicy.ExcludedSenders
+            MakeDefault                           = $AntiPhishPolicy.MakeDefault
+            PhishThresholdLevel                   = $PhishThresholdLevelValue
+            TargetedDomainActionRecipients        = $AntiPhishPolicy.TargetedDomainActionRecipients
+            TargetedDomainProtectionAction        = $TargetedDomainProtectionAction
+            TargetedDomainsToProtect              = $AntiPhishPolicy.TargetedDomainsToProtect
+            TargetedUserActionRecipients          = $AntiPhishPolicy.TargetedUserActionRecipients
+            TargetedUserProtectionAction          = $TargetedUserProtectionActionValue
+            TargetedUsersToProtect                = $AntiPhishPolicy.TargetedUsersToProtect
+            TreatSoftPassAsAuthenticated          = $AntiPhishPolicy.TreatSoftPassAsAuthenticated
+            GlobalAdminAccount                    = $GlobalAdminAccount
+            Ensure = 'Present'
         }
 
         Write-Verbose -Message "Found AntiPhishPolicy $($Identity)"
@@ -292,13 +314,16 @@ function Set-TargetResource
     if (('Present' -eq $Ensure ) -and (-not $AntiPhishPolicy))
     {
         New-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
-        Start-Sleep -Seconds 1
-        Set-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
     }
 
     if (('Present' -eq $Ensure ) -and ($AntiPhishPolicy))
     {
-        Set-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
+        # The Set-AntiphishPolicy cmdlet doesn't account for more than 80% of the parameters
+        # defined by the New-AntiphishPolicy one. Therefore we need to delete the existing
+        # policy and recreate it in order to make sure the parameters all match the desired
+        # state specified;
+        Remove-AntiPhishPolicy -Identity $Identity -Confirm:$false -Force
+        New-EXOAntiPhishPolicy -AntiPhishPolicyParams $PSBoundParameters
     }
 
     if (('Absent' -eq $Ensure ) -and ($AntiPhishPolicy))
@@ -455,20 +480,39 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        EXOAntiPhishPolicy " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    $InformationPreference = "Continue"
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline `
+                      -ErrorAction SilentlyContinue
+
+    $AntiPhishPolicies = Get-AntiPhishPolicy
+    $content = ""
+    $i = 1
+    $PolicyCount = $AntiPhishPolicies.Length
+    if ($null -eq $PolicyCount)
+    {
+        $PolicyCount = 1
+    }
+    foreach ($Policy in $AntiPhishPolicies)
+    {
+        Write-Information "    [$i/$PolicyCount] $($Policy.Identity)"
+
+        $Params = @{
+            Identity           = $Policy.Identity
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @Params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content += "        EXOAntiPhishPolicy " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        $i++
+    }
     return $content
 }
 

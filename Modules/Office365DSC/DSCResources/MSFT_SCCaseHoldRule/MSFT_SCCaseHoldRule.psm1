@@ -209,9 +209,14 @@ function Export-TargetResource
     $Rules = Get-CaseHoldRule
 
     $i = 1
+    $RulesLength = $Rules.Length
+    if ($null -eq $RulesLength)
+    {
+        $RulesLength = 1
+    }
     foreach ($Rule in $Rules)
     {
-        Write-Information "    - [$i/$($Rules.Length)] $($Rule.Name)"
+        Write-Information "    - [$i/$RulesLength] $($Rule.Name)"
         try
         {
             $policy = Get-CaseHoldPolicy -Identity $Rule.Policy -ErrorAction Stop

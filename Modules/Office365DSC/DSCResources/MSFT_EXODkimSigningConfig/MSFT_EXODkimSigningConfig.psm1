@@ -70,22 +70,14 @@ function Get-TargetResource
     else
     {
         $result = @{
-            Ensure = 'Present'
-        }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-        {
-            if ($null -ne $DkimSigningConfig.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $DkimSigningConfig.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
+            Ensure                 = 'Present'
+            Identity               = $Identity
+            AdminDisplayName       = $DkimSigningConfig.AdminDisplayName
+            BodyCanonicalization   = $DkimSigningConfig.BodyCanonicalization
+            Enabled                = $DkimSigningConfig.Enabled
+            HeaderCanonicalization = $DkimSigningConfig.HeaderCanonicalization
+            KeySize                = 1024
+            GlobalAdminAccount     = $GlobalAdminAccount
         }
 
         Write-Verbose -Message "Found DkimSigningConfig $($Identity)"

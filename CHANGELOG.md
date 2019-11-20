@@ -9,14 +9,20 @@
     returning all values;
 * SCAuditConfigurationSettings
   * Initial release;
+* SCDLPComplianceRule
+  * Fixed issue with the extraction of NotifyAllowOverride;
 * SPOPropertyBag
   * Added multithreading;
 * SPOTheme
   * Fixed an issue with the Set-TargetResource
     still using SPO management shell cmdlets instead of PnP;
+* SPOUserProfileProperty
+  * Introduced Multi-Threading;
+* TeamsUser
+  * Introduced Multi-Threading;
 * Metadata
   * Updated SharePointPnPPowerShellOnline dependency
-    to version 3.14.1910.1;
+    to version 3.15.1911.0;
   * Updated ReverseDSC dependency to version 2.0.0.0;
 
 ## 1.0.0.1048
@@ -41,12 +47,13 @@
   * Added workload selectors to the GUI interface;
 * Metadata
   * Updated MSCloudLoginAssistant dependency
-    to version 0.7.5;
+    to version 0.7.6;
   * Updated ReverseDSC dependency
     to version 1.9.4.6;
   * Updated Microsoft.Online.SharePoint.PowerShell dependency
     to version 16.0.19223.12000;
-  * UPdated SharePointPnPPowerShellOnline dependency
+  * Updated MicrosoftTeams dependency to version 1.0.0.2;
+  * Updated SharePointPnPPowerShellOnline dependency
     to version 3.14.1910.0
 
 ## 1.0.0.846
@@ -127,4 +134,4 @@
   * Initial Release
 * SPOSite
   * Added default value for Storage Quota
-  * Fixed an issue with site creation that could result in infinite loops
+  * Fixed an issue with site creation that could result in infinite loops;
