@@ -13632,9 +13632,9 @@ function Get-FilePlanPropertyReferenceId
 function New-FilePlanPropertyCategory
 {
     Param(
-    [Parameter()]
-    [System.String]
-    $Identity
+        [Parameter()]
+        [System.String]
+        $Name
     )
 }
 
