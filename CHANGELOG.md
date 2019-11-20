@@ -13,6 +13,8 @@
   * Fixed issue with the extraction of NotifyAllowOverride;
 * SCFilePlanPropertyAuthority
   * Initial Release;
+* SCFilePlanPropertyReferenceID
+  * Initial Release;
 * SPOPropertyBag
   * Added multithreading;
 * SPOTheme

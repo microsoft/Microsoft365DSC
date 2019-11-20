@@ -13610,3 +13610,30 @@ function Set-ComplianceSearch
         $SharePointLocationExclusion
     )
 }
+
+function Get-FilePlanPropertyReferenceId
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function New-FilePlanPropertyReferenceId
+{
+    Param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Name
+    )
+}
+
+function Remove-FilePlanPropertyReferenceId
+{
+    Param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Identity
+    )
+}

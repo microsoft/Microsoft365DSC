@@ -382,9 +382,17 @@ Configuration Master
                                                   };
         }
 
+
         SCFilePlanPropertyAuthority FilePlanPropertyAuthority
         {
             Name               = "My Authority"
+            Ensure             = "Present"
+            GlobalAdminAccount = $GlobalAdmin
+        }
+
+        SCFilePlanPropertyReferenceId FilePlanPropertyReferenceId
+        {
+            Name               = "My Reference ID"
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }
