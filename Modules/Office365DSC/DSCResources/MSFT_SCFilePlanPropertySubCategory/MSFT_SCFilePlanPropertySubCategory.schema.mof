@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("SCFilePlanPropertyCategory")]
-class MSFT_SCFilePlanPropertyCategory : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("SCFilePlanPropertySubCategory")]
+class MSFT_SCFilePlanPropertySubCategory : OMI_BaseResource
 {
     [Key, Description("The Name parameter specifies the unique name of the category.")] String Name;
     [Required, Description("The Category parameter specifies the name of the parent category associated with the sub-category.")] String Category;
