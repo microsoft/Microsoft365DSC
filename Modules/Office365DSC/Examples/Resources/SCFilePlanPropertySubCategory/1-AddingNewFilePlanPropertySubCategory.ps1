@@ -16,7 +16,7 @@ Configuration Example
         SCFilePlanPropertyCategory FilePlanPropertySubCategory
         {
             Name               = "My Sub-Category"
-            Parent             = "My Category"
+            Category           = "My Category"
             Ensure             = "Present"
             GlobalAdminAccount = $credsGlobalAdmin
         }

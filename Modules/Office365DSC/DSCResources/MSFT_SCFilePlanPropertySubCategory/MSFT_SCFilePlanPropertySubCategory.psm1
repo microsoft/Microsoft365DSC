@@ -95,7 +95,7 @@ function Set-TargetResource
     {
         $CreationParams = $PSBoundParameters
         $CreationParams.Add("ParentId", $Category)
-        $CreationParams.Remove("Category")
+        $CreationParams.Remove("Category") | Out-Null
         $CreationParams.Remove("GlobalAdminAccount") | Out-Null
         $CreationParams.Remove("Ensure") | Out-Null
 
