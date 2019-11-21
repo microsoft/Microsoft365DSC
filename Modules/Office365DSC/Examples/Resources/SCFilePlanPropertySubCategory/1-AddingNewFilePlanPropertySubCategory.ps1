@@ -13,7 +13,7 @@ Configuration Example
 
     node localhost
     {
-        SCFilePlanPropertyCategory FilePlanPropertySubCategory
+        SCFilePlanPropertySubCategory FilePlanPropertySubCategory
         {
             Name               = "My Sub-Category"
             Category           = "My Category"
