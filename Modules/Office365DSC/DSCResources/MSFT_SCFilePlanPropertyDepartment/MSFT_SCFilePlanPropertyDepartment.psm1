@@ -85,7 +85,7 @@ function Set-TargetResource
     {
         # Do Nothing
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
+    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $Current.Ensure))
     {
         Remove-FilePlanPropertyDepartment -Identity $Name -Confirm:$false
     }
