@@ -46,10 +46,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-FilePlanPropertyCategory -MockWith {
-                return @{
+                return @(@{
                     DisplayName = "Parent"
                     Id          = "11111-22222-33333-44444-55555"
-                }
+                })
             }
 
             Mock -CommandName Get-FilePlanPropertySubCategory -MockWith {
@@ -78,17 +78,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-FilePlanPropertyCategory -MockWith {
-                return @{
+                return @(@{
                     DisplayName = "Parent"
                     Id          = "CN=11111-22222-33333-44444-55555"
-                }
+                })
             }
 
             Mock -CommandName Get-FilePlanPropertySubCategory -MockWith {
-                return @{
+                return @(@{
                     DisplayName = "Demo Sub-Category"
                     ParentId    = "11111-22222-33333-44444-55555"
-                }
+                })
             }
 
             It 'Should return true from the Test method' {
@@ -113,16 +113,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-FilePlanPropertyCategory -MockWith {
-                return @{
+                return @(@{
                     DisplayName = "Parent"
                     Id          = "11111-22222-33333-44444-55555"
-                }
+                })
             }
 
             Mock -CommandName Get-FilePlanPropertySubCategory -MockWith {
-                return @{
-                    DisplayName ="Demo Sub-Category"
-                }
+                return @(@{
+                    DisplayName = "Demo Sub-Category"
+                    ParentId    = "11111-22222-33333-44444-55555"
+                })
             }
 
             It 'Should return False from the Test method' {
@@ -144,16 +145,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-FilePlanPropertyCategory -MockWith {
-                return @{
+                return @(@{
                     DisplayName = "Parent"
                     Id          = "11111-22222-33333-44444-55555"
-                }
+                })
             }
 
             Mock -CommandName Get-FilePlanPropertySubCategory -MockWith {
-                return @{
-                    DisplayName ="Demo Sub-Category"
-                }
+                return @(@{
+                    DisplayName = "Demo Sub-Category"
+                    ParentId    = "11111-22222-33333-44444-55555"
+                })
             }
 
             It "Should Reverse Engineer resource from the Export method" {

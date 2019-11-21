@@ -36,6 +36,7 @@ function Get-TargetResource
         return $empty
     }
     $parentId = $parent.Id.Replace("CN=","")
+
     $property = Get-FilePlanPropertySubCategory | Where-Object -FilterScript {$_.DisplayName -eq $Name -and `
                                                  $_.ParentId -eq $parentId}
 
@@ -50,7 +51,7 @@ function Get-TargetResource
 
         $result = @{
             Name                 = $property.DisplayName
-            Category             = $Category.DisplayName
+            Category             = $parent.DisplayName
             GlobalAdminAccount   = $GlobalAdminAccount
             Ensure               = 'Present'
         }
