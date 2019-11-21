@@ -173,7 +173,7 @@ function Export-TargetResource
     $content = ""
     foreach ($Property in $Properties)
     {
-        $parent = Get-FilePlanPropertyCategory | ?{$_.Id -like "*$($property.ParentId)*"}
+        $parent = Get-FilePlanPropertyCategory | Where-Object -FilterScript{$_.Id -like "*$($property.ParentId)*"}
         Write-Information "    - [$i/$($Properties.Length)] $($Property.Name)"
         $params = @{
             Name               = $Property.DisplayName
