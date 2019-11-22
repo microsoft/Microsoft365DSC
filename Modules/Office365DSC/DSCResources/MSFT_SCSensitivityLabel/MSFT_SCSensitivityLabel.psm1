@@ -292,7 +292,6 @@ function Test-TargetResource
 
     if ($null -ne $AdvancedSettings)
     {
-        #$labelSettings = Convert-CIMToAdvancedSettings $AdvancedSettings
         $TestAdvancedSettings = Test-AdvancedSettings -DesiredProperty $AdvancedSettings -CurrentProperty $CurrentValues.AdvancedSettings
         if ($false -eq $TestAdvancedSettings)
         {
@@ -310,6 +309,7 @@ function Test-TargetResource
     }
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
 
@@ -564,9 +564,9 @@ function ConvertTo-AdvancedSettingString
     foreach ($advancedSetting in $AdvancedSettings)
     {
         $StringContent += "             MSFT_SCLabelSetting`r`n            {`r`n"
-        $StringContent += "                Key = '$($advancedSetting.Key)'`r`n"
-        $StringContent += "                Value    = '$($advancedSetting.Value)'`r`n"
-        $StringContent += "            }`r`n"
+        $StringContent += "                 Key = '$($advancedSetting.Key)'`r`n"
+        $StringContent += "                 Value    = '$($advancedSetting.Value)'`r`n"
+        $StringContent += "             }`r`n"
     }
     $StringContent += "            )`r`n"
     return $StringContent
@@ -586,15 +586,15 @@ function ConvertTo-LocaleSettingsString
     foreach ($LocaleSetting in $LocaleSettings)
     {
         $StringContent += "             MSFT_SCLabelLocaleSettings`r`n            {`r`n"
-        $StringContent += "                LocaleKey = '$($LocaleSetting.LocaleKey)'`r`n"
+        $StringContent += "                 LocaleKey = '$($LocaleSetting.LocaleKey)'`r`n"
         foreach ($Setting in $LocaleSetting.Settings)
         {
-            $StringContent += "             Settings = @(MSFT_SCLabelSetting`r`n            {`r`n"
-            $StringContent += "                Key = '$($Setting.Key)'`r`n"
-            $StringContent += "                Value    = '$($Setting.Value)'`r`n"
-            $StringContent += "            })`r`n"
+            $StringContent += "             Settings  = @(MSFT_SCLabelSetting`r`n            {`r`n"
+            $StringContent += "                 Key   = '$($Setting.Key)'`r`n"
+            $StringContent += "                 Value = '$($Setting.Value)'`r`n"
+            $StringContent += "              })`r`n"
         }
-        $StringContent += "            }`r`n"
+        $StringContent += "             }`r`n"
     }
     $StringContent += "            )`r`n"
     return $StringContent

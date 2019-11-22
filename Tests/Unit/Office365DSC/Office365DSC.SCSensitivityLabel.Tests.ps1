@@ -94,10 +94,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 ToolTip            = "Test tool tip"
                 DisplayName        = "Test label"
                 ParentId           = "MyLabel"
+
                 AdvancedSettings   = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
                         Key   = "LabelStatus"
                         Value = "Enabled"
                     } -clientOnly)
+
                 LocaleSettings     = (New-CimInstance -ClassName MSFT_SCLabelLocaleSettings -Property @{
                         LocaleKey = "DisplayName"
                         Settings  = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
@@ -105,6 +107,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Value = "English DisplayName"
                             } -ClientOnly)
                     } -clientOnly)
+
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Present"
             }
@@ -117,10 +120,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName      = "Test label"
                     ParentId         = "MyLabel"
                     Priority         = "2"
-                    AdvancedSettings = '[{"Key":"LabelStatus", "Value":"Enabled"}]'
+                    Settings = '{"Key": "LabelStatus",
+                                        "Value": "Enabled"}'
                     LocaleSettings   = '{"LocaleKey":"DisplayName",
                                          "Settings":[
                                          {"Key":"en-us","Value":"English Display Names"}]}'
+
                 }
             }
 
@@ -172,10 +177,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
-                Name               = "TestRule"
+                #Name               = "TestRule"
             }
-
-            Mock -CommandName Get-Label -MockWith {
+            Mock -CommandName Get-Label  -MockWith {
                 return @{
                     Name = "TestRule"
                 }
