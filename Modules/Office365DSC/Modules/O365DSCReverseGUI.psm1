@@ -433,7 +433,7 @@ function Show-O365GUI
         $pnlSC.Top = $pnlSPO.Height + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 125
         $pnlSC.Left = $SecondColumnLeft
 
-        $pnlSC.Height = 260
+        $pnlSC.Height = 360
         $pnlSC.Width = 300
         $pnlSC.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -509,8 +509,48 @@ function Show-O365GUI
         $chckSCDLPComplianceRule.Text = "Data Loss Prevention Compliance Rule"
         $pnlSC.Controls.Add($chckSCDLPComplianceRule)
 
+        $chckSCFilePlanPropertyAuthority = New-Object System.Windows.Forms.CheckBox
+        $chckSCFilePlanPropertyAuthority.Top = 180
+        $chckSCFilePlanPropertyAuthority.AutoSize = $true;
+        $chckSCFilePlanPropertyAuthority.Name = "chckSCFilePlanPropertyAuthority"
+        $chckSCFilePlanPropertyAuthority.Checked = $true
+        $chckSCFilePlanPropertyAuthority.Text = "File Plan Property Authority"
+        $pnlSC.Controls.Add($chckSCFilePlanPropertyAuthority)
+
+        $chckSCFilePlanPropertyCategory = New-Object System.Windows.Forms.CheckBox
+        $chckSCFilePlanPropertyCategory.Top = 200
+        $chckSCFilePlanPropertyCategory.AutoSize = $true;
+        $chckSCFilePlanPropertyCategory.Name = "chckSCFilePlanPropertyCategory"
+        $chckSCFilePlanPropertyCategory.Checked = $true
+        $chckSCFilePlanPropertyCategory.Text = "File Plan Property Category"
+        $pnlSC.Controls.Add($chckSCFilePlanPropertyCategory)
+
+        $chckSCFilePlanPropertyCitation = New-Object System.Windows.Forms.CheckBox
+        $chckSCFilePlanPropertyCitation.Top = 220
+        $chckSCFilePlanPropertyCitation.AutoSize = $true;
+        $chckSCFilePlanPropertyCitation.Name = "chckSCFilePlanPropertyCitation"
+        $chckSCFilePlanPropertyCitation.Checked = $true
+        $chckSCFilePlanPropertyCitation.Text = "File Plan Property Citation"
+        $pnlSC.Controls.Add($chckSCFilePlanPropertyCitation)
+
+        $chckSCFilePlanPropertyDepartment = New-Object System.Windows.Forms.CheckBox
+        $chckSCFilePlanPropertyDepartment.Top = 240
+        $chckSCFilePlanPropertyDepartment.AutoSize = $true;
+        $chckSCFilePlanPropertyDepartment.Name = "chckSCFilePlanPropertyDepartment"
+        $chckSCFilePlanPropertyDepartment.Checked = $true
+        $chckSCFilePlanPropertyDepartment.Text = "File Plan Property Department"
+        $pnlSC.Controls.Add($chckSCFilePlanPropertyDepartment)
+
+        $chckSCFilePlanPropertyReferenceId = New-Object System.Windows.Forms.CheckBox
+        $chckSCFilePlanPropertyReferenceId.Top = 260
+        $chckSCFilePlanPropertyReferenceId.AutoSize = $true;
+        $chckSCFilePlanPropertyReferenceId.Name = "chckSCFilePlanPropertyReferenceId"
+        $chckSCFilePlanPropertyReferenceId.Checked = $true
+        $chckSCFilePlanPropertyReferenceId.Text = "File Plan Property Reference ID"
+        $pnlSC.Controls.Add($chckSCFilePlanPropertyReferenceId)
+
         $chckSCRetentionCompliancePolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSCRetentionCompliancePolicy.Top = 180
+        $chckSCRetentionCompliancePolicy.Top = 280
         $chckSCRetentionCompliancePolicy.AutoSize = $true;
         $chckSCRetentionCompliancePolicy.Name = "chckSCRetentionCompliancePolicy"
         $chckSCRetentionCompliancePolicy.Checked = $true
@@ -518,7 +558,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCRetentionCompliancePolicy)
 
         $chckSCRetentionComplianceRule = New-Object System.Windows.Forms.CheckBox
-        $chckSCRetentionComplianceRule.Top = 200
+        $chckSCRetentionComplianceRule.Top = 300
         $chckSCRetentionComplianceRule.AutoSize = $true;
         $chckSCRetentionComplianceRule.Name = "chckSCRetentionComplianceRule"
         $chckSCRetentionComplianceRule.Checked = $true
@@ -534,7 +574,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCSensitivityLabel)
 
         $chckSCSupervisoryReviewPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSCSupervisoryReviewPolicy.Top = 220
+        $chckSCSupervisoryReviewPolicy.Top = 320
         $chckSCSupervisoryReviewPolicy.AutoSize = $true;
         $chckSCSupervisoryReviewPolicy.Name = "chckSCSupervisoryReviewPolicy"
         $chckSCSupervisoryReviewPolicy.Checked = $true
@@ -542,7 +582,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCSupervisoryReviewPolicy)
 
         $chckSCSupervisoryReviewRule = New-Object System.Windows.Forms.CheckBox
-        $chckSCSupervisoryReviewRule.Top = 240
+        $chckSCSupervisoryReviewRule.Top = 340
         $chckSCSupervisoryReviewRule.AutoSize = $true;
         $chckSCSupervisoryReviewRule.Name = "chckSCSupervisoryReviewRule"
         $chckSCSupervisoryReviewRule.Checked = $true

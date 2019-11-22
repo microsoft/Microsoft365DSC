@@ -9458,6 +9458,58 @@ function Remove-AuditConfigurationPolicy
     )
 }
 
+function New-FilePlanPropertyCitation
+{
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $CitationUrl,
+
+        [Parameter()]
+        [System.String]
+        $CitationJurisdiction
+    )
+}
+
+function Get-FilePlanPropertyCitation
+{
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-FilePlanPropertyCitation
+{
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function Set-FilePlanPropertyCitation
+{
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $CitationUrl,
+
+        [Parameter()]
+        [System.String]
+        $CitationJurisdiction
+    )
+}
+
 function Get-PnPUserProfileProperty {
     [CmdletBinding()]
     param(
@@ -10077,6 +10129,43 @@ param(
 
 
  }
+
+function Get-FilePlanPropertyAuthority
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function New-FilePlanPropertyAuthority
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name
+    )
+}
+
+function Remove-FilePlanPropertyAuthority
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
 
 
 function Get-AzureADDirectoryRoleTemplate {
@@ -13541,5 +13630,86 @@ function Get-Label{
         [System.String]
         $Name
 
+    )
+}
+
+function Get-FilePlanPropertyDepartment
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Get-FilePlanPropertyCategory
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Get-FilePlanPropertyReferenceId
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function New-FilePlanPropertyDepartment
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Name
+    )
+}
+
+function New-FilePlanPropertyCategory
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Name
+    )
+}
+
+function New-FilePlanPropertyReferenceId
+{
+    Param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Name
+    )
+}
+
+function Remove-FilePlanPropertyDepartment
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-FilePlanPropertyCategory
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-FilePlanPropertyReferenceId
+{
+    Param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Identity
     )
 }
