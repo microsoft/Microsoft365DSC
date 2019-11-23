@@ -565,14 +565,6 @@ function Show-O365GUI
         $chckSCRetentionComplianceRule.Text = "Retention Compliance Rule"
         $pnlSC.Controls.Add($chckSCRetentionComplianceRule)
 
-        $chckSCSensitivityLabel = New-Object System.Windows.Forms.CheckBox
-        $chckSCSensitivityLabel.Top = 200
-        $chckSCSensitivityLabel.AutoSize = $true;
-        $chckSCSensitivityLabel.Name = "chckSCSensitivityLabel"
-        $chckSCSensitivityLabel.Checked = $true
-        $chckSCSensitivityLabel.Text = "Sensitivity Labels"
-        $pnlSC.Controls.Add($chckSCSensitivityLabel)
-
         $chckSCSupervisoryReviewPolicy = New-Object System.Windows.Forms.CheckBox
         $chckSCSupervisoryReviewPolicy.Top = 320
         $chckSCSupervisoryReviewPolicy.AutoSize = $true;

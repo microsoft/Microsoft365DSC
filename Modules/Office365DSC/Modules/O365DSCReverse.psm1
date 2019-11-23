@@ -1011,19 +1011,95 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
-    #region "SCSensitivityLabel"
+    #region "SCFilePlanPropertyAuthority"
     if (($null -ne $ComponentsToExtract -and
-        $ComponentsToExtract.Contains("chckSCSensitivityLabel")) -or
-        $AllComponents)
+        $ComponentsToExtract.Contains("chckSCFilePlanPropertyAuthority")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
     {
-        Write-Information "Extracting SCSensitivityLabel..."
+        Write-Information "Extracting SCFilePlanPropertyAuthority..."
         Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                           -Platform SecurityComplianceCenter `
                           -ErrorAction SilentlyContinue
 
         $ModulePath = Join-Path -Path $PSScriptRoot `
-                                                   -ChildPath "..\DSCResources\MSFT_SCSensitivityLabel\MSFT_SCSensitivityLabel.psm1" `
-                                                   -Resolve
+                                -ChildPath "..\DSCResources\MSFT_SCFilePlanPropertyAuthority\MSFT_SCFilePlanPropertyAuthority.psm1" `
+                                -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "SCFilePlanPropertyCategory"
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckSCFilePlanPropertyCategory")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
+    {
+        Write-Information "Extracting SCFilePlanPropertyCategory..."
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                        -Platform SecurityComplianceCenter `
+                        -ErrorAction SilentlyContinue
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_SCFilePlanPropertyCategory\MSFT_SCFilePlanPropertyCategory.psm1" `
+                                -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "SCFilePlanPropertyCitation"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckSCFilePlanPropertyCitation")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
+    {
+        Write-Information "Extracting SCFilePlanPropertyCitation..."
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform SecurityComplianceCenter `
+                          -ErrorAction SilentlyContinue
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_SCFilePlanPropertyCitation\MSFT_SCFilePlanPropertyCitation.psm1" `
+                                -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "SCFilePlanPropertyDepartment"
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckSCFilePlanPropertyDepartment")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
+    {
+        Write-Information "Extracting SCFilePlanPropertyDepartment..."
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                        -Platform SecurityComplianceCenter `
+                        -ErrorAction SilentlyContinue
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_SCFilePlanPropertyDepartment\MSFT_SCFilePlanPropertyDepartment.psm1" `
+                                -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "SCFilePlanPropertyReferenceId"
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckSCFilePlanPropertyReferenceId")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
+    {
+        Write-Information "Extracting SCFilePlanPropertyReferenceId..."
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                        -Platform SecurityComplianceCenter `
+                        -ErrorAction SilentlyContinue
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_SCFilePlanPropertyReferenceId\MSFT_SCFilePlanPropertyReferenceId.psm1" `
+                                -Resolve
 
         Import-Module $ModulePath | Out-Null
         $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
