@@ -226,7 +226,6 @@ function Set-TargetResource
         Remove-Label -Identity $Name -Confirm:$false -forcedeletion:$true
     }
 }
-
 function Test-TargetResource
 {
     [CmdletBinding()]
@@ -314,7 +313,6 @@ function Test-TargetResource
         -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
-
     return $TestResult
 }
 
