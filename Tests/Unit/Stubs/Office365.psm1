@@ -13622,7 +13622,7 @@ function Set-Label{
 function Get-Label{
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Identity,
 

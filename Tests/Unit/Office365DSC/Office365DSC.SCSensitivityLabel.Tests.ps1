@@ -177,11 +177,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
-                #Name               = "TestRule"
             }
             Mock -CommandName Get-Label  -MockWith {
                 return @{
                     Name = "TestRule"
+                    Settings = '{"Key": "LabelStatus",
+                                        "Value": "Enabled"}'
+                    LocaleSettings   = '{"LocaleKey":"DisplayName",
+                                         "Settings":[
+                                         {"Key":"en-us","Value":"English Display Names"}]}'
                 }
             }
 
