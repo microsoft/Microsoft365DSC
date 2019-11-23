@@ -68,7 +68,7 @@ Configuration Example
                 }
             )
             ParentId           = "Personal"
-            GlobalAdminAccount = $GlobalAdminAccount
+            GlobalAdminAccount = $credsGlobalAdmin
             Ensure             = "Present"
         }
     }
