@@ -8,7 +8,7 @@ param
     [System.String]
     $GlobalAdminPassword,
 
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [System.String]
     $Domain
 )
@@ -17,11 +17,11 @@ Configuration Master
 {
     param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdmin,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Domain
     )
@@ -37,7 +37,7 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
         }
-<#
+        <#
         EXOAntiPhishPolicy AntiphishPolicy
         {
             MakeDefault                           = $null;
@@ -98,13 +98,13 @@ Configuration Master
 
         EXOCASMailboxPlan CASMailboxPlan
         {
-            ActiveSyncEnabled    = $True;
-            OwaMailboxPolicy     = "OwaMailboxPolicy-Default";
-            GlobalAdminAccount   = $GlobalAdmin;
-            PopEnabled           = $True;
-            Identity             = "ExchangeOnlineEssentials-759100cd-4fb6-46db-80ae-bb0ef4bd92b0";
-            Ensure               = "Present";
-            ImapEnabled          = $True;
+            ActiveSyncEnabled  = $True;
+            OwaMailboxPolicy   = "OwaMailboxPolicy-Default";
+            GlobalAdminAccount = $GlobalAdmin;
+            PopEnabled         = $True;
+            Identity           = "ExchangeOnlineEssentials-759100cd-4fb6-46db-80ae-bb0ef4bd92b0";
+            Ensure             = "Present";
+            ImapEnabled        = $True;
         }
 
         EXOClientAccessRule ClientAccessRule
@@ -220,14 +220,14 @@ Configuration Master
 
         O365Group O365DSCCoreTeam
         {
-            DisplayName          = "Office365DSC Core Team"
-            MailNickName         = "O365DSCCore"
-            ManagedBy            = "admin@$Domain"
-            Description          = "Group for all the Core Team members"
-            Members              = @("John.Smith@$Domain")
-            GlobalAdminAccount   = $GlobalAdmin
-            Ensure               = "Present"
-            DependsOn            = "[O365User]JohnSmith"
+            DisplayName        = "Office365DSC Core Team"
+            MailNickName       = "O365DSCCore"
+            ManagedBy          = "admin@$Domain"
+            Description        = "Group for all the Core Team members"
+            Members            = @("John.Smith@$Domain")
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+            DependsOn          = "[O365User]JohnSmith"
         }
 
         SCAuditConfigurationPolicy SharePointAuditPolicy
@@ -278,38 +278,38 @@ Configuration Master
 
         SCComplianceSearchAction DemoSearchActionExport
         {
-            IncludeSharePointDocumentVersions   = $False;
-            Action                              = "Export";
-            SearchName                          = "Integration Compliance Search - EXO";
-            GlobalAdminAccount                  = $GlobalAdmin;
-            IncludeCredential                   = $False;
-            RetryOnError                        = $False;
-            ActionScope                         = "IndexedItemsOnly";
-            Ensure                              = "Present";
-            EnableDedupe                        = $False;
+            IncludeSharePointDocumentVersions = $False;
+            Action                            = "Export";
+            SearchName                        = "Integration Compliance Search - EXO";
+            GlobalAdminAccount                = $GlobalAdmin;
+            IncludeCredential                 = $False;
+            RetryOnError                      = $False;
+            ActionScope                       = "IndexedItemsOnly";
+            Ensure                            = "Present";
+            EnableDedupe                      = $False;
         }
 
         SCComplianceSearchAction DemoSearchActionRetention
         {
-            IncludeSharePointDocumentVersions   = $False;
-            Action                              = "Retention";
-            SearchName                          = "Integration Compliance Search - EXO";
-            GlobalAdminAccount                  = $GlobalAdmin;
-            IncludeCredential                   = $False;
-            RetryOnError                        = $False;
-            ActionScope                         = "IndexedItemsOnly";
-            Ensure                              = "Present";
-            EnableDedupe                        = $False;
+            IncludeSharePointDocumentVersions = $False;
+            Action                            = "Retention";
+            SearchName                        = "Integration Compliance Search - EXO";
+            GlobalAdminAccount                = $GlobalAdmin;
+            IncludeCredential                 = $False;
+            RetryOnError                      = $False;
+            ActionScope                       = "IndexedItemsOnly";
+            Ensure                            = "Present";
+            EnableDedupe                      = $False;
         }
 
         SCComplianceSearchAction DemoSearchActionPurge
         {
-            Action                              = "Purge";
-            SearchName                          = "Integration Compliance Search - EXO";
-            GlobalAdminAccount                  = $GlobalAdmin;
-            IncludeCredential                   = $False;
-            RetryOnError                        = $False;
-            Ensure                              = "Present";
+            Action             = "Purge";
+            SearchName         = "Integration Compliance Search - EXO";
+            GlobalAdminAccount = $GlobalAdmin;
+            IncludeCredential  = $False;
+            RetryOnError       = $False;
+            Ensure             = "Present";
         }
 
         SCComplianceCase DemoCase
@@ -351,9 +351,10 @@ Configuration Master
             RetentionAction    = "Keep"
             RetentionDuration  = "1025"
             RetentionType      = "ModificationAgeInDays"
-            FilePlanProperty   = MSFT_SCFilePlanProperty{
+            FilePlanProperty   = MSFT_SCFilePlanProperty
+            {
                 FilePlanPropertyDepartment = "Human resources"
-                FilePlanPropertyCategory = "Accounts receivable"
+                FilePlanPropertyCategory   = "Accounts receivable"
             }
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
@@ -377,9 +378,9 @@ Configuration Master
             Ensure                              = "Present";
             GlobalAdminAccount                  = $GlobalAdmin
             ContentContainsSensitiveInformation = MSFT_SCDLPSensitiveInformation
-                                                  {
-                                                      name = "U.S. Social Security Number (SSN)"
-                                                  };
+            {
+                name = "U.S. Social Security Number (SSN)"
+            };
         }
 
         SCFilePlanPropertyAuthority FilePlanPropertyAuthority
@@ -468,22 +469,22 @@ Configuration Master
 
         SPOSite ClassicSite
         {
-            Title                = "Classic Site"
-            Url                  = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
-            Owner                = "adminnonMFA@$Domain"
-            Template             = "STS#0"
-            GlobalAdminAccount   = $GlobalAdmin
-            Ensure               = "Present"
+            Title              = "Classic Site"
+            Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
+            Owner              = "adminnonMFA@$Domain"
+            Template           = "STS#0"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
         }
 
         SPOSite ModernSite
         {
-            Title                = "Modern Site"
-            Url                  = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
-            Owner                = "adminnonmfa@$Domain"
-            Template             = "STS#3"
-            GlobalAdminAccount   = $GlobalAdmin
-            Ensure               = "Present"
+            Title              = "Modern Site"
+            Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+            Owner              = "adminnonmfa@$Domain"
+            Template           = "STS#3"
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
         }
 
         SPOPropertyBag MyKey
@@ -514,17 +515,19 @@ Configuration Master
 
         SPOTheme SPTheme01
         {
-                GlobalAdminAccount  = $GlobalAdmin
-                Name                = "Integration Palette"
-                Palette             = @(MSFT_SPOThemePaletteProperty{
-                                            Property = "themePrimary"
-                                            Value = "#0078d4"
-                                      }
-                                      MSFT_SPOThemePaletteProperty{
-                                          Property = "themeLighterAlt"
-                                          Value = "#eff6fc"
-                                      }
-                )
+            GlobalAdminAccount = $GlobalAdmin
+            Name               = "Integration Palette"
+            Palette            = @(MSFT_SPOThemePaletteProperty
+                {
+                    Property = "themePrimary"
+                    Value    = "#0078d4"
+                }
+                MSFT_SPOThemePaletteProperty
+                {
+                    Property = "themeLighterAlt"
+                    Value    = "#eff6fc"
+                }
+            )
         }
 
         <#SPOStorageEntity SiteEntity1
@@ -604,7 +607,7 @@ Configuration Master
             User               = "John.Smith@$($Domain)"
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
-            DependsON          = @("[O365User]JohnSmith","[TeamsTeam]TeamAlpha")
+            DependsON          = @("[O365User]JohnSmith", "[TeamsTeam]TeamAlpha")
         }
 
         SCSensitivityLabel SCSenLabel
@@ -664,8 +667,8 @@ Configuration Master
             Ensure             = "Present"
         }
     }
-    }
 }
+
 
 $ConfigurationData = @{
     AllNodes = @(
