@@ -102,7 +102,7 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting O365AdminAuditLogConfig..."
         try
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform ExchangeOnline `
                               -ErrorAction SilentlyContinue
 
@@ -188,7 +188,7 @@ function Start-O365ConfigurationExtract
     {
         try
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform ExchangeOnline `
                               -ErrorAction SilentlyContinue
 
@@ -235,7 +235,7 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting EXOCASMailboxPlan..."
         try
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform ExchangeOnline `
                               -ErrorAction SilentlyContinue
 
@@ -266,7 +266,7 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting EXOClientAccessRule..."
         try
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform ExchangeOnline `
                               -ErrorAction SilentlyContinue
 
@@ -296,7 +296,7 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting EXODkimSigningConfig..."
         try
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform ExchangeOnline `
                               -ErrorAction SilentlyContinue
 
@@ -339,7 +339,7 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting EXOHostedConnectionFilterPolicy..."
         try
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform ExchangeOnline `
                               -ErrorAction SilentlyContinue
 
@@ -369,7 +369,7 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting EXOHostedContentFilterPolicy..."
         try
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform ExchangeOnline `
                               -ErrorAction SilentlyContinue
             $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
@@ -398,7 +398,7 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting EXOHostedContentFilterRule..."
         try
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform ExchangeOnline `
                               -ErrorAction SilentlyContinue
 
@@ -428,7 +428,7 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting EXOHostedOutboundSpamFilterPolicy..."
         try
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform ExchangeOnline `
                               -ErrorAction SilentlyContinue
 
@@ -453,7 +453,7 @@ function Start-O365ConfigurationExtract
     {
         try
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform ExchangeOnline `
                               -ErrorAction SilentlyContinue
 
@@ -490,7 +490,7 @@ function Start-O365ConfigurationExtract
     {
         try
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform ExchangeOnline `
                               -ErrorAction SilentlyContinue
 
@@ -527,7 +527,7 @@ function Start-O365ConfigurationExtract
     {
         try
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform ExchangeOnline `
                               -ErrorAction SilentlyContinue
 
@@ -564,7 +564,7 @@ function Start-O365ConfigurationExtract
     {
         try
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform ExchangeOnline `
                               -ErrorAction SilentlyContinue
 
@@ -602,7 +602,7 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting EXOMailTips..."
         try
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform ExchangeOnline `
                               -ErrorAction SilentlyContinue
 
@@ -644,7 +644,7 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting EXOSharedMailbox..."
         try
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform ExchangeOnline `
                               -ErrorAction SilentlyContinue
 
@@ -698,7 +698,7 @@ function Start-O365ConfigurationExtract
                                         -Resolve
 
         Import-Module $O365UserModulePath | Out-Null
-        Test-MSCloudLogin -Platform MSOnline -O365Credential $GlobalAdminAccount
+        Test-MSCloudLogin -Platform MSOnline -CloudCredential $GlobalAdminAccount
 
         $users = Get-MsolUser
         $partialContent = ""
@@ -740,7 +740,7 @@ function Start-O365ConfigurationExtract
         Import-Module $O365GroupModulePath | Out-Null
 
         # Other Groups
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform AzureAD
         $groups = Get-AzureADGroup | Where-Object -FilterScript {
                                          $_.MailNickName -ne "00000000-0000-0000-0000-000000000000"
@@ -782,7 +782,7 @@ function Start-O365ConfigurationExtract
         Import-Module $EXOMailboxSettingsModulePath | Out-Null
         try
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform ExchangeOnline `
                               -ErrorAction SilentlyContinue
 
@@ -897,7 +897,7 @@ function Start-O365ConfigurationExtract
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
     {
         Write-Information "Extracting SCComplianceSearch..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform SecurityComplianceCenter `
                           -ErrorAction SilentlyContinue
 
@@ -916,7 +916,7 @@ function Start-O365ConfigurationExtract
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
     {
         Write-Information "Extracting SCComplianceSearchAction..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform SecurityComplianceCenter `
                           -ErrorAction SilentlyContinue
 
@@ -960,7 +960,7 @@ function Start-O365ConfigurationExtract
         try
         {
             Write-Information "Extracting SCDLPCompliancePolicy..."
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform SecurityComplianceCenter `
                               -ErrorAction SilentlyContinue
 
@@ -998,7 +998,7 @@ function Start-O365ConfigurationExtract
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
     {
         Write-Information "Extracting SCDLPComplianceRule..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform SecurityComplianceCenter `
                           -ErrorAction SilentlyContinue
 
@@ -1017,7 +1017,7 @@ function Start-O365ConfigurationExtract
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
     {
         Write-Information "Extracting SCFilePlanPropertyAuthority..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform SecurityComplianceCenter `
                           -ErrorAction SilentlyContinue
 
@@ -1036,7 +1036,7 @@ function Start-O365ConfigurationExtract
     $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
     {
         Write-Information "Extracting SCFilePlanPropertyCategory..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                         -Platform SecurityComplianceCenter `
                         -ErrorAction SilentlyContinue
 
@@ -1055,7 +1055,7 @@ function Start-O365ConfigurationExtract
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
     {
         Write-Information "Extracting SCFilePlanPropertyCitation..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform SecurityComplianceCenter `
                           -ErrorAction SilentlyContinue
 
@@ -1074,7 +1074,7 @@ function Start-O365ConfigurationExtract
     $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
     {
         Write-Information "Extracting SCFilePlanPropertyDepartment..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                         -Platform SecurityComplianceCenter `
                         -ErrorAction SilentlyContinue
 
@@ -1093,7 +1093,7 @@ function Start-O365ConfigurationExtract
     $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
     {
         Write-Information "Extracting SCFilePlanPropertyReferenceId..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                         -Platform SecurityComplianceCenter `
                         -ErrorAction SilentlyContinue
 
@@ -1114,7 +1114,7 @@ function Start-O365ConfigurationExtract
         try
         {
             Write-Information "Extracting SCRetentionCompliancePolicy..."
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform SecurityComplianceCenter `
                               -ErrorAction SilentlyContinue
 
@@ -1155,7 +1155,7 @@ function Start-O365ConfigurationExtract
         try
         {
             Write-Information "Extracting SCRetentionComplianceRule..."
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform SecurityComplianceCenter `
                               -ErrorAction SilentlyContinue
 
@@ -1212,7 +1212,7 @@ function Start-O365ConfigurationExtract
         try
         {
             Write-Information "Extracting SCSupervisoryReviewPolicy..."
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform SecurityComplianceCenter `
                               -ErrorAction SilentlyContinue
 
@@ -1258,7 +1258,7 @@ function Start-O365ConfigurationExtract
         try
         {
             Write-Information "Extracting SCSupervisoryReviewRule..."
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform SecurityComplianceCenter `
                               -ErrorAction SilentlyContinue
 
@@ -1295,6 +1295,22 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "SPOAccessControlSettings"
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckSPOAccessControlSettings")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SPO")))
+    {
+        Write-Information "Extracting SPOAccessControlSettings..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_SPOAccessControlSettings\MSFT_SPOAccessControlSettings.psm1" `
+                                -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region SPOApp
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSPOApp")) -or
@@ -1306,13 +1322,13 @@ function Start-O365ConfigurationExtract
                                       -Resolve
 
         Import-Module $SPOAppModulePath | Out-Null
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform PnP
         try
         {
             $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
             Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
-                              -O365Credential $GlobalAdminAccount `
+                              -CloudCredential $GlobalAdminAccount `
                               -Platform PnP
 
             if (-not [string]::IsNullOrEmpty($tenantAppCatalogUrl))
@@ -1354,7 +1370,7 @@ function Start-O365ConfigurationExtract
                 }
 
                 Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
-                                -O365Credential $GlobalAdminAccount `
+                                -CloudCredential $GlobalAdminAccount `
                                 -Platform PnP
 
                 foreach ($file in $allFiles)
@@ -1388,7 +1404,7 @@ function Start-O365ConfigurationExtract
 
         Import-Module $SPOSiteModulePath | Out-Null
 
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform SharePointOnline
         $invalidTemplates = @("SRCHCEN#0", "GROUP#0", "SPSMSITEHOST#0", "POINTPUBLISHINGHUB#0", "POINTPUBLISHINGTOPIC#0")
         $sites = Get-SPOSite -Limit All | Where-Object -FilterScript { $_.Template -notin $invalidTemplates }
@@ -1473,7 +1489,7 @@ function Start-O365ConfigurationExtract
         $partialContent = ""
         if ($centralAdminUrl)
         {
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform SharePointOnline
 
             $hubSites = Get-SPOHubSite
@@ -1539,7 +1555,7 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSearchResultSourceModulePath | Out-Null
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform PnP
         $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
         $sources =  $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
@@ -1576,7 +1592,7 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSearchManagedPropertyModulePath | Out-Null
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform PnP
         $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
         $properties =  $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
@@ -1628,7 +1644,7 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSiteDesignModulePath | Out-Null
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform PnP
 
         $siteDesigns = Get-PnPSiteDesign
@@ -1658,7 +1674,7 @@ function Start-O365ConfigurationExtract
                                                         -Resolve
 
         Import-Module $SPOSiteDesignModulePath | Out-Null
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform PnP
 
         $siteDesigns = Get-PnPSiteDesign
@@ -1689,7 +1705,7 @@ function Start-O365ConfigurationExtract
 
         Import-Module $SPOModulePath | Out-Null
 
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform PnP
 
         $storageEntities = Get-PnPStorageEntity
@@ -1840,7 +1856,7 @@ function Start-O365ConfigurationExtract
         try
         {
             Write-Information "Extracting TeamsChannel..."
-            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                               -Platform MicrosoftTeams
             $TeamsChannelModulePath = Join-Path -Path $PSScriptRoot `
                                             -ChildPath "..\DSCResources\MSFT_TeamsChannel\MSFT_TeamsChannel.psm1" `
@@ -1878,7 +1894,7 @@ function Start-O365ConfigurationExtract
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
     {
 
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform MicrosoftTeams
         Write-Information "Extracting TeamsUser..."
         $ModulePath = Join-Path -Path $PSScriptRoot `

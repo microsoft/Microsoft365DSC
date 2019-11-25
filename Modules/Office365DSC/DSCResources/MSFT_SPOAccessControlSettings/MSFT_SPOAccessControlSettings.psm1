@@ -296,20 +296,20 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Yes')]
-        [String]
-        $IsSingleInstance,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
+
+    $params = @{
+        IsSingleInstance   = 'Yes'
+        GlobalAdminAccount = $GlobalAdminAccount
+    }
+    $result = Get-TargetResource @params
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "SPOAccessControlSettings " + (New-GUID).ToString() + "`r`n"
-    $content += "{`r`n"
+    $content = "        SPOAccessControlSettings " + (New-GUID).ToString() + "`r`n"
+    $content += "       {`r`n"
     $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += "}`r`n"
+    $content += "        }`r`n"
     return $content
 }
 
