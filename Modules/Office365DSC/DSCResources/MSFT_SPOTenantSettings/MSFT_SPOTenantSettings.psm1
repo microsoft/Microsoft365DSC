@@ -118,10 +118,19 @@ function Get-TargetResource
     {
         $SPOTenantSettings = Get-PNPTenant
 
+        $CompatibilityRange = $SPOTenantSettings.CompatibilityRange.Split(',')
+        $MinCompat = $null
+        $MaxCompat = $null
+        if ($CompatibilityRange.Length -eq 2)
+        {
+            $MinCompat = $CompatibilityRange[0]
+            $MaxCompat = $CompatibilityRange[1]
+        }
+
         return @{
             IsSingleInstance                              = 'Yes'
-            MinCompatibilityLevel                         = $SPOTenantSettings.MinCompatibilityLevel
-            MaxCompatibilityLevel                         = $SPOTenantSettings.MaxCompatibilityLevel
+            MinCompatibilityLevel                         = $MinCompat
+            MaxCompatibilityLevel                         = $MaxCompat
             SearchResolveExactEmailOrUPN                  = $SPOTenantSettings.SearchResolveExactEmailOrUPN
             OfficeClientADALDisabled                      = $SPOTenantSettings.OfficeClientADALDisabled
             LegacyAuthProtocolsEnabled                    = $SPOTenantSettings.LegacyAuthProtocolsEnabled

@@ -128,6 +128,22 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "EXOAcceptedDomain"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckEXOAcceptedDomain")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("EXO")))
+    {
+        Write-Information "Extracting EXOAcceptedDomain..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_EXOAcceptedDomain\MSFT_EXOAcceptedDomain.psm1" `
+                                -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "EXOAntiPhishPolicy"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckEXOAntiPhishPolicy")) -or
@@ -457,7 +473,7 @@ function Start-O365ConfigurationExtract
                               -Platform ExchangeOnline `
                               -ErrorAction SilentlyContinue
 
-            if (Confirm-ImportedCmdletIsAvailable -CmdletName GetSafeAttachmentPolicy)
+            if (Confirm-ImportedCmdletIsAvailable -CmdletName 'Get-SafeAttachmentPolicy')
             {
                 Write-Information "Extracting EXOSafeAttachmentPolicy..."
                 $SafeAttachmentPolicies = Get-SafeAttachmentPolicy

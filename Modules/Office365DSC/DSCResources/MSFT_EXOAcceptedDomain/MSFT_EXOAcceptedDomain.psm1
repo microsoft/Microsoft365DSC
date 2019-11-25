@@ -215,22 +215,40 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidatePattern('(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
-        [System.String]
-        $Identity,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        EXOAcceptedDomain " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
-    return $content
+    $InformationPreference = 'Continue'
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform ExchangeOnline
+
+    $AllAcceptedDomains = Get-AcceptedDomain
+
+    $dscContent = ""
+    $i = 0
+    $totalCount = $AllAcceptedDomains.Count
+    if ($null = $totalCount)
+    {
+        $totalCount = 1
+    }
+    foreach ($domain in $AllAcceptedDomains)
+    {
+        Write-Information "    [$i/$totalCount] $($domain.Identity)"
+
+        $Params = @{
+            Identity           = $domain.Identity
+            GLobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @Params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content = "        EXOAcceptedDomain " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        $dscContent += $content
+    }
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource
