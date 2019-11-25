@@ -307,8 +307,9 @@ function Export-TargetResource
     $result = Get-TargetResource @params
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        SPOAccessControlSettings " + (New-GUID).ToString() + "`r`n"
-    $content += "       {`r`n"
-    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += "        {`r`n"
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
     $content += "        }`r`n"
     return $content
 }
