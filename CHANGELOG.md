@@ -16,10 +16,12 @@
 * SCFilePlanPropertyCategory
   * Initial Release;
 * SCFilePlanPropertyCitation
-  * Initial release;
+  * Initial Release;
 * SCFilePlanPropertyDepartment
   * Initial Release;
 * SCFilePlanPropertyReferenceID
+  * Initial Release;
+* SCFilePlanPropertySubCategory
   * Initial Release;
 * SPOPropertyBag
   * Added multithreading;

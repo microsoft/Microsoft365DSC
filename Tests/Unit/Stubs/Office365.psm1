@@ -13681,6 +13681,15 @@ function Get-FilePlanPropertyCategory
     )
 }
 
+function Get-FilePlanPropertySubCategory
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
 function Get-FilePlanPropertyReferenceId
 {
     Param(
@@ -13708,6 +13717,19 @@ function New-FilePlanPropertyCategory
     )
 }
 
+function New-FilePlanPropertySubCategory
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $ParentId
+    )
+}
+
 function New-FilePlanPropertyReferenceId
 {
     Param(
@@ -13722,7 +13744,11 @@ function Remove-FilePlanPropertyDepartment
     Param(
         [Parameter()]
         [System.String]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
     )
 }
 
@@ -13731,7 +13757,24 @@ function Remove-FilePlanPropertyCategory
     Param(
         [Parameter()]
         [System.String]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function Remove-FilePlanPropertySubCategory
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
     )
 }
 
@@ -13740,7 +13783,11 @@ function Remove-FilePlanPropertyReferenceId
     Param(
         [Parameter(Mandatory=$true)]
         [System.String]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
     )
 }
 
