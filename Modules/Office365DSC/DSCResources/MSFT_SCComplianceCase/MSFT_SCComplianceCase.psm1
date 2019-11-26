@@ -202,26 +202,28 @@ function Export-TargetResource
     $InformationPreference = "Continue"
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
-    $Cases = Get-ComplianceCase
+    [array]$Cases = Get-ComplianceCase
 
+    $dscContent = ""
     $i = 1
     foreach ($Case in $Cases)
     {
-        Write-Information "    - [$i/$($Cases.Length)] $($Case.Name)"
+        Write-Information "    - [$i/$($Cases.Count)] $($Case.Name)"
         $params = @{
             Name               = $Case.Name
             GlobalAdminAccount = $GlobalAdminAccount
         }
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content = "        SCComplianceCase " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
+        $partialContent = "        SCComplianceCase " + (New-GUID).ToString() + "`r`n"
+        $partialContent += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
+        $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $partialContent += "        }`r`n"
+        $dscContent += $partialContent
         $i++
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource
