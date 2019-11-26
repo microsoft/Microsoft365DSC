@@ -582,6 +582,25 @@ Configuration Master
             Ensure             = "Present"
         }
 
+        TeamsClientConfiguration TeamsClientConfiguration
+        {
+            AllowBox                         = $True;
+            AllowDropBox                     = $True;
+            AllowEmailIntoChannel            = $True;
+            AllowGoogleDrive                 = $True;
+            AllowGuestUser                   = $True;
+            AllowOrganizationTab             = $True;
+            AllowResourceAccountSendMessage  = $True;
+            AllowScopedPeopleSearchandAccess = $False;
+            AllowShareFile                   = $True;
+            AllowSkypeBusinessInterop        = $True;
+            ContentPin                       = "RequiredOutsideScheduleMeeting";
+            GlobalAdminAccount               = $GlobalAdmin;
+            Identity                         = "Global";
+            ResourceAccountContentAccess     = "NoAccess";
+            RestrictedSenderList             = $null;
+        }
+
         TeamsTeam TeamAlpha
         {
             DisplayName          = "Alpha Team"

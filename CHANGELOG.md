@@ -30,6 +30,8 @@
     still using SPO management shell cmdlets instead of PnP
 * SPOUserProfileProperty
   * Introduced Multi-Threading
+* TeamsClientConfiguration
+  * Initial Release;
 * TeamsUser
   * Introduced Multi-Threading;
 * Metadata

@@ -6,86 +6,98 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateLength(1, 50)]
-        $DisplayName,
+        [ValidateSet('Global')]
+        $Identity,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $TeamName,
+        [Parameter()]
+        [System.Boolean]
+        $AllowBox,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDropBox,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowEmailIntoChannel,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGoogleDrive,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOrganizationTab,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowResourceAccountSendMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowScopedPeopleSearchandAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowShareFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSkypeBusinessInterop,
 
         [Parameter()]
         [System.String]
-        [ValidateLength(0, 50)]
-        $NewDisplayName,
+        [ValidateSet('NotRequired', 'RequiredOutsideScheduleMeeting', 'AlwaysRequired')]
+        $ContentPin = 'RequiredOutsideScheduledMeeting',
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1, 1024)]
-        $Description,
+        [ValidateSet('NoAccess','PartialAccess','FullAccess')]
+        $ResourceAccountContentAccess,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
-        [System.String]
-        $Ensure = "Present",
+        [System.String[]]
+        $RestrictedSenderList,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of Teams channel $DisplayName"
+    Write-Verbose -Message "Getting configuration of Teams Client"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform MicrosoftTeams
-
-    $nullReturn = @{
-        TeamName           = $TeamName
-        DisplayName        = $DisplayName
-        Description        = $Description
-        NewDisplayName     = $NewDisplayName
-        Ensure             = "Absent"
-        GlobalAdminAccount = $GlobalAdminAccount
-    }
-    Write-Verbose -Message "Checking for existance of team channels"
-    $CurrentParameters = $PSBoundParameters
+                      -Platform SkypeForBusiness
 
     try
     {
-        $team = Get-TeamByName $TeamName
-
-        Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
-
-        $channel = Get-TeamChannel -GroupId $team.GroupId `
-                                   -ErrorAction SilentlyContinue `
-                                        | Where-Object -FilterScript {
-                                            ($_.DisplayName -eq $DisplayName)
-                                          }
-
-        #Current channel doesnt exist and trying to rename throw an error
-        if (($null -eq $channel) -and $CurrentParameters.ContainsKey("NewDisplayName"))
-        {
-            Write-Verbose -Message "Cannot rename channel $DisplayName , doesnt exist in current Team"
-            throw "Channel named $DisplayName doesn't exist in current Team"
-        }
-
-        if ($null -eq $channel)
-        {
-            Write-Verbose -Message "Failed to get team channels with ID $($team.GroupId) and display name of $DisplayName"
-            return $nullReturn
-        }
+        $config = Get-CsTeamsClientConfiguration
 
         return @{
-            DisplayName        = $channel.DisplayName
-            TeamName           = $team.DisplayName
-            Description        = $channel.Description
-            NewDisplayName     = $NewDisplayName
-            Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdminAccount
+            Identity                         = $config.Identity
+            AllowBox                         = $config.AllowBox
+            AllowDropBox                     = $config.AllowDropBox
+            AllowEmailIntoChannel            = $config.AllowEmailIntoChannel
+            AllowGoogleDrive                 = $config.AllowGoogleDrive
+            AllowGuestUser                   = $config.AllowGuestUser
+            AllowOrganizationTab             = $config.AllowOrganizationTab
+            AllowResourceAccountSendMessage  = $config.AllowResourceAccountSendMessage
+            AllowScopedPeopleSearchandAccess = $config.AllowScopedPeopleSearchandAccess
+            AllowShareFile                   = $config.AllowShareFile
+            AllowSkypeBusinessInterop        = $config.AllowSkypeBusinessInterop
+            ContentPin                       = $config.ContentPin
+            ResourceAccountContentAccess     = $config.ResourceAccountContentAccess
+            RestrictedSenderList             = $config.RestrictedSenderList
+            GlobalAdminAccount               = $GlobalAdminAccount
         }
     }
     catch
     {
-        return $nullReturn
+        throw $_
     }
 }
 
@@ -96,84 +108,77 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateLength(1, 50)]
-        $DisplayName,
+        [ValidateSet('Global')]
+        $Identity,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $TeamName,
+        [Parameter()]
+        [System.Boolean]
+        $AllowBox,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDropBox,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowEmailIntoChannel,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGoogleDrive,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOrganizationTab,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowResourceAccountSendMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowScopedPeopleSearchandAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowShareFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSkypeBusinessInterop,
 
         [Parameter()]
         [System.String]
-        [ValidateLength(0, 50)]
-        $NewDisplayName,
+        [ValidateSet('NotRequired', 'RequiredOutsideScheduleMeeting', 'AlwaysRequired')]
+        $ContentPin = 'RequiredOutsideScheduledMeeting',
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1, 1024)]
-        $Description,
+        [ValidateSet('NoAccess','PartialAccess','FullAccess')]
+        $ResourceAccountContentAccess,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
-        [System.String]
-        $Ensure = "Present",
+        [System.String[]]
+        $RestrictedSenderList,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of Teams channel $DisplayName"
+    Write-Verbose -Message "Setting configuration of Teams Client"
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform MicrosoftTeams
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+                      -Platform SkypeForBusiness
 
-    $channel = Get-TargetResource @PSBoundParameters
+    $SetParams = $PSBoundParameters
+    $SetParams.Remove("GlobalAdminAccount")
 
-    $CurrentParameters = $PSBoundParameters
-
-    $team = Get-TeamByName $TeamName
-
-    if ($team.Length -gt 1)
-    {
-        throw "Multiple Teams with name {$($TeamName)} were found"
-    }
-    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
-
-    $CurrentParameters.Remove("TeamName")
-    $CurrentParameters.Add("GroupId", $team.GroupId)
-    $CurrentParameters.Remove("GlobalAdminAccount")
-    $CurrentParameters.Remove("Ensure")
-
-    if ($Ensure -eq "Present")
-    {
-        # Remap attribute from DisplayName to current display name for Set-TeamChannel cmdlet
-        if ($channel.Ensure -eq "Present")
-        {
-            if ($CurrentParameters.ContainsKey("NewDisplayName"))
-            {
-                Write-Verbose -Message "Updating team channel to new channel name $NewDisplayName"
-                Set-TeamChannel @CurrentParameters -CurrentDisplayName $DisplayName
-            }
-        }
-        else
-        {
-            if ($CurrentParameters.ContainsKey("NewDisplayName"))
-            {
-                $CurrentParameters.Remove("NewDisplayName")
-            }
-            Write-Verbose -Message "Creating team channel  $DislayName"
-            New-TeamChannel @CurrentParameters
-        }
-    }
-    else
-    {
-        if ($channel.DisplayName)
-        {
-            Write-Verbose -Message "Removing team channel $DislayName"
-            Remove-TeamChannel -GroupId $team.GroupId -DisplayName $DisplayName
-        }
-    }
+    Set-CsTeamsClientConfiguration @SetParams
 }
 
 function Test-TargetResource
@@ -184,44 +189,81 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateLength(1, 50)]
-        $DisplayName,
+        [ValidateSet('Global')]
+        $Identity,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $TeamName,
+        [Parameter()]
+        [System.Boolean]
+        $AllowBox,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDropBox,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowEmailIntoChannel,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGoogleDrive,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOrganizationTab,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowResourceAccountSendMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowScopedPeopleSearchandAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowShareFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSkypeBusinessInterop,
 
         [Parameter()]
         [System.String]
-        [ValidateLength(0, 50)]
-        $NewDisplayName,
+        [ValidateSet('NotRequired', 'RequiredOutsideScheduleMeeting', 'AlwaysRequired')]
+        $ContentPin = 'RequiredOutsideScheduledMeeting',
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1, 1024)]
-        $Description,
+        [ValidateSet('NoAccess','PartialAccess','FullAccess')]
+        $ResourceAccountContentAccess,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
-        [System.String]
-        $Ensure = "Present",
+        [System.String[]]
+        $RestrictedSenderList,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of Teams channel $DisplayName"
+    Write-Verbose -Message "Testing configuration of Teams Client"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
                                                   -Source $($MyInvocation.MyCommand.Source) `
                                                   -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure")
+                                                  -ValuesToCheck $ValuesToCheck
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -235,21 +277,17 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateLength(1, 50)]
-        $DisplayName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $TeamName,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
+
+    $params = @{
+        Identity           = "Global"
+        GlobalAdminAccount = $GlobalAdminAccount
+    }
+    $result = Get-TargetResource @params
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        TeamsChannel " + (New-GUID).ToString() + "`r`n"
+    $content = "        TeamsClientConfiguration " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"

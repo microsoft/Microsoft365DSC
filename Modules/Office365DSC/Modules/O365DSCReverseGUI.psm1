@@ -618,7 +618,7 @@ function Show-O365GUI
         $pnlTeams = New-Object System.Windows.Forms.Panel
         $pnlTeams.Top = 88 + $topBannerHeight
         $pnlTeams.Left = $ThirdColumnLeft
-        $pnlTeams.Height = 60
+        $pnlTeams.Height = 80
         $pnlTeams.Width = 300
         $pnlTeams.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -630,8 +630,16 @@ function Show-O365GUI
         $chckTeamsChannel.Text = "Channels"
         $pnlTeams.Controls.Add($chckTeamsChannel)
 
+        $chckTeamsClientConfiguration = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsClientConfiguration.Top = 20
+        $chckTeamsClientConfiguration.AutoSize = $true;
+        $chckTeamsClientConfiguration.Name = "chckTeamsClientConfiguration"
+        $chckTeamsClientConfiguration.Checked = $true
+        $chckTeamsClientConfiguration.Text = "Client Configuration"
+        $pnlTeams.Controls.Add($chckTeamsClientConfiguration)
+
         $chckTeamsTeam = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsTeam.Top = 20
+        $chckTeamsTeam.Top = 40
         $chckTeamsTeam.AutoSize = $true;
         $chckTeamsTeam.Name = "chckTeamsTeam"
         $chckTeamsTeam.Checked = $true
@@ -639,7 +647,7 @@ function Show-O365GUI
         $pnlTeams.Controls.Add($chckTeamsTeam)
 
         $chckTeamsUser = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsUser.Top = 40
+        $chckTeamsUser.Top = 60
         $chckTeamsUser.AutoSize = $true;
         $chckTeamsUser.Name = "chckTeamsUser"
         $chckTeamsUser.Checked = $true
