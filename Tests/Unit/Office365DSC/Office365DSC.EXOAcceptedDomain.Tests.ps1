@@ -200,7 +200,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
-                Identity           = "contoso.com"
             }
 
             It "Should Reverse Engineer resource from the Export method" {

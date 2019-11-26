@@ -23,7 +23,7 @@ function Get-TargetResource
         $MailNickName,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $Owner,
 
         [Parameter()]
@@ -169,9 +169,13 @@ function Get-TargetResource
         }
 
         $Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object {$_.Role -eq "owner"}
+        $OwnersArray = @()
         if ($null -ne $Owners)
         {
-            $Owners = $Owners.User.ToString()
+            foreach ($owner in $Owners.User)
+            {
+                $OwnersArray += $owner[0].ToString()
+            }
         }
         Write-Verbose -Message "Found Team $($team.DisplayName)."
 
@@ -179,7 +183,7 @@ function Get-TargetResource
             DisplayName                       = $team.DisplayName
             GroupID                           = $team.GroupId
             Description                       = $team.Description
-            Owner                             = $Owners
+            Owner                             = $OwnersArray
             MailNickName                      = $team.MailNickName
             Visibility                        = $team.Visibility
             AllowAddRemoveApps                = $team.AllowAddRemoveApps
@@ -233,7 +237,7 @@ function Set-TargetResource
         $MailNickName,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $Owner,
 
         [Parameter()]
@@ -349,6 +353,10 @@ function Set-TargetResource
             $CurrentParameters.Remove("GroupID")
         }
         Write-Verbose -Message "Creating team $DisplayName"
+        if ($null -ne $Owner)
+        {
+            $CurrentParameters.Owner = $Owner[0]
+        }
         New-Team @CurrentParameters
     }
     elseif ($Ensure -eq "Absent" -and ($team.Ensure -eq "Present"))
@@ -383,7 +391,7 @@ function Test-TargetResource
         $MailNickName,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $Owner,
 
         [Parameter()]
