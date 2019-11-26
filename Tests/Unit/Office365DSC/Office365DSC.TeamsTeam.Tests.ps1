@@ -48,7 +48,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 AllowCustomMemes                  = $True
                 AllowGuestCreateUpdateChannels    = $false
                 AllowGuestDeleteChannels          = $false
-                Owner                             = "JohnDoe@contoso.com"
+                Owner                             = @("JohnDoe@contoso.com")
                 GlobalAdminAccount                = $GlobalAdminAccount
             }
 
@@ -78,7 +78,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DisplayName        = "TestTeam"
                 Ensure             = "Present"
                 GroupID            = "1234-1234-1234-1234"
-                Owner              = "owner@contoso.com"
+                Owner              = @("owner@contoso.com")
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -115,7 +115,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Present"
                 Description        = "Test Team"
                 Visibility         = "Private"
-                Owner              = "owner@contoso.com"
+                Owner              = @("owner@contoso.com")
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

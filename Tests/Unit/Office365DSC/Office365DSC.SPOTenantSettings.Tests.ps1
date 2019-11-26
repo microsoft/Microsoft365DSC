@@ -51,8 +51,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Set-PnPTenant -MockWith {
                 return @{
-                    MinCompatibilityLevel                           = 16
-                    MaxCompatibilityLevel                           = 16
+                    CompatibilityRange                              = "16,16"
                     SearchResolveExactEmailOrUPN                    = $false
                     OfficeClientADALDisabled                        = $false
                     LegacyAuthProtocolsEnabled                      = $true
@@ -73,8 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPTenant -MockWith {
                 return @{
-                    MinCompatibilityLevel                           = 16
-                    MaxCompatibilityLevel                           = 16
+                    CompatibilityRange                              = "16,16"
                     SearchResolveExactEmailOrUPN                    = $false
                     OfficeClientADALDisabled                        = $false
                     LegacyAuthProtocolsEnabled                      = $true
@@ -110,8 +108,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPTenant -MockWith {
                 return @{
-                    MinCompatibilityLevel                           = 16
-                    MaxCompatibilityLevel                           = 16
+                    CompatibilityRange                              = "16,16"
                     SearchResolveExactEmailOrUPN                    = $false
                     OfficeClientADALDisabled                        = $false
                     LegacyAuthProtocolsEnabled                      = $true

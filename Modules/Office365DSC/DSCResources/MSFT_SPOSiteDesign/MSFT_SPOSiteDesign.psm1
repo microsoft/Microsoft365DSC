@@ -76,8 +76,12 @@ function Get-TargetResource
     $scriptTitles = @()
     foreach ($scriptId in $siteDesign.SiteScriptIds)
     {
-        $siteScript = Get-PnPSiteScript -Identity $scriptId
-        $scriptTitles += $siteScript.Title
+        $siteScript = Get-PnPSiteScript -Identity $scriptId -ErrorAction SilentlyContinue
+
+        if ($null -ne $siteScript)
+        {
+            $scriptTitles += $siteScript.Title
+        }
     }
     ## Todo need to see if we can get this somehow from PNP module instead of hard coded in script
     ## https://github.com/SharePoint/PnP-PowerShell/blob/master/Commands/Enums/SiteWebTemplate.cs
