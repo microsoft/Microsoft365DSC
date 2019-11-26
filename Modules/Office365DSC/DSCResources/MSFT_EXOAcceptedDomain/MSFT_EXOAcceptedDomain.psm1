@@ -222,18 +222,13 @@ function Export-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform ExchangeOnline
 
-    $AllAcceptedDomains = Get-AcceptedDomain
+    [array]$AllAcceptedDomains = Get-AcceptedDomain
 
     $dscContent = ""
-    $i = 0
-    $totalCount = $AllAcceptedDomains.Count
-    if ($null = $totalCount)
-    {
-        $totalCount = 1
-    }
+    $i = 1
     foreach ($domain in $AllAcceptedDomains)
     {
-        Write-Information "    [$i/$totalCount] $($domain.Identity)"
+        Write-Information "    [$i/$($AllAcceptedDomains.Count)] $($domain.Identity)"
 
         $Params = @{
             Identity           = $domain.Identity
@@ -247,6 +242,7 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $dscContent += $content
+        $i++
     }
     return $dscContent
 }

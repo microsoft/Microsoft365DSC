@@ -202,8 +202,38 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            It "Should Reverse Engineer resource from the Export method" {
-                Export-TargetResource @testParams
+            $acceptedDomain1 = @{
+                DomainType         = 'Authoritative'
+                Identity           = 'different1.tailspin.com'
+                MatchSubDomains    = $false
+                OutboundOnly       = $false
+            }
+
+            $acceptedDomain2 = @{
+                DomainType         = 'Authoritative'
+                Identity           = 'different2.tailspin.com'
+                MatchSubDomains    = $false
+                OutboundOnly       = $false
+            }
+
+            It "Should Reverse Engineer resource from the Export method when single" {
+                Mock -CommandName Get-AcceptedDomain -MockWith {
+                    return $acceptedDomain1
+                }
+
+                $exported = Export-TargetResource @testParams
+                ([regex]::Matches($exported, " EXOAcceptedDomain " )).Count | Should Be 1
+                $exported.Contains("different1.tailspin.com") | Should Be $true
+            }
+
+            It "Should Reverse Engineer resource from the Export method when multiple" {
+                Mock -CommandName Get-AcceptedDomain -MockWith {
+                    return @($acceptedDomain1, $acceptedDomain2)
+                }
+
+                $exported = Export-TargetResource @testParams
+                ([regex]::Matches($exported, " EXOAcceptedDomain " )).Count | Should Be 2
+                $exported.Contains("different2.tailspin.com") | Should Be $true
             }
         }
     }

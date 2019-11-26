@@ -171,40 +171,93 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-CaseHoldPolicy -MockWith {
-                return @{
-                    Name    = "Test Policy"
-                    Comment = "Different Comment"
-                    Enabled = $true
-                    SharePointLocation = @(
-                        @{
-                            Name = "https://contoso.com"
-                        },
-                        @{
-                            Name = "https://tailspintoys.com"
-                        }
-                    )
-                    ExchangeLocation = @(
-                        @{
-                            Name = "admin@contoso.com"
-                        },
-                        @{
-                            Name = "admin@tailspintoys.com"
-                        }
-                    )
-                    PublicFolderLocation = @(
-                        @{
-                            Name = "contoso.com"
-                        },
-                        @{
-                            Name = "tailspintoys.com"
-                        }
-                    )
-                }
+            $caseHoldPolicy1 = @{
+                Name    = "Test Policy1"
+                Comment = "Different Comment"
+                Enabled = $true
+                SharePointLocation = @(
+                    @{
+                        Name = "https://contoso.com"
+                    },
+                    @{
+                        Name = "https://tailspintoys.com"
+                    }
+                )
+                ExchangeLocation = @(
+                    @{
+                        Name = "admin@contoso.com"
+                    },
+                    @{
+                        Name = "admin@tailspintoys.com"
+                    }
+                )
+                PublicFolderLocation = @(
+                    @{
+                        Name = "contoso.com"
+                    },
+                    @{
+                        Name = "tailspintoys.com"
+                    }
+                )
             }
 
-            It "Should Reverse Engineer resource from the Export method" {
-                Export-TargetResource @testParams
+            $caseHoldPolicy2 = @{
+                Name    = "Test Policy2"
+                Comment = "Different Comment"
+                Enabled = $true
+                SharePointLocation = @(
+                    @{
+                        Name = "https://contoso.com"
+                    },
+                    @{
+                        Name = "https://tailspintoys.com"
+                    }
+                )
+                ExchangeLocation = @(
+                    @{
+                        Name = "admin@contoso.com"
+                    },
+                    @{
+                        Name = "admin@tailspintoys.com"
+                    }
+                )
+                PublicFolderLocation = @(
+                    @{
+                        Name = "contoso.com"
+                    },
+                    @{
+                        Name = "tailspintoys.com"
+                    }
+                )
+            }
+
+            Mock -CommandName Get-CaseHoldPolicy -ParameterFilter {$Case -eq "Case1"} -MockWith {
+                return $caseHoldPolicy1
+            }
+
+            Mock -CommandName Get-CaseHoldPolicy -ParameterFilter {$Case -eq "Case2"} -MockWith {
+                return $caseHoldPolicy2
+            }
+
+            It "Should Reverse Engineer resource from the Export method when single compliance case" {
+                Mock -CommandName Get-ComplianceCase -MockWith {
+                    return @{Name="Case1"}
+                }
+
+                $exported = Export-TargetResource @testParams
+                ([regex]::Matches($exported, " SCCaseHoldPolicy " )).Count | Should Be 1
+                $exported.Contains($caseHoldPolicy1.Name) | Should Be $true
+            }
+
+            It "Should Reverse Engineer resource from the Export method when multiple compliance case" {
+                Mock -CommandName Get-ComplianceCase -MockWith {
+                    return @(@{Name="Case1"}, @{Name="Case2"})
+                }
+
+                $exported = Export-TargetResource @testParams
+                ([regex]::Matches($exported, " SCCaseHoldPolicy " )).Count | Should Be 2
+                $exported.Contains($caseHoldPolicy1.Name) | Should Be $true
+                $exported.Contains($caseHoldPolicy2.Name) | Should Be $true
             }
         }
     }
