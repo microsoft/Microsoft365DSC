@@ -1122,6 +1122,25 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "SCFilePlanPropertySubCategory"
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckSCFilePlanPropertySubCategory")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
+    {
+        Write-Information "Extracting SCFilePlanPropertySubCategory..."
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                          -Platform SecurityComplianceCenter `
+                          -ErrorAction SilentlyContinue
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_SCFilePlanPropertySubCategory\MSFT_SCFilePlanPropertySubCategory.psm1" `
+                                -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "SCRetentionCompliancePolicy"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckSCRetentionCompliancePolicy")) -or

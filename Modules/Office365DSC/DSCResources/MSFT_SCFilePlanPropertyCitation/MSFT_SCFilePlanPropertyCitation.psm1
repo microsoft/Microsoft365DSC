@@ -103,7 +103,7 @@ function Set-TargetResource
     {
         Set-FilePlanPropertyCitation -Name $Name -CitationUrl $CitationUrl -CitationJurisdiction $CitationJurisdiction
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
+    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $Current.Ensure))
     {
         Remove-FilePlanPropertyCitation -Identity $Name -Confirm:$false
     }

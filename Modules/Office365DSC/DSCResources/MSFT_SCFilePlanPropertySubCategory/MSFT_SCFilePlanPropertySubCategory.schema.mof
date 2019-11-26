@@ -1,0 +1,8 @@
+[ClassVersion("1.0.0.0"), FriendlyName("SCFilePlanPropertySubCategory")]
+class MSFT_SCFilePlanPropertySubCategory : OMI_BaseResource
+{
+    [Key, Description("The Name parameter specifies the unique name of the sub-category.")] String Name;
+    [Required, Description("The Category parameter specifies the name of the parent category associated with the sub-category.")] String Category;
+    [Write, Description("Specify if this category should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};
