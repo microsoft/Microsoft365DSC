@@ -206,17 +206,13 @@ function Export-TargetResource
     $InformationPreference = "Continue"
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
                       -Platform SecurityComplianceCenter
-    $Rules = Get-CaseHoldRule
+    [array]$Rules = Get-CaseHoldRule
 
+    $dscContent = ""
     $i = 1
-    $RulesLength = $Rules.Length
-    if ($null -eq $RulesLength)
-    {
-        $RulesLength = 1
-    }
     foreach ($Rule in $Rules)
     {
-        Write-Information "    - [$i/$RulesLength] $($Rule.Name)"
+        Write-Information "    - [$i/$($Rules.Count)] $($Rule.Name)"
         try
         {
             $policy = Get-CaseHoldPolicy -Identity $Rule.Policy -ErrorAction Stop
@@ -228,11 +224,12 @@ function Export-TargetResource
             }
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content = "        SCCaseHoldRule " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
+            $partialContent = "        SCCaseHoldRule " + (New-GUID).ToString() + "`r`n"
+            $partialContent += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            $content += "        }`r`n"
+            $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $partialContent += "        }`r`n"
+            $dscContent += $partialContent
         }
         catch
         {
@@ -240,7 +237,7 @@ function Export-TargetResource
         }
         $i++
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource
