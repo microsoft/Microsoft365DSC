@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("TeamsChannel")]
-class MSFT_TeamsChannel : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("TeamsClientConfiguration")]
+class MSFT_TeamsClientConfiguration : OMI_BaseResource
 {
     [Key, Description("The only valid input is Global - the tenant wide configuration")] string Identity;
     [Write, Description("Designates whether users are able to leverage Box as a third party storage solution in Microsoft Teams. If $true, users will be able to add Box in the client and interact with the files stored there.")] boolean AllowBox;
