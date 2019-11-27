@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("TeamsClientConfiguration")]
 class MSFT_TeamsClientConfiguration : OMI_BaseResource
 {
-    [Key, Description("The only valid input is Global - the tenant wide configuration")] string Identity;
+    [Key, Description("The only valid input is Global - the tenant wide configuration"), ValueMap{"Global"}, Values{"Global"}] string Identity;
     [Write, Description("Designates whether users are able to leverage Box as a third party storage solution in Microsoft Teams. If $true, users will be able to add Box in the client and interact with the files stored there.")] boolean AllowBox;
     [Write, Description("Designates whether users are able to leverage DropBox as a third party storage solution in Microsoft Teams. If $true, users will be able to add DropBox in the client and interact with the files stored there.")] boolean AllowDropBox;
     [Write, Description("When set to $true, mail hooks are enabled, and users can post messages to a channel by sending an email to the email address of Teams channel.")] boolean AllowEmailIntoChannel;
