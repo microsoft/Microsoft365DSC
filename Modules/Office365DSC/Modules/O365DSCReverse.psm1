@@ -1861,21 +1861,6 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
-    #region "TeamsTeam"
-    if (($null -ne $ComponentsToExtract -and
-        $ComponentsToExtract.Contains("chckTeamsTeam")) -or
-        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
-    {
-        Write-Information "Extracting TeamsTeam..."
-        $ModulePath = Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
-                                -Resolve
-
-        Import-Module $ModulePath | Out-Null
-        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
-    }
-    #endregion
-
     #region TeamsClientConfiguration
     if (($null -ne $ComponentsToExtract -and
     $ComponentsToExtract.Contains("chckTeamsClientConfiguration")) -or
@@ -1886,6 +1871,21 @@ function Start-O365ConfigurationExtract
         $ModulePath = Join-Path -Path $PSScriptRoot `
                                                 -ChildPath "..\DSCResources\MSFT_TeamsClientConfiguration\MSFT_TeamsClientConfiguration.psm1" `
                                                 -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "TeamsTeam"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckTeamsTeam")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsTeam..."
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
+                                -Resolve
 
         Import-Module $ModulePath | Out-Null
         $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount

@@ -105,7 +105,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Updates the Teams Client settings in the Set method" {
-                Set-TargetResource @testParams | Assert-MockCalled -CommandName Set-CsTeamsClientConfiguration
+                Set-TargetResource @testParams
             }
         }
 
