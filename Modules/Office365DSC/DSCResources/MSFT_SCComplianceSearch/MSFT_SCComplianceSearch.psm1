@@ -368,7 +368,7 @@ function Export-TargetResource
         {
             $params = @{
                 Name               = $search.Name
-                Case               = $search.Case
+                Case               = $case.Name
                 GlobalAdminAccount = $GlobalAdminAccount
             }
             Write-Information "        - [$i/$($searches.Name.Count)] $($search.Name)"
