@@ -136,7 +136,7 @@ function Get-TargetResource
     }
 
     Write-Verbose -Message "Checking for existance of Team $DisplayName"
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                       -Platform MicrosoftTeams
 
     $CurrentParameters = $PSBoundParameters
@@ -507,26 +507,44 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateLength(1, 256)]
-        $DisplayName,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $result.Remove("GroupID")
-    if ("" -eq $result.Owner)
+    $InformationPreference = 'Continue'
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+                      -Platform MicrosoftTeams
+
+    $teams = Get-Team
+    $i = 1
+    $content = ""
+    $organization = $GlobalAdminAccount.UserName.Split('@')[1]
+    foreach ($team in $teams)
     {
-        $result.Remove("Owner")
+        Write-Information "    - [$i/$($teams.Length)] $($team.DisplayName)"
+        $params = @{
+            DisplayName        = $team.DisplayName
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $result.Remove("GroupID")
+        if ("" -eq $result.Owner)
+        {
+            $result.Remove("Owner")
+        }
+        $content += "        TeamsTeam " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $partialContent += "        }`r`n"
+        if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+        }
+        $content += $partialContent
+        $i++
     }
-    $content = "        TeamsTeam " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+
     return $content
 }
 
