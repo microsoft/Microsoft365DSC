@@ -29,11 +29,15 @@
   * Fixed an issue with the Set-TargetResource
     still using SPO management shell cmdlets instead of PnP
 * SPOUserProfileProperty
-  * Introduced Multi-Threading
+  * Introduced Multi-Threading;
+* TeamsClientConfiguration
+  * Initial Release;
 * TeamsUser
   * Introduced Multi-Threading;
 * Metadata
   * Updated MicrosoftTeams dependency to version 1.0.3;
+  * Updated MSCloudLoginAssistant dependency to version
+    0.7.7;
   * Updated SharePointPnPPowerShellOnline dependency
     to version 3.15.1911.0;
   * Updated ReverseDSC dependency to version 2.0.0.0;
