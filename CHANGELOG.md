@@ -32,6 +32,8 @@
   * Introduced Multi-Threading
 * TeamsUpgradeConfiguration
   * Initial Release;
+* TeamsClientConfiguration
+  * Initial Release;
 * TeamsUser
   * Introduced Multi-Threading;
 * Metadata

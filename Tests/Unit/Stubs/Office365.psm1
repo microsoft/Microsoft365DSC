@@ -13908,6 +13908,12 @@ function Get-CsTeamsUpgradeConfiguration
     param()
 }
 
+function Get-CsTeamsClientConfiguration
+{
+    [CmdletBinding()]
+    param()
+}
+
 function Set-CsTeamsUpgradeConfiguration
 {
     [CmdletBinding()]
@@ -13920,5 +13926,69 @@ function Set-CsTeamsUpgradeConfiguration
         [System.String]
         [ValidateSet("SkypeMeetingsApp","NativeLimitedClient")]
         $SfBMeetingJoinUx
+    )
+}
+function Set-CsTeamsClientConfiguration
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('Global')]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBox,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDropBox,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowEmailIntoChannel,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGoogleDrive,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOrganizationTab,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowResourceAccountSendMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowScopedPeopleSearchandAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowShareFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSkypeBusinessInterop,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('NotRequired', 'RequiredOutsideScheduleMeeting', 'AlwaysRequired')]
+        $ContentPin = 'RequiredOutsideScheduledMeeting',
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('NoAccess','PartialAccess','FullAccess')]
+        $ResourceAccountContentAccess,
+
+        [Parameter()]
+        [System.String[]]
+        $RestrictedSenderList
     )
 }
