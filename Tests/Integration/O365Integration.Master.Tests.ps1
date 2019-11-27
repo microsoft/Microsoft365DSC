@@ -582,6 +582,14 @@ Configuration Master
             Ensure             = "Present"
         }
 
+        TeamsUpgradeConfiguration UpgradeConfig
+        {
+            DownloadTeams        = $True;
+            GlobalAdminAccount   = $credsGlobalAdmin
+            IsSingleInstance     = "Yes"
+            SfBMeetingJoinUx     = "NativeLimitedClient"
+        }
+
         TeamsTeam TeamAlpha
         {
             DisplayName          = "Alpha Team"

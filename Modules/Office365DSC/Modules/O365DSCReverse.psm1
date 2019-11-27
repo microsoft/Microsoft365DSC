@@ -1846,6 +1846,21 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "TeamsUpgradeConfiguration"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckTeamsUpgradeConfiguration")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsUpgradeConfiguration..."
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_TeamsUpgradeConfiguration\MSFT_TeamsUpgradeConfiguration.psm1" `
+                                        -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "TeamsTeam"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckTeamsTeam")) -or
