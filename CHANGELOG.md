@@ -29,7 +29,7 @@
   * Fixed an issue with the Set-TargetResource
     still using SPO management shell cmdlets instead of PnP
 * SPOUserProfileProperty
-  * Introduced Multi-Threading
+  * Introduced Multi-Threading;
 * TeamsClientConfiguration
   * Initial Release;
 * TeamsUser
