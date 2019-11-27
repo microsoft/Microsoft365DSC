@@ -585,7 +585,7 @@ Configuration Master
         TeamsUpgradeConfiguration UpgradeConfig
         {
             DownloadTeams        = $True;
-            GlobalAdminAccount   = $credsGlobalAdmin
+            GlobalAdminAccount   = $GlobalAdmin
             IsSingleInstance     = "Yes"
             SfBMeetingJoinUx     = "NativeLimitedClient"
         }
