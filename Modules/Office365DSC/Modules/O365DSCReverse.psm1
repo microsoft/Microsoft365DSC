@@ -1877,21 +1877,6 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
-    #region "TeamsTeam"
-    if (($null -ne $ComponentsToExtract -and
-        $ComponentsToExtract.Contains("chckTeamsTeam")) -or
-        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
-    {
-        Write-Information "Extracting TeamsTeam..."
-        $ModulePath = Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
-                                -Resolve
-
-        Import-Module $ModulePath | Out-Null
-        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
-    }
-    #endregion
-
     #region "TeamsChannel"
     if (($null -ne $ComponentsToExtract -and
         $ComponentsToExtract.Contains("chckTeamsChannel")) -or
@@ -1918,8 +1903,8 @@ function Start-O365ConfigurationExtract
                 {
                     Write-Information "        - [$i/$($channels.Length)] $($channel.DisplayName)"
                     $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
-                                                        -DisplayName $channel.DisplayName `
-                                                        -GlobalAdminAccount $GlobalAdminAccount
+                                                         -DisplayName $channel.DisplayName `
+                                                         -GlobalAdminAccount $GlobalAdminAccount
                     $i++
                 }
                 $j++
@@ -1929,6 +1914,21 @@ function Start-O365ConfigurationExtract
         {
             Write-Verbose $_
         }
+    }
+    #endregion
+
+    #region "TeamsTeam"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckTeamsTeam")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsTeam..."
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
+                                -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
 
