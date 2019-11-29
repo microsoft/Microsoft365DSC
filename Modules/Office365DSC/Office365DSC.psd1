@@ -56,7 +56,7 @@
                       @{ModuleName = "Microsoft.Online.SharePoint.PowerShell"; RequiredVersion = "16.0.19223.12000"; },
                       @{ModuleName = "MicrosoftTeams"; RequiredVersion = "1.0.3"; },
                       @{ModuleName = "AzureAD"; RequiredVersion = "2.0.2.4"; },
-                      @{ModuleName = "MSCloudLoginAssistant"; RequiredVersion = "0.7.9"; })
+                      @{ModuleName = "MSCloudLoginAssistant"; RequiredVersion = "0.8.0-alpha"; })
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()
