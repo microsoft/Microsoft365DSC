@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "O365OrgCustomizationSetting"
+    -DscResource "O365OrgCustomizationSetting" `
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve
 
