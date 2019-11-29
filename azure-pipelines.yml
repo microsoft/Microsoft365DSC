@@ -2,6 +2,7 @@ pr:
 - Dev
 
 pool:
+  name: 'Krystel'
   vmImage: 'windows-2019'
 
 steps:
