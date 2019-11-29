@@ -1701,21 +1701,24 @@ function Export-O365Configuration
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                                            -Workloads $Workloads `
                                            -Path $Path -FileName $FileName `
-                                           -MaxProcesses $MaxProcesses
+                                           -MaxProcesses $MaxProcesses `
+                                           -Quiet
         }
         elseif ($null -ne $ComponentsToExtract)
         {
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                                            -ComponentsToExtract $ComponentsToExtract `
                                            -Path $Path -FileName $FileName `
-                                           -MaxProcesses $MaxProcesses
+                                           -MaxProcesses $MaxProcesses `
+                                           -Quiet
         }
         else
         {
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                                            -AllComponents `
                                            -Path $Path -FileName $FileName `
-                                           -MaxProcesses $MaxProcesses
+                                           -MaxProcesses $MaxProcesses `
+                                           -Quiet
         }
     }
 }

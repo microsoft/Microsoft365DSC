@@ -3,6 +3,10 @@ function Start-O365ConfigurationExtract
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param(
+        [Parameter()]
+        [Switch]
+        $Quiet,
+
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
@@ -1969,9 +1973,11 @@ function Start-O365ConfigurationExtract
     $DSCContent += "$ConfigName -ConfigurationData .\ConfigurationData.psd1 -GlobalAdminAccount `$GlobalAdminAccount"
     #endregion
 
+    $shouldOpenOutputDirectory = !$Quiet
     #region Prompt the user for a location to save the extract and generate the files
     if ($null -eq $Path -or "" -eq $Path)
     {
+        $shouldOpenOutputDirectory = $true
         $OutputDSCPath = Read-Host "Destination Path"
     }
     else
@@ -2028,5 +2034,9 @@ function Start-O365ConfigurationExtract
         $outputConfigurationData = $OutputDSCPath + "ConfigurationData.psd1"
         New-ConfigurationDataDocument -Path $outputConfigurationData
     }
-    Invoke-Item -Path $OutputDSCPath
+
+    if ($shouldOpenOutputDirectory)
+    {
+        Invoke-Item -Path $OutputDSCPath
+    }
 }
