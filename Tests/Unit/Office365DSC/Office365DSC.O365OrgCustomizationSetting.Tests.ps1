@@ -10,16 +10,7 @@ param(
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
-
-$Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "O365OrgCustomizationSetting" `
-            -ChildPath "..\Stubs\Office365.psm1" `
-            -Resolve
-
-Import-Module -Name (Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\UnitTestHelper.psm1" `
-        -Resolve)
-
+        
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
     -DscResource "O365OrgCustomizationSetting"
 
