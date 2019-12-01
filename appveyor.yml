@@ -12,7 +12,7 @@ install:
         Install-Module AzureAD -RequiredVersion 2.0.2.4 -Force
         Install-Module MSOnline -RequiredVersion 1.1.183.17 -Force
         Install-Module MicrosoftTeams -RequiredVersion 1.0.3 -Force
-        Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.15.1911.0 -Force
+        Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.16.1912.0 -Force
         Install-Module MSCloudLoginAssistant -RequiredVersion 0.8.1 -Force
 
         $webClient = new-object System.Net.WebClient
