@@ -66,8 +66,8 @@ function Set-TargetResource
                       -Platform SkypeForBusiness
 
     $SetParameters = $PSBoundParameters
-    $SetParameters.Remove("IsSingleInstance")
-    $SetParameters.Remove("GlobalAdminAccount")
+    $SetParameters.Remove("IsSingleInstance") | Out-Null
+    $SetParameters.Remove("GlobalAdminAccount") | Out-Null
 
     Set-CsTeamsUpgradeConfiguration @SetParameters
 }
