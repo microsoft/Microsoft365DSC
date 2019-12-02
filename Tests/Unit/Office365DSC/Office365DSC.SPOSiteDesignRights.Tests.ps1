@@ -189,9 +189,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-
-
-
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
@@ -199,14 +196,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPSiteDesign -MockWith {
                 return @{
-                    SiteDesignTitle = "Customer List"
-                    Id              = "12345-12345-12345-12345-12345"
+                    Title = "Customer List"
+                    Id    = "12345-12345-12345-12345-12345"
                 }
             }
 
             Mock -CommandName Get-PnPSiteDesignRights -MockWith {
                 return @{
-                    UserPrincipals = "jdoe@dsazure.com"
+                    PrincipalName = "i:0#.f|membership|john.smith@contoso.com"
                     Rights         = "View"
                 }
             }

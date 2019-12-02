@@ -30,13 +30,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Mock Invoke-O365DSCCommand {
-        }
-
-        $StartJob = Get-Command Start-Job
-        Mock -CommandName Start-Job -MockWith
-        {
-            & $StartJob -ScriptBlock {} -ComputerName localhost -AsJob
+        Mock -CommandName Invoke-O365DSCCommand -MockWith {
         }
 
         # Test contexts
