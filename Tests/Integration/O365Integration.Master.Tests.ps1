@@ -667,6 +667,15 @@ Configuration Master
             RestrictedSenderList             = $null;
         }
 
+        TeamsUpgradePolicy IntegrationUpgradePolicy
+        {
+            Identity           = 'Integration TeamsUpgradePolicy'
+            GlobalAdminAccount = $GlobalAdmin
+            Description        = 'Integration Policy Description'
+            NotifySfBUsers     = $true
+            Ensure             = 'Present'
+        }
+
         TeamsChannel ChannelAlpha1
         {
             DisplayName        = "Channel Alpha"
@@ -684,15 +693,6 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
             DependsON          = @("[O365User]JohnSmith", "[TeamsTeam]TeamAlpha")
-        }
-
-        TeamsUpgradePolicy IntegrationUpgradePolicy
-        {
-            Identity           = 'Integration TeamsUpgradePolicy'
-            GlobalAdminAccount = $GlobalAdmin
-            Description        = 'Integration Policy Description'
-            NotifySfBUsers     = $true
-            Ensure             = 'Present'
         }
     }
 }

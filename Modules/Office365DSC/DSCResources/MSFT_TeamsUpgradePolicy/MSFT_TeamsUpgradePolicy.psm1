@@ -27,14 +27,14 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Checking the Teams Upgrade Policies"
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                       -Platform SkypeForBusiness
 
     $policy = Get-CsTeamsUpgradePolicy -Identity $Identity -ErrorAction SilentlyContinue
 
     if ($null -eq $policy)
     {
-        Write-Verbose -Message "No Teams Upgrasde Policy with Identity {$Identity} was found"
+        Write-Verbose -Message "No Teams Upgrade Policy with Identity {$Identity} was found"
         return @{
             Identity           = $Identity
             Ensure             = 'Absent'
@@ -80,7 +80,7 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting Teams Upgrade Policy {$Identity}"
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                       -Platform SkypeForBusiness
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -190,7 +190,7 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = 'Continue'
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                       -Platform SkypeForBusiness
     $policies = Get-CsTeamsUpgradePolicy
     $i = 1
