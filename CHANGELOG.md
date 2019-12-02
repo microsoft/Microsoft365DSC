@@ -7,6 +7,8 @@
 * EXOClientAccessRule
   * Fixed issue with Get-TargetResource not
     returning all values;
+* O365OrgCustomizationSetting
+  * Inital Release;
 * SCAuditConfigurationSettings
   * Initial release;
 * SCDLPComplianceRule
