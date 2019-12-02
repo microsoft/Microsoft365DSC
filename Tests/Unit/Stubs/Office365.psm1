@@ -14003,7 +14003,7 @@ function Get-CsTeamsCallingPolicy
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Identity
     )
@@ -14015,7 +14015,11 @@ function Remove-CsTeamsCallingPolicy
     param(
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [Switch]
+        $Confirm
     )
 }
 

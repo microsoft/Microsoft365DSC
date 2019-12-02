@@ -148,18 +148,18 @@ function Set-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                       -Platform SkypeForBusiness
 
+    $CurrentValues = Get-TargetResource @PSBoundParameters
+
     $SetParameters = $PSBoundParameters
     $SetParameters.Remove("Ensure") | Out-Null
     $SetParameters.Remove("GlobalAdminAccount") | Out-Null
-
-    $CurrentValues = Get-TargetResource @PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating a new Teams Calling Policy {$Identity}"
         New-CsTeamsCallingPolicy @SetParameters
     }
-    elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
+    elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
         # If we get here, it's because the Test-TargetResource detected a drift, therefore we always call
         # into the Set-CsTeamsCallingPolicy cmdlet.
