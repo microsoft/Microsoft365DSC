@@ -13998,3 +13998,117 @@ function Enable-OrganizationCustomization
     param(
     )
 }
+
+function Get-CsTeamsCallingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-CsTeamsCallingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function New-CsTeamsCallingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCalling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateCalling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVoicemail,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDelegation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallForwardingToUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallForwardingToPhone,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreventTollBypass,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled')]
+        $BusyOnBusyEnabledType
+    )
+}
+
+function Set-CsTeamsCallingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCalling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateCalling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVoicemail,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDelegation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallForwardingToUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallForwardingToPhone,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreventTollBypass,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled')]
+        $BusyOnBusyEnabledType
+    )
+}
