@@ -582,6 +582,14 @@ Configuration Master
             Ensure             = "Present"
         }
 
+        TeamsUpgradeConfiguration UpgradeConfig
+        {
+            DownloadTeams        = $True;
+            GlobalAdminAccount   = $GlobalAdmin
+            IsSingleInstance     = "Yes"
+            SfBMeetingJoinUx     = "NativeLimitedClient"
+        }
+
         TeamsClientConfiguration TeamsClientConfiguration
         {
             AllowBox                         = $True;

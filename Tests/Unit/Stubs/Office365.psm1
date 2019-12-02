@@ -13902,12 +13902,32 @@ function Get-Label{
     )
 }
 
+function Get-CsTeamsUpgradeConfiguration
+{
+    [CmdletBinding()]
+    param()
+}
+
 function Get-CsTeamsClientConfiguration
 {
     [CmdletBinding()]
     param()
 }
 
+function Set-CsTeamsUpgradeConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $DownloadTeams,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("SkypeMeetingsApp","NativeLimitedClient")]
+        $SfBMeetingJoinUx
+    )
+}
 function Set-CsTeamsClientConfiguration
 {
     param
