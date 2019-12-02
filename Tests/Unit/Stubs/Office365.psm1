@@ -13998,3 +13998,17 @@ function Enable-OrganizationCustomization
     param(
     )
 }
+
+function Start-Job
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $ScriptBLock,
+
+        [Parameter()]
+        [System.String]
+        $Name
+    )
+}
