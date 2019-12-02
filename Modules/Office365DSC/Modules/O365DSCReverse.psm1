@@ -1975,7 +1975,7 @@ function Start-O365ConfigurationExtract
 
     $shouldOpenOutputDirectory = !$Quiet
     #region Prompt the user for a location to save the extract and generate the files
-    if ($null -eq $Path -or "" -eq $Path)
+    if ([System.String]::IsNullOrEmpty($Path))
     {
         $shouldOpenOutputDirectory = $true
         $OutputDSCPath = Read-Host "Destination Path"
