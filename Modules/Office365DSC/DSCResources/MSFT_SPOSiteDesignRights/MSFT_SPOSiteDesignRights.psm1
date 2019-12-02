@@ -89,7 +89,7 @@ function Set-TargetResource
         [System.String[]]
         $UserPrincipals,
 
-        [Parameter()]
+        [Parameter(Mandatory=$true)]
         [ValidateSet("View", "None")]
         [System.String]
         $Rights,
@@ -180,7 +180,7 @@ function Test-TargetResource
         [System.String[]]
         $UserPrincipals,
 
-        [Parameter()]
+        [Parameter(Mandatory=$true)]
         [ValidateSet("View", "None")]
         [System.String]
         $Rights,
