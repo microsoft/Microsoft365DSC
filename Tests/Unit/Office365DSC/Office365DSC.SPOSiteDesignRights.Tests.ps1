@@ -194,7 +194,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                SiteDesignTitle    = "Customer List"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

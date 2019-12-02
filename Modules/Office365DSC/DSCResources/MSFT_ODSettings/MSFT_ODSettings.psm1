@@ -48,7 +48,7 @@ function Get-TargetResource
         $DisableReportProblemDialog,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $DomainGuids,
 
         [Parameter()]
@@ -223,7 +223,7 @@ function Set-TargetResource
         $DisableReportProblemDialog,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $DomainGuids,
 
         [Parameter()]
@@ -370,7 +370,7 @@ function Test-TargetResource
         $DisableReportProblemDialog,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $DomainGuids,
 
         [Parameter()]
