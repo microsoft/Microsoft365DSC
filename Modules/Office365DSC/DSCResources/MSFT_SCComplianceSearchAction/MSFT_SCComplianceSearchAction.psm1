@@ -327,7 +327,7 @@ function Export-TargetResource
     $content = ""
     foreach ($action in $actions)
     {
-        Write-Information "    [$i/$($actions.Length)] $($action.Name)"
+        Write-Information "        [$i/$($actions.Length)] $($action.Name)"
         $params = @{
             Action             = $action.Action
             SearchName         = $action.SearchName
@@ -361,7 +361,6 @@ function Export-TargetResource
         $actions = Get-ComplianceSearchAction -Case $Case.Name
 
         $i = 1
-        $content = ""
         foreach ($action in $actions)
         {
             Write-Information "        [$i/$($actions.Length)] $($action.Name)"
@@ -387,6 +386,7 @@ function Export-TargetResource
             $content += "        }`r`n"
             $i++
         }
+        $j++
     }
     return $content
 }
