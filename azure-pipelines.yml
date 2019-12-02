@@ -15,7 +15,7 @@ steps:
   inputs:
     targetType: 'inline'
     failOnStderr: true
-    script: Install-Module Microsoft.Online.SharePoint.PowerShell -RequiredVersion "16.0.19223.12000" -Force;Install-Module AzureAD -RequiredVersion "2.0.2.4" -Force; Install-Module MicrosoftTeams -RequiredVersion "1.0.3" -Force;Install-Module SharePointPnPPowerShellOnline -RequiredVersion "3.15.1911.0" -Force;Install-Module MSOnline -Requiredversion "1.1.183.17" -Force;Install-Module ReverseDSC -Requiredversion "2.0.0.0" -Force;Install-Module MSCloudLoginAssistant -Force -RequiredVersion "0.7.7";Import-Module '$(build.artifactstagingdirectory)\BuildFiles\Tests\TestHarness.psm1' -Force;$results = Invoke-TestHarness; if ($results.FailedCount -gt 0){throw "Unit Test Failed"}
+    script: Install-Module Microsoft.Online.SharePoint.PowerShell -RequiredVersion "16.0.19223.12000" -Force;Install-Module AzureAD -RequiredVersion "2.0.2.4" -Force; Install-Module MicrosoftTeams -RequiredVersion "1.0.3" -Force;Install-Module SharePointPnPPowerShellOnline -RequiredVersion "3.16.1912.0" -Force;Install-Module MSOnline -Requiredversion "1.1.183.17" -Force;Install-Module ReverseDSC -Requiredversion "2.0.0.0" -Force;Install-Module MSCloudLoginAssistant -Force -RequiredVersion "0.8.1";Import-Module '$(build.artifactstagingdirectory)\BuildFiles\Tests\TestHarness.psm1' -Force;$results = Invoke-TestHarness; if ($results.FailedCount -gt 0){throw "Unit Test Failed"}
 - task: PublishBuildArtifacts@1
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)'

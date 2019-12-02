@@ -357,7 +357,7 @@ function Export-TargetResource
 
             $status =  "Completed $jobsCompleted/$totalJobs jobs in $elapsedTime seconds"
             $percentCompleted = $jobsCompleted/$totalJobs * 100
-            Write-Progress -Activity "SPOPropertyBag Extraction" -PercentComplete $percentCompleted -Status $status
+            Write-Progress -Activity "TeamsUser Extraction" -PercentComplete $percentCompleted -Status $status
         }
         $elapsedTime ++
         Start-Sleep -Seconds 1
