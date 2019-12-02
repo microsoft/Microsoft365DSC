@@ -322,11 +322,12 @@ function Export-TargetResource
 
     $actions = Get-ComplianceSearchAction
 
+    Write-Information "    Tenant Wide Actions:"
     $i = 1
     $content = ""
     foreach ($action in $actions)
     {
-        Write-Information "    [$i/$($actions.Length)] $($action.Name)"
+        Write-Information "        [$i/$($actions.Length)] $($action.Name)"
         $params = @{
             Action             = $action.Action
             SearchName         = $action.SearchName
@@ -348,6 +349,44 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $i++
+    }
+
+    [array]$cases = Get-ComplianceCase
+
+    $j = 1
+    foreach ($case in $cases)
+    {
+        Write-Information "    Case [$j/$($cases.Count)] $($Case.Name)"
+
+        $actions = Get-ComplianceSearchAction -Case $Case.Name
+
+        $i = 1
+        foreach ($action in $actions)
+        {
+            Write-Information "        [$i/$($actions.Length)] $($action.Name)"
+            $params = @{
+                Action             = $action.Action
+                SearchName         = $action.SearchName
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            $Scenario = Get-ResultProperty -ResultString $action.Results -PropertyName "Scenario"
+
+            if ('RetentionReports' -eq $Scenario)
+            {
+                $params.Action = "Retention"
+            }
+
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        SCComplianceSearchAction " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
+            $i++
+        }
+        $j++
     }
     return $content
 }

@@ -9965,7 +9965,12 @@ function Get-ComplianceCase {
    param(
        [Parameter()]
        [System.String]
-       $Identity
+       $Identity,
+
+       [Parameter()]
+       [System.String]
+       [ValidateSet('eDiscovery', 'DSR')]
+       $CaseType
    )
 }
 

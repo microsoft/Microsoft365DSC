@@ -940,15 +940,12 @@ function Start-O365ConfigurationExtract
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
     {
         Write-Information "Extracting SCComplianceSearch..."
-        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-            -Platform SecurityComplianceCenter `
-            -ErrorAction SilentlyContinue
 
-        $SCComplianceCSearchModulePath = Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\DSCResources\MSFT_SCComplianceSearch\MSFT_SCComplianceSearch.psm1" `
-            -Resolve
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_SCComplianceSearch\MSFT_SCComplianceSearch.psm1" `
+                                -Resolve
 
-        Import-Module $SCComplianceCSearchModulePath | Out-Null
+        Import-Module $ModulePath | Out-Null
         $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
@@ -959,15 +956,12 @@ function Start-O365ConfigurationExtract
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
     {
         Write-Information "Extracting SCComplianceSearchAction..."
-        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-            -Platform SecurityComplianceCenter `
-            -ErrorAction SilentlyContinue
 
-        $SCComplianceCSearchActionModulePath = Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\DSCResources\MSFT_SCComplianceSearchAction\MSFT_SCComplianceSearchAction.psm1" `
-            -Resolve
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_SCComplianceSearchAction\MSFT_SCComplianceSearchAction.psm1" `
+                                -Resolve
 
-        Import-Module $SCComplianceCSearchActionModulePath | Out-Null
+        Import-Module $ModulePath | Out-Null
         $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
@@ -1701,27 +1695,12 @@ function Start-O365ConfigurationExtract
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SPO")))
     {
         Write-Information "Extracting SPOSiteDesign..."
-        $SPOSiteDesignModulePath = Join-Path -Path $PSScriptRoot `
+        $ModuelPath = Join-Path -Path $PSScriptRoot `
             -ChildPath "..\DSCResources\MSFT_SPOSiteDesign\MSFT_SPOSiteDesign.psm1" `
             -Resolve
 
-        Import-Module $SPOSiteDesignModulePath | Out-Null
-        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-            -Platform PnP
-
-        $siteDesigns = Get-PnPSiteDesign
-
-        $partialContent = ""
-        $i = 1
-        foreach ($siteDesign in $siteDesigns)
-        {
-            Write-Information "    - [$i/$($siteDesigns.Length)] $($siteDesign.Title)"
-            $partialContent = Export-TargetResource -Title $siteDesign.Title `
-                -GlobalAdminAccount $GlobalAdminAccount
-
-            $DSCContent += $partialContent
-            $i++
-        }
+        Import-Module $ModuelPath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
 
@@ -1731,27 +1710,12 @@ function Start-O365ConfigurationExtract
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SPO")))
     {
         Write-Information "Extracting SPOSiteDesignRights..."
-        $SPOSiteDesignModulePath = Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\DSCResources\MSFT_SPOSiteDesignRights\MSFT_SPOSiteDesignRights.psm1" `
-            -Resolve
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                -ChildPath "..\DSCResources\MSFT_SPOSiteDesignRights\MSFT_SPOSiteDesignRights.psm1" `
+                                -Resolve
 
-        Import-Module $SPOSiteDesignModulePath | Out-Null
-        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-            -Platform PnP
-
-        $siteDesigns = Get-PnPSiteDesign
-
-        $partialContent = ""
-        $i = 1
-        foreach ($siteDesign in $siteDesigns)
-        {
-            Write-Information "    - [$i/$($siteDesigns.Length)] $($siteDesign.Title)"
-            $partialContent += Export-TargetResource -SiteDesignTitle $siteDesign.Title `
-                -GlobalAdminAccount $GlobalAdminAccount
-
-            $DSCContent += $partialContent
-            $i++
-        }
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
 

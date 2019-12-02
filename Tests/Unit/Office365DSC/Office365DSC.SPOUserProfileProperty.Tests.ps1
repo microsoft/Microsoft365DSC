@@ -30,8 +30,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Mock Invoke-O365DSCCommand {
-            return Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $Arguments -NoNewScope
+        Mock -CommandName Invoke-O365DSCCommand -MockWith {
         }
 
         # Test contexts
