@@ -18,7 +18,7 @@ Configuration Example
             Identity                   = 'New Calling Policy'
             AllowCalling               = $true
             AllowPrivateCalling        = $false
-            AllowVoicemail             = $false
+            AllowVoicemail             = 'UserOverride'
             AllowCallGroups            = $true
             AllowDelegation            = $true
             AllowCallForwardingToUser  = $false

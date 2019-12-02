@@ -17,7 +17,8 @@ function Get-TargetResource
         $AllowPrivateCalling,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
+        [ValidateSet('AlwaysEnabled', 'AlwaysDisabled', 'UserOverride')]
         $AllowVoicemail,
 
         [Parameter()]
@@ -105,7 +106,8 @@ function Set-TargetResource
         $AllowPrivateCalling,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
+        [ValidateSet('AlwaysEnabled', 'AlwaysDisabled', 'UserOverride')]
         $AllowVoicemail,
 
         [Parameter()]
@@ -192,7 +194,8 @@ function Test-TargetResource
         $AllowPrivateCalling,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
+        [ValidateSet('AlwaysEnabled', 'AlwaysDisabled', 'UserOverride')]
         $AllowVoicemail,
 
         [Parameter()]
