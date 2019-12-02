@@ -1888,6 +1888,21 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "TeamsUpgradePolicy"
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckTeamsUpgradePolicy")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsUpgradePolicy..."
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+                                        -ChildPath "..\DSCResources\MSFT_TeamsUpgradePolicy\MSFT_TeamsUpgradePolicy.psm1" `
+                                        -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region TeamsClientConfiguration
     if (($null -ne $ComponentsToExtract -and
             $ComponentsToExtract.Contains("chckTeamsClientConfiguration")) -or
