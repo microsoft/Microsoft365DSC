@@ -10,7 +10,7 @@ param(
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
-        
+
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
     -DscResource "O365OrgCustomizationSetting"
 
@@ -108,7 +108,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should Reverse Engineer resource from the Export method" {
                 $returnValue = Export-TargetResource @testParams
-                $returnValue | Should -Not Be ""
+                $returnValue | Should Not Be ""
             }
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
