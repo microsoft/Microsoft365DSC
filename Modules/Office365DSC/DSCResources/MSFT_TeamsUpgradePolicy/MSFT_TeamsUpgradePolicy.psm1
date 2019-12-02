@@ -32,7 +32,7 @@ function Get-TargetResource
 
     $policy = Get-CsTeamsUpgradePolicy -Identity $Identity -ErrorAction SilentlyContinue
 
-    if ($null -ne $policy)
+    if ($null -eq $policy)
     {
         Write-Verbose -Message "No Teams Upgrasde Policy with Identity {$Identity} was found"
         return @{
@@ -121,7 +121,7 @@ function Set-TargetResource
         Write-Verbose -Message "An existing instance of Teams Upgrade Policy {$Identity} was found. Deleting it from the Set method."
         try
         {
-            Remove-CsTeamUpgradePolicy -Identity $Identity
+            Remove-CsTeamsUpgradePolicy -Identity $Identity
         }
         catch
         {
