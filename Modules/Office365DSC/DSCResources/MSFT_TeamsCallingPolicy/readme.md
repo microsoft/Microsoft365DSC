@@ -1,4 +1,4 @@
 
 # TeamsCallingPolicy
 
-This resource configures the Teams Calling Policies.
+This resource configures a Teams Calling Policy.
