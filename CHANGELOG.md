@@ -43,7 +43,7 @@
 * Metadata
   * Updated MicrosoftTeams dependency to version 1.0.3;
   * Updated MSCloudLoginAssistant dependency to version
-    0.8.1;
+    0.8.2;
   * Updated SharePointPnPPowerShellOnline dependency
     to version 3.16.1912.0;
   * Updated ReverseDSC dependency to version 2.0.0.0;
