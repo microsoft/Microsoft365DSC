@@ -32,11 +32,17 @@
     still using SPO management shell cmdlets instead of PnP
 * SPOUserProfileProperty
   * Introduced Multi-Threading
+<<<<<<< HEAD
 * TeamsClientConfiguration
   * Initial Release;
 * TeamsUpgradeConfiguration
+=======
+* TeamsCallingPolicy
+>>>>>>> upstream/dev
   * Initial Release;
 * TeamsUpgradePolicy
+  * Initial Release;
+* TeamsUpgradeConfiguration
   * Initial Release;
 * TeamsUser
   * Introduced Multi-Threading;

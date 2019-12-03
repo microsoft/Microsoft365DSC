@@ -12,7 +12,7 @@ function Get-TargetResource
         [System.String[]]
         $UserPrincipals,
 
-        [Parameter()]
+        [Parameter(Mandatory=$true)]
         [ValidateSet("View", "None")]
         [System.String]
         $Rights,
@@ -51,7 +51,7 @@ function Get-TargetResource
     Write-Verbose -Message "Site Design ID is $($siteDesign.Id)"
 
     $siteDesignRights = Get-PnPSiteDesignRights -Identity $siteDesign.Id -ErrorAction SilentlyContinue | `
-        Where-Object -FilterScript { $_.Rights -eq $Rights }
+            Where-Object -FilterScript { $_.Rights -eq $Rights }
 
     if ($null -eq $siteDesignRights)
     {
@@ -70,7 +70,7 @@ function Get-TargetResource
     return @{
         SiteDesignTitle    = $SiteDesignTitle
         UserPrincipals     = $curUserPrincipals
-        Rights             = $Rights
+        Rights             = $siteDesignRights.Rights.ToString()
         Ensure             = "Present"
         GlobalAdminAccount = $GlobalAdminAccount
     }
@@ -89,7 +89,7 @@ function Set-TargetResource
         [System.String[]]
         $UserPrincipals,
 
-        [Parameter()]
+        [Parameter(Mandatory=$true)]
         [ValidateSet("View", "None")]
         [System.String]
         $Rights,
@@ -180,7 +180,7 @@ function Test-TargetResource
         [System.String[]]
         $UserPrincipals,
 
-        [Parameter()]
+        [Parameter(Mandatory=$true)]
         [ValidateSet("View", "None")]
         [System.String]
         $Rights,
@@ -221,25 +221,56 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $SiteDesignTitle,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
+    $InformationPreference = 'Continue'
+
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+                      -Platform PnP
+
+    $siteDesigns = Get-PnPSiteDesign
 
     $content = ""
-    if ($result.Ensure -eq "Present")
+    $i = 1
+    foreach ($siteDesign in $siteDesigns)
     {
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content = "        SPOSiteDesignRights " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
+        Write-Information "    - [$i/$($siteDesigns.Length)] $($siteDesign.Title)"
+        $params = @{
+            SiteDesignTitle    = $siteDesign.Title
+            Rights             = "View"
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @params
+        $content = ""
+        if ($result.Ensure -eq "Present")
+        {
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        SPOSiteDesignRights " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
+        }
+
+        $params = @{
+            SiteDesignTitle    = $siteDesign.Title
+            Rights             = "None"
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @params
+        if ($result.Ensure -eq "Present")
+        {
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        SPOSiteDesignRights " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
+        }
+        $i++
     }
+
     return $content
 }
 

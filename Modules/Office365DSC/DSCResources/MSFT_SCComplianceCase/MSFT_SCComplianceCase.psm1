@@ -208,7 +208,29 @@ function Export-TargetResource
     $i = 1
     foreach ($Case in $Cases)
     {
-        Write-Information "    - [$i/$($Cases.Count)] $($Case.Name)"
+        Write-Information "    - eDiscovery: [$i/$($Cases.Count)] $($Case.Name)"
+        $params = @{
+            Name               = $Case.Name
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $partialContent = "        SCComplianceCase " + (New-GUID).ToString() + "`r`n"
+        $partialContent += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $partialContent += "        }`r`n"
+        $dscContent += $partialContent
+        $i++
+    }
+
+    [array]$Cases = Get-ComplianceCase -CaseType "DSR"
+
+    $dscContent = ""
+    $i = 1
+    foreach ($Case in $Cases)
+    {
+        Write-Information "    - GDPR: [$i/$($Cases.Count)] $($Case.Name)"
         $params = @{
             Name               = $Case.Name
             GlobalAdminAccount = $GlobalAdminAccount

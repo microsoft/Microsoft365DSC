@@ -9965,7 +9965,12 @@ function Get-ComplianceCase {
    param(
        [Parameter()]
        [System.String]
-       $Identity
+       $Identity,
+
+       [Parameter()]
+       [System.String]
+       [ValidateSet('eDiscovery', 'DSR')]
+       $CaseType
    )
 }
 
@@ -13994,7 +13999,11 @@ function Enable-OrganizationCustomization
     )
 }
 
+<<<<<<< HEAD
 function Get-CsTeamsUpgradePolicy
+=======
+function Get-CsTeamsCallingPolicy
+>>>>>>> upstream/dev
 {
     [CmdletBinding()]
     param(
@@ -14004,17 +14013,33 @@ function Get-CsTeamsUpgradePolicy
     )
 }
 
+<<<<<<< HEAD
 function Remove-CsTeamsUpgradePolicy
+=======
+function Remove-CsTeamsCallingPolicy
+>>>>>>> upstream/dev
 {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
         [System.String]
+<<<<<<< HEAD
         $Identity
     )
 }
 
 function Set-CsTeamsUpgradePolicy
+=======
+        $Identity,
+
+        [Parameter()]
+        [Switch]
+        $Confirm
+    )
+}
+
+function New-CsTeamsCallingPolicy
+>>>>>>> upstream/dev
 {
     [CmdletBinding()]
     param(
@@ -14023,6 +14048,7 @@ function Set-CsTeamsUpgradePolicy
         $Identity,
 
         [Parameter()]
+<<<<<<< HEAD
         [System.String]
         $Description,
 
@@ -14033,6 +14059,48 @@ function Set-CsTeamsUpgradePolicy
 }
 
 function New-CsTeamsUpgradePolicy
+=======
+        [System.Boolean]
+        $AllowCalling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateCalling,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('AlwaysEnabled', 'AlwaysDisabled', 'UserOverride')]
+        $AllowVoicemail,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDelegation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallForwardingToUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallForwardingToPhone,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreventTollBypass,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled')]
+        $BusyOnBusyEnabledType
+    )
+}
+
+function Set-CsTeamsCallingPolicy
+>>>>>>> upstream/dev
 {
     [CmdletBinding()]
     param(
@@ -14041,11 +14109,50 @@ function New-CsTeamsUpgradePolicy
         $Identity,
 
         [Parameter()]
+<<<<<<< HEAD
         [System.String]
         $Description,
 
         [Parameter()]
         [System.Boolean]
         $NotifySfBUsers
+=======
+        [System.Boolean]
+        $AllowCalling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateCalling,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('AlwaysEnabled', 'AlwaysDisabled', 'UserOverride')]
+        $AllowVoicemail,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDelegation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallForwardingToUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallForwardingToPhone,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreventTollBypass,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled')]
+        $BusyOnBusyEnabledType
+>>>>>>> upstream/dev
     )
 }
