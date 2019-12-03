@@ -14040,7 +14040,8 @@ function New-CsTeamsCallingPolicy
         $AllowPrivateCalling,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
+        [ValidateSet('AlwaysEnabled', 'AlwaysDisabled', 'UserOverride')]
         $AllowVoicemail,
 
         [Parameter()]
@@ -14087,7 +14088,8 @@ function Set-CsTeamsCallingPolicy
         $AllowPrivateCalling,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
+        [ValidateSet('AlwaysEnabled', 'AlwaysDisabled', 'UserOverride')]
         $AllowVoicemail,
 
         [Parameter()]
