@@ -230,6 +230,15 @@ Configuration Master
             DependsOn          = "[O365User]JohnSmith"
         }
 
+        PPPowerAppsEnvironment IntegrationPAEnvironment
+        {
+            DisplayName          = "Integration PowerApps Environment";
+            Ensure               = "Present";
+            EnvironmentSKU       = "Production";
+            GlobalAdminAccount   = $GlobalAdmin;
+            Location             = "canada";
+        }
+
         SCAuditConfigurationPolicy SharePointAuditPolicy
         {
             Workload           = "SharePoint"
@@ -529,44 +538,6 @@ Configuration Master
                 }
             )
         }
-
-        <#SPOStorageEntity SiteEntity1
-        {
-            Key                = "SiteEntity1"
-            Value              = "Modern Value"
-            Description        = "Entity for Modern Site"
-            EntityScope        = "Site"
-            SiteUrl            = "https://o365dsc.sharepoint.com/sites/Modern"
-            GlobalAdminAccount = $GlobalAdmin
-            Ensure             = "Present"
-        }
-
-        SPOStorageEntity TenantEntity1
-        {
-            Key                = "TenantEntity1"
-            Value              = "Tenant Value"
-            Description        = "Entity for Tenant"
-            EntityScope        = "Tenant"
-            SiteUrl            = "https://o365dsc-admin.sharepoint.com/"
-            GlobalAdminAccount = $GlobalAdmin
-            Ensure             = "Present"
-        }#>
-
-        <#SPOTenantCDNPolicy PublicCDNPolicies
-        {
-            IncludeFileExtensions                = @('.jpg', '.png');
-            GlobalAdminAccount                   = $GlobalAdmin
-            CDNType                              = "Public";
-            ExcludeRestrictedSiteClassifications = @();
-        }
-
-        SPOTenantCDNPolicy PrivateCDNPolicies
-        {
-            IncludeFileExtensions                = @('.gif');
-            GlobalAdminAccount                   = $GlobalAdmin
-            CDNType                              = "Private";
-            ExcludeRestrictedSiteClassifications = @();
-        }#>
 
         SPOUserProfileProperty SPOUserProfileProperty
         {

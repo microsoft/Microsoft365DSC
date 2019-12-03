@@ -1678,7 +1678,7 @@ function Export-O365Configuration
         $ComponentsToExtract,
 
         [Parameter()]
-        [ValidateSet('SPO', 'EXO', 'SC', 'OD', 'O365', 'TEAMS')]
+        [ValidateSet('SPO', 'EXO', 'SC', 'OD', 'O365', 'PP', 'TEAMS')]
         [System.String[]]
         $Workloads,
 

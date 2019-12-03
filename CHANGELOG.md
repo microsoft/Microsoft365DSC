@@ -9,7 +9,7 @@
     returning all values;
 * O365OrgCustomizationSetting
   * Inital Release;
-* PPTenantSettings
+* PPPowerAppsEnvironment
   * Initial Release;
 * SCAuditConfigurationSettings
   * Initial Release;
