@@ -4,7 +4,7 @@ class MSFT_TeamsCallingPolicy : OMI_BaseResource
     [Key, Description("Identity of the Teams Calling Policy.")] String Identity;
     [Write, Description("Controls interop calling capabilities. Turning this on will allow Skype for Business users to have one-on-one calls with Teams users and vice-versa.")] Boolean AllowCalling;
     [Write, Description("Controls all calling capabilities in Teams. Turning this off will turn off all calling functionality in Teams. If you use Skype for Business for calling, this policy will not affect calling functionality in Skype for Business.")] Boolean AllowPrivateCalling;
-    [Write, Description("Enables inbound calls to be routed to voice mail. Valid options are: AlwaysEnabled, AlwaysDisabled, UserOverride."), ValueMap{"AlwaysEnabled","AlwaysDisabled",""UserOverride"}, Values{"AlwaysEnabled","AlwaysDisabled",""UserOverride"}] String AllowVoicemail;
+    [Write, Description("Enables inbound calls to be routed to voice mail. Valid options are: AlwaysEnabled, AlwaysDisabled, UserOverride."), ValueMap{"AlwaysEnabled","AlwaysDisabled","UserOverride"}, Values{"AlwaysEnabled","AlwaysDisabled","UserOverride"}] String AllowVoicemail;
     [Write, Description("Enables inbound calls to be routed to call groups.")] Boolean AllowCallGroups;
     [Write, Description("Enables inbound calls to be routed to delegates; allows delegates to make outbound calls on behalf of the users for whom they have delegated permissions.")] Boolean AllowDelegation;
     [Write, Description("Enables call forwarding or simultaneous ringing of inbound calls to other users in your tenant.")] Boolean AllowCallForwardingToUser;
