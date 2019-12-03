@@ -73,7 +73,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Identity                   = 'Test Calling Policy'
                 AllowCalling               = $true
                 AllowPrivateCalling        = $false
-                AllowVoicemail             = $false
+                AllowVoicemail             = 'UserOverride'
                 AllowCallGroups            = $true
                 AllowDelegation            = $true
                 AllowCallForwardingToUser  = $false
@@ -113,7 +113,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Policy exists but is already in the Desired State" -Fixture {
+        Context -Name "Policy exists and is already in the Desired State" -Fixture {
             $testParams = @{
                 Identity                   = 'Test Calling Policy'
                 AllowCalling               = $true
@@ -134,7 +134,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                   = 'Test Calling Policy'
                     AllowCalling               = $true
                     AllowPrivateCalling        = $false
-                    AllowVoicemail             = $false
+                    AllowVoicemail             = 'UserOverride'
                     AllowCallGroups            = $true
                     AllowDelegation            = $true
                     AllowCallForwardingToUser  = $false
@@ -174,7 +174,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                   = 'Test Calling Policy'
                     AllowCalling               = $true
                     AllowPrivateCalling        = $false
-                    AllowVoicemail             = $false
+                    AllowVoicemail             = 'UserOverride'
                     AllowCallGroups            = $true
                     AllowDelegation            = $true
                     AllowCallForwardingToUser  = $false
