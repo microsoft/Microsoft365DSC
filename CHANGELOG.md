@@ -9,8 +9,10 @@
     returning all values;
 * O365OrgCustomizationSetting
   * Inital Release;
+* PPTenantSettings
+  * Initial Release;
 * SCAuditConfigurationSettings
-  * Initial release;
+  * Initial Release;
 * SCDLPComplianceRule
   * Fixed issue with the extraction of NotifyAllowOverride;
 * SCFilePlanPropertyAuthority

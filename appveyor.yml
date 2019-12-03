@@ -14,6 +14,7 @@ install:
         Install-Module MicrosoftTeams -RequiredVersion 1.0.3 -Force
         Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.16.1912.0 -Force
         Install-Module MSCloudLoginAssistant -RequiredVersion 0.8.1 -Force
+        Install-Module Microsoft.PowerApps.PowerShell.Administration -RequiredVersion 2.0.26 -Force
 
         $webClient = new-object System.Net.WebClient
         $url = "https://github.com/Microsoft/Office365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_9119-1200_x64_en-us.msi?raw=true"
