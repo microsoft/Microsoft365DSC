@@ -1614,15 +1614,16 @@ function Test-Office365DSCParameterState
         $EventMessage += "    <ConfigurationDrift Source=`"$Source`">`r`n"
 
         $EventMessage += "        <ParametersNotInDesiredState>`r`n"
-        $driftedParameters = ''
+        $driftedValue = ''
         foreach ($key in $DriftedParameters.Keys)
         {
-            $DriftedParameters += $key + "|"
+            $driftedValue += $key + "|"
             $EventMessage += "            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n"
         }
         #region Telemetry
+        $driftedValue = $driftedValue.Remove($driftedValue.Length -1, 1)
         $data.Add("Event", "ConfigurationDrift")
-        $data.Add("Parameters", $DriftedParameters)
+        $data.Add("Parameters", $driftedValue)
         #endregion
         $EventMessage += "        </ParametersNotInDesiredState>`r`n"
         $EventMessage += "    </ConfigurationDrift>`r`n"
