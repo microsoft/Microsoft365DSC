@@ -42,7 +42,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Add-TeamUser -MockWith {
-                return @{User = $null}
+                return @{
+                    User = $null
+                }
             }
 
             Mock -CommandName Get-TeamUser -MockWith {
@@ -118,7 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-           Mock -CommandName Get-TeamByName -MockWith {
+            Mock -CommandName Get-TeamByName -MockWith {
                 return @{
                     DisplayName = "TestTeam"
                     GroupID     = "12345-12345-12345-12345-12345"
@@ -213,9 +215,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-Team -MockWith {
                 return @(@{
-                    DisplayName = "TestTeam"
-                    GroupID     = "12345-12345-12345-12345-12345"
-                })
+                        DisplayName = "TestTeam"
+                        GroupID     = "12345-12345-12345-12345-12345"
+                    })
             }
 
             Mock -CommandName Get-TeamUser -MockWith {

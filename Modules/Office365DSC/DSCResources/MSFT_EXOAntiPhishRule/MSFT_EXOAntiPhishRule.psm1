@@ -61,7 +61,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of AntiPhishRule for $Identity"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     Write-Verbose -Message "Global ExchangeOnlineSession status:"
     Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
@@ -184,7 +184,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of AntiPhishRule for $Identity"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $AntiPhishRules = Get-AntiPhishRule
 
@@ -295,9 +295,9 @@ function Test-TargetResource
     }
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -316,8 +316,8 @@ function Export-TargetResource
     )
     $InformationPreference = "Continue"
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline `
-                      -ErrorAction SilentlyContinue
+        -Platform ExchangeOnline `
+        -ErrorAction SilentlyContinue
 
     $AntiPhishRules = Get-AntiphishRule
     $content = ""

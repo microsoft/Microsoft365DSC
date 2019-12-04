@@ -100,7 +100,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure  | Should be "Present"
+                (Get-TargetResource @testParams).Ensure | Should be "Present"
             }
 
             It "Should return true from the Test method" {
@@ -108,12 +108,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Rename existing channel" -Fixture{
+        Context -Name "Rename existing channel" -Fixture {
             $testParams = @{
                 TeamName           = "TestTeam"
                 DisplayName        = "Test Channel"
                 Ensure             = "Present"
-                NewDisplayName = "Test Channel Updated"
+                NewDisplayName     = "Test Channel Updated"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -139,7 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure  | Should be "Present"
+                (Get-TargetResource @testParams).Ensure | Should be "Present"
             }
 
             It "Renames existing channel in the Set method" {
@@ -151,7 +151,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Remove existing channel" -Fixture{
+        Context -Name "Remove existing channel" -Fixture {
             $testParams = @{
                 TeamName           = "TestTeam"
                 DisplayName        = "Test Channel"
@@ -186,7 +186,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure  | Should be "Present"
+                (Get-TargetResource @testParams).Ensure | Should be "Present"
             }
 
             It "Remove channel in the Set method" {

@@ -37,10 +37,10 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of SCCaseHoldRule for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $Rules = Get-CaseHoldRule -Policy $Policy -ErrorAction 'SilentlyContinue'
-    $Rule = $Rules | Where-Object { $_.Name -eq $Name}
+    $Rule = $Rules | Where-Object { $_.Name -eq $Name }
 
     if ($null -eq $Rule)
     {
@@ -106,7 +106,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of SCCaseHoldRule for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $CurrentRule = Get-TargetResource @PSBoundParameters
 
@@ -183,9 +183,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -205,7 +205,7 @@ function Export-TargetResource
 
     $InformationPreference = "Continue"
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
     [array]$Rules = Get-CaseHoldRule
 
     $dscContent = ""

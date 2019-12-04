@@ -192,7 +192,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Get AntiphishRule fails" -Fixture{
+        Context -Name "Get AntiphishRule fails" -Fixture {
             $testParams = @{
                 Identity           = 'contoso.com'
                 AntiPhishPolicy    = 'TestPolicy'
@@ -200,7 +200,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Present"
             }
 
-            Mock -CommandName Get-AntiPhishRule -MockWith{
+            Mock -CommandName Get-AntiPhishRule -MockWith {
                 throw "Error Getting AntiPhishRules"
             }
 
@@ -215,7 +215,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                GlobalAdminAccount           = $GlobalAdminAccount
+                GlobalAdminAccount = $GlobalAdminAccount
             }
 
             It "Should Reverse Engineer resource from the Export method" {

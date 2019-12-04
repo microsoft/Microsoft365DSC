@@ -3,16 +3,16 @@ param(
     [Parameter()]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\Stubs\Office365DSC.psm1" `
-                                         -Resolve)
+            -ChildPath "..\Stubs\Office365DSC.psm1" `
+            -Resolve)
 )
 
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\UnitTestHelper.psm1" `
-                                -Resolve)
+        -ChildPath "..\UnitTestHelper.psm1" `
+        -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                                -DscResource "SPOSearchResultSource"
+    -DscResource "SPOSearchResultSource"
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -95,8 +95,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
             $xmlTemplatePath = Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\..\..\Modules\Office365DSC\Dependencies\SearchConfigurationSettings.xml" `
-                                         -Resolve
+                -ChildPath "..\..\..\Modules\Office365DSC\Dependencies\SearchConfigurationSettings.xml" `
+                -Resolve
             $emptyXMLTemplate = Get-Content $xmlTemplatePath
             Mock -CommandName Get-PnPSearchConfiguration -MockWith {
 

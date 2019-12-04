@@ -39,7 +39,7 @@ function Get-TargetResource
         $ExpirationDateOption,
 
         [Parameter()]
-        [ValidateSet("Delete","Keep","KeepAndDelete")]
+        [ValidateSet("Delete", "Keep", "KeepAndDelete")]
         [System.String]
         $RetentionComplianceAction,
 
@@ -56,7 +56,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of RetentionComplianceRule for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $RuleObject = Get-RetentionComplianceRule -Identity $Name -ErrorAction SilentlyContinue
 
@@ -131,7 +131,7 @@ function Set-TargetResource
         $ExpirationDateOption,
 
         [Parameter()]
-        [ValidateSet("Delete","Keep","KeepAndDelete")]
+        [ValidateSet("Delete", "Keep", "KeepAndDelete")]
         [System.String]
         $RetentionComplianceAction,
 
@@ -148,7 +148,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of RetentionComplianceRule for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $CurrentRule = Get-TargetResource @PSBoundParameters
 
@@ -218,7 +218,7 @@ function Test-TargetResource
         $ExpirationDateOption,
 
         [Parameter()]
-        [ValidateSet("Delete","Keep","KeepAndDelete")]
+        [ValidateSet("Delete", "Keep", "KeepAndDelete")]
         [System.String]
         $RetentionComplianceAction,
 
@@ -241,9 +241,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

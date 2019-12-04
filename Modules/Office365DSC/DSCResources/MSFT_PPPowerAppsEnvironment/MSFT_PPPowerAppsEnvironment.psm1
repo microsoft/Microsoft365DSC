@@ -9,16 +9,16 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('canada','unitesstates','europe','asia','australia','india','japan','unitedkingdom','unitedstatesfirstrelease','southamerica','france','usgov')]
+        [ValidateSet('canada', 'unitesstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
         $Location,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production','Trial')]
+        [ValidateSet('Production', 'Trial')]
         $EnvironmentSKU,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -30,7 +30,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration for PowerApps Environment {$DisplayName}"
 
     Test-MSCloudLogin -Cloud $GlobalAdminAccount `
-                      -Platform PowerPlatforms
+        -Platform PowerPlatforms
 
     $nullReturn = @{
         DisplayName        = $DisplayName
@@ -42,7 +42,7 @@ function Get-TargetResource
 
     try
     {
-        $environment = Get-AdminPowerAppEnvironment | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+        $environment = Get-AdminPowerAppEnvironment | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
 
         if ($null -eq $environment)
         {
@@ -76,16 +76,16 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('canada','unitesstates','europe','asia','australia','india','japan','unitedkingdom','unitedstatesfirstrelease','southamerica','france','usgov')]
+        [ValidateSet('canada', 'unitesstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
         $Location,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production','Trial')]
+        [ValidateSet('Production', 'Trial')]
         $EnvironmentSKU,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -97,7 +97,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration for PowerApps Environment {$DisplayName}"
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform PowerPlatforms
+        -Platform PowerPlatforms
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $CurrentParameters = $PSBoundParameters
@@ -139,16 +139,16 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('canada','unitesstates','europe','asia','australia','india','japan','unitedkingdom','unitedstatesfirstrelease','southamerica','france','usgov')]
+        [ValidateSet('canada', 'unitesstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
         $Location,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production','Trial')]
+        [ValidateSet('Production', 'Trial')]
         $EnvironmentSKU,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -166,9 +166,9 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove("GlobalAdminAccount") | Out-Null
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -189,7 +189,7 @@ function Export-TargetResource
     $InformationPreference = 'Continue'
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform PowerPlatforms
+        -Platform PowerPlatforms
 
     [array]$environments = Get-AdminPowerAppEnvironment
     $content = ''

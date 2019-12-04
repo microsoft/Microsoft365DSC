@@ -51,7 +51,7 @@ function Get-TargetResource
     }
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $HostedOutboundSpamFilterPolicies = Get-HostedOutboundSpamFilterPolicy
 
@@ -135,7 +135,7 @@ function Set-TargetResource
     }
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $HostedOutboundSpamFilterPolicyParams = $PSBoundParameters
     $HostedOutboundSpamFilterPolicyParams.Remove('Ensure') | Out-Null
@@ -204,9 +204,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('Verbose') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

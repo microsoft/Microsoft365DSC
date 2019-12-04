@@ -21,12 +21,12 @@ Configuration Example
             RetentionAction    = "Keep"
             RetentionDuration  = "1025"
             RetentionType      = "ModificationAgeInDays"
-            FilePlanProperty   = MSFT_SCFilePlanProperty{
-                FilePlanPropertyDepartment = "DemoDept"
-                FilePlanPropertyCitation = "DemoCit"
+            FilePlanProperty   = MSFT_SCFilePlanProperty {
+                FilePlanPropertyDepartment  = "DemoDept"
+                FilePlanPropertyCitation    = "DemoCit"
                 FilePlanPropertyReferenceId = "DemoRef"
-                FilePlanPropertyAuthority = "DemoAuth"
-                FilePlanPropertyCategory = "DemoCat"
+                FilePlanPropertyAuthority   = "DemoAuth"
+                FilePlanPropertyCategory    = "DemoCat"
                 FilePlanPropertySubcategory = "DemoSub"
             }
             Ensure             = "Present"

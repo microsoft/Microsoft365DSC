@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                              -DscResource "SCFilePlanPropertyReferenceId"
+    -DscResource "SCFilePlanPropertyReferenceId"
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -39,9 +39,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "ReferenceId doesn't already exist" -Fixture {
             $testParams = @{
-                Name                 = "Demo ReferenceId"
-                GlobalAdminAccount   = $GlobalAdminAccount
-                Ensure               = "Present"
+                Name               = "Demo ReferenceId"
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = "Present"
             }
 
             Mock -CommandName Get-FilePlanPropertyReferenceId -MockWith {
@@ -63,9 +63,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReferenceId already exists" -Fixture {
             $testParams = @{
-                Name                 = "Demo ReferenceId"
-                GlobalAdminAccount   = $GlobalAdminAccount
-                Ensure               = "Present"
+                Name               = "Demo ReferenceId"
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = "Present"
             }
 
             Mock -CommandName Get-FilePlanPropertyReferenceId -MockWith {
@@ -89,9 +89,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReferenceId should not exist" -Fixture {
             $testParams = @{
-                Name                 = "Demo ReferenceId"
-                GlobalAdminAccount   = $GlobalAdminAccount
-                Ensure               = "Absent"
+                Name               = "Demo ReferenceId"
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = "Absent"
             }
 
             Mock -CommandName Get-FilePlanPropertyReferenceId -MockWith {

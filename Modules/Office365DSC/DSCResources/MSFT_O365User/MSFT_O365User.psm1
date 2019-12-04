@@ -94,7 +94,7 @@ function Get-TargetResource
         $UserType,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -106,15 +106,15 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
 
     $nullReturn = @{
-        UserPrincipalName = $null
-        DisplayName = $null
-        FirstName = $null
-        LastName = $null
-        UsageLocation = $null
-        LicenseAssignment = $null
-        Password = $null
+        UserPrincipalName  = $null
+        DisplayName        = $null
+        FirstName          = $null
+        LastName           = $null
+        UsageLocation      = $null
+        LicenseAssignment  = $null
+        Password           = $null
         GlobalAdminAccount = $GlobalAdminAccount
-        Ensure = "Absent"
+        Ensure             = "Absent"
     }
 
     try
@@ -141,30 +141,30 @@ function Get-TargetResource
         }
 
         $results = @{
-            UserPrincipalName = $user.UserPrincipalName
-            DisplayName = $user.DisplayName
-            FirstName = $user.FirstName
-            LastName = $user.LastName
-            UsageLocation = $user.UsageLocation
-            LicenseAssignment = $currentLicenseAssignment
-            Password = $Password
-            City = $user.City
-            Country = $user.Country
-            Department = $user.Department
-            Fax = $user.Fax
-            MobilePhone = $user.MobilePhone
-            Office = $user.Office
-            PasswordNeverExpires = $passwordNeverExpires
-            PhoneNumber = $user.PhoneNumber
-            PostalCode = $user.PostalCode
+            UserPrincipalName     = $user.UserPrincipalName
+            DisplayName           = $user.DisplayName
+            FirstName             = $user.FirstName
+            LastName              = $user.LastName
+            UsageLocation         = $user.UsageLocation
+            LicenseAssignment     = $currentLicenseAssignment
+            Password              = $Password
+            City                  = $user.City
+            Country               = $user.Country
+            Department            = $user.Department
+            Fax                   = $user.Fax
+            MobilePhone           = $user.MobilePhone
+            Office                = $user.Office
+            PasswordNeverExpires  = $passwordNeverExpires
+            PhoneNumber           = $user.PhoneNumber
+            PostalCode            = $user.PostalCode
             PreferredDataLocation = $user.PreferredDataLocation
-            PreferredLanguage = $user.PreferredLanguage
-            State = $user.State
-            StreetAddress = $user.StreetAddress
-            Title = $user.Title
-            UserType = $user.UserType
-            GlobalAdminAccount = $GlobalAdminAccount
-            Ensure = "Present"
+            PreferredLanguage     = $user.PreferredLanguage
+            State                 = $user.State
+            StreetAddress         = $user.StreetAddress
+            Title                 = $user.Title
+            UserType              = $user.UserType
+            GlobalAdminAccount    = $GlobalAdminAccount
+            Ensure                = "Present"
         }
         return [System.Collections.Hashtable] $results
     }
@@ -272,7 +272,7 @@ function Set-TargetResource
         $UserType,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -284,7 +284,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of Office 365 User $UserPrincipalName"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform MSOnline
+        -Platform MSOnline
 
     $user = Get-TargetResource @PSBoundParameters
     $CurrentParameters = $PSBoundParameters
@@ -328,8 +328,8 @@ function Set-TargetResource
             try
             {
                 Set-MsolUserLicense -UserPrincipalName $UserPrincipalName `
-                                    -AddLicenses $LicenseAssignment `
-                                    -ErrorAction SilentlyContinue
+                    -AddLicenses $LicenseAssignment `
+                    -ErrorAction SilentlyContinue
             }
             catch
             {
@@ -350,9 +350,9 @@ function Set-TargetResource
         try
         {
             Set-MsolUserLicense -UserPrincipalName $UserPrincipalName `
-                                -AddLicenses $licensesToAdd `
-                                -RemoveLicenses $licensesToRemove `
-                                -ErrorAction SilentlyContinue
+                -AddLicenses $licensesToAdd `
+                -RemoveLicenses $licensesToRemove `
+                -ErrorAction SilentlyContinue
         }
         catch
         {
@@ -459,7 +459,7 @@ function Test-TargetResource
         $UserType,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -476,30 +476,30 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "UserPrincipalName", `
-                                                                   "LicenseAssignment", `
-                                                                   "UsageLocation", `
-                                                                   "FirstName", `
-                                                                   "LastName", `
-                                                                   "DisplayName", `
-                                                                   "City", `
-                                                                   "Country", `
-                                                                   "Department", `
-                                                                   "Fax", `
-                                                                   "MobilePhone", `
-                                                                   "Office", `
-                                                                   "PasswordNeverExpires", `
-                                                                   "PhoneNumber", `
-                                                                   "PostalCode", `
-                                                                   "PreferredDataLocation", `
-                                                                   "PreferredLanguage", `
-                                                                   "State", `
-                                                                   "StreetAddress", `
-                                                                   "Title", `
-                                                                   "UserType")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("Ensure", `
+            "UserPrincipalName", `
+            "LicenseAssignment", `
+            "UsageLocation", `
+            "FirstName", `
+            "LastName", `
+            "DisplayName", `
+            "City", `
+            "Country", `
+            "Department", `
+            "Fax", `
+            "MobilePhone", `
+            "Office", `
+            "PasswordNeverExpires", `
+            "PhoneNumber", `
+            "PostalCode", `
+            "PreferredDataLocation", `
+            "PreferredLanguage", `
+            "State", `
+            "StreetAddress", `
+            "Title", `
+            "UserType")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

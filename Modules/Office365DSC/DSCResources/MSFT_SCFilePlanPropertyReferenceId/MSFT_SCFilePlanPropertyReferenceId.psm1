@@ -21,9 +21,9 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of SCFilePlanPropertyReferenceId for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
-    $property = Get-FilePlanPropertyReferenceId | Where-Object -FilterScript {$_.DisplayName -eq $Name}
+    $property = Get-FilePlanPropertyReferenceId | Where-Object -FilterScript { $_.DisplayName -eq $Name }
 
     if ($null -eq $property)
     {
@@ -37,9 +37,9 @@ function Get-TargetResource
         Write-Verbose "Found existing SCFilePlanPropertyReferenceId $($Name)"
 
         $result = @{
-            Name                 = $property.DisplayName
-            GlobalAdminAccount   = $GlobalAdminAccount
-            Ensure               = 'Present'
+            Name               = $property.DisplayName
+            GlobalAdminAccount = $GlobalAdminAccount
+            Ensure             = 'Present'
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
@@ -69,7 +69,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of SCFilePlanPropertyReferenceId for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $Current = Get-TargetResource @PSBoundParameters
 
@@ -120,9 +120,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -142,7 +142,7 @@ function Export-TargetResource
 
     $InformationPreference = "Continue"
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
     $Properties = Get-FilePlanPropertyReferenceId
 
     $i = 1

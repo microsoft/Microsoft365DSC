@@ -23,7 +23,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting SPO Profile Properties for user {$UserName}"
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $nullReturn = @{
         UserName           = $UserName
@@ -50,7 +50,7 @@ function Get-TargetResource
             $propertiesValue += $convertedProperty
         }
 
-        $result =  @{
+        $result = @{
             UserName           = $UserName
             Properties         = $propertiesValue
             GlobalAdminAccount = $GlobalAdminAccount
@@ -91,7 +91,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting Profile Properties for user {$UserName}"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $currentProperties = Get-TargetResource @PSBoundParameters
 
@@ -141,8 +141,8 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState  -DesiredValues $PSBoundParameters `
-                                                   -Source $($MyInvocation.MyCommand.Source) `
-                                                   -CurrentValues $CurrentValues
+        -Source $($MyInvocation.MyCommand.Source) `
+        -CurrentValues $CurrentValues
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -156,7 +156,7 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [ValidateRange(1,100)]
+        [ValidateRange(1, 100)]
         $MaxProcesses = 16,
 
         [Parameter(Mandatory = $true)]
@@ -266,7 +266,7 @@ function Export-TargetResource
     $elapsedTime = 0
     do
     {
-        $jobs = Get-Job | Where-Object -FilterScript {$_.Name -like '*SPOUserProfileProperty*'}
+        $jobs = Get-Job | Where-Object -FilterScript { $_.Name -like '*SPOUserProfileProperty*' }
         $count = $jobs.Length
         foreach ($job in $jobs)
         {
@@ -284,8 +284,8 @@ function Export-TargetResource
                 break
             }
 
-            $status =  "Completed $jobsCompleted/$totalJobs jobs in $elapsedTime seconds"
-            $percentCompleted = $jobsCompleted/$totalJobs * 100
+            $status = "Completed $jobsCompleted/$totalJobs jobs in $elapsedTime seconds"
+            $percentCompleted = $jobsCompleted / $totalJobs * 100
             Write-Progress -Activity "SPOUserProfileProperty Extraction" -PercentComplete $percentCompleted -Status $status
         }
         $elapsedTime ++

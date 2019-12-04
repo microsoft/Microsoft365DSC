@@ -30,7 +30,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of member $User to Team $TeamName"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform MicrosoftTeams
+        -Platform MicrosoftTeams
 
     $nullReturn = @{
         User               = $User
@@ -110,7 +110,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of member $User to Team $TeamName"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform MicrosoftTeams
+        -Platform MicrosoftTeams
 
     $team = Get-TeamByName $TeamName
 
@@ -181,11 +181,11 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "User", `
-                                                                   "Role")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("Ensure", `
+            "User", `
+            "Role")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -199,7 +199,7 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [ValidateRange(1,100)]
+        [ValidateRange(1, 100)]
         $MaxProcesses,
 
         [Parameter(Mandatory = $true)]
@@ -262,7 +262,7 @@ function Export-TargetResource
                 $content = ""
                 $j = 1
                 Test-MSCloudLogin -CloudCredential $params.GlobalAdminAccount `
-                                  -Platform MicrosoftTeams
+                    -Platform MicrosoftTeams
 
                 $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
                 if ($GlobalAdminAccount.UserName.Contains("@"))
@@ -337,7 +337,7 @@ function Export-TargetResource
     $elapsedTime = 0
     do
     {
-        $jobs = Get-Job | Where-Object -FilterScript {$_.Name -like '*TeamsUser*'}
+        $jobs = Get-Job | Where-Object -FilterScript { $_.Name -like '*TeamsUser*' }
         $count = $jobs.Length
         foreach ($job in $jobs)
         {
@@ -355,8 +355,8 @@ function Export-TargetResource
                 break
             }
 
-            $status =  "Completed $jobsCompleted/$totalJobs jobs in $elapsedTime seconds"
-            $percentCompleted = $jobsCompleted/$totalJobs * 100
+            $status = "Completed $jobsCompleted/$totalJobs jobs in $elapsedTime seconds"
+            $percentCompleted = $jobsCompleted / $totalJobs * 100
             Write-Progress -Activity "TeamsUser Extraction" -PercentComplete $percentCompleted -Status $status
         }
         $elapsedTime ++

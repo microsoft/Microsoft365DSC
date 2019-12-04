@@ -92,18 +92,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-CaseHoldRule -MockWith {
                 return @{
-                    Name               = "TestRule"
-                    Policy             = "12345-12345-12345-12345-12345"
-                    Comment            = "Different comment"
-                    Disabled           = $true
-                    ContentMatchQuery  = "filename:2016 budget filetype:xlsx"
+                    Name              = "TestRule"
+                    Policy            = "12345-12345-12345-12345-12345"
+                    Comment           = "Different comment"
+                    Disabled          = $true
+                    ContentMatchQuery = "filename:2016 budget filetype:xlsx"
                 }
             }
 
             Mock -CommandName Get-CaseHoldPolicy -MockWith {
                 return @{
-                    Name              = "TestPolicy"
-                    Identity          = "12345-12345-12345-12345-12345"
+                    Name     = "TestPolicy"
+                    Identity = "12345-12345-12345-12345-12345"
                 }
             }
 
@@ -133,18 +133,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-CaseHoldRule -MockWith {
                 return @{
-                    Name               = "TestRule"
-                    Policy             = "12345-12345-12345-12345-12345"
-                    Comment            = "Different comment"
-                    Disabled           = $true
-                    ContentMatchQuery  = "filename:2016 budget filetype:xlsx"
+                    Name              = "TestRule"
+                    Policy            = "12345-12345-12345-12345-12345"
+                    Comment           = "Different comment"
+                    Disabled          = $true
+                    ContentMatchQuery = "filename:2016 budget filetype:xlsx"
                 }
             }
 
             Mock -CommandName Get-CaseHoldPolicy -MockWith {
                 return @{
-                    Name              = "TestPolicy"
-                    Identity          = "12345-12345-12345-12345-12345"
+                    Name     = "TestPolicy"
+                    Identity = "12345-12345-12345-12345-12345"
                 }
             }
 
@@ -167,25 +167,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             $testRule1 = @{
-                Name               = "TestRule1"
-                Policy             = "12345-12345-12345-12345-12345"
-                Comment            = "Different comment"
-                Disabled           = $true
-                ContentMatchQuery  = "filename:2016 budget filetype:xlsx"
+                Name              = "TestRule1"
+                Policy            = "12345-12345-12345-12345-12345"
+                Comment           = "Different comment"
+                Disabled          = $true
+                ContentMatchQuery = "filename:2016 budget filetype:xlsx"
             }
 
             $testRule2 = @{
-                Name               = "TestRule2"
-                Policy             = "12345-12345-12345-12345-12345"
-                Comment            = "Different comment"
-                Disabled           = $true
-                ContentMatchQuery  = "filename:2016 budget filetype:xlsx"
+                Name              = "TestRule2"
+                Policy            = "12345-12345-12345-12345-12345"
+                Comment           = "Different comment"
+                Disabled          = $true
+                ContentMatchQuery = "filename:2016 budget filetype:xlsx"
             }
 
             Mock -CommandName Get-CaseHoldPolicy -MockWith {
                 return @{
-                    Name              = "TestPolicy"
-                    Identity          = "12345-12345-12345-12345-12345"
+                    Name     = "TestPolicy"
+                    Identity = "12345-12345-12345-12345-12345"
                 }
             }
 

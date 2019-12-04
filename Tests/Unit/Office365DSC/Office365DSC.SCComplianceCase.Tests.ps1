@@ -114,9 +114,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-ComplianceCase -MockWith {
                 return @{
-                    Name              = "TestCase"
-                    Description       = ""
-                    Status            = "Active"
+                    Name        = "TestCase"
+                    Description = ""
+                    Status      = "Active"
                 }
             }
 
@@ -144,9 +144,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-ComplianceCase -MockWith {
                 return @{
-                    Name              = "TestCase"
-                    Description       = "This is a test Case"
-                    Status            = "Closed"
+                    Name        = "TestCase"
+                    Description = "This is a test Case"
+                    Status      = "Closed"
                 }
             }
 

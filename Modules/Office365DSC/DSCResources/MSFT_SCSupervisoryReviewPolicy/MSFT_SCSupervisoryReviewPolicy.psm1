@@ -5,7 +5,7 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateLength(1,64)]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
 
@@ -30,7 +30,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of SupervisoryReviewPolicy for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $PolicyObject = Get-SupervisoryReviewPolicyV2 $Name -ErrorAction SilentlyContinue
 
@@ -64,7 +64,7 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateLength(1,64)]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
 
@@ -89,7 +89,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of SupervisoryReviewPolicy for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $CurrentPolicy = Get-TargetResource @PSBoundParameters
 
@@ -123,7 +123,7 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateLength(1,64)]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
 
@@ -154,9 +154,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -170,7 +170,7 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateLength(1,64)]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
 
