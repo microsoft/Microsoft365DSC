@@ -32,7 +32,7 @@ function Start-O365ConfigurationExtract
         $MaxProcesses,
 
         [Parameter()]
-        [ValidateSet('SPO', 'EXO', 'SC', 'OD', 'O365', 'TEAMS')]
+        [ValidateSet('SPO', 'EXO', 'SC', 'OD', 'O365', 'TEAMS', 'PP')]
         [System.String[]]
         $Workloads
     )
@@ -869,6 +869,22 @@ function Start-O365ConfigurationExtract
         {
             New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
+    }
+    #endregion
+
+    #region PPPowerAppsEnvironment
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckPPPowerAppsEnvironment")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("PP")))
+    {
+        Write-Information "Extracting PPowerAppsEnvironment..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_PPPowerAppsEnvironment\MSFT_PPPowerAppsEnvironment.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
 

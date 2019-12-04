@@ -13999,6 +13999,45 @@ function Enable-OrganizationCustomization
     )
 }
 
+function New-AdminPowerAppEnvironment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('canada','unitesstates','europe','asia','australia','india','japan','unitedkingdom','unitedstatesfirstrelease','southamerica','france','usgov')]
+        $Location,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('Production','Trial')]
+        $EnvironmentSKU
+    )
+}
+
+function Get-AdminPowerAppEnvironment
+{
+    [CmdletBinding()]
+    param()
+}
+
+function Remove-AdminPowerAppEnvironment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $EnvironmentName,
+
+        [Parameter()]
+        [Switch]
+        $Confirm
+    )
+}
 function Get-CsTeamsCallingPolicy
 {
     [CmdletBinding()]
