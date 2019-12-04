@@ -1375,6 +1375,11 @@ function Test-Office365DSCParameterState
     )
     $VerbosePreference = "SilentlyContinue"
     $WarningPreference = "SilentlyContinue"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", "$Source")
+    $data.Add("Method", "Test-TargetResource")
+    #endregion
     $returnValue = $true
 
     $DriftedParameters = @{ }
@@ -1609,10 +1614,16 @@ function Test-Office365DSCParameterState
         $EventMessage += "    <ConfigurationDrift Source=`"$Source`">`r`n"
 
         $EventMessage += "        <ParametersNotInDesiredState>`r`n"
+        $driftedParameters = ''
         foreach ($key in $DriftedParameters.Keys)
         {
+            $DriftedParameters += $DriftedParameters + "|"
             $EventMessage += "            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n"
         }
+        #region Telemetry
+        $data.Add("Event", "ConfigurationDrift")
+        $data.Add("Parameters", $DriftedParameters)
+        #endregion
         $EventMessage += "        </ParametersNotInDesiredState>`r`n"
         $EventMessage += "    </ConfigurationDrift>`r`n"
         $EventMessage += "    <DesiredValues>`r`n"
@@ -1631,6 +1642,9 @@ function Test-Office365DSCParameterState
 
         Add-O365DSCEvent -Message $EventMessage -EntryType 'Error' -EventID 1 -Source $Source
     }
+    #region Telemetry
+    Add-O365DSCTelemetryEvent -Type "Flow" -Data $data
+    #endregion
     return $returnValue
 }
 

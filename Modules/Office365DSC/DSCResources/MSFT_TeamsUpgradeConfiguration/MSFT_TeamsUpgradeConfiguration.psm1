@@ -22,8 +22,15 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-
     Write-Verbose -Message "Checking the Teams Upgrade Configuration"
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", "TeamsUpgradeConfiguration")
+    $data.Add("Method", "Get-TargetResource")
+    Add-O365DSCTelemetryEvent -Type "Flow" -Data $data
+    #endregion
+
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SkypeForBusiness
 
@@ -61,6 +68,13 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting Teams Upgrade Configuration"
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", "TeamsUpgradeConfiguration")
+    $data.Add("Method", "Set-TargetResource")
+    Add-O365DSCTelemetryEvent -Type "Flow" -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SkypeForBusiness
@@ -127,6 +141,13 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", "TeamsUpgradeConfiguration")
+    $data.Add("Method", "Export-TargetResource")
+    Add-O365DSCTelemetryEvent -Type "Flow" -Data $data
+    #endregion
 
     $params = @{
         IsSingleInstance   = 'Yes'
