@@ -3,16 +3,16 @@ param(
     [Parameter()]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\Stubs\Office365.psm1" `
-                                         -Resolve)
+            -ChildPath "..\Stubs\Office365.psm1" `
+            -Resolve)
 )
 
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\UnitTestHelper.psm1" `
-                                -Resolve)
+        -ChildPath "..\UnitTestHelper.psm1" `
+        -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                              -DscResource "O365User"
+    -DscResource "O365User"
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -26,13 +26,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "When the user doesn't already exist" -Fixture {
             $testParams = @{
-                UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
-                DisplayName = "John Smith"
-                FirstName = "John"
-                LastName = "Smith"
-                UsageLocation = "US"
-                LicenseAssignment = @("CONTOSO:ENTERPRISE_PREMIUM")
-                Password = $GlobalAdminAccount
+                UserPrincipalName  = "JohnSmith@contoso.onmicrosoft.com"
+                DisplayName        = "John Smith"
+                FirstName          = "John"
+                LastName           = "Smith"
+                UsageLocation      = "US"
+                LicenseAssignment  = @("CONTOSO:ENTERPRISE_PREMIUM")
+                Password           = $GlobalAdminAccount
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -57,29 +57,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "When the user already exists" -Fixture {
             $testParams = @{
-                UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
-                DisplayName = "John Smith"
-                FirstName = "John"
-                LastName = "Smith"
-                UsageLocation = "US"
-                LicenseAssignment = @("CONTOSO:ENTERPRISE_PREMIUM")
-                Password = $GlobalAdminAccount
-                Ensure = "Present"
+                UserPrincipalName  = "JohnSmith@contoso.onmicrosoft.com"
+                DisplayName        = "John Smith"
+                FirstName          = "John"
+                LastName           = "Smith"
+                UsageLocation      = "US"
+                LicenseAssignment  = @("CONTOSO:ENTERPRISE_PREMIUM")
+                Password           = $GlobalAdminAccount
+                Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-MSOLUser -MockWith {
                 return @{
-                    UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
-                    DisplayName = "John Smith"
-                    FirstName = "John"
-                    LastName = "Smith"
-                    UsageLocation = "US"
-                    Licenses= @(@{
-                        AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
-                    })
+                    UserPrincipalName    = "JohnSmith@contoso.onmicrosoft.com"
+                    DisplayName          = "John Smith"
+                    FirstName            = "John"
+                    LastName             = "Smith"
+                    UsageLocation        = "US"
+                    Licenses             = @(@{
+                            AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
+                        })
                     PasswordNeverExpires = $False
-                    Ensure = "Present"
+                    Ensure               = "Present"
                 }
             }
 
@@ -94,30 +94,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "When the user already exists but has a different license assigned" -Fixture {
             $testParams = @{
-                UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
-                DisplayName = "John Smith"
-                FirstName = "John"
-                LastName = "Smith"
-                UsageLocation = "US"
-                LicenseAssignment = @()
-                Password = $GlobalAdminAccount
+                UserPrincipalName    = "JohnSmith@contoso.onmicrosoft.com"
+                DisplayName          = "John Smith"
+                FirstName            = "John"
+                LastName             = "Smith"
+                UsageLocation        = "US"
+                LicenseAssignment    = @()
+                Password             = $GlobalAdminAccount
                 PasswordNeverExpires = $false
-                Ensure = "Present"
-                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure               = "Present"
+                GlobalAdminAccount   = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-MSOLUser -MockWith {
                 return @{
-                    UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
-                    DisplayName = "John Smith"
-                    FirstName = "John"
-                    LastName = "Smith"
-                    UsageLocation = "US"
-                    Licenses = @(@{
-                        AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
-                    })
+                    UserPrincipalName    = "JohnSmith@contoso.onmicrosoft.com"
+                    DisplayName          = "John Smith"
+                    FirstName            = "John"
+                    LastName             = "Smith"
+                    UsageLocation        = "US"
+                    Licenses             = @(@{
+                            AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
+                        })
                     PasswordNeverExpires = $false
-                    Ensure = "Present"
+                    Ensure               = "Present"
                 }
             }
 
@@ -136,22 +136,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                UserPrincipalName  = "JohnSmith@contoso.onmicrosoft.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-MSOLUser -MockWith {
                 return @{
-                    UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
-                    DisplayName = "John Smith"
-                    FirstName = "John"
-                    LastName = "Smith"
-                    UsageLocation = "US"
-                    Licenses = @(@{
-                        AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
-                    })
+                    UserPrincipalName    = "JohnSmith@contoso.onmicrosoft.com"
+                    DisplayName          = "John Smith"
+                    FirstName            = "John"
+                    LastName             = "Smith"
+                    UsageLocation        = "US"
+                    Licenses             = @(@{
+                            AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
+                        })
                     PasswordNeverExpires = $false
-                    Ensure = "Present"
+                    Ensure               = "Present"
                 }
             }
 

@@ -72,7 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPPropertyBag -MockWith {
                 return @(
                     @{
-                        Key = "MyKey"
+                        Key   = "MyKey"
                         Value = "MyValue"
                     }
                 )
@@ -93,10 +93,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                GlobalAdminAccount           = $GlobalAdminAccount
+                GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-PnPTenantSite -MockWith{
+            Mock -CommandName Get-PnPTenantSite -MockWith {
                 return @(
                     @{
                         Url = "https://contoso.sharepoint.com"
@@ -107,7 +107,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPPropertyBag -MockWith {
                 return @(
                     @{
-                        Key = "MyKey"
+                        Key   = "MyKey"
                         Value = "MyValue"
                     }
                 )

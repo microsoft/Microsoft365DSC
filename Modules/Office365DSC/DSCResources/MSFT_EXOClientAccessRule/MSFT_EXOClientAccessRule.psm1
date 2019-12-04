@@ -23,7 +23,7 @@ function Get-TargetResource
         $AnyOfClientIPAddressesOrRanges = @(),
 
         [Parameter()]
-        [ValidateSet('ExchangeActiveSync','ExchangeAdminCenter','ExchangeWebServices','IMAP4','OfflineAddressBook','OutlookAnywhere','OutlookWebApp','POP3','PowerShellWebServices','RemotePowerShell','REST','UniversalOutlook')]
+        [ValidateSet('ExchangeActiveSync', 'ExchangeAdminCenter', 'ExchangeWebServices', 'IMAP4', 'OfflineAddressBook', 'OutlookAnywhere', 'OutlookWebApp', 'POP3', 'PowerShellWebServices', 'RemotePowerShell', 'REST', 'UniversalOutlook')]
         [System.String[]]
         $AnyOfProtocols = @(),
 
@@ -41,7 +41,7 @@ function Get-TargetResource
         $ExceptAnyOfClientIPAddressesOrRanges = @(),
 
         [Parameter()]
-        [ValidateSet('ExchangeActiveSync','ExchangeAdminCenter','ExchangeWebServices','IMAP4','OfflineAddressBook','OutlookAnywhere','OutlookWebApp','POP3','PowerShellWebServices','RemotePowerShell','REST','UniversalOutlook')]
+        [ValidateSet('ExchangeActiveSync', 'ExchangeAdminCenter', 'ExchangeWebServices', 'IMAP4', 'OfflineAddressBook', 'OutlookAnywhere', 'OutlookWebApp', 'POP3', 'PowerShellWebServices', 'RemotePowerShell', 'REST', 'UniversalOutlook')]
         [System.String[]]
         $ExceptAnyOfProtocols = @(),
 
@@ -79,7 +79,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of ClientAccessRule for $Identity"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
 
     $ClientAccessRules = Get-ClientAccessRule
@@ -147,7 +147,7 @@ function Set-TargetResource
         $AnyOfClientIPAddressesOrRanges = @(),
 
         [Parameter()]
-        [ValidateSet('ExchangeActiveSync','ExchangeAdminCenter','ExchangeWebServices','IMAP4','OfflineAddressBook','OutlookAnywhere','OutlookWebApp','POP3','PowerShellWebServices','RemotePowerShell','REST','UniversalOutlook')]
+        [ValidateSet('ExchangeActiveSync', 'ExchangeAdminCenter', 'ExchangeWebServices', 'IMAP4', 'OfflineAddressBook', 'OutlookAnywhere', 'OutlookWebApp', 'POP3', 'PowerShellWebServices', 'RemotePowerShell', 'REST', 'UniversalOutlook')]
         [System.String[]]
         $AnyOfProtocols = @(),
 
@@ -165,7 +165,7 @@ function Set-TargetResource
         $ExceptAnyOfClientIPAddressesOrRanges = @(),
 
         [Parameter()]
-        [ValidateSet('ExchangeActiveSync','ExchangeAdminCenter','ExchangeWebServices','IMAP4','OfflineAddressBook','OutlookAnywhere','OutlookWebApp','POP3','PowerShellWebServices','RemotePowerShell','REST','UniversalOutlook')]
+        [ValidateSet('ExchangeActiveSync', 'ExchangeAdminCenter', 'ExchangeWebServices', 'IMAP4', 'OfflineAddressBook', 'OutlookAnywhere', 'OutlookWebApp', 'POP3', 'PowerShellWebServices', 'RemotePowerShell', 'REST', 'UniversalOutlook')]
         [System.String[]]
         $ExceptAnyOfProtocols = @(),
 
@@ -203,7 +203,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of ClientAccessRule for $Identity"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
 
     $ClientAccessRules = Get-ClientAccessRule
@@ -264,7 +264,7 @@ function Test-TargetResource
         $AnyOfClientIPAddressesOrRanges = @(),
 
         [Parameter()]
-        [ValidateSet('ExchangeActiveSync','ExchangeAdminCenter','ExchangeWebServices','IMAP4','OfflineAddressBook','OutlookAnywhere','OutlookWebApp','POP3','PowerShellWebServices','RemotePowerShell','REST','UniversalOutlook')]
+        [ValidateSet('ExchangeActiveSync', 'ExchangeAdminCenter', 'ExchangeWebServices', 'IMAP4', 'OfflineAddressBook', 'OutlookAnywhere', 'OutlookWebApp', 'POP3', 'PowerShellWebServices', 'RemotePowerShell', 'REST', 'UniversalOutlook')]
         [System.String[]]
         $AnyOfProtocols = @(),
 
@@ -282,7 +282,7 @@ function Test-TargetResource
         $ExceptAnyOfClientIPAddressesOrRanges = @(),
 
         [Parameter()]
-        [ValidateSet('ExchangeActiveSync','ExchangeAdminCenter','ExchangeWebServices','IMAP4','OfflineAddressBook','OutlookAnywhere','OutlookWebApp','POP3','PowerShellWebServices','RemotePowerShell','REST','UniversalOutlook')]
+        [ValidateSet('ExchangeActiveSync', 'ExchangeAdminCenter', 'ExchangeWebServices', 'IMAP4', 'OfflineAddressBook', 'OutlookAnywhere', 'OutlookWebApp', 'POP3', 'PowerShellWebServices', 'RemotePowerShell', 'REST', 'UniversalOutlook')]
         [System.String[]]
         $ExceptAnyOfProtocols = @(),
 
@@ -328,9 +328,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

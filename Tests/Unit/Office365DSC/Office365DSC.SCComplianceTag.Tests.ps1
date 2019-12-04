@@ -58,8 +58,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 RetentionAction    = "Keep"
                 RetentionDuration  = "1025"
                 FilePlanProperty   = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
-                    FilePlanPropertyDepartment = "Legal"
-                } -ClientOnly)
+                        FilePlanPropertyDepartment = "Legal"
+                    } -ClientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 RetentionType      = "ModificationAgeInDays"
                 Ensure             = "Present"
@@ -89,13 +89,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 RetentionAction    = "Keep"
                 RetentionDuration  = "1025"
                 FilePlanProperty   = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
-                    FilePlanPropertyDepartment = "DemoDept"
-                    FilePlanPropertyCitation = "DemoCit"
-                    FilePlanPropertyReferenceId = "DemoRef"
-                    FilePlanPropertyAuthority = "DemoAuth"
-                    FilePlanPropertyCategory = "DemoCat"
-                    FilePlanPropertySubcategory = "DemoSub"
-                } -ClientOnly)
+                        FilePlanPropertyDepartment  = "DemoDept"
+                        FilePlanPropertyCitation    = "DemoCit"
+                        FilePlanPropertyReferenceId = "DemoRef"
+                        FilePlanPropertyAuthority   = "DemoAuth"
+                        FilePlanPropertyCategory    = "DemoCat"
+                        FilePlanPropertySubcategory = "DemoSub"
+                    } -ClientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 RetentionType      = "ModificationAgeInDays"
                 Ensure             = "Present"
@@ -138,8 +138,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Comment            = "This is a test Rule"
                 RetentionAction    = "Keep"
                 FilePlanProperty   = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
-                    FilePlanPropertyDepartment = "Legal"
-                } -ClientOnly)
+                        FilePlanPropertyDepartment = "Legal"
+                    } -ClientOnly)
                 RetentionDuration  = "1025"
                 GlobalAdminAccount = $GlobalAdminAccount
                 RetentionType      = "ModificationAgeInDays"

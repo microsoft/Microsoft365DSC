@@ -5,7 +5,7 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Exchange','SharePoint','OneDriveForBusiness')]
+        [ValidateSet('Exchange', 'SharePoint', 'OneDriveForBusiness')]
         [System.String]
         $Workload,
 
@@ -22,18 +22,18 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of SCAuditConfigurationPolicy for Workload {$Workload}"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $PolicyObject = $null
     $WorkloadValue = $Workload
     if ($Workload -eq 'OneDriveForBusiness')
     {
-        $PolicyObject = Get-AuditConfigurationPolicy | Where-Object -FilterScript {$_.Name -eq 'a415dcce-19a0-4153-b137-eb6fd67995b5'}
+        $PolicyObject = Get-AuditConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq 'a415dcce-19a0-4153-b137-eb6fd67995b5' }
         $WorkloadValue = 'OneDriveForBusiness'
     }
     else
     {
-        $PolicyObject = Get-AuditConfigurationPolicy | Where-Object -FilterScript {$_.Workload -eq $Workload}
+        $PolicyObject = Get-AuditConfigurationPolicy | Where-Object -FilterScript { $_.Workload -eq $Workload }
     }
 
 
@@ -65,7 +65,7 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Exchange','SharePoint','OneDriveForBusiness')]
+        [ValidateSet('Exchange', 'SharePoint', 'OneDriveForBusiness')]
         [System.String]
         $Workload,
 
@@ -82,13 +82,13 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of SCAuditConfigurationPolicy for $Workload"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $CurrentPolicy = Get-TargetResource @PSBoundParameters
 
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
     {
-        $CreationParams = @{Workload = $Workload}
+        $CreationParams = @{Workload = $Workload }
         New-AuditConfigurationPolicy @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
@@ -101,11 +101,11 @@ function Set-TargetResource
         Write-Verbose "Removing SCAuditConfigurationPolicy for Workload {$Workload}"
         if ($Workload -eq 'OneDriveForBusiness')
         {
-            $policy = Get-AuditConfigurationPolicy | Where-Object -FilterScript {$_.Name -eq 'a415dcce-19a0-4153-b137-eb6fd67995b5'}
+            $policy = Get-AuditConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq 'a415dcce-19a0-4153-b137-eb6fd67995b5' }
         }
         else
         {
-            $policy = Get-AuditConfigurationPolicy | Where-Object -FilterScript {$_.Workload -eq $CurrentPolicy.Workload}
+            $policy = Get-AuditConfigurationPolicy | Where-Object -FilterScript { $_.Workload -eq $CurrentPolicy.Workload }
         }
         Remove-AuditConfigurationPolicy -Identity $policy.Identity
     }
@@ -118,7 +118,7 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Exchange','SharePoint','OneDriveForBusiness')]
+        [ValidateSet('Exchange', 'SharePoint', 'OneDriveForBusiness')]
         [System.String]
         $Workload,
 
@@ -141,9 +141,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -162,7 +162,7 @@ function Export-TargetResource
     )
     $InformationPreference = "Continue"
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $policies = Get-AuditConfigurationPolicy
     $content = ""

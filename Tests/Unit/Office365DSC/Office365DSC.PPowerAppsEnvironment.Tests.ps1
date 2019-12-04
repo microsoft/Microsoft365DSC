@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                              -DscResource "PPPowerAppsEnvironment"
+    -DscResource "PPPowerAppsEnvironment"
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -75,9 +75,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AdminPowerAppEnvironment -MockWith {
                 return @{
-                    DisplayName        = "Test Environment"
-                    Location           = 'unitedstates'
-                    EnvironmentType    = 'production'
+                    DisplayName     = "Test Environment"
+                    Location        = 'unitedstates'
+                    EnvironmentType = 'production'
                 }
             }
 
@@ -107,9 +107,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AdminPowerAppEnvironment -MockWith {
                 return @{
-                    DisplayName        = "Test Environment"
-                    Location           = 'canada'
-                    EnvironmentType     = 'production'
+                    DisplayName     = "Test Environment"
+                    Location        = 'canada'
+                    EnvironmentType = 'production'
                 }
             }
 
@@ -133,9 +133,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AdminPowerAppEnvironment -MockWith {
                 return @{
-                    DisplayName        = "Test Environment"
-                    Location           = 'canada'
-                    EnvironmentType     = 'production'
+                    DisplayName     = "Test Environment"
+                    Location        = 'canada'
+                    EnvironmentType = 'production'
                 }
             }
 
@@ -161,9 +161,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AdminPowerAppEnvironment -MockWith {
                 return @{
-                    DisplayName        = "Test Environment"
-                    Location           = 'canada'
-                    EnvironmentType     = 'production'
+                    DisplayName     = "Test Environment"
+                    Location        = 'canada'
+                    EnvironmentType = 'production'
                 }
             }
 

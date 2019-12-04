@@ -34,7 +34,7 @@ function Get-TargetResource
     }
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $GetResults = Get-AdminAuditLogConfig
     if (-not $GetResults)
@@ -92,7 +92,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration for Office 365 Audit Log"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
     {
@@ -156,9 +156,9 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @('UnifiedAuditLogIngestionEnabled')
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @('UnifiedAuditLogIngestionEnabled')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

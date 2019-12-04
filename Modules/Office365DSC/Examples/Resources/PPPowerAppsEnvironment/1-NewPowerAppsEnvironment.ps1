@@ -15,11 +15,11 @@ Configuration Example
     {
         PPPowerAppsEnvironment DemoEnvironment
         {
-            DisplayName          = "My Demo Environment"
-            Ensure               = "Present"
-            EnvironmentSKU       = "Production"
-            GlobalAdminAccount   = $credsGlobalAdmin
-            Location             = "canada"
+            DisplayName        = "My Demo Environment"
+            Ensure             = "Present"
+            EnvironmentSKU     = "Production"
+            GlobalAdminAccount = $credsGlobalAdmin
+            Location           = "canada"
         }
     }
 }

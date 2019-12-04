@@ -276,7 +276,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting EXOOrganizationConfig"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $ConfigSettings = Get-OrganizationConfig
     if ($null -eq $ConfigSettings)
@@ -657,7 +657,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting EXOOrganizationConfig"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
 
     Write-Verbose -Message "Setting EXOOrganizationConfig with values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -953,9 +953,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

@@ -21,7 +21,7 @@ function Get-TargetResource
         $Overwrite = $true,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -33,17 +33,17 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration for app $Identity"
 
     $nullReturn = @{
-        Identity        = ""
-        Path            = $null
-        Publish         = $Publish
-        Overwrite       = $Overwrite
-        Ensure          = "Absent"
+        Identity  = ""
+        Path      = $null
+        Publish   = $Publish
+        Overwrite = $Overwrite
+        Ensure    = "Absent"
     }
 
     try
     {
         Test-MSCloudLogin -Platform PnP `
-                          -O365Credential $GlobalAdminAccount
+            -O365Credential $GlobalAdminAccount
         $app = Get-PnPApp -Identity $Identity -ErrorAction SilentlyContinue
         if ($null -eq $app)
         {
@@ -52,11 +52,11 @@ function Get-TargetResource
         }
 
         return @{
-            Identity        = $app.Title
-            Path            = $Path
-            Publish         = $app.Deployed
-            Overwrite       = $Overwrite
-            Ensure          = "Present"
+            Identity  = $app.Title
+            Path      = $Path
+            Publish   = $app.Deployed
+            Overwrite = $Overwrite
+            Ensure    = "Present"
         }
     }
     catch
@@ -88,7 +88,7 @@ function Set-TargetResource
         $Overwrite = $true,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -100,7 +100,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration for app $Identity"
 
     Test-MSCloudLogin -Platform PnP `
-                      -O365Credential $GlobalAdminAccount
+        -O365Credential $GlobalAdminAccount
 
     $currentApp = Get-TargetResource @PSBoundParameters
 
@@ -143,7 +143,7 @@ function Test-TargetResource
         $Overwrite = $true,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -160,10 +160,10 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "Identity")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("Ensure", `
+            "Identity")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

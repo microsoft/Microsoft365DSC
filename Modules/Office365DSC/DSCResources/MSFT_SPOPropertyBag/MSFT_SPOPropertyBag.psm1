@@ -31,8 +31,8 @@ function Get-TargetResource
     {
         Write-Verbose -Message "Connecting to PnP from the Get method"
         Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                            -ConnectionUrl $Url `
-                            -Platform PnP
+            -ConnectionUrl $Url `
+            -Platform PnP
         Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
         $property = Get-PnPPropertyBag
         Write-Verbose -Message "Properties obtained correctly"
@@ -96,8 +96,8 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of SPOPropertyBag property for $Key at {$Url}"
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -ConnectionUrl $Url `
-                      -Platform PnP
+        -ConnectionUrl $Url `
+        -Platform PnP
 
     $currentProperty = Get-TargetResource @PSBoundParameters
 
@@ -152,9 +152,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -168,7 +168,7 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [ValidateRange(1,100)]
+        [ValidateRange(1, 100)]
         $MaxProcesses,
 
         [Parameter(Mandatory = $true)]
@@ -177,7 +177,7 @@ function Export-TargetResource
     )
     $InformationPreference = "Continue"
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
     $result = ""
 
     # Get all Site Collections in tenant;
@@ -241,8 +241,8 @@ function Export-TargetResource
                         try
                         {
                             Test-MSCloudLogin -CloudCredential $params.GlobalAdminAccount `
-                                              -ConnectionUrl $siteUrl `
-                                              -Platform PnP
+                                -ConnectionUrl $siteUrl `
+                                -Platform PnP
                         }
                         catch
                         {
@@ -252,7 +252,7 @@ function Export-TargetResource
                         try
                         {
                             $properties = Get-PnPPropertyBag
-                            foreach($property in $properties)
+                            foreach ($property in $properties)
                             {
                                 $getValues = @{
                                     Url                = $siteUrl
@@ -293,7 +293,7 @@ function Export-TargetResource
     $elapsedTime = 0
     do
     {
-        $jobs = Get-Job | Where-Object -FilterScript {$_.Name -like '*SPOPropertyBag*'}
+        $jobs = Get-Job | Where-Object -FilterScript { $_.Name -like '*SPOPropertyBag*' }
         $count = $jobs.Length
         foreach ($job in $jobs)
         {
@@ -310,8 +310,8 @@ function Export-TargetResource
                 break
             }
 
-            $status =  "Completed $jobsCompleted/$totalJobs jobs in $elapsedTime seconds"
-            $percentCompleted = $jobsCompleted/$totalJobs * 100
+            $status = "Completed $jobsCompleted/$totalJobs jobs in $elapsedTime seconds"
+            $percentCompleted = $jobsCompleted / $totalJobs * 100
             Write-Progress -Activity "SPOPropertyBag Extraction" -PercentComplete $percentCompleted -Status $status
         }
         $elapsedTime ++

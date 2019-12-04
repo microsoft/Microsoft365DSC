@@ -13,7 +13,7 @@ function Get-TargetResource
         $Policy,
 
         [Parameter()]
-        [ValidateSet("InOrganization","NotInOrganization","None")]
+        [ValidateSet("InOrganization", "NotInOrganization", "None")]
         [System.String[]]
         $AccessScope,
 
@@ -95,7 +95,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of DLPCompliancePolicy for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $PolicyRule = Get-DlpComplianceRule -Identity $Name -ErrorAction SilentlyContinue
 
@@ -178,7 +178,7 @@ function Set-TargetResource
         $Policy,
 
         [Parameter()]
-        [ValidateSet("InOrganization","NotInOrganization","None")]
+        [ValidateSet("InOrganization", "NotInOrganization", "None")]
         [System.String[]]
         $AccessScope,
 
@@ -260,7 +260,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of DLPComplianceRule for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $CurrentRule = Get-TargetResource @PSBoundParameters
 
@@ -315,7 +315,7 @@ function Test-TargetResource
         $Policy,
 
         [Parameter()]
-        [ValidateSet("InOrganization","NotInOrganization","None")]
+        [ValidateSet("InOrganization", "NotInOrganization", "None")]
         [System.String[]]
         $AccessScope,
 
@@ -404,26 +404,26 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Name",
-                                                    "Policy",
-                                                    "AccessScope",
-                                                    "BlockAccess",
-                                                    "BlockAccessScope",
-                                                    "Comment",
-                                                    "ContentPropertyContainsWords",
-                                                    "Disabled",
-                                                    "GenerateAlert",
-                                                    "GenerateIncidentReport",
-                                                    "IncidentReportContent",
-                                                    "NotifyAllowOverride",
-                                                    "NotifyEmailCustomText",
-                                                    "NotifyPolicyTipCustomText",
-                                                    "NotifyUser",
-                                                    "ReportSeverityLevel",
-                                                    "RuleErrorAction",
-                                                    "Ensure")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("Name",
+        "Policy",
+        "AccessScope",
+        "BlockAccess",
+        "BlockAccessScope",
+        "Comment",
+        "ContentPropertyContainsWords",
+        "Disabled",
+        "GenerateAlert",
+        "GenerateIncidentReport",
+        "IncidentReportContent",
+        "NotifyAllowOverride",
+        "NotifyEmailCustomText",
+        "NotifyPolicyTipCustomText",
+        "NotifyUser",
+        "ReportSeverityLevel",
+        "RuleErrorAction",
+        "Ensure")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -442,7 +442,7 @@ function Export-TargetResource
     )
 
     $InformationPreference = "Continue"
-    $rules = Get-DLPComplianceRule | Where-Object {$_.Mode -ne 'PendingDeletion'}
+    $rules = Get-DLPComplianceRule | Where-Object { $_.Mode -ne 'PendingDeletion' }
 
     $i = 1
     $DSCContent = ""
@@ -526,7 +526,7 @@ function Get-SCDLPSensitiveInformation
     )
 
     $result = @{
-        name           = $SensitiveInformation.name
+        name = $SensitiveInformation.name
     }
 
     if ($null -ne $SensitiveInformation.id)

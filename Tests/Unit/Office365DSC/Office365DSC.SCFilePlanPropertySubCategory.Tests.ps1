@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                              -DscResource "SCFilePlanPropertySubCategory"
+    -DscResource "SCFilePlanPropertySubCategory"
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -39,17 +39,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "Sub-Category doesn't already exist" -Fixture {
             $testParams = @{
-                Name                 = "Demo Sub-Category"
-                Category             = "Parent"
-                GlobalAdminAccount   = $GlobalAdminAccount
-                Ensure               = "Present"
+                Name               = "Demo Sub-Category"
+                Category           = "Parent"
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = "Present"
             }
 
             Mock -CommandName Get-FilePlanPropertyCategory -MockWith {
                 return @(@{
-                    DisplayName = "Parent"
-                    Id          = "11111-22222-33333-44444-55555"
-                })
+                        DisplayName = "Parent"
+                        Id          = "11111-22222-33333-44444-55555"
+                    })
             }
 
             Mock -CommandName Get-FilePlanPropertySubCategory -MockWith {
@@ -71,24 +71,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Category already exists" -Fixture {
             $testParams = @{
-                Name                 = "Demo Sub-Category"
-                Category             = "Parent"
-                GlobalAdminAccount   = $GlobalAdminAccount
-                Ensure               = "Present"
+                Name               = "Demo Sub-Category"
+                Category           = "Parent"
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = "Present"
             }
 
             Mock -CommandName Get-FilePlanPropertyCategory -MockWith {
                 return @(@{
-                    DisplayName = "Parent"
-                    Id          = "CN=11111-22222-33333-44444-55555"
-                })
+                        DisplayName = "Parent"
+                        Id          = "CN=11111-22222-33333-44444-55555"
+                    })
             }
 
             Mock -CommandName Get-FilePlanPropertySubCategory -MockWith {
                 return @(@{
-                    DisplayName = "Demo Sub-Category"
-                    ParentId    = "11111-22222-33333-44444-55555"
-                })
+                        DisplayName = "Demo Sub-Category"
+                        ParentId    = "11111-22222-33333-44444-55555"
+                    })
             }
 
             It 'Should return true from the Test method' {
@@ -106,24 +106,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Category should not exist" -Fixture {
             $testParams = @{
-                Name                 = "Demo Sub-Category"
-                Category             = "Parent"
-                GlobalAdminAccount   = $GlobalAdminAccount
-                Ensure               = "Absent"
+                Name               = "Demo Sub-Category"
+                Category           = "Parent"
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = "Absent"
             }
 
             Mock -CommandName Get-FilePlanPropertyCategory -MockWith {
                 return @(@{
-                    DisplayName = "Parent"
-                    Id          = "11111-22222-33333-44444-55555"
-                })
+                        DisplayName = "Parent"
+                        Id          = "11111-22222-33333-44444-55555"
+                    })
             }
 
             Mock -CommandName Get-FilePlanPropertySubCategory -MockWith {
                 return @(@{
-                    DisplayName = "Demo Sub-Category"
-                    ParentId    = "11111-22222-33333-44444-55555"
-                })
+                        DisplayName = "Demo Sub-Category"
+                        ParentId    = "11111-22222-33333-44444-55555"
+                    })
             }
 
             It 'Should return False from the Test method' {
@@ -141,21 +141,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                GlobalAdminAccount   = $GlobalAdminAccount
+                GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-FilePlanPropertyCategory -MockWith {
                 return @(@{
-                    DisplayName = "Parent"
-                    Id          = "11111-22222-33333-44444-55555"
-                })
+                        DisplayName = "Parent"
+                        Id          = "11111-22222-33333-44444-55555"
+                    })
             }
 
             Mock -CommandName Get-FilePlanPropertySubCategory -MockWith {
                 return @(@{
-                    DisplayName = "Demo Sub-Category"
-                    ParentId    = "11111-22222-33333-44444-55555"
-                })
+                        DisplayName = "Demo Sub-Category"
+                        ParentId    = "11111-22222-33333-44444-55555"
+                    })
             }
 
             It "Should Reverse Engineer resource from the Export method" {

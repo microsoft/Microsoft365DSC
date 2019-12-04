@@ -45,7 +45,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of SCCaseHoldPolicy for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $PolicyObject = Get-CaseHoldPolicy -Case $Case -Identity $Name -ErrorAction SilentlyContinue
 
@@ -60,14 +60,14 @@ function Get-TargetResource
     {
         Write-Verbose "Found existing SCCaseHoldPolicy $($Name)"
         $result = @{
-            Ensure                     = 'Present'
-            Name                       = $PolicyObject.Name
-            Case                       = $Case
-            Enabled                    = $PolicyObject.Enabled
-            Comment                    = $PolicyObject.Comment
-            ExchangeLocation           = $PolicyObject.ExchangeLocation.Name
-            PublicFolderLocation       = $PolicyObject.PublicFolderLocation.Name
-            SharePointLocation         = $PolicyObject.SharePointLocation.Name
+            Ensure               = 'Present'
+            Name                 = $PolicyObject.Name
+            Case                 = $Case
+            Enabled              = $PolicyObject.Enabled
+            Comment              = $PolicyObject.Comment
+            ExchangeLocation     = $PolicyObject.ExchangeLocation.Name
+            PublicFolderLocation = $PolicyObject.PublicFolderLocation.Name
+            SharePointLocation   = $PolicyObject.SharePointLocation.Name
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
@@ -122,7 +122,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of SCCaseHoldPolicy for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $CurrentPolicy = Get-TargetResource @PSBoundParameters
 
@@ -147,17 +147,17 @@ function Set-TargetResource
         # SharePoint Location is specified or already existing, we need to determine
         # the delta.
         if ($null -ne $CurrentPolicy.SharePointLocation -or `
-            $null -ne $SharePointLocation)
+                $null -ne $SharePointLocation)
         {
             $ToBeRemoved = $CurrentPolicy.SharePointLocation | `
-                                Where-Object {$SharePointLocation -NotContains $_}
+                Where-Object { $SharePointLocation -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add("RemoveSharePointLocation", $ToBeRemoved)
             }
 
             $ToBeAdded = $SharePointLocation | `
-                                Where-Object {$CurrentPolicy.SharePointLocation -NotContains $_}
+                Where-Object { $CurrentPolicy.SharePointLocation -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddSharePointLocation", $ToBeAdded)
@@ -169,17 +169,17 @@ function Set-TargetResource
         # Exchange Location is specified or already existing, we need to determine
         # the delta.
         if ($null -ne $CurrentPolicy.ExchangeLocation -or `
-            $null -ne $ExchangeLocation)
+                $null -ne $ExchangeLocation)
         {
             $ToBeRemoved = $CurrentPolicy.ExchangeLocation | `
-                                Where-Object {$ExchangeLocation -NotContains $_}
+                Where-Object { $ExchangeLocation -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add("RemoveExchangeLocation", $ToBeRemoved)
             }
 
             $ToBeAdded = $ExchangeLocation | `
-                                Where-Object {$CurrentPolicy.ExchangeLocation -NotContains $_}
+                Where-Object { $CurrentPolicy.ExchangeLocation -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddExchangeLocation", $ToBeAdded)
@@ -191,17 +191,17 @@ function Set-TargetResource
         # OneDrive Location is specified or already existing, we need to determine
         # the delta.
         if ($null -ne $CurrentPolicy.PublicFolderLocation -or `
-            $null -ne $PublicFolderLocation)
+                $null -ne $PublicFolderLocation)
         {
             $ToBeRemoved = $CurrentPolicy.PublicFolderLocation | `
-                                Where-Object {$PublicFolderLocation -NotContains $_}
+                Where-Object { $PublicFolderLocation -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add("RemovePublicFolderLocation", $ToBeRemoved)
             }
 
             $ToBeAdded = $PublicFolderLocation | `
-                                Where-Object {$CurrentPolicy.PublicFolderLocation -NotContains $_}
+                Where-Object { $CurrentPolicy.PublicFolderLocation -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add("AddPublicFolderLocation", $ToBeAdded)
@@ -273,9 +273,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -294,7 +294,7 @@ function Export-TargetResource
     )
     $InformationPreference = "Continue"
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     [array]$cases = Get-ComplianceCase
 
@@ -306,7 +306,7 @@ function Export-TargetResource
         [array]$policies = Get-CaseHoldPolicy -Case $case.Name
 
         $j = 1
-        foreach($policy in $policies)
+        foreach ($policy in $policies)
         {
             Write-Information "        [$j/$($policies.Count)] $($policy.Name)"
             $params = @{

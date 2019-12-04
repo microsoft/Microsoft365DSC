@@ -30,13 +30,13 @@ function Get-TargetResource
 
     $nullReturn = @{
         DisplayName = $DisplayName
-        TimeZone = $null
-        Locale = $null
-        Ensure = "Absent"
+        TimeZone    = $null
+        Locale      = $null
+        Ensure      = "Absent"
     }
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     try
     {
@@ -54,10 +54,10 @@ function Get-TargetResource
     }
 
     $result = @{
-        DisplayName = $DisplayName
-        TimeZone = $mailboxSettings.TimeZone
-        Locale = $mailboxSettings.Language.Name
-        Ensure = "Present"
+        DisplayName        = $DisplayName
+        TimeZone           = $mailboxSettings.TimeZone
+        Locale             = $mailboxSettings.Language.Name
+        Ensure             = "Present"
         GlobalAdminAccount = $GlobalAdminAccount
     }
     Write-Verbose -Message "Found an existing instance of Mailbox '$($DisplayName)'"
@@ -93,7 +93,7 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Office 365 Mailbox Settings for $DisplayName"
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $currentMailbox = Get-TargetResource @PSBoundParameters
 
@@ -104,7 +104,7 @@ function Set-TargetResource
     }
 
     $AllowedTimeZones = (Get-ChildItem "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Time zones" | `
-        ForEach-Object {Get-ItemProperty $_.PSPath}).PSChildName
+            ForEach-Object { Get-ItemProperty $_.PSPath }).PSChildName
 
     if ($AllowedTimeZones.Contains($TimeZone) -eq $false)
     {
@@ -113,8 +113,8 @@ function Set-TargetResource
 
 
     Set-MailboxRegionalConfiguration -Identity $DisplayName `
-                                     -Language $Locale `
-                                     -TimeZone $TimeZone
+        -Language $Locale `
+        -TimeZone $TimeZone
 }
 
 function Test-TargetResource
@@ -153,12 +153,12 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "DisplayName", `
-                                                                   "TimeZone", `
-                                                                   "Locale")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("Ensure", `
+            "DisplayName", `
+            "TimeZone", `
+            "Locale")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

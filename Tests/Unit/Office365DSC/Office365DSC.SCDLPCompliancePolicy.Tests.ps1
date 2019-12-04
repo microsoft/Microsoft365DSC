@@ -86,7 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Mode               = "Enable"
                     SharePointLocation = @(
                         @{
-                            Name="https://contoso.sharepoint.com/sites/demo"
+                            Name = "https://contoso.sharepoint.com/sites/demo"
                         }
                     )
                 }
@@ -134,21 +134,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Policy Exists but Needs to Update Settings" -Fixture {
             $testParams = @{
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
-                SharePointLocation = @("https://contoso.sharepoint.com/sites/demo", "https://northwind.com")
+                Ensure                      = 'Present'
+                GlobalAdminAccount          = $GlobalAdminAccount
+                SharePointLocation          = @("https://contoso.sharepoint.com/sites/demo", "https://northwind.com")
                 SharePointLocationException = @("https://contoso.sharepoint.com/sites/ex", "https://northwind.com/ex")
-                OneDriveLocation   = @("https://contoso.sharepoint.com/sites/demo", "https://northwind.com")
-                ExchangeLocation    = @("https://owa.contoso.com")
+                OneDriveLocation            = @("https://contoso.sharepoint.com/sites/demo", "https://northwind.com")
+                ExchangeLocation            = @("https://owa.contoso.com")
                 OneDriveLocationException   = @("https://tailspin.com/sites/", "https://tailspin.com/od")
                 TeamsLocation               = @("john.smith@contoso.com", "jane.doe@contoso.com")
-                TeamsLocationException = @("https://contoso.sharepoint.com/sites/ex", "https://northwind.com/ex")
-                Name               = 'TestPolicy'
+                TeamsLocationException      = @("https://contoso.sharepoint.com/sites/ex", "https://northwind.com/ex")
+                Name                        = 'TestPolicy'
             }
 
             Mock -CommandName Get-DLPCompliancePolicy -MockWith {
                 return @{
-                    Name = "TestPolicy"
+                    Name                        = "TestPolicy"
                     ExchangeLocation            = @("https://owa.tailspin.com")
                     SharePointLocation          = @(
                         @{
@@ -162,13 +162,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     OneDriveLocation            = @(
                         @{
                             Name = "https://contoso.sharepoint.com/sites/demo"
-                         },
+                        },
                         @{
                             Name = 'https://tailspin.com'
                         }
                     )
                     OneDriveLocationException   = @("https://tailspin.com/sites/", "https://tailspin.com")
-                    TeamsLocation            = @(
+                    TeamsLocation               = @(
                         @{
                             Name = "john.smith@contoso.com"
                         },
@@ -176,7 +176,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Name = 'bob.houle@contoso.com'
                         }
                     )
-                    TeamsLocationException   = @("https://tailspin.com/sites/", "https://tailspin.com")
+                    TeamsLocationException      = @("https://tailspin.com/sites/", "https://tailspin.com")
                 }
             }
 
@@ -193,7 +193,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-DLPCompliancePolicy -MockWith {
                 return @{
-                    Name = "TestPolicy"
+                    Name                        = "TestPolicy"
                     ExchangeLocation            = @("https://owa.tailspin.com")
                     SharePointLocation          = @(
                         @{
@@ -207,13 +207,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     OneDriveLocation            = @(
                         @{
                             Name = "https://contoso.sharepoint.com/sites/demo"
-                         },
+                        },
                         @{
                             Name = 'https://tailspin.com'
                         }
                     )
                     OneDriveLocationException   = @("https://tailspin.com/sites/", "https://tailspin.com")
-                    TeamsLocation            = @(
+                    TeamsLocation               = @(
                         @{
                             Name = "john.smith@contoso.com"
                         },
@@ -221,7 +221,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Name = 'bob.houle@contoso.com'
                         }
                     )
-                    TeamsLocationException   = @("https://tailspin.com/sites/", "https://tailspin.com")
+                    TeamsLocationException      = @("https://tailspin.com/sites/", "https://tailspin.com")
                 }
             }
 

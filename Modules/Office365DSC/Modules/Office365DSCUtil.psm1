@@ -1683,7 +1683,7 @@ function Export-O365Configuration
         $Workloads,
 
         [Parameter()]
-        [ValidateRange(1,100)]
+        [ValidateRange(1, 100)]
         $MaxProcesses = 16,
 
         [Parameter()]
@@ -1700,26 +1700,26 @@ function Export-O365Configuration
         if ($null -ne $Workloads)
         {
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
-                                           -Workloads $Workloads `
-                                           -Path $Path -FileName $FileName `
-                                           -MaxProcesses $MaxProcesses `
-                                           -Quiet
+                -Workloads $Workloads `
+                -Path $Path -FileName $FileName `
+                -MaxProcesses $MaxProcesses `
+                -Quiet
         }
         elseif ($null -ne $ComponentsToExtract)
         {
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
-                                           -ComponentsToExtract $ComponentsToExtract `
-                                           -Path $Path -FileName $FileName `
-                                           -MaxProcesses $MaxProcesses `
-                                           -Quiet
+                -ComponentsToExtract $ComponentsToExtract `
+                -Path $Path -FileName $FileName `
+                -MaxProcesses $MaxProcesses `
+                -Quiet
         }
         else
         {
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
-                                           -AllComponents `
-                                           -Path $Path -FileName $FileName `
-                                           -MaxProcesses $MaxProcesses `
-                                           -Quiet
+                -AllComponents `
+                -Path $Path -FileName $FileName `
+                -MaxProcesses $MaxProcesses `
+                -Quiet
         }
     }
 }
@@ -1803,19 +1803,19 @@ function Split-ArrayByParts
 
     for ($i = 1; $i -le $Parts; $i++)
     {
-        $start = (($i-1) * $PartSize)
+        $start = (($i - 1) * $PartSize)
 
         if ($start -lt $Array.Count)
         {
-            $end   = (($i) * $PartSize) -1
+            $end = (($i) * $PartSize) - 1
             if ($end -ge $Array.count)
             {
-                $end = $Array.count -1
+                $end = $Array.count - 1
             }
             $outArray.Add(@($Array[$start..$end]))
         }
     }
-    return ,$outArray
+    return , $outArray
 }
 
 function Invoke-O365DSCCommand
@@ -1887,7 +1887,7 @@ function Get-SPOUserProfilePropertyInstance
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Key,
 

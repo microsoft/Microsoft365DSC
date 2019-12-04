@@ -114,15 +114,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-Label -MockWith {
                 return @{
-                    Name             = "TestLabel"
-                    Comment          = "Updated comment"
-                    ToolTip          = "Test tool tip"
-                    DisplayName      = "Test label"
-                    ParentId         = "MyLabel"
-                    Priority         = "2"
-                    Settings = '{"Key": "LabelStatus",
+                    Name           = "TestLabel"
+                    Comment        = "Updated comment"
+                    ToolTip        = "Test tool tip"
+                    DisplayName    = "Test label"
+                    ParentId       = "MyLabel"
+                    Priority       = "2"
+                    Settings       = '{"Key": "LabelStatus",
                                         "Value": "Enabled"}'
-                    LocaleSettings   = '{"LocaleKey":"DisplayName",
+                    LocaleSettings = '{"LocaleKey":"DisplayName",
                                          "Settings":[
                                          {"Key":"en-us","Value":"English Display Names"}]}'
 
@@ -180,10 +180,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Get-Label  -MockWith {
                 return @{
-                    Name = "TestRule"
-                    Settings = '{"Key": "LabelStatus",
+                    Name           = "TestRule"
+                    Settings       = '{"Key": "LabelStatus",
                                         "Value": "Enabled"}'
-                    LocaleSettings   = '{"LocaleKey":"DisplayName",
+                    LocaleSettings = '{"LocaleKey":"DisplayName",
                                          "Settings":[
                                          {"Key":"en-us","Value":"English Display Names"}]}'
                 }

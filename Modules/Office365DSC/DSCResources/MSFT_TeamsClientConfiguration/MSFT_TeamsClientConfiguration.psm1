@@ -56,7 +56,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('NoAccess','PartialAccess','FullAccess')]
+        [ValidateSet('NoAccess', 'PartialAccess', 'FullAccess')]
         $ResourceAccountContentAccess,
 
         [Parameter()]
@@ -71,7 +71,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of Teams Client"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SkypeForBusiness
+        -Platform SkypeForBusiness
 
     try
     {
@@ -158,7 +158,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('NoAccess','PartialAccess','FullAccess')]
+        [ValidateSet('NoAccess', 'PartialAccess', 'FullAccess')]
         $ResourceAccountContentAccess,
 
         [Parameter()]
@@ -173,7 +173,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of Teams Client"
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform SkypeForBusiness
+        -Platform SkypeForBusiness
 
     $SetParams = $PSBoundParameters
     $SetParams.Remove("GlobalAdminAccount")
@@ -239,7 +239,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('NoAccess','PartialAccess','FullAccess')]
+        [ValidateSet('NoAccess', 'PartialAccess', 'FullAccess')]
         $ResourceAccountContentAccess,
 
         [Parameter()]
@@ -261,9 +261,9 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

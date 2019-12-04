@@ -54,7 +54,7 @@ function Get-TargetResource
         $EmailAttestationReAuthDays,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -66,7 +66,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of SharePoint Online Access Control Settings"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
     $nullReturn = @{
         IsSingleInstance             = 'Yes'
         DisplayStartASiteOption      = $null
@@ -168,7 +168,7 @@ function Set-TargetResource
         $EmailAttestationReAuthDays,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -180,13 +180,13 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of SharePoint Online Access Control Settings"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("IsSingleInstance")
 
-    if($IPAddressAllowList -eq "")
+    if ($IPAddressAllowList -eq "")
     {
         Write-Verbose -Message "The IPAddressAllowList is not configured, for that the IPAddressEnforcement parameter can not be set and will be removed"
         $CurrentParameters.Remove("IPAddressEnforcement")
@@ -251,7 +251,7 @@ function Test-TargetResource
         $EmailAttestationReAuthDays,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -268,21 +268,21 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("IsSingleInstance", `
-                                                                   "GlobalAdminAccount", `
-                                                                   "DisplayStartASiteOption", `
-                                                                   "StartASiteFormUrl", `
-                                                                   "IPAddressEnforcement", `
-                                                                   "IPAddressAllowList", `
-                                                                   "IPAddressWACTokenLifetime", `
-                                                                   "CommentsOnSitePagesDisabled", `
-                                                                   "SocialBarOnSitePagesDisabled", `
-                                                                   "DisallowInfectedFileDownload", `
-                                                                   "ExternalServicesEnabled", `
-                                                                   "EmailAttestationRequired", `
-                                                                   "EmailAttestationReAuthDays")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("IsSingleInstance", `
+            "GlobalAdminAccount", `
+            "DisplayStartASiteOption", `
+            "StartASiteFormUrl", `
+            "IPAddressEnforcement", `
+            "IPAddressAllowList", `
+            "IPAddressWACTokenLifetime", `
+            "CommentsOnSitePagesDisabled", `
+            "SocialBarOnSitePagesDisabled", `
+            "DisallowInfectedFileDownload", `
+            "ExternalServicesEnabled", `
+            "EmailAttestationRequired", `
+            "EmailAttestationReAuthDays")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

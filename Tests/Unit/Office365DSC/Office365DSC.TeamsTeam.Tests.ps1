@@ -213,7 +213,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-Team -MockWith {
                 return @{
-                    DisplayName = "Test Team"
+                    DisplayName  = "Test Team"
                     GroupID      = "1234-1234-1234-1234"
                     MailNickName = "testteam"
                     Visibility   = "Private"

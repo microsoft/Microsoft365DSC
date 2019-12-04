@@ -107,7 +107,7 @@ function Show-O365GUI
         $chckAllO365.Top = $topBannerHeight + 40
         $chckAllO365.Checked = $true
         $chckAllO365.AutoSize = $true
-        $chckAllO365.Add_CheckedChanged({SectionChanged -Control $chckAllO365 -Panel $pnlO365})
+        $chckAllO365.Add_CheckedChanged( { SectionChanged -Control $chckAllO365 -Panel $pnlO365 })
         $pnlMain.Controls.Add($chckAllO365)
         #endregion
 
@@ -284,7 +284,7 @@ function Show-O365GUI
         $chckAllEXO.Top = $topBannerHeight + 340
         $chckAllEXO.Checked = $true
         $chckAllEXO.AutoSize = $true
-        $chckAllEXO.Add_CheckedChanged({SectionChanged -Control $chckAllEXO -Panel $pnlEXO})
+        $chckAllEXO.Add_CheckedChanged( { SectionChanged -Control $chckAllEXO -Panel $pnlEXO })
         $pnlMain.Controls.Add($chckAllEXO)
         #endregion
 
@@ -329,7 +329,7 @@ function Show-O365GUI
         $chckSPOHubSite.Text = "Hub Sites"
         $pnlSPO.Controls.Add($chckSPOHubSite)
 
-        $chckSPOPropertyBag= New-Object System.Windows.Forms.CheckBox
+        $chckSPOPropertyBag = New-Object System.Windows.Forms.CheckBox
         $chckSPOPropertyBag.Top = 60
         $chckSPOPropertyBag.AutoSize = $true;
         $chckSPOPropertyBag.Name = "chckSPOPropertyBag"
@@ -395,7 +395,7 @@ function Show-O365GUI
         $chckSPOSiteDesignRights.Text = "Site Design Rights"
         $pnlSPO.Controls.Add($chckSPOSiteDesignRights)
 
-        $chckSPOStorageEntity= New-Object System.Windows.Forms.CheckBox
+        $chckSPOStorageEntity = New-Object System.Windows.Forms.CheckBox
         $chckSPOStorageEntity.Top = 220
         $chckSPOStorageEntity.AutoSize = $true;
         $chckSPOStorageEntity.Name = "chckSPOStorageEntity"
@@ -440,7 +440,7 @@ function Show-O365GUI
         $chckAllSharePoint.Top = $topBannerHeight + 40
         $chckAllSharePoint.Checked = $true
         $chckAllSharePoint.AutoSize = $true
-        $chckAllSharePoint.Add_CheckedChanged({SectionChanged -Control $chckAllSharePoint -Panel $pnlSPO})
+        $chckAllSharePoint.Add_CheckedChanged( { SectionChanged -Control $chckAllSharePoint -Panel $pnlSPO })
         $pnlMain.Controls.Add($chckAllSharePoint)
         #endregion
 
@@ -610,7 +610,7 @@ function Show-O365GUI
         $chckAllSC.Top = $topBannerHeight + 440
         $chckAllSC.Checked = $true
         $chckAllSC.AutoSize = $true
-        $chckAllSC.Add_CheckedChanged({SectionChanged -Control $chckAllSC -Panel $pnlSC})
+        $chckAllSC.Add_CheckedChanged( { SectionChanged -Control $chckAllSC -Panel $pnlSC })
         $pnlMain.Controls.Add($chckAllSC)
         #endregion
 
@@ -667,7 +667,7 @@ function Show-O365GUI
         $chckAllTeams.Top = $topBannerHeight + 40
         $chckAllTeams.Checked = $true
         $chckAllTeams.AutoSize = $true
-        $chckAllTeams.Add_CheckedChanged({SectionChanged -Control $chckAllTeams -Panel $pnlTeams})
+        $chckAllTeams.Add_CheckedChanged( { SectionChanged -Control $chckAllTeams -Panel $pnlTeams })
         $pnlMain.Controls.Add($chckAllTeams)
         #endregion
 
@@ -703,7 +703,7 @@ function Show-O365GUI
         $chckAllOD.Enabled = $false #TODO - Reactivate after SPO Mgmt Shell bug fix
         $chckAllOD.Checked = $false #TODO - Reactivate after SPO Mgmt Shell bug fix
         $chckAllOD.AutoSize = $true
-        $chckAllOD.Add_CheckedChanged({SectionChanged -Control $chckAllOD -Panel $pnlOD})
+        $chckAllOD.Add_CheckedChanged( { SectionChanged -Control $chckAllOD -Panel $pnlOD })
         $pnlMain.Controls.Add($chckAllOD)
         #endregion
 
@@ -733,7 +733,7 @@ function Show-O365GUI
         $btnClear.BackColor = [System.Drawing.Color]::IndianRed
         $btnClear.ForeColor = [System.Drawing.Color]::White
         $btnClear.Text = "Unselect All"
-        $btnClear.Add_Click({SelectComponentsForMode($pnlMain, 0)})
+        $btnClear.Add_Click( { SelectComponentsForMode($pnlMain, 0) })
         $panelMenu.Controls.Add($btnClear);
 
         $lblFarmAccount = New-Object System.Windows.Forms.Label
@@ -767,12 +767,12 @@ function Show-O365GUI
         $txtPassword.Width = 175
         $txtPassword.PasswordChar = "*"
         $txtPassword.Font = [System.Drawing.Font]::new($txtPassword.Font.Name, 10)
-        $txtPassword.Add_KeyDown({
-            if($_.KeyCode -eq [System.Windows.Forms.Keys]::Enter)
-            {
-                $btnExtract.PerformClick()
-            }
-        })
+        $txtPassword.Add_KeyDown( {
+                if ($_.KeyCode -eq [System.Windows.Forms.Keys]::Enter)
+                {
+                    $btnExtract.PerformClick()
+                }
+            })
         $panelMenu.Controls.Add($txtPassword)
 
         $btnExtract = New-Object System.Windows.Forms.Button
@@ -783,40 +783,40 @@ function Show-O365GUI
         $btnExtract.BackColor = [System.Drawing.Color]::ForestGreen
         $btnExtract.ForeColor = [System.Drawing.Color]::White
         $btnExtract.Text = "Start Extraction"
-        $btnExtract.Add_Click({
-            if($txtPassword.Text.Length -gt 0)
-            {
-                $form.Hide()
-                $SelectedComponents = @()
-                foreach ($panel in ($form.Controls[0].Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Panel"}))
+        $btnExtract.Add_Click( {
+                if ($txtPassword.Text.Length -gt 0)
                 {
-                    foreach ($checkbox in ($panel.Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Checkbox"}))
+                    $form.Hide()
+                    $SelectedComponents = @()
+                    foreach ($panel in ($form.Controls[0].Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Panel" }))
                     {
-                        if ($checkbox.Checked)
+                        foreach ($checkbox in ($panel.Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Checkbox" }))
                         {
-                            $SelectedComponents += $checkbox.Name
+                            if ($checkbox.Checked)
+                            {
+                                $SelectedComponents += $checkbox.Name
+                            }
                         }
                     }
-                }
 
-                try
-                {
-                    $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force))
-                    Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
-                                                   -ComponentsToExtract $SelectedComponents `
-                                                   -Path $Path
+                    try
+                    {
+                        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force))
+                        Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                            -ComponentsToExtract $SelectedComponents `
+                            -Path $Path
+                    }
+                    catch
+                    {
+                        $Message = "Could not initiate the ReverseDSC Extraction"
+                        New-Office365DSCLogEntry -Error $_ -Message $Message_
+                    }
                 }
-                catch
+                else
                 {
-                    $Message = "Could not initiate the ReverseDSC Extraction"
-                    New-Office365DSCLogEntry -Error $_ -Message $Message_
+                    [System.Windows.Forms.MessageBox]::Show("Please provide a password for the Tenant Admin Account")
                 }
-            }
-            else
-            {
-                [System.Windows.Forms.MessageBox]::Show("Please provide a password for the Tenant Admin Account")
-            }
-        })
+            })
         $panelMenu.Controls.Add($btnExtract);
 
         $pnlMain.Controls.Add($panelMenu);
@@ -835,23 +835,26 @@ function Show-O365GUI
     }
 }
 
-function SelectComponentsForMode($panelMain, $mode){
+function SelectComponentsForMode($panelMain, $mode)
+{
     $components = $null
-    if($mode -eq 1)
+    if ($mode -eq 1)
     {
         $components = $liteComponents
     }
-    elseif($mode -eq 2)
+    elseif ($mode -eq 2)
     {
         $components = $defaultComponents
     }
-    foreach($parent in $panelMain.Controls)
+    foreach ($parent in $panelMain.Controls)
     {
-        if($parent.GetType().ToString() -eq "System.Windows.Forms.Panel")
+        if ($parent.GetType().ToString() -eq "System.Windows.Forms.Panel")
         {
-            foreach($control in ([System.Windows.Forms.Panel]$parent).Controls){
-                try{
-                    if($mode -ne 3)
+            foreach ($control in ([System.Windows.Forms.Panel]$parent).Controls)
+            {
+                try
+                {
+                    if ($mode -ne 3)
                     {
                         $control.Checked = $false
                     }
@@ -866,14 +869,15 @@ function SelectComponentsForMode($panelMain, $mode){
                 }
             }
         }
-        elseif($parent.GetType().ToString() -eq "System.Windows.Forms.Checkbox")
+        elseif ($parent.GetType().ToString() -eq "System.Windows.Forms.Checkbox")
         {
             ([System.Windows.Forms.Checkbox]$parent).Checked = $false
         }
     }
-    foreach($control in $components)
+    foreach ($control in $components)
     {
-        try{
+        try
+        {
             $control.Checked = $true
         }
         catch
