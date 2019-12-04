@@ -41,6 +41,28 @@ function Get-TargetResource
         $AllowUserTranslation,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveReader,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRemoveUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPriorityMessages,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('DisabledUserOverride', 'EnabledUserOverride')]
+        $ChannelsInChatListEnabledType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('ChatsAndChannels', 'ChatsOnly', 'Disabled')]
+        $AudioMessageEnabledType,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('STRICT', 'MODERATE', 'NORESTRICTION')]
         $GiphyRatingType,
@@ -51,7 +73,7 @@ function Get-TargetResource
         $ReadReceiptsEnabledType,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $Description,
 
         [Parameter()]
@@ -75,46 +97,41 @@ function Get-TargetResource
 
     try
     {
-        $policy = Get-CsTeamsMessagingPolicy -identity $Identity
+        $policy = Get-CsTeamsMessagingPolicy -identity $Identity -ErrorAction SilentlyContinue
 
         if ($null -eq $policy)
         {
             return @{
-                Identity                = $Identity
-                AllowGiphy              = $AllowGiphy
-                AllowMemes              = $AllowMemes
-                AllowOwnerDeleteMessage = $AllowOwnerDeleteMessage
-                AllowStickers           = $AllowStickers
-                AllowUrlPreviews        = $AllowUrlPreviews
-                AllowUserChat           = $AllowUserChat
-                AllowUserDeleteMessage  = $AllowUserDeleteMessage
-                AllowUserTranslation    = $AllowUserTranslation
-                GiphyRatingType         = $GiphyRatingType
-                ReadReceiptsEnabledType = $ReadReceiptsEnabledType
-                Description             = $Description
-                Tenant                  = $Tenant
-                Ensure                  = "Absent"
-                GlobalAdminAccount      = $GlobalAdminAccount
+                Identity           = $Identity
+                Ensure             = 'Absent'
+                GlobalAdminAccount = $GlobalAdminAccount
             }
         }
         else
         {
+            # Tag: gets appended to Identity
+            $currentIdentity = $policy.Identity.split(":")[1]
             return @{
-                Identity                = $policy.Identity
-                AllowGiphy              = $policy.AllowGiphy
-                AllowMemes              = $policy.AllowMemes
-                AllowOwnerDeleteMessage = $policy.AllowOwnerDeleteMessage
-                AllowStickers           = $policy.AllowStickers
-                AllowUrlPreviews        = $policy.AllowUrlPreviews
-                AllowUserChat           = $policy.AllowUserChat
-                AllowUserDeleteMessage  = $policy.AllowUserDeleteMessage
-                AllowUserTranslation    = $policy.AllowUserTranslation
-                GiphyRatingType         = $policy.GiphyRatingType
-                ReadReceiptsEnabledType = $policy.ReadReceiptsEnabledType
-                Description             = $policy.Description
-                Tenant                  = $policy.Tenant
-                Ensure                           = "Absent"
-                GlobalAdminAccount               = $GlobalAdminAccount
+                Identity                      = $currentIdentity
+                AllowGiphy                    = $policy.AllowGiphy
+                AllowMemes                    = $policy.AllowMemes
+                AllowOwnerDeleteMessage       = $policy.AllowOwnerDeleteMessage
+                AllowStickers                 = $policy.AllowStickers
+                AllowUrlPreviews              = $policy.AllowUrlPreviews
+                AllowUserChat                 = $policy.AllowUserChat
+                AllowUserDeleteMessage        = $policy.AllowUserDeleteMessage
+                AllowUserTranslation          = $policy.AllowUserTranslation
+                GiphyRatingType               = $policy.GiphyRatingType
+                ReadReceiptsEnabledType       = $policy.ReadReceiptsEnabledType
+                AllowImmersiveReader          = $policy.AllowImmersiveReader
+                AllowRemoveUser               = $policy.AllowRemoveUser
+                AllowPriorityMessages         = $policy.AllowPriorityMessages
+                ChannelsInChatListEnabledType = $policy.ChannelsInChatListEnabledType
+                AudioMessageEnabledType       = $policy.AudioMessageEnabledType
+                Description                   = $policy.Description
+                Tenant                        = $policy.Tenant
+                Ensure                        = "Present"
+                GlobalAdminAccount            = $GlobalAdminAccount
             }
         }
     }
@@ -166,6 +183,28 @@ function Set-TargetResource
         $AllowUserTranslation,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveReader,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRemoveUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPriorityMessages,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('DisabledUserOverride', 'EnabledUserOverride')]
+        $ChannelsInChatListEnabledType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('ChatsAndChannels', 'ChatsOnly', 'Disabled')]
+        $AudioMessageEnabledType,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('STRICT', 'MODERATE', 'NORESTRICTION')]
         $GiphyRatingType,
@@ -176,7 +215,7 @@ function Set-TargetResource
         $ReadReceiptsEnabledType,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $Description,
 
         [Parameter()]
@@ -202,18 +241,19 @@ function Set-TargetResource
 
     $SetParams = $PSBoundParameters
     $SetParams.Remove("GlobalAdminAccount") | Out-Null
+    $SetParams.Remove("Ensure") | Out-Null
 
     if ($curPolicy.Ensure -eq "Absent" -and "Present" -eq $Ensure )
     {
-        New-CsTeamsClientConfiguration @SetParams -force:$True
+        New-CsTeamsMessagingPolicy @SetParams -force:$True
     }
     elseif (($curPolicy.Ensure -eq "Present" -and "Present" -eq $Ensure))
     {
-        Set-CsTeamsClientConfiguration @SetParams -force:$True
+        Set-CsTeamsMessagingPolicy @SetParams -force:$True
     }
-    elseif (($Ensure -eq "Absent"  -and $curPolicy.Ensure -eq "Present"))
+    elseif (($Ensure -eq "Absent" -and $curPolicy.Ensure -eq "Present"))
     {
-        Remove-CsTeamsClientConfiguration -identity $curPolicy.Identity -force:$True
+        Remove-CsTeamsMessagingPolicy -identity $curPolicy.Identity -force:$True
     }
 
 }
@@ -261,6 +301,28 @@ function Test-TargetResource
         $AllowUserTranslation,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveReader,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRemoveUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPriorityMessages,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('DisabledUserOverride', 'EnabledUserOverride')]
+        $ChannelsInChatListEnabledType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('ChatsAndChannels', 'ChatsOnly', 'Disabled')]
+        $AudioMessageEnabledType,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('STRICT', 'MODERATE', 'NORESTRICTION')]
         $GiphyRatingType,
@@ -271,7 +333,7 @@ function Test-TargetResource
         $ReadReceiptsEnabledType,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $Description,
 
         [Parameter()]
@@ -297,10 +359,12 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
-    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+    $ValuesToCheck.Remove('Tenant') | Out-Null
+    $TestResult = Test-Office365DSCParameterState `
+        -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
