@@ -109,7 +109,7 @@ function Get-TargetResource
         }
         else
         {
-            # Tag: gets appended to Identity
+            # Tag: gets prefixed to Identity on get need to remove
             $currentIdentity = $policy.Identity.split(":")[1]
             return @{
                 Identity                      = $currentIdentity
