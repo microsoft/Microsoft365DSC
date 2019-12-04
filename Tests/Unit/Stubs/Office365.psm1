@@ -14345,7 +14345,7 @@ function Get-CsTeamsMessagingPolicy
 {
     [CmdletBinding()]
     param(
-    [Parameter(Mandatory = $true)]
+    [Parameter()]
         [System.String]
         $Identity
     )
