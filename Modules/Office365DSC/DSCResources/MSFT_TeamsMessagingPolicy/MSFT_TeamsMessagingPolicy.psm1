@@ -392,8 +392,9 @@ function Export-TargetResource
     foreach ($policy in $policies)
     {
         Write-Information "    [$i/$($policies.Count)] $($policy.Identity)"
+        $currentIdentity = $policy.Identity.split(";")[1]
         $params = @{
-            Identity           = $policy.Identity
+            Identity           = $currentIdentity
             Ensure             = 'Present'
             GlobalAdminAccount = $GlobalAdminAccount
         }
