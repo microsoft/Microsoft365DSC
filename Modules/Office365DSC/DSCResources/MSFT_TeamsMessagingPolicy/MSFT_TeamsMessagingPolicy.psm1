@@ -77,7 +77,7 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $Tenant,
 
         [Parameter()]
@@ -219,7 +219,7 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $Tenant,
 
         [Parameter()]
@@ -337,7 +337,7 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $Tenant,
 
         [Parameter()]

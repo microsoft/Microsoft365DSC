@@ -14157,3 +14157,197 @@ function Set-CsTeamsCallingPolicy
         $BusyOnBusyEnabledType
     )
 }
+function New-CsTeamsMessagingPolicy
+{
+    [CmdletBinding()]
+    param(
+    [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGiphy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOwnerDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowStickers,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUrlPreviews,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserChat,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserTranslation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveReader,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRemoveUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPriorityMessages,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('DisabledUserOverride', 'EnabledUserOverride')]
+        $ChannelsInChatListEnabledType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('ChatsAndChannels', 'ChatsOnly', 'Disabled')]
+        $AudioMessageEnabledType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('STRICT', 'MODERATE', 'NORESTRICTION')]
+        $GiphyRatingType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('UserPreference', 'Everyone', 'None')]
+        $ReadReceiptsEnabledType,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Tenant,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force
+    )
+}
+
+function Set-CsTeamsMessagingPolicy
+{
+    [CmdletBinding()]
+    param(
+    [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGiphy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOwnerDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowStickers,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUrlPreviews,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserChat,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserTranslation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveReader,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRemoveUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPriorityMessages,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('DisabledUserOverride', 'EnabledUserOverride')]
+        $ChannelsInChatListEnabledType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('ChatsAndChannels', 'ChatsOnly', 'Disabled')]
+        $AudioMessageEnabledType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('STRICT', 'MODERATE', 'NORESTRICTION')]
+        $GiphyRatingType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('UserPreference', 'Everyone', 'None')]
+        $ReadReceiptsEnabledType,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Tenant,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force
+    )
+}
+function Remove-CsTeamsMessagingPolicy
+{
+    [CmdletBinding()]
+    param(
+    [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force
+    )
+}
+function Get-CsTeamsMessagingPolicy
+{
+    [CmdletBinding()]
+    param(
+    [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
