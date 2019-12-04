@@ -69,20 +69,20 @@ function Get-TargetResource
         {
             if($Error[0].Exception.Message -eq "Group cannot be found.")
             {
-                $Message = "Site group $($Identity) could not be found on site $($Url)"
-                New-Office365DSCLogEntry -Error $_ -Message $Message
-                throw $Message
-                return $nullReturn
+                write-verbose -Message "Site group $($Identity) could not be found on site $($Url)"
+                #New-Office365DSCLogEntry -Error $_ -Message $Message
+                
             }
+            return $nullReturn
         }
         
         return @{
-        Url                = $Url
-        Identity           = $siteGroup.Title
-        Owner              = $siteGroup.OwnerLoginName
-        PermissionLevels   = $siteGroup.Roles
-        GlobalAdminAccount = $GlobalAdminAccount
-        Ensure             = "Present"
+            Url                = $Url
+            Identity           = $siteGroup.Title
+            Owner              = $siteGroup.OwnerLoginName
+            PermissionLevels   = $siteGroup.Roles
+            GlobalAdminAccount = $GlobalAdminAccount
+            Ensure             = "Present"
         }
     }
     catch
@@ -144,12 +144,11 @@ function Set-TargetResource
     {
         if($Error[0].Exception.Message -eq "Group cannot be found.")
         {
-            $Message = "Group $($Identity) does not exist on site $($url)... creating it"
-            $createGroup = $true
-            New-Office365DSCLogEntry -Error $_ -Message $Message
-            throw $Message
+            write-verbose -Message "Group $($Identity) does not exist on site $($url)... creating it"
             
+            #New-Office365DSCLogEntry -Error $_ -Message $Message
         }
+        $createGroup = $true
     }
     $currentValues = Get-TargetResource @PSBoundParameters
 
@@ -266,25 +265,35 @@ function Export-TargetResource
     )
 
     $InformationPreference = 'Continue'
-    Test-MSCloudLogin -Platform PnP -CloudCredential $GlobalAdminAccount
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+                      -Platform SharePointOnline `
+                      -ErrorAction SilentlyContinue
 
-    $sites = Get-PnPTenantSite
+    #Loop through all sites
+    #for each site loop through all site groups and retrieve parameters
+    $sites = Get-SPOSites -limit All
 
     $i = 1
     $content = ""
     foreach ($site in $sites)
     {
-        try
+        Write-Information "    [$i/$($sites.Length)] SPOSite groups for {$($site.Url)}"
+        $siteGroups = Get-SPOSiteGroup -Site $site.Url
+        foreach($siteGroup in $siteGroups)
         {
-            Write-Information "    [$i/$($sites.Length)] Audit Settings for {$($site.Url)}"
             $params = @{
                 Url                = $site.Url
-                AuditFlags         = 'None'
+                Identity           = $siteGroup.Title
+                Owner              = $siteGroup.OwnerLoginName
+                PermissionLevels   = $siteGroup.Roles
                 GlobalAdminAccount = $GlobalAdminAccount
             }
+        }
+        try
+        {
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        SPOSiteAuditSettings " + (New-GUID).ToString() + "`r`n"
+            $content += "        SPOSiteGroups " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
@@ -292,7 +301,7 @@ function Export-TargetResource
         }
         catch
         {
-            Write-Verbose "There was an issue retrieving Audit Settings for $Url"
+            Write-Verbose "There was an issue retrieving the SiteGroups for $Url"
         }
         $i++
     }
