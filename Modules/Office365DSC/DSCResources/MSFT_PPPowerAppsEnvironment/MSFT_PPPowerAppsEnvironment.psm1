@@ -119,19 +119,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating PowerApps environment {$DisplayName}"
-        try
-        {
-            Write-Verbose -Message "    - Removing the existing instance"
-            Remove-AdminPowerAppEnvironment -EnvironmentName -$DisplayName -Confirm:$false | Out-Null
-            Write-Verbose -Message "    - Creating new instance"
-            New-AdminPowerAppEnvironment @CurrentParameters
-        }
-        catch
-        {
-            Write-Verbose -Message "An error occured trying to create new PowerApps Environment {$DisplayName}"
-            throw $_
-        }
+        Write-Warning -Message "Resource doesn't support updating existing environments. Please delete and recreate {$DisplayName}"
     }
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {

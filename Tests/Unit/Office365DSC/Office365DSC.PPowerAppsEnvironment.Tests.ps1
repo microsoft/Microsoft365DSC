@@ -89,10 +89,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
-            It "Should delete and recreate the environment in the Set method" {
+            It "Should not do anything in the Set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName Remove-AdminPowerAppEnvironment -Exactly 1
-                Assert-MockCalled -CommandName New-AdminPowerAppEnvironment -Exactly 1
+                Assert-MockCalled -CommandName Remove-AdminPowerAppEnvironment -Exactly 0
+                Assert-MockCalled -CommandName New-AdminPowerAppEnvironment -Exactly 0
             }
         }
 
