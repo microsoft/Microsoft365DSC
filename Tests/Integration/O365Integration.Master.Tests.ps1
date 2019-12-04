@@ -608,6 +608,29 @@ Configuration Master
             DependsON          = @("[O365User]JohnSmith", "[TeamsTeam]TeamAlpha")
         }
 
+        TeamsMessagingPolicy SampleTeamsMessage
+        {
+            Identity                      = "TestPolicy"
+            Description                   = "My sample policy"
+            ReadReceiptsEnabledType       = "UserPreference"
+            AllowImmersiveReader          = $True
+            AllowGiphy                    = $True
+            AllowStickers                 = $True
+            AllowUrlPreviews              = $false
+            AllowUserChat                 = $True
+            AllowUserDeleteMessage        = $false
+            AllowUserTranslation          = $True
+            AllowRemoveUser               = $false
+            AllowPriorityMessages         = $True
+            GiphyRatingType               = "MODERATE"
+            AllowMemes                    = $False
+            AudioMessageEnabledType       = "ChatsOnly"
+            AllowOwnerDeleteMessage       = $False
+            ChannelsInChatListEnabledType = "EnabledUserOverride"
+            GlobalAdminAccount            = $GlobalAdmin
+            Ensure                        = "Present"
+        }
+
         SCSensitivityLabel SCSenLabel
         {
             Name               = "Demo Label"
