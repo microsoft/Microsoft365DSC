@@ -31,7 +31,7 @@ Configuration Example
             AllowMemes                    = $False
             AudioMessageEnabledType       = "ChatsOnly"
             AllowOwnerDeleteMessage       = $False
-            GlobalAdminAccount            = $GlobalAdminAccount
+            GlobalAdminAccount            = $credsGlobalAdmin
             Ensure                        = "Present"
         }
     }
