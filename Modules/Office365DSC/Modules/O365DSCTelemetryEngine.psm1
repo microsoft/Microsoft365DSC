@@ -39,7 +39,7 @@ function Add-O365DSCTelemetryEvent
     try
     {
         $TelemetryClient.TrackEvent($Type, $Data, $Metrics)
-	    $TelemetryClient.Flush()
+        $TelemetryClient.Flush()
     }
     catch
     {
