@@ -627,7 +627,7 @@ Configuration Master
             AudioMessageEnabledType       = "ChatsOnly"
             AllowOwnerDeleteMessage       = $False
             ChannelsInChatListEnabledType = "EnabledUserOverride"
-            GlobalAdminAccount            = $GlobalAdminAccount
+            GlobalAdminAccount            = $GlobalAdmin
             Ensure                        = "Present"
         }
 
