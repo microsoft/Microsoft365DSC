@@ -157,7 +157,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-CsTeamsMessagingPolicy -MockWith {
                 return @{
-                    Identity                = "TestPolicy"
+                    Identity                = "Tag:TestPolicy"
                     Description             = "My sample policy"
                     ReadReceiptsEnabledType = "UserPreference"
                     AllowImmersiveReader    = $True
@@ -196,7 +196,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-CsTeamsMessagingPolicy -MockWith {
                 return @{
-                    Identity                      = 'SamplePolicy'
+                    Identity                      = 'Tag:SamplePolicy'
                     Description                   = "My sample policy"
                     ReadReceiptsEnabledType       = "UserPreference"
                     AllowImmersiveReader          = $True
