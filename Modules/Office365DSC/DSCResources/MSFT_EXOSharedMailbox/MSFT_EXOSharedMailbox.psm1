@@ -27,6 +27,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of Office 365 Shared Mailbox $DisplayName"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = @{
         DisplayName        = $DisplayName
@@ -103,6 +109,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Shared Mailbox $DisplayName"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $currentMailbox = Get-TargetResource @PSBoundParameters
 
@@ -196,6 +208,12 @@ function Test-TargetResource
     )
 
     Write-Verbose -Message "Testing configuration of Office 365 Shared Mailbox $DisplayName"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 

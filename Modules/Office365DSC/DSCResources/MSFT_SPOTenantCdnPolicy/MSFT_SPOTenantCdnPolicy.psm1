@@ -23,6 +23,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPOTenantCdnPolicy {$CDNType}"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PnP
@@ -68,6 +74,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for SPOTenantCDNPolicy {$CDNType}"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PnP
@@ -156,6 +168,12 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PnP
 

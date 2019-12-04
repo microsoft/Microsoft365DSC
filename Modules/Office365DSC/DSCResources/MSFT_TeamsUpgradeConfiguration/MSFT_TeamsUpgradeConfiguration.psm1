@@ -26,9 +26,9 @@ function Get-TargetResource
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", "TeamsUpgradeConfiguration")
-    $data.Add("Method", "Get-TargetResource")
-    Add-O365DSCTelemetryEvent -Type "Flow" -Data $data
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
@@ -71,9 +71,9 @@ function Set-TargetResource
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", "TeamsUpgradeConfiguration")
-    $data.Add("Method", "Set-TargetResource")
-    Add-O365DSCTelemetryEvent -Type "Flow" -Data $data
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
@@ -141,12 +141,11 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", "TeamsUpgradeConfiguration")
-    $data.Add("Method", "Export-TargetResource")
-    Add-O365DSCTelemetryEvent -Type "Flow" -Data $data
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
     $params = @{

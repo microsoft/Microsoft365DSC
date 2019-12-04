@@ -1617,7 +1617,7 @@ function Test-Office365DSCParameterState
         $driftedParameters = ''
         foreach ($key in $DriftedParameters.Keys)
         {
-            $DriftedParameters += $DriftedParameters + "|"
+            $DriftedParameters += $key + "|"
             $EventMessage += "            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n"
         }
         #region Telemetry
@@ -1643,7 +1643,7 @@ function Test-Office365DSCParameterState
         Add-O365DSCEvent -Message $EventMessage -EntryType 'Error' -EventID 1 -Source $Source
     }
     #region Telemetry
-    Add-O365DSCTelemetryEvent -Type "Flow" -Data $data
+    Add-O365DSCTelemetryEvent -Data $data
     #endregion
     return $returnValue
 }

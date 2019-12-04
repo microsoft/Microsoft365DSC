@@ -229,6 +229,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of HostedContentFilterPolicy for $Identity"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
@@ -538,6 +544,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of HostedContentFilterPolicy for $Identity"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
@@ -809,6 +821,12 @@ function Test-TargetResource
     )
 
     Write-Verbose -Message "Testing configuration of HostedContentFilterPolicy for $Identity"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 

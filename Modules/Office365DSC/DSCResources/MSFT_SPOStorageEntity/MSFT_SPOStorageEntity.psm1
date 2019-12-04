@@ -40,6 +40,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPO Storage Entity for $Key"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -ConnectionUrl $SiteUrl `
         -O365Credential $GlobalAdminAccount `
@@ -130,6 +136,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for SPO Storage Entity for $Key"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -ConnectionUrl $SiteUrl `
         -O365Credential $GlobalAdminAccount `
@@ -249,6 +261,12 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        SPOStorageEntity " + (New-Guid).ToString() + "`r`n"

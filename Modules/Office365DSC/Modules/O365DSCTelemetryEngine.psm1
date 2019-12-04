@@ -21,11 +21,11 @@ function Add-O365DSCTelemetryEvent
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
-        $Type,
+        $Type = 'Flow',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Collections.Generic.Dictionary[[System.String],[System.String]]]
         $Data,
 
