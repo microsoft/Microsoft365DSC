@@ -14009,7 +14009,7 @@ function New-AdminPowerAppEnvironment
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('canada','unitesstates','europe','asia','australia','india','japan','unitedkingdom','unitedstatesfirstrelease','southamerica','france')]
+        [ValidateSet('canada','unitesstates','europe','asia','australia','india','japan','unitedkingdom','unitedstatesfirstrelease','southamerica','france','usgov')]
         $Location,
 
         [Parameter(Mandatory = $true)]
