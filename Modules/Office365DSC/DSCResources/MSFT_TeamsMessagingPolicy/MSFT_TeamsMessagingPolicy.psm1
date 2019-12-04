@@ -381,18 +381,25 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SkypeForBusiness
 
-    $params = @{
-        Identity           = "Global"
-        GlobalAdminAccount = $GlobalAdminAccount
-    }
     $i = 1
     [array]$policies = Get-CsTeamsMessagingPolicy
     $content = ''
     foreach ($policy in $policies)
     {
         Write-Information "    [$i/$($policies.Count)] $($policy.Identity)"
-        $currentIdentity = $policy.Identity.split(";")[1]
+        if ($policy.Identity.ToString().contains(":"))
+        {
+            $currentIdentity = $policy.Identity.split(":")[1]
+        }
+        else
+        {
+            $currentIdentity = $policy.Identity
+        }
+
         $params = @{
             Identity           = $currentIdentity
             Ensure             = 'Present'
