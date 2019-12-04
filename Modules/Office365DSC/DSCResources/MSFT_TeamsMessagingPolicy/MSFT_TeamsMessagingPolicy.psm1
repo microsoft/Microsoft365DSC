@@ -386,13 +386,26 @@ function Export-TargetResource
         Identity           = "Global"
         GlobalAdminAccount = $GlobalAdminAccount
     }
-    $result = Get-TargetResource @params
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        TeamsMessagingPolicy " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    $i = 1
+    [array]$policies = Get-CsTeamsMessagingPolicy
+    $content = ''
+    foreach ($policy in $policies)
+    {
+        Write-Information "    [$i/$($policies.Count)] $($policy.Identity)"
+        $params = @{
+            Identity           = $policy.Identity
+            Ensure             = 'Present'
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content += "        TeamsMessagePolicy " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        $i++
+    }
     return $content
 }
 
