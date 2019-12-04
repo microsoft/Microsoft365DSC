@@ -3,15 +3,15 @@ param(
     [Parameter()]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\Stubs\Office365.psm1" `
-                                         -Resolve)
+            -ChildPath "..\Stubs\Office365.psm1" `
+            -Resolve)
 )
 
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\UnitTestHelper.psm1" `
-                                -Resolve)
+        -ChildPath "..\UnitTestHelper.psm1" `
+        -Resolve)
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                                -DscResource "SPOApp"
+    -DscResource "SPOApp"
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {

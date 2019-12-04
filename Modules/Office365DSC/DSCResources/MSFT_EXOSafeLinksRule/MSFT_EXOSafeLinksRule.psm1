@@ -61,7 +61,7 @@ function Get-TargetResource
     Write-Verbose -Message "Setting configuration of SafeLinksRule for $Identity"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $SafeLinksRules = Get-SafeLinksRule
     $SafeLinksRule = $SafeLinksRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -172,7 +172,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of SafeLinksRule for $Identity"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $SafeLinksRules = Get-SafeLinksRule
 
@@ -277,9 +277,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

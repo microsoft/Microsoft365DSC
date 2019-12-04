@@ -29,7 +29,7 @@ function Get-TargetResource
         $MailTipsExternalRecipientsTipsEnabled,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -41,18 +41,18 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of Mailtips for $Organization"
 
     $nullReturn = @{
-        Organization = $Organization
-        MailTipsAllTipsEnabled = $null
-        MailTipsGroupMetricsEnabled = $null
-        MailTipsLargeAudienceThreshold = $null
-        MailTipsMailboxSourcedTipsEnabled = $null
+        Organization                          = $Organization
+        MailTipsAllTipsEnabled                = $null
+        MailTipsGroupMetricsEnabled           = $null
+        MailTipsLargeAudienceThreshold        = $null
+        MailTipsMailboxSourcedTipsEnabled     = $null
         MailTipsExternalRecipientsTipsEnabled = $null
-        Ensure = "Absent"
-        GlobalAdminAccount = $null
+        Ensure                                = "Absent"
+        GlobalAdminAccount                    = $null
     }
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $OrgConfig = Get-OrganizationConfig
 
@@ -108,7 +108,7 @@ function Set-TargetResource
         $MailTipsExternalRecipientsTipsEnabled,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure,
 
@@ -122,7 +122,7 @@ function Set-TargetResource
     $OrgConfig = Get-TargetResource @PSBoundParameters
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     # CASE : MailTipsAllTipsEnabled is used
 
@@ -189,7 +189,7 @@ function Test-TargetResource
         $MailTipsExternalRecipientsTipsEnabled,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure,
 
@@ -206,14 +206,14 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("MailTipsAllTipsEnabled",
-                                                                   "MailTipsGroupMetricsEnabled",
-                                                                   "MailTipsLargeAudienceThreshold",
-                                                                   "MailTipsMailboxSourcedTipsEnabled",
-                                                                   "MailTipsExternalRecipientsTipsEnabled",
-                                                                   "Ensure")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("MailTipsAllTipsEnabled",
+        "MailTipsGroupMetricsEnabled",
+        "MailTipsLargeAudienceThreshold",
+        "MailTipsMailboxSourcedTipsEnabled",
+        "MailTipsExternalRecipientsTipsEnabled",
+        "Ensure")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

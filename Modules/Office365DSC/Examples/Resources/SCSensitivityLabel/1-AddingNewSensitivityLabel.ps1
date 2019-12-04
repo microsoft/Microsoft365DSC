@@ -16,42 +16,42 @@ Configuration Example
     {
         SCSensitivityLabel DemoRule
         {
-            Name               = "DemoLabel"
-            Comment            = "Demo Label comment"
-            ToolTip            = "Demo tool tip"
-            DisplayName        = "Demo Label"
+            Name           = "DemoLabel"
+            Comment        = "Demo Label comment"
+            ToolTip        = "Demo tool tip"
+            DisplayName    = "Demo Label"
 
             LocaleSettings = @(
                 MSFT_SCLabelLocaleSettings
                 {
                     LocaleKey = "DisplayName"
-                    Settings  = @(
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "en-us"
-                                    Value = "English Display Names"
-                                }
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "fr-fr"
-                                    Value = "Nom da'ffichage francais"
-                                }
+                    Settings = @(
+                        MSFT_SCLabelSetting
+                        {
+                            Key   = "en-us"
+                            Value = "English Display Names"
+                        }
+                        MSFT_SCLabelSetting
+                        {
+                            Key   = "fr-fr"
+                            Value = "Nom da'ffichage francais"
+                        }
                     )
                 }
                 MSFT_SCLabelLocaleSettings
                 {
                     LocaleKey = "StopColor"
-                    Settings  = @(
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "en-us"
-                                    Value = "RedGreen"
-                                }
-                                MSFT_SCLabelSetting
-                                {
-                                    Key = "fr-fr"
-                                    Value = "Rouge"
-                                }
+                    Settings = @(
+                        MSFT_SCLabelSetting
+                        {
+                            Key   = "en-us"
+                            Value = "RedGreen"
+                        }
+                        MSFT_SCLabelSetting
+                        {
+                            Key   = "fr-fr"
+                            Value = "Rouge"
+                        }
                     )
                 }
             )

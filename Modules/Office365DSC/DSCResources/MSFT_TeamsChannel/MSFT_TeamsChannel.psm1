@@ -36,7 +36,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of Teams channel $DisplayName"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform MicrosoftTeams
+        -Platform MicrosoftTeams
 
     $nullReturn = @{
         TeamName           = $TeamName
@@ -56,10 +56,10 @@ function Get-TargetResource
         Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
         $channel = Get-TeamChannel -GroupId $team.GroupId `
-                                   -ErrorAction SilentlyContinue `
-                                        | Where-Object -FilterScript {
-                                            ($_.DisplayName -eq $DisplayName)
-                                          }
+            -ErrorAction SilentlyContinue `
+        | Where-Object -FilterScript {
+            ($_.DisplayName -eq $DisplayName)
+        }
 
         #Current channel doesnt exist and trying to rename throw an error
         if (($null -eq $channel) -and $CurrentParameters.ContainsKey("NewDisplayName"))
@@ -126,7 +126,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of Teams channel $DisplayName"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform MicrosoftTeams
+        -Platform MicrosoftTeams
 
     $channel = Get-TargetResource @PSBoundParameters
 
@@ -219,9 +219,9 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("Ensure")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

@@ -32,7 +32,7 @@ function Start-O365ConfigurationExtract
         $MaxProcesses,
 
         [Parameter()]
-        [ValidateSet('SPO', 'EXO', 'SC', 'OD', 'O365', 'TEAMS')]
+        [ValidateSet('SPO', 'EXO', 'SC', 'OD', 'O365', 'TEAMS', 'PP')]
         [System.String[]]
         $Workloads
     )
@@ -872,6 +872,22 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region PPPowerAppsEnvironment
+    if (($null -ne $ComponentsToExtract -and
+            $ComponentsToExtract.Contains("chckPPPowerAppsEnvironment")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("PP")))
+    {
+        Write-Information "Extracting PPowerAppsEnvironment..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_PPPowerAppsEnvironment\MSFT_PPPowerAppsEnvironment.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region SCAuditConfigurationPolicy
     if (($null -ne $ComponentsToExtract -and
             $ComponentsToExtract.Contains("chckSCAuditConfigurationPolicy")) -or
@@ -942,8 +958,8 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting SCComplianceSearch..."
 
         $ModulePath = Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\DSCResources\MSFT_SCComplianceSearch\MSFT_SCComplianceSearch.psm1" `
-                                -Resolve
+            -ChildPath "..\DSCResources\MSFT_SCComplianceSearch\MSFT_SCComplianceSearch.psm1" `
+            -Resolve
 
         Import-Module $ModulePath | Out-Null
         $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
@@ -958,8 +974,8 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting SCComplianceSearchAction..."
 
         $ModulePath = Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\DSCResources\MSFT_SCComplianceSearchAction\MSFT_SCComplianceSearchAction.psm1" `
-                                -Resolve
+            -ChildPath "..\DSCResources\MSFT_SCComplianceSearchAction\MSFT_SCComplianceSearchAction.psm1" `
+            -Resolve
 
         Import-Module $ModulePath | Out-Null
         $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
@@ -1711,8 +1727,8 @@ function Start-O365ConfigurationExtract
     {
         Write-Information "Extracting SPOSiteDesignRights..."
         $ModulePath = Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\DSCResources\MSFT_SPOSiteDesignRights\MSFT_SPOSiteDesignRights.psm1" `
-                                -Resolve
+            -ChildPath "..\DSCResources\MSFT_SPOSiteDesignRights\MSFT_SPOSiteDesignRights.psm1" `
+            -Resolve
 
         Import-Module $ModulePath | Out-Null
         $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
@@ -1839,13 +1855,13 @@ function Start-O365ConfigurationExtract
 
     #region "TeamsUpgradeConfiguration"
     if (($null -ne $ComponentsToExtract -and
-        $ComponentsToExtract.Contains("chckTeamsUpgradeConfiguration")) -or
+            $ComponentsToExtract.Contains("chckTeamsUpgradeConfiguration")) -or
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
     {
         Write-Information "Extracting TeamsUpgradeConfiguration..."
         $ModulePath = Join-Path -Path $PSScriptRoot `
-                                        -ChildPath "..\DSCResources\MSFT_TeamsUpgradeConfiguration\MSFT_TeamsUpgradeConfiguration.psm1" `
-                                        -Resolve
+            -ChildPath "..\DSCResources\MSFT_TeamsUpgradeConfiguration\MSFT_TeamsUpgradeConfiguration.psm1" `
+            -Resolve
 
         Import-Module $ModulePath | Out-Null
         $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
@@ -1876,8 +1892,8 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting TeamsCallingPolicy..."
 
         $ModulePath = Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\DSCResources\MSFT_TeamsCallingPolicy\MSFT_TeamsCallingPolicy.psm1" `
-                                -Resolve
+            -ChildPath "..\DSCResources\MSFT_TeamsCallingPolicy\MSFT_TeamsCallingPolicy.psm1" `
+            -Resolve
 
         Import-Module $ModulePath | Out-Null
         $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
@@ -1886,13 +1902,13 @@ function Start-O365ConfigurationExtract
 
     #region "TeamsTeam"
     if (($null -ne $ComponentsToExtract -and
-        $ComponentsToExtract.Contains("chckTeamsTeam")) -or
+            $ComponentsToExtract.Contains("chckTeamsTeam")) -or
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
     {
         Write-Information "Extracting TeamsTeam..."
         $ModulePath = Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
-                                -Resolve
+            -ChildPath "..\DSCResources\MSFT_TeamsTeam\MSFT_TeamsTeam.psm1" `
+            -Resolve
 
         Import-Module $ModulePath | Out-Null
         $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
@@ -1925,8 +1941,8 @@ function Start-O365ConfigurationExtract
                 {
                     Write-Information "        - [$i/$($channels.Length)] $($channel.DisplayName)"
                     $DSCContent += Export-TargetResource -TeamName $team.DisplayName `
-                                                         -DisplayName $channel.DisplayName `
-                                                         -GlobalAdminAccount $GlobalAdminAccount
+                        -DisplayName $channel.DisplayName `
+                        -GlobalAdminAccount $GlobalAdminAccount
                     $i++
                 }
                 $j++

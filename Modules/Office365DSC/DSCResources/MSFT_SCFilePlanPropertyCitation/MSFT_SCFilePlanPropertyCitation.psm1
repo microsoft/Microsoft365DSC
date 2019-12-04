@@ -29,9 +29,9 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of SCFilePlanPropertyCitation for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
-    $property = Get-FilePlanPropertyCitation | Where-Object -FilterScript {$_.Name -eq $Name}
+    $property = Get-FilePlanPropertyCitation | Where-Object -FilterScript { $_.Name -eq $Name }
 
     if ($null -eq $property)
     {
@@ -87,7 +87,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of SCFilePlanPropertyCitation for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $Current = Get-TargetResource @PSBoundParameters
 
@@ -146,9 +146,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -168,7 +168,7 @@ function Export-TargetResource
 
     $InformationPreference = "Continue"
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
     $Properties = Get-FilePlanPropertyCitation
 
     $i = 1

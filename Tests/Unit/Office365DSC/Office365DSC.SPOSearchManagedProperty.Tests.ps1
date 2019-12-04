@@ -3,16 +3,16 @@ param(
     [Parameter()]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\Stubs\Office365DSC.psm1" `
-                                         -Resolve)
+            -ChildPath "..\Stubs\Office365DSC.psm1" `
+            -Resolve)
 )
 
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\UnitTestHelper.psm1" `
-                                -Resolve)
+        -ChildPath "..\UnitTestHelper.psm1" `
+        -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                                -DscResource "SPOSearchManagedProperty"
+    -DscResource "SPOSearchManagedProperty"
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -121,29 +121,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "When the Managed Property doesn't already exist" -Fixture {
             $testParams = @{
-                Name ="TestMP"
-                Type = "Text"
-                Description = "This is a test"
-                Searchable = $false
-                FullTextContext = 0
-                Queryable = $false
-                Retrievable = $false
-                AllowMultipleValues = $false
-                Refinable = "Yes"
-                Sortable = "Yes"
-                Safe = $false
-                Aliases = @("Alias1")
-                TokenNormalization = $true
-                CompleteMatching = $false
+                Name                        = "TestMP"
+                Type                        = "Text"
+                Description                 = "This is a test"
+                Searchable                  = $false
+                FullTextContext             = 0
+                Queryable                   = $false
+                Retrievable                 = $false
+                AllowMultipleValues         = $false
+                Refinable                   = "Yes"
+                Sortable                    = "Yes"
+                Safe                        = $false
+                Aliases                     = @("Alias1")
+                TokenNormalization          = $true
+                CompleteMatching            = $false
                 LanguageNeutralTokenization = $true
-                FinerQueryTokenization = $false
-                CompanyNameExtraction = $true
-                Ensure = "Present"
-                GlobalAdminAccount = $GlobalAdminAccount
+                FinerQueryTokenization      = $false
+                CompanyNameExtraction       = $true
+                Ensure                      = "Present"
+                GlobalAdminAccount          = $GlobalAdminAccount
             }
             $xmlTemplatePath = Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\..\..\Modules\Office365DSC\Dependencies\SearchConfigurationSettings.xml" `
-                                         -Resolve
+                -ChildPath "..\..\..\Modules\Office365DSC\Dependencies\SearchConfigurationSettings.xml" `
+                -Resolve
             $emptyXMLTemplate = Get-Content $xmlTemplatePath
             Mock -CommandName Get-PnPSearchConfiguration -MockWith {
 
@@ -170,25 +170,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the Managed Property already exists" -Fixture {
             $Script:RecentMPExtract = $null
             $testParams = @{
-                Name ="TestMP"
-                Type = "Text"
-                Description = "This is a test"
-                Searchable = $false
-                FullTextContext = 0
-                Queryable = $false
-                Retrievable = $false
-                AllowMultipleValues = $false
-                Refinable = "Yes"
-                Sortable = "Yes"
-                Safe = $false
-                Aliases = @("Alias1")
-                TokenNormalization = $true
-                CompleteMatching = $false
+                Name                        = "TestMP"
+                Type                        = "Text"
+                Description                 = "This is a test"
+                Searchable                  = $false
+                FullTextContext             = 0
+                Queryable                   = $false
+                Retrievable                 = $false
+                AllowMultipleValues         = $false
+                Refinable                   = "Yes"
+                Sortable                    = "Yes"
+                Safe                        = $false
+                Aliases                     = @("Alias1")
+                TokenNormalization          = $true
+                CompleteMatching            = $false
                 LanguageNeutralTokenization = $true
-                FinerQueryTokenization = $false
-                CompanyNameExtraction = $true
-                Ensure = "Present"
-                GlobalAdminAccount = $GlobalAdminAccount
+                FinerQueryTokenization      = $false
+                CompanyNameExtraction       = $true
+                Ensure                      = "Present"
+                GlobalAdminAccount          = $GlobalAdminAccount
             }
             Mock -CommandName Get-PnPSearchConfiguration -MockWith {
 
@@ -214,12 +214,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "When Invalid values are used" -Fixture {
             $testParams = @{
-                Name ="TestMP"
-                Type = "Text"
+                Name                        = "TestMP"
+                Type                        = "Text"
                 LanguageNeutralTokenization = $true
-                CompleteMatching = $true
-                Ensure = "Present"
-                GlobalAdminAccount = $GlobalAdminAccount
+                CompleteMatching            = $true
+                Ensure                      = "Present"
+                GlobalAdminAccount          = $GlobalAdminAccount
             }
 
             It "Should throw and errors" {

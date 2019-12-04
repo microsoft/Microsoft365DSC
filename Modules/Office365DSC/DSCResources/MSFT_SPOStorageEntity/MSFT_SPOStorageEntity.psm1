@@ -42,8 +42,8 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration for SPO Storage Entity for $Key"
 
     Test-MSCloudLogin -ConnectionUrl $SiteUrl `
-                      -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -O365Credential $GlobalAdminAccount `
+        -Platform PnP
 
     $nullReturn = @{
         Key                = $Key
@@ -58,7 +58,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting storage entity $Key"
 
-    $entityStorageParms = @{}
+    $entityStorageParms = @{ }
     $entityStorageParms.Add("Key", $Key)
 
     if ($null -ne $EntityScope -and "" -ne $EntityScope)
@@ -132,8 +132,8 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration for SPO Storage Entity for $Key"
 
     Test-MSCloudLogin -ConnectionUrl $SiteUrl `
-                      -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -O365Credential $GlobalAdminAccount `
+        -Platform PnP
 
     $curStorageEntry = Get-TargetResource @PSBoundParameters
 
@@ -161,7 +161,7 @@ function Set-TargetResource
             if ($_.Exception -like "*Access denied*")
             {
                 throw "It appears that the account doesn't have access to create an SPO Storage " + `
-                      "Entity or that an App Catalog was not created for the specified location"
+                    "Entity or that an App Catalog was not created for the specified location"
             }
         }
     }
@@ -216,15 +216,15 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Key", `
-                                                                   "Value", `
-                                                                   "Key", `
-                                                                   "Comment", `
-                                                                   "Description", `
-                                                                   "EntityScope", `
-                                                                   "Ensure")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("Key", `
+            "Value", `
+            "Key", `
+            "Comment", `
+            "Description", `
+            "EntityScope", `
+            "Ensure")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

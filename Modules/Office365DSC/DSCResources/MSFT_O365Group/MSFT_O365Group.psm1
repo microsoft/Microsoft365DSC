@@ -25,7 +25,7 @@ function Get-TargetResource
         $Members,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -37,16 +37,16 @@ function Get-TargetResource
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
 
     $nullReturn = @{
-        DisplayName = $DisplayName
-        MailNickName = $Name
-        Description = $null
-        ManagedBy = $null
+        DisplayName        = $DisplayName
+        MailNickName       = $Name
+        Description        = $null
+        ManagedBy          = $null
         GlobalAdminAccount = $null
-        Ensure = "Absent"
+        Ensure             = "Absent"
     }
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform AzureAD
+        -Platform AzureAD
 
     $ADGroup = Get-AzureADGroup -SearchString $MailNickName -ErrorAction SilentlyContinue
     if ($null -eq $ADGroup)
@@ -93,13 +93,13 @@ function Get-TargetResource
         }
 
         $returnValue = @{
-            DisplayName = $ADGroup.DisplayName
-            MailNickName = $ADGroup.MailNickName
-            Members = $newMemberList
-            ManagedBy = $ownersUPN
-            Description = $description
+            DisplayName        = $ADGroup.DisplayName
+            MailNickName       = $ADGroup.MailNickName
+            Members            = $newMemberList
+            ManagedBy          = $ownersUPN
+            Description        = $description
             GlobalAdminAccount = $GlobalAdminAccount
-            Ensure = "Present"
+            Ensure             = "Present"
         }
 
         Write-Verbose -Message "Retrieved the following instance of the Group:"
@@ -143,7 +143,7 @@ function Set-TargetResource
         $Members,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -154,7 +154,7 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $currentGroup = Get-TargetResource @PSBoundParameters
 
@@ -299,7 +299,7 @@ function Test-TargetResource
         $Members,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -316,8 +316,8 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

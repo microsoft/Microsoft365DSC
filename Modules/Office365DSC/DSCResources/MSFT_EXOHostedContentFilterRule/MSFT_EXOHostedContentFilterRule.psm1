@@ -61,7 +61,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of HostedContentFilterRule for $Identity"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     Write-Verbose -Message "Global ExchangeOnlineSession status:"
     Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
@@ -180,7 +180,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of HostedContentFilterRule for $Identity"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     Write-Verbose -Message "Global ExchangeOnlineSession status:"
     Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
@@ -197,7 +197,7 @@ function Set-TargetResource
     {
         if ($PSBoundParameters.Enabled -and ('Disabled' -eq $HostedContentFilterRule.State))
         {
-             # New-HostedContentFilterRule has the Enabled parameter, Set-HostedContentFilterRule does not.
+            # New-HostedContentFilterRule has the Enabled parameter, Set-HostedContentFilterRule does not.
             # There doesn't appear to be any way to change the Enabled state of a rule once created.
             Write-Verbose -Message "Removing HostedContentFilterRule $($Identity) in order to change Enabled state."
             Remove-HostedContentFilterRule -Identity $Identity -Confirm:$false
@@ -287,9 +287,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

@@ -63,7 +63,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of ComplianceTag for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $tagObjects = Get-ComplianceTag
     $tagObject = $tagObjects | Where-Object { $_.Name -eq $Name }
@@ -168,7 +168,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of ComplianceTag for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $CurrentTag = Get-TargetResource @PSBoundParameters
 
@@ -205,29 +205,29 @@ function Set-TargetResource
         if ($SetParams.IsRecordLabel -eq $false -and $CurrentTag.IsRecordLabel -eq $true)
         {
             throw "Can't remove label on the existing Compliance Tag {$Name}. " + `
-                  "You will need to delete the tag and recreate it."
+                "You will need to delete the tag and recreate it."
         }
 
         if ($null -ne $PsBoundParameters["Regulatory"] -and
             $Regulatory -ne $CurrentTag.Regulatory)
         {
             throw "SPComplianceTag can't change the Regulatory property on " + `
-                  "existing tags {$Name} from $Regulatory to $($CurrentTag.Regulatory)." + `
-                  " You will need to delete the tag and recreate it."
+                "existing tags {$Name} from $Regulatory to $($CurrentTag.Regulatory)." + `
+                " You will need to delete the tag and recreate it."
         }
 
         if ($RetentionAction -ne $CurrentTag.RetentionAction)
         {
             throw "SPComplianceTag can't change the RetentionAction property on " + `
-                  "existing tags {$Name} from $RetentionAction to $($CurrentTag.RetentionAction)." + `
-                  " You will need to delete the tag and recreate it."
+                "existing tags {$Name} from $RetentionAction to $($CurrentTag.RetentionAction)." + `
+                " You will need to delete the tag and recreate it."
         }
 
         if ($RetentionType -ne $CurrentTag.RetentionType)
         {
             throw "SPComplianceTag can't change the RetentionType property on " + `
-                  "existing tags {$Name} from $RetentionType to $($CurrentTag.RetentionType)." + `
-                  " You will need to delete the tag and recreate it."
+                "existing tags {$Name} from $RetentionType to $($CurrentTag.RetentionType)." + `
+                " You will need to delete the tag and recreate it."
         }
 
         #Convert File plan to JSON before Set
@@ -319,7 +319,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove("FilePlanProperty") | Out-Null
 
     $TestFilePlanProperties = Test-SCFilePlanProperties -CurrentProperty $CurrentValues `
-                                                        -DesiredProperty $PSBoundParameters
+        -DesiredProperty $PSBoundParameters
 
     if ($false -eq $TestFilePlanProperties)
     {
@@ -327,9 +327,9 @@ function Test-TargetResource
     }
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -348,8 +348,8 @@ function Export-TargetResource
     )
     $InformationPreference = 'Continue'
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter `
-                      -ErrorAction SilentlyContinue
+        -Platform SecurityComplianceCenter `
+        -ErrorAction SilentlyContinue
     $tags = Get-ComplianceTag
 
     $totalTags = $tags.Length
@@ -395,14 +395,15 @@ function Get-SCFilePlanPropertyObject
     }
 
     $result = [PSCustomObject]@{
-        Settings=@(
-            @{Key="FilePlanPropertyDepartment"; Value=$properties.FilePlanPropertyDepartment},
-            @{Key="FilePlanPropertyCategory";   Value=$properties.FilePlanPropertyCategory},
-            @{Key="FilePlanPropertySubcategory";Value=$properties.FilePlanPropertySubcategory},
-            @{Key="FilePlanPropertyCitation";   Value=$properties.FilePlanPropertyCitation},
-            @{Key="FilePlanPropertyReferenceId";Value=$properties.FilePlanPropertyReferenceId},
-            @{Key="FilePlanPropertyAuthority";  Value=$properties.FilePlanPropertyAuthority}
-        )}
+        Settings = @(
+            @{Key = "FilePlanPropertyDepartment"; Value = $properties.FilePlanPropertyDepartment },
+            @{Key = "FilePlanPropertyCategory"; Value = $properties.FilePlanPropertyCategory },
+            @{Key = "FilePlanPropertySubcategory"; Value = $properties.FilePlanPropertySubcategory },
+            @{Key = "FilePlanPropertyCitation"; Value = $properties.FilePlanPropertyCitation },
+            @{Key = "FilePlanPropertyReferenceId"; Value = $properties.FilePlanPropertyReferenceId },
+            @{Key = "FilePlanPropertyAuthority"; Value = $properties.FilePlanPropertyAuthority }
+        )
+    }
 
     return $result
 }
@@ -412,7 +413,7 @@ function Get-SCFilePlanProperty
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Metadata
     )
@@ -441,7 +442,7 @@ function Get-SCFilePlanPropertyAsString($params)
         return $null
     }
     $currentProperty = "MSFT_SCFilePlanProperty{`r`n"
-    foreach($key in $params.Keys)
+    foreach ($key in $params.Keys)
     {
         $currentProperty += "                " + $key + " = '" + $params[$key] + "'`r`n"
     }
@@ -459,11 +460,11 @@ function Test-SCFilePlanProperties
     )
 
     if ($CurrentProperty.FilePlanPropertyDepartment -ne $DesiredProperty.FilePlanPropertyDepartment -or `
-        $CurrentProperty.FilePlanPropertyCategory -ne $DesiredProperty.FilePlanPropertyCategory -or `
-        $CurrentProperty.FilePlanPropertySubcategory -ne $DesiredProperty.FilePlanPropertySubcategory -or `
-        $CurrentProperty.FilePlanPropertyCitation -ne $DesiredProperty.FilePlanPropertyCitation -or `
-        $CurrentProperty.FilePlanPropertyReferenceId -ne $DesiredProperty.FilePlanPropertyReferenceId -or `
-        $CurrentProperty.FilePlanPropertyAuthority -ne $DesiredProperty.FilePlanPropertyAuthority)
+            $CurrentProperty.FilePlanPropertyCategory -ne $DesiredProperty.FilePlanPropertyCategory -or `
+            $CurrentProperty.FilePlanPropertySubcategory -ne $DesiredProperty.FilePlanPropertySubcategory -or `
+            $CurrentProperty.FilePlanPropertyCitation -ne $DesiredProperty.FilePlanPropertyCitation -or `
+            $CurrentProperty.FilePlanPropertyReferenceId -ne $DesiredProperty.FilePlanPropertyReferenceId -or `
+            $CurrentProperty.FilePlanPropertyAuthority -ne $DesiredProperty.FilePlanPropertyAuthority)
     {
         return $false
     }

@@ -33,12 +33,12 @@ function Get-TargetResource
         $BlockedSenders = @(),
 
         [Parameter()]
-        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine')]
+        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine')]
         [System.String]
         $BulkSpamAction = 'MoveToJmf',
 
         [Parameter()]
-        [ValidateRange(1,9)]
+        [ValidateRange(1, 9)]
         [uint32]
         $BulkThreshold = 7,
 
@@ -72,17 +72,17 @@ function Get-TargetResource
         $EndUserSpamNotificationCustomSubject,
 
         [Parameter()]
-        [ValidateRange(1,15)]
+        [ValidateRange(1, 15)]
         [uint32]
         $EndUserSpamNotificationFrequency = 3,
 
         [Parameter()]
-        [ValidateSet('Default','English','French','German','Italian','Japanese','Spanish','Korean','Portuguese','Russian','ChineseSimplified','ChineseTraditional','Amharic','Arabic','Bulgarian','BengaliIndia','Catalan','Czech','Cyrillic','Danish','Greek','Estonian','Basque','Farsi','Finnish','Filipino','Galician','Gujarati','Hebrew','Hindi','Croatian','Hungarian','Indonesian','Icelandic','Kazakh','Kannada','Lithuanian','Latvian','Malayalam','Marathi','Malay','Dutch','NorwegianNynorsk','Norwegian','Oriya','Polish','PortuguesePortugal','Romanian','Slovak','Slovenian','SerbianCyrillic','Serbian','Swedish','Swahili','Tamil','Telugu','Thai','Turkish','Ukrainian','Urdu','Vietnamese')]
+        [ValidateSet('Default', 'English', 'French', 'German', 'Italian', 'Japanese', 'Spanish', 'Korean', 'Portuguese', 'Russian', 'ChineseSimplified', 'ChineseTraditional', 'Amharic', 'Arabic', 'Bulgarian', 'BengaliIndia', 'Catalan', 'Czech', 'Cyrillic', 'Danish', 'Greek', 'Estonian', 'Basque', 'Farsi', 'Finnish', 'Filipino', 'Galician', 'Gujarati', 'Hebrew', 'Hindi', 'Croatian', 'Hungarian', 'Indonesian', 'Icelandic', 'Kazakh', 'Kannada', 'Lithuanian', 'Latvian', 'Malayalam', 'Marathi', 'Malay', 'Dutch', 'NorwegianNynorsk', 'Norwegian', 'Oriya', 'Polish', 'PortuguesePortugal', 'Romanian', 'Slovak', 'Slovenian', 'SerbianCyrillic', 'Serbian', 'Swedish', 'Swahili', 'Tamil', 'Telugu', 'Thai', 'Turkish', 'Ukrainian', 'Urdu', 'Vietnamese')]
         [System.String]
         $EndUserSpamNotificationLanguage = 'Default',
 
         [Parameter()]
-        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $HighConfidenceSpamAction = 'MoveToJmf',
 
@@ -108,7 +108,7 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('Off', 'On', 'Test')]
         [System.String]
-        $IncreaseScoreWithRedirectToOtherPort ='Off',
+        $IncreaseScoreWithRedirectToOtherPort = 'Off',
 
         [Parameter()]
         [System.String[]]
@@ -183,12 +183,12 @@ function Get-TargetResource
         $ModifySubjectValue,
 
         [Parameter()]
-        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $PhishSpamAction = 'MoveToJmf',
 
         [Parameter()]
-        [ValidateRange(1,15)]
+        [ValidateRange(1, 15)]
         [uint32]
         $QuarantineRetentionPeriod = 15,
 
@@ -201,12 +201,12 @@ function Get-TargetResource
         $RegionBlockList = @(),
 
         [Parameter()]
-        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $SpamAction = 'MoveToJmf',
 
         [Parameter()]
-        [ValidateSet('None','AddXHeader','BccMessage')]
+        [ValidateSet('None', 'AddXHeader', 'BccMessage')]
         [System.String]
         $TestModeAction = 'None',
 
@@ -231,7 +231,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of HostedContentFilterPolicy for $Identity"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
 
@@ -342,12 +342,12 @@ function Set-TargetResource
         $BlockedSenders = @(),
 
         [Parameter()]
-        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine')]
+        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine')]
         [System.String]
         $BulkSpamAction = 'MoveToJmf',
 
         [Parameter()]
-        [ValidateRange(1,9)]
+        [ValidateRange(1, 9)]
         [uint32]
         $BulkThreshold = 7,
 
@@ -381,17 +381,17 @@ function Set-TargetResource
         $EndUserSpamNotificationCustomSubject,
 
         [Parameter()]
-        [ValidateRange(1,15)]
+        [ValidateRange(1, 15)]
         [uint32]
         $EndUserSpamNotificationFrequency = 3,
 
         [Parameter()]
-        [ValidateSet('Default','English','French','German','Italian','Japanese','Spanish','Korean','Portuguese','Russian','ChineseSimplified','ChineseTraditional','Amharic','Arabic','Bulgarian','BengaliIndia','Catalan','Czech','Cyrillic','Danish','Greek','Estonian','Basque','Farsi','Finnish','Filipino','Galician','Gujarati','Hebrew','Hindi','Croatian','Hungarian','Indonesian','Icelandic','Kazakh','Kannada','Lithuanian','Latvian','Malayalam','Marathi','Malay','Dutch','NorwegianNynorsk','Norwegian','Oriya','Polish','PortuguesePortugal','Romanian','Slovak','Slovenian','SerbianCyrillic','Serbian','Swedish','Swahili','Tamil','Telugu','Thai','Turkish','Ukrainian','Urdu','Vietnamese')]
+        [ValidateSet('Default', 'English', 'French', 'German', 'Italian', 'Japanese', 'Spanish', 'Korean', 'Portuguese', 'Russian', 'ChineseSimplified', 'ChineseTraditional', 'Amharic', 'Arabic', 'Bulgarian', 'BengaliIndia', 'Catalan', 'Czech', 'Cyrillic', 'Danish', 'Greek', 'Estonian', 'Basque', 'Farsi', 'Finnish', 'Filipino', 'Galician', 'Gujarati', 'Hebrew', 'Hindi', 'Croatian', 'Hungarian', 'Indonesian', 'Icelandic', 'Kazakh', 'Kannada', 'Lithuanian', 'Latvian', 'Malayalam', 'Marathi', 'Malay', 'Dutch', 'NorwegianNynorsk', 'Norwegian', 'Oriya', 'Polish', 'PortuguesePortugal', 'Romanian', 'Slovak', 'Slovenian', 'SerbianCyrillic', 'Serbian', 'Swedish', 'Swahili', 'Tamil', 'Telugu', 'Thai', 'Turkish', 'Ukrainian', 'Urdu', 'Vietnamese')]
         [System.String]
         $EndUserSpamNotificationLanguage = 'Default',
 
         [Parameter()]
-        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $HighConfidenceSpamAction = 'MoveToJmf',
 
@@ -417,7 +417,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('Off', 'On', 'Test')]
         [System.String]
-        $IncreaseScoreWithRedirectToOtherPort ='Off',
+        $IncreaseScoreWithRedirectToOtherPort = 'Off',
 
         [Parameter()]
         [System.String[]]
@@ -492,12 +492,12 @@ function Set-TargetResource
         $ModifySubjectValue,
 
         [Parameter()]
-        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $PhishSpamAction = 'MoveToJmf',
 
         [Parameter()]
-        [ValidateRange(1,15)]
+        [ValidateRange(1, 15)]
         [uint32]
         $QuarantineRetentionPeriod = 15,
 
@@ -510,12 +510,12 @@ function Set-TargetResource
         $RegionBlockList = @(),
 
         [Parameter()]
-        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $SpamAction = 'MoveToJmf',
 
         [Parameter()]
-        [ValidateSet('None','AddXHeader','BccMessage')]
+        [ValidateSet('None', 'AddXHeader', 'BccMessage')]
         [System.String]
         $TestModeAction = 'None',
 
@@ -540,7 +540,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of HostedContentFilterPolicy for $Identity"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
 
@@ -613,12 +613,12 @@ function Test-TargetResource
         $BlockedSenders = @(),
 
         [Parameter()]
-        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine')]
+        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine')]
         [System.String]
         $BulkSpamAction = 'MoveToJmf',
 
         [Parameter()]
-        [ValidateRange(1,9)]
+        [ValidateRange(1, 9)]
         [uint32]
         $BulkThreshold = 7,
 
@@ -652,17 +652,17 @@ function Test-TargetResource
         $EndUserSpamNotificationCustomSubject,
 
         [Parameter()]
-        [ValidateRange(1,15)]
+        [ValidateRange(1, 15)]
         [uint32]
         $EndUserSpamNotificationFrequency = 3,
 
         [Parameter()]
-        [ValidateSet('Default','English','French','German','Italian','Japanese','Spanish','Korean','Portuguese','Russian','ChineseSimplified','ChineseTraditional','Amharic','Arabic','Bulgarian','BengaliIndia','Catalan','Czech','Cyrillic','Danish','Greek','Estonian','Basque','Farsi','Finnish','Filipino','Galician','Gujarati','Hebrew','Hindi','Croatian','Hungarian','Indonesian','Icelandic','Kazakh','Kannada','Lithuanian','Latvian','Malayalam','Marathi','Malay','Dutch','NorwegianNynorsk','Norwegian','Oriya','Polish','PortuguesePortugal','Romanian','Slovak','Slovenian','SerbianCyrillic','Serbian','Swedish','Swahili','Tamil','Telugu','Thai','Turkish','Ukrainian','Urdu','Vietnamese')]
+        [ValidateSet('Default', 'English', 'French', 'German', 'Italian', 'Japanese', 'Spanish', 'Korean', 'Portuguese', 'Russian', 'ChineseSimplified', 'ChineseTraditional', 'Amharic', 'Arabic', 'Bulgarian', 'BengaliIndia', 'Catalan', 'Czech', 'Cyrillic', 'Danish', 'Greek', 'Estonian', 'Basque', 'Farsi', 'Finnish', 'Filipino', 'Galician', 'Gujarati', 'Hebrew', 'Hindi', 'Croatian', 'Hungarian', 'Indonesian', 'Icelandic', 'Kazakh', 'Kannada', 'Lithuanian', 'Latvian', 'Malayalam', 'Marathi', 'Malay', 'Dutch', 'NorwegianNynorsk', 'Norwegian', 'Oriya', 'Polish', 'PortuguesePortugal', 'Romanian', 'Slovak', 'Slovenian', 'SerbianCyrillic', 'Serbian', 'Swedish', 'Swahili', 'Tamil', 'Telugu', 'Thai', 'Turkish', 'Ukrainian', 'Urdu', 'Vietnamese')]
         [System.String]
         $EndUserSpamNotificationLanguage = 'Default',
 
         [Parameter()]
-        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $HighConfidenceSpamAction = 'MoveToJmf',
 
@@ -688,7 +688,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('Off', 'On', 'Test')]
         [System.String]
-        $IncreaseScoreWithRedirectToOtherPort ='Off',
+        $IncreaseScoreWithRedirectToOtherPort = 'Off',
 
         [Parameter()]
         [System.String[]]
@@ -763,12 +763,12 @@ function Test-TargetResource
         $ModifySubjectValue,
 
         [Parameter()]
-        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $PhishSpamAction = 'MoveToJmf',
 
         [Parameter()]
-        [ValidateRange(1,15)]
+        [ValidateRange(1, 15)]
         [uint32]
         $QuarantineRetentionPeriod = 15,
 
@@ -781,12 +781,12 @@ function Test-TargetResource
         $RegionBlockList = @(),
 
         [Parameter()]
-        [ValidateSet('MoveToJmf','AddXHeader','ModifySubject','Redirect','Delete','Quarantine','NoAction')]
+        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $SpamAction = 'MoveToJmf',
 
         [Parameter()]
-        [ValidateSet('None','AddXHeader','BccMessage')]
+        [ValidateSet('None', 'AddXHeader', 'BccMessage')]
         [System.String]
         $TestModeAction = 'None',
 
@@ -819,9 +819,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

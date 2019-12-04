@@ -9,8 +9,10 @@
     returning all values;
 * O365OrgCustomizationSetting
   * Inital Release;
+* PPPowerAppsEnvironment
+  * Initial Release;
 * SCAuditConfigurationSettings
-  * Initial release;
+  * Initial Release;
 * SCDLPComplianceRule
   * Fixed issue with the extraction of NotifyAllowOverride;
 * SCFilePlanPropertyAuthority
@@ -43,7 +45,7 @@
 * Metadata
   * Updated MicrosoftTeams dependency to version 1.0.3;
   * Updated MSCloudLoginAssistant dependency to version
-    0.8.1;
+    0.8.2;
   * Updated SharePointPnPPowerShellOnline dependency
     to version 3.16.1912.0;
   * Updated ReverseDSC dependency to version 2.0.0.0;
@@ -70,7 +72,7 @@
   * Added workload selectors to the GUI interface;
 * Metadata
   * Updated MSCloudLoginAssistant dependency
-    to version 0.7.6;
+    to version 0.8.3;
   * Updated ReverseDSC dependency
     to version 1.9.4.6;
   * Updated Microsoft.Online.SharePoint.PowerShell dependency

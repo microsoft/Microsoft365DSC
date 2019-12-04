@@ -190,7 +190,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Identity           = 'contoso.com'
                 Action             = 'DenyAccess'
-                GlobalAdminAccount           = $GlobalAdminAccount
+                GlobalAdminAccount = $GlobalAdminAccount
             }
 
             It "Should Reverse Engineer resource from the Export method" {

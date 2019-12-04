@@ -73,8 +73,8 @@ function Add-O365DSCEvent
     try
     {
         Write-EventLog -LogName 'Office365DSC' -Source $Source `
-                       -EventID $EventID -Message $Message -EntryType $EntryType `
-                       -ErrorAction SilentlyContinue
+            -EventID $EventID -Message $Message -EntryType $EntryType `
+            -ErrorAction SilentlyContinue
     }
     catch
     {

@@ -30,7 +30,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of SCComplianceCase for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $Case = Get-ComplianceCase -Identity $Name -ErrorAction SilentlyContinue
 
@@ -93,7 +93,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of SCComplianceCase for $Name"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $CurrentCase = Get-TargetResource @PSBoundParameters
 
@@ -179,9 +179,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -201,7 +201,7 @@ function Export-TargetResource
 
     $InformationPreference = "Continue"
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
     [array]$Cases = Get-ComplianceCase
 
     $dscContent = ""

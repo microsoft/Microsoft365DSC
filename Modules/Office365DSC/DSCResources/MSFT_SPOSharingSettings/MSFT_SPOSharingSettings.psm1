@@ -96,7 +96,7 @@ function Get-TargetResource
         $RequireAcceptingAccountMatchInvitedAccount,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -108,7 +108,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration for SPO Sharing settings"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $nullReturn = @{
         IsSingleInstance                           = 'Yes'
@@ -271,7 +271,7 @@ function Set-TargetResource
         $RequireAcceptingAccountMatchInvitedAccount,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -283,7 +283,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration for SPO Sharing settings"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
@@ -426,7 +426,7 @@ function Test-TargetResource
         $RequireAcceptingAccountMatchInvitedAccount,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -443,29 +443,29 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("IsSingleInstance", `
-                                                                   "SharingCapability", `
-                                                                   "ShowEveryoneClaim", `
-                                                                   "ShowAllUsersClaim", `
-                                                                   "ShowEveryoneExceptExternalUsersClaim", `
-                                                                   "ProvisionSharedWithEveryoneFolder", `
-                                                                   "EnableGuestSignInAcceleration", `
-                                                                   "BccExternalSharingInvitations", `
-                                                                   "BccExternalSharingInvitationsList", `
-                                                                   "RequireAnonymousLinksExpireInDays", `
-                                                                   "SharingAllowedDomainList", `
-                                                                   "SharingBlockedDomainList", `
-                                                                   "SharingDomainRestrictionMode", `
-                                                                   "DefaultSharingLinkType", `
-                                                                   "PreventExternalUsersFromResharing", `
-                                                                   "ShowPeoplePickerSuggestionsForGuestUsers", `
-                                                                   "FileAnonymousLinkType", `
-                                                                   "FolderAnonymousLinkType", `
-                                                                   "NotifyOwnersWhenItemsReshared", `
-                                                                   "RequireAcceptingAccountMatchInvitedAccount", `
-                                                                   "DefaultLinkPermission")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("IsSingleInstance", `
+            "SharingCapability", `
+            "ShowEveryoneClaim", `
+            "ShowAllUsersClaim", `
+            "ShowEveryoneExceptExternalUsersClaim", `
+            "ProvisionSharedWithEveryoneFolder", `
+            "EnableGuestSignInAcceleration", `
+            "BccExternalSharingInvitations", `
+            "BccExternalSharingInvitationsList", `
+            "RequireAnonymousLinksExpireInDays", `
+            "SharingAllowedDomainList", `
+            "SharingBlockedDomainList", `
+            "SharingDomainRestrictionMode", `
+            "DefaultSharingLinkType", `
+            "PreventExternalUsersFromResharing", `
+            "ShowPeoplePickerSuggestionsForGuestUsers", `
+            "FileAnonymousLinkType", `
+            "FolderAnonymousLinkType", `
+            "NotifyOwnersWhenItemsReshared", `
+            "RequireAcceptingAccountMatchInvitedAccount", `
+            "DefaultLinkPermission")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

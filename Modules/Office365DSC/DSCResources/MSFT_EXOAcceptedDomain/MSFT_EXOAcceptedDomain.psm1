@@ -20,12 +20,12 @@ function Get-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [ValidateScript( {$false -eq $_})]
+        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $MatchSubDomains = $false,
 
         [Parameter()]
-        [ValidateScript( {$false -eq $_})]
+        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $OutboundOnly = $false,
 
@@ -37,7 +37,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of Accepted Domain for $Identity"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $AllAcceptedDomains = Get-AcceptedDomain
 
@@ -49,7 +49,7 @@ function Get-TargetResource
 
         # Check to see if $Identity matches a verified domain in the O365 Tenant
         Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform AzureAD
+            -Platform AzureAD
 
         $VerifiedDomains = Get-AzureADDomain | Where-Object -FilterScript { $_.IsVerified }
         $MatchingVerifiedDomain = $VerifiedDomains | Where-Object -FilterScript { $_.Name -eq $Identity }
@@ -122,12 +122,12 @@ function Set-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [ValidateScript( {$false -eq $_})]
+        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $MatchSubDomains = $false,
 
         [Parameter()]
-        [ValidateScript( {$false -eq $_})]
+        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $OutboundOnly = $false,
 
@@ -139,7 +139,7 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of Accepted Domain for $Identity"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $AcceptedDomainParams = @{
         DomainType      = $DomainType
@@ -174,12 +174,12 @@ function Test-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [ValidateScript( {$false -eq $_})]
+        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $MatchSubDomains = $false,
 
         [Parameter()]
-        [ValidateScript( {$false -eq $_})]
+        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $OutboundOnly = $false,
 
@@ -199,9 +199,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -220,7 +220,7 @@ function Export-TargetResource
     )
     $InformationPreference = 'Continue'
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     [array]$AllAcceptedDomains = Get-AcceptedDomain
 

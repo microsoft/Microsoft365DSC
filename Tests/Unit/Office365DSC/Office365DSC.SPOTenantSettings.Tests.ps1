@@ -28,66 +28,66 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "SPO Tenant settings are not configured" -Fixture {
             $testParams = @{
-                IsSingleInstance                                = "Yes"
-                GlobalAdminAccount                              = $GlobalAdminAccount
-                MinCompatibilityLevel                           = 16
-                MaxCompatibilityLevel                           = 16
-                SearchResolveExactEmailOrUPN                    = $false
-                OfficeClientADALDisabled                        = $false
-                LegacyAuthProtocolsEnabled                      = $true
-                RequireAcceptingAccountMatchInvitedAccount      = $true
-                SignInAccelerationDomain                        = ""
-                UsePersistentCookiesForExplorerView             = $false
-                UserVoiceForFeedbackEnabled                     = $true
-                PublicCdnEnabled                                = $false
-                PublicCdnAllowedFileTypes                       = "CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF"
-                UseFindPeopleInPeoplePicker                     = $false
-                NotificationsInSharePointEnabled                = $true
-                OwnerAnonymousNotification                      = $true
-                ApplyAppEnforcedRestrictionsToAdHocRecipients   = $true
-                FilePickerExternalImageSearchEnabled            = $true
-                HideDefaultThemes                               = $false
+                IsSingleInstance                              = "Yes"
+                GlobalAdminAccount                            = $GlobalAdminAccount
+                MinCompatibilityLevel                         = 16
+                MaxCompatibilityLevel                         = 16
+                SearchResolveExactEmailOrUPN                  = $false
+                OfficeClientADALDisabled                      = $false
+                LegacyAuthProtocolsEnabled                    = $true
+                RequireAcceptingAccountMatchInvitedAccount    = $true
+                SignInAccelerationDomain                      = ""
+                UsePersistentCookiesForExplorerView           = $false
+                UserVoiceForFeedbackEnabled                   = $true
+                PublicCdnEnabled                              = $false
+                PublicCdnAllowedFileTypes                     = "CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF"
+                UseFindPeopleInPeoplePicker                   = $false
+                NotificationsInSharePointEnabled              = $true
+                OwnerAnonymousNotification                    = $true
+                ApplyAppEnforcedRestrictionsToAdHocRecipients = $true
+                FilePickerExternalImageSearchEnabled          = $true
+                HideDefaultThemes                             = $false
             }
 
             Mock -CommandName Set-PnPTenant -MockWith {
                 return @{
-                    CompatibilityRange                              = "16,16"
-                    SearchResolveExactEmailOrUPN                    = $false
-                    OfficeClientADALDisabled                        = $false
-                    LegacyAuthProtocolsEnabled                      = $true
-                    RequireAcceptingAccountMatchInvitedAccount      = $true
-                    SignInAccelerationDomain                        = ""
-                    UsePersistentCookiesForExplorerView             = $false
-                    UserVoiceForFeedbackEnabled                     = $true
-                    PublicCdnEnabled                                = $false
-                    PublicCdnAllowedFileTypes                       = "CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF"
-                    UseFindPeopleInPeoplePicker                     = $false
-                    NotificationsInSharePointEnabled                = $true
-                    OwnerAnonymousNotification                      = $true
-                    ApplyAppEnforcedRestrictionsToAdHocRecipients   = $true
-                    FilePickerExternalImageSearchEnabled            = $true
-                    HideDefaultThemes                               = $true
+                    CompatibilityRange                            = "16,16"
+                    SearchResolveExactEmailOrUPN                  = $false
+                    OfficeClientADALDisabled                      = $false
+                    LegacyAuthProtocolsEnabled                    = $true
+                    RequireAcceptingAccountMatchInvitedAccount    = $true
+                    SignInAccelerationDomain                      = ""
+                    UsePersistentCookiesForExplorerView           = $false
+                    UserVoiceForFeedbackEnabled                   = $true
+                    PublicCdnEnabled                              = $false
+                    PublicCdnAllowedFileTypes                     = "CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF"
+                    UseFindPeopleInPeoplePicker                   = $false
+                    NotificationsInSharePointEnabled              = $true
+                    OwnerAnonymousNotification                    = $true
+                    ApplyAppEnforcedRestrictionsToAdHocRecipients = $true
+                    FilePickerExternalImageSearchEnabled          = $true
+                    HideDefaultThemes                             = $true
                 }
             }
 
             Mock -CommandName Get-PnPTenant -MockWith {
                 return @{
-                    CompatibilityRange                              = "16,16"
-                    SearchResolveExactEmailOrUPN                    = $false
-                    OfficeClientADALDisabled                        = $false
-                    LegacyAuthProtocolsEnabled                      = $true
-                    RequireAcceptingAccountMatchInvitedAccount      = $true
-                    SignInAccelerationDomain                        = ""
-                    UsePersistentCookiesForExplorerView             = $false
-                    UserVoiceForFeedbackEnabled                     = $true
-                    PublicCdnEnabled                                = $false
-                    PublicCdnAllowedFileTypes                       = "CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF"
-                    UseFindPeopleInPeoplePicker                     = $false
-                    NotificationsInSharePointEnabled                = $true
-                    OwnerAnonymousNotification                      = $true
-                    ApplyAppEnforcedRestrictionsToAdHocRecipients   = $true
-                    FilePickerExternalImageSearchEnabled            = $true
-                    HideDefaultThemes                               = $true
+                    CompatibilityRange                            = "16,16"
+                    SearchResolveExactEmailOrUPN                  = $false
+                    OfficeClientADALDisabled                      = $false
+                    LegacyAuthProtocolsEnabled                    = $true
+                    RequireAcceptingAccountMatchInvitedAccount    = $true
+                    SignInAccelerationDomain                      = ""
+                    UsePersistentCookiesForExplorerView           = $false
+                    UserVoiceForFeedbackEnabled                   = $true
+                    PublicCdnEnabled                              = $false
+                    PublicCdnAllowedFileTypes                     = "CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF"
+                    UseFindPeopleInPeoplePicker                   = $false
+                    NotificationsInSharePointEnabled              = $true
+                    OwnerAnonymousNotification                    = $true
+                    ApplyAppEnforcedRestrictionsToAdHocRecipients = $true
+                    FilePickerExternalImageSearchEnabled          = $true
+                    HideDefaultThemes                             = $true
                 }
             }
 
@@ -102,28 +102,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                GlobalAdminAccount           = $GlobalAdminAccount
-                IsSingleInstance             = "Yes"
+                GlobalAdminAccount = $GlobalAdminAccount
+                IsSingleInstance   = "Yes"
             }
 
             Mock -CommandName Get-PnPTenant -MockWith {
                 return @{
-                    CompatibilityRange                              = "16,16"
-                    SearchResolveExactEmailOrUPN                    = $false
-                    OfficeClientADALDisabled                        = $false
-                    LegacyAuthProtocolsEnabled                      = $true
-                    RequireAcceptingAccountMatchInvitedAccount      = $true
-                    SignInAccelerationDomain                        = ""
-                    UsePersistentCookiesForExplorerView             = $false
-                    UserVoiceForFeedbackEnabled                     = $true
-                    PublicCdnEnabled                                = $false
-                    PublicCdnAllowedFileTypes                       = "CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF"
-                    UseFindPeopleInPeoplePicker                     = $false
-                    NotificationsInSharePointEnabled                = $true
-                    OwnerAnonymousNotification                      = $true
-                    ApplyAppEnforcedRestrictionsToAdHocRecipients   = $true
-                    FilePickerExternalImageSearchEnabled            = $true
-                    HideDefaultThemes                               = $false
+                    CompatibilityRange                            = "16,16"
+                    SearchResolveExactEmailOrUPN                  = $false
+                    OfficeClientADALDisabled                      = $false
+                    LegacyAuthProtocolsEnabled                    = $true
+                    RequireAcceptingAccountMatchInvitedAccount    = $true
+                    SignInAccelerationDomain                      = ""
+                    UsePersistentCookiesForExplorerView           = $false
+                    UserVoiceForFeedbackEnabled                   = $true
+                    PublicCdnEnabled                              = $false
+                    PublicCdnAllowedFileTypes                     = "CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF"
+                    UseFindPeopleInPeoplePicker                   = $false
+                    NotificationsInSharePointEnabled              = $true
+                    OwnerAnonymousNotification                    = $true
+                    ApplyAppEnforcedRestrictionsToAdHocRecipients = $true
+                    FilePickerExternalImageSearchEnabled          = $true
+                    HideDefaultThemes                             = $false
                 }
             }
 

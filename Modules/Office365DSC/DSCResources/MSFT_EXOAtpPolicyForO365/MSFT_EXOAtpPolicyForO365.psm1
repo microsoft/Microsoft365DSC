@@ -46,11 +46,11 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of AtpPolicyForO365 for $Identity"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     try
     {
-        $nullReturn =$PSBoundParameters
+        $nullReturn = $PSBoundParameters
         $nullReturn.Ensure = 'Absent'
         $AtpPolicies = Get-AtpPolicyForO365
 
@@ -63,7 +63,7 @@ function Get-TargetResource
         else
         {
             $result = @{
-                IsSingleInstance = "Yes"
+                IsSingleInstance          = "Yes"
                 Identity                  = $AtpPolicyForO365.Identity
                 AllowClickThrough         = $AtpPolicyForO365.AllowClickThrough
                 BlockUrls                 = $AtpPolicyForO365.BlockUrls
@@ -137,7 +137,7 @@ function Set-TargetResource
     }
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $AtpPolicyParams = $PSBoundParameters
     $AtpPolicyParams.Remove('Ensure') | Out-Null
@@ -205,9 +205,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('Verbose') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
