@@ -580,6 +580,17 @@ Configuration Master
             RestrictedSenderList             = $null;
         }
 
+        TeamsChannelsPolicy IntegrationChannelPolicy
+        {
+            AllowOrgWideTeamCreation    = $True;
+            AllowPrivateChannelCreation = $True;
+            AllowPrivateTeamDiscovery   = $True;
+            Description                 = $null;
+            Ensure                      = "Present";
+            GlobalAdminAccount          = $GlobalAdmin;
+            Identity                    = "Integration Channel Policy";
+        }
+
         TeamsTeam TeamAlpha
         {
             DisplayName          = "Alpha Team"
