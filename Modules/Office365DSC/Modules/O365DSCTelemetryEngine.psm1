@@ -9,6 +9,10 @@ function Get-ApplicationInsightsTelemetryClient
         [Reflection.Assembly]::LoadFile($AI) | Out-Null
 
         $InstrumentationKey = "bc5aa204-0b1e-4499-a955-d6a639bdb4fa"
+        if ($null -ne $env:O365DSCTelemetryInstrumentationKey)
+        {
+            $InstrumentationKey = $env:O365DSCTelemetryInstrumentationKey
+        }
         $TelClient = [Microsoft.ApplicationInsights.TelemetryClient]::new()
         $TelClient.InstrumentationKey = $InstrumentationKey
 
@@ -34,15 +38,44 @@ function Add-O365DSCTelemetryEvent
         $Metrics
     )
 
-    $TelemetryClient = Get-ApplicationInsightsTelemetryClient
+    if ($env:O365DSCTelemetryEnabled)
+    {
+        $TelemetryClient = Get-ApplicationInsightsTelemetryClient
 
-    try
-    {
-        $TelemetryClient.TrackEvent($Type, $Data, $Metrics)
-        $TelemetryClient.Flush()
+        try
+        {
+            $TelemetryClient.TrackEvent($Type, $Data, $Metrics)
+            $TelemetryClient.Flush()
+        }
+        catch
+        {
+            Write-Error $_
+        }
     }
-    catch
+}
+
+function Set-O365DSCTelemetryOption
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String]
+        $InstrumentationKey
+    )
+
+    if ($null -ne $Enabled)
     {
-        throw $_
+        [System.Environment]::SetEnvironmentVariable('O365DSCTelemetryEnabled', $Enabled, `
+            [System.EnvironmentVariableTarget]::Machine)
+    }
+
+    if ($null -ne $InstrumentationKey)
+    {
+        [System.Environment]::SetEnvironmentVariable('O365DSCTelemetryInstrumentationKey', $InstrumentationKey, `
+            [System.EnvironmentVariableTarget]::Machine)
     }
 }
