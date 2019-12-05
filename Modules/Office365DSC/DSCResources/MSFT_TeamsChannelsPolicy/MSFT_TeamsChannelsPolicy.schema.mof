@@ -2,7 +2,7 @@
 class MSFT_TeamsChannelsPolicy : OMI_BaseResource
 {
     [Key, Description("Identity of the Teams Channel Policy.")] String Identity;
-    [Write, Description("Descritpion of the Teams Channel Policy.")] String Description;
+    [Write, Description("Description of the Teams Channel Policy.")] String Description;
     [Write, Description("Determines whether a user is allowed to create an org-wide team. Set this to TRUE to allow. Set this FALSE to prohibit.")] Boolean AllowOrgWideTeamCreation;
     [Write, Description("Determines whether a user is allowed to discover private teams in suggestions and search results. Set this to TRUE to allow. Set this FALSE to prohibit.")] Boolean AllowPrivateTeamDiscovery;
     [Write, Description("Determines whether a user is allowed to create a private channel. Set this to TRUE to allow. Set this FALSE to prohibit.")] Boolean AllowPrivateChannelCreation;
