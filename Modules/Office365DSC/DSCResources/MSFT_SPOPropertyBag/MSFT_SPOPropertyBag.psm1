@@ -27,6 +27,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SPOPropertyBag for $Key"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     try
     {
         Write-Verbose -Message "Connecting to PnP from the Get method"
@@ -94,6 +100,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of SPOPropertyBag property for $Key at {$Url}"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -ConnectionUrl $Url `
@@ -176,6 +188,12 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = "Continue"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PnP
     $result = ""

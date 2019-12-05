@@ -94,6 +94,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for Managed Property instance $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform PnP
@@ -287,6 +293,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for Managed Property instance $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform PnP
@@ -709,7 +721,7 @@ function Test-TargetResource
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("Ensure", `
             "Name",
-        "Type")
+            "Type")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -735,6 +747,12 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        SPOSearchManagedProperty " + (New-GUID).ToString() + "`r`n"

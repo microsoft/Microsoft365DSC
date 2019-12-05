@@ -18,6 +18,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting SPOSiteAuditSettings for {$Url}"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = @{
         Url                = $Url
@@ -72,6 +78,12 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting Audit settings for {$Url}"
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -ConnectionUrl $Url `
@@ -134,6 +146,12 @@ function Export-TargetResource
     )
 
     $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -Platform PnP -CloudCredential $GlobalAdminAccount
 
     $sites = Get-PnPTenantSite

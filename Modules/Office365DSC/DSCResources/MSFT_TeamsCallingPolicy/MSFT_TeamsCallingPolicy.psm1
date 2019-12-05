@@ -57,6 +57,14 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting the Teams Calling Policy $($Identity)"
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent  -Data $data
+    #endregion
+
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform SkypeForBusiness
 
@@ -146,6 +154,13 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting Teams Calling Policy"
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform SkypeForBusiness
@@ -264,6 +279,14 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = 'Continue'
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform SkypeForBusiness
 

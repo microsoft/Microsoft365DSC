@@ -28,6 +28,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SCComplianceCase for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
@@ -91,6 +97,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of SCComplianceCase for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
@@ -200,6 +212,12 @@ function Export-TargetResource
     )
 
     $InformationPreference = "Continue"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
     [array]$Cases = Get-ComplianceCase

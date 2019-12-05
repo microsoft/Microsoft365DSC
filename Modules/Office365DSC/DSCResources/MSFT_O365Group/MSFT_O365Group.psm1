@@ -35,6 +35,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = @{
         DisplayName        = $DisplayName
@@ -153,6 +159,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
@@ -346,6 +358,12 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = "`$Credsglobaladmin"
     $content = "        O365Group " + (New-GUID).ToString() + "`r`n"
