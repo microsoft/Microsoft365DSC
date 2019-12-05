@@ -38,7 +38,7 @@ function Add-O365DSCTelemetryEvent
         $Metrics
     )
 
-    if ($env:O365DSCTelemetryEnabled)
+    if ($null -eq $env:O365DSCTelemetryEnabled -or $env:O365DSCTelemetryEnabled)
     {
         $TelemetryClient = Get-ApplicationInsightsTelemetryClient
 

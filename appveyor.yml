@@ -28,7 +28,7 @@ install:
         Import-Module MSCloudLoginAssistant -Force
         Import-Module AzureAD -Force
         Import-Module MicrosoftTeams -Force
-        [System.Environment]::SetEnvironmentVariable('O365DSCTelemetryEnabled', $Enabled, [System.EnvironmentVariableTarget]::Machine)
+        [System.Environment]::SetEnvironmentVariable('O365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine)
         Import-Module -Name "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
         Invoke-AppveyorInstallTask
 
