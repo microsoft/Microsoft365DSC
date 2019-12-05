@@ -49,6 +49,8 @@
   * Updated SharePointPnPPowerShellOnline dependency
     to version 3.16.1912.0;
   * Updated ReverseDSC dependency to version 2.0.0.0;
+* Misc
+  * Added new Telemetry Engine;
 
 ## 1.0.0.1048
 
