@@ -49,6 +49,13 @@ function Get-TargetResource
 
     Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     try
     {
         Write-Verbose "Retrieving user without a specific Role specified"
@@ -108,6 +115,13 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of member $User to Team $TeamName"
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform MicrosoftTeams
@@ -206,6 +220,15 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference ='Continue'
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     $result = ""
 
     # Get all Site Collections in tenant;

@@ -35,6 +35,13 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Teams channel $DisplayName"
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform MicrosoftTeams
 
@@ -124,6 +131,13 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Teams channel $DisplayName"
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform MicrosoftTeams
@@ -247,6 +261,14 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        TeamsChannel " + (New-GUID).ToString() + "`r`n"

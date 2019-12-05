@@ -22,6 +22,14 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting SPO Profile Properties for user {$UserName}"
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform PnP
 
@@ -89,6 +97,13 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting Profile Properties for user {$UserName}"
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform PnP
@@ -165,6 +180,14 @@ function Export-TargetResource
     )
 
     $InformationPreference = 'Continue'
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     Test-MSCloudLogin -Platform MSOnline -O365Credential $GlobalAdminAccount
     $result = ""
 

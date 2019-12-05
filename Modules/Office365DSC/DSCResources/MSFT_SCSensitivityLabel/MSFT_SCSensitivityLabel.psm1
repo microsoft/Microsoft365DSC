@@ -51,6 +51,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of Sensitiivity Label for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Calling Test-SecurityAndComplianceConnection function:"
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
@@ -152,6 +158,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Sensitiivity label for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
@@ -327,6 +339,12 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -Platform 'SecurityComplianceCenter' `
         -CloudCredential $GlobalAdminAccount
