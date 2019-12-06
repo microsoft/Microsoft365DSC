@@ -37,12 +37,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When Meeting Policy doesn't exist but should" -Fixture {
             $testParams = @{
                 Identity                                   = "Test Policy";
-                AllowAnonymousUsersToDialOut               = $False;
                 AllowAnonymousUsersToStartMeeting          = $False;
                 AllowChannelMeetingScheduling              = $True;
                 AllowCloudRecording                        = $True;
                 AllowExternalParticipantGiveRequestControl = $False;
-                AllowIPAudio                               = $True;
                 AllowIPVideo                               = $True;
                 AllowMeetNow                               = $True;
                 AllowOutlookAddIn                          = $True;
@@ -81,12 +79,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Policy exists but is not in the Desired State" -Fixture {
             $testParams = @{
                 Identity                                   = "Test Policy";
-                AllowAnonymousUsersToDialOut               = $False;
                 AllowAnonymousUsersToStartMeeting          = $False;
                 AllowChannelMeetingScheduling              = $True;
                 AllowCloudRecording                        = $True;
                 AllowExternalParticipantGiveRequestControl = $False;
-                AllowIPAudio                               = $True;
                 AllowIPVideo                               = $True;
                 AllowMeetNow                               = $True;
                 AllowOutlookAddIn                          = $True;
@@ -107,12 +103,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-CsTeamsChannelsPolicy -MockWith {
                 return @{
                     Identity                                   = "Test Policy";
-                    AllowAnonymousUsersToDialOut               = $False;
                     AllowAnonymousUsersToStartMeeting          = $False;
                     AllowChannelMeetingScheduling              = $True;
                     AllowCloudRecording                        = $True;
                     AllowExternalParticipantGiveRequestControl = $False;
-                    AllowIPAudio                               = $True;
                     AllowIPVideo                               = $True;
                     AllowMeetNow                               = $True;
                     AllowOutlookAddIn                          = $True;
@@ -147,12 +141,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Policy exists and is already in the Desired State" -Fixture {
             $testParams = @{
                 Identity                                   = "Test Policy";
-                AllowAnonymousUsersToDialOut               = $False;
                 AllowAnonymousUsersToStartMeeting          = $False;
                 AllowChannelMeetingScheduling              = $True;
                 AllowCloudRecording                        = $True;
                 AllowExternalParticipantGiveRequestControl = $False;
-                AllowIPAudio                               = $True;
                 AllowIPVideo                               = $True;
                 AllowMeetNow                               = $True;
                 AllowOutlookAddIn                          = $True;
@@ -173,12 +165,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-CsTeamsChannelsPolicy -MockWith {
                 return @{
                     Identity                                   = "Test Policy";
-                    AllowAnonymousUsersToDialOut               = $False;
                     AllowAnonymousUsersToStartMeeting          = $False;
                     AllowChannelMeetingScheduling              = $True;
                     AllowCloudRecording                        = $True;
                     AllowExternalParticipantGiveRequestControl = $False;
-                    AllowIPAudio                               = $True;
                     AllowIPVideo                               = $True;
                     AllowMeetNow                               = $True;
                     AllowOutlookAddIn                          = $True;
@@ -207,12 +197,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Policy exists but it should not" -Fixture {
             $testParams = @{
                 Identity                                   = "Test Policy";
-                AllowAnonymousUsersToDialOut               = $False;
                 AllowAnonymousUsersToStartMeeting          = $False;
                 AllowChannelMeetingScheduling              = $True;
                 AllowCloudRecording                        = $True;
                 AllowExternalParticipantGiveRequestControl = $False;
-                AllowIPAudio                               = $True;
                 AllowIPVideo                               = $True;
                 AllowMeetNow                               = $True;
                 AllowOutlookAddIn                          = $True;
@@ -233,12 +221,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-CsTeamsChannelsPolicy -MockWith {
                 return @{
                     Identity                                   = "Test Policy";
-                    AllowAnonymousUsersToDialOut               = $False;
                     AllowAnonymousUsersToStartMeeting          = $False;
                     AllowChannelMeetingScheduling              = $True;
                     AllowCloudRecording                        = $True;
                     AllowExternalParticipantGiveRequestControl = $False;
-                    AllowIPAudio                               = $True;
                     AllowIPVideo                               = $True;
                     AllowMeetNow                               = $True;
                     AllowOutlookAddIn                          = $True;
@@ -276,12 +262,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-CsTeamsChannelsPolicy -MockWith {
                 return @{
                     Identity                                   = "Test Policy";
-                    AllowAnonymousUsersToDialOut               = $False;
                     AllowAnonymousUsersToStartMeeting          = $False;
                     AllowChannelMeetingScheduling              = $True;
                     AllowCloudRecording                        = $True;
                     AllowExternalParticipantGiveRequestControl = $False;
-                    AllowIPAudio                               = $True;
                     AllowIPVideo                               = $True;
                     AllowMeetNow                               = $True;
                     AllowOutlookAddIn                          = $True;

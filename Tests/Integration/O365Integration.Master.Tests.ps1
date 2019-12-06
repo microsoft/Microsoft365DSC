@@ -593,12 +593,10 @@ Configuration Master
 
         TeamsMeetingPolicy DemoMeetingPolicy
         {
-            AllowAnonymousUsersToDialOut               = $False;
             AllowAnonymousUsersToStartMeeting          = $False;
             AllowChannelMeetingScheduling              = $True;
             AllowCloudRecording                        = $True;
             AllowExternalParticipantGiveRequestControl = $False;
-            AllowIPAudio                               = $True;
             AllowIPVideo                               = $True;
             AllowMeetNow                               = $True;
             AllowOutlookAddIn                          = $True;

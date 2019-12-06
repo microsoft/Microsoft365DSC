@@ -22,15 +22,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowIPAudio,
-
-        [Parameter()]
-        [System.Boolean]
         $AllowIPVideo,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowAnonymousUsersToDialOut,
 
         [Parameter()]
         [System.Boolean]
@@ -126,8 +118,6 @@ function Get-TargetResource
         AllowChannelMeetingScheduling              = $policy.AllowChannelMeetingScheduling
         AllowMeetNow                               = $policy.AllowMeetNow
         AllowIPVideo                               = $policy.AllowIPVideo
-        AllowIPAudio                               = $policy.AllowIPAudio
-        AllowAnonymousUsersToDialOut               = $policy.AllowAnonymousUsersToDialOut
         AllowAnonymousUsersToStartMeeting          = $policy.AllowAnonymousUsersToStartMeeting
         AllowPrivateMeetingScheduling              = $policy.AllowPrivateMeetingScheduling
         AutoAdmittedUsers                          = $policy.AutoAdmittedUsers
@@ -169,15 +159,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowIPAudio,
-
-        [Parameter()]
-        [System.Boolean]
         $AllowIPVideo,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowAnonymousUsersToDialOut,
 
         [Parameter()]
         [System.Boolean]
@@ -304,15 +286,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowIPAudio,
-
-        [Parameter()]
-        [System.Boolean]
         $AllowIPVideo,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowAnonymousUsersToDialOut,
 
         [Parameter()]
         [System.Boolean]
