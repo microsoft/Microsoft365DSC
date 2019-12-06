@@ -29,7 +29,7 @@ function Start-O365ConfigurationExtract
 
         [Parameter()]
         [ValidateRange(1, 100)]
-        $MaxProcesses,
+        $MaxProcesses = 16,
 
         [Parameter()]
         [ValidateSet('SPO', 'EXO', 'SC', 'OD', 'O365', 'TEAMS', 'PP')]
@@ -1273,6 +1273,25 @@ function Start-O365ConfigurationExtract
         {
             New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
         }
+    }
+    #endregion
+
+    #region "SCSensitivityLabel"
+    if (($null -ne $ComponentsToExtract -and
+            $ComponentsToExtract.Contains("chckSCSensitivityLabel")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
+    {
+        Write-Information "Extracting SCSensitivityLabel..."
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            -Platform SecurityComplianceCenter `
+            -ErrorAction SilentlyContinue
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_SCSensitivityLabel\MSFT_SCSensitivityLabel.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
 

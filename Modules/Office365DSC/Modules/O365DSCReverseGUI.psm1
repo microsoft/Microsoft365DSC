@@ -66,7 +66,7 @@ function Show-O365GUI
         $pnlO365 = New-Object System.Windows.Forms.Panel
         $pnlO365.Top = 88 + $topBannerHeight
         $pnlO365.Left = $firstColumnLeft
-        $pnlO365.Height = 60
+        $pnlO365.Height = 80
         $pnlO365.Width = 300
         $pnlO365.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -87,7 +87,7 @@ function Show-O365GUI
         $pnlO365.Controls.Add($chckO365Group);
 
         $chckO365OrgCustomizationSetting = New-Object System.Windows.Forms.CheckBox
-        $chckO365OrgCustomizationSetting.Top = 20
+        $chckO365OrgCustomizationSetting.Top = 40
         $chckO365OrgCustomizationSetting.AutoSize = $true;
         $chckO365OrgCustomizationSetting.Name = "chckO365OrgCustomizationSetting"
         $chckO365OrgCustomizationSetting.Checked = $true
@@ -95,7 +95,7 @@ function Show-O365GUI
         $pnlO365.Controls.Add($chckO365OrgCustomizationSetting);
 
         $chckO365User = New-Object System.Windows.Forms.CheckBox
-        $chckO365User.Top = 40
+        $chckO365User.Top = 60
         $chckO365User.AutoSize = $true;
         $chckO365User.Name = "chckO365User"
         $chckO365User.Checked = $true
@@ -123,7 +123,7 @@ function Show-O365GUI
         $pnlExo = New-Object System.Windows.Forms.Panel
         $pnlExo.Top = 388 + $topBannerHeight
         $pnlExo.Left = $firstColumnLeft
-        $pnlExo.Height = 360
+        $pnlExo.Height = 380
         $pnlExo.Width = 300
         $pnlExo.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -449,15 +449,15 @@ function Show-O365GUI
         $imagePath = $PSScriptRoot + "\..\Dependencies\Images\SecurityAndCompliance.png"
         $imgSC.ImageLocation = $imagePath
         $imgSC.Left = $SecondColumnLeft
-        $imgSC.Top = $topBannerHeight + $pnlSPO.Height + $imgSPO.Height + 75
+        $imgSC.Top = $topBannerHeight + $pnlSPO.Height + $imgSPO.Height + 40
         $imgSC.AutoSize = $true
         $pnlMain.Controls.Add($imgSC)
 
         $pnlSC = New-Object System.Windows.Forms.Panel
-        $pnlSC.Top = $pnlSPO.Height + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 125
+        $pnlSC.Top = $pnlSPO.Height + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 90
         $pnlSC.Left = $SecondColumnLeft
 
-        $pnlSC.Height = 360
+        $pnlSC.Height = 400
         $pnlSC.Width = 300
         $pnlSC.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -573,8 +573,16 @@ function Show-O365GUI
         $chckSCFilePlanPropertyReferenceId.Text = "File Plan Property Reference ID"
         $pnlSC.Controls.Add($chckSCFilePlanPropertyReferenceId)
 
+        $chckSCFilePlanPropertySubCategory= New-Object System.Windows.Forms.CheckBox
+        $chckSCFilePlanPropertySubCategory.Top = 280
+        $chckSCFilePlanPropertySubCategory.AutoSize = $true;
+        $chckSCFilePlanPropertySubCategory.Name = "chckSCFilePlanPropertySubCategory"
+        $chckSCFilePlanPropertySubCategory.Checked = $true
+        $chckSCFilePlanPropertySubCategory.Text = "File Plan Property Sub-Category"
+        $pnlSC.Controls.Add($chckSCFilePlanPropertySubCategory)
+
         $chckSCRetentionCompliancePolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSCRetentionCompliancePolicy.Top = 280
+        $chckSCRetentionCompliancePolicy.Top = 300
         $chckSCRetentionCompliancePolicy.AutoSize = $true;
         $chckSCRetentionCompliancePolicy.Name = "chckSCRetentionCompliancePolicy"
         $chckSCRetentionCompliancePolicy.Checked = $true
@@ -582,15 +590,23 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCRetentionCompliancePolicy)
 
         $chckSCRetentionComplianceRule = New-Object System.Windows.Forms.CheckBox
-        $chckSCRetentionComplianceRule.Top = 300
+        $chckSCRetentionComplianceRule.Top = 320
         $chckSCRetentionComplianceRule.AutoSize = $true;
         $chckSCRetentionComplianceRule.Name = "chckSCRetentionComplianceRule"
         $chckSCRetentionComplianceRule.Checked = $true
         $chckSCRetentionComplianceRule.Text = "Retention Compliance Rule"
         $pnlSC.Controls.Add($chckSCRetentionComplianceRule)
 
+        $chckSCSensitivityLabel = New-Object System.Windows.Forms.CheckBox
+        $chckSCSensitivityLabel.Top = 340
+        $chckSCSensitivityLabel.AutoSize = $true;
+        $chckSCSensitivityLabel.Name = "chckSCSensitivityLabel"
+        $chckSCSensitivityLabel.Checked = $true
+        $chckSCSensitivityLabel.Text = "Sensitivity Label"
+        $pnlSC.Controls.Add($chckSCSensitivityLabel)
+
         $chckSCSupervisoryReviewPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSCSupervisoryReviewPolicy.Top = 320
+        $chckSCSupervisoryReviewPolicy.Top = 360
         $chckSCSupervisoryReviewPolicy.AutoSize = $true;
         $chckSCSupervisoryReviewPolicy.Name = "chckSCSupervisoryReviewPolicy"
         $chckSCSupervisoryReviewPolicy.Checked = $true
@@ -598,7 +614,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCSupervisoryReviewPolicy)
 
         $chckSCSupervisoryReviewRule = New-Object System.Windows.Forms.CheckBox
-        $chckSCSupervisoryReviewRule.Top = 340
+        $chckSCSupervisoryReviewRule.Top = 380
         $chckSCSupervisoryReviewRule.AutoSize = $true;
         $chckSCSupervisoryReviewRule.Name = "chckSCSupervisoryReviewRule"
         $chckSCSupervisoryReviewRule.Checked = $true
