@@ -1282,10 +1282,6 @@ function Start-O365ConfigurationExtract
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
     {
         Write-Information "Extracting SCSensitivityLabel..."
-        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-            -Platform SecurityComplianceCenter `
-            -ErrorAction SilentlyContinue
-
         $ModulePath = Join-Path -Path $PSScriptRoot `
             -ChildPath "..\DSCResources\MSFT_SCSensitivityLabel\MSFT_SCSensitivityLabel.psm1" `
             -Resolve
