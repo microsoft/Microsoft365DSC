@@ -1915,15 +1915,15 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
-    #region TeamsMessaging
+    #region TeamsMessagingPolicy
     if (($null -ne $ComponentsToExtract -and
-    $ComponentsToExtract.Contains("chckTeamsMessaging")) -or
+    $ComponentsToExtract.Contains("chckTeamsMessagingPolicy")) -or
     $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
     {
-        Write-Information "Extracting TeamsMessaging..."
+        Write-Information "Extracting TeamsMessagingPolicy..."
 
         $ModulePath = Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\DSCResources\MSFT_TeamsMessaging\MSFT_TeamsMessaging.psm1" `
+            -ChildPath "..\DSCResources\MSFT_TeamsMessagingPolicy\MSFT_TeamsMessagingPolicy.psm1" `
             -Resolve
 
         Import-Module $ModulePath | Out-Null
