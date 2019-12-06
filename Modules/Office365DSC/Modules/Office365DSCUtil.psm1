@@ -1699,12 +1699,29 @@ function Export-O365Configuration
 
         [Parameter()]
         [ValidateRange(1, 100)]
-        $MaxProcesses = 16,
+        $MaxProcesses,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Event", "Extraction")
+    $data.Add("Quiet", $Quiet)
+    $data.Add("Path", [System.String]::IsNullOrEmpty($Path))
+    $data.Add("FileName", $null -ne [System.String]::IsNullOrEmpty($FileName))
+    $data.Add("ComponentsToExtract", $null -ne $ComponentsToExtract)
+    $data.Add("Workloads", $null -ne $Workloads)
+    $data.Add("MaxProcesses", $null -ne $MaxProcesses)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
+    if ($null -eq $MaxProcesses)
+    {
+        $MaxProcesses = 16
+    }
 
     if (-not $Quiet)
     {

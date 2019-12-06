@@ -66,7 +66,7 @@ function Show-O365GUI
         $pnlO365 = New-Object System.Windows.Forms.Panel
         $pnlO365.Top = 88 + $topBannerHeight
         $pnlO365.Left = $firstColumnLeft
-        $pnlO365.Height = 60
+        $pnlO365.Height = 80
         $pnlO365.Width = 300
         $pnlO365.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -87,7 +87,7 @@ function Show-O365GUI
         $pnlO365.Controls.Add($chckO365Group);
 
         $chckO365OrgCustomizationSetting = New-Object System.Windows.Forms.CheckBox
-        $chckO365OrgCustomizationSetting.Top = 20
+        $chckO365OrgCustomizationSetting.Top = 40
         $chckO365OrgCustomizationSetting.AutoSize = $true;
         $chckO365OrgCustomizationSetting.Name = "chckO365OrgCustomizationSetting"
         $chckO365OrgCustomizationSetting.Checked = $true
@@ -95,7 +95,7 @@ function Show-O365GUI
         $pnlO365.Controls.Add($chckO365OrgCustomizationSetting);
 
         $chckO365User = New-Object System.Windows.Forms.CheckBox
-        $chckO365User.Top = 40
+        $chckO365User.Top = 60
         $chckO365User.AutoSize = $true;
         $chckO365User.Name = "chckO365User"
         $chckO365User.Checked = $true
@@ -123,7 +123,7 @@ function Show-O365GUI
         $pnlExo = New-Object System.Windows.Forms.Panel
         $pnlExo.Top = 388 + $topBannerHeight
         $pnlExo.Left = $firstColumnLeft
-        $pnlExo.Height = 360
+        $pnlExo.Height = 380
         $pnlExo.Width = 300
         $pnlExo.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -449,15 +449,15 @@ function Show-O365GUI
         $imagePath = $PSScriptRoot + "\..\Dependencies\Images\SecurityAndCompliance.png"
         $imgSC.ImageLocation = $imagePath
         $imgSC.Left = $SecondColumnLeft
-        $imgSC.Top = $topBannerHeight + $pnlSPO.Height + $imgSPO.Height + 75
+        $imgSC.Top = $topBannerHeight + $pnlSPO.Height + $imgSPO.Height + 40
         $imgSC.AutoSize = $true
         $pnlMain.Controls.Add($imgSC)
 
         $pnlSC = New-Object System.Windows.Forms.Panel
-        $pnlSC.Top = $pnlSPO.Height + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 125
+        $pnlSC.Top = $pnlSPO.Height + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 90
         $pnlSC.Left = $SecondColumnLeft
 
-        $pnlSC.Height = 360
+        $pnlSC.Height = 400
         $pnlSC.Width = 300
         $pnlSC.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -573,8 +573,16 @@ function Show-O365GUI
         $chckSCFilePlanPropertyReferenceId.Text = "File Plan Property Reference ID"
         $pnlSC.Controls.Add($chckSCFilePlanPropertyReferenceId)
 
+        $chckSCFilePlanPropertySubCategory= New-Object System.Windows.Forms.CheckBox
+        $chckSCFilePlanPropertySubCategory.Top = 280
+        $chckSCFilePlanPropertySubCategory.AutoSize = $true;
+        $chckSCFilePlanPropertySubCategory.Name = "chckSCFilePlanPropertySubCategory"
+        $chckSCFilePlanPropertySubCategory.Checked = $true
+        $chckSCFilePlanPropertySubCategory.Text = "File Plan Property Sub-Category"
+        $pnlSC.Controls.Add($chckSCFilePlanPropertySubCategory)
+
         $chckSCRetentionCompliancePolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSCRetentionCompliancePolicy.Top = 280
+        $chckSCRetentionCompliancePolicy.Top = 300
         $chckSCRetentionCompliancePolicy.AutoSize = $true;
         $chckSCRetentionCompliancePolicy.Name = "chckSCRetentionCompliancePolicy"
         $chckSCRetentionCompliancePolicy.Checked = $true
@@ -582,15 +590,23 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCRetentionCompliancePolicy)
 
         $chckSCRetentionComplianceRule = New-Object System.Windows.Forms.CheckBox
-        $chckSCRetentionComplianceRule.Top = 300
+        $chckSCRetentionComplianceRule.Top = 320
         $chckSCRetentionComplianceRule.AutoSize = $true;
         $chckSCRetentionComplianceRule.Name = "chckSCRetentionComplianceRule"
         $chckSCRetentionComplianceRule.Checked = $true
         $chckSCRetentionComplianceRule.Text = "Retention Compliance Rule"
         $pnlSC.Controls.Add($chckSCRetentionComplianceRule)
 
+        $chckSCSensitivityLabel = New-Object System.Windows.Forms.CheckBox
+        $chckSCSensitivityLabel.Top = 340
+        $chckSCSensitivityLabel.AutoSize = $true;
+        $chckSCSensitivityLabel.Name = "chckSCSensitivityLabel"
+        $chckSCSensitivityLabel.Checked = $true
+        $chckSCSensitivityLabel.Text = "Sensitivity Label"
+        $pnlSC.Controls.Add($chckSCSensitivityLabel)
+
         $chckSCSupervisoryReviewPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSCSupervisoryReviewPolicy.Top = 320
+        $chckSCSupervisoryReviewPolicy.Top = 360
         $chckSCSupervisoryReviewPolicy.AutoSize = $true;
         $chckSCSupervisoryReviewPolicy.Name = "chckSCSupervisoryReviewPolicy"
         $chckSCSupervisoryReviewPolicy.Checked = $true
@@ -598,7 +614,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCSupervisoryReviewPolicy)
 
         $chckSCSupervisoryReviewRule = New-Object System.Windows.Forms.CheckBox
-        $chckSCSupervisoryReviewRule.Top = 340
+        $chckSCSupervisoryReviewRule.Top = 380
         $chckSCSupervisoryReviewRule.AutoSize = $true;
         $chckSCSupervisoryReviewRule.Name = "chckSCSupervisoryReviewRule"
         $chckSCSupervisoryReviewRule.Checked = $true
@@ -626,36 +642,68 @@ function Show-O365GUI
         $pnlTeams = New-Object System.Windows.Forms.Panel
         $pnlTeams.Top = 88 + $topBannerHeight
         $pnlTeams.Left = $ThirdColumnLeft
-        $pnlTeams.Height = 80
+        $pnlTeams.Height = 160
         $pnlTeams.Width = 300
         $pnlTeams.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
+        $chckTeamsCallingPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsCallingPolicy.Top = 0
+        $chckTeamsCallingPolicy.AutoSize = $true;
+        $chckTeamsCallingPolicy.Name = "chckTeamsCallingPolicy"
+        $chckTeamsCallingPolicy.Checked = $true
+        $chckTeamsCallingPolicy.Text = "Calling Policies"
+        $pnlTeams.Controls.Add($chckTeamsCallingPolicy)
+
         $chckTeamsChannel = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsChannel.Top = 0
+        $chckTeamsChannel.Top = 20
         $chckTeamsChannel.AutoSize = $true;
         $chckTeamsChannel.Name = "chckTeamsChannel"
         $chckTeamsChannel.Checked = $true
         $chckTeamsChannel.Text = "Channels"
         $pnlTeams.Controls.Add($chckTeamsChannel)
 
+        $chckTeamsChannelsPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsChannelsPolicy.Top = 40
+        $chckTeamsChannelsPolicy.AutoSize = $true;
+        $chckTeamsChannelsPolicy.Name = "chckTeamsChannelsPolicy"
+        $chckTeamsChannelsPolicy.Checked = $true
+        $chckTeamsChannelsPolicy.Text = "Channel Policies"
+        $pnlTeams.Controls.Add($chckTeamsChannelsPolicy)
+
         $chckTeamsClientConfiguration = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsClientConfiguration.Top = 20
+        $chckTeamsClientConfiguration.Top = 60
         $chckTeamsClientConfiguration.AutoSize = $true;
         $chckTeamsClientConfiguration.Name = "chckTeamsClientConfiguration"
         $chckTeamsClientConfiguration.Checked = $true
         $chckTeamsClientConfiguration.Text = "Client Configuration"
         $pnlTeams.Controls.Add($chckTeamsClientConfiguration)
 
+        $chckTeamsMeetingPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsMeetingPolicy.Top = 80
+        $chckTeamsMeetingPolicy.AutoSize = $true;
+        $chckTeamsMeetingPolicy.Name = "chckTeamsMeetingPolicy"
+        $chckTeamsMeetingPolicy.Checked = $true
+        $chckTeamsMeetingPolicy.Text = "Meeting Policies"
+        $pnlTeams.Controls.Add($chckTeamsMeetingPolicy)
+
         $chckTeamsTeam = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsTeam.Top = 40
+        $chckTeamsTeam.Top = 100
         $chckTeamsTeam.AutoSize = $true;
         $chckTeamsTeam.Name = "chckTeamsTeam"
         $chckTeamsTeam.Checked = $true
         $chckTeamsTeam.Text = "Teams"
         $pnlTeams.Controls.Add($chckTeamsTeam)
 
+        $chckTeamsUpgradePolicy = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsUpgradePolicy.Top = 120
+        $chckTeamsUpgradePolicy.AutoSize = $true;
+        $chckTeamsUpgradePolicy.Name = "chckTeamsUpgradePolicy"
+        $chckTeamsUpgradePolicy.Checked = $true
+        $chckTeamsUpgradePolicy.Text = "Upgrade Policies"
+        $pnlTeams.Controls.Add($chckTeamsUpgradePolicy)
+
         $chckTeamsUser = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsUser.Top = 60
+        $chckTeamsUser.Top = 140
         $chckTeamsUser.AutoSize = $true;
         $chckTeamsUser.Name = "chckTeamsUser"
         $chckTeamsUser.Checked = $true
@@ -707,9 +755,45 @@ function Show-O365GUI
         $pnlMain.Controls.Add($chckAllOD)
         #endregion
 
+        #region PowerApps
+        $imgPP = New-Object System.Windows.Forms.PictureBox
+        $imagePath = $PSScriptRoot + "\..\Dependencies\Images\PowerApps.png"
+        $imgPP.ImageLocation = $imagePath
+        $imgPP.Left = $fourthColumnLeft
+        $imgPP.Top = $topBannerHeight + $pnlOd.Height + 100
+        $imgPP.AutoSize = $true
+        $pnlMain.Controls.Add($imgPP)
+
+        $pnlPP = New-Object System.Windows.Forms.Panel
+        $pnlPP.Top = 88 + $topBannerHeight + $pnlOD.Height + 100
+        $pnlPP.Left = $fourthColumnLeft
+        $pnlPP.Height = 20
+        $pnlPP.Width = 300
+        $pnlPP.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+
+        $chckPPPowerAppsEnvironment = New-Object System.Windows.Forms.CheckBox
+        $chckPPPowerAppsEnvironment.Top = 0
+        $chckPPPowerAppsEnvironment.AutoSize = $true;
+        $chckPPPowerAppsEnvironment.Name = "chckPPPowerAppsEnvironment"
+        $chckPPPowerAppsEnvironment.Checked = $true
+        $chckPPPowerAppsEnvironment.Enabled = $true
+        $chckPPPowerAppsEnvironment.Text = "PowerApps Environment"
+        $pnlPP.Controls.Add($chckPPPowerAppsEnvironment)
+
+        $chckAllPP = New-Object System.Windows.Forms.CheckBox
+        $chckAllPP.Left = $fourthColumnLeft + 280
+        $chckAllPP.Top = $topBannerHeight + $pnlOD.Height + 135
+        $chckAllPP.Enabled = $true
+        $chckAllPP.Checked = $true
+        $chckAllPP.AutoSize = $true
+        $chckAllPP.Add_CheckedChanged( { SectionChanged -Control $chckAllPP -Panel $pnlPP })
+        $pnlMain.Controls.Add($chckAllPP)
+        #endregion
+
         $pnlMain.Controls.Add($pnlO365)
         $pnlMain.Controls.Add($pnlExo)
         $pnlMain.Controls.Add($pnlOD)
+        $pnlMain.Controls.Add($pnlPP)
         $pnlMain.Controls.Add($pnlSPO)
         $pnlMain.Controls.Add($pnlSC)
         $pnlMain.Controls.Add($pnlTeams)

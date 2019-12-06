@@ -9470,7 +9470,7 @@ function New-FilePlanPropertyCitation
 function Get-FilePlanPropertyCitation
 {
     Param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Identity
     )
