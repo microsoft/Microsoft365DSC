@@ -76,7 +76,7 @@ function Get-TargetResource
     return @{
         SiteDesignTitle    = $SiteDesignTitle
         UserPrincipals     = $curUserPrincipals
-        Rights             = $siteDesignRights.Rights.ToString()
+        Rights             = $Rights
         Ensure             = "Present"
         GlobalAdminAccount = $GlobalAdminAccount
     }

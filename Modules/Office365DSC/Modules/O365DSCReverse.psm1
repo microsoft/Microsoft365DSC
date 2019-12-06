@@ -29,7 +29,7 @@ function Start-O365ConfigurationExtract
 
         [Parameter()]
         [ValidateRange(1, 100)]
-        $MaxProcesses,
+        $MaxProcesses = 16,
 
         [Parameter()]
         [ValidateSet('SPO', 'EXO', 'SC', 'OD', 'O365', 'TEAMS', 'PP')]
@@ -1276,6 +1276,21 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "SCSensitivityLabel"
+    if (($null -ne $ComponentsToExtract -and
+            $ComponentsToExtract.Contains("chckSCSensitivityLabel")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SC")))
+    {
+        Write-Information "Extracting SCSensitivityLabel..."
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_SCSensitivityLabel\MSFT_SCSensitivityLabel.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "SCSupervisoryReviewPolicy"
     if (($null -ne $ComponentsToExtract -and
             $ComponentsToExtract.Contains("chckSCSupervisoryReviewPolicy")) -or
@@ -1900,6 +1915,22 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region TeamsMessagingPolicy
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckTeamsMessagingPolicy")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsMessagingPolicy..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsMessagingPolicy\MSFT_TeamsMessagingPolicy.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region TeamsChannelsPolicy
     if (($null -ne $ComponentsToExtract -and
     $ComponentsToExtract.Contains("chckTeamsChannelsPolicy")) -or
@@ -1968,6 +1999,22 @@ function Start-O365ConfigurationExtract
         {
             Write-Verbose $_
         }
+    }
+    #endregion
+
+    #region TeamsUpgradeConfiguration
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckTeamsUpgradeConfiguration")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsUpgradeCOnfiguration..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsUpgradeCOnfiguration\MSFT_TeamsUpgradeCOnfiguration.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
 
