@@ -619,6 +619,25 @@ Configuration Master
             DependsON          = @("[O365User]JohnSmith", "[TeamsTeam]TeamAlpha")
         }
 
+        TeamsMeetingConfiguration MeetingConfiguration
+        {
+            ClientAppSharingPort        = 50040;
+            ClientAppSharingPortRange   = 20;
+            ClientAudioPort             = 50000;
+            ClientAudioPortRange        = 21;
+            ClientMediaPortRangeEnabled = $True;
+            ClientVideoPort             = 50020;
+            ClientVideoPortRange        = 20;
+            CustomFooterText            = "This is some custom footer text";
+            DisableAnonymousJoin        = $False;
+            EnableQoS                   = $False;
+            GlobalAdminAccount          = $GlobalAdmin;
+            HelpURL                     = "https://github.com/Microsoft/Office365DSC/Help";
+            Identity                    = "Global";
+            LegalURL                    = "https://github.com/Microsoft/Office365DSC/Legal";
+            LogoURL                     = "https://github.com/Microsoft/Office365DSC/Logo.png";
+        }
+
         TeamsMessagingPolicy SampleTeamsMessage
         {
             Identity                      = "TestPolicy"

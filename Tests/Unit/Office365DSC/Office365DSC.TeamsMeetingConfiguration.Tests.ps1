@@ -12,7 +12,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "TeamsClientConfiguration"
+    -DscResource "TeamsMeetingConfiguration"
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -23,93 +23,88 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Mock -CommandName Test-MSCloudLogin -MockWith {
         }
-        Mock -CommandName Get-CsTeamsClientConfiguration -MockWith {
+        Mock -CommandName Get-CsTeamsMeetingConfiguration -MockWith {
             return @{
-                AllowBox                         = $True;
-                AllowDropBox                     = $True;
-                AllowEmailIntoChannel            = $True;
-                AllowGoogleDrive                 = $True;
-                AllowGuestUser                   = $True;
-                AllowOrganizationTab             = $True;
-                AllowResourceAccountSendMessage  = $True;
-                AllowScopedPeopleSearchandAccess = $False;
-                AllowShareFile                   = $True;
-                AllowSkypeBusinessInterop        = $True;
-                ContentPin                       = "RequiredOutsideScheduleMeeting";
-                Identity                         = "Global";
-                ResourceAccountContentAccess     = "NoAccess";
-                RestrictedSenderList             = @("john.smith@contoso.com")
+                ClientAppSharingPort        = 50040;
+                ClientAppSharingPortRange   = 20;
+                ClientAudioPort             = 50000;
+                ClientAudioPortRange        = 20;
+                ClientMediaPortRangeEnabled = $True;
+                ClientVideoPort             = 50020;
+                ClientVideoPortRange        = 20;
+                CustomFooterText            = $null;
+                DisableAnonymousJoin        = $False;
+                EnableQoS                   = $False;
+                HelpURL                     = $null;
+                Identity                    = "Global";
+                LegalURL                    = $null;
+                LogoURL                     = $null;
             }
         }
-        Mock -CommandName Set-CsTeamsClientConfiguration -MockWith {
+        Mock -CommandName Set-CsTeamsMeetingConfiguration -MockWith {
         }
 
         # Test contexts
         Context -Name "When settings are correctly set" -Fixture {
             $testParams = @{
-                AllowBox                         = $True;
-                AllowDropBox                     = $True;
-                AllowEmailIntoChannel            = $True;
-                AllowGoogleDrive                 = $True;
-                AllowGuestUser                   = $True;
-                AllowOrganizationTab             = $True;
-                AllowResourceAccountSendMessage  = $True;
-                AllowScopedPeopleSearchandAccess = $False;
-                AllowShareFile                   = $True;
-                AllowSkypeBusinessInterop        = $True;
-                ContentPin                       = "RequiredOutsideScheduleMeeting";
-                GlobalAdminAccount               = $GlobalAdminAccount;
-                Identity                         = "Global";
-                ResourceAccountContentAccess     = "NoAccess";
-                RestrictedSenderList             = @("john.smith@contoso.com")
+                ClientAppSharingPort        = 50040;
+                ClientAppSharingPortRange   = 20;
+                ClientAudioPort             = 50000;
+                ClientAudioPortRange        = 20;
+                ClientMediaPortRangeEnabled = $True;
+                ClientVideoPort             = 50020;
+                ClientVideoPortRange        = 20;
+                CustomFooterText            = $null;
+                DisableAnonymousJoin        = $False;
+                EnableQoS                   = $False;
+                GlobalAdminAccount          = $GlobalAdminAccount;
+                HelpURL                     = $null;
+                Identity                    = "Global";
+                LegalURL                    = $null;
+                LogoURL                     = $null;
             }
 
-            It "Should return true for the AllowBox property from the Get method" {
-                (Get-TargetResource @testParams).AllowBox | Should Be $True
+            It "Should return 20 for the ClientVideoPortRange property from the Get method" {
+                (Get-TargetResource @testParams).ClientVideoPortRange | Should Be 20
             }
 
             It "Should return true from the Test method" {
                 Test-TargetResource @testParams | Should Be $true
             }
-
-            It "Updates the Team fun settings in the Set method" {
-                Set-TargetResource @testParams
-            }
         }
 
         Context -Name "When settings are NOT correctly set" -Fixture {
             $testParams = @{
-                AllowBox                         = $false;
-                AllowDropBox                     = $True;
-                AllowEmailIntoChannel            = $True;
-                AllowGoogleDrive                 = $True;
-                AllowGuestUser                   = $True;
-                AllowOrganizationTab             = $True;
-                AllowResourceAccountSendMessage  = $True;
-                AllowScopedPeopleSearchandAccess = $False;
-                AllowShareFile                   = $True;
-                AllowSkypeBusinessInterop        = $True;
-                ContentPin                       = "RequiredOutsideScheduleMeeting";
-                GlobalAdminAccount               = $GlobalAdminAccount;
-                Identity                         = "Global";
-                ResourceAccountContentAccess     = "NoAccess";
-                RestrictedSenderList             = @("john.smith@contoso.com", "test@contoso.com")
+                ClientAppSharingPort        = 50040;
+                ClientAppSharingPortRange   = 20;
+                ClientAudioPort             = 50000;
+                ClientAudioPortRange        = 20;
+                ClientMediaPortRangeEnabled = $True;
+                ClientVideoPort             = 50020;
+                ClientVideoPortRange        = 21; #Variant
+                CustomFooterText            = $null;
+                DisableAnonymousJoin        = $False;
+                EnableQoS                   = $False;
+                GlobalAdminAccount          = $GlobalAdminAccount;
+                HelpURL                     = $null;
+                Identity                    = "Global";
+                LegalURL                    = $null;
+                LogoURL                     = $null;
             }
 
-            It "Should return true for the AllowBox property from the Get method" {
-                (Get-TargetResource @testParams).AllowBox | Should Be $True
+            It "Should return 20 for the ClientVideoPortRange property from the Get method" {
+                (Get-TargetResource @testParams).ClientVideoPortRange | Should Be 20
             }
 
             It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $true
+                Test-TargetResource @testParams | Should Be $false
             }
 
             It "Updates the Teams Client settings in the Set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled Set-CsTeamsClientConfiguration
+                Assert-MockCalled Set-CsTeamsMeetingConfiguration -Exactly 1
             }
         }
-
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{

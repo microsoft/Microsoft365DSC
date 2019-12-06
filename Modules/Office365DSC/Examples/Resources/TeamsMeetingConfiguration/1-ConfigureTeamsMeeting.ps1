@@ -1,6 +1,5 @@
 <#
-This example is used to test new resources and showcase the usage of new resources being worked on.
-It is not meant to use as a production baseline.
+This examples sets the Teams Meeting Configuration.
 #>
 
 Configuration Example
@@ -14,22 +13,23 @@ Configuration Example
 
     node localhost
     {
-        TeamsClientConfiguration TeamsClientConfiguration
+        TeamsMeetingConfiguration DemoMeetingConfiguration
         {
-            AllowBox                         = $True;
-            AllowDropBox                     = $True;
-            AllowEmailIntoChannel            = $True;
-            AllowGoogleDrive                 = $True;
-            AllowGuestUser                   = $True;
-            AllowOrganizationTab             = $True;
-            AllowResourceAccountSendMessage  = $True;
-            AllowScopedPeopleSearchandAccess = $False;
-            AllowShareFile                   = $True;
-            AllowSkypeBusinessInterop        = $True;
-            ContentPin                       = "RequiredOutsideScheduleMeeting";
-            GlobalAdminAccount               = $credsGlobalAdmin;
-            Identity                         = "Global";
-            ResourceAccountContentAccess     = "NoAccess";
+            ClientAppSharingPort        = 50040;
+            ClientAppSharingPortRange   = 20;
+            ClientAudioPort             = 50000;
+            ClientAudioPortRange        = 20;
+            ClientMediaPortRangeEnabled = $True;
+            ClientVideoPort             = 50020;
+            ClientVideoPortRange        = 20;
+            CustomFooterText            = "This is some custom footer text";
+            DisableAnonymousJoin        = $False;
+            EnableQoS                   = $False;
+            GlobalAdminAccount          = $credsglobaladmin;
+            HelpURL                     = "https://github.com/Microsoft/Office365DSC/Help";
+            Identity                    = "Global";
+            LegalURL                    = "https://github.com/Microsoft/Office365DSC/Legal";
+            LogoURL                     = "https://github.com/Microsoft/Office365DSC/Logo.png";
         }
     }
 }

@@ -35,27 +35,30 @@ function Get-TargetResource
 
         [Parameter()]
         [System.UInt32]
-        $ClientAudioPort,
+        [ValidateRange(1024, 65535)]
+        $ClientAudioPort = 50000,
 
         [Parameter()]
         [System.UInt32]
-        $ClientAudioPortRange,
+        $ClientAudioPortRange = 20,
 
         [Parameter()]
         [System.UInt32]
-        $ClientVideoPort,
+        [ValidateRange(1024, 65535)]
+        $ClientVideoPort = 50020,
 
         [Parameter()]
         [System.UInt32]
-        $ClientVideoPortRange,
+        $ClientVideoPortRange = 20,
 
         [Parameter()]
         [System.UInt32]
-        $ClientAppSharingPort,
+        [ValidateRange(1024, 65535)]
+        $ClientAppSharingPort = 50040,
 
         [Parameter()]
         [System.UInt32]
-        $ClientAppSharingPortRange,
+        $ClientAppSharingPortRange = 20,
 
         [Parameter()]
         [System.Boolean]
@@ -142,27 +145,30 @@ function Set-TargetResource
 
         [Parameter()]
         [System.UInt32]
-        $ClientAudioPort,
+        [ValidateRange(1024, 65535)]
+        $ClientAudioPort = 50000,
 
         [Parameter()]
         [System.UInt32]
-        $ClientAudioPortRange,
+        $ClientAudioPortRange = 20,
 
         [Parameter()]
         [System.UInt32]
-        $ClientVideoPort,
+        [ValidateRange(1024, 65535)]
+        $ClientVideoPort = 50020,
 
         [Parameter()]
         [System.UInt32]
-        $ClientVideoPortRange,
+        $ClientVideoPortRange = 20,
 
         [Parameter()]
         [System.UInt32]
-        $ClientAppSharingPort,
+        [ValidateRange(1024, 65535)]
+        $ClientAppSharingPort = 50040,
 
         [Parameter()]
         [System.UInt32]
-        $ClientAppSharingPortRange,
+        $ClientAppSharingPortRange = 20,
 
         [Parameter()]
         [System.Boolean]
@@ -173,7 +179,7 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of Teams Client"
+    Write-Verbose -Message "Setting configuration of Teams Meetings"
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -228,27 +234,30 @@ function Test-TargetResource
 
         [Parameter()]
         [System.UInt32]
-        $ClientAudioPort,
+        [ValidateRange(1024, 65535)]
+        $ClientAudioPort = 50000,
 
         [Parameter()]
         [System.UInt32]
-        $ClientAudioPortRange,
+        $ClientAudioPortRange = 20,
 
         [Parameter()]
         [System.UInt32]
-        $ClientVideoPort,
+        [ValidateRange(1024, 65535)]
+        $ClientVideoPort = 50020,
 
         [Parameter()]
         [System.UInt32]
-        $ClientVideoPortRange,
+        $ClientVideoPortRange = 20,
 
         [Parameter()]
         [System.UInt32]
-        $ClientAppSharingPort,
+        [ValidateRange(1024, 65535)]
+        $ClientAppSharingPort = 50040,
 
         [Parameter()]
         [System.UInt32]
-        $ClientAppSharingPortRange,
+        $ClientAppSharingPortRange = 20,
 
         [Parameter()]
         [System.Boolean]
@@ -304,7 +313,7 @@ function Export-TargetResource
     }
     $result = Get-TargetResource @params
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        TeamsClientConfiguration " + (New-GUID).ToString() + "`r`n"
+    $content = "        TeamsMeetingConfiguration " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
