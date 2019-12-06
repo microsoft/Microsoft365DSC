@@ -1900,6 +1900,22 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region TeamsMessaging
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckTeamsMessaging")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsMessaging..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsMessaging\MSFT_TeamsMessaging.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region TeamsChannelsPolicy
     if (($null -ne $ComponentsToExtract -and
     $ComponentsToExtract.Contains("chckTeamsChannelsPolicy")) -or
@@ -1968,6 +1984,22 @@ function Start-O365ConfigurationExtract
         {
             Write-Verbose $_
         }
+    }
+    #endregion
+
+    #region TeamsUpgradeConfiguration
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckTeamsUpgradeConfiguration")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsUpgradeCOnfiguration..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsUpgradeCOnfiguration\MSFT_TeamsUpgradeCOnfiguration.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
 
