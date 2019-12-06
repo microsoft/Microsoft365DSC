@@ -113,7 +113,7 @@ function Set-TargetResource
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $Current.Ensure))
     {
-        Set-FilePlanPropertyCitation -Name $Name -CitationUrl $CitationUrl -CitationJurisdiction $CitationJurisdiction
+        Set-FilePlanPropertyCitation -Identity $Name -CitationUrl $CitationUrl -CitationJurisdiction $CitationJurisdiction
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $Current.Ensure))
     {
