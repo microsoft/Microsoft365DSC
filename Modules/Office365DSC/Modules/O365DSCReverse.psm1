@@ -1900,6 +1900,22 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region TeamsChannelsPolicy
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckTeamsChannelsPolicy")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsChannelsPolicy..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsChannelsPolicy\MSFT_TeamsChannelsPolicy.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "TeamsTeam"
     if (($null -ne $ComponentsToExtract -and
             $ComponentsToExtract.Contains("chckTeamsTeam")) -or

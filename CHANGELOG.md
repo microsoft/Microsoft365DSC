@@ -36,6 +36,8 @@
   * Introduced Multi-Threading
 * TeamsCallingPolicy
   * Initial Release;
+* TeamsChannelsPolicy
+  * Initial Release;
 * TeamsClientConfiguration
   * Initial Release;
 * TeamsUpgradeConfiguration

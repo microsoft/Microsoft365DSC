@@ -14351,3 +14351,80 @@ function Get-CsTeamsMessagingPolicy
     )
 }
 
+
+function Get-CsTeamsChannelsPolicy
+{
+    [CmdletBinding()]
+    param(
+    [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-CsTeamsChannelsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function New-CsTeamsChannelsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOrgWideTeamCreation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateTeamDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateChannelCreation
+    )
+}
+
+function Set-CsTeamsChannelsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOrgWideTeamCreation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateTeamDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateChannelCreation
+    )
+}
+
