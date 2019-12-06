@@ -591,6 +591,32 @@ Configuration Master
             Identity                    = "Integration Channel Policy";
         }
 
+        TeamsMeetingPolicy DemoMeetingPolicy
+        {
+            AllowAnonymousUsersToDialOut               = $False;
+            AllowAnonymousUsersToStartMeeting          = $False;
+            AllowChannelMeetingScheduling              = $True;
+            AllowCloudRecording                        = $True;
+            AllowExternalParticipantGiveRequestControl = $False;
+            AllowIPAudio                               = $True;
+            AllowIPVideo                               = $True;
+            AllowMeetNow                               = $True;
+            AllowOutlookAddIn                          = $True;
+            AllowParticipantGiveRequestControl         = $True;
+            AllowPowerPointSharing                     = $True;
+            AllowPrivateMeetingScheduling              = $True;
+            AllowSharedNotes                           = $True;
+            AllowTranscription                         = $False;
+            AllowWhiteboard                            = $True;
+            AutoAdmittedUsers                          = "Everyone";
+            Description                                = "Integration Meeting Policy";
+            Ensure                                     = "Present";
+            GlobalAdminAccount                         = $GlobalAdmin;
+            Identity                                   = "Integration Meeting Policy";
+            MediaBitRateKb                             = 50000;
+            ScreenSharingMode                          = "EntireScreen";
+        }
+
         TeamsTeam TeamAlpha
         {
             DisplayName          = "Alpha Team"

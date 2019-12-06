@@ -14428,3 +14428,202 @@ function Set-CsTeamsChannelsPolicy
     )
 }
 
+function Get-CsTeamsMeetingPolicy
+{
+    [CmdletBinding()]
+    param(
+    [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-CsTeamsMeetingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function New-CsTeamsMeetingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowChannelMeetingScheduling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetNow,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowIPAudio,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowIPVideo,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnonymousUsersToDialOut,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnonymousUsersToStartMeeting,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateMeetingScheduling,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany')]
+        $AutoAdmittedUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCloudRecording,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOutlookAddIn,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPowerPointSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowParticipantGiveRequestControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowExternalParticipantGiveRequestControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSharedNotes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWhiteboard,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTranscription,
+
+        [Parameter()]
+        [System.UInt32]
+        $MediaBitRateKb,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('SingleApplication', 'EntireScreen', 'Disabled')]
+        $ScreenSharingMode
+    )
+}
+
+function Set-CsTeamsMeetingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowChannelMeetingScheduling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetNow,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowIPAudio,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowIPVideo,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnonymousUsersToDialOut,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnonymousUsersToStartMeeting,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateMeetingScheduling,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany')]
+        $AutoAdmittedUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCloudRecording,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOutlookAddIn,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPowerPointSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowParticipantGiveRequestControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowExternalParticipantGiveRequestControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSharedNotes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWhiteboard,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTranscription,
+
+        [Parameter()]
+        [System.UInt32]
+        $MediaBitRateKb,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('SingleApplication', 'EntireScreen', 'Disabled')]
+        $ScreenSharingMode
+    )
+}
