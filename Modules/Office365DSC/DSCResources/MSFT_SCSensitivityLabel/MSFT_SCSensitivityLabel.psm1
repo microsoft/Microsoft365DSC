@@ -72,10 +72,10 @@ function Get-TargetResource
     }
     else
     {
-        $parentLabel = Get-Label -Identity $label.ParentId -ErrorAction SilentlyContinue
         $parentLabelID = $null
-        if ($null -ne $parentLabel)
+        if ($null -ne $label.ParentId)
         {
+            $parentLabel = Get-Label -Identity $label.ParentId -ErrorAction SilentlyContinue
             $parentLabelID = $parentLabel.Name
         }
         if ($null -ne $label.LocaleSettings)

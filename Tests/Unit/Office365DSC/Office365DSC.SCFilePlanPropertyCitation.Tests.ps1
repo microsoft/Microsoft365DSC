@@ -69,7 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Search already exists, but need to update properties" -Fixture {
+        Context -Name "Citation already exists, but need to update properties" -Fixture {
             $testParams = @{
                 Name                 = "Demo Citation"
                 CitationURL          = "https://contoso.com/Citation"
