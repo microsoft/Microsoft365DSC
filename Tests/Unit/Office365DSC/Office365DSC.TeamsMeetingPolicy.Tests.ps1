@@ -24,13 +24,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Test-MSCloudLogin -MockWith {
         }
 
-        Mock -CommandName New-CsTeamsChannelsPolicy -MockWith {
+        Mock -CommandName New-CsTeamsMeetingPolicy -MockWith {
         }
 
-        Mock -CommandName Set-CsTeamsChannelsPolicy -MockWith {
+        Mock -CommandName Set-CsTeamsMeetingPolicy -MockWith {
         }
 
-        Mock -CommandName Remove-CsTeamsChannelsPolicy -MockWith {
+        Mock -CommandName Remove-CsTeamsMeetingPolicy -MockWith {
         }
 
         # Test contexts
@@ -100,7 +100,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount                         = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-CsTeamsChannelsPolicy -MockWith {
+            Mock -CommandName Get-CsTeamsMeetingPolicy -MockWith {
                 return @{
                     Identity                                   = "Test Policy";
                     AllowAnonymousUsersToStartMeeting          = $False;
@@ -162,7 +162,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount                         = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-CsTeamsChannelsPolicy -MockWith {
+            Mock -CommandName Get-CsTeamsMeetingPolicy -MockWith {
                 return @{
                     Identity                                   = "Test Policy";
                     AllowAnonymousUsersToStartMeeting          = $False;
@@ -218,7 +218,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount                         = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-CsTeamsChannelsPolicy -MockWith {
+            Mock -CommandName Get-CsTeamsMeetingPolicy -MockWith {
                 return @{
                     Identity                                   = "Test Policy";
                     AllowAnonymousUsersToStartMeeting          = $False;
@@ -259,7 +259,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-CsTeamsChannelsPolicy -MockWith {
+            Mock -CommandName Get-CsTeamsMeetingPolicy -MockWith {
                 return @{
                     Identity                                   = "Test Policy";
                     AllowAnonymousUsersToStartMeeting          = $False;
