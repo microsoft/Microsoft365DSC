@@ -3,7 +3,7 @@ This example is used to test new resources and showcase the usage of new resourc
 It is not meant to use as a production baseline.
 #>
 
-Configuration MSFT_SiteGroup #Example
+Configuration Example
 {
     param(
         [Parameter(Mandatory = $true)]
@@ -16,9 +16,9 @@ Configuration MSFT_SiteGroup #Example
     {
         SPOSiteGroup ee4a977d-4d7d-4968-9238-2a1702aa699c
         {
-            Url                                         = "https://m365x478508.sharepoint.com/sites/classictestsite"
+            Url                                         = "https://office365dsc.sharepoint.com/sites/testsite1"
             Identity                                    = "TestSiteGroup"
-            Owner                                       = "admin@M365x478508.onmicrosoft.com"#"admin@Office365DSC.onmicrosoft.com"
+            Owner                                       = "admin@Office365DSC.onmicrosoft.com"
             PermissionLevels                            = @("Edit", "Read")
             Ensure                                      = "Present"
             GlobalAdminAccount                          = $credsGlobalAdmin
@@ -27,9 +27,9 @@ Configuration MSFT_SiteGroup #Example
 
         SPOSiteGroup adfd6217-29de-4297-95d4-7004455d3daa
         {
-            Url                                         = "https://m365x478508.sharepoint.com/sites/testsite"
+            Url                                         = "https://office365dsc.sharepoint.com/sites/testsite1"
             Identity                                    = "TestSiteGroup"
-            Owner                                       = "admin@M365x478508.onmicrosoft.com" #"admin@Office365DSC.onmicrosoft.com"
+            Owner                                       = "admin@Office365DSC.onmicrosoft.com"
             PermissionLevels                            = @("Edit", "Read")
             Ensure                                      = "Present"
             GlobalAdminAccount                          = $credsGlobalAdmin
@@ -37,17 +37,3 @@ Configuration MSFT_SiteGroup #Example
         }
     }
 }
-
-
-$configData = @{
-    AllNodes = @(
-        @{
-            NodeName = "localhost"
-            PSDscAllowPlainTextPassword = $true;
-            PSDscAllowDomainUser = $true;
-    }
-    )
-}
-
-#Example -ConfigurationData $configData
-MSFT_SiteGroup -ConfigurationData $configData
