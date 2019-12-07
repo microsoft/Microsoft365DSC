@@ -1025,7 +1025,7 @@ function Remove-Mailbox{
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]
-        [string]
+        [System.String]
         $Identity,
 
         [Parameter()]
@@ -1038,7 +1038,6 @@ function Get-OrganizationConfig
 {
     [CmdletBinding()]
     param(
-
     )
 }
 
@@ -7096,7 +7095,11 @@ function Get-MsolUser {
 param(
     [Parameter(ParameterSetName='GetUserByUpn__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
-    ${UserPrincipalName}
+    ${UserPrincipalName},
+
+    [Parameter()]
+    [Switch]
+    $All
 )
  }
 
@@ -9115,30 +9118,33 @@ param(
    )
 }
 
-function Get-PnPTenantTheme {
+function Get-PnPTenantTheme
+{
     [CmdletBinding()]
-   param(
+    param(
        [Parameter()]
        [System.String]
        $Identity
    )
 }
 
-function Remove-PnPTenantTheme {
+function Remove-PnPTenantTheme
+{
     [CmdletBinding()]
-   param(
+    param(
        [Parameter()]
        [System.String]
        $Identity
    )
 }
 
-function Add-PnPTenantTheme {
+function Add-PnPTenantTheme
+{
     [CmdletBinding()]
-   param(
+    param(
        [Parameter(Mandatory = $true)]
        [System.String]
-       $Name,
+       $Identity,
 
        [Parameter()]
        [System.Boolean]
@@ -9154,9 +9160,351 @@ function Add-PnPTenantTheme {
    )
 }
 
+function Set-OrganizationConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $ActivityBasedAuthenticationTimeoutEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ActivityBasedAuthenticationTimeoutInterval,
+
+        [Parameter()]
+        [System.Boolean]
+        $ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AppsForOfficeEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AsyncSendEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AuditDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AutoExpandingArchive,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsPaymentsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $BookingsSocialSharingRestricted,
+
+        [Parameter()]
+        [System.UInt32]
+        $ByteEncoderTypeFor7BitCharsets,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectorsActionableMessagesEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectorsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectorsEnabledForOutlook,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectorsEnabledForSharepoint,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectorsEnabledForTeams,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectorsEnabledForYammer,
+
+        [Parameter()]
+        [System.String]
+        $DefaultAuthenticationPolicy,
+
+        [Parameter()]
+        [ValidateSet('Private', 'Public')]
+        [System.String]
+        $DefaultGroupAccessType,
+
+        [Parameter()]
+        [System.String]
+        $DefaultPublicFolderAgeLimit,
+
+        [Parameter()]
+        [System.String]
+        $DefaultPublicFolderDeletedItemRetention,
+
+        [Parameter()]
+        [System.String]
+        $DefaultPublicFolderIssueWarningQuota,
+
+        [Parameter()]
+        [System.String]
+        $DefaultPublicFolderMaxItemSize,
+
+        [Parameter()]
+        [System.String]
+        $DefaultPublicFolderMovedItemRetention,
+
+        [Parameter()]
+        [System.String]
+        $DefaultPublicFolderProhibitPostQuota,
+
+        [Parameter()]
+        [System.Boolean]
+        $DirectReportsGroupAutoCreationEnabled,
+
+        [Parameter()]
+        [System.String]
+        $DistributionGroupDefaultOU,
+
+        [Parameter()]
+        [System.String[]]
+        $DistributionGroupNameBlockedWordsList,
+
+        [Parameter()]
+        [System.String]
+        $DistributionGroupNamingPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $ElcProcessingDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EndUserDLUpgradeFlowsDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EwsAllowEntourage,
+
+        [Parameter()]
+        [System.String[]]
+        $EwsAllowList,
+
+        [Parameter()]
+        [System.Boolean]
+        $EwsAllowMacOutlook,
+
+        [Parameter()]
+        [System.Boolean]
+        $EwsAllowOutlook,
+
+        [Parameter()]
+        [ValidateSet('EnforeAllowList', 'EnforceBlockList')]
+        [System.String]
+        $EwsApplicationAccessPolicy,
+
+        [Parameter()]
+        [System.String[]]
+        $EwsBlockList,
+
+        [Parameter()]
+        [System.Boolean]
+        $EwsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExchangeNotificationEnabled,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeNotificationRecipients,
+
+        [Parameter()]
+        [System.Boolean]
+        $FocusedInboxOn,
+
+        [Parameter()]
+        [System.String]
+        $HierarchicalAddressBookRoot,
+
+        [Parameter()]
+        [System.String[]]
+        $IPListBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $LeanPopoutEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $LinkPreviewEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MailTipsAllTipsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MailTipsExternalRecipientsTipsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MailTipsGroupMetricsEnabled,
+
+        [Parameter()]
+        [System.UInt32]
+        $MailTipsLargeAudienceThreshold,
+
+        [Parameter()]
+        [System.Boolean]
+        $MailTipsMailboxSourcedTipsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OAuth2ClientProfileEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OutlookMobileGCCRestrictionsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $OutlookPayEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $PublicComputersDetectionEnabled,
+
+        [Parameter()]
+        [ValidateSet('None', 'Local', 'Remote')]
+        [System.String]
+        $PublicFoldersEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $PublicFolderShowClientControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $ReadTrackingEnabled,
+
+        [Parameter()]
+        [System.String[]]
+        $RemotePublicFolderMailboxes,
+
+        [Parameter()]
+        [System.String]
+        $SiteMailboxCreationURL,
+
+        [Parameter()]
+        [System.Boolean]
+        $SmtpActionableMessagesEnabled,
+
+        [Parameter()]
+        [System.String]
+        $VisibleMeetingUpdateProperties,
+
+        [Parameter()]
+        [System.Boolean]
+        $WebPushNotificationsDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $WebSuggestedRepliesDisabled
+    )
+}
+
+function New-AuditConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Workload
+    )
+}
+
+function Get-AuditConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-AuditConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function New-FilePlanPropertyCitation
+{
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $CitationUrl,
+
+        [Parameter()]
+        [System.String]
+        $CitationJurisdiction
+    )
+}
+
+function Get-FilePlanPropertyCitation
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-FilePlanPropertyCitation
+{
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity
+    )
+}
+
+function Set-FilePlanPropertyCitation
+{
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $CitationUrl,
+
+        [Parameter()]
+        [System.String]
+        $CitationJurisdiction
+    )
+}
+
 function Get-PnPUserProfileProperty {
     [CmdletBinding()]
-   param(
+    param(
        [Parameter()]
        [System.String]
        $Account
@@ -9617,7 +9965,12 @@ function Get-ComplianceCase {
    param(
        [Parameter()]
        [System.String]
-       $Identity
+       $Identity,
+
+       [Parameter()]
+       [System.String]
+       [ValidateSet('eDiscovery', 'DSR')]
+       $CaseType
    )
 }
 
@@ -9773,6 +10126,43 @@ param(
 
 
  }
+
+function Get-FilePlanPropertyAuthority
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function New-FilePlanPropertyAuthority
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name
+    )
+}
+
+function Remove-FilePlanPropertyAuthority
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
 
 
 function Get-AzureADDirectoryRoleTemplate {
@@ -13271,3 +13661,770 @@ function Set-ComplianceSearch
         $SharePointLocationExclusion
     )
 }
+
+function Get-FilePlanPropertyDepartment
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Get-FilePlanPropertyCategory
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Get-FilePlanPropertySubCategory
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Get-FilePlanPropertyReferenceId
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function New-FilePlanPropertyDepartment
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Name
+    )
+}
+
+function New-FilePlanPropertyCategory
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Name
+    )
+}
+
+function New-FilePlanPropertySubCategory
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $ParentId
+    )
+}
+
+function New-FilePlanPropertyReferenceId
+{
+    Param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Name
+    )
+}
+
+function Remove-FilePlanPropertyDepartment
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function Remove-FilePlanPropertyCategory
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function Remove-FilePlanPropertySubCategory
+{
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function Remove-FilePlanPropertyReferenceId
+{
+    Param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function Remove-Label{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $ForceDeletion
+    )
+}
+
+function New-Label{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String]
+        $AdvancedSettings,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $LocaleSettings,
+
+        [Parameter()]
+        [uint32]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $Tooltip,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [System.String]
+        $ParentId
+    )
+}
+function Set-Label{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String]
+        $AdvancedSettings,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $LocaleSettings,
+
+        [Parameter()]
+        [System.String]
+        $ParentId,
+
+        [Parameter()]
+        [uint32]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $Tooltip,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled
+    )
+}
+function Get-Label{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Name
+
+    )
+}
+
+function Get-CsTeamsUpgradeConfiguration
+{
+    [CmdletBinding()]
+    param()
+}
+
+function Get-CsTeamsClientConfiguration
+{
+    [CmdletBinding()]
+    param()
+}
+
+function Set-CsTeamsUpgradeConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $DownloadTeams,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("SkypeMeetingsApp","NativeLimitedClient")]
+        $SfBMeetingJoinUx
+    )
+}
+function Set-CsTeamsClientConfiguration
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('Global')]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBox,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDropBox,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowEmailIntoChannel,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGoogleDrive,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOrganizationTab,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowResourceAccountSendMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowScopedPeopleSearchandAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowShareFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSkypeBusinessInterop,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('NotRequired', 'RequiredOutsideScheduleMeeting', 'AlwaysRequired')]
+        $ContentPin = 'RequiredOutsideScheduledMeeting',
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('NoAccess','PartialAccess','FullAccess')]
+        $ResourceAccountContentAccess,
+
+        [Parameter()]
+        [System.String[]]
+        $RestrictedSenderList
+        )
+}
+
+function Enable-OrganizationCustomization
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
+function New-AdminPowerAppEnvironment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('canada','unitesstates','europe','asia','australia','india','japan','unitedkingdom','unitedstatesfirstrelease','southamerica','france','usgov')]
+        $Location,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('Production','Trial')]
+        $EnvironmentSKU
+    )
+}
+
+function Get-AdminPowerAppEnvironment
+{
+    [CmdletBinding()]
+    param()
+}
+
+function Remove-AdminPowerAppEnvironment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $EnvironmentName,
+
+        [Parameter()]
+        [Switch]
+        $Confirm
+    )
+}
+function Get-CsTeamsCallingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-CsTeamsCallingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [Switch]
+        $Confirm
+    )
+}
+
+function New-CsTeamsCallingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCalling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateCalling,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('AlwaysEnabled', 'AlwaysDisabled', 'UserOverride')]
+        $AllowVoicemail,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDelegation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallForwardingToUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallForwardingToPhone,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreventTollBypass,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled')]
+        $BusyOnBusyEnabledType
+    )
+}
+
+function Set-CsTeamsCallingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCalling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateCalling,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('AlwaysEnabled', 'AlwaysDisabled', 'UserOverride')]
+        $AllowVoicemail,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDelegation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallForwardingToUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallForwardingToPhone,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreventTollBypass,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Enabled', 'Disabled')]
+        $BusyOnBusyEnabledType
+    )
+}
+function New-CsTeamsMessagingPolicy
+{
+    [CmdletBinding()]
+    param(
+    [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGiphy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOwnerDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowStickers,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUrlPreviews,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserChat,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserTranslation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveReader,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRemoveUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPriorityMessages,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('DisabledUserOverride', 'EnabledUserOverride')]
+        $ChannelsInChatListEnabledType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('ChatsAndChannels', 'ChatsOnly', 'Disabled')]
+        $AudioMessageEnabledType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('STRICT', 'MODERATE', 'NORESTRICTION')]
+        $GiphyRatingType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('UserPreference', 'Everyone', 'None')]
+        $ReadReceiptsEnabledType,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Tenant,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force
+    )
+}
+
+function Set-CsTeamsMessagingPolicy
+{
+    [CmdletBinding()]
+    param(
+    [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGiphy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOwnerDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowStickers,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUrlPreviews,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserChat,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserTranslation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveReader,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRemoveUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPriorityMessages,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('DisabledUserOverride', 'EnabledUserOverride')]
+        $ChannelsInChatListEnabledType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('ChatsAndChannels', 'ChatsOnly', 'Disabled')]
+        $AudioMessageEnabledType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('STRICT', 'MODERATE', 'NORESTRICTION')]
+        $GiphyRatingType,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('UserPreference', 'Everyone', 'None')]
+        $ReadReceiptsEnabledType,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Tenant,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force
+    )
+}
+function Remove-CsTeamsMessagingPolicy
+{
+    [CmdletBinding()]
+    param(
+    [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Force
+    )
+}
+function Get-CsTeamsMessagingPolicy
+{
+    [CmdletBinding()]
+    param(
+    [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+
+function Get-CsTeamsChannelsPolicy
+{
+    [CmdletBinding()]
+    param(
+    [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Remove-CsTeamsChannelsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function New-CsTeamsChannelsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOrgWideTeamCreation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateTeamDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateChannelCreation
+    )
+}
+
+function Set-CsTeamsChannelsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowOrgWideTeamCreation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateTeamDiscovery,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateChannelCreation
+    )
+}
+

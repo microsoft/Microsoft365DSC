@@ -45,35 +45,49 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of AtpPolicyForO365 for $Identity"
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
-    $AtpPolicies = Get-AtpPolicyForO365
+    try
+    {
+        $nullReturn = $PSBoundParameters
+        $nullReturn.Ensure = 'Absent'
+        $AtpPolicies = Get-AtpPolicyForO365
 
-    $AtpPolicyForO365 = $AtpPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    if (-not $AtpPolicyForO365)
-    {
-        Write-Verbose -Message "AtpPolicyForO365 $($Identity) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
-    }
-    else
-    {
-        $result = @{
-            IsSingleInstance = "Yes"
-            Identity                  = $AtpPolicyForO365.Identity
-            AllowClickThrough         = $AtpPolicyForO365.AllowClickThrough
-            BlockUrls                 = $AtpPolicyForO365.BlockUrls
-            EnableATPForSPOTeamsODB   = $AtpPolicyForO365.EnableATPForSPOTeamsODB
-            EnableSafeLinksForClients = $AtpPolicyForO365.EnableSafeLinksForClients
-            TrackClicks               = $AtpPolicyForO365.TrackClicks
-            Ensure                    = 'Present'
+        $AtpPolicyForO365 = $AtpPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        if (-not $AtpPolicyForO365)
+        {
+            Write-Verbose -Message "AtpPolicyForO365 $($Identity) does not exist."
+            return $nullResult
         }
+        else
+        {
+            $result = @{
+                IsSingleInstance          = "Yes"
+                Identity                  = $AtpPolicyForO365.Identity
+                AllowClickThrough         = $AtpPolicyForO365.AllowClickThrough
+                BlockUrls                 = $AtpPolicyForO365.BlockUrls
+                EnableATPForSPOTeamsODB   = $AtpPolicyForO365.EnableATPForSPOTeamsODB
+                EnableSafeLinksForClients = $AtpPolicyForO365.EnableSafeLinksForClients
+                TrackClicks               = $AtpPolicyForO365.TrackClicks
+                Ensure                    = 'Present'
+            }
 
-        Write-Verbose -Message "Found AtpPolicyForO365 $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
-        return $result
+            Write-Verbose -Message "Found AtpPolicyForO365 $($Identity)"
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
+            return $result
+        }
+    }
+    catch
+    {
+        Write-Warning $_.Exception
+        return $nullResult
     }
 }
 
@@ -122,6 +136,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of AtpPolicyForO365 for $Identity"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     if ('Default' -ne $Identity)
     {
@@ -129,7 +149,7 @@ function Set-TargetResource
     }
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $AtpPolicyParams = $PSBoundParameters
     $AtpPolicyParams.Remove('Ensure') | Out-Null
@@ -197,8 +217,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('Verbose') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -224,6 +245,12 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     $result = Get-TargetResource @PSBoundParameters
     $content = ""
     if ($result.Ensure -eq "Present")

@@ -30,14 +30,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Mock -CommandName Invoke-O365DSCCommand -MockWith {
+        }
+
         # Test contexts
         Context -Name "Properties are already set" -Fixture {
             $testParams = @{
                 UserName           = "john.smith@contoso.com"
                 Properties         = (New-CimInstance -ClassName MSFT_SPOUserProfileProperty -Property @{
-                    Key   = "MyKey"
-                    Value = "MyValue"
-                } -ClientOnly)
+                        Key   = "MyKey"
+                        Value = "MyValue"
+                    } -ClientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Present"
             }
@@ -45,12 +48,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPUserProfileProperty -MockWith {
                 return @{
                     AccountName           = "john.smith@contoso.com"
-                    UserProfileProperties = @{"MyKey"="MyValue";}
+                    UserProfileProperties = @{'MyOldKey' = 'MyValue' }
                 }
-            }
-
-            It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should Be $true
             }
 
             It "Should return Present from the Get method" {
@@ -62,9 +61,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 UserName           = "john.smith@contoso.com"
                 Properties         = (New-CimInstance -ClassName MSFT_SPOUserProfileProperty -Property @{
-                    Key   = "MyNewKey"
-                    Value = "MyValue"
-                } -ClientOnly)
+                        Key   = "MyNewKey"
+                        Value = "MyValue"
+                    } -ClientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Present"
             }
@@ -72,7 +71,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPUserProfileProperty -MockWith {
                 return @{
                     AccountName           = "john.smith@contoso.com"
-                    UserProfileProperties = @{"MyOldKey"="MyValue";}
+                    UserProfileProperties = @{'MyOldKey' = 'MyValue' }
                 }
             }
 
@@ -93,7 +92,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPUserProfileProperty -MockWith {
                 return @{
                     AccountName           = "john.smith@contoso.com"
-                    UserProfileProperties = @{"MyOldKey"="MyValue";}
+                    UserProfileProperties = @{MyOldKey = MyValue }
+                }
+            }
+
+            Mock -CommandName Get-MSOLUser -MockWith {
+                return @{
+                    UserPrincipalName = "john.smith@contoso.com"
                 }
             }
 

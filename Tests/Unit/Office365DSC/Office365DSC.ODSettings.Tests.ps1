@@ -3,16 +3,16 @@ param(
     [Parameter()]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\Stubs\Office365.psm1" `
-                                         -Resolve)
+            -ChildPath "..\Stubs\Office365.psm1" `
+            -Resolve)
 )
 
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\UnitTestHelper.psm1" `
-                                -Resolve)
+        -ChildPath "..\UnitTestHelper.psm1" `
+        -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                                -DscResource "ODSettings"
+    -DscResource "ODSettings"
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -28,12 +28,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Check OneDrive Quota" -Fixture {
             $testParams = @{
                 OneDriveStorageQuota = 1024
-                IsSingleInstance = "Yes"
-                GlobalAdminAccount = $GlobalAdminAccount
+                IsSingleInstance     = "Yes"
+                GlobalAdminAccount   = $GlobalAdminAccount
             }
 
             Mock -CommandName Set-SPOTenant -MockWith {
-                return @{OneDriveStorageQuota = $null}
+                return @{OneDriveStorageQuota = $null }
             }
 
             Mock -CommandName Get-SPOTenant -MockWith {
@@ -52,20 +52,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Set OneDrive Quota" -Fixture {
             $testParams = @{
-                OneDriveStorageQuota = 1024
-                IsSingleInstance = "Yes"
-                OrphanedPersonalSitesRetentionPeriod = 60
-                OneDriveForGuestsEnabled = $true
-                NotifyOwnersWhenInvitationsAccepted = $true
+                OneDriveStorageQuota                      = 1024
+                IsSingleInstance                          = "Yes"
+                OrphanedPersonalSitesRetentionPeriod      = 60
+                OneDriveForGuestsEnabled                  = $true
+                NotifyOwnersWhenInvitationsAccepted       = $true
                 NotificationsInOneDriveForBusinessEnabled = $true
-                ODBMembersCanShare = "On"
-                ODBAccessRequests = "On"
-                BlockMacSync = $true
-                DisableReportProblemDialog = $true
-                DomainGuids = "12345-12345-12345-12345-12345"
-                ExcludedFileExtensions = @(".asmx")
-                GrooveBlockOption = "HardOptIn"
-                GlobalAdminAccount = $GlobalAdminAccount
+                ODBMembersCanShare                        = "On"
+                ODBAccessRequests                         = "On"
+                BlockMacSync                              = $true
+                DisableReportProblemDialog                = $true
+                DomainGuids                               = "12345-12345-12345-12345-12345"
+                ExcludedFileExtensions                    = @(".asmx")
+                GrooveBlockOption                         = "HardOptIn"
+                GlobalAdminAccount                        = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-SPOTenant -MockWith {
@@ -76,13 +76,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-SPOTenantSyncClientRestriction -MockWith {
                 return @{
-                    OptOutOfGrooveBlock = $false
-                    OptOutOfGrooveSoftBlock = $false
+                    OptOutOfGrooveBlock        = $false
+                    OptOutOfGrooveSoftBlock    = $false
                     DisableReportProblemDialog = $false
-                    BlockMacSync = $true
-                    AllowedDomainList = @("")
-                    TenantRestrictionEnabled = $true
-                    ExcludedFileExtensions = @(".asmx")
+                    BlockMacSync               = $true
+                    AllowedDomainList          = @("")
+                    TenantRestrictionEnabled   = $true
+                    ExcludedFileExtensions     = @(".asmx")
                 }
             }
 

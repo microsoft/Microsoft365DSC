@@ -9,7 +9,7 @@ function Get-TargetResource
         $Name,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Text","Integer","Decimal","DateTime","YesNo","Double","Binary")]
+        [ValidateSet("Text", "Integer", "Decimal", "DateTime", "YesNo", "Double", "Binary")]
         [System.String]
         $Type,
 
@@ -94,9 +94,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for Managed Property instance $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $nullReturn = @{
         Name                        = $Name
@@ -125,8 +131,8 @@ function Get-TargetResource
     {
         $Script:RecentMPExtract = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
     }
-    $property =  $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
-                    | Where-Object -FilterScript { $_.Value.Name -eq $Name }
+    $property = $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
+    | Where-Object -FilterScript { $_.Value.Name -eq $Name }
 
     if ($null -eq $property)
     {
@@ -148,7 +154,7 @@ function Get-TargetResource
     # Get Mapped Crawled Properties
     $currentManagedPID = [string] $property.Value.Pid
     $mappedProperties = $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.Mappings.dictionary.KeyValueOfstringMappingInfoy6h3NzC8 `
-                            | Where-Object -FilterScript { $_.Value.ManagedPid -eq $currentManagedPID }
+    | Where-Object -FilterScript { $_.Value.ManagedPid -eq $currentManagedPID }
 
     $mappings = @()
     foreach ($mappedProperty in $mappedProperties)
@@ -169,26 +175,26 @@ function Get-TargetResource
     }
     Write-Verbose -Message "Retrieved Property"
     return @{
-        Name = [string] $property.Value.Name
-        Type = [string] $property.Value.ManagedType
-        Description = [string] $property.Value.Description
-        Searchable = [boolean] $property.Value.Searchable
-        FullTextIndex = $FullTextIndex
-        FullTextContext = [UInt32] $property.Value.Context
-        Queryable = [boolean] $property.Value.Queryable
-        Retrievable = [boolean] $property.Value.Retrievable
-        AllowMultipleValues = [boolean] $property.Value.HasMultipleValues
-        Refinable = $fixedRefinable
-        Sortable = $fixedSortable
-        Safe = [boolean] $property.Value.SafeForAnonymous
-        Aliases = [boolean] $property.Value.Aliases
-        TokenNormalization = [boolean] $property.Value.TokenNormalization
-        CompleteMatching = [boolean] $property.Value.CompleteMatching
+        Name                        = [string] $property.Value.Name
+        Type                        = [string] $property.Value.ManagedType
+        Description                 = [string] $property.Value.Description
+        Searchable                  = [boolean] $property.Value.Searchable
+        FullTextIndex               = $FullTextIndex
+        FullTextContext             = [UInt32] $property.Value.Context
+        Queryable                   = [boolean] $property.Value.Queryable
+        Retrievable                 = [boolean] $property.Value.Retrievable
+        AllowMultipleValues         = [boolean] $property.Value.HasMultipleValues
+        Refinable                   = $fixedRefinable
+        Sortable                    = $fixedSortable
+        Safe                        = [boolean] $property.Value.SafeForAnonymous
+        Aliases                     = [boolean] $property.Value.Aliases
+        TokenNormalization          = [boolean] $property.Value.TokenNormalization
+        CompleteMatching            = [boolean] $property.Value.CompleteMatching
         LanguageNeutralTokenization = [boolean] $property.Value.LanguageNeutralWordBreaker
-        FinerQueryTokenization = [boolean] $property.Value.ExpandSegments
-        MappedCrawledProperties = $mappings
-        CompanyNameExtraction = $CompanyNameExtraction
-        Ensure = "Present"
+        FinerQueryTokenization      = [boolean] $property.Value.ExpandSegments
+        MappedCrawledProperties     = $mappings
+        CompanyNameExtraction       = $CompanyNameExtraction
+        Ensure                      = "Present"
     }
 }
 
@@ -202,7 +208,7 @@ function Set-TargetResource
         $Name,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Text","Integer","Decimal","DateTime","YesNo","Double","Binary")]
+        [ValidateSet("Text", "Integer", "Decimal", "DateTime", "YesNo", "Double", "Binary")]
         [System.String]
         $Type,
 
@@ -287,13 +293,19 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for Managed Property instance $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
-    $SearchConfigTemplatePath =  Join-Path -Path $PSScriptRoot `
-                                           -ChildPath "..\..\Dependencies\SearchConfigurationSettings.xml" `
-                                           -Resolve
+    $SearchConfigTemplatePath = Join-Path -Path $PSScriptRoot `
+        -ChildPath "..\..\Dependencies\SearchConfigurationSettings.xml" `
+        -Resolve
     $SearchConfigXML = [Xml] (Get-Content $SearchConfigTemplatePath -Raw)
 
     # Get the managed property back if it already exists.
@@ -302,8 +314,8 @@ function Set-TargetResource
         $Script:RecentMPExtract = [XML] (Get-PnpSearchConfiguration -Scope Subscription)
     }
 
-    $property =  $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
-                    | Where-Object -FilterScript { $_.Value.Name -eq $Name }
+    $property = $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
+    | Where-Object -FilterScript { $_.Value.Name -eq $Name }
     if ($null -ne $property)
     {
         $currentPID = $property.Value.Pid
@@ -311,49 +323,49 @@ function Set-TargetResource
 
     $prop = $SearchConfigXml.ChildNodes[0].SearchSchemaConfigurationSettings.ManagedProperties.dictionary
     $newManagedPropertyElement = $SearchConfigXML.CreateElement("d4p1:KeyValueOfstringManagedPropertyInfoy6h3NzC8", `
-                                                                "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
+            "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
     $keyNode = $SearchConfigXML.CreateElement("d4p1:Key", `
-                                              "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
+            "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
     $keyNode.InnerText = $Name
     $newManagedPropertyElement.AppendChild($keyNode) | Out-Null
 
     $valueNode = $SearchConfigXML.CreateElement("d4p1:Value", `
-                                              "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
+            "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
 
     $node = $SearchConfigXML.CreateElement("d3p1:Name", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $Name
     $valueNode.AppendChild($node) | Out-Null
 
     $node = $SearchConfigXML.CreateElement("d3p1:CompleteMatching", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $CompleteMatching.ToString().Replace("$", "").ToLower()
     $valueNode.AppendChild($node) | Out-Null
 
     $node = $SearchConfigXML.CreateElement("d3p1:Context", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $FullTextContext.ToString()
     $valueNode.AppendChild($node) | Out-Null
 
     $node = $SearchConfigXML.CreateElement("d3p1:DeleteDisallowed", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = "false"
     $valueNode.AppendChild($node) | Out-Null
 
     $node = $SearchConfigXML.CreateElement("d3p1:Description", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
 
     $node.InnerText = $Description
     $valueNode.AppendChild($node) | Out-Null
 
     $node = $SearchConfigXML.CreateElement("d3p1:EnabledForScoping", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = "false"
     $valueNode.AppendChild($node) | Out-Null
 
     #region EntiryExtractionBitMap
     $node = $SearchConfigXML.CreateElement("d3p1:EntityExtractorBitMap", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
 
     if ($CompanyNameExtraction)
     {
@@ -367,32 +379,32 @@ function Set-TargetResource
     #endregion
 
     $node = $SearchConfigXML.CreateElement("d3p1:ExpandSegments", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $FinerQueryTokenization.ToString().Replace("$", "").ToLower()
     $valueNode.AppendChild($node) | Out-Null
 
     $node = $SearchConfigXML.CreateElement("d3p1:FullTextIndex", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $FullTextIndex
     $valueNode.AppendChild($node) | Out-Null
 
     $node = $SearchConfigXML.CreateElement("d3p1:HasMultipleValues", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $AllowMultipleValues.ToString().Replace("$", "").ToLower()
     $valueNode.AppendChild($node) | Out-Null
 
     $node = $SearchConfigXML.CreateElement("d3p1:IndexOptions", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = "0"
     $valueNode.AppendChild($node) | Out-Null
 
     $node = $SearchConfigXML.CreateElement("d3p1:IsImplicit", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = "false"
     $valueNode.AppendChild($node) | Out-Null
 
     $node = $SearchConfigXML.CreateElement("d3p1:IsReadOnly", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = "false"
     $valueNode.AppendChild($node) | Out-Null
 
@@ -402,18 +414,18 @@ function Set-TargetResource
         throw "You cannot have CompleteMatching set to True if LanguageNeutralTokenization is set to True"
     }
     $node = $SearchConfigXML.CreateElement("d3p1:LanguageNeutralWordBreaker", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $LanguageNeutralTokenization.ToString().Replace("$", "").ToLower()
     $valueNode.AppendChild($node) | Out-Null
     #endregion
 
     $node = $SearchConfigXML.CreateElement("d3p1:ManagedType", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $Type
     $valueNode.AppendChild($node) | Out-Null
 
     $node = $SearchConfigXML.CreateElement("d3p1:MappingDisallowed", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = "false"
     $valueNode.AppendChild($node) | Out-Null
 
@@ -421,14 +433,14 @@ function Set-TargetResource
     if ($null -ne $currentPID)
     {
         $node = $SearchConfigXML.CreateElement("d3p1:Pid", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+                "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
         $node.InnerText = $currentPid
         $valueNode.AppendChild($node) | Out-Null
     }
     #endregion
 
     $node = $SearchConfigXML.CreateElement("d3p1:Queryable", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $Queryable.ToString().Replace("$", "").ToLower()
     $valueNode.AppendChild($node) | Out-Null
 
@@ -439,40 +451,40 @@ function Set-TargetResource
         $value = $true
     }
     $node = $SearchConfigXML.CreateElement("d3p1:Refinable", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $value.ToString().Replace("$", "").ToLower()
     $valueNode.AppendChild($node) | Out-Null
 
     $node = $SearchConfigXML.CreateElement("d3p1:RefinerConfiguration", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
 
     $subNode = $SearchConfigXML.CreateElement("d3p1:Anchoring", `
-                                              "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $subNode.InnerText = "Auto"
     $node.AppendChild($subNode) | Out-Null
 
     $subNode = $SearchConfigXML.CreateElement("d3p1:CutoffMaxBuckets", `
-                                              "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $subNode.InnerText = "1000"
     $node.AppendChild($subNode) | Out-Null
 
     $subNode = $SearchConfigXML.CreateElement("d3p1:Divisor", `
-                                              "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $subNode.InnerText = "1"
     $node.AppendChild($subNode) | Out-Null
 
     $subNode = $SearchConfigXML.CreateElement("d3p1:Intervals", `
-                                              "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $subNode.InnerText = "4"
     $node.AppendChild($subNode) | Out-Null
 
     $subNode = $SearchConfigXML.CreateElement("d3p1:Resolution", `
-                                              "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $subNode.InnerText = "1"
     $node.AppendChild($subNode) | Out-Null
 
     $subNode = $SearchConfigXML.CreateElement("d3p1:Type", `
-                                              "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $subNode.InnerText = "Deep"
     $node.AppendChild($subNode) | Out-Null
 
@@ -480,27 +492,27 @@ function Set-TargetResource
     #endregion
 
     $node = $SearchConfigXML.CreateElement("d3p1:RemoveDuplicates", `
-                                              "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = "true"
     $valueNode.AppendChild($node) | Out-Null
 
     $node = $SearchConfigXML.CreateElement("d3p1:RespectPriority", `
-                                              "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = "false"
     $valueNode.AppendChild($node) | Out-Null
 
     $node = $SearchConfigXML.CreateElement("d3p1:Retrievable", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $Retrievable.ToString().Replace("$", "").ToLower()
     $valueNode.AppendChild($node) | Out-Null
 
     $node = $SearchConfigXML.CreateElement("d3p1:SafeForAnonymous", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $Safe.ToString().Replace("$", "").ToLower()
     $valueNode.AppendChild($node) | Out-Null
 
     $node = $SearchConfigXML.CreateElement("d3p1:Searchable", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $Searchable.ToString().Replace("$", "").ToLower()
     $valueNode.AppendChild($node) | Out-Null
 
@@ -511,18 +523,18 @@ function Set-TargetResource
         $value = $true
     }
     $node = $SearchConfigXML.CreateElement("d3p1:Sortable", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $value.ToString().Replace("$", "").ToLower()
     $valueNode.AppendChild($node) | Out-Null
     #endregion
 
     $node = $SearchConfigXML.CreateElement("d3p1:SortableType", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = "Enabled"
     $valueNode.AppendChild($node) | Out-Null
 
     $node = $SearchConfigXML.CreateElement("d3p1:TokenNormalization", `
-                                           "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+            "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
     $node.InnerText = $TokenNormalization.ToString().Replace("$", "").ToLower()
     $valueNode.AppendChild($node) | Out-Null
 
@@ -530,7 +542,7 @@ function Set-TargetResource
     $prop.AppendChild($newManagedPropertyElement) | Out-Null
 
     $tempPath = Join-Path -Path $ENV:TEMP `
-                           -ChildPath ((New-Guid).ToString().Split('-')[0] + ".config")
+        -ChildPath ((New-Guid).ToString().Split('-')[0] + ".config")
     $SearchConfigXML.OuterXml | Out-File $tempPath
 
     # Create the Managed Property if it doesn't already exist
@@ -546,12 +558,12 @@ function Set-TargetResource
         {
             # Get the managed property back. This is the only way to ensure we have the right PID
             $currentConfigXML = [XML] (Get-PnpSearchCOnfiguration -Scope Subscription)
-            $property =  $currentConfigXML.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
-                            | Where-Object -FilterScript { $_.Value.Name -eq $Name }
+            $property = $currentConfigXML.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
+            | Where-Object -FilterScript { $_.Value.Name -eq $Name }
             $currentPID = $property.Value.Pid
 
             $node = $SearchConfigXML.CreateElement("d3p1:Pid", `
-                                                   "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+                    "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
             $node.InnerText = $currentPID
 
             # The order in which we list the properties matters. Pid is to appear right after MappingDisallowed.
@@ -564,25 +576,25 @@ function Set-TargetResource
         foreach ($alias in $aliasesArray)
         {
             $mainNode = $SearchConfigXML.CreateElement("d4p1:KeyValueOfstringAliasInfoy6h3NzC8", `
-                                                   "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
+                    "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
             $keyNode = $SearchConfigXML.CreateElement("d4p1:Key", `
-                                                      "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
+                    "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
             $keyNode.InnerText = $alias
 
             $valueNode = $SearchConfigXML.CreateElement("d4p1:Value", `
-                                                      "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
+                    "http://schemas.microsoft.com/2003/10/Serialization/Arrays")
             $node = $SearchConfigXML.CreateElement("d3p1:Name", `
-                                                   "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+                    "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
             $node.InnerText = $alias
             $valueNode.AppendChild($node) | Out-Null
 
             $node = $SearchConfigXML.CreateElement("d3p1:ManagedPid", `
-                                                   "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+                    "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
             $node.InnerText = $currentPID
             $valueNode.AppendChild($node) | Out-Null
 
             $node = $SearchConfigXML.CreateElement("d3p1:SchemaId", `
-                                                   "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
+                    "http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration")
             $node.InnerText = "6408"
             $valueNode.AppendChild($node) | Out-Null
 
@@ -592,7 +604,7 @@ function Set-TargetResource
         }
 
         $tempPath = Join-Path -Path $ENV:TEMP `
-                              -ChildPath ((New-Guid).ToString().Split('-')[0] + ".config")
+            -ChildPath ((New-Guid).ToString().Split('-')[0] + ".config")
         Write-Verbose -Message "Configuring SPO Search Schema with the following XML Document"
         Write-Verbose $SearchConfigXML.OuterXML
         $SearchConfigXML.OuterXml | Out-File $tempPath
@@ -613,7 +625,7 @@ function Test-TargetResource
         $Name,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Text","Integer","Decimal","DateTime","YesNo","Double","Binary")]
+        [ValidateSet("Text", "Integer", "Decimal", "DateTime", "YesNo", "Double", "Binary")]
         [System.String]
         $Type,
 
@@ -705,10 +717,11 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "Name",
-                                                                   "Type")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("Ensure", `
+            "Name",
+            "Type")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -726,7 +739,7 @@ function Export-TargetResource
         $Name,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Text","Integer","Decimal","DateTime","YesNo","Double","Binary")]
+        [ValidateSet("Text", "Integer", "Decimal", "DateTime", "YesNo", "Double", "Binary")]
         [System.String]
         $Type,
 
@@ -734,6 +747,12 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        SPOSearchManagedProperty " + (New-GUID).ToString() + "`r`n"

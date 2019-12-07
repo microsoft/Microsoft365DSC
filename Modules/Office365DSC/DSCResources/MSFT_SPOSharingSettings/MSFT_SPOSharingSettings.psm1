@@ -88,7 +88,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("View", "Edit")]
+        [ValidateSet("None", "View", "Edit")]
         $DefaultLinkPermission,
 
         [Parameter()]
@@ -96,7 +96,7 @@ function Get-TargetResource
         $RequireAcceptingAccountMatchInvitedAccount,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -106,9 +106,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPO Sharing settings"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+        -Platform PnP
 
     $nullReturn = @{
         IsSingleInstance                           = 'Yes'
@@ -137,7 +143,7 @@ function Get-TargetResource
 
     try
     {
-        $SPOSharingSettings = Get-SPOTenant
+        $SPOSharingSettings = Get-PnPTenant
 
         return @{
             IsSingleInstance                           = 'Yes'
@@ -263,7 +269,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("View", "Edit")]
+        [ValidateSet("None", "View", "Edit")]
         $DefaultLinkPermission,
 
         [Parameter()]
@@ -271,7 +277,7 @@ function Set-TargetResource
         $RequireAcceptingAccountMatchInvitedAccount,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -281,9 +287,15 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for SPO Sharing settings"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+        -Platform PnP
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
@@ -326,7 +338,7 @@ function Set-TargetResource
     {
         Write-verbose -Message "Configuring Tenant with: $value"
     }
-    Set-SPOTenant @CurrentParameters | Out-Null
+    Set-PnPTenant @CurrentParameters | Out-Null
 }
 function Test-TargetResource
 {
@@ -418,7 +430,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("View", "Edit")]
+        [ValidateSet("None", "View", "Edit")]
         $DefaultLinkPermission,
 
         [Parameter()]
@@ -426,7 +438,7 @@ function Test-TargetResource
         $RequireAcceptingAccountMatchInvitedAccount,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -443,28 +455,29 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("IsSingleInstance", `
-                                                                   "SharingCapability", `
-                                                                   "ShowEveryoneClaim", `
-                                                                   "ShowAllUsersClaim", `
-                                                                   "ShowEveryoneExceptExternalUsersClaim", `
-                                                                   "ProvisionSharedWithEveryoneFolder", `
-                                                                   "EnableGuestSignInAcceleration", `
-                                                                   "BccExternalSharingInvitations", `
-                                                                   "BccExternalSharingInvitationsList", `
-                                                                   "RequireAnonymousLinksExpireInDays", `
-                                                                   "SharingAllowedDomainList", `
-                                                                   "SharingBlockedDomainList", `
-                                                                   "SharingDomainRestrictionMode", `
-                                                                   "DefaultSharingLinkType", `
-                                                                   "PreventExternalUsersFromResharing", `
-                                                                   "ShowPeoplePickerSuggestionsForGuestUsers", `
-                                                                   "FileAnonymousLinkType", `
-                                                                   "FolderAnonymousLinkType", `
-                                                                   "NotifyOwnersWhenItemsReshared", `
-                                                                   "RequireAcceptingAccountMatchInvitedAccount", `
-                                                                   "DefaultLinkPermission")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("IsSingleInstance", `
+            "SharingCapability", `
+            "ShowEveryoneClaim", `
+            "ShowAllUsersClaim", `
+            "ShowEveryoneExceptExternalUsersClaim", `
+            "ProvisionSharedWithEveryoneFolder", `
+            "EnableGuestSignInAcceleration", `
+            "BccExternalSharingInvitations", `
+            "BccExternalSharingInvitationsList", `
+            "RequireAnonymousLinksExpireInDays", `
+            "SharingAllowedDomainList", `
+            "SharingBlockedDomainList", `
+            "SharingDomainRestrictionMode", `
+            "DefaultSharingLinkType", `
+            "PreventExternalUsersFromResharing", `
+            "ShowPeoplePickerSuggestionsForGuestUsers", `
+            "FileAnonymousLinkType", `
+            "FolderAnonymousLinkType", `
+            "NotifyOwnersWhenItemsReshared", `
+            "RequireAcceptingAccountMatchInvitedAccount", `
+            "DefaultLinkPermission")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -478,106 +491,27 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Yes')]
-        [String]
-        $IsSingleInstance,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
-        $SharingCapability,
-
-        [Parameter()]
-        [System.boolean]
-        $ShowEveryoneClaim,
-
-        [Parameter()]
-        [System.boolean]
-        $ShowAllUsersClaim,
-
-        [Parameter()]
-        [System.boolean]
-        $ShowEveryoneExceptExternalUsersClaim,
-
-        [Parameter()]
-        [System.boolean]
-        $ProvisionSharedWithEveryoneFolder,
-
-        [Parameter()]
-        [System.boolean]
-        $EnableGuestSignInAcceleration,
-
-        [Parameter()]
-        [System.boolean]
-        $BccExternalSharingInvitations,
-
-        [Parameter()]
-        [System.String]
-        $BccExternalSharingInvitationsList,
-
-        [Parameter()]
-        [System.Uint32]
-        $RequireAnonymousLinksExpireInDays,
-
-        [Parameter()]
-        [System.String]
-        $SharingAllowedDomainList,
-
-        [Parameter()]
-        [System.String]
-        $SharingBlockedDomainList,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("None", "AllowList", "BlockList")]
-        $SharingDomainRestrictionMode,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("None", "Direct", "Internal", "AnonymousAccess")]
-        $DefaultSharingLinkType,
-
-        [Parameter()]
-        [System.boolean]
-        $PreventExternalUsersFromResharing,
-
-        [Parameter()]
-        [System.boolean]
-        $ShowPeoplePickerSuggestionsForGuestUsers,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("View", "Edit")]
-        $FileAnonymousLinkType,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("View", "Edit")]
-        $FolderAnonymousLinkType,
-
-        [Parameter()]
-        [System.boolean]
-        $NotifyOwnersWhenItemsReshared,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("View", "Edit")]
-        $DefaultLinkPermission,
-
-        [Parameter()]
-        [System.boolean]
-        $RequireAcceptingAccountMatchInvitedAccount,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+    $PSBoundParameters.Add("IsSingleInstance", "Yes")
     $result = Get-TargetResource @PSBoundParameters
+    if (-1 -eq $result.RequireAnonymousLinksExpireInDays)
+    {
+        $result.Remove("RequireAnonymousLinksExpireInDays")
+    }
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "SPOSharingSettings " + (New-GUID).ToString() + "`r`n"
-    $content += "{`r`n"
-    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += "}`r`n"
+    $content = "        SPOSharingSettings " + (New-GUID).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += "        }`r`n"
     return $content
 }
 

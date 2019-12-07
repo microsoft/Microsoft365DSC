@@ -144,12 +144,18 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for site collection $Url"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SharePointOnline
 
     $nullReturn = @{
-        Url                                      = $Url
+        Url                                         = $Url
         Owner                                       = $null
         #TimeZoneId                                 = $null
         LocaleId                                    = $null
@@ -325,7 +331,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly","ExternalUserSharingOnly","ExternalUserAndGuestSharing")]
+        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
         $SharingCapability,
 
         [Parameter()]
@@ -342,17 +348,17 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled","NotDisabled")]
+        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
         $DisableAppViews,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled","NotDisabled")]
+        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
         $DisableCompanyWideSharingLinks,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled","NotDisabled")]
+        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
         $DisableFlows,
 
         [Parameter()]
@@ -370,7 +376,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "AllowList","BlockList")]
+        [ValidateSet("None", "AllowList", "BlockList")]
         $SharingDomainRestrictionMode,
 
         [Parameter()]
@@ -379,12 +385,12 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "AnonymousAccess","Internal","Direct")]
+        [ValidateSet("None", "AnonymousAccess", "Internal", "Direct")]
         $DefaultSharingLinkType,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "View","Edit")]
+        [ValidateSet("None", "View", "Edit")]
         $DefaultLinkPermission,
 
         [Parameter()]
@@ -410,9 +416,15 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for site collection $Url"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+        -Platform SharePointOnline
 
     if ($Ensure -eq "Present")
     {
@@ -603,39 +615,40 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "Url", `
-                                                                   "Title", `
-                                                                   "Owner", `
-                                                                   "StorageQuota", `
-                                                                   "CompatibilityLevel", `
-                                                                   "LocaleId", `
-                                                                   "ResourceQuota", `
-                                                                   "Template", `
-                                                                   "TimeZoneId", `
-                                                                   "AllowSelfServiceUpgrade", `
-                                                                   "DenyAddAndCustomizePages", `
-                                                                   "LockState", `
-                                                                   "ResourceQuotaWarningLevel", `
-                                                                   "SharingCapability", `
-                                                                   "StorageQuotaWarningLevel", `
-                                                                   "CommentsOnSitePagesDisabled", `
-                                                                   "SocialBarOnSitePagesDisabled", `
-                                                                   "DisableAppViews", `
-                                                                   "DisableCompanyWideSharingLinks", `
-                                                                   "DisableFlows", `
-                                                                   "RestrictedToGeo", `
-                                                                   "SharingAllowedDomainList", `
-                                                                   "SharingBlockedDomainList", `
-                                                                   "SharingDomainRestrictionMode", `
-                                                                   "ShowPeoplePickerSuggestionsForGuestUsers", `
-                                                                   "DefaultSharingLinkType", `
-                                                                   "DefaultLinkPermission", `
-                                                                   "HubUrl", `
-                                                                   "AnonymousLinkExpirationInDays", `
-                                                                   "OverrideTenantAnonymousLinkExpirationPolicy"
-                                                                   )
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("Ensure", `
+            "Url", `
+            "Title", `
+            "Owner", `
+            "StorageQuota", `
+            "CompatibilityLevel", `
+            "LocaleId", `
+            "ResourceQuota", `
+            "Template", `
+            "TimeZoneId", `
+            "AllowSelfServiceUpgrade", `
+            "DenyAddAndCustomizePages", `
+            "LockState", `
+            "ResourceQuotaWarningLevel", `
+            "SharingCapability", `
+            "StorageQuotaWarningLevel", `
+            "CommentsOnSitePagesDisabled", `
+            "SocialBarOnSitePagesDisabled", `
+            "DisableAppViews", `
+            "DisableCompanyWideSharingLinks", `
+            "DisableFlows", `
+            "RestrictedToGeo", `
+            "SharingAllowedDomainList", `
+            "SharingBlockedDomainList", `
+            "SharingDomainRestrictionMode", `
+            "ShowPeoplePickerSuggestionsForGuestUsers", `
+            "DefaultSharingLinkType", `
+            "DefaultLinkPermission", `
+            "HubUrl", `
+            "AnonymousLinkExpirationInDays", `
+            "OverrideTenantAnonymousLinkExpirationPolicy"
+    )
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -660,6 +673,12 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     if ($result.RestrictedToGeo -eq "Unknown")
@@ -738,7 +757,7 @@ function Set-SPOSiteConfiguration
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly","ExternalUserSharingOnly","ExternalUserAndGuestSharing")]
+        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
         $SharingCapability,
 
         [Parameter()]
@@ -755,17 +774,17 @@ function Set-SPOSiteConfiguration
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled","NotDisabled")]
+        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
         $DisableAppViews,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled","NotDisabled")]
+        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
         $DisableCompanyWideSharingLinks,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Unknown", "Disabled","NotDisabled")]
+        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
         $DisableFlows,
 
         [Parameter()]
@@ -783,7 +802,7 @@ function Set-SPOSiteConfiguration
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "AllowList","BlockList")]
+        [ValidateSet("None", "AllowList", "BlockList")]
         $SharingDomainRestrictionMode,
 
         [Parameter()]
@@ -792,12 +811,12 @@ function Set-SPOSiteConfiguration
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "AnonymousAccess","Internal","Direct")]
+        [ValidateSet("None", "AnonymousAccess", "Internal", "Direct")]
         $DefaultSharingLinkType,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "View","Edit")]
+        [ValidateSet("None", "View", "Edit")]
         $DefaultLinkPermission,
 
         [Parameter()]
@@ -826,7 +845,7 @@ function Set-SPOSiteConfiguration
         $IsSecondTry = $false
     )
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+        -Platform SharePointOnline
     $deletedSite = Get-SPODeletedSite | Where-Object -FilterScript { $_.Url -eq $Url }
     if ($deletedSite)
     {
@@ -860,7 +879,7 @@ function Set-SPOSiteConfiguration
             }
             if ($CurrentParameters.ContainsKey("AllowSelfServiceUpgrade"))
             {
-                $CurrentParameters.Remove("AllowSelfServiceUpgrade") 
+                $CurrentParameters.Remove("AllowSelfServiceUpgrade")
             }
             if ($CurrentParameters.ContainsKey("DenyAddAndCustomizePages"))
             {
@@ -870,7 +889,8 @@ function Set-SPOSiteConfiguration
             {
                 $CurrentParameters.Remove("ResourceQuotaWarningLevel")
             }
-            if ($CurrentParameters.ContainsKey("SharingCapability")){
+            if ($CurrentParameters.ContainsKey("SharingCapability"))
+            {
                 $CurrentParameters.Remove("SharingCapability")
             }
             if ($CurrentParameters.ContainsKey("StorageQuotaWarningLevel"))
@@ -1010,7 +1030,7 @@ function Set-SPOSiteConfiguration
             $CurrentParameters = $PSBoundParameters
             #Sites based on the GROUP#0 template should not be created via SharePoint but rather as part of an Office 365 group.
             #Once a site based on the GROUP#0 template has been created not all properties can be configured as they can be for other sitetemplates for that they will be removed
-            if($CurrentParameters.Template -eq "GROUP#0")
+            if ($CurrentParameters.Template -eq "GROUP#0")
             {
                 if ($CurrentParameters.ContainsKey("Title"))
                 {
@@ -1085,7 +1105,7 @@ function Set-SPOSiteConfiguration
                     $CurrentParameters.Remove("SharingBlockedDomainList")
                 }
             }
-            if($SharingDomainRestrictionMode -eq "None")
+            if ($SharingDomainRestrictionMode -eq "None")
             {
                 Write-Verbose -Message "SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
                 if ($CurrentParameters.ContainsKey("SharingAllowedDomainList"))
@@ -1153,7 +1173,7 @@ function Set-SPOSiteConfiguration
                     $CurrentParameters.Remove("showPeoplePickerSuggestionsForGuestUsers")
                 }
             }
-            if($OverrideTenantAnonymousLinkExpirationPolicy -eq $false)
+            if ($OverrideTenantAnonymousLinkExpirationPolicy -eq $false)
             {
                 Write-Verbose -Message "As long as property <OverrideTenantAnonymousLinkExpirationPolicy> is set to false property <AnonymousLinkExpirationInDays> will not take any effect."
                 write-verbose -Message "$($OverrideTenantAnonymousLinkExpirationPolicy)"
@@ -1199,7 +1219,7 @@ function Set-SPOSiteConfiguration
     }
     else
     {
-        if($PSBoundParameters.Template -eq "GROUP#0")
+        if ($PSBoundParameters.Template -eq "GROUP#0")
         {
             throw "Group based sites (GROUP#0) should be created as part of an O365 group. Make sure to specify it as a configuration item"
         }
@@ -1207,13 +1227,13 @@ function Set-SPOSiteConfiguration
         {
             Write-Verbose -Message "Creating site collection $Url"
             $siteCreation = @{
-            Url                = $Url
-            Owner              = $Owner
-            StorageQuota       = $StorageQuota
-            Title              = $Title
-            CompatibilityLevel = $CompatibilityLevel
-            LocaleId           = $LocaleId
-            Template           = $Template
+                Url                = $Url
+                Owner              = $Owner
+                StorageQuota       = $StorageQuota
+                Title              = $Title
+                CompatibilityLevel = $CompatibilityLevel
+                LocaleId           = $LocaleId
+                Template           = $Template
             }
 
             New-SPOSite @siteCreation
@@ -1228,6 +1248,5 @@ function Set-SPOSiteConfiguration
                 throw "There was an error trying to create SPOSite $Url"
             }
         }
-        
     }
 }

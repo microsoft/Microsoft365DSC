@@ -117,7 +117,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                GlobalAdminAccount                   = $GlobalAdminAccount
+                GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-PnPTenantCDNPolicies -MockWith {

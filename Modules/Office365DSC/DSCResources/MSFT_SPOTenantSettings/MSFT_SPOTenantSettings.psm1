@@ -78,7 +78,7 @@ function Get-TargetResource
         $HideDefaultThemes,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -88,9 +88,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPO Tenant"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $nullReturn = @{
         IsSingleInstance                              = 'Yes'
@@ -118,10 +124,19 @@ function Get-TargetResource
     {
         $SPOTenantSettings = Get-PNPTenant
 
+        $CompatibilityRange = $SPOTenantSettings.CompatibilityRange.Split(',')
+        $MinCompat = $null
+        $MaxCompat = $null
+        if ($CompatibilityRange.Length -eq 2)
+        {
+            $MinCompat = $CompatibilityRange[0]
+            $MaxCompat = $CompatibilityRange[1]
+        }
+
         return @{
             IsSingleInstance                              = 'Yes'
-            MinCompatibilityLevel                         = $SPOTenantSettings.MinCompatibilityLevel
-            MaxCompatibilityLevel                         = $SPOTenantSettings.MaxCompatibilityLevel
+            MinCompatibilityLevel                         = $MinCompat
+            MaxCompatibilityLevel                         = $MaxCompat
             SearchResolveExactEmailOrUPN                  = $SPOTenantSettings.SearchResolveExactEmailOrUPN
             OfficeClientADALDisabled                      = $SPOTenantSettings.OfficeClientADALDisabled
             LegacyAuthProtocolsEnabled                    = $SPOTenantSettings.LegacyAuthProtocolsEnabled
@@ -229,7 +244,7 @@ function Set-TargetResource
         $HideDefaultThemes,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -239,15 +254,21 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for SPO Tenant"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("IsSingleInstance")
 
-    if($PublicCdnEnabled -eq $false)
+    if ($PublicCdnEnabled -eq $false)
     {
         Write-Verbose -Message "The use of the public CDN is not enabled, for that the PublicCdnAllowedFileTypes parameter can not be configured and will be removed"
         $CurrentParameters.Remove("PublicCdnAllowedFileTypes")
@@ -335,7 +356,7 @@ function Test-TargetResource
         $HideDefaultThemes,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -351,25 +372,26 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("IsSingleInstance", `
-                                                                   "GlobalAdminAccount", `
-                                                                   "MaxCompatibilityLevel", `
-                                                                   "SearchResolveExactEmailOrUPN", `
-                                                                   "OfficeClientADALDisabled", `
-                                                                   "LegacyAuthProtocolsEnabled", `
-                                                                   "RequireAcceptingAccountMatchInvitedAccount", `
-                                                                   "SignInAccelerationDomain", `
-                                                                   "UsePersistentCookiesForExplorerView", `
-                                                                   "UserVoiceForFeedbackEnabled", `
-                                                                   "PublicCdnEnabled", `
-                                                                   "PublicCdnAllowedFileTypes", `
-                                                                   "UseFindPeopleInPeoplePicker", `
-                                                                   "NotificationsInSharePointEnabled", `
-                                                                   "OwnerAnonymousNotification", `
-                                                                   "ApplyAppEnforcedRestrictionsToAdHocRecipients", `
-                                                                   "FilePickerExternalImageSearchEnabled", `
-                                                                   "HideDefaultThemes")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("IsSingleInstance", `
+            "GlobalAdminAccount", `
+            "MaxCompatibilityLevel", `
+            "SearchResolveExactEmailOrUPN", `
+            "OfficeClientADALDisabled", `
+            "LegacyAuthProtocolsEnabled", `
+            "RequireAcceptingAccountMatchInvitedAccount", `
+            "SignInAccelerationDomain", `
+            "UsePersistentCookiesForExplorerView", `
+            "UserVoiceForFeedbackEnabled", `
+            "PublicCdnEnabled", `
+            "PublicCdnAllowedFileTypes", `
+            "UseFindPeopleInPeoplePicker", `
+            "NotificationsInSharePointEnabled", `
+            "OwnerAnonymousNotification", `
+            "ApplyAppEnforcedRestrictionsToAdHocRecipients", `
+            "FilePickerExternalImageSearchEnabled", `
+            "HideDefaultThemes")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -391,7 +413,22 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     $result = Get-TargetResource @PSBoundParameters
+    if ($null -eq $result.MaxCompatibilityLevel)
+    {
+        $result.Remove("MaxCompatibilityLevel")
+    }
+    if ($null -eq $result.MinCompatibilityLevel)
+    {
+        $result.Remove("MinCompatibilityLevel")
+    }
+
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        SPOTenantSettings " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

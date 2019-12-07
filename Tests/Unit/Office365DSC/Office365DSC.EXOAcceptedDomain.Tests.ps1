@@ -3,16 +3,16 @@ param(
     [Parameter()]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\Stubs\Office365.psm1" `
-                                         -Resolve)
+            -ChildPath "..\Stubs\Office365.psm1" `
+            -Resolve)
 )
 
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\UnitTestHelper.psm1" `
-                                -Resolve)
+        -ChildPath "..\UnitTestHelper.psm1" `
+        -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                              -DscResource "EXOAcceptedDomain"
+    -DscResource "EXOAcceptedDomain"
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -47,17 +47,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AzureADDomain -MockWith {
                 return @{
-                    Name = 'different.contoso.com'
+                    Name       = 'different.contoso.com'
                     IsVerified = $true
                 }
             }
 
             Mock -CommandName Get-AcceptedDomain -MockWith {
                 return @{
-                    DomainType         = 'Authoritative'
-                    Identity           = 'different.contoso.com'
-                    MatchSubDomains    = $false
-                    OutboundOnly       = $false
+                    DomainType      = 'Authoritative'
+                    Identity        = 'different.contoso.com'
+                    MatchSubDomains = $false
+                    OutboundOnly    = $false
                 }
             }
 
@@ -95,10 +95,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AcceptedDomain -MockWith {
                 return @{
-                    DomainType         = 'Authoritative'
-                    Identity           = 'different.tailspin.com'
-                    MatchSubDomains    = $false
-                    OutboundOnly       = $false
+                    DomainType      = 'Authoritative'
+                    Identity        = 'different.tailspin.com'
+                    MatchSubDomains = $false
+                    OutboundOnly    = $false
                 }
             }
 
@@ -126,7 +126,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AzureADDomain -MockWith {
                 return @{
-                    Name = 'contoso.com'
+                    Name       = 'contoso.com'
                     IsVerified = $true
                 }
 
@@ -134,10 +134,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AcceptedDomain -MockWith {
                 return @{
-                    DomainType         = 'Authoritative'
-                    Identity           = 'contoso.com'
-                    MatchSubDomains    = $false
-                    OutboundOnly       = $false
+                    DomainType      = 'Authoritative'
+                    Identity        = 'contoso.com'
+                    MatchSubDomains = $false
+                    OutboundOnly    = $false
                 }
             }
 
@@ -160,7 +160,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AzureADDomain -MockWith {
                 return @{
-                    Name = 'contoso.com'
+                    Name       = 'contoso.com'
                     IsVerified = $true
                 }
 
@@ -168,10 +168,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AcceptedDomain -MockWith {
                 return @{
-                    DomainType         = 'InternalRelay'
-                    Identity           = 'contoso.com'
-                    MatchSubDomains    = $true
-                    OutboundOnly       = $false
+                    DomainType      = 'InternalRelay'
+                    Identity        = 'contoso.com'
+                    MatchSubDomains = $true
+                    OutboundOnly    = $false
                 }
             }
 
@@ -200,11 +200,40 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
-                Identity           = "contoso.com"
             }
 
-            It "Should Reverse Engineer resource from the Export method" {
-                Export-TargetResource @testParams
+            $acceptedDomain1 = @{
+                DomainType      = 'Authoritative'
+                Identity        = 'different1.tailspin.com'
+                MatchSubDomains = $false
+                OutboundOnly    = $false
+            }
+
+            $acceptedDomain2 = @{
+                DomainType      = 'Authoritative'
+                Identity        = 'different2.tailspin.com'
+                MatchSubDomains = $false
+                OutboundOnly    = $false
+            }
+
+            It "Should Reverse Engineer resource from the Export method when single" {
+                Mock -CommandName Get-AcceptedDomain -MockWith {
+                    return $acceptedDomain1
+                }
+
+                $exported = Export-TargetResource @testParams
+                ([regex]::Matches($exported, " EXOAcceptedDomain " )).Count | Should Be 1
+                $exported.Contains("different1.tailspin.com") | Should Be $true
+            }
+
+            It "Should Reverse Engineer resource from the Export method when multiple" {
+                Mock -CommandName Get-AcceptedDomain -MockWith {
+                    return @($acceptedDomain1, $acceptedDomain2)
+                }
+
+                $exported = Export-TargetResource @testParams
+                ([regex]::Matches($exported, " EXOAcceptedDomain " )).Count | Should Be 2
+                $exported.Contains("different2.tailspin.com") | Should Be $true
             }
         }
     }

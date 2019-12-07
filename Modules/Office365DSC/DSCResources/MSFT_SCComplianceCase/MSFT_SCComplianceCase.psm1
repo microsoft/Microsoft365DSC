@@ -28,9 +28,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SCComplianceCase for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $Case = Get-ComplianceCase -Identity $Name -ErrorAction SilentlyContinue
 
@@ -91,9 +97,15 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of SCComplianceCase for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $CurrentCase = Get-TargetResource @PSBoundParameters
 
@@ -179,8 +191,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -199,28 +212,58 @@ function Export-TargetResource
     )
 
     $InformationPreference = "Continue"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
-    $Cases = Get-ComplianceCase
+        -Platform SecurityComplianceCenter
+    [array]$Cases = Get-ComplianceCase
 
+    $dscContent = ""
     $i = 1
     foreach ($Case in $Cases)
     {
-        Write-Information "    - [$i/$($Cases.Length)] $($Case.Name)"
+        Write-Information "    - eDiscovery: [$i/$($Cases.Count)] $($Case.Name)"
         $params = @{
             Name               = $Case.Name
             GlobalAdminAccount = $GlobalAdminAccount
         }
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content = "        SCComplianceCase " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
+        $partialContent = "        SCComplianceCase " + (New-GUID).ToString() + "`r`n"
+        $partialContent += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
+        $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $partialContent += "        }`r`n"
+        $dscContent += $partialContent
         $i++
     }
-    return $content
+
+    [array]$Cases = Get-ComplianceCase -CaseType "DSR"
+
+    $dscContent = ""
+    $i = 1
+    foreach ($Case in $Cases)
+    {
+        Write-Information "    - GDPR: [$i/$($Cases.Count)] $($Case.Name)"
+        $params = @{
+            Name               = $Case.Name
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $partialContent = "        SCComplianceCase " + (New-GUID).ToString() + "`r`n"
+        $partialContent += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $partialContent += "        }`r`n"
+        $dscContent += $partialContent
+        $i++
+    }
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -61,9 +61,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of ComplianceTag for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $tagObjects = Get-ComplianceTag
     $tagObject = $tagObjects | Where-Object { $_.Name -eq $Name }
@@ -166,9 +172,15 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of ComplianceTag for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $CurrentTag = Get-TargetResource @PSBoundParameters
 
@@ -205,29 +217,29 @@ function Set-TargetResource
         if ($SetParams.IsRecordLabel -eq $false -and $CurrentTag.IsRecordLabel -eq $true)
         {
             throw "Can't remove label on the existing Compliance Tag {$Name}. " + `
-                  "You will need to delete the tag and recreate it."
+                "You will need to delete the tag and recreate it."
         }
 
         if ($null -ne $PsBoundParameters["Regulatory"] -and
             $Regulatory -ne $CurrentTag.Regulatory)
         {
             throw "SPComplianceTag can't change the Regulatory property on " + `
-                  "existing tags {$Name} from $Regulatory to $($CurrentTag.Regulatory)." + `
-                  " You will need to delete the tag and recreate it."
+                "existing tags {$Name} from $Regulatory to $($CurrentTag.Regulatory)." + `
+                " You will need to delete the tag and recreate it."
         }
 
         if ($RetentionAction -ne $CurrentTag.RetentionAction)
         {
             throw "SPComplianceTag can't change the RetentionAction property on " + `
-                  "existing tags {$Name} from $RetentionAction to $($CurrentTag.RetentionAction)." + `
-                  " You will need to delete the tag and recreate it."
+                "existing tags {$Name} from $RetentionAction to $($CurrentTag.RetentionAction)." + `
+                " You will need to delete the tag and recreate it."
         }
 
         if ($RetentionType -ne $CurrentTag.RetentionType)
         {
             throw "SPComplianceTag can't change the RetentionType property on " + `
-                  "existing tags {$Name} from $RetentionType to $($CurrentTag.RetentionType)." + `
-                  " You will need to delete the tag and recreate it."
+                "existing tags {$Name} from $RetentionType to $($CurrentTag.RetentionType)." + `
+                " You will need to delete the tag and recreate it."
         }
 
         #Convert File plan to JSON before Set
@@ -319,7 +331,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove("FilePlanProperty") | Out-Null
 
     $TestFilePlanProperties = Test-SCFilePlanProperties -CurrentProperty $CurrentValues `
-                                -DesiredProperty $PSBoundParameters
+        -DesiredProperty $PSBoundParameters
 
     if ($false -eq $TestFilePlanProperties)
     {
@@ -327,6 +339,7 @@ function Test-TargetResource
     }
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
 
@@ -342,22 +355,46 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $result.FilePlanProperty = Get-SCFilePlanPropertyAsString $result.FilePlanProperty
-    $content = "        SCComplianceTag " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "FilePlanProperty"
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        -Platform SecurityComplianceCenter `
+        -ErrorAction SilentlyContinue
+    $tags = Get-ComplianceTag
+
+    $totalTags = $tags.Length
+    if ($null -eq $totalTags)
+    {
+        $totalTags = 1
+    }
+    $i = 1
+    $content = ''
+    foreach ($tag in $tags)
+    {
+        Write-Information "    - [$i/$($totalTags)] $($tag.Name)"
+        $Params = @{
+            Name               = $tag.Name
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @Params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $result.FilePlanProperty = Get-SCFilePlanPropertyAsString $result.FilePlanProperty
+        $content += "        SCComplianceTag " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "FilePlanProperty"
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        $i++
+    }
     return $content
 }
 
@@ -376,14 +413,15 @@ function Get-SCFilePlanPropertyObject
     }
 
     $result = [PSCustomObject]@{
-        Settings=@(
-            @{Key="FilePlanPropertyDepartment"; Value=$properties.FilePlanPropertyDepartment},
-            @{Key="FilePlanPropertyCategory";   Value=$properties.FilePlanPropertyCategory},
-            @{Key="FilePlanPropertySubcategory";Value=$properties.FilePlanPropertySubcategory},
-            @{Key="FilePlanPropertyCitation";   Value=$properties.FilePlanPropertyCitation},
-            @{Key="FilePlanPropertyReferenceId";Value=$properties.FilePlanPropertyReferenceId},
-            @{Key="FilePlanPropertyAuthority";  Value=$properties.FilePlanPropertyAuthority}
-        )}
+        Settings = @(
+            @{Key = "FilePlanPropertyDepartment"; Value = $properties.FilePlanPropertyDepartment },
+            @{Key = "FilePlanPropertyCategory"; Value = $properties.FilePlanPropertyCategory },
+            @{Key = "FilePlanPropertySubcategory"; Value = $properties.FilePlanPropertySubcategory },
+            @{Key = "FilePlanPropertyCitation"; Value = $properties.FilePlanPropertyCitation },
+            @{Key = "FilePlanPropertyReferenceId"; Value = $properties.FilePlanPropertyReferenceId },
+            @{Key = "FilePlanPropertyAuthority"; Value = $properties.FilePlanPropertyAuthority }
+        )
+    }
 
     return $result
 }
@@ -393,7 +431,7 @@ function Get-SCFilePlanProperty
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Metadata
     )
@@ -417,8 +455,12 @@ function Get-SCFilePlanProperty
 
 function Get-SCFilePlanPropertyAsString($params)
 {
+    if ($null -eq $params)
+    {
+        return $null
+    }
     $currentProperty = "MSFT_SCFilePlanProperty{`r`n"
-    foreach($key in $params.Keys)
+    foreach ($key in $params.Keys)
     {
         $currentProperty += "                " + $key + " = '" + $params[$key] + "'`r`n"
     }
@@ -436,11 +478,11 @@ function Test-SCFilePlanProperties
     )
 
     if ($CurrentProperty.FilePlanPropertyDepartment -ne $DesiredProperty.FilePlanPropertyDepartment -or `
-        $CurrentProperty.FilePlanPropertyCategory -ne $DesiredProperty.FilePlanPropertyCategory -or `
-        $CurrentProperty.FilePlanPropertySubcategory -ne $DesiredProperty.FilePlanPropertySubcategory -or `
-        $CurrentProperty.FilePlanPropertyCitation -ne $DesiredProperty.FilePlanPropertyCitation -or `
-        $CurrentProperty.FilePlanPropertyReferenceId -ne $DesiredProperty.FilePlanPropertyReferenceId -or `
-        $CurrentProperty.FilePlanPropertyAuthority -ne $DesiredProperty.FilePlanPropertyAuthority)
+            $CurrentProperty.FilePlanPropertyCategory -ne $DesiredProperty.FilePlanPropertyCategory -or `
+            $CurrentProperty.FilePlanPropertySubcategory -ne $DesiredProperty.FilePlanPropertySubcategory -or `
+            $CurrentProperty.FilePlanPropertyCitation -ne $DesiredProperty.FilePlanPropertyCitation -or `
+            $CurrentProperty.FilePlanPropertyReferenceId -ne $DesiredProperty.FilePlanPropertyReferenceId -or `
+            $CurrentProperty.FilePlanPropertyAuthority -ne $DesiredProperty.FilePlanPropertyAuthority)
     {
         return $false
     }

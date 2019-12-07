@@ -42,7 +42,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Add-TeamUser -MockWith {
-                return @{User = $null}
+                return @{
+                    User = $null
+                }
             }
 
             Mock -CommandName Get-TeamUser -MockWith {
@@ -118,7 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-           Mock -CommandName Get-TeamByName -MockWith {
+            Mock -CommandName Get-TeamByName -MockWith {
                 return @{
                     DisplayName = "TestTeam"
                     GroupID     = "12345-12345-12345-12345-12345"
@@ -208,16 +210,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                TeamName           = "TestTeam"
-                User               = "JohnSmith@contoso.onmicrosoft.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-TeamByName -MockWith {
-                return @{
-                    DisplayName = "TestTeam"
-                    GroupID     = "12345-12345-12345-12345-12345"
-                }
+            Mock -CommandName Get-Team -MockWith {
+                return @(@{
+                        DisplayName = "TestTeam"
+                        GroupID     = "12345-12345-12345-12345-12345"
+                    })
             }
 
             Mock -CommandName Get-TeamUser -MockWith {

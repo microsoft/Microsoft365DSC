@@ -35,12 +35,18 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SCCaseHoldRule for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $Rules = Get-CaseHoldRule -Policy $Policy -ErrorAction 'SilentlyContinue'
-    $Rule = $Rules | Where-Object { $_.Name -eq $Name}
+    $Rule = $Rules | Where-Object { $_.Name -eq $Name }
 
     if ($null -eq $Rule)
     {
@@ -104,9 +110,15 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of SCCaseHoldRule for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $CurrentRule = Get-TargetResource @PSBoundParameters
 
@@ -183,8 +195,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -203,14 +216,21 @@ function Export-TargetResource
     )
 
     $InformationPreference = "Continue"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
-    $Rules = Get-CaseHoldRule
+        -Platform SecurityComplianceCenter
+    [array]$Rules = Get-CaseHoldRule
 
+    $dscContent = ""
     $i = 1
     foreach ($Rule in $Rules)
     {
-        Write-Information "    - [$i/$($Rules.Length)] $($Rule.Name)"
+        Write-Information "    - [$i/$($Rules.Count)] $($Rule.Name)"
         try
         {
             $policy = Get-CaseHoldPolicy -Identity $Rule.Policy -ErrorAction Stop
@@ -222,11 +242,12 @@ function Export-TargetResource
             }
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content = "        SCCaseHoldRule " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
+            $partialContent = "        SCCaseHoldRule " + (New-GUID).ToString() + "`r`n"
+            $partialContent += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            $content += "        }`r`n"
+            $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $partialContent += "        }`r`n"
+            $dscContent += $partialContent
         }
         catch
         {
@@ -234,7 +255,7 @@ function Export-TargetResource
         }
         $i++
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -33,7 +33,7 @@ function Get-TargetResource
         $SiteDesignId,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -43,12 +43,18 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for hub site collection $Url"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+        -Platform SharePointOnline
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform MSOnline
+        -Platform MSOnline
 
     $nullReturn = @{
         Url                  = $Url
@@ -171,7 +177,7 @@ function Set-TargetResource
         $SiteDesignId,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -181,12 +187,18 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for hub site collection $Url"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+        -Platform SharePointOnline
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform MSOnline
+        -Platform MSOnline
 
     try
     {
@@ -202,7 +214,7 @@ function Set-TargetResource
 
     $currentValues = Get-TargetResource @PSBoundParameters
 
-    if($Ensure -eq "Present" -and $currentValues.Ensure -eq "Absent")
+    if ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Configuring site collection as Hub Site"
         Register-SPOHubSite -Site $site -Principals $AllowedToJoin | Out-Null
@@ -253,8 +265,8 @@ function Set-TargetResource
                 if ($principal -notmatch $regex)
                 {
                     $group = $groups | Where-Object -FilterScript {
-                                           $_.DisplayName -eq $principal
-                                       }
+                        $_.DisplayName -eq $principal
+                    }
 
                     if ($group.Count -ne 1)
                     {
@@ -336,8 +348,8 @@ function Set-TargetResource
                             if ($principal -notmatch $regex)
                             {
                                 $group = $groups | Where-Object -FilterScript {
-                                                       $_.DisplayName -eq $principal
-                                                   }
+                                    $_.DisplayName -eq $principal
+                                }
 
                                 if ($group.Count -ne 1)
                                 {
@@ -398,7 +410,7 @@ function Test-TargetResource
         $SiteDesignId,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -415,15 +427,16 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "Url", `
-                                                                   "Title", `
-                                                                   "Description", `
-                                                                   "LogoUrl", `
-                                                                   "RequiresJoinApproval", `
-                                                                   "AllowedToJoin", `
-                                                                   "SiteDesignId")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("Ensure", `
+            "Url", `
+            "Title", `
+            "Description", `
+            "LogoUrl", `
+            "RequiresJoinApproval", `
+            "AllowedToJoin", `
+            "SiteDesignId")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -444,6 +457,12 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = "`$Credsglobaladmin"
 

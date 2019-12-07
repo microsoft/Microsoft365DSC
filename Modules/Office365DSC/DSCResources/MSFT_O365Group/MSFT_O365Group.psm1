@@ -12,7 +12,7 @@ function Get-TargetResource
         [System.String]
         $DisplayName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String[]]
         $ManagedBy,
 
@@ -25,7 +25,7 @@ function Get-TargetResource
         $Members,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -35,18 +35,24 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = @{
-        DisplayName = $DisplayName
-        MailNickName = $Name
-        Description = $null
-        ManagedBy = $null
+        DisplayName        = $DisplayName
+        MailNickName       = $Name
+        Description        = $null
+        ManagedBy          = $null
         GlobalAdminAccount = $null
-        Ensure = "Absent"
+        Ensure             = "Absent"
     }
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform AzureAD
+        -Platform AzureAD
 
     $ADGroup = Get-AzureADGroup -SearchString $MailNickName -ErrorAction SilentlyContinue
     if ($null -eq $ADGroup)
@@ -93,13 +99,13 @@ function Get-TargetResource
         }
 
         $returnValue = @{
-            DisplayName = $ADGroup.DisplayName
-            MailNickName = $ADGroup.MailNickName
-            Members = $newMemberList
-            ManagedBy = $ownersUPN
-            Description = $description
+            DisplayName        = $ADGroup.DisplayName
+            MailNickName       = $ADGroup.MailNickName
+            Members            = $newMemberList
+            ManagedBy          = $ownersUPN
+            Description        = $description
             GlobalAdminAccount = $GlobalAdminAccount
-            Ensure = "Present"
+            Ensure             = "Present"
         }
 
         Write-Verbose -Message "Retrieved the following instance of the Group:"
@@ -130,7 +136,7 @@ function Set-TargetResource
         [System.String]
         $DisplayName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String[]]
         $ManagedBy,
 
@@ -143,7 +149,7 @@ function Set-TargetResource
         $Members,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -153,8 +159,14 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $currentGroup = Get-TargetResource @PSBoundParameters
 
@@ -286,7 +298,7 @@ function Test-TargetResource
         [System.String]
         $DisplayName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String[]]
         $ManagedBy,
 
@@ -299,7 +311,7 @@ function Test-TargetResource
         $Members,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -316,12 +328,8 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "DisplayName", `
-                                                                   "MailNickName", `
-                                                                   "Description", `
-                                                                   "Members")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -350,6 +358,12 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = "`$Credsglobaladmin"
     $content = "        O365Group " + (New-GUID).ToString() + "`r`n"

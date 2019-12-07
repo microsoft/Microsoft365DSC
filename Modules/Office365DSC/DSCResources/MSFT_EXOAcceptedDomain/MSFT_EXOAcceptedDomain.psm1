@@ -20,12 +20,12 @@ function Get-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [ValidateScript( {$false -eq $_})]
+        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $MatchSubDomains = $false,
 
         [Parameter()]
-        [ValidateScript( {$false -eq $_})]
+        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $OutboundOnly = $false,
 
@@ -35,9 +35,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of Accepted Domain for $Identity"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $AllAcceptedDomains = Get-AcceptedDomain
 
@@ -49,7 +55,7 @@ function Get-TargetResource
 
         # Check to see if $Identity matches a verified domain in the O365 Tenant
         Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                          -Platform AzureAD
+            -Platform AzureAD
 
         $VerifiedDomains = Get-AzureADDomain | Where-Object -FilterScript { $_.IsVerified }
         $MatchingVerifiedDomain = $VerifiedDomains | Where-Object -FilterScript { $_.Name -eq $Identity }
@@ -122,12 +128,12 @@ function Set-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [ValidateScript( {$false -eq $_})]
+        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $MatchSubDomains = $false,
 
         [Parameter()]
-        [ValidateScript( {$false -eq $_})]
+        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $OutboundOnly = $false,
 
@@ -138,8 +144,15 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Accepted Domain for $Identity"
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $AcceptedDomainParams = @{
         DomainType      = $DomainType
@@ -174,12 +187,12 @@ function Test-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [ValidateScript( {$false -eq $_})]
+        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $MatchSubDomains = $false,
 
         [Parameter()]
-        [ValidateScript( {$false -eq $_})]
+        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $OutboundOnly = $false,
 
@@ -199,8 +212,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -214,22 +228,42 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidatePattern('(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
-        [System.String]
-        $Identity,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        EXOAcceptedDomain " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
-    return $content
+    $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        -Platform ExchangeOnline
+
+    [array]$AllAcceptedDomains = Get-AcceptedDomain
+
+    $dscContent = ""
+    $i = 1
+    foreach ($domain in $AllAcceptedDomains)
+    {
+        Write-Information "    [$i/$($AllAcceptedDomains.Count)] $($domain.Identity)"
+
+        $Params = @{
+            Identity           = $domain.Identity
+            GLobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @Params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content = "        EXOAcceptedDomain " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        $dscContent += $content
+        $i++
+    }
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

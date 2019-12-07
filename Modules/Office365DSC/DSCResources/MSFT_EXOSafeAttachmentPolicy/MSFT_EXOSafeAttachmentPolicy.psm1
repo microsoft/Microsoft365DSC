@@ -44,9 +44,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SafeAttachmentPolicy for $Identity"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
 
@@ -61,23 +67,15 @@ function Get-TargetResource
     else
     {
         $result = @{
-            Ensure = 'Present'
-        }
-
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-        {
-            if ($null -ne $SafeAttachmentPolicy.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $SafeAttachmentPolicy.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
+            Ensure             = 'Present'
+            Identity           = $Identity
+            Action             = $SafeAttachmentPolicy.Action
+            ActionOnError      = $SafeAttachmentPolicy.ActionOnError
+            AdminDisplayName   = $SafeAttachmentPolicy.AdminDisplayName
+            Enable             = $SafeAttachmentPolicy.Enable
+            Redirect           = $SafeAttachmentPolicy.Redirect
+            RedirectAddress    = $SafeAttachmentPolicy.RedirectAddress
+            GlobalAdminAccount = $GlobalAdminAccount
         }
 
         Write-Verbose -Message "Found SafeAttachmentPolicy $($Identity)"
@@ -131,9 +129,15 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of SafeAttachmentPolicy for $Identity"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $SafeAttachmentPolicyParams = $PSBoundParameters
     $SafeAttachmentPolicyParams.Remove('Ensure') | Out-Null
@@ -222,8 +226,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -244,6 +249,12 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        EXOSafeAttachmentPolicy " + (New-GUID).ToString() + "`r`n"

@@ -25,6 +25,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for Office 365 Audit Log"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = @{
         IsSingleInstance                = $IsSingleInstance
@@ -34,7 +40,7 @@ function Get-TargetResource
     }
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $GetResults = Get-AdminAuditLogConfig
     if (-not $GetResults)
@@ -90,9 +96,15 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for Office 365 Audit Log"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     if ($UnifiedAuditLogIngestionEnabled -eq 'Enabled')
     {
@@ -156,8 +168,9 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @('UnifiedAuditLogIngestionEnabled')
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @('UnifiedAuditLogIngestionEnabled')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -188,6 +201,12 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     $result = Get-TargetResource @PSBoundParameters
 
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"

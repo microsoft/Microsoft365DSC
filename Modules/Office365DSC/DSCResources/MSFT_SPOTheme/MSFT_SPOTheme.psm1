@@ -27,20 +27,26 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPO Theme $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $nullReturn = @{
-        Name                = $Name
-        IsInverted          = $null
-        Palette             = $null
-        Ensure              = "Absent"
-        GlobalAdminAccount  = $GlobalAdminAccount
+        Name               = $Name
+        IsInverted         = $null
+        Palette            = $null
+        Ensure             = "Absent"
+        GlobalAdminAccount = $GlobalAdminAccount
     }
 
     Write-Verbose -Message "Getting theme $Name"
-    $theme = Get-PnPTenantTheme | Where-Object -FilterScript {$_.Name -eq $Name}
+    $theme = Get-PnPTenantTheme | Where-Object -FilterScript { $_.Name -eq $Name }
     if ($null -eq $theme)
     {
         Write-Verbose -Message "The specified theme doesn't exist."
@@ -49,11 +55,11 @@ function Get-TargetResource
     $convertedPalette = Convert-ExistingThemePaletteToHashTable -Palette ([System.Collections.Hashtable]$theme.Palette)
 
     return @{
-        Name                = $theme.Name
-        IsInverted          = $theme.IsInverted
-        Palette             = $convertedPalette
-        GlobalAdminAccount  = $GlobalAdminAccount
-        Ensure              = "Present"
+        Name               = $theme.Name
+        IsInverted         = $theme.IsInverted
+        Palette            = $convertedPalette
+        GlobalAdminAccount = $GlobalAdminAccount
+        Ensure             = "Present"
     }
 }
 
@@ -85,9 +91,15 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for SPO Theme $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $CurrentPalette = Get-TargetResource @PSBoundParameters
     if ($Ensure -eq "Present")
@@ -95,14 +107,14 @@ function Set-TargetResource
         Write-Verbose "Converting Received Palette Values into Hashtable"
         $HashPalette = Convert-NewThemePaletteToHashTable -Palette $Palette
         $AddParameters = @{
-            Name       = $Name
+            Identity   = $Name
             IsInverted = $IsInverted
             Palette    = $HashPalette
         }
 
         try
         {
-            $existingTheme = Get-PnPTenantTheme -Name $Name
+            $existingTheme = Get-PnPTenantTheme -Name $Name -ErrorAction SilentlyContinue
         }
         catch
         {
@@ -112,7 +124,7 @@ function Set-TargetResource
         if ($null -eq $existingTheme)
         {
             Write-Verbose -Message "Theme {$Name} doesn't already exist. Creating it."
-            Add-SPOTheme @AddParameters
+            Add-PnPTenantTheme @AddParameters
         }
         else
         {
@@ -170,12 +182,18 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "Name", `
-                                                                   "IsInverted", `
-                                                                   "Palette")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("Ensure", `
+            "Name", `
+            "IsInverted")
+
+    if ($TestResult)
+    {
+        $TestResult = Compare-SPOTheme -existingThemePalette $currentValues.Palette -configThemePalette $Palette
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -194,9 +212,15 @@ function Export-TargetResource
     )
 
     $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+        -Platform PnP
 
     $themes = Get-PnPTenantTheme
     $content = ""
@@ -232,7 +256,7 @@ function Convert-ExistingThemePaletteToHashTable
         $Palette
     )
     $themeHash = @{ }
-    foreach($entry in $Palette.GetEnumerator())
+    foreach ($entry in $Palette.GetEnumerator())
     {
         $themeHash[$entry.Key] = $entry.Value
     }
@@ -249,7 +273,7 @@ function Convert-NewThemePaletteToHashTable
         $Palette
     )
 
-    $results = @{}
+    $results = @{ }
     foreach ($entry in $Palette)
     {
         $results.Add($entry.Property, $entry.Value)
@@ -300,23 +324,23 @@ function Compare-SPOTheme
     $existingThemePaletteCount = 0
     $configThemePaletteCount = 0
 
-    foreach($val in $existingThemePalette.Value)
+    foreach ($val in $existingThemePalette.Value)
     {
-        if($configThemePalette.Value.Contains($val))
+        if ($configThemePalette.Value.Contains($val))
         {
             $configThemePaletteCount++
         }
     }
 
-    foreach($val in $configThemePalette.Value)
+    foreach ($val in $configThemePalette.Value)
     {
-        if($existingThemePalette.value.Contains($val))
+        if ($existingThemePalette.value.Contains($val))
         {
             $existingThemePaletteCount++
         }
     }
 
-    if(($existingThemePalette.Count -eq $configThemePaletteCount) -and ($configThemePalette.Count -eq $existingThemePaletteCount))
+    if (($existingThemePalette.Count -eq $configThemePaletteCount) -and ($configThemePalette.Count -eq $existingThemePaletteCount))
     {
         return "Themes are identical"
     }

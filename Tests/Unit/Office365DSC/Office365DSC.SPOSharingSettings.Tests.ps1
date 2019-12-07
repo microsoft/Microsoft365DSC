@@ -52,7 +52,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 RequireAcceptingAccountMatchInvitedAccount = $false
             }
 
-            Mock -CommandName Set-SPOTenant -MockWith {
+            Mock -CommandName Set-PnPTenant -MockWith {
                 return @{
                     SharingCapability                          = 'ExternalUserSharingOnly'
                     ShowEveryoneClaim                          = $false
@@ -77,7 +77,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-SPOTenant -MockWith {
+            Mock -CommandName Get-PnPTenant -MockWith {
                 return @{
                     SharingCapability                          = 'Disabled'
                     ShowEveryoneClaim                          = $false
@@ -107,37 +107,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Sets the tenant sharing settings in Set method" {
-                set-TargetResource @testParams
+                Set-TargetResource @testParams
             }
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                GlobalAdminAccount                         = $GlobalAdminAccount
-                IsSingleInstance                           = "Yes"
-                SharingCapability                          = 'ExternalUserSharingOnly'
-                ShowEveryoneClaim                          = $false
-                ShowAllUsersClaim                          = $false
-                ShowEveryoneExceptExternalUsersClaim       = $true
-                ProvisionSharedWithEveryoneFolder          = $false
-                EnableGuestSignInAcceleration              = $false
-                BccExternalSharingInvitations              = $false
-                BccExternalSharingInvitationsList          = ""
-                RequireAnonymousLinksExpireInDays          = 730
-                SharingAllowedDomainList                   = "contoso.com"
-                SharingBlockedDomainList                   = "contoso.com"
-                SharingDomainRestrictionMode               = "None"
-                DefaultSharingLinkType                     = "AnonymousAccess"
-                PreventExternalUsersFromResharing          = $false
-                ShowPeoplePickerSuggestionsForGuestUsers   = $false
-                FileAnonymousLinkType                      = "Edit"
-                FolderAnonymousLinkType                    = "Edit"
-                NotifyOwnersWhenItemsReshared              = $true
-                DefaultLinkPermission                      = "View"
-                RequireAcceptingAccountMatchInvitedAccount = $false
+                GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-SPOTenant -MockWith {
+            Mock -CommandName Get-PnPTenant -MockWith {
                 return @{
                     GlobalAdminAccount                         = $GlobalAdminAccount
                     SharingCapability                          = 'ExternalUserSharingOnly'

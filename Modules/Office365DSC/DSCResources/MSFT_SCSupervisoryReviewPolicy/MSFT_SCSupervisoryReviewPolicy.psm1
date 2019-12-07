@@ -5,7 +5,7 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateLength(1,64)]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
 
@@ -28,11 +28,17 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SupervisoryReviewPolicy for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
-    $PolicyObject = Get-SupervisoryReviewPolicyV2 $Name
+    $PolicyObject = Get-SupervisoryReviewPolicyV2 $Name -ErrorAction SilentlyContinue
 
     if ($null -eq $PolicyObject)
     {
@@ -64,7 +70,7 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateLength(1,64)]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
 
@@ -87,9 +93,15 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of SupervisoryReviewPolicy for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $CurrentPolicy = Get-TargetResource @PSBoundParameters
 
@@ -123,7 +135,7 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateLength(1,64)]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
 
@@ -154,8 +166,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -169,7 +182,7 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateLength(1,64)]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
 
@@ -181,6 +194,12 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        SCSupervisoryReviewPolicy " + (New-GUID).ToString() + "`r`n"

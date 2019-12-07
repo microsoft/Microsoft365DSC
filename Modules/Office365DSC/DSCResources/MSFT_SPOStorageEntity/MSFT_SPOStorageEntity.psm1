@@ -40,10 +40,16 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPO Storage Entity for $Key"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -ConnectionUrl $SiteUrl `
-                      -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -O365Credential $GlobalAdminAccount `
+        -Platform PnP
 
     $nullReturn = @{
         Key                = $Key
@@ -58,7 +64,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting storage entity $Key"
 
-    $entityStorageParms = @{}
+    $entityStorageParms = @{ }
     $entityStorageParms.Add("Key", $Key)
 
     if ($null -ne $EntityScope -and "" -ne $EntityScope)
@@ -130,10 +136,16 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for SPO Storage Entity for $Key"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -ConnectionUrl $SiteUrl `
-                      -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -O365Credential $GlobalAdminAccount `
+        -Platform PnP
 
     $curStorageEntry = Get-TargetResource @PSBoundParameters
 
@@ -161,7 +173,7 @@ function Set-TargetResource
             if ($_.Exception -like "*Access denied*")
             {
                 throw "It appears that the account doesn't have access to create an SPO Storage " + `
-                      "Entity or that an App Catalog was not created for the specified location"
+                    "Entity or that an App Catalog was not created for the specified location"
             }
         }
     }
@@ -216,14 +228,15 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Key", `
-                                                                   "Value", `
-                                                                   "Key", `
-                                                                   "Comment", `
-                                                                   "Description", `
-                                                                   "EntityScope", `
-                                                                   "Ensure")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("Key", `
+            "Value", `
+            "Key", `
+            "Comment", `
+            "Description", `
+            "EntityScope", `
+            "Ensure")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -248,6 +261,12 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        SPOStorageEntity " + (New-Guid).ToString() + "`r`n"

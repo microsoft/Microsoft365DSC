@@ -19,7 +19,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         $secpasswd = ConvertTo-SecureString "Pass@word1)" -AsPlainText -Force
-        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.com", $secpasswd)
 
         Mock -CommandName Test-MSCloudLogin -MockWith {
         }
@@ -48,7 +48,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 AllowCustomMemes                  = $True
                 AllowGuestCreateUpdateChannels    = $false
                 AllowGuestDeleteChannels          = $false
-                Owner                             = "JohnDoe@contoso.com"
+                Owner                             = @("JohnDoe@contoso.com")
                 GlobalAdminAccount                = $GlobalAdminAccount
             }
 
@@ -78,7 +78,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DisplayName        = "TestTeam"
                 Ensure             = "Present"
                 GroupID            = "1234-1234-1234-1234"
-                Owner              = "owner@contoso.com"
+                Owner              = @("owner@contoso.com")
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -115,7 +115,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Present"
                 Description        = "Test Team"
                 Visibility         = "Private"
-                Owner              = "owner@contoso.com"
+                Owner              = @("owner@contoso.com")
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -213,7 +213,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-Team -MockWith {
                 return @{
-                    DisplayName = "Test Team"
+                    DisplayName  = "Test Team"
                     GroupID      = "1234-1234-1234-1234"
                     MailNickName = "testteam"
                     Visibility   = "Private"
@@ -242,7 +242,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                DisplayName        = "Test Team"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

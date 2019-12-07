@@ -98,7 +98,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         TwoLetterISOLanguageName = "iv";
                     }
                     AllowNotFoundExchangeLocationsEnabled = $False;
-                    SharePointLocation = @("https://tailspintoys.com")
+                    SharePointLocation                    = @("https://tailspintoys.com")
                 }
             }
 

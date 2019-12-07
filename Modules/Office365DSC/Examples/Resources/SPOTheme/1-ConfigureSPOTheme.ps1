@@ -19,14 +19,14 @@ Configuration Example
             GlobalAdminAccount = $credsGlobalAdmin
             Name               = "PSTheme1"
             IsInverted         = $false
-            Palette            =  @(MSFT_SPOThemePaletteProperty{
-                                        Property = "themePrimary"
-                                        Value = "#0078d4"
-                                    }
-                                    MSFT_SPOThemePaletteProperty{
-                                        Property = "themeLighterAlt"
-                                        Value = "#eff6fc"
-                                    }
+            Palette            =  @(MSFT_SPOThemePaletteProperty {
+                    Property = "themePrimary"
+                    Value    = "#0078d4"
+                }
+                MSFT_SPOThemePaletteProperty {
+                    Property = "themeLighterAlt"
+                    Value    = "#eff6fc"
+                }
             )
             Ensure             = "Present"
         }

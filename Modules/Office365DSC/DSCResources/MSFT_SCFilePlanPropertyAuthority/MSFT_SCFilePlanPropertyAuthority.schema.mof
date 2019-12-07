@@ -1,0 +1,7 @@
+[ClassVersion("1.0.0.0"), FriendlyName("SCFilePlanPropertyAuthority")]
+class MSFT_SCFilePlanPropertyAuthority : OMI_BaseResource
+{
+    [Key, Description("The Name parameter specifies the unique name of the Authority.")] String Name;
+    [Write, Description("Specify if this authority should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};

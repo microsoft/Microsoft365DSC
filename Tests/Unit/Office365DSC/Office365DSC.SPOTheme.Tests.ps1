@@ -3,15 +3,15 @@ param(
     [Parameter()]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\Stubs\Office365.psm1" `
-                                         -Resolve)
+            -ChildPath "..\Stubs\Office365.psm1" `
+            -Resolve)
 )
 
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\UnitTestHelper.psm1" `
-                                -Resolve)
+        -ChildPath "..\UnitTestHelper.psm1" `
+        -Resolve)
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                                -DscResource "SPOTheme"
+    -DscResource "SPOTheme"
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -30,15 +30,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Name               = "TestTheme"
                 IsInverted         = $false
                 Palette            = (New-CimInstance -ClassName MSFT_SPOThemePaletteProperty -Property @{
-                    Property = "themePrimary"
-                    Value    = "#eff6fc"
-                } -ClientOnly)
+                        Property = "themePrimary"
+                        Value    = "#eff6fc"
+                    } -ClientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Absent"
             }
 
             Mock -CommandName Add-PnPTenantTheme -MockWith {
-                return @{Name = $null}
+                return @{
+                    Name = $null
+                }
             }
 
             Mock -CommandName Get-PnPTenantTheme -MockWith {
@@ -62,42 +64,42 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Name               = "TestTheme"
                 IsInverted         = $false
                 Palette            = (New-CimInstance -ClassName MSFT_SPOThemePaletteProperty -Property @{
-                    Property = "themePrimary"
-                    Value    = "#eff6fc"
-                } -ClientOnly)
+                        Property = "themePrimary"
+                        Value    = "#eff6fc"
+                    } -ClientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Present"
             }
 
             Mock -CommandName Get-PnPTenantTheme -MockWith {
                 return @{
-                    Name               = "TestTheme"
-                    IsInverted         = $true
-                    Palette            = @{
-                        "themePrimary" = "#0078d4";
-                        "themeLighterAlt" = "#eff6fc";
-                        "themeLighter" = "#deecf9";
-                        "themeLight" = "#c7e0f4";
-                        "themeTertiary" = "#71afe5";
-                        "themeSecondary" = "#2b88d8";
-                        "themeDarkAlt" = "#106ebe";
-                        "themeDark" = "#005a9e";
-                        "themeDarker" = "#004578";
-                        "neutralLighterAlt" = "#f8f8f8";
-                        "neutralLighter" = "#f4f4f4";
-                        "neutralLight" = "#eaeaea";
+                    Name       = "TestTheme"
+                    IsInverted = $true
+                    Palette    = @{
+                        "themePrimary"         = "#0078d4";
+                        "themeLighterAlt"      = "#eff6fc";
+                        "themeLighter"         = "#deecf9";
+                        "themeLight"           = "#c7e0f4";
+                        "themeTertiary"        = "#71afe5";
+                        "themeSecondary"       = "#2b88d8";
+                        "themeDarkAlt"         = "#106ebe";
+                        "themeDark"            = "#005a9e";
+                        "themeDarker"          = "#004578";
+                        "neutralLighterAlt"    = "#f8f8f8";
+                        "neutralLighter"       = "#f4f4f4";
+                        "neutralLight"         = "#eaeaea";
                         "neutralQuaternaryAlt" = "#dadada";
-                        "neutralQuaternary" = "#d0d0d0";
-                        "neutralTertiaryAlt" = "#c8c8c8";
-                        "neutralTertiary" = "#c2c2c2";
-                        "neutralSecondary" = "#858585";
-                        "neutralPrimaryAlt" = "#4b4b4b";
-                        "neutralPrimary" = "#333";
-                        "neutralDark" = "#272727";
-                        "black" = "#1d1d1d";
-                        "white" = "#fff";
-                        "bodyBackground" = "#0078d4";
-                        "bodyText" = "#fff";
+                        "neutralQuaternary"    = "#d0d0d0";
+                        "neutralTertiaryAlt"   = "#c8c8c8";
+                        "neutralTertiary"      = "#c2c2c2";
+                        "neutralSecondary"     = "#858585";
+                        "neutralPrimaryAlt"    = "#4b4b4b";
+                        "neutralPrimary"       = "#333";
+                        "neutralDark"          = "#272727";
+                        "black"                = "#1d1d1d";
+                        "white"                = "#fff";
+                        "bodyBackground"       = "#0078d4";
+                        "bodyText"             = "#fff";
                     }
                 }
             }
@@ -120,42 +122,42 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Name               = "TestTheme"
                 IsInverted         = $false
                 Palette            = (New-CimInstance -ClassName MSFT_SPOThemePaletteProperty -Property @{
-                    Property = "themePrimary"
-                    Value    = "#eff6fc"
-                } -ClientOnly)
+                        Property = "themePrimary"
+                        Value    = "#eff6fc"
+                    } -ClientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Present"
             }
 
             Mock -CommandName Get-PnPTenantTheme -MockWith {
                 return @{
-                    Name               = "TestTheme"
-                    IsInverted         = $true
-                    Palette            = @{
-                        "themePrimary" = "#0078d4";
-                        "themeLighterAlt" = "#eff6fc";
-                        "themeLighter" = "#deecf9";
-                        "themeLight" = "#c7e0f4";
-                        "themeTertiary" = "#71afe5";
-                        "themeSecondary" = "#2b88d8";
-                        "themeDarkAlt" = "#106ebe";
-                        "themeDark" = "#005a9e";
-                        "themeDarker" = "#004578";
-                        "neutralLighterAlt" = "#f8f8f8";
-                        "neutralLighter" = "#f4f4f4";
-                        "neutralLight" = "#eaeaea";
+                    Name       = "TestTheme"
+                    IsInverted = $true
+                    Palette    = @{
+                        "themePrimary"         = "#0078d4";
+                        "themeLighterAlt"      = "#eff6fc";
+                        "themeLighter"         = "#deecf9";
+                        "themeLight"           = "#c7e0f4";
+                        "themeTertiary"        = "#71afe5";
+                        "themeSecondary"       = "#2b88d8";
+                        "themeDarkAlt"         = "#106ebe";
+                        "themeDark"            = "#005a9e";
+                        "themeDarker"          = "#004578";
+                        "neutralLighterAlt"    = "#f8f8f8";
+                        "neutralLighter"       = "#f4f4f4";
+                        "neutralLight"         = "#eaeaea";
                         "neutralQuaternaryAlt" = "#dadada";
-                        "neutralQuaternary" = "#d0d0d0";
-                        "neutralTertiaryAlt" = "#c8c8c8";
-                        "neutralTertiary" = "#c2c2c2";
-                        "neutralSecondary" = "#858585";
-                        "neutralPrimaryAlt" = "#4b4b4b";
-                        "neutralPrimary" = "#333";
-                        "neutralDark" = "#272727";
-                        "black" = "#1d1d1d";
-                        "white" = "#fff";
-                        "bodyBackground" = "#0078d4";
-                        "bodyText" = "#fff";
+                        "neutralQuaternary"    = "#d0d0d0";
+                        "neutralTertiaryAlt"   = "#c8c8c8";
+                        "neutralTertiary"      = "#c2c2c2";
+                        "neutralSecondary"     = "#858585";
+                        "neutralPrimaryAlt"    = "#4b4b4b";
+                        "neutralPrimary"       = "#333";
+                        "neutralDark"          = "#272727";
+                        "black"                = "#1d1d1d";
+                        "white"                = "#fff";
+                        "bodyBackground"       = "#0078d4";
+                        "bodyText"             = "#fff";
                     }
                 }
             }
@@ -171,7 +173,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                GlobalAdminAccount  = $GlobalAdminAccount
+                GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-PnPTenantTheme -MockWith {
@@ -179,30 +181,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name               = "TestTheme"
                     IsInverted         = $false
                     Palette            = @{
-                        "themePrimary" = "#0078d4";
-                        "themeLighterAlt" = "#eff6fc";
-                        "themeLighter" = "#deecf9";
-                        "themeLight" = "#c7e0f4";
-                        "themeTertiary" = "#71afe5";
-                        "themeSecondary" = "#2b88d8";
-                        "themeDarkAlt" = "#106ebe";
-                        "themeDark" = "#005a9e";
-                        "themeDarker" = "#004578";
-                        "neutralLighterAlt" = "#f8f8f8";
-                        "neutralLighter" = "#f4f4f4";
-                        "neutralLight" = "#eaeaea";
+                        "themePrimary"         = "#0078d4";
+                        "themeLighterAlt"      = "#eff6fc";
+                        "themeLighter"         = "#deecf9";
+                        "themeLight"           = "#c7e0f4";
+                        "themeTertiary"        = "#71afe5";
+                        "themeSecondary"       = "#2b88d8";
+                        "themeDarkAlt"         = "#106ebe";
+                        "themeDark"            = "#005a9e";
+                        "themeDarker"          = "#004578";
+                        "neutralLighterAlt"    = "#f8f8f8";
+                        "neutralLighter"       = "#f4f4f4";
+                        "neutralLight"         = "#eaeaea";
                         "neutralQuaternaryAlt" = "#dadada";
-                        "neutralQuaternary" = "#d0d0d0";
-                        "neutralTertiaryAlt" = "#c8c8c8";
-                        "neutralTertiary" = "#c2c2c2";
-                        "neutralSecondary" = "#858585";
-                        "neutralPrimaryAlt" = "#4b4b4b";
-                        "neutralPrimary" = "#333";
-                        "neutralDark" = "#272727";
-                        "black" = "#1d1d1d";
-                        "white" = "#fff";
-                        "bodyBackground" = "#0078d4";
-                        "bodyText" = "#fff";
+                        "neutralQuaternary"    = "#d0d0d0";
+                        "neutralTertiaryAlt"   = "#c8c8c8";
+                        "neutralTertiary"      = "#c2c2c2";
+                        "neutralSecondary"     = "#858585";
+                        "neutralPrimaryAlt"    = "#4b4b4b";
+                        "neutralPrimary"       = "#333";
+                        "neutralDark"          = "#272727";
+                        "black"                = "#1d1d1d";
+                        "white"                = "#fff";
+                        "bodyBackground"       = "#0078d4";
+                        "bodyText"             = "#fff";
                     }
                     GlobalAdminAccount = $GlobalAdminAccount
                     Ensure             = "Present"
