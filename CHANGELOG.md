@@ -44,6 +44,7 @@
   * Initial Release;
 * TeamsUser
   * Introduced Multi-Threading;
+  * Fixed an issue with User's Principal Name;
 * Metadata
   * Updated MicrosoftTeams dependency to version 1.0.3;
   * Updated MSCloudLoginAssistant dependency to version
