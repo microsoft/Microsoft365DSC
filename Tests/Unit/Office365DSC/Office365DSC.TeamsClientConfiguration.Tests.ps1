@@ -101,7 +101,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $true
+                Test-TargetResource @testParams | Should Be $false
             }
 
             It "Updates the Teams Client settings in the Set method" {

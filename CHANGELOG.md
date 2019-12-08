@@ -40,6 +40,10 @@
   * Initial Release;
 * TeamsClientConfiguration
   * Initial Release;
+* TeamsMeetingConfiguration
+  * Initial Release;
+* TeamsMessagingPolicy
+  * Initial Release;
 * TeamsUpgradeConfiguration
   * Initial Release;
 * TeamsUser
