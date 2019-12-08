@@ -283,6 +283,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+
+    if ([System.String]::IsNullOrEmpty($RestrictedSenderList))
+    {
+        $ValuesToCheck.Remove("RestrictedSenderList") | Out-Null
+    }
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
