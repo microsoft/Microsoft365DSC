@@ -14428,3 +14428,74 @@ function Set-CsTeamsChannelsPolicy
     )
 }
 
+function Get-CsTeamsMeetingConfiguration
+{
+    [CmdletBinding()]
+    param()
+}
+
+function Set-CsTeamsMeetingConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('Global')]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $LogoURL,
+
+        [Parameter()]
+        [System.String]
+        $LegalURL,
+
+        [Parameter()]
+        [System.String]
+        $HelpURL,
+
+        [Parameter()]
+        [System.String]
+        $CustomFooterText,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableAnonymousJoin,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableQoS,
+
+        [Parameter()]
+        [System.UInt32]
+        [ValidateRange(1024, 65535)]
+        $ClientAudioPort,
+
+        [Parameter()]
+        [System.UInt32]
+        $ClientAudioPortRange,
+
+        [Parameter()]
+        [System.UInt32]
+        [ValidateRange(1024, 65535)]
+        $ClientVideoPort,
+
+        [Parameter()]
+        [System.UInt32]
+        $ClientVideoPortRange,
+
+        [Parameter()]
+        [System.UInt32]
+        [ValidateRange(1024, 65535)]
+        $ClientAppSharingPort,
+
+        [Parameter()]
+        [System.UInt32]
+        $ClientAppSharingPortRange,
+
+        [Parameter()]
+        [System.Boolean]
+        $ClientMediaPortRangeEnabled
+    )
+}
