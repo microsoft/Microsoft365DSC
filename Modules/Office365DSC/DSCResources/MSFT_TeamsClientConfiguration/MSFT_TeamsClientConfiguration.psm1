@@ -61,7 +61,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $RestrictedSenderList,
+        $RestrictedSenderList = $null,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -175,7 +175,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $RestrictedSenderList,
+        $RestrictedSenderList = $null,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -267,7 +267,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $RestrictedSenderList,
+        $RestrictedSenderList = $null,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
