@@ -11,64 +11,30 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowBox,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowDropBox,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowEmailIntoChannel,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGoogleDrive,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGuestUser,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowOrganizationTab,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowResourceAccountSendMessage,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowScopedPeopleSearchandAccess,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowShareFile,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowSkypeBusinessInterop,
+        $AllowSdnProviderForBroadcastMeeting,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('NotRequired', 'RequiredOutsideScheduleMeeting', 'AlwaysRequired')]
-        $ContentPin = 'RequiredOutsideScheduledMeeting',
+        $SdnName,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('NoAccess', 'PartialAccess', 'FullAccess')]
-        $ResourceAccountContentAccess,
+        $SdnLicenseId,
 
         [Parameter()]
-        [System.String[]]
-        $RestrictedSenderList,
+        [System.String]
+        $SdnApiTemplateUrl,
+
+        [Parameter()]
+        [System.String]
+        $SdnApiToken,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of Teams Client"
+    Write-Verbose -Message "Getting configuration of Teams Meeting Broadcast"
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -82,24 +48,16 @@ function Get-TargetResource
 
     try
     {
-        $config = Get-CsTeamsClientConfiguration
+        $config = Get-CsTeamsMeetingBroadcastConfiguration -ExposeSDNConfigurationJsonBlob
 
         return @{
-            Identity                         = $config.Identity
-            AllowBox                         = $config.AllowBox
-            AllowDropBox                     = $config.AllowDropBox
-            AllowEmailIntoChannel            = $config.AllowEmailIntoChannel
-            AllowGoogleDrive                 = $config.AllowGoogleDrive
-            AllowGuestUser                   = $config.AllowGuestUser
-            AllowOrganizationTab             = $config.AllowOrganizationTab
-            AllowResourceAccountSendMessage  = $config.AllowResourceAccountSendMessage
-            AllowScopedPeopleSearchandAccess = $config.AllowScopedPeopleSearchandAccess
-            AllowShareFile                   = $config.AllowShareFile
-            AllowSkypeBusinessInterop        = $config.AllowSkypeBusinessInterop
-            ContentPin                       = $config.ContentPin
-            ResourceAccountContentAccess     = $config.ResourceAccountContentAccess
-            RestrictedSenderList             = $config.RestrictedSenderList
-            GlobalAdminAccount               = $GlobalAdminAccount
+            Identity                            = $config.Identity
+            AllowSdnProviderForBroadcastMeeting = $config.AllowSdnProviderForBroadcastMeeting
+            SdnName                             = $config.SdnName
+            SdnLicenseId                        = $config.SdnLicenseId
+            SdnApiTemplateUrl                   = $config.SdnApiTemplateUrl
+            SdnApiToken                         = $config.SdnApiToken
+            GlobalAdminAccount                  = $GlobalAdminAccount
         }
     }
     catch
@@ -120,64 +78,30 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowBox,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowDropBox,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowEmailIntoChannel,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGoogleDrive,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGuestUser,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowOrganizationTab,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowResourceAccountSendMessage,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowScopedPeopleSearchandAccess,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowShareFile,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowSkypeBusinessInterop,
+        $AllowSdnProviderForBroadcastMeeting,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('NotRequired', 'RequiredOutsideScheduleMeeting', 'AlwaysRequired')]
-        $ContentPin = 'RequiredOutsideScheduledMeeting',
+        $SdnName,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('NoAccess', 'PartialAccess', 'FullAccess')]
-        $ResourceAccountContentAccess,
+        $SdnLicenseId,
 
         [Parameter()]
-        [System.String[]]
-        $RestrictedSenderList,
+        [System.String]
+        $SdnApiTemplateUrl,
+
+        [Parameter()]
+        [System.String]
+        $SdnApiToken,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of Teams Client"
+    Write-Verbose -Message "Setting configuration of Teams Meeting Broadcast"
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -192,7 +116,7 @@ function Set-TargetResource
     $SetParams = $PSBoundParameters
     $SetParams.Remove("GlobalAdminAccount")
 
-    Set-CsTeamsClientConfiguration @SetParams
+    Set-CsTeamsMeetingBroadcastConfiguration @SetParams
 }
 
 function Test-TargetResource
@@ -208,57 +132,23 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowBox,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowDropBox,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowEmailIntoChannel,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGoogleDrive,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowGuestUser,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowOrganizationTab,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowResourceAccountSendMessage,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowScopedPeopleSearchandAccess,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowShareFile,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowSkypeBusinessInterop,
+        $AllowSdnProviderForBroadcastMeeting,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('NotRequired', 'RequiredOutsideScheduleMeeting', 'AlwaysRequired')]
-        $ContentPin = 'RequiredOutsideScheduledMeeting',
+        $SdnName,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('NoAccess', 'PartialAccess', 'FullAccess')]
-        $ResourceAccountContentAccess,
+        $SdnLicenseId,
 
         [Parameter()]
-        [System.String[]]
-        $RestrictedSenderList,
+        [System.String]
+        $SdnApiTemplateUrl,
+
+        [Parameter()]
+        [System.String]
+        $SdnApiToken,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -303,14 +193,13 @@ function Export-TargetResource
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
-
     $params = @{
         Identity           = "Global"
         GlobalAdminAccount = $GlobalAdminAccount
     }
     $result = Get-TargetResource @params
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        TeamsClientConfiguration " + (New-GUID).ToString() + "`r`n"
+    $content = "        TeamsMeetingBroadcastConfiguration " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
