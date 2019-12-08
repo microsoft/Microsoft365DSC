@@ -84,7 +84,7 @@ function Get-TargetResource
     {
         $config = Get-CsTeamsClientConfiguration
 
-        return @{
+        $result = @{
             Identity                         = $config.Identity
             AllowBox                         = $config.AllowBox
             AllowDropBox                     = $config.AllowDropBox
@@ -101,6 +101,11 @@ function Get-TargetResource
             RestrictedSenderList             = $config.RestrictedSenderList
             GlobalAdminAccount               = $GlobalAdminAccount
         }
+        if ([System.String]::IsNullOrEmpty($RestrictedSenderList))
+        {
+            $result.Remove("RestrictedSenderList") | Out-Null
+        }
+        return $result
     }
     catch
     {
