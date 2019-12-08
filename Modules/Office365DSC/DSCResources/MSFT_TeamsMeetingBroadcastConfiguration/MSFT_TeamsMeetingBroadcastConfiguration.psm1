@@ -15,6 +15,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $SupportURL,
+
+        [Parameter()]
+        [System.String]
         $SdnName,
 
         [Parameter()]
@@ -82,6 +86,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $SupportURL,
+
+        [Parameter()]
+        [System.String]
         $SdnName,
 
         [Parameter()]
@@ -133,6 +141,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowSdnProviderForBroadcastMeeting,
+
+        [Parameter()]
+        [System.String]
+        $SupportURL,
 
         [Parameter()]
         [System.String]
