@@ -192,6 +192,10 @@ function Set-TargetResource
     $SetParams = $PSBoundParameters
     $SetParams.Remove("GlobalAdminAccount")
 
+    if ($null -eq $RestrictedSenderList)
+    {
+        $SetParams.Remove("RestrictedSenderList") | Out-Null
+    }
     Set-CsTeamsClientConfiguration @SetParams
 }
 
