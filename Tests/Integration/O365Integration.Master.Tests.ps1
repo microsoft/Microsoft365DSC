@@ -591,6 +591,18 @@ Configuration Master
             Identity                    = "Integration Channel Policy";
         }
 
+        TeamsMeetingBroadcastConfiguration MeetingBroadcastConfiguration
+        {
+            Identity                            = 'Global'
+            AllowSdnProviderForBroadcastMeeting =
+            SupportURL                          =
+            SdnName                             =
+            SdnLicenseId                        =
+            SdnApiTemplateUrl                   =
+            SdnApiToken                         =
+            GlobalAdminAccount                  = $GlobalAdmin
+        }
+
         TeamsTeam TeamAlpha
         {
             DisplayName          = "Alpha Team"
