@@ -192,7 +192,7 @@ function Set-TargetResource
     $SetParams = $PSBoundParameters
     $SetParams.Remove("GlobalAdminAccount")
 
-    if ($null -eq $RestrictedSenderList)
+    if ([System.String]::IsNullOrEmpty($RestrictedSenderList))
     {
         $SetParams.Remove("RestrictedSenderList") | Out-Null
     }
