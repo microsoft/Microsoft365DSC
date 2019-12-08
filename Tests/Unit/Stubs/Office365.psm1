@@ -14470,29 +14470,29 @@ function Set-CsTeamsMeetingConfiguration
         [Parameter()]
         [System.UInt32]
         [ValidateRange(1024, 65535)]
-        $ClientAudioPort = 50000,
+        $ClientAudioPort,
 
         [Parameter()]
         [System.UInt32]
-        $ClientAudioPortRange = 20,
-
-        [Parameter()]
-        [System.UInt32]
-        [ValidateRange(1024, 65535)]
-        $ClientVideoPort = 50020,
-
-        [Parameter()]
-        [System.UInt32]
-        $ClientVideoPortRange = 20,
+        $ClientAudioPortRange,
 
         [Parameter()]
         [System.UInt32]
         [ValidateRange(1024, 65535)]
-        $ClientAppSharingPort = 50040,
+        $ClientVideoPort,
 
         [Parameter()]
         [System.UInt32]
-        $ClientAppSharingPortRange = 20,
+        $ClientVideoPortRange,
+
+        [Parameter()]
+        [System.UInt32]
+        [ValidateRange(1024, 65535)]
+        $ClientAppSharingPort,
+
+        [Parameter()]
+        [System.UInt32]
+        $ClientAppSharingPortRange,
 
         [Parameter()]
         [System.Boolean]
