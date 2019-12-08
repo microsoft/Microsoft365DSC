@@ -2053,6 +2053,22 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region TeamsMeetingConfiguration
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckTeamsMeetingConfiguration")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsMeetingConfiguration..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsMeetingConfiguration\MSFT_TeamsMeetingConfiguration.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     # Close the Node and Configuration declarations
     $DSCContent += "    }`r`n"
     $DSCContent += "}`r`n"
