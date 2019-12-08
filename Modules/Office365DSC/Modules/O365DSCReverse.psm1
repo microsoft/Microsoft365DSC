@@ -2016,8 +2016,7 @@ function Start-O365ConfigurationExtract
             -Resolve
 
         Import-Module $ModulePath | Out-Null
-        $DSCContent += Export-TargetResource -MaxProcesses $MaxProcesses `
-            -GlobalAdminAccount $GlobalAdminAccount
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
     }
     #endregion
 
