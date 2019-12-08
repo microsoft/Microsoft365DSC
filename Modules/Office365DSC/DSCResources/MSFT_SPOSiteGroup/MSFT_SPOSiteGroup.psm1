@@ -41,7 +41,7 @@ function Get-TargetResource
         Url                = $Url
         Identity           = $null
         Owner              = $null
-        PermissionLevels    = $null
+        PermissionLevels   = $null
         GlobalAdminAccount = $GlobalAdminAccount
         Ensure             = "Absent"
     }
@@ -76,19 +76,23 @@ function Get-TargetResource
             if($Error[0].Exception.Message -eq "Group cannot be found.")
             {
                 write-verbose -Message "Site group $($Identity) could not be found on site $($Url)"
-                #New-Office365DSCLogEntry -Error $_ -Message $Message
                 
             }
+        }
+        if($null -eq $siteGroup)
+        {
             return $nullReturn
         }
-        
-        return @{
-            Url                = $Url
-            Identity           = $siteGroup.Title
-            Owner              = $siteGroup.OwnerLoginName
-            PermissionLevels   = $siteGroup.Roles
-            GlobalAdminAccount = $GlobalAdminAccount
-            Ensure             = "Present"
+        else
+        {
+            return @{
+                Url                = $Url
+                Identity           = $siteGroup.Title
+                Owner              = $siteGroup.OwnerLoginName
+                PermissionLevels   = $siteGroup.Roles
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = "Present"
+            }
         }
     }
     catch
@@ -145,71 +149,87 @@ function Set-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                       -Platform SharePointOnline `
                       -ErrorAction SilentlyContinue
-    
-                      
-    try
-    {
-        $siteGroup = Get-SPOSiteGroup -Group $Identity -Site $Url
-    }
-    catch
-    {
-        if($Error[0].Exception.Message -eq "Group cannot be found.")
-        {
-            write-verbose -Message "Group $($Identity) does not exist on site $($url)... creating it"
-            
-            #New-Office365DSCLogEntry -Error $_ -Message $Message
-        }
-        $createGroup = $true
-    }
-    $currentValues = Get-TargetResource @PSBoundParameters
 
-    if($Ensure -eq "Present" -and $currentValues.Ensure -eq "Absent")
+    $currentValues = Get-TargetResource @PSBoundParameters
+    if($Ensure -eq "Present"-and $currentValues.Ensure -eq "Absent")
     {
-        if($createGroup -eq $true)
-        {
-            $SiteGroupSettings = @{
-                Site = $Url
-                Group = $Identity
-                PermissionLevels = $PermissionLevels
-            }
-            New-SPOSiteGroup @SiteGroupSettings
+        $SiteGroupSettings = @{
+            Site = $Url
+            Group = $Identity
+            PermissionLevels = $PermissionLevels
         }
-        else
+        Write-Verbose -Message "Site group $($Identity) does not exist, creating it."
+        New-SPOSiteGroup @SiteGroupSettings
+    }
+    elseif ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Present")
+    {
+        $RefferenceObjectRoles = $PermissionLevels
+        $DifferenceObjectRoles = $currentValues.PermissionLevels
+        $compareOutput = Compare-Object -ReferenceObject $RefferenceObjectRoles -DifferenceObject $DifferenceObjectRoles
+        $PermissionLevelsToAdd = @()
+        $PermissionLevelsToRemove = @()
+        foreach($entry in $compareOutput)
         {
-            $RefferenceObjectRoles = $PermissionLevels
-            $DifferenceObjectRoles = $siteGroup.Roles
-            $compareOutput = Compare-Object -ReferenceObject $RefferenceObjectRoles -DifferenceObject $DifferenceObjectRoles
-            $PermissionLevelsToAdd = @()
-            $PermissionLevelsToRemove = @()
-            foreach($entry in $compareOutput)
+            if($entry.SideIndicator -eq "<=")
             {
-                if($entry.SideIndicator -eq "<=")
-                {
-                    Write-Verbose -Message "Permissionlevels to add: $($entry.InputObject)"
-                    $PermissionLevelsToAdd +=$entry.InputObject
-                }
-                else
-                {
-                    Write-Verbose -Message "Permissionlevels to remove: $($entry.InputObject)"
-                    $PermissionLevelsToRemove += $entry.InputObject
-                }
+                Write-Verbose -Message "Permissionlevels to add: $($entry.InputObject)"
+                $PermissionLevelsToAdd +=$entry.InputObject
             }
+            else
+            {
+                Write-Verbose -Message "Permissionlevels to remove: $($entry.InputObject)"
+                $PermissionLevelsToRemove += $entry.InputObject
+            }
+        }
+        if($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -ne 0)
+        {
             $SiteGroupSettings = @{
-                Site = $Url
-                Identity = $Identity
-                Owner = $Owner
-                PermissionLevelsToAdd = $PermissionLevelsToAdd
+                Site                     = $Url
+                Identity                 = $Identity
+                Owner                    = $Owner
                 PermissionLevelsToRemove = $PermissionLevelsToRemove
             }
             Set-SPOSiteGroup @SiteGroupSettings
         }
+        elseif($PermissionLevelsToRemove.Count -eq 0 -and $PermissionLevelsToAdd.Count -ne 0)
+        {
+            $SiteGroupSettings = @{
+                Site                     = $Url
+                Identity                 = $Identity
+                Owner                    = $Owner
+                PermissionLevelsToAdd    = $PermissionLevelsToAdd
+            }
+            Set-SPOSiteGroup @SiteGroupSettings
+        }
+        elseif($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -eq 0)
+        {
+            $SiteGroupSettings = @{
+                Site                     = $Url
+                Identity                 = $Identity
+                Owner                    = $Owner
+            }
+            Set-SPOSiteGroup @SiteGroupSettings
+        }
+        else
+        {
+            $SiteGroupSettings = @{
+                Site                     = $Url
+                Identity                 = $Identity
+                Owner                    = $Owner
+                PermissionLevelsToAdd    = $PermissionLevelsToAdd
+                PermissionLevelsToRemove = $PermissionLevelsToRemove
+            }
+            Set-SPOSiteGroup @SiteGroupSettings
+        }
+        
     }
-    else
+    elseif($Ensure -eq "Absent" -and $currentValues.Ensure -eq "Present")
     {
         $SiteGroupSettings = @{
             Site     = $Url
             Identity = $Identity
         }
+        Write-Verbose "Removing SPOSiteGroup $($Identity)"
         Remove-SPOSiteGroup @SiteGroupSettings
     }
 }
@@ -288,7 +308,7 @@ function Export-TargetResource
 
     #Loop through all sites
     #for each site loop through all site groups and retrieve parameters
-    $sites = Get-SPOSites -limit All
+    $sites = Get-SPOSite -limit All
 
     $i = 1
     $content = ""

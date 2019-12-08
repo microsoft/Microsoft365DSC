@@ -1750,6 +1750,21 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region SPOSiteGroups
+    if (($null -ne $ComponentsToExtract -and
+            $ComponentsToExtract.Contains("chckSPOSiteGroups")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SPO")))
+    {
+        Write-Information "Extracting SPOSiteGroups..."
+        $ModuelPath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_SPOSiteGroup\MSFT_SPOSiteGroup.psm1" `
+            -Resolve
+
+        Import-Module $ModuelPath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region SPOStorageEntity
     if (($null -ne $ComponentsToExtract -and
             $ComponentsToExtract.Contains("chckSPOStorageEntity")) -or
