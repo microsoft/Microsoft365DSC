@@ -14713,7 +14713,7 @@ function Set-CsTeamsMeetingBroadcastConfiguration
 
         [Parameter()]
         [System.String]
-        $SdnName,
+        $SdnProviderName,
 
         [Parameter()]
         [System.String]
