@@ -129,7 +129,7 @@
             Write-Progress -Activity "Cleaning Stubs" -Status "Line $i of $($lines.Length)" -PercentComplete (($i/$lines.Length)*100)
             $line = $line -replace "\[System.Nullable\[Microsoft.*]]", "[System.Nullable[object]]"
             $line = $line -replace "\[Microsoft.*.\]", "[object]"
-            $line = $line -replace "[SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[object]", `
+            $line = $line -replace "\[SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind\[object]", `
                 "[SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[object]]"
             $Content += $line + "`r`n"
             $i++
