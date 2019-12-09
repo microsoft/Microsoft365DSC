@@ -171,6 +171,11 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
+    if ($CurrentValues.SdnApiToken -eq '**********')
+    {
+        $CurrentValues.Remove("SdnApiToken") | Out-Null
+    }
+
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
