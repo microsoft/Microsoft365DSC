@@ -33,7 +33,7 @@ function Get-TargetResource
         $Notes,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ReviewerEmail,
 
         [Parameter()]
@@ -144,7 +144,7 @@ function Set-TargetResource
         $Notes,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ReviewerEmail,
 
         [Parameter()]
@@ -293,7 +293,7 @@ function Test-TargetResource
         $Notes,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ReviewerEmail,
 
         [Parameter()]
