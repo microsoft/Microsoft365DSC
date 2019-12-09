@@ -603,6 +603,30 @@ Configuration Master
             GlobalAdminAccount                  = $GlobalAdmin
         }
 
+        TeamsMeetingPolicy DemoMeetingPolicy
+        {
+            AllowAnonymousUsersToStartMeeting          = $False;
+            AllowChannelMeetingScheduling              = $True;
+            AllowCloudRecording                        = $True;
+            AllowExternalParticipantGiveRequestControl = $False;
+            AllowIPVideo                               = $True;
+            AllowMeetNow                               = $True;
+            AllowOutlookAddIn                          = $True;
+            AllowParticipantGiveRequestControl         = $True;
+            AllowPowerPointSharing                     = $True;
+            AllowPrivateMeetingScheduling              = $True;
+            AllowSharedNotes                           = $True;
+            AllowTranscription                         = $False;
+            AllowWhiteboard                            = $True;
+            AutoAdmittedUsers                          = "Everyone";
+            Description                                = "Integration Meeting Policy";
+            Ensure                                     = "Present";
+            GlobalAdminAccount                         = $GlobalAdmin;
+            Identity                                   = "Integration Meeting Policy";
+            MediaBitRateKb                             = 50000;
+            ScreenSharingMode                          = "EntireScreen";
+        }
+
         TeamsTeam TeamAlpha
         {
             DisplayName          = "Alpha Team"
@@ -629,6 +653,25 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
             DependsON          = @("[O365User]JohnSmith", "[TeamsTeam]TeamAlpha")
+        }
+
+        TeamsMeetingConfiguration MeetingConfiguration
+        {
+            ClientAppSharingPort        = 50040;
+            ClientAppSharingPortRange   = 20;
+            ClientAudioPort             = 50000;
+            ClientAudioPortRange        = 21;
+            ClientMediaPortRangeEnabled = $True;
+            ClientVideoPort             = 50020;
+            ClientVideoPortRange        = 20;
+            CustomFooterText            = "This is some custom footer text";
+            DisableAnonymousJoin        = $False;
+            EnableQoS                   = $False;
+            GlobalAdminAccount          = $GlobalAdmin;
+            HelpURL                     = "https://github.com/Microsoft/Office365DSC/Help";
+            Identity                    = "Global";
+            LegalURL                    = "https://github.com/Microsoft/Office365DSC/Legal";
+            LogoURL                     = "https://github.com/Microsoft/Office365DSC/Logo.png";
         }
 
         TeamsMessagingPolicy SampleTeamsMessage
@@ -712,7 +755,6 @@ Configuration Master
         }
     }
 }
-
 
 $ConfigurationData = @{
     AllNodes = @(
