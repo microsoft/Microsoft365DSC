@@ -42,6 +42,8 @@
   * Initial Release;
 * TeamsMeetingConfiguration
   * Initial Release;
+* TeamsMeetingPolicy
+  * Initial Release;
 * TeamsMessagingPolicy
   * Initial Release;
 * TeamsUpgradeConfiguration

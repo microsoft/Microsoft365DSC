@@ -642,7 +642,7 @@ function Show-O365GUI
         $pnlTeams = New-Object System.Windows.Forms.Panel
         $pnlTeams.Top = 88 + $topBannerHeight
         $pnlTeams.Left = $ThirdColumnLeft
-        $pnlTeams.Height = 160
+        $pnlTeams.Height = 180
         $pnlTeams.Width = 300
         $pnlTeams.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -686,8 +686,16 @@ function Show-O365GUI
         $chckTeamsMeetingPolicy.Text = "Meeting Policies"
         $pnlTeams.Controls.Add($chckTeamsMeetingPolicy)
 
+        $chckTeamsMessagingPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsMessagingPolicy.Top = 100
+        $chckTeamsMessagingPolicy.AutoSize = $true;
+        $chckTeamsMessagingPolicy.Name = "chckTeamsMessagingPolicy"
+        $chckTeamsMessagingPolicy.Checked = $true
+        $chckTeamsMessagingPolicy.Text = "Messaging Policies"
+        $pnlTeams.Controls.Add($chckTeamsMessagingPolicy)
+
         $chckTeamsTeam = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsTeam.Top = 100
+        $chckTeamsTeam.Top = 120
         $chckTeamsTeam.AutoSize = $true;
         $chckTeamsTeam.Name = "chckTeamsTeam"
         $chckTeamsTeam.Checked = $true
@@ -695,7 +703,7 @@ function Show-O365GUI
         $pnlTeams.Controls.Add($chckTeamsTeam)
 
         $chckTeamsUpgradePolicy = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsUpgradePolicy.Top = 120
+        $chckTeamsUpgradePolicy.Top = 140
         $chckTeamsUpgradePolicy.AutoSize = $true;
         $chckTeamsUpgradePolicy.Name = "chckTeamsUpgradePolicy"
         $chckTeamsUpgradePolicy.Checked = $true
@@ -703,7 +711,7 @@ function Show-O365GUI
         $pnlTeams.Controls.Add($chckTeamsUpgradePolicy)
 
         $chckTeamsUser = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsUser.Top = 140
+        $chckTeamsUser.Top = 160
         $chckTeamsUser.AutoSize = $true;
         $chckTeamsUser.Name = "chckTeamsUser"
         $chckTeamsUser.Checked = $true
