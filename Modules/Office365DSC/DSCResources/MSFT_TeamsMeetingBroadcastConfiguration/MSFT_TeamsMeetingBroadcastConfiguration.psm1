@@ -61,6 +61,7 @@ function Get-TargetResource
             SdnLicenseId                        = $config.SdnLicenseId
             SdnApiTemplateUrl                   = $config.SdnApiTemplateUrl
             SdnApiToken                         = $config.SdnApiToken
+            SupportURL                          = $config.SupportURL
             GlobalAdminAccount                  = $GlobalAdminAccount
         }
     }
