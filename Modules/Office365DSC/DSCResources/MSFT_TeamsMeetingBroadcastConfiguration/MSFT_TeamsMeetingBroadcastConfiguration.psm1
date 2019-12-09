@@ -52,7 +52,7 @@ function Get-TargetResource
 
     try
     {
-        $config = Get-CsTeamsMeetingBroadcastConfiguration -ExposeSDNConfigurationJsonBlob
+        $config = Get-CsTeamsMeetingBroadcastConfiguration -ExposeSDNConfigurationJsonBlob:$true
 
         return @{
             Identity                            = $config.Identity
@@ -196,7 +196,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference ='Continue'
+    $InformationPreference = 'Continue'
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -209,12 +209,17 @@ function Export-TargetResource
         Identity           = "Global"
         GlobalAdminAccount = $GlobalAdminAccount
     }
+    Add-ConfigurationDataEntry -Node "NonNodeData" -Key "SdnApiToken" -Value "**********"`
+        -Description "API Token for the Teams SDN Provider for Meeting Broadcast"
     $result = Get-TargetResource @params
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    $result.SdnAPIToken = '$ConfigurationData.Settings.SdnApiToken'
     $content = "        TeamsMeetingBroadcastConfiguration " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $partial = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $partial = Convert-DSCStringParamToVariable -DSCBlock $partial -ParameterName "SdnApiToken"
+    $content += $partial
     $content += "        }`r`n"
     return $content
 }

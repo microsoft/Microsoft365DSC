@@ -25,88 +25,56 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
         Mock -CommandName Get-CsTeamsMeetingBroadcastConfiguration -MockWith {
             return @{
-                AllowBox                         = $True;
-                AllowDropBox                     = $True;
-                AllowEmailIntoChannel            = $True;
-                AllowGoogleDrive                 = $True;
-                AllowGuestUser                   = $True;
-                AllowOrganizationTab             = $True;
-                AllowResourceAccountSendMessage  = $True;
-                AllowScopedPeopleSearchandAccess = $False;
-                AllowShareFile                   = $True;
-                AllowSkypeBusinessInterop        = $True;
-                ContentPin                       = "RequiredOutsideScheduleMeeting";
-                Identity                         = "Global";
-                ResourceAccountContentAccess     = "NoAccess";
-                RestrictedSenderList             = @("john.smith@contoso.com")
+                AllowSdnProviderForBroadcastMeeting = $True;
+                Identity                            = "Global";
+                SdnApiTemplateUrl                   = "https://api.contosoprovider.com/v1/Template";
+                SdnApiToken                         = $ConfigurationData.Settings.SdnApiToken;
+                SdnLicenseId                        = "123456-123456-123456-123456";
+                SdnName                             = "ContosoProvider";
             }
         }
-        Mock -CommandName Set-CsTeamsClientConfiguration -MockWith {
+        Mock -CommandName Set-CsTeamsMeetingBroadcastConfiguration -MockWith {
         }
 
         # Test contexts
         Context -Name "When settings are correctly set" -Fixture {
             $testParams = @{
-                AllowBox                         = $True;
-                AllowDropBox                     = $True;
-                AllowEmailIntoChannel            = $True;
-                AllowGoogleDrive                 = $True;
-                AllowGuestUser                   = $True;
-                AllowOrganizationTab             = $True;
-                AllowResourceAccountSendMessage  = $True;
-                AllowScopedPeopleSearchandAccess = $False;
-                AllowShareFile                   = $True;
-                AllowSkypeBusinessInterop        = $True;
-                ContentPin                       = "RequiredOutsideScheduleMeeting";
-                GlobalAdminAccount               = $GlobalAdminAccount;
-                Identity                         = "Global";
-                ResourceAccountContentAccess     = "NoAccess";
-                RestrictedSenderList             = @("john.smith@contoso.com")
+                AllowSdnProviderForBroadcastMeeting = $True;
+                Identity                            = "Global";
+                SdnApiTemplateUrl                   = "https://api.contosoprovider.com/v1/Template";
+                SdnApiToken                         = $ConfigurationData.Settings.SdnApiToken;
+                SdnLicenseId                        = "123456-123456-123456-123456";
+                SdnName                             = "ContosoProvider";
+                GlobalAdminAccount                  = $GlobalAdminAccount;
             }
 
-            It "Should return true for the AllowBox property from the Get method" {
-                (Get-TargetResource @testParams).AllowBox | Should Be $True
+            It "Should the SdnName property from the Get method" {
+                (Get-TargetResource @testParams).SdnName | Should Be 'ContosoProvider'
             }
 
             It "Should return true from the Test method" {
                 Test-TargetResource @testParams | Should Be $true
             }
-
-            It "Updates the Team fun settings in the Set method" {
-                Set-TargetResource @testParams
-            }
         }
 
         Context -Name "When settings are NOT correctly set" -Fixture {
             $testParams = @{
-                AllowBox                         = $false;
-                AllowDropBox                     = $True;
-                AllowEmailIntoChannel            = $True;
-                AllowGoogleDrive                 = $True;
-                AllowGuestUser                   = $True;
-                AllowOrganizationTab             = $True;
-                AllowResourceAccountSendMessage  = $True;
-                AllowScopedPeopleSearchandAccess = $False;
-                AllowShareFile                   = $True;
-                AllowSkypeBusinessInterop        = $True;
-                ContentPin                       = "RequiredOutsideScheduleMeeting";
-                GlobalAdminAccount               = $GlobalAdminAccount;
-                Identity                         = "Global";
-                ResourceAccountContentAccess     = "NoAccess";
-                RestrictedSenderList             = @("john.smith@contoso.com", "test@contoso.com")
-            }
-
-            It "Should return true for the AllowBox property from the Get method" {
-                (Get-TargetResource @testParams).AllowBox | Should Be $True
+                AllowSdnProviderForBroadcastMeeting = $True;
+                Identity                            = "Global";
+                SdnApiTemplateUrl                   = "https://api.contosoprovider.com/v1/Template";
+                SdnApiToken                         = $ConfigurationData.Settings.SdnApiToken;
+                SdnLicenseId                        = "123456-111111-111111-123456"; #Variant
+                SdnName                             = "ContosoProvider";
+                GlobalAdminAccount                  = $GlobalAdminAccount;
             }
 
             It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $true
+                Test-TargetResource @testParams | Should Be $false
             }
 
-            It "Updates the Teams Client settings in the Set method" {
+            It "Updates the settings in the Set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled Set-CsTeamsClientConfiguration
+                Assert-MockCalled Set-CsTeamsMeetingBroadcastConfiguration
             }
         }
 

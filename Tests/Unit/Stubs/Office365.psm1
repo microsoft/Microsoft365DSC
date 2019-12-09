@@ -14683,3 +14683,48 @@ function Set-CsTeamsMeetingPolicy
         $ScreenSharingMode
     )
 }
+
+function Get-CsTeamsMeetingBroadcastConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $ExposeSDNConfigurationJsonBlob
+    )
+}
+
+function Set-CsTeamsMeetingBroadcastConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('Global')]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSdnProviderForBroadcastMeeting,
+
+        [Parameter()]
+        [System.String]
+        $SupportURL,
+
+        [Parameter()]
+        [System.String]
+        $SdnName,
+
+        [Parameter()]
+        [System.String]
+        $SdnLicenseId,
+
+        [Parameter()]
+        [System.String]
+        $SdnApiTemplateUrl,
+
+        [Parameter()]
+        [System.String]
+        $SdnApiToken
+    )
+}

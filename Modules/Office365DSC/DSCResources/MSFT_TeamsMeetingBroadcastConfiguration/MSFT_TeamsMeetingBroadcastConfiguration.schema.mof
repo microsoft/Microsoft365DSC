@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("TeamsClientConfiguration")]
-class MSFT_TeamsClientConfiguration : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("TeamsMeetingBroadcastConfiguration")]
+class MSFT_TeamsMeetingBroadcastConfiguration : OMI_BaseResource
 {
     [Key, Description("The only valid input is Global - the tenant wide configuration"), ValueMap{"Global"}, Values{"Global"}] string Identity;
     [Write, Description("Specifies a URL where broadcast event attendees can find support information or FAQs specific to that event. The URL will be displayed to the attendees during the broadcast.")] String SupportURL;
