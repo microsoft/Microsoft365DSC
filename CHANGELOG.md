@@ -13,6 +13,8 @@
   * Initial Release;
 * SCAuditConfigurationSettings
   * Initial Release;
+* SCComplianceTag
+  * Changed ReviewerEmail to type String array;
 * SCDLPComplianceRule
   * Fixed issue with the extraction of NotifyAllowOverride;
 * SCFilePlanPropertyAuthority
