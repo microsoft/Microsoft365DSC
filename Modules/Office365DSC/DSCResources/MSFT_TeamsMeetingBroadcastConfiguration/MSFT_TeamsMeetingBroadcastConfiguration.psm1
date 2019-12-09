@@ -125,7 +125,7 @@ function Set-TargetResource
     $SetParams = $PSBoundParameters
     $SetParams.Remove("GlobalAdminAccount")
 
-    Set-CsTeamsMeetingBroadcastConfiguration @SetParams
+    Set-CsTeamsMeetingBroadcastConfiguration @SetParams | Out-Null
 }
 
 function Test-TargetResource
