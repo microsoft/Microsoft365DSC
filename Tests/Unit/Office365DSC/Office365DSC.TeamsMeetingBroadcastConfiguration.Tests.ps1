@@ -64,7 +64,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 SdnApiTemplateUrl                   = "https://api.contosoprovider.com/v1/Template";
                 SdnApiToken                         = $ConfigurationData.Settings.SdnApiToken;
                 SdnLicenseId                        = "123456-111111-111111-123456"; #Variant
-                SdnName                             = "ContosoProvider";
+                SdnProviderName                     = "ContosoProvider";
                 GlobalAdminAccount                  = $GlobalAdminAccount;
             }
 
