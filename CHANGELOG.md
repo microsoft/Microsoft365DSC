@@ -60,6 +60,7 @@
   * Updated ReverseDSC dependency to version 2.0.0.0;
 * Misc
   * Added new Telemetry Engine;
+  * Added new Dynamic Stubs Generation feature;
 
 ## 1.0.0.1048
 
