@@ -10,7 +10,7 @@
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
- 
+
     if ($null -eq $GlobalAdminAccount)
     {
         $GlobalAdminAccount = Get-Credential
@@ -71,7 +71,7 @@
             RandomCmdlet = 'Clear-CsOnlineTelephoneNumberReservation'
         }
     )
- 
+
     foreach ($Module in $Modules)
     {
         Write-Host "Generating Stubs for {$($Module.Platform)}..." -NoNewline
@@ -83,7 +83,7 @@
             Test-MSCloudLogin -Platform $Module.Platform -CloudCredential $GlobalAdminAccount
             $newModules = Get-Module | select Name
             $Diff = Compare-object -ReferenceObject $currentModules -DifferenceObject $newModules
-            
+
             if ($null -eq $Diff)
             {
                 $foundModule = Get-Module | Where-Object -FilterScript {$_.ExportedCommands.Values.Name -ccontains $Module.RandomCmdlet}
@@ -101,12 +101,14 @@
 
         $cmdlets = Get-Command | Where-Object -FilterScript { $_.Source -eq $Module.ModuleName }
         $StubContent = ''
+        $i = 1
         foreach ($cmdlet in $cmdlets)
         {
+            Write-Progress -Activity "Generating Stubs" -Status $cmdlet.Name -PercentComplete (($i/$cmdlets.Length)*100)
             $signature = $null
             $metadata = New-Object -TypeName System.Management.Automation.CommandMetaData -ArgumentList $cmdlet
-            $definition = [System.Management.Automation.ProxyCommand]::Create($metadata) 
-        
+            $definition = [System.Management.Automation.ProxyCommand]::Create($metadata)
+
             foreach ($line in $definition -split "`n")
             {
                 if ($line.Trim() -eq 'begin')
@@ -116,16 +118,24 @@
                 $signature += $line
             }
             $StubContent += "function $($cmdlet.Name)`n{`r`n    $signature}`n"
+            $i ++
         }
- 
+
         $Content += "#region $($Module.Platform)`r`n"
-        foreach ($line in $StubContent.Split([Environment]::NewLine))
+        $lines = $StubContent.Split([Environment]::NewLine)
+        $i = 1
+        foreach ($line in $lines)
         {
+            Write-Progress -Activity "Cleaning Stubs" -Status "Line $i of $($lines.Length)" -PercentComplete (($i/$lines.Length)*100)
             $line = $line -replace "\[System.Nullable\[Microsoft.*]]", "[System.Nullable[object]]"
             $line = $line -replace "\[Microsoft.*.\]", "[object]"
+            $line = $line -replace "[SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[object]", `
+                "[SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[object]]"
             $Content += $line + "`r`n"
+            $i++
         }
         $Content += "#endregion`r`n"
+        Write-Progress -Activity "Cleaning Stubs" -Completed
         Write-Host "Done" -ForegroundColor Green
     }
     $Content | Out-File $DestinationFilePath -Encoding utf8
