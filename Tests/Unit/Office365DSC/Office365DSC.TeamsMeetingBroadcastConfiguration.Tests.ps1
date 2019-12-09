@@ -48,8 +48,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount                  = $GlobalAdminAccount;
             }
 
-            It "Should the SdnName property from the Get method" {
-                (Get-TargetResource @testParams).SdnName | Should Be 'ContosoProvider'
+            It "Should the SdnProviderName property from the Get method" {
+                (Get-TargetResource @testParams).SdnProviderName | Should Be 'ContosoProvider'
             }
 
             It "Should return true from the Test method" {

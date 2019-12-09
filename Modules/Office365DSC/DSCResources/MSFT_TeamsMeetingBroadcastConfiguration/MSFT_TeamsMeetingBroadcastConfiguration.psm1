@@ -19,7 +19,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $SdnName,
+        $SdnProviderName,
 
         [Parameter()]
         [System.String]
@@ -57,7 +57,7 @@ function Get-TargetResource
         return @{
             Identity                            = $config.Identity
             AllowSdnProviderForBroadcastMeeting = $config.AllowSdnProviderForBroadcastMeeting
-            SdnName                             = $config.SdnName
+            SdnProviderName                     = $config.SdnName
             SdnLicenseId                        = $config.SdnLicenseId
             SdnApiTemplateUrl                   = $config.SdnApiTemplateUrl
             SdnApiToken                         = $config.SdnApiToken
@@ -90,7 +90,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $SdnName,
+        $SdnProviderName,
 
         [Parameter()]
         [System.String]
@@ -148,7 +148,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $SdnName,
+        $SdnProviderName,
 
         [Parameter()]
         [System.String]
