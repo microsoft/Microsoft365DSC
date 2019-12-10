@@ -123,9 +123,9 @@ function Set-TargetResource
         -Platform SkypeForBusiness
 
     $SetParams = $PSBoundParameters
-    $SetParams.Remove("GlobalAdminAccount")
+    $SetParams.Remove("GlobalAdminAccount") | Out-Null
 
-    Set-CsTeamsMeetingBroadcastConfiguration @SetParams | Out-Null
+    Set-CsTeamsMeetingBroadcastConfiguration @SetParams
 }
 
 function Test-TargetResource
