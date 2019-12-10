@@ -162,11 +162,7 @@ function Confirm-AzureADDomain
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
-    ${Name},
-
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [object]
-    ${CrossCloudVerificationCode})
+    ${Name})
 
 }
 function Connect-AzureAD
@@ -175,7 +171,7 @@ function Connect-AzureAD
     [CmdletBinding(DefaultParameterSetName='UserCredential', SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Open.Azure.AD.CommonLibrary.AzureEnvironment+EnvironmentName]
     ${AzureEnvironmentName},
 
     [Parameter(ParameterSetName='UserCredential')]
@@ -214,7 +210,7 @@ param(
     [string]
     ${AccountId},
 
-    [object]
+    [Microsoft.Open.Azure.AD.CommonLibrary.LogLevel]
     ${LogLevel},
 
     [string]
@@ -710,7 +706,11 @@ function Get-AzureADDirectoryRoleMember
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
-    ${ObjectId})
+    ${ObjectId},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
 
 }
 function Get-AzureADDirectoryRoleTemplate
@@ -936,16 +936,6 @@ param(
 
 }
 function Get-AzureADMSGroupLifecyclePolicy
-{
-
-    [CmdletBinding(DefaultParameterSetName='GetQuery')]
-param(
-    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${Id})
-
-}
-function Get-AzureADMSIdentityProvider
 {
 
     [CmdletBinding(DefaultParameterSetName='GetQuery')]
@@ -1444,16 +1434,6 @@ param(
     ${View})
 
 }
-function Get-CrossCloudVerificationCode
-{
-
-    [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${Name})
-
-}
 function New-AzureADApplication
 {
 
@@ -1545,11 +1525,11 @@ param(
     ${EndDate},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Open.AzureAD.Graph.PowerShell.Custom.KeyType]]
     ${Type},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Open.AzureAD.Graph.PowerShell.Custom.KeyUsage]]
     ${Usage},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -1601,7 +1581,7 @@ param(
     ${InternalUrl},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Open.MSGraph.Model.ApplicationProxyApplicationObject+ExternalAuthenticationTypeEnum]]
     ${ExternalAuthenticationType},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -1614,18 +1594,10 @@ param(
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [System.Nullable[bool]]
-    ${IsSecureCookieEnabled},
-
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
-    ${IsPersistentCookieEnabled},
-
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
     ${IsTranslateLinksInBodyEnabled},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Open.MSGraph.Model.ApplicationProxyApplicationObject+ApplicationServerTimeoutEnum]]
     ${ApplicationServerTimeout},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -1639,7 +1611,7 @@ function New-AzureADApplicationProxyConnectorGroup
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [object]
+    [Microsoft.Open.MSGraph.Model.Name]
     ${Name})
 
 }
@@ -1844,39 +1816,6 @@ dynamicparam
 }
 
 }
-function New-AzureADMSIdentityProvider
-{
-
-    [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
-param()
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('AzureAD\New-AzureADMSIdentityProvider', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
-}
 function New-AzureADMSInvitation
 {
 
@@ -2001,11 +1940,11 @@ param(
     ${EndDate},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Open.AzureAD.Graph.PowerShell.Custom.KeyType]]
     ${Type},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Open.AzureAD.Graph.PowerShell.Custom.KeyUsage]]
     ${Usage},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -2045,7 +1984,7 @@ function New-AzureADTrustedCertificateAuthority
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, HelpMessage='Trusted certificate authority list')]
-    [object]
+    [Microsoft.Open.AzureAD.Model.CertificateAuthorityInformation]
     ${CertificateAuthorityInformation})
 
 }
@@ -2392,16 +2331,6 @@ param(
     ${Id})
 
 }
-function Remove-AzureADMSIdentityProvider
-{
-
-    [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${Id})
-
-}
 function Remove-AzureADMSLifecyclePolicyGroup
 {
 
@@ -2520,7 +2449,7 @@ function Remove-AzureADTrustedCertificateAuthority
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, HelpMessage='The unique identifier of the object specific Azure Active Directory object')]
-    [object]
+    [Microsoft.Open.AzureAD.Model.CertificateAuthorityInformation]
     ${CertificateAuthorityInformation})
 
 }
@@ -2660,7 +2589,7 @@ param(
     ${ObjectId},
 
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [object]
+    [Microsoft.Open.AzureAD.Model.GroupIdsForMembershipCheck]
     ${GroupIdsForMembershipCheck})
 
 }
@@ -2674,7 +2603,7 @@ param(
     ${ObjectId},
 
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [object]
+    [Microsoft.Open.AzureAD.Model.GroupIdsForMembershipCheck]
     ${GroupIdsForMembershipCheck})
 
 }
@@ -2688,7 +2617,7 @@ param(
     ${ObjectId},
 
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [object]
+    [Microsoft.Open.AzureAD.Model.GroupIdsForMembershipCheck]
     ${GroupIdsForMembershipCheck})
 
 }
@@ -2702,7 +2631,7 @@ param(
     ${ObjectId},
 
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [object]
+    [Microsoft.Open.AzureAD.Model.GroupIdsForMembershipCheck]
     ${GroupIdsForMembershipCheck})
 
 }
@@ -2785,7 +2714,7 @@ param(
     ${InternalUrl},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Open.MSGraph.Model.ApplicationProxyApplicationObject+ExternalAuthenticationTypeEnum]]
     ${ExternalAuthenticationType},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -2798,18 +2727,10 @@ param(
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [System.Nullable[bool]]
-    ${IsSecureCookieEnabled},
-
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
-    ${IsPersistentCookieEnabled},
-
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
     ${IsTranslateLinksInBodyEnabled},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Open.MSGraph.Model.ApplicationProxyApplicationObject+ApplicationServerTimeoutEnum]]
     ${ApplicationServerTimeout},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -2859,7 +2780,7 @@ param(
     ${ObjectId},
 
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Open.MSGraph.Model.OnPremisesPublishingSingleSignOnObject+SingleSignOnModeEnum]]
     ${SingleSignOnMode},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -2867,7 +2788,7 @@ param(
     ${KerberosInternalApplicationServicePrincipalName},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Open.MSGraph.Model.OnPremisesPublishingKerberosSignOnSettingsObject+KerberosSignOnMappingAttributeTypeEnum]]
     ${KerberosDelegatedLoginIdentity})
 
 }
@@ -2895,7 +2816,7 @@ param(
     ${Id},
 
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [object]
+    [Microsoft.Open.MSGraph.Model.Name]
     ${Name})
 
 }
@@ -3079,42 +3000,6 @@ dynamicparam
 }
 
 }
-function Set-AzureADMSIdentityProvider
-{
-
-    [CmdletBinding(DefaultParameterSetName='InvokeByDynamicParameters')]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${Id})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('AzureAD\Set-AzureADMSIdentityProvider', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
-}
 function Set-AzureADServicePrincipal
 {
 
@@ -3190,7 +3075,7 @@ function Set-AzureADTrustedCertificateAuthority
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, HelpMessage='Trusted certificate authority list')]
-    [object]
+    [Microsoft.Open.AzureAD.Model.CertificateAuthorityInformation]
     ${CertificateAuthorityInformation})
 
 }
@@ -3263,7 +3148,7 @@ param(
     ${ObjectId},
 
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [object]
+    [Microsoft.Open.AzureAD.Model.AssignedLicenses]
     ${AssignedLicenses})
 
 }
@@ -57403,7 +57288,7 @@ param(
     ${GroupObjectId},
 
     [Parameter(ParameterSetName='AddGroupMembers__0', ValueFromPipelineByPropertyName=$true)]
-    [object]
+    [Microsoft.Online.Administration.GroupMemberType]
     ${GroupMemberType},
 
     [Parameter(ParameterSetName='AddGroupMembers__0', ValueFromPipelineByPropertyName=$true)]
@@ -57426,7 +57311,7 @@ param(
 
     [Parameter(ParameterSetName='AddRoleMembers__0', ValueFromPipelineByPropertyName=$true)]
     [Parameter(ParameterSetName='AddRoleMembersByRoleName__0', ValueFromPipelineByPropertyName=$true)]
-    [object]
+    [Microsoft.Online.Administration.RoleMemberType]
     ${RoleMemberType},
 
     [Parameter(ParameterSetName='AddRoleMembers__0', ValueFromPipelineByPropertyName=$true)]
@@ -57516,7 +57401,7 @@ param(
     ${MetadataExchangeUri},
 
     [Parameter(ParameterSetName='VerifyDomain2__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.AuthenticationProtocol]]
     ${PreferredAuthenticationProtocol},
 
     [Parameter(ParameterSetName='VerifyDomain2__0', ValueFromPipelineByPropertyName=$true)]
@@ -57532,15 +57417,15 @@ param(
     ${OpenIdConnectDiscoveryEndpoint},
 
     [Parameter(ParameterSetName='VerifyDomain2__0', ValueFromPipelineByPropertyName=$true)]
-    [object]
+    [Microsoft.Online.Administration.SigningCertificateUpdateStatus]
     ${SigningCertificateUpdateStatus},
 
     [Parameter(ParameterSetName='VerifyDomain2__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.PromptLoginBehavior]]
     ${PromptLoginBehavior},
 
     [Parameter(ParameterSetName='VerifyDomain2__0', ValueFromPipelineByPropertyName=$true)]
-    [object]
+    [Microsoft.Online.Administration.ForceTakeoverOption]
     ${ForceTakeover},
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
@@ -57583,7 +57468,7 @@ param(
     [Parameter(ParameterSetName='None__0')]
     [Parameter(ParameterSetName='Credential')]
     [Parameter(ParameterSetName='AccessToken')]
-    [object]
+    [Microsoft.Online.Administration.Automation.AzureEnvironment]
     ${AzureEnvironment})
 
 }
@@ -57890,12 +57775,12 @@ param(
 
     [Parameter(ParameterSetName='ListDirSyncProvisioningErrors__0')]
     [Parameter(ParameterSetName='All__0')]
-    [object]
+    [Microsoft.Online.Administration.SortField]
     ${SortField},
 
     [Parameter(ParameterSetName='ListDirSyncProvisioningErrors__0')]
     [Parameter(ParameterSetName='All__0')]
-    [object]
+    [Microsoft.Online.Administration.SortDirection]
     ${SortDirection},
 
     [Parameter(ParameterSetName='ListDirSyncProvisioningErrors__0')]
@@ -57921,15 +57806,15 @@ param(
     ${DomainName},
 
     [Parameter(ParameterSetName='ListDomains__0')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.DomainStatus]]
     ${Status},
 
     [Parameter(ParameterSetName='ListDomains__0')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.DomainAuthenticationType]]
     ${Authentication},
 
     [Parameter(ParameterSetName='ListDomains__0')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.DomainCapabilities]]
     ${Capability},
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
@@ -57961,7 +57846,7 @@ param(
     ${DomainName},
 
     [Parameter(ParameterSetName='GetDomainVerificationDns__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.DomainVerificationMode]]
     ${Mode},
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
@@ -58009,7 +57894,7 @@ param(
 
     [Parameter(ParameterSetName='ListGroups__0')]
     [Parameter(ParameterSetName='All__0')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.GroupType]]
     ${GroupType},
 
     [Parameter(ParameterSetName='ListGroups__0')]
@@ -58096,7 +57981,7 @@ param(
 
     [Parameter(ParameterSetName='ListPartnerContracts__0')]
     [Parameter(ParameterSetName='All__0')]
-    [object]
+    [Microsoft.Online.Administration.PartnerContractSearchKey]
     ${SearchKey},
 
     [Parameter(ParameterSetName='ListPartnerContracts__0')]
@@ -58335,7 +58220,7 @@ param(
 
     [Parameter(ParameterSetName='ListUsers__0')]
     [Parameter(ParameterSetName='All__0')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.UserEnabledFilter]]
     ${EnabledFilter},
 
     [Parameter(ParameterSetName='ListUsers__0')]
@@ -58404,7 +58289,7 @@ param(
     [Parameter(ParameterSetName='ListUsersByStrongAuthentication__0')]
     [Parameter(ParameterSetName='All__0')]
     [AllowEmptyCollection()]
-    [object]
+    [Microsoft.Online.Administration.StrongAuthenticationRequirement[]]
     ${Requirements},
 
     [Parameter(ParameterSetName='ListUsersByStrongAuthentication__0')]
@@ -58476,11 +58361,11 @@ param(
     ${Name},
 
     [Parameter(ParameterSetName='AddDomain__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.DomainAuthenticationType]]
     ${Authentication},
 
     [Parameter(ParameterSetName='AddDomain__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.DomainVerificationMethod]]
     ${VerificationMethod},
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
@@ -58562,11 +58447,11 @@ param(
 
     [Parameter(ParameterSetName='AddServicePrincipal__0', ValueFromPipelineByPropertyName=$true)]
     [AllowEmptyCollection()]
-    [object]
+    [Microsoft.Online.Administration.RedirectUri[]]
     ${Addresses},
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.ServicePrincipalCredentialType]]
     ${Type},
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
@@ -58582,7 +58467,7 @@ param(
     ${EndDate},
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.ServicePrincipalCredentialUsage]]
     ${Usage},
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
@@ -58600,7 +58485,7 @@ param(
     ${Address},
 
     [Parameter(ParameterSetName='NewServicePrincipalAddresses')]
-    [object]
+    [Microsoft.Online.Administration.AddressType]
     ${AddressType})
 
 }
@@ -58622,7 +58507,7 @@ param(
     ${AppPrincipalId},
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.ServicePrincipalCredentialType]]
     ${Type},
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
@@ -58638,7 +58523,7 @@ param(
     ${EndDate},
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.ServicePrincipalCredentialUsage]]
     ${Usage},
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
@@ -58754,7 +58639,7 @@ param(
 
     [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
     [AllowEmptyCollection()]
-    [object]
+    [Microsoft.Online.Administration.StrongAuthenticationMethod[]]
     ${StrongAuthenticationMethods},
 
     [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
@@ -58764,7 +58649,7 @@ param(
 
     [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
     [AllowEmptyCollection()]
-    [object]
+    [Microsoft.Online.Administration.StrongAuthenticationRequirement[]]
     ${StrongAuthenticationRequirements},
 
     [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
@@ -58772,7 +58657,7 @@ param(
     ${StsRefreshTokensValidFrom},
 
     [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.UserType]]
     ${UserType},
 
     [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
@@ -58781,7 +58666,7 @@ param(
 
     [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
     [AllowEmptyCollection()]
-    [object]
+    [Microsoft.Online.Administration.LicenseOption[]]
     ${LicenseOptions},
 
     [Parameter(ParameterSetName='AddUser__0', ValueFromPipelineByPropertyName=$true)]
@@ -59020,7 +58905,7 @@ param(
     ${GroupObjectId},
 
     [Parameter(ParameterSetName='RemoveGroupMembers__0', ValueFromPipelineByPropertyName=$true)]
-    [object]
+    [Microsoft.Online.Administration.GroupMemberType]
     ${GroupMemberType},
 
     [Parameter(ParameterSetName='RemoveGroupMembers__0', ValueFromPipelineByPropertyName=$true)]
@@ -59043,7 +58928,7 @@ param(
 
     [Parameter(ParameterSetName='RemoveRoleMembers__0', ValueFromPipelineByPropertyName=$true)]
     [Parameter(ParameterSetName='RemoveRoleMembersByRoleName__0', ValueFromPipelineByPropertyName=$true)]
-    [object]
+    [Microsoft.Online.Administration.RoleMemberType]
     ${RoleMemberType},
 
     [Parameter(ParameterSetName='RemoveRoleMembers__0', ValueFromPipelineByPropertyName=$true)]
@@ -59385,11 +59270,11 @@ function Set-MsolDeviceRegistrationServicePolicy
     [CmdletBinding()]
 param(
     [ValidateSet('All','None','Selected')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.Automation.DeviceRegistrationServicePolicy+Scope]]
     ${AllowedToAzureAdJoin},
 
     [ValidateSet('All','None')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.Automation.DeviceRegistrationServicePolicy+Scope]]
     ${AllowedToWorkplaceJoin},
 
     [ValidateRange(1, 100)]
@@ -59509,7 +59394,7 @@ param(
     ${DomainName},
 
     [Parameter(ParameterSetName='SetDomainAuthentication__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
-    [object]
+    [Microsoft.Online.Administration.DomainAuthenticationType]
     ${Authentication},
 
     [Parameter(ParameterSetName='SetDomainAuthentication__0', ValueFromPipelineByPropertyName=$true)]
@@ -59545,7 +59430,7 @@ param(
     ${MetadataExchangeUri},
 
     [Parameter(ParameterSetName='SetDomainAuthentication__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.AuthenticationProtocol]]
     ${PreferredAuthenticationProtocol},
 
     [Parameter(ParameterSetName='SetDomainAuthentication__0', ValueFromPipelineByPropertyName=$true)]
@@ -59561,11 +59446,11 @@ param(
     ${OpenIdConnectDiscoveryEndpoint},
 
     [Parameter(ParameterSetName='SetDomainAuthentication__0', ValueFromPipelineByPropertyName=$true)]
-    [object]
+    [Microsoft.Online.Administration.SigningCertificateUpdateStatus]
     ${SigningCertificateUpdateStatus},
 
     [Parameter(ParameterSetName='SetDomainAuthentication__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.PromptLoginBehavior]]
     ${PromptLoginBehavior},
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
@@ -59615,7 +59500,7 @@ param(
     ${MetadataExchangeUri},
 
     [Parameter(ParameterSetName='SetDomainFederationSettings__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.AuthenticationProtocol]]
     ${PreferredAuthenticationProtocol},
 
     [Parameter(ParameterSetName='SetDomainFederationSettings__0', ValueFromPipelineByPropertyName=$true)]
@@ -59631,11 +59516,11 @@ param(
     ${OpenIdConnectDiscoveryEndpoint},
 
     [Parameter(ParameterSetName='SetDomainFederationSettings__0', ValueFromPipelineByPropertyName=$true)]
-    [object]
+    [Microsoft.Online.Administration.SigningCertificateUpdateStatus]
     ${SigningCertificateUpdateStatus},
 
     [Parameter(ParameterSetName='SetDomainFederationSettings__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.PromptLoginBehavior]]
     ${PromptLoginBehavior},
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
@@ -59679,7 +59564,7 @@ param(
     ${ObjectId},
 
     [Parameter(ParameterSetName='SetPartnerInformation__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.CompanyType]]
     ${CompanyType},
 
     [Parameter(ParameterSetName='SetPartnerInformation__0', ValueFromPipelineByPropertyName=$true)]
@@ -59763,7 +59648,7 @@ param(
 
     [Parameter(ParameterSetName='SetServicePrincipal__0', ValueFromPipelineByPropertyName=$true)]
     [AllowEmptyCollection()]
-    [object]
+    [Microsoft.Online.Administration.RedirectUri[]]
     ${Addresses},
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
@@ -59883,7 +59768,7 @@ param(
 
     [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
     [AllowEmptyCollection()]
-    [object]
+    [Microsoft.Online.Administration.StrongAuthenticationMethod[]]
     ${StrongAuthenticationMethods},
 
     [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
@@ -59893,7 +59778,7 @@ param(
 
     [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
     [AllowEmptyCollection()]
-    [object]
+    [Microsoft.Online.Administration.StrongAuthenticationRequirement[]]
     ${StrongAuthenticationRequirements},
 
     [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
@@ -59901,7 +59786,7 @@ param(
     ${StsRefreshTokensValidFrom},
 
     [Parameter(ParameterSetName='SetUser__0', ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.Administration.UserType]]
     ${UserType},
 
     [Parameter(ValueFromPipelineByPropertyName=$true)]
@@ -59921,7 +59806,7 @@ param(
     [Parameter(ParameterSetName='SetUserLicenses__0', ValueFromPipelineByPropertyName=$true)]
     [Parameter(ParameterSetName='SetUserLicensesByUpn__0', ValueFromPipelineByPropertyName=$true)]
     [AllowEmptyCollection()]
-    [object]
+    [Microsoft.Online.Administration.LicenseOption[]]
     ${LicenseOptions},
 
     [Parameter(ParameterSetName='SetUserLicensesByUpn__0', Mandatory=$true, ValueFromPipelineByPropertyName=$true)]
@@ -60029,15 +59914,15 @@ function Connect-PnPHubSite
 
     [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true, HelpMessage='The site to connect to the hubsite')]
+    [Parameter(Mandatory=$true, Position=0, HelpMessage='The site to connect to the hubsite')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
     ${Site},
 
-    [Parameter(Mandatory=$true, HelpMessage='The hubsite to connect the site to')]
+    [Parameter(Mandatory=$true, Position=1, HelpMessage='The hubsite to connect the site to')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
     ${HubSite},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
+    [Parameter(Position=2, HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
     [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
     ${Connection})
 
@@ -60047,11 +59932,11 @@ function Disconnect-PnPHubSite
 
     [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true, HelpMessage='The site to disconnect from its hubsite')]
+    [Parameter(Mandatory=$true, Position=0, HelpMessage='The site to disconnect from its hubsite')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
     ${Site},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
+    [Parameter(Position=1, HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
     [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
     ${Connection})
 
@@ -60073,47 +59958,21 @@ param(
     [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
     ${Connection})
 
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Resolve-PnPFolder', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
 }
 function Execute-PnPQuery
 {
 
     [CmdletBinding()]
 param(
-    [Parameter(HelpMessage='Number of times to retry in case of throttling. Defaults to 10.')]
+    [Parameter(Position=0, HelpMessage='Number of times to retry in case of throttling. Defaults to 10.')]
     [int]
     ${RetryCount},
 
-    [Parameter(HelpMessage='Delay in seconds. Defaults to 1.')]
+    [Parameter(Position=1, HelpMessage='Delay in seconds. Defaults to 1.')]
     [int]
     ${RetryWait},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
+    [Parameter(Position=2, HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
     [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
     ${Connection})
 
@@ -60265,15 +60124,15 @@ param(
     ${User},
 
     [Parameter(HelpMessage='Alert delivery method')]
-    [object]
+    [Microsoft.SharePoint.Client.AlertDeliveryChannel]
     ${DeliveryMethod},
 
     [Parameter(HelpMessage='Alert change type')]
-    [object]
+    [Microsoft.SharePoint.Client.AlertEventType]
     ${ChangeType},
 
     [Parameter(HelpMessage='Alert frequency')]
-    [object]
+    [Microsoft.SharePoint.Client.AlertFrequency]
     ${Frequency},
 
     [Parameter(HelpMessage='Alert filter')]
@@ -60515,7 +60374,7 @@ param(
     ${Group},
 
     [Parameter(HelpMessage='Specifies the parent of the new content type')]
-    [object]
+    [Microsoft.SharePoint.Client.ContentType]
     ${ParentContentType},
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
@@ -60625,12 +60484,12 @@ param(
     ${RegistrationId},
 
     [Parameter(ParameterSetName='Default', HelpMessage='A string array that contain the permissions needed for the custom action')]
-    [object]
+    [Microsoft.SharePoint.Client.PermissionKind[]]
     ${Rights},
 
     [Parameter(ParameterSetName='Default', HelpMessage='Specifies the type of object associated with the custom action')]
     [Parameter(ParameterSetName='Client Side Component Id', HelpMessage='Specifies the type of object associated with the custom action')]
-    [object]
+    [Microsoft.SharePoint.Client.UserCustomActionRegistrationType]
     ${RegistrationType},
 
     [Parameter(ParameterSetName='Default', HelpMessage='The scope of the CustomAction to add to. Either Web or Site; defaults to Web. ''All'' is not valid for this command.')]
@@ -60742,12 +60601,12 @@ param(
 
     [Parameter(Mandatory=$true, HelpMessage='The type of the event receiver like ItemAdded, ItemAdding. See https://msdn.microsoft.com/en-us/library/microsoft.sharepoint.client.eventreceivertype.aspx for the full list of available types.')]
     [Alias('Type')]
-    [object]
+    [Microsoft.SharePoint.Client.EventReceiverType]
     ${EventReceiverType},
 
     [Parameter(Mandatory=$true, HelpMessage='The synchronization type: Asynchronous or Synchronous')]
     [Alias('Sync')]
-    [object]
+    [Microsoft.SharePoint.Client.EventReceiverSynchronization]
     ${Synchronization},
 
     [Parameter(HelpMessage='The sequence number where this remote event receiver should be placed')]
@@ -60793,7 +60652,7 @@ param(
 
     [Parameter(ParameterSetName='Add field to list', Mandatory=$true, HelpMessage='The type of the field like Choice, Note, MultiChoice. For a complete list of field types visit https://docs.microsoft.com/dotnet/api/microsoft.sharepoint.client.fieldtype')]
     [Parameter(ParameterSetName='Add field to web', Mandatory=$true, HelpMessage='The type of the field like Choice, Note, MultiChoice. For a complete list of field types visit https://docs.microsoft.com/dotnet/api/microsoft.sharepoint.client.fieldtype')]
-    [object]
+    [Microsoft.SharePoint.Client.FieldType]
     ${Type},
 
     [Parameter(ParameterSetName='Add field to list', HelpMessage='The ID of the field, must be unique')]
@@ -60827,7 +60686,7 @@ param(
     ${ClientSideComponentProperties},
 
     [Obsolete('Not in use')]
-    [object]
+    [Microsoft.SharePoint.Client.AddFieldOptions]
     ${FieldOptions},
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
@@ -61519,11 +61378,11 @@ param(
     ${Clone},
 
     [Parameter(HelpMessage='Specifies permission flags(s) to enable. Please visit https://docs.microsoft.com/previous-versions/office/sharepoint-csom/ee536458(v%3Doffice.15) for the PermissionKind enum')]
-    [object]
+    [Microsoft.SharePoint.Client.PermissionKind[]]
     ${Include},
 
     [Parameter(HelpMessage='Specifies permission flags(s) to disable. Please visit https://docs.microsoft.com/previous-versions/office/sharepoint-csom/ee536458(v%3Doffice.15) for the PermissionKind enum')]
-    [object]
+    [Microsoft.SharePoint.Client.PermissionKind[]]
     ${Exclude},
 
     [Parameter(HelpMessage='Optional description for the new permission level.')]
@@ -61724,7 +61583,7 @@ param(
     ${Required},
 
     [Parameter(HelpMessage='Specifies the control settings while adding a field. See https://msdn.microsoft.com/en-us/library/microsoft.sharepoint.client.addfieldoptions.aspx for details')]
-    [object]
+    [Microsoft.SharePoint.Client.AddFieldOptions]
     ${FieldOptions},
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
@@ -61758,7 +61617,7 @@ Relative-Relative path depends on the OriginScope. If the originScope is Tenant,
     ${OriginUrl},
 
     [Parameter(Mandatory=$true, HelpMessage='Specifies the CDN type. The valid values are: public or private.')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
     ${CdnType},
 
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
@@ -61891,7 +61750,7 @@ param(
     ${Fields},
 
     [Parameter(HelpMessage='The type of view to add.')]
-    [object]
+    [Microsoft.SharePoint.Client.ViewType]
     ${ViewType},
 
     [Parameter(HelpMessage='The row limit for the view. Defaults to 30.')]
@@ -62056,7 +61915,7 @@ function Add-PnPWorkflowDefinition
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, HelpMessage='The workflow definition to add.')]
-    [object]
+    [Microsoft.SharePoint.Client.WorkflowServices.WorkflowDefinition]
     ${Definition},
 
     [Parameter(HelpMessage='Overrides the default behavior, which is to publish workflow definitions.')]
@@ -62492,7 +62351,7 @@ param(
     ${UseWebLogin},
 
     [Parameter(ParameterSetName='Main', HelpMessage='Specify to use for instance use forms based authentication (FBA)')]
-    [object]
+    [Microsoft.SharePoint.Client.ClientAuthenticationMode]
     ${AuthenticationMode},
 
     [Parameter(ParameterSetName='Main', HelpMessage='If you want to create a PSDrive connected to the URL')]
@@ -64503,7 +64362,7 @@ function Get-PnPProperty
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, HelpMessage='Specifies the object where the properties of should be retrieved')]
-    [object]
+    [Microsoft.SharePoint.Client.ClientObject]
     ${ClientObject},
 
     [Parameter(Mandatory=$true, Position=1, HelpMessage='The properties to load. If one property is specified its value will be returned to the output.')]
@@ -64990,7 +64849,7 @@ function Get-PnPSiteDesignRunStatus
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true, HelpMessage='The site design run for the desired set of script action details.')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.TenantSiteDesignRun]
     ${Run},
 
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
@@ -65226,7 +65085,7 @@ function Get-PnPTenantCdnEnabled
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, HelpMessage='The type of cdn to retrieve the origins from')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
     ${CdnType},
 
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
@@ -65240,7 +65099,7 @@ function Get-PnPTenantCdnOrigin
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, HelpMessage='The type of cdn to retrieve the origins from')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
     ${CdnType},
 
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
@@ -65254,7 +65113,7 @@ function Get-PnPTenantCdnPolicies
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, HelpMessage='The type of cdn to retrieve the policies from')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
     ${CdnType},
 
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
@@ -65433,11 +65292,11 @@ function Get-PnPTerm
 param(
     [Parameter(ParameterSetName='By Term Id', Mandatory=$true, HelpMessage='The Id or Name of a Term')]
     [Parameter(ParameterSetName='By Termset', HelpMessage='The Id or Name of a Term')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[object]
+    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
     ${Identity},
 
     [Parameter(ParameterSetName='By Termset', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Name of the termset to check.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind[object]
+    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
     ${TermSet},
 
     [Parameter(ParameterSetName='By Termset', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Name of the termgroup to check.')]
@@ -65446,7 +65305,7 @@ param(
 
     [Parameter(ParameterSetName='By Term Id', HelpMessage='Term store to check; if not specified the default term store is used.')]
     [Parameter(ParameterSetName='By Termset', HelpMessage='Term store to check; if not specified the default term store is used.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[object]
+    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
     ${TermStore},
 
     [Parameter(ParameterSetName='By Termset', HelpMessage='Find the first term recursively matching the label in a term hierarchy.')]
@@ -65495,12 +65354,12 @@ function Get-PnPTermGroup
 param(
     [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='Name of the taxonomy term group to retrieve.')]
     [Alias('GroupName')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind[object]
+    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermGroup]]
     ${Identity},
 
     [Parameter(HelpMessage='Term store to check; if not specified the default term store is used.')]
     [Alias('TermStoreName')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[object]
+    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
     ${TermStore},
 
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
@@ -65540,7 +65399,7 @@ function Get-PnPTermSet
     [CmdletBinding()]
 param(
     [Parameter(HelpMessage='The Id or Name of a termset')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[object]
+    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
     ${Identity},
 
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Name of the term group to check.')]
@@ -65548,7 +65407,7 @@ param(
     ${TermGroup},
 
     [Parameter(HelpMessage='Term store to check; if not specified the default term store is used.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[object]
+    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
     ${TermStore},
 
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
@@ -65999,7 +65858,7 @@ param(
     ${Principals},
 
     [Parameter(Mandatory=$true, HelpMessage='Provide Join to give permissions to associate a site with this Hub Site or use None to revoke the permissions for the user(s) specified with the Principals argument')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.SPOHubSiteUserRights]
     ${Rights},
 
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
@@ -66021,7 +65880,7 @@ param(
     ${Principals},
 
     [Parameter(HelpMessage='The rights to set. Defaults to ''View''')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.TenantSiteDesignPrincipalRights]
     ${Rights},
 
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
@@ -66294,23 +66153,23 @@ param(
     ${ListName},
 
     [Parameter(HelpMessage='Webs you want to process (for example different site collections), will use Web parameter if not specified')]
-    [object]
+    [Microsoft.SharePoint.Client.Web[]]
     ${Webs},
 
     [Parameter(HelpMessage='Function to be executed on the web. There is one input parameter of type Web')]
-    [System.Action[object]
+    [System.Action[Microsoft.SharePoint.Client.Web]]
     ${WebAction},
 
     [Parameter(HelpMessage='Function to be executed on the web that would determine if WebAction should be invoked, There is one input parameter of type Web and the function should return a boolean value')]
-    [System.Func[object]
+    [System.Func[Microsoft.SharePoint.Client.Web,bool]]
     ${ShouldProcessWebAction},
 
     [Parameter(HelpMessage='Function to be executed on the web, this will trigger after lists and list items have been processed. There is one input parameter of type Web')]
-    [System.Action[object]
+    [System.Action[Microsoft.SharePoint.Client.Web]]
     ${PostWebAction},
 
     [Parameter(HelpMessage='Function to be executed on the web that would determine if PostWebAction should be invoked, There is one input parameter of type Web and the function should return a boolean value')]
-    [System.Func[object]
+    [System.Func[Microsoft.SharePoint.Client.Web,bool]]
     ${ShouldProcessPostWebAction},
 
     [Parameter(HelpMessage='The properties to load for web.')]
@@ -66318,19 +66177,19 @@ param(
     ${WebProperties},
 
     [Parameter(HelpMessage='Function to be executed on the list. There is one input parameter of type List')]
-    [System.Action[object]
+    [System.Action[Microsoft.SharePoint.Client.List]]
     ${ListAction},
 
     [Parameter(HelpMessage='Function to be executed on the web that would determine if ListAction should be invoked, There is one input parameter of type List and the function should return a boolean value')]
-    [System.Func[object]
+    [System.Func[Microsoft.SharePoint.Client.List,bool]]
     ${ShouldProcessListAction},
 
     [Parameter(HelpMessage='Function to be executed on the list, this will trigger after list items have been processed. There is one input parameter of type List')]
-    [System.Action[object]
+    [System.Action[Microsoft.SharePoint.Client.List]]
     ${PostListAction},
 
     [Parameter(HelpMessage='Function to be executed on the web that would determine if PostListAction should be invoked, There is one input parameter of type List and the function should return a boolean value')]
-    [System.Func[object]
+    [System.Func[Microsoft.SharePoint.Client.List,bool]]
     ${ShouldProcessPostListAction},
 
     [Parameter(HelpMessage='The properties to load for list.')]
@@ -66338,11 +66197,11 @@ param(
     ${ListProperties},
 
     [Parameter(HelpMessage='Function to be executed on the list item. There is one input parameter of type ListItem')]
-    [System.Action[object]
+    [System.Action[Microsoft.SharePoint.Client.ListItem]]
     ${ListItemAction},
 
     [Parameter(HelpMessage='Function to be executed on the web that would determine if ListItemAction should be invoked, There is one input parameter of type ListItem and the function should return a boolean value')]
-    [System.Func[object]
+    [System.Func[Microsoft.SharePoint.Client.ListItem,bool]]
     ${ShouldProcessListItemAction},
 
     [Parameter(HelpMessage='The properties to load for list items.')]
@@ -66797,7 +66656,7 @@ param(
     ${Title},
 
     [Parameter(Mandatory=$true, HelpMessage='The type of list to create.')]
-    [object]
+    [Microsoft.SharePoint.Client.ListTemplateType]
     ${Template},
 
     [Parameter(HelpMessage='If set, will override the url of the list.')]
@@ -66814,7 +66673,7 @@ param(
 
     [Parameter(HelpMessage='Obsolete')]
     [Obsolete('Not in use, use OnQuickLaunch parameter instead')]
-    [object]
+    [Microsoft.SharePoint.Client.QuickLaunchOptions]
     ${QuickLaunchOptions},
 
     [Parameter(HelpMessage='Switch parameter if content types should be enabled on this list')]
@@ -67205,7 +67064,7 @@ param(
     ${Lcid},
 
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The termset to add the term to.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind[object]
+    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
     ${TermSet},
 
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The termgroup to create the term in.')]
@@ -67226,7 +67085,7 @@ param(
 
     [Parameter(HelpMessage='Term store to check; if not specified the default term store is used.')]
     [Alias('TermStoreName')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[object]
+    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
     ${TermStore},
 
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
@@ -67255,7 +67114,7 @@ param(
 
     [Parameter(HelpMessage='Term store to add the group to; if not specified the default term store is used.')]
     [Alias('TermStoreName')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[object]
+    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
     ${TermStore},
 
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
@@ -67313,7 +67172,7 @@ param(
 
     [Parameter(HelpMessage='Term store to check; if not specified the default term store is used.')]
     [Alias('TermStoreName')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[object]
+    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
     ${TermStore},
 
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
@@ -67385,7 +67244,7 @@ param(
     ${IdProperty},
 
     [Parameter(Position=4, HelpMessage='The type of profile identifier (Email/CloudId/PrincipalName). Defaults to Email.')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantManagement.ImportProfilePropertiesUserIdType]
     ${IdType},
 
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
@@ -68312,7 +68171,7 @@ param(
     ${OriginUrl},
 
     [Parameter(Mandatory=$true, HelpMessage='The cdn type to remove the origin from.')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
     ${CdnType},
 
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
@@ -68746,7 +68605,7 @@ param(
     ${ServerRelativeUrl},
 
     [Parameter(HelpMessage='The check in type to use. Defaults to Major.')]
-    [object]
+    [Microsoft.SharePoint.Client.CheckinType]
     ${CheckinType},
 
     [Parameter(HelpMessage='The comment added to the checkin. Defaults to ''Restored to previous version''.')]
@@ -69257,7 +69116,7 @@ function Set-PnPContext
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1, ValueFromPipeline=$true, HelpMessage='The ClientContext to set')]
-    [object]
+    [Microsoft.SharePoint.Client.ClientContext]
     ${Context})
 
 }
@@ -69413,7 +69272,7 @@ param(
     ${Url},
 
     [Parameter(HelpMessage='The check in type to use. Defaults to Major')]
-    [object]
+    [Microsoft.SharePoint.Client.CheckinType]
     ${CheckinType},
 
     [Parameter(HelpMessage='The check in comment')]
@@ -69807,7 +69666,7 @@ param(
     ${ForceCheckout},
 
     [Parameter(HelpMessage='Set the list experience: Auto, NewExperience or ClassicExperience')]
-    [object]
+    [Microsoft.SharePoint.Client.ListExperience]
     ${ListExperience},
 
     [Parameter(HelpMessage='Enable or disable attachments. Set to $true to enable, $false to disable.')]
@@ -70287,7 +70146,7 @@ function Set-PnPSearchSettings
     [CmdletBinding()]
 param(
     [Parameter(HelpMessage='Set the scope of which the suite bar search box shows. Possible values: Inherit, AllPages, ModernOnly, Hidden')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.SharePoint.Client.SearchBoxInNavBarType]]
     ${SearchBoxInNavBar},
 
     [Parameter(HelpMessage='Set the URL where the search box should redirect to.')]
@@ -70295,7 +70154,7 @@ param(
     ${SearchPageUrl},
 
     [Parameter(HelpMessage='Set the search scope of the suite bar search box. Possible values: DefaultScope, Tenant, Hub, Site')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.SharePoint.Client.SearchScopeType]]
     ${SearchScope},
 
     [Parameter(HelpMessage='Scope to apply the setting to. Possible values: Web (default), Site\r\n\r\nFor a root site, the scope does not matter.')]
@@ -70337,7 +70196,7 @@ param(
     ${LogoFilePath},
 
     [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies what the sharing capabilities are for the site. Possible values: Disabled, ExternalUserSharingOnly, ExternalUserAndGuestSharing, ExistingExternalUserSharingOnly')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
     ${Sharing},
 
     [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the storage quota for this site collection in megabytes. This value must not exceed the company''s available quota.')]
@@ -70380,19 +70239,19 @@ param(
     ${CommentsOnSitePagesDisabled},
 
     [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the default link permission for the site collection. None - Respect the organization default link permission. View - Sets the default link permission for the site to "view" permissions. Edit - Sets the default link permission for the site to "edit" permissions')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]]
     ${DefaultLinkPermission},
 
     [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the default link type for the site collection. None - Respect the organization default sharing link type. AnonymousAccess - Sets the default sharing link for this site to an Anonymous Access or Anyone link. Internal - Sets the default sharing link for this site to the "organization" link or company shareable link. Direct - Sets the default sharing link for this site to the "Specific people" link')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]]
     ${DefaultSharingLinkType},
 
     [Parameter(ParameterSetName='Set Properties')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.SharePoint.TenantAdministration.AppViewsPolicy]]
     ${DisableAppViews},
 
     [Parameter(ParameterSetName='Set Properties')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.SharePoint.TenantAdministration.CompanyWideSharingLinksPolicy]]
     ${DisableCompanyWideSharingLinks},
 
     [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies to prevent non-owners from inviting new users to the site')]
@@ -70409,7 +70268,7 @@ param(
     ${NewUrl},
 
     [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the Geo/Region restrictions of this site.')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.SharePoint.TenantAdministration.RestrictedToRegion]]
     ${RestrictedToGeo},
 
     [Parameter(ParameterSetName='Set Properties', HelpMessage='Disables or enables the Social Bar for Site Collection.')]
@@ -70575,7 +70434,7 @@ function Set-PnPTaxonomyFieldValue
     [CmdletBinding(DefaultParameterSetName='ITEM')]
 param(
     [Parameter(Mandatory=$true, HelpMessage='The list item to set the field value to')]
-    [object]
+    [Microsoft.SharePoint.Client.ListItem]
     ${ListItem},
 
     [Parameter(Mandatory=$true, HelpMessage='The internal name of the field')]
@@ -70620,7 +70479,7 @@ NoPreference- Support for feature will be enabled by Microsoft on your Office 36
 Allowed- Lets the # and % characters in file and folder names in SharePoint Online and OneDrive for Business document libraries.
 
 Disallowed- Disallows the # and % characters in file and folder names in SharePoint Online and OneDrive for Business document libraries.')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SpecialCharactersState]]
     ${SpecialCharactersStateInFileFolderNames},
 
     [Parameter(HelpMessage='Specifies the lower bound on the compatibility level for new sites.')]
@@ -70655,7 +70514,7 @@ ExternalUserAndGuestSharing (default) - External user sharing (share by email) a
 ExternalUserSharingOnly - External user sharing (share by email) is enabled, but guest link sharing is disabled.
 
 For more information about sharing, see Manage external sharing for your SharePoint online environment (http://office.microsoft.com/en-us/office365-sharepoint-online-enterprise-help/manage-external-sharing-for-your-sharepoint-online-environment-HA102849864.aspx).')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
     ${SharingCapability},
 
     [Parameter(HelpMessage='Determines whether tenant users see the Start a Site menu option.
@@ -70846,7 +70705,7 @@ For additional information about how to restrict a domain sharing, see Restricte
 The following values are: None AllowList BlockList
 
 For additional information about how to restrict a domain sharing, see Restricted Domains Sharing in Office 365 SharePoint Online and OneDrive for Business.')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SharingDomainRestrictionModes]]
     ${SharingDomainRestrictionMode},
 
     [Parameter(HelpMessage='Sets a default OneDrive for Business storage quota for the tenant. It will be used for new OneDrive for Business sites created.
@@ -70902,7 +70761,7 @@ Note:
 Setting this value to “none” will default “get a link” to the most permissive link available (that is, if anonymous links are enabled, the default link will be anonymous access; if they are disabled then the default link will be internal.
 
 The values are: None Direct Internal AnonymousAccess')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]]
     ${DefaultSharingLinkType},
 
     [Parameter(HelpMessage='Lets administrators set policy on re-sharing behavior in OneDrive for Business.
@@ -70914,7 +70773,7 @@ On- Users with edit permissions can re-share.
 Off- Only OneDrive for Business owner can share. The value of ODBAccessRequests defines whether a request to share gets sent to the owner.
 
 Unspecified- Let each OneDrive for Business owner enable or disable re-sharing behavior on their OneDrive.')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.SharePoint.Client.SharingState]]
     ${ODBMembersCanShare},
 
     [Parameter(HelpMessage='Lets administrators set policy on access requests and requests to share in OneDrive for Business.
@@ -70926,7 +70785,7 @@ On- Users without permission to share can trigger sharing requests to the OneDri
 Off- Prevent access requests and requests to share on OneDrive for Business.
 
 Unspecified- Let each OneDrive for Business owner enable or disable access requests and requests to share on their OneDrive.')]
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.SharePoint.Client.SharingState]]
     ${ODBAccessRequests},
 
     [System.Nullable[bool]]
@@ -70935,10 +70794,10 @@ Unspecified- Let each OneDrive for Business owner enable or disable access reque
     [System.Nullable[bool]]
     ${ShowPeoplePickerSuggestionsForGuestUsers},
 
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.SharePoint.Client.AnonymousLinkType]]
     ${FileAnonymousLinkType},
 
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.SharePoint.Client.AnonymousLinkType]]
     ${FolderAnonymousLinkType},
 
     [Parameter(HelpMessage='When this parameter is set to $true and another user re-shares a document from a user’’s OneDrive for Business, the OneDrive for Business owner is notified by e-mail.
@@ -70986,10 +70845,10 @@ Accepts a value of true (enabled) to hide the Download button or false (disabled
     [System.Nullable[bool]]
     ${DisallowInfectedFileDownload},
 
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]]
     ${DefaultLinkPermission},
 
-    [System.Nullable[object]]
+    [System.Nullable[Microsoft.Online.SharePoint.TenantManagement.SPOConditionalAccessPolicyType]]
     ${ConditionalAccessPolicy},
 
     [System.Nullable[bool]]
@@ -71050,11 +70909,11 @@ function Set-PnPTenantCdnPolicy
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, HelpMessage='The type of cdn to retrieve the policies from')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
     ${CdnType},
 
     [Parameter(Mandatory=$true, HelpMessage='The type of the policy to set')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnPolicyType]
     ${PolicyType},
 
     [Parameter(Mandatory=$true, HelpMessage='The value of the policy to set')]
@@ -71081,7 +70940,7 @@ param(
 
     [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies what the sharing capabilities are for the site. Possible values: Disabled, ExternalUserSharingOnly, ExternalUserAndGuestSharing, ExistingExternalUserSharingOnly')]
     [Alias('Sharing')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]
     ${SharingCapability},
 
     [Parameter(ParameterSetName='Set Properties', HelpMessage='Determines whether the Add And Customize Pages right is denied on the site collection. For more information about permission levels, see User permissions and permission levels in SharePoint.')]
@@ -71124,11 +70983,11 @@ param(
     ${LockState},
 
     [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the default link permission for the site collection. None - Respect the organization default link permission. View - Sets the default link permission for the site to "view" permissions. Edit - Sets the default link permission for the site to "edit" permissions')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]
     ${DefaultLinkPermission},
 
     [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the default link type for the site collection. None - Respect the organization default sharing link type. AnonymousAccess - Sets the default sharing link for this site to an Anonymous Access or Anyone link. Internal - Sets the default sharing link for this site to the "organization" link or company shareable link. Direct - Sets the default sharing link for this site to the "Specific people" link')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]
     ${DefaultSharingLinkType},
 
     [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies a list of email domains that is allowed for sharing with the external collaborators. Use the space character as the delimiter for entering multiple values. For example, "contoso.com fabrikam.com".')]
@@ -71144,7 +71003,7 @@ param(
     ${BlockDownloadOfNonViewableFiles},
 
     [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies the external sharing mode for domains.')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantManagement.SharingDomainRestrictionModes]
     ${SharingDomainRestrictionMode},
 
     [Parameter(ParameterSetName='Set Properties', HelpMessage='Specifies if comments on site pages are enabled')]
@@ -71152,15 +71011,15 @@ param(
     ${CommentsOnSitePagesDisabled},
 
     [Parameter(ParameterSetName='Set Properties', HelpMessage='-')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.AppViewsPolicy]
     ${DisableAppViews},
 
     [Parameter(ParameterSetName='Set Properties', HelpMessage='-')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.CompanyWideSharingLinksPolicy]
     ${DisableCompanyWideSharingLinks},
 
     [Parameter(ParameterSetName='Set Properties', HelpMessage='-')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.FlowsPolicy]
     ${DisableFlows},
 
     [Parameter(HelpMessage='Wait for the operation to complete')]
@@ -71367,10 +71226,10 @@ param(
     [string]
     ${CustomMasterUrl},
 
-    [object]
+    [Microsoft.SharePoint.Client.HeaderLayoutType]
     ${HeaderLayout},
 
-    [object]
+    [Microsoft.SharePoint.Client.SPVariantThemeType]
     ${HeaderEmphasis},
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
@@ -71972,29 +71831,6 @@ param(
     ${ApiVersion})
 
 }
-function Add-PowerAppsAccount
-{
-
-    [CmdletBinding()]
-param(
-    [Parameter(Position=0)]
-    [string]
-    ${Audience},
-
-    [Parameter(Position=1)]
-    [ValidateSet('prod','preview','tip1','tip2','usgov','usgovhigh')]
-    [string]
-    ${Endpoint},
-
-    [Parameter(Position=2)]
-    [string]
-    ${Username},
-
-    [Parameter(Position=3)]
-    [securestring]
-    ${Password})
-
-}
 function Clear-AdminPowerAppApisToBypassConsent
 {
 
@@ -72502,100 +72338,12 @@ param(
     ${ApiVersion})
 
 }
-function Get-JwtToken
-{
-
-    [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0)]
-    [string]
-    ${Audience})
-
-}
-function Get-TenantDetailsFromGraph
-{
-
-    
-param(
-    [string]
-    ${GraphApiVersion})
-
-}
 function Get-TenantSettings
 {
 
     [CmdletBinding()]
 param(
     [Parameter(Position=0)]
-    [string]
-    ${ApiVersion})
-
-}
-function Get-UsersOrGroupsFromGraph
-{
-
-    [CmdletBinding(DefaultParameterSetName='Id')]
-param(
-    [Parameter(ParameterSetName='Id', Mandatory=$true)]
-    [string]
-    ${ObjectId},
-
-    [Parameter(ParameterSetName='Search', Mandatory=$true)]
-    [string]
-    ${SearchString},
-
-    [Parameter(ParameterSetName='Id')]
-    [Parameter(ParameterSetName='Search')]
-    [string]
-    ${GraphApiVersion})
-
-}
-function InvokeApi
-{
-
-    [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0)]
-    [string]
-    ${Method},
-
-    [Parameter(Mandatory=$true, Position=1)]
-    [string]
-    ${Route},
-
-    [Parameter(Position=2)]
-    [System.Object]
-    ${Body},
-
-    [switch]
-    ${ThrowOnFailure},
-
-    [Parameter(Position=3)]
-    [string]
-    ${ApiVersion})
-
-}
-function InvokeApiNoParseContent
-{
-
-    [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0)]
-    [string]
-    ${Method},
-
-    [Parameter(Mandatory=$true, Position=1)]
-    [string]
-    ${Route},
-
-    [Parameter(Position=2)]
-    [System.Object]
-    ${Body},
-
-    [switch]
-    ${ThrowOnFailure},
-
-    [Parameter(Position=3)]
     [string]
     ${ApiVersion})
 
@@ -73034,45 +72782,6 @@ param(
     ${DatabaseId})
 
 }
-function Remove-PowerAppsAccount
-{
-
-    [CmdletBinding()]
-param()
-
-}
-function ReplaceMacro
-{
-
-    [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [string]
-    ${Input},
-
-    [Parameter(Mandatory=$true, Position=1)]
-    [string]
-    ${Macro},
-
-    [Parameter(Position=2)]
-    [string]
-    ${Value})
-
-}
-function Select-CurrentEnvironment
-{
-
-    [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Name', Mandatory=$true, Position=0, ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${EnvironmentName},
-
-    [Parameter(ParameterSetName='Default', Mandatory=$true)]
-    [switch]
-    ${Default})
-
-}
 function Set-AdminDlpPolicy
 {
 
@@ -73429,13 +73138,6 @@ param(
     [Parameter(Position=0)]
     [string]
     ${ApiVersion})
-
-}
-function Test-PowerAppsAccount
-{
-
-    [CmdletBinding()]
-param()
 
 }
 
@@ -90841,11 +90543,11 @@ function Add-SPOHubSiteAssociation
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoHubSitePipeBind]
     ${HubSite})
 
 }
@@ -90856,12 +90558,12 @@ function Add-SPOHubToHubAssociation
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [ValidateNotNull()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoHubSitePipeBind]
     ${Source},
 
     [Parameter(Mandatory=$true)]
     [ValidateNotNull()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoHubSitePipeBind]
     ${Target})
 
 }
@@ -90877,10 +90579,10 @@ param(
     [string]
     ${ThumbnailUrl},
 
-    [object]
+    [Microsoft.SharePoint.Administration.OrgAssetType, Microsoft.SharePoint.Client, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]
     ${OrgAssetType},
 
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]
     ${CdnType})
 
 }
@@ -90890,7 +90592,7 @@ function Add-SPOSiteCollectionAppCatalog
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site})
 
 }
@@ -90911,7 +90613,7 @@ param(
 
     [Parameter(Mandatory=$true)]
     [ValidateNotNull()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOSiteScriptPipeBind[]]
     ${SiteScripts},
 
     [string]
@@ -90974,7 +90676,7 @@ param(
     ${OriginUrl},
 
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]
     ${CdnType})
 
 }
@@ -90986,11 +90688,11 @@ param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [Alias('Name')]
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoThemePipeBind]
     ${Identity},
 
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoThemePalettePipeBind]
     ${Palette},
 
     [Parameter(Mandatory=$true)]
@@ -91007,7 +90709,7 @@ function Add-SPOUser
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [Parameter(Mandatory=$true, Position=2)]
@@ -91050,11 +90752,11 @@ function Connect-SPOService
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.UrlCmdletPipeBind]
     ${Url},
 
     [Parameter(Position=1, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.CredentialCmdletPipeBind]
     ${Credential},
 
     [Parameter(Position=2)]
@@ -91062,7 +90764,7 @@ param(
     ${ClientTag},
 
     [Parameter(ParameterSetName='AuthenticationLocation', Position=3)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.AADCrossTenantAuthenticationLocation]
     ${Region},
 
     [Parameter(ParameterSetName='AuthenticationUrl', Mandatory=$true, Position=3)]
@@ -91077,7 +90779,7 @@ function ConvertTo-SPOMigrationEncryptedPackage
 param(
     [Parameter(ParameterSetName='ImplicitSourceParameterSet', Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Online.SharePoint.Migration.MigrationPackageLocation]
     ${MigrationSourceLocations},
 
     [Parameter(ParameterSetName='ExplicitSourceParameterSet', Mandatory=$true)]
@@ -91092,7 +90794,7 @@ param(
 
     [Parameter(Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Online.SharePoint.Migration.EncryptionParameters]
     ${EncryptionParameters},
 
     [Parameter(Mandatory=$true)]
@@ -91154,16 +90856,16 @@ param(
     ${UserMappingFile},
 
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.CredentialCmdletPipeBind]
     ${Credentials},
 
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.CredentialCmdletPipeBind]
     ${AzureADUserCredentials},
 
     [switch]
     ${NoAzureADLookup},
 
-    [object]
+    [Microsoft.Online.SharePoint.Migration.TargetEnvironment]
     ${TargetEnvironment},
 
     [switch]
@@ -91246,7 +90948,7 @@ param(
     ${LoginName},
 
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [string]
@@ -91310,7 +91012,7 @@ function Get-SPOBuiltInDesignPackageVisibility
 
     [CmdletBinding()]
 param(
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.SharePoint.Administration.DesignPackageType, Microsoft.SharePoint.Client, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${DesignPackage})
 
 }
@@ -91341,13 +91043,13 @@ param(
     ${MoveEndTime},
 
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.JobType]
     ${MoveJobType},
 
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.MoveState]
     ${MoveState},
 
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.MoveDirection]
     ${MoveDirection})
 
 }
@@ -91367,7 +91069,7 @@ function Get-SPODataEncryptionPolicy
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Identity})
 
 }
@@ -91377,7 +91079,7 @@ function Get-SPODeletedSite
     [CmdletBinding(DefaultParameterSetName='ParameterSetAllSites')]
 param(
     [Parameter(Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Identity},
 
     [string]
@@ -91410,7 +91112,7 @@ param(
     ${Filter},
 
     [Parameter(ParameterSetName='All', Position=4)]
-    [object]
+    [Microsoft.Online.SharePoint.TenantManagement.SortOrder, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]
     ${SortOrder},
 
     [Parameter(ParameterSetName='All', Position=5)]
@@ -91465,7 +91167,7 @@ function Get-SPOHubSite
     [CmdletBinding()]
 param(
     [Parameter(Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoHubSitePipeBind]
     ${Identity})
 
 }
@@ -91484,18 +91186,18 @@ param(
     ${AzureQueueUri},
 
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.CredentialCmdletPipeBind]
     ${Credentials},
 
     [Parameter(ParameterSetName='AzureLocationsImplicit', Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.Migration.MigrationPackageAzureLocations]
     ${MigrationPackageAzureLocations},
 
     [guid[]]
     ${JobIds},
 
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Online.SharePoint.Migration.EncryptionParameters]
     ${EncryptionParameters},
 
     [switch]
@@ -91520,7 +91222,7 @@ param(
     ${JobId},
 
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.CredentialCmdletPipeBind]
     ${Credentials},
 
     [switch]
@@ -91569,7 +91271,7 @@ function Get-SPOSite
 param(
     [Parameter(ParameterSetName='ParamSet3', Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [Parameter(ParameterSetName='ParamSet1', Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Identity},
 
     [Parameter(ParameterSetName='ParamSet2')]
@@ -91609,7 +91311,7 @@ function Get-SPOSiteCollectionAppCatalogs
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site})
 
 }
@@ -91641,11 +91343,11 @@ param(
     ${MoveEndTime},
 
     [Parameter(ParameterSetName='MoveReport')]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.MoveState]
     ${MoveState},
 
     [Parameter(ParameterSetName='MoveReport')]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.MoveDirection]
     ${MoveDirection})
 
 }
@@ -91655,7 +91357,7 @@ function Get-SPOSiteDataEncryptionPolicy
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Identity})
 
 }
@@ -91665,7 +91367,7 @@ function Get-SPOSiteDesign
     [CmdletBinding()]
 param(
     [Parameter(Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOSiteDesignPipeBind]
     ${Identity})
 
 }
@@ -91676,7 +91378,7 @@ function Get-SPOSiteDesignRights
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [ValidateNotNull()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOSiteDesignPipeBind]
     ${Identity})
 
 }
@@ -91690,7 +91392,7 @@ param(
     ${WebUrl},
 
     [Parameter(Position=1, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOSiteDesignPipeBind]
     ${SiteDesignId})
 
 }
@@ -91700,7 +91402,7 @@ function Get-SPOSiteDesignRunStatus
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOSiteDesignRun]
     ${Run})
 
 }
@@ -91710,7 +91412,7 @@ function Get-SPOSiteDesignTask
     [CmdletBinding()]
 param(
     [Parameter(Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOSiteDesignTaskPipeBind]
     ${Identity},
 
     [Parameter(Position=1)]
@@ -91724,7 +91426,7 @@ function Get-SPOSiteGroup
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [Parameter(Position=2)]
@@ -91742,11 +91444,11 @@ function Get-SPOSiteRenameState
 param(
     [Parameter(ParameterSetName='SourceSiteUrl', Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Identity},
 
     [Parameter(ParameterSetName='RenameReport')]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.RenameState]
     ${State})
 
 }
@@ -91756,7 +91458,7 @@ function Get-SPOSiteScript
     [CmdletBinding()]
 param(
     [Parameter(Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOSiteScriptPipeBind]
     ${Identity})
 
 }
@@ -91805,7 +91507,7 @@ function Get-SPOSiteUserInvitations
     [CmdletBinding(DefaultParameterSetName='All')]
 param(
     [Parameter(Mandatory=$true, Position=1)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [Parameter(Mandatory=$true, Position=2)]
@@ -91819,7 +91521,7 @@ function Get-SPOStorageEntity
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [Parameter(Mandatory=$true, Position=1, ValueFromPipeline=$true)]
@@ -91840,7 +91542,7 @@ function Get-SPOTenantCdnEnabled
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]
     ${CdnType})
 
 }
@@ -91850,7 +91552,7 @@ function Get-SPOTenantCdnOrigins
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]
     ${CdnType})
 
 }
@@ -91860,7 +91562,7 @@ function Get-SPOTenantCdnPolicies
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]
     ${CdnType})
 
 }
@@ -91975,7 +91677,7 @@ function Get-SPOUser
     [CmdletBinding(DefaultParameterSetName='All')]
 param(
     [Parameter(Mandatory=$true, Position=1)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [Parameter(ParameterSetName='ByGroup', Position=2)]
@@ -92021,11 +91723,11 @@ param(
     ${MoveEndTime},
 
     [Parameter(ParameterSetName='MoveReport')]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.MoveState]
     ${MoveState},
 
     [Parameter(ParameterSetName='MoveReport')]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.MoveDirection]
     ${MoveDirection})
 
 }
@@ -92065,7 +91767,7 @@ function Grant-SPOHubSiteRights
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [Alias('HubSite')]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoHubSitePipeBind]
     ${Identity},
 
     [Parameter(Mandatory=$true)]
@@ -92073,7 +91775,7 @@ param(
     ${Principals},
 
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOHubSiteUserRightsClient]
     ${Rights})
 
 }
@@ -92084,7 +91786,7 @@ function Grant-SPOSiteDesignRights
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [ValidateNotNull()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOSiteDesignPipeBind]
     ${Identity},
 
     [Parameter(Mandatory=$true)]
@@ -92093,7 +91795,7 @@ param(
     ${Principals},
 
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOSiteDesignPrincipalRights]
     ${Rights})
 
 }
@@ -92104,7 +91806,7 @@ function Invoke-SPOMigrationEncryptUploadSubmit
 param(
     [Parameter(ParameterSetName='ImplicitSourceParameterSet', Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Online.SharePoint.Migration.MigrationPackageLocation]
     ${MigrationSourceLocations},
 
     [Parameter(ParameterSetName='ExplicitSourceParameterSet', Mandatory=$true)]
@@ -92119,7 +91821,7 @@ param(
 
     [Parameter(Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.CredentialCmdletPipeBind]
     ${Credentials},
 
     [Parameter(Mandatory=$true)]
@@ -92141,7 +91843,7 @@ function Invoke-SPOSiteDesign
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
     [ValidateNotNull()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOSiteDesignPipeBind]
     ${Identity},
 
     [Parameter(Mandatory=$true)]
@@ -92255,7 +91957,7 @@ function New-SPOSite
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.UrlCmdletPipeBind]
     ${Url},
 
     [Parameter(Mandatory=$true)]
@@ -92297,7 +91999,7 @@ function New-SPOSiteGroup
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [Parameter(Mandatory=$true, Position=2)]
@@ -92315,7 +92017,7 @@ function Register-SPODataEncryptionPolicy
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Identity},
 
     [Parameter(Mandatory=$true)]
@@ -92349,7 +92051,7 @@ function Register-SPOHubSite
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [Parameter(Mandatory=$true)]
@@ -92365,7 +92067,7 @@ function Remove-SPODeletedSite
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Identity},
 
     [switch]
@@ -92416,7 +92118,7 @@ function Remove-SPOHubSiteAssociation
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site})
 
 }
@@ -92427,7 +92129,7 @@ function Remove-SPOHubToHubAssociation
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [ValidateNotNull()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoHubSitePipeBind]
     ${HubSite})
 
 }
@@ -92447,7 +92149,7 @@ param(
     ${JobId},
 
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.CredentialCmdletPipeBind]
     ${Credentials},
 
     [switch]
@@ -92510,7 +92212,7 @@ function Remove-SPOSite
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Identity},
 
     [switch]
@@ -92523,7 +92225,7 @@ function Remove-SPOSiteCollectionAppCatalog
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site})
 
 }
@@ -92544,7 +92246,7 @@ function Remove-SPOSiteDesign
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [ValidateNotNull()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOSiteDesignPipeBind]
     ${Identity})
 
 }
@@ -92554,7 +92256,7 @@ function Remove-SPOSiteDesignTask
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOSiteDesignTaskPipeBind]
     ${Identity})
 
 }
@@ -92564,7 +92266,7 @@ function Remove-SPOSiteGroup
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [Parameter(Mandatory=$true, Position=2)]
@@ -92579,7 +92281,7 @@ function Remove-SPOSiteScript
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [ValidateNotNull()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOSiteScriptPipeBind]
     ${Identity})
 
 }
@@ -92589,7 +92291,7 @@ function Remove-SPOSiteUserInvitations
     [CmdletBinding(DefaultParameterSetName='All')]
 param(
     [Parameter(Mandatory=$true, Position=1)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [Parameter(Mandatory=$true, Position=2)]
@@ -92607,7 +92309,7 @@ function Remove-SPOStorageEntity
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [Parameter(Mandatory=$true, Position=1, ValueFromPipeline=$true)]
@@ -92625,7 +92327,7 @@ param(
     ${OriginUrl},
 
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]
     ${CdnType})
 
 }
@@ -92643,7 +92345,7 @@ function Remove-SPOTheme
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [Alias('Name')]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoThemePipeBind]
     ${Identity})
 
 }
@@ -92653,7 +92355,7 @@ function Remove-SPOUser
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [Parameter(ParameterSetName='ByLogin', Mandatory=$true, Position=2)]
@@ -92675,7 +92377,7 @@ param(
     ${LoginName},
 
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [string]
@@ -92701,7 +92403,7 @@ function Repair-SPOSite
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Identity},
 
     [guid]
@@ -92731,7 +92433,7 @@ function Request-SPOUpgradeEvaluationSite
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Identity},
 
     [switch]
@@ -92747,7 +92449,7 @@ function Restore-SPODataEncryptionPolicy
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Identity},
 
     [Parameter(Mandatory=$true)]
@@ -92782,7 +92484,7 @@ function Restore-SPODeletedSite
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Identity},
 
     [switch]
@@ -92796,7 +92498,7 @@ function Revoke-SPOHubSiteRights
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [Alias('HubSite')]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoHubSitePipeBind]
     ${Identity},
 
     [Parameter(Mandatory=$true)]
@@ -92811,7 +92513,7 @@ function Revoke-SPOSiteDesignRights
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [ValidateNotNull()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOSiteDesignPipeBind]
     ${Identity},
 
     [Parameter(Mandatory=$true)]
@@ -92866,7 +92568,7 @@ param(
     ${IsVisible},
 
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.SharePoint.Administration.DesignPackageType, Microsoft.SharePoint.Client, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]
     ${DesignPackage})
 
 }
@@ -92911,7 +92613,7 @@ function Set-SPOHubSite
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [Alias('HubSite')]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoHubSitePipeBind]
     ${Identity},
 
     [string]
@@ -92941,7 +92643,7 @@ param(
     [Parameter(ParameterSetName='ImplicitSourceExplicitAzure', Mandatory=$true)]
     [Parameter(ParameterSetName='ImplicitSourceImplicitAzure', Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Online.SharePoint.Migration.MigrationPackageLocation]
     ${MigrationSourceLocations},
 
     [Parameter(ParameterSetName='ExplicitSourceImplicitAzure', Mandatory=$true)]
@@ -92988,11 +92690,11 @@ param(
 
     [Parameter(ParameterSetName='ExplicitSourceImplicitAzure', Mandatory=$true)]
     [Parameter(ParameterSetName='ImplicitSourceImplicitAzure', Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.Migration.MigrationPackageAzureLocations]
     ${MigrationPackageAzureLocations},
 
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Online.SharePoint.Migration.EncryptionParameters]
     ${EncryptionParameters},
 
     [switch]
@@ -93002,7 +92704,7 @@ param(
     ${NoSnapshotCreation},
 
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Online.SharePoint.Migration.MigrationFileEncryptionInfo[]]
     ${EncryptionMetaInfo},
 
     [switch]
@@ -93052,7 +92754,7 @@ param(
     [string]
     ${ThumbnailUrl},
 
-    [object]
+    [Microsoft.SharePoint.Administration.OrgAssetType, Microsoft.SharePoint.Client, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]
     ${OrgAssetType})
 
 }
@@ -93073,7 +92775,7 @@ function Set-SPOSite
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Identity},
 
     [Parameter(ParameterSetName='ParamSet1')]
@@ -93127,7 +92829,7 @@ param(
     ${EnablePWA},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${SharingCapability},
 
     [Parameter(ParameterSetName='ParamSet1')]
@@ -93139,7 +92841,7 @@ param(
     ${StorageQuotaReset},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.Online.SharePoint.TenantAdministration.SandboxedCodeActivationCapabilities, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${SandboxedCodeActivationCapability},
 
     [Parameter(ParameterSetName='ParamSet3')]
@@ -93151,11 +92853,11 @@ param(
     ${RemoveLabel},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.Online.SharePoint.TenantAdministration.CompanyWideSharingLinksPolicy, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${DisableCompanyWideSharingLinks},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.Online.SharePoint.TenantManagement.SharingDomainRestrictionModes, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${SharingDomainRestrictionMode},
 
     [Parameter(ParameterSetName='ParamSet1')]
@@ -93167,7 +92869,7 @@ param(
     ${SharingBlockedDomainList},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantManagement.SPOConditionalAccessPolicyType, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]
     ${ConditionalAccessPolicy},
 
     [Parameter(ParameterSetName='ParamSet1')]
@@ -93175,7 +92877,7 @@ param(
     ${AllowDownloadingNonWebViewableFiles},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [object]
+    [Microsoft.Online.SharePoint.TenantManagement.SPOLimitedAccessFileType, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]
     ${LimitedAccessFileType},
 
     [Parameter(ParameterSetName='ParamSet1')]
@@ -93188,15 +92890,15 @@ param(
     ${SensitivityLabel},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.Online.SharePoint.TenantAdministration.AppViewsPolicy, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${DisableAppViews},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.Online.SharePoint.TenantAdministration.FlowsPolicy, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${DisableFlows},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.Online.SharePoint.TenantAdministration.RestrictedToRegion, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${RestrictedToGeo},
 
     [Parameter(ParameterSetName='ParamSet1')]
@@ -93216,11 +92918,11 @@ param(
     ${HubSiteId},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.Online.SharePoint.TenantManagement.SharingLinkType, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${DefaultSharingLinkType},
 
     [Parameter(ParameterSetName='ParamSet1')]
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${DefaultLinkPermission},
 
     [Parameter(ParameterSetName='ParamSet1')]
@@ -93255,7 +92957,7 @@ function Set-SPOSiteDesign
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [ValidateNotNull()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOSiteDesignPipeBind]
     ${Identity},
 
     [string]
@@ -93264,7 +92966,7 @@ param(
     [string]
     ${WebTemplate},
 
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOSiteScriptPipeBind[]]
     ${SiteScripts},
 
     [string]
@@ -93292,7 +92994,7 @@ function Set-SPOSiteGroup
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [Parameter(Mandatory=$true, Position=2)]
@@ -93323,7 +93025,7 @@ function Set-SPOSiteOffice365Group
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [Parameter(Mandatory=$true, Position=1)]
@@ -93360,7 +93062,7 @@ function Set-SPOSiteScript
 param(
     [Parameter(Mandatory=$true)]
     [ValidateNotNull()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOSiteScriptPipeBind]
     ${Identity},
 
     [ValidateNotNullOrEmpty()]
@@ -93385,7 +93087,7 @@ function Set-SPOStorageEntity
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [Parameter(Mandatory=$true)]
@@ -93422,7 +93124,7 @@ param(
     [string]
     ${NoAccessRedirectUrl},
 
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${SharingCapability},
 
     [System.Nullable[bool]]
@@ -93497,7 +93199,7 @@ param(
     [string]
     ${SharingBlockedDomainList},
 
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.Online.SharePoint.TenantManagement.SharingDomainRestrictionModes, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${SharingDomainRestrictionMode},
 
     [System.Nullable[long]]
@@ -93521,13 +93223,13 @@ param(
     [System.Nullable[bool]]
     ${UseFindPeopleInPeoplePicker},
 
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.Online.SharePoint.TenantManagement.SharingLinkType, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${DefaultSharingLinkType},
 
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.SharePoint.Client.SharingState, Microsoft.SharePoint.Client, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${ODBMembersCanShare},
 
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.SharePoint.Client.SharingState, Microsoft.SharePoint.Client, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${ODBAccessRequests},
 
     [System.Nullable[bool]]
@@ -93536,10 +93238,10 @@ param(
     [System.Nullable[bool]]
     ${ShowPeoplePickerSuggestionsForGuestUsers},
 
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.SharePoint.Client.AnonymousLinkType, Microsoft.SharePoint.Client, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${FileAnonymousLinkType},
 
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.SharePoint.Client.AnonymousLinkType, Microsoft.SharePoint.Client, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${FolderAnonymousLinkType},
 
     [System.Nullable[bool]]
@@ -93554,7 +93256,7 @@ param(
     [System.Nullable[bool]]
     ${NotificationsInSharePointEnabled},
 
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.Online.SharePoint.TenantManagement.SpecialCharactersState, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${SpecialCharactersStateInFileFolderNames},
 
     [System.Nullable[bool]]
@@ -93578,7 +93280,7 @@ param(
     [System.Nullable[bool]]
     ${DisallowInfectedFileDownload},
 
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${DefaultLinkPermission},
 
     [string]
@@ -93588,7 +93290,7 @@ param(
     ${ConditionalAccessPolicyErrorHelpLink},
 
     [Parameter(ParameterSetName='ParamSetMultipleSites')]
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.Online.SharePoint.TenantManagement.SPOConditionalAccessPolicyType, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${ConditionalAccessPolicy},
 
     [Parameter(ParameterSetName='ParamSetMultipleSites')]
@@ -93596,7 +93298,7 @@ param(
     ${AllowDownloadingNonWebViewableFiles},
 
     [Parameter(ParameterSetName='ParamSetMultipleSites')]
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.Online.SharePoint.TenantManagement.SPOLimitedAccessFileType, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${LimitedAccessFileType},
 
     [Parameter(ParameterSetName='ParamSetMultipleSites')]
@@ -93624,7 +93326,7 @@ param(
     [System.Nullable[bool]]
     ${EnableMinimumVersionRequirement},
 
-    [System.Nullable`1[[object]
+    [System.Nullable`1[[Microsoft.Online.SharePoint.TenantManagement.SensitiveByDefaultState, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]
     ${MarkNewFilesSensitiveByDefault},
 
     [System.Nullable[bool]]
@@ -93640,7 +93342,7 @@ param(
     ${EnableAzureADB2BIntegration},
 
     [Parameter(ParameterSetName='ParamSetMultipleSites', Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind[]]
     ${Sites},
 
     [System.Nullable[bool]]
@@ -93658,7 +93360,7 @@ param(
     [bool]
     ${Enable},
 
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SPOTenantCdnTypeClient]
     ${CdnType},
 
     [switch]
@@ -93671,7 +93373,7 @@ function Set-SPOTenantCdnPolicy
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnPolicyType, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]
     ${PolicyType},
 
     [Parameter(Mandatory=$true)]
@@ -93679,7 +93381,7 @@ param(
     ${PolicyValue},
 
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType, Microsoft.Online.SharePoint.Client.Tenant, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]
     ${CdnType})
 
 }
@@ -93766,7 +93468,7 @@ function Set-SPOUser
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=1)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Site},
 
     [Parameter(Mandatory=$true, Position=2)]
@@ -93789,11 +93491,11 @@ function Set-SPOWebTheme
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [Alias('Identity','Name')]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoThemePipeBind]
     ${Theme},
 
     [Parameter(Mandatory=$true, Position=1)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Web})
 
 }
@@ -93859,7 +93561,7 @@ function Start-SPOSiteRename
 param(
     [Parameter(Mandatory=$true, Position=0)]
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Identity},
 
     [Parameter(Mandatory=$true, Position=1)]
@@ -94027,18 +93729,18 @@ param(
     ${AzureQueueUri},
 
     [Parameter(ParameterSetName='AzureLocationsPipebind', Mandatory=$true, Position=1, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.Migration.MigrationPackageAzureLocations]
     ${MigrationPackageAzureLocations},
 
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.CredentialCmdletPipeBind]
     ${Credentials},
 
     [switch]
     ${NoLogFile},
 
     [ValidateNotNullOrEmpty()]
-    [object]
+    [Microsoft.Online.SharePoint.Migration.EncryptionParameters]
     ${EncryptionParameters})
 
 }
@@ -94048,7 +93750,7 @@ function Test-SPOSite
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Identity},
 
     [guid]
@@ -94065,7 +93767,7 @@ function Unregister-SPOHubSite
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
     [Alias('HubSite')]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoHubSitePipeBind]
     ${Identity},
 
     [switch]
@@ -94078,7 +93780,7 @@ function Update-SPODataEncryptionPolicy
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Identity},
 
     [Parameter(Mandatory=$true)]
@@ -94094,7 +93796,7 @@ param(
     ${KeyVersion},
 
     [Parameter(Mandatory=$true)]
-    [object]
+    [Microsoft.SharePoint.Client.CustomerKeyVaultKeyType, Microsoft.SharePoint.Client, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c]
     ${KeyType})
 
 }
@@ -94114,7 +93816,7 @@ function Upgrade-SPOSite
     [CmdletBinding(DefaultParameterSetName='SPSiteById', SupportsShouldProcess=$true, ConfirmImpact='Medium')]
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [object]
+    [Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind]
     ${Identity},
 
     [switch]
