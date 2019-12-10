@@ -44,11 +44,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPSiteScript -MockWith {
                 return @(
                     @{
-                        Id    = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                        Id    = "12345678-1234-1234-1234-123456789012"
                         Title = "Cust List"
                     },
                     @{
-                        Id    = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx2"
+                        Id    = "12345678-1234-1234-1234-123456789011"
                         Title = "List_Views"
                     }
                 )
