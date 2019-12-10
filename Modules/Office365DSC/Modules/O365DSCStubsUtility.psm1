@@ -1,4 +1,4 @@
-﻿function Get-O365StubFiles
+function Get-O365StubFiles
 {
     param
     (
