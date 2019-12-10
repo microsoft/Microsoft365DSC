@@ -202,7 +202,7 @@ function Set-TargetResource
         if ($null -ne $siteDesign)
         {
             Write-Verbose -Message "Updating current site design $Title"
-            Set-PnPSiteDesign  -Identity $siteDesign.Id  @CurrentParameters
+            Set-PnPSiteDesign -Identity $siteDesign.Id  @CurrentParameters
         }
     }
     elseif (($Ensure -eq "Absent" -and $curSiteDesign.Ensure -eq "Present"))

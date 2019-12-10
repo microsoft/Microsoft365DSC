@@ -19,8 +19,8 @@ function New-O365DscUnitTestHelper
         $ExcludeInvokeHelper,
 
         [Parameter()]
-        [Switch]
-        $IncludeDistributedCacheStubs
+        [System.String]
+        $GenericStubModule
     )
 
     $repoRoot = Join-Path -Path $PSScriptRoot -ChildPath "..\..\" -Resolve
@@ -51,6 +51,7 @@ function New-O365DscUnitTestHelper
     $initScript = @"
             Remove-Module -Name "AzureAD" -Force -ErrorAction SilentlyContinue
             Import-Module -Name "$StubModule" -WarningAction SilentlyContinue
+            Import-Module -Name "$GenericStubModule" -WarningAction SilentlyContinue
             Import-Module -Name "$moduleToLoad"
 
 "@

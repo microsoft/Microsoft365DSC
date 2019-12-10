@@ -49,16 +49,14 @@ function Invoke-TestHarness
         -ChildPath "\Tests\Unit\Stubs\Office365.psm1"
     Import-Module $firstStub -WarningAction SilentlyContinue
 
-    $versionsToTest | ForEach-Object -Process {
-        $stubPath = Join-Path -Path $repoDir `
+    $stubPath = Join-Path -Path $repoDir `
             -ChildPath "\Tests\Unit\Stubs\Office365.psm1"
-        $testsToRun += @(@{
-                'Path'       = (Join-Path -Path $repoDir -ChildPath "\Tests\Unit")
-                'Parameters' = @{
-                    'CmdletModule' = $stubPath
-                }
-            })
-    }
+    $testsToRun += @(@{
+            'Path'       = (Join-Path -Path $repoDir -ChildPath "\Tests\Unit")
+            'Parameters' = @{
+                'CmdletModule' = $stubPath
+            }
+        })
 
     # DSC Common Tests
     if ($PSBoundParameters.ContainsKey('DscTestsPath') -eq $true)
