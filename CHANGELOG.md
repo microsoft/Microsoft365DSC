@@ -42,6 +42,8 @@
   * Initial Release;
 * TeamsClientConfiguration
   * Initial Release;
+* TeamsMeetingBroadcastConfiguration
+  * Initial Release;
 * TeamsMeetingConfiguration
   * Initial Release;
 * TeamsMeetingPolicy

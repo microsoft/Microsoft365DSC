@@ -2018,6 +2018,24 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "TeamsMeetingBroadcastConfiguration"
+    if (($null -ne $ComponentsToExtract -and
+            $ComponentsToExtract.Contains("chckTeamsMeetingBroadcastConfiguration")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+            -Platform MicrosoftTeams
+        Write-Information "Extracting TeamsMeetingBroadcastConfiguration..."
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsMeetingBroadcastConfiguration\MSFT_TeamsMeetingBroadcastConfiguration.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region TeamsUpgradeConfiguration
     if (($null -ne $ComponentsToExtract -and
     $ComponentsToExtract.Contains("chckTeamsUpgradeConfiguration")) -or
@@ -2026,7 +2044,7 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting TeamsUpgradeCOnfiguration..."
 
         $ModulePath = Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\DSCResources\MSFT_TeamsUpgradeCOnfiguration\MSFT_TeamsUpgradeCOnfiguration.psm1" `
+            -ChildPath "..\DSCResources\MSFT_TeamsUpgradeConfiguration\MSFT_TeamsUpgradeConfiguration.psm1" `
             -Resolve
 
         Import-Module $ModulePath | Out-Null
