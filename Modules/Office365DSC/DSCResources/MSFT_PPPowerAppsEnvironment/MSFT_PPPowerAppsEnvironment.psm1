@@ -136,7 +136,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing existing instance of PowerApps environment {$DisplayName}"
-        Remove-AdminPowerAppEnvironment -EnvironmentName -$DisplayName -Confirm:$false | Out-Null
+        Remove-AdminPowerAppEnvironment -EnvironmentName -$DisplayName | Out-Null
     }
 }
 

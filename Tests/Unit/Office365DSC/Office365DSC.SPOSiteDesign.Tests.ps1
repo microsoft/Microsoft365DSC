@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SPOSiteDesign"
+    -DscResource "SPOSiteDesign" -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -28,7 +30,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Check Site Design " -Fixture {
             $testParams = @{
                 Title               = "DSC Site Design"
-                SiteScriptNames     = "Cust List", "List_Views"
+                SiteScriptNames     = @("Cust List", "List_Views")
                 WebTemplate         = "TeamSite"
                 IsDefault           = $false
                 Description         = "Created by DSC"
@@ -40,9 +42,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
 
             Mock -CommandName Get-PnPSiteScript -MockWith {
-                return @{
-                    SiteScriptIds = "12345-12345-12345-12345-12345", "22345-12345-12345-12345-12345"
-                }
+                return @(
+                    @{
+                        Id    = "12345-12345-12345-12345-12345"
+                        Title = "Cust List"
+                    },
+                    @{
+                        Id    = "12345-12345-12345-12345-12346"
+                        Title = "List_Views"
+                    }
+                )
             }
 
             Mock -CommandName Get-PnPSiteDesign -MockWith {
@@ -61,7 +70,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-            It "Adds the sige design in the Set method" {
+            It "Adds the site design in the Set method" {
                 Set-TargetResource @testParams
             }
 
@@ -82,6 +91,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPSiteDesign -MockWith {
                 return @{
                     Title               = "DSC Site Design"
+                    Id                  = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
                     SiteScriptNames     = "Cust List"
                     WebTemplate         = "TeamSite"
                     Description         = "Updated by DSC"
@@ -101,7 +111,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-            It "Updates the sige design in the Set method" {
+            It "Updates the site design in the Set method" {
                 Set-TargetResource @testParams
             }
 

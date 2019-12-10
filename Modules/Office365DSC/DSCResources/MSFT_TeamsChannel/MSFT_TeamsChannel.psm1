@@ -167,6 +167,7 @@ function Set-TargetResource
             if ($CurrentParameters.ContainsKey("NewDisplayName"))
             {
                 Write-Verbose -Message "Updating team channel to new channel name $NewDisplayName"
+                $CurrentParameters.Remove("DisplayName") | Out-Null
                 Set-TeamChannel @CurrentParameters -CurrentDisplayName $DisplayName
             }
         }

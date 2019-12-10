@@ -1957,3 +1957,38 @@ function ConvertTo-SPOUserProfilePropertyInstanceString
     }
     return $results
 }
+
+function Install-O365DSCDevBranch
+{
+    [CmdletBinding()]
+    param()
+    #region Download and Extract Dev branch's ZIP
+    $url         = "https://github.com/microsoft/Office365DSC/archive/Dev.zip"
+    $output      = "$($env:Temp)\dev.zip"
+    $extractPath = $env:Temp + "\O365Dev"
+
+    Invoke-WebRequest -Uri $url -OutFile $output
+
+    Expand-Archive $output -DestinationPath $extractPath -Force
+    #endregion
+
+    #region Install All Dependencies
+    $manifest = Import-PowerShellDataFile "$extractPath\Office365DSC-Dev\Modules\Office365DSC\Office365DSC.psd1"
+    $dependencies = $manifest.RequiredModules
+    foreach ($dependency in $dependencies)
+    {
+        Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force
+        Import-Module $dependency.ModuleName -Force
+    }
+    #endregion
+
+    #region Install O365DSC
+    $defaultPath = 'C:\Program Files\WindowsPowerShell\Modules\Office365DSC\'
+    $currentVersionPath = $defaultPath + $($manifest.ModuleVersion)
+    if (Test-Path $currentVersionPath)
+    {
+        Remove-Item $currentVersionPath -Recurse -Confirm:$false
+    }
+    Copy-Item "$extractPath\Office365DSC-Dev\Modules\Office365DSC" -Destination $currentVersionPath -Recurse -Force
+    #endregion
+}

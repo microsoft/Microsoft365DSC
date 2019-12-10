@@ -47,7 +47,7 @@
         @{
             Platform   = 'MSOnline'
             ModuleName = 'MSOnline'
-        },#>
+        },
         @{
             Platform   = 'PnP'
             ModuleName = 'SharePointPnPPowerShellOnline'
@@ -78,22 +78,9 @@
         $CurrentModuleName = $Module.ModuleName
         if ($null -eq $CurrentModuleName)
         {
-            # Get currently Loaded Modules list, connect to workload, and compare new list to figure out what the new
-            # temporary proxy module name is;
-            $currentModules = Get-Module | select Name
             Test-MSCloudLogin -Platform $Module.Platform -CloudCredential $GlobalAdminAccount
-            $newModules = Get-Module | select Name
-            $Diff = Compare-object -ReferenceObject $currentModules -DifferenceObject $newModules
-
-            if ($null -eq $Diff)
-            {
-                $foundModule = Get-Module | Where-Object -FilterScript {$_.ExportedCommands.Values.Name -ccontains $Module.RandomCmdlet}
-                $CurrentModuleName = $foundModule.Name
-            }
-            else
-            {
-                $CurrentModuleName = $Diff.Name
-            }
+            $foundModule = Get-Module | Where-Object -FilterScript {$_.ExportedCommands.Values.Name -ccontains $Module.RandomCmdlet}
+            $CurrentModuleName = $foundModule.Name
         }
         else
         {
@@ -121,19 +108,20 @@
             $StubContent += "function $($cmdlet.Name)`n{`r`n    $signature}`n"
             $i ++
         }
+        Write-Progress -Activity "Generating Stubs" -Completed
 
         $Content += "#region $($Module.Platform)`r`n"
-        $lines = $StubContent.Split([Environment]::NewLine)
-        $i = 1
-        foreach ($line in $lines)
+
+        $TypesToConvert = @('Microsoft.Online.SharePoint.PowerShell.SpoHubSitePipeBind', `
+            'Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind'
+        )
+
+        foreach ($type in $TypesToConvert)
         {
-            Write-Progress -Activity "Cleaning Stubs" -Status "Line $i of $($lines.Length)" -PercentComplete (($i/$lines.Length)*100)
-            $line = $line.Replace('[System.Collections.Generic.List[object]`n', '[System.Collections.Generic.List[object]]`n')
-            $Content += $line + "`r`n"
-            $i++
+            $StubContent = $StubContent.Replace($type, 'Object')
         }
+        $Content += $StubContent
         $Content += "#endregion`r`n"
-        Write-Progress -Activity "Cleaning Stubs" -Completed
         Write-Host "Done" -ForegroundColor Green
     }
     $Content | Out-File $DestinationFilePath -Encoding utf8
