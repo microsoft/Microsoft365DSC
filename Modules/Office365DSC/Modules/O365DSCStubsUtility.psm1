@@ -47,7 +47,7 @@
         @{
             Platform   = 'MSOnline'
             ModuleName = 'MSOnline'
-        },
+        },#>
         @{
             Platform   = 'PnP'
             ModuleName = 'SharePointPnPPowerShellOnline'
@@ -75,7 +75,8 @@
     foreach ($Module in $Modules)
     {
         Write-Host "Generating Stubs for {$($Module.Platform)}..." -NoNewline
-        if ($null -eq $Module.ModuleName)
+        $CurrentModuleName = $Module.ModuleName
+        if ($null -eq $CurrentModuleName)
         {
             # Get currently Loaded Modules list, connect to workload, and compare new list to figure out what the new
             # temporary proxy module name is;
@@ -87,11 +88,11 @@
             if ($null -eq $Diff)
             {
                 $foundModule = Get-Module | Where-Object -FilterScript {$_.ExportedCommands.Values.Name -ccontains $Module.RandomCmdlet}
-                $Module.ModuleName = $foundModule.Name
+                $CurrentModuleName = $foundModule.Name
             }
             else
             {
-                $Module.ModuleName = $Diff.Name
+                $CurrentModuleName = $Diff.Name
             }
         }
         else
@@ -99,7 +100,7 @@
             Test-MSCloudLogin -Platform $Module.Platform -CloudCredential $GlobalAdminAccount
         }
 
-        $cmdlets = Get-Command | Where-Object -FilterScript { $_.Source -eq $Module.ModuleName }
+        $cmdlets = Get-Command | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
         $StubContent = ''
         $i = 1
         foreach ($cmdlet in $cmdlets)
@@ -127,10 +128,7 @@
         foreach ($line in $lines)
         {
             Write-Progress -Activity "Cleaning Stubs" -Status "Line $i of $($lines.Length)" -PercentComplete (($i/$lines.Length)*100)
-            $line = $line -replace "\[System.Nullable\[Microsoft.*]]", "[System.Nullable[object]]"
-            $line = $line -replace "\[Microsoft.*.\]", "[object]"
-            $line = $line -replace "\[SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind\[object]", `
-                "[SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[object]]"
+            $line = $line.Replace('[System.Collections.Generic.List[object]`n', '[System.Collections.Generic.List[object]]`n')
             $Content += $line + "`r`n"
             $i++
         }
