@@ -11,7 +11,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
+        [ValidateSet("ExistingExternalUserSharingOnly", "ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
         $SharingCapability,
 
         [Parameter()]
@@ -192,7 +192,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
+        [ValidateSet("ExistingExternalUserSharingOnly", "ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
         $SharingCapability,
 
         [Parameter()]
@@ -353,7 +353,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
+        [ValidateSet("ExistingExternalUserSharingOnly", "ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly")]
         $SharingCapability,
 
         [Parameter()]

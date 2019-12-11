@@ -31,6 +31,9 @@
   * Initial Release;
 * SPOPropertyBag
   * Added multithreading;
+* SPOSharingSettings
+  * Added ExistingExternalUserSharingOnly as a supported value
+    for SharingCapabilities;
 * SPOTheme
   * Fixed an issue with the Set-TargetResource
     still using SPO management shell cmdlets instead of PnP
