@@ -1373,7 +1373,7 @@ function Test-Office365DSCParameterState
         [System.String]
         $Source = 'Generic'
     )
-    $VerbosePreference = "SilentlyContinue"
+    $VerbosePreference = "Continue"
     $WarningPreference = "SilentlyContinue"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -1617,13 +1617,17 @@ function Test-Office365DSCParameterState
         $driftedValue = ''
         foreach ($key in $DriftedParameters.Keys)
         {
-            $driftedValue += $key + "|"
+            Write-Verbose -Message "Detected Drifted Parameter [$Source]$key"
+            #region Telemetry
+            $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+            $driftedData.Add("Event", "DriftedParameter")
+            $driftedData.Add("Parameter", "[$Source]$key")
+            Add-O365DSCTelemetryEvent -Type "DriftInfo" -Data $driftedData
+            #endregion
             $EventMessage += "            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n"
         }
         #region Telemetry
-        $driftedValue = $driftedValue.Remove($driftedValue.Length -1, 1)
         $data.Add("Event", "ConfigurationDrift")
-        $data.Add("Parameters", $driftedValue)
         #endregion
         $EventMessage += "        </ParametersNotInDesiredState>`r`n"
         $EventMessage += "    </ConfigurationDrift>`r`n"
