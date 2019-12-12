@@ -9,7 +9,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('canada', 'unitesstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
+        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
         $Location,
 
         [Parameter(Mandatory = $true)]
@@ -82,7 +82,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('canada', 'unitesstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
+        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
         $Location,
 
         [Parameter(Mandatory = $true)]
@@ -151,7 +151,7 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('canada', 'unitesstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
+        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
         $Location,
 
         [Parameter(Mandatory = $true)]
