@@ -3,15 +3,17 @@ param(
     [Parameter()]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                               -ChildPath "..\Stubs\Office365.psm1" `
-                               -Resolve)
+            -ChildPath "..\Stubs\Office365.psm1" `
+            -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                               -ChildPath "..\UnitTestHelper.psm1" `
-                               -Resolve)
+        -ChildPath "..\UnitTestHelper.psm1" `
+        -Resolve)
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                              -DscResource "SPOHubSite"
+    -DscResource "SPOHubSite" -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -30,7 +32,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Description          = "Hub for the Marketing division"
                 LogoUrl              = "https://contoso.sharepoint.com/sites/Marketing/SiteAssets/hublogo.png"
                 RequiresJoinApproval = $true
-                AllowedToJoin        = @("admin@contoso.onmicrosoft.com","superuser@contoso.onmicrosoft.com")
+                AllowedToJoin        = @("admin@contoso.onmicrosoft.com", "superuser@contoso.onmicrosoft.com")
                 SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
                 GlobalAdminAccount   = $GlobalAdminAccount
                 Ensure               = "Present"
@@ -55,9 +57,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "When the site isn't a hub site and shouldn't" -Fixture {
             $testParams = @{
-                Url                  = "https://contoso.sharepoint.com/sites/Marketing"
-                GlobalAdminAccount   = $GlobalAdminAccount
-                Ensure               = "Absent"
+                Url                = "https://contoso.sharepoint.com/sites/Marketing"
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = "Absent"
             }
 
             Mock -CommandName Get-SPOSite -MockWith {
@@ -77,9 +79,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "When the site is a hub site and shouldn't" -Fixture {
             $testParams = @{
-                Url                  = "https://contoso.sharepoint.com/sites/Marketing"
-                GlobalAdminAccount   = $GlobalAdminAccount
-                Ensure               = "Absent"
+                Url                = "https://contoso.sharepoint.com/sites/Marketing"
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = "Absent"
             }
 
             Mock -CommandName Get-SPOSite -MockWith {
@@ -90,7 +92,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-SPOHubSite -MockWith {
                 $returnVal = @{
-                    Permissions = @(
+                    Permissions          = @(
                         @{
                             PrincipalName = "i:0#.f|membership|admin@contoso.onmicrosoft.com"
                         },
@@ -98,7 +100,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             PrincipalName = "c:0o.c|federateddirectoryclaimprovider|bfc75218-faac-4202-bf33-3a8ba2e2b4a7"
                         }
                     )
-                    LogoUrl      = "https://contoso.sharepoint.com/sites/Marketing/SiteAssets/hublogo.png"
+                    LogoUrl              = "https://contoso.sharepoint.com/sites/Marketing/SiteAssets/hublogo.png"
                     Title                = "Marketing Hub"
                     Description          = "Hub for the Marketing division"
                     RequiresJoinApproval = $true
@@ -138,7 +140,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Description          = "Hub for the Marketing division"
                 LogoUrl              = "https://contoso.sharepoint.com/sites/Marketing/SiteAssets/hublogo.png"
                 RequiresJoinApproval = $true
-                AllowedToJoin        = @("admin@contoso.onmicrosoft.com","group@contoso.onmicrosoft.com")
+                AllowedToJoin        = @("admin@contoso.onmicrosoft.com", "group@contoso.onmicrosoft.com")
                 SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
                 GlobalAdminAccount   = $GlobalAdminAccount
                 Ensure               = "Present"
@@ -152,7 +154,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-SPOHubSite -MockWith {
                 $returnVal = @{
-                    Permissions = @(
+                    Permissions          = @(
                         @{
                             PrincipalName = "i:0#.f|membership|admin@contoso.onmicrosoft.com"
                         },
@@ -160,7 +162,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             PrincipalName = "c:0o.c|federateddirectoryclaimprovider|bfc75218-faac-4202-bf33-3a8ba2e2b4a7"
                         }
                     )
-                    LogoUrl      = "https://contoso.sharepoint.com/sites/Marketing/SiteAssets/hublogo.png"
+                    LogoUrl              = "https://contoso.sharepoint.com/sites/Marketing/SiteAssets/hublogo.png"
                     Title                = "Marketing Hub"
                     Description          = "Hub for the Marketing division"
                     RequiresJoinApproval = $true
@@ -193,7 +195,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Description          = "Hub for the Marketing division"
                 LogoUrl              = "https://contoso.sharepoint.com/sites/Marketing/SiteAssets/hublogo.png"
                 RequiresJoinApproval = $true
-                AllowedToJoin        = @("admin@contoso.onmicrosoft.com","group@contoso.onmicrosoft.com")
+                AllowedToJoin        = @("admin@contoso.onmicrosoft.com", "group@contoso.onmicrosoft.com")
                 SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
                 GlobalAdminAccount   = $GlobalAdminAccount
                 Ensure               = "Present"
@@ -207,7 +209,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-SPOHubSite -MockWith {
                 $returnVal = @{
-                    Permissions = @(
+                    Permissions          = @(
                         @{
                             PrincipalName = "i:0#.f|membership|wrongadmin@contoso.onmicrosoft.com"
                         },
@@ -215,7 +217,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             PrincipalName = "c:0o.c|federateddirectoryclaimprovider|bfc75218-faac-4202-bf33-3a8ba2e2b4a7"
                         }
                     )
-                    LogoUrl      = "https://contoso.sharepoint.com/sites/Marketing/SiteAssets/hublogo.png"
+                    LogoUrl              = "https://contoso.sharepoint.com/sites/Marketing/SiteAssets/hublogo.png"
                     Title                = "Wrong Title"
                     Description          = "Wrong Description"
                     RequiresJoinApproval = $false
@@ -257,7 +259,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Description          = "Hub for the Marketing division"
                 LogoUrl              = "https://contoso.sharepoint.com/sites/Marketing/SiteAssets/hublogo.png"
                 RequiresJoinApproval = $true
-                AllowedToJoin        = @("admin@contoso.onmicrosoft.com","group@contoso.onmicrosoft.com","SecurityGroup")
+                AllowedToJoin        = @("admin@contoso.onmicrosoft.com", "group@contoso.onmicrosoft.com", "SecurityGroup")
                 SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
                 GlobalAdminAccount   = $GlobalAdminAccount
                 Ensure               = "Present"
@@ -300,7 +302,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Description          = "Hub for the Marketing division"
                 LogoUrl              = "https://contoso.sharepoint.com/sites/Marketing/SiteAssets/hublogo.png"
                 RequiresJoinApproval = $true
-                AllowedToJoin        = @("admin@contoso.onmicrosoft.com","group@contoso.onmicrosoft.com","SecurityGroup")
+                AllowedToJoin        = @("admin@contoso.onmicrosoft.com", "group@contoso.onmicrosoft.com", "SecurityGroup")
                 SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
                 GlobalAdminAccount   = $GlobalAdminAccount
                 Ensure               = "Present"
@@ -322,13 +324,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Url = "https://contoso.com/sites/TestSite"
+                Url                = "https://contoso.com/sites/TestSite"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-SPOSite -MockWith {
                 return @{
-                    Url = "https://contoso.com/sites/TestSite"
+                    Url    = "https://contoso.com/sites/TestSite"
                     Ensure = "Present"
                 }
             }

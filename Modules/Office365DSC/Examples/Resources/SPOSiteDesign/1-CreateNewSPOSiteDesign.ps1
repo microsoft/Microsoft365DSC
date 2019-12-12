@@ -22,8 +22,8 @@ Configuration Example
             IsDefault           = $false
             Description         = "Created by DSC"
             PreviewImageAltText = "Office 365"
-            Ensure             = "Present"
-            GlobalAdminAccount = $credsGlobalAdmin
+            Ensure              = "Present"
+            GlobalAdminAccount  = $credsGlobalAdmin
         }
     }
 }

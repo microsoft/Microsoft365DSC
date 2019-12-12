@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "EXOHostedContentFilterRule"
+    -DscResource "EXOHostedContentFilterRule" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -69,10 +71,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "HostedContentFilterRule creation." -Fixture {
             $testParams = @{
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
-                Identity           = 'TestRule'
-                HostedContentFilterPolicy    = 'TestPolicy'
+                Ensure                    = 'Present'
+                GlobalAdminAccount        = $GlobalAdminAccount
+                Identity                  = 'TestRule'
+                HostedContentFilterPolicy = 'TestPolicy'
             }
 
             Mock -CommandName Get-HostedContentFilterRule -MockWith {
@@ -95,7 +97,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure                    = 'Present'
                 Identity                  = 'TestRule'
                 GlobalAdminAccount        = $GlobalAdminAccount
-                HostedContentFilterPolicy           = 'TestPolicy'
+                HostedContentFilterPolicy = 'TestPolicy'
                 Enabled                   = $true
                 Priority                  = 0
                 ExceptIfRecipientDomainIs = @('dev.contoso.com')
@@ -110,7 +112,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     Ensure                    = 'Present'
                     Identity                  = 'TestRule'
-                    HostedContentFilterPolicy           = 'TestPolicy'
+                    HostedContentFilterPolicy = 'TestPolicy'
                     Priority                  = 0
                     ExceptIfRecipientDomainIs = @('dev.contoso.com')
                     ExceptIfSentTo            = @('test@contoso.com')
@@ -132,7 +134,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure                    = 'Present'
                 Identity                  = 'TestRule'
                 GlobalAdminAccount        = $GlobalAdminAccount
-                HostedContentFilterPolicy           = 'TestPolicy'
+                HostedContentFilterPolicy = 'TestPolicy'
                 Enabled                   = $true
                 Priority                  = 0
                 ExceptIfRecipientDomainIs = @('dev.contoso.com')
@@ -148,7 +150,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                    = 'Present'
                     Identity                  = 'TestRule'
                     GlobalAdminAccount        = $GlobalAdminAccount
-                    HostedContentFilterPolicy           = 'TestPolicy'
+                    HostedContentFilterPolicy = 'TestPolicy'
                     Enabled                   = $true
                     Priority                  = 0
                     ExceptIfRecipientDomainIs = @('notdev.contoso.com')
@@ -171,10 +173,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "HostedContentFilterRule removal." -Fixture {
             $testParams = @{
-                Ensure             = 'Absent'
-                GlobalAdminAccount = $GlobalAdminAccount
-                Identity           = 'TestRule'
-                HostedContentFilterPolicy    = 'TestPolicy'
+                Ensure                    = 'Absent'
+                GlobalAdminAccount        = $GlobalAdminAccount
+                Identity                  = 'TestRule'
+                HostedContentFilterPolicy = 'TestPolicy'
             }
 
             Mock -CommandName Get-HostedContentFilterRule -MockWith {
@@ -194,9 +196,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Identity           = 'contoso.com'
-                HostedContentFilterPolicy    = 'TestPolicy'
-                GlobalAdminAccount           = $GlobalAdminAccount
+                Identity                  = 'contoso.com'
+                HostedContentFilterPolicy = 'TestPolicy'
+                GlobalAdminAccount        = $GlobalAdminAccount
             }
 
             It "Should Reverse Engineer resource from the Export method" {

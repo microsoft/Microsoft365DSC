@@ -16,7 +16,7 @@ function SectionChanged
         if ($pnlControl.GetType().ToString() -eq "System.Windows.Forms.Checkbox")
         {
             # TODO remove exception after the SPO Management Shell bug is fixed;
-            if ($pnlControl.Name -ne 'chckSPOSite' -and $pnlControl.Name -ne 'chckSPOHubSite' -and $pnlControl.Name -ne 'chckSPOSharingSettings')
+            if ($pnlControl.Name -ne 'chckSPOSite' -and $pnlControl.Name -ne 'chckSPOHubSite')
             {
                 $pnlControl.Checked = $Control.Checked
             }
@@ -66,7 +66,7 @@ function Show-O365GUI
         $pnlO365 = New-Object System.Windows.Forms.Panel
         $pnlO365.Top = 88 + $topBannerHeight
         $pnlO365.Left = $firstColumnLeft
-        $pnlO365.Height = 60
+        $pnlO365.Height = 80
         $pnlO365.Width = 300
         $pnlO365.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -86,8 +86,16 @@ function Show-O365GUI
         $chckO365Group.Text = "Groups"
         $pnlO365.Controls.Add($chckO365Group);
 
+        $chckO365OrgCustomizationSetting = New-Object System.Windows.Forms.CheckBox
+        $chckO365OrgCustomizationSetting.Top = 40
+        $chckO365OrgCustomizationSetting.AutoSize = $true;
+        $chckO365OrgCustomizationSetting.Name = "chckO365OrgCustomizationSetting"
+        $chckO365OrgCustomizationSetting.Checked = $true
+        $chckO365OrgCustomizationSetting.Text = "Office 365 Organization Customization Setting"
+        $pnlO365.Controls.Add($chckO365OrgCustomizationSetting);
+
         $chckO365User = New-Object System.Windows.Forms.CheckBox
-        $chckO365User.Top = 40
+        $chckO365User.Top = 60
         $chckO365User.AutoSize = $true;
         $chckO365User.Name = "chckO365User"
         $chckO365User.Checked = $true
@@ -99,7 +107,7 @@ function Show-O365GUI
         $chckAllO365.Top = $topBannerHeight + 40
         $chckAllO365.Checked = $true
         $chckAllO365.AutoSize = $true
-        $chckAllO365.Add_CheckedChanged({SectionChanged -Control $chckAllO365 -Panel $pnlO365})
+        $chckAllO365.Add_CheckedChanged( { SectionChanged -Control $chckAllO365 -Panel $pnlO365 })
         $pnlMain.Controls.Add($chckAllO365)
         #endregion
 
@@ -115,12 +123,36 @@ function Show-O365GUI
         $pnlExo = New-Object System.Windows.Forms.Panel
         $pnlExo.Top = 388 + $topBannerHeight
         $pnlExo.Left = $firstColumnLeft
-        $pnlExo.Height = 300
+        $pnlExo.Height = 380
         $pnlExo.Width = 300
         $pnlExo.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
+        $chckEXOAcceptedDomain = New-Object System.Windows.Forms.CheckBox
+        $chckEXOAcceptedDomain.Top = 0
+        $chckEXOAcceptedDomain.AutoSize = $true;
+        $chckEXOAcceptedDomain.Name = "chckEXOAcceptedDomain"
+        $chckEXOAcceptedDomain.Checked = $true
+        $chckEXOAcceptedDomain.Text = "Accepted Domains"
+        $pnlExo.Controls.Add($chckEXOAcceptedDomain)
+
+        $chckEXOAntiPhishPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckEXOAntiPhishPolicy.Top = 20
+        $chckEXOAntiPhishPolicy.AutoSize = $true;
+        $chckEXOAntiPhishPolicy.Name = "chckEXOAntiPhishPolicy"
+        $chckEXOAntiPhishPolicy.Checked = $true
+        $chckEXOAntiPhishPolicy.Text = "Anti-Phish Policies"
+        $pnlExo.Controls.Add($chckEXOAntiPhishPolicy)
+
+        $chckEXOAntiPhishRule = New-Object System.Windows.Forms.CheckBox
+        $chckEXOAntiPhishRule.Top = 40
+        $chckEXOAntiPhishRule.AutoSize = $true;
+        $chckEXOAntiPhishRule.Name = "chckEXOAntiPhishRule"
+        $chckEXOAntiPhishRule.Checked = $true
+        $chckEXOAntiPhishRule.Text = "Anti-Phish Rules"
+        $pnlExo.Controls.Add($chckEXOAntiPhishRule)
+
         $chckEXOAtpPolicyForO365 = New-Object System.Windows.Forms.CheckBox
-        $chckEXOAtpPolicyForO365.Top = 0
+        $chckEXOAtpPolicyForO365.Top = 60
         $chckEXOAtpPolicyForO365.AutoSize = $true;
         $chckEXOAtpPolicyForO365.Name = "chckEXOAtpPolicyForO365"
         $chckEXOAtpPolicyForO365.Checked = $true
@@ -128,7 +160,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOAtpPolicyForO365)
 
         $chckEXOClientAccessRule = New-Object System.Windows.Forms.CheckBox
-        $chckEXOClientAccessRule.Top = 20
+        $chckEXOClientAccessRule.Top = 80
         $chckEXOClientAccessRule.AutoSize = $true;
         $chckEXOClientAccessRule.Name = "chckEXOClientAccessRule"
         $chckEXOClientAccessRule.Checked = $true
@@ -136,7 +168,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOClientAccessRule)
 
         $chckEXOCASMailboxPlan = New-Object System.Windows.Forms.CheckBox
-        $chckEXOCASMailboxPlan.Top = 40
+        $chckEXOCASMailboxPlan.Top = 100
         $chckEXOCASMailboxPlan.AutoSize = $true;
         $chckEXOCASMailboxPlan.Name = "chckEXOCASMailboxPlan"
         $chckEXOCASMailboxPlan.Checked = $true
@@ -144,7 +176,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOCASMailboxPlan)
 
         $chckEXODkimSigningConfig = New-Object System.Windows.Forms.CheckBox
-        $chckEXODkimSigningConfig.Top = 60
+        $chckEXODkimSigningConfig.Top = 120
         $chckEXODkimSigningConfig.AutoSize = $true;
         $chckEXODkimSigningConfig.Name = "chckEXODkimSigningConfig"
         $chckEXODkimSigningConfig.Checked = $true
@@ -152,7 +184,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXODkimSigningConfig)
 
         $chckEXOHostedConnectionFilterPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckEXOHostedConnectionFilterPolicy.Top = 80
+        $chckEXOHostedConnectionFilterPolicy.Top = 140
         $chckEXOHostedConnectionFilterPolicy.AutoSize = $true;
         $chckEXOHostedConnectionFilterPolicy.Name = "chckEXOHostedConnectionFilterPolicy"
         $chckEXOHostedConnectionFilterPolicy.Checked = $true
@@ -160,7 +192,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOHostedConnectionFilterPolicy)
 
         $chckEXOHostedContentFilterPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckEXOHostedContentFilterPolicy.Top = 100
+        $chckEXOHostedContentFilterPolicy.Top = 160
         $chckEXOHostedContentFilterPolicy.AutoSize = $true;
         $chckEXOHostedContentFilterPolicy.Name = "chckEXOHostedContentFilterPolicy"
         $chckEXOHostedContentFilterPolicy.Checked = $true
@@ -168,7 +200,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOHostedContentFilterPolicy)
 
         $chckEXOHostedContentFilterRule = New-Object System.Windows.Forms.CheckBox
-        $chckEXOHostedContentFilterRule.Top = 120
+        $chckEXOHostedContentFilterRule.Top = 180
         $chckEXOHostedContentFilterRule.AutoSize = $true;
         $chckEXOHostedContentFilterRule.Name = "chckEXOHostedContentFilterRule"
         $chckEXOHostedContentFilterRule.Checked = $true
@@ -176,7 +208,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOHostedContentFilterRule)
 
         $chckEXOMailboxSettings = New-Object System.Windows.Forms.CheckBox
-        $chckEXOMailboxSettings.Top = 140
+        $chckEXOMailboxSettings.Top = 200
         $chckEXOMailboxSettings.AutoSize = $true;
         $chckEXOMailboxSettings.Name = "chckEXOMailboxSettings"
         $chckEXOMailboxSettings.Checked = $true
@@ -184,15 +216,23 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOMailboxSettings)
 
         $chckEXOMailTips = New-Object System.Windows.Forms.CheckBox
-        $chckEXOMailTips.Top = 160
+        $chckEXOMailTips.Top = 220
         $chckEXOMailTips.AutoSize = $true;
         $chckEXOMailTips.Name = "chckEXOMailTips"
         $chckEXOMailTips.Checked = $true
         $chckEXOMailTips.Text = "Mail Tips"
         $pnlExo.Controls.Add($chckEXOMailTips);
 
+        $chckEXOOrganizationConfig = New-Object System.Windows.Forms.CheckBox
+        $chckEXOOrganizationConfig.Top = 240
+        $chckEXOOrganizationConfig.AutoSize = $true;
+        $chckEXOOrganizationConfig.Name = "chckEXOOrganizationConfig"
+        $chckEXOOrganizationConfig.Checked = $true
+        $chckEXOOrganizationConfig.Text = "Organization Config"
+        $pnlExo.Controls.Add($chckEXOOrganizationConfig);
+
         $chckEXOOutboundSpamFilterPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckEXOOutboundSpamFilterPolicy.Top = 180
+        $chckEXOOutboundSpamFilterPolicy.Top = 260
         $chckEXOOutboundSpamFilterPolicy.AutoSize = $true;
         $chckEXOOutboundSpamFilterPolicy.Name = "chckEXOOutboundSpamFilterPolicy"
         $chckEXOOutboundSpamFilterPolicy.Checked = $true
@@ -200,7 +240,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOOutboundSpamFilterPolicy)
 
         $chckEXOSafeAttachmentPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckEXOSafeAttachmentPolicy.Top = 200
+        $chckEXOSafeAttachmentPolicy.Top = 280
         $chckEXOSafeAttachmentPolicy.AutoSize = $true;
         $chckEXOSafeAttachmentPolicy.Name = "chckEXOSafeAttachmentPolicy"
         $chckEXOSafeAttachmentPolicy.Checked = $true
@@ -208,7 +248,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOSafeAttachmentPolicy)
 
         $chckEXOSafeAttachmentRule = New-Object System.Windows.Forms.CheckBox
-        $chckEXOSafeAttachmentRule.Top = 220
+        $chckEXOSafeAttachmentRule.Top = 300
         $chckEXOSafeAttachmentRule.AutoSize = $true;
         $chckEXOSafeAttachmentRule.Name = "chckEXOSafeAttachmentRule"
         $chckEXOSafeAttachmentRule.Checked = $true
@@ -216,7 +256,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOSafeAttachmentRule)
 
         $chckEXOSafeLinksPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckEXOSafeLinksPolicy.Top = 240
+        $chckEXOSafeLinksPolicy.Top = 320
         $chckEXOSafeLinksPolicy.AutoSize = $true;
         $chckEXOSafeLinksPolicy.Name = "chckEXOSafeLinksPolicy"
         $chckEXOSafeLinksPolicy.Checked = $true
@@ -224,7 +264,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOSafeLinksPolicy)
 
         $chckEXOSafeLinksRule = New-Object System.Windows.Forms.CheckBox
-        $chckEXOSafeLinksRule.Top = 260
+        $chckEXOSafeLinksRule.Top = 340
         $chckEXOSafeLinksRule.AutoSize = $true;
         $chckEXOSafeLinksRule.Name = "chckEXOSafeLinksRule"
         $chckEXOSafeLinksRule.Checked = $true
@@ -232,7 +272,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOSafeLinksRule)
 
         $chckEXOSharedMailbox = New-Object System.Windows.Forms.CheckBox
-        $chckEXOSharedMailbox.Top = 280
+        $chckEXOSharedMailbox.Top = 360
         $chckEXOSharedMailbox.AutoSize = $true;
         $chckEXOSharedMailbox.Name = "chckEXOSharedMailbox"
         $chckEXOSharedMailbox.Checked = $true
@@ -244,7 +284,7 @@ function Show-O365GUI
         $chckAllEXO.Top = $topBannerHeight + 340
         $chckAllEXO.Checked = $true
         $chckAllEXO.AutoSize = $true
-        $chckAllEXO.Add_CheckedChanged({SectionChanged -Control $chckAllEXO -Panel $pnlEXO})
+        $chckAllEXO.Add_CheckedChanged( { SectionChanged -Control $chckAllEXO -Panel $pnlEXO })
         $pnlMain.Controls.Add($chckAllEXO)
         #endregion
 
@@ -260,7 +300,7 @@ function Show-O365GUI
         $pnlSPO = New-Object System.Windows.Forms.Panel
         $pnlSPO.Top = 88 + $topBannerHeight
         $pnlSPO.Left = $SecondColumnLeft
-        $pnlSPO.Height = 300
+        $pnlSPO.Height = 320
         $pnlSPO.Width = 300
         $pnlSPO.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -289,7 +329,7 @@ function Show-O365GUI
         $chckSPOHubSite.Text = "Hub Sites"
         $pnlSPO.Controls.Add($chckSPOHubSite)
 
-        $chckSPOPropertyBag= New-Object System.Windows.Forms.CheckBox
+        $chckSPOPropertyBag = New-Object System.Windows.Forms.CheckBox
         $chckSPOPropertyBag.Top = 60
         $chckSPOPropertyBag.AutoSize = $true;
         $chckSPOPropertyBag.Name = "chckSPOPropertyBag"
@@ -317,8 +357,8 @@ function Show-O365GUI
         $chckSPOSharingSettings.Top = 120
         $chckSPOSharingSettings.AutoSize = $true;
         $chckSPOSharingSettings.Name = "chckSPOSharingSettings"
-        $chckSPOSharingSettings.Checked = $false #TODO enable after SPO Mgmt Shell bug is fixed
-        $chckSPOSharingSettings.Enabled = $false #TODO enable after SPO Mgmt Shell bug is fixed
+        $chckSPOSharingSettings.Checked = $true
+        $chckSPOSharingSettings.Enabled = $true
         $chckSPOSharingSettings.Text = "Sharing Settings"
         $pnlSPO.Controls.Add($chckSPOSharingSettings)
 
@@ -339,16 +379,24 @@ function Show-O365GUI
         $chckSPOSiteAuditSettings.Text = "Site Audit Settings"
         $pnlSPO.Controls.Add($chckSPOSiteAuditSettings)
 
+        $chckSPOSiteDesign = New-Object System.Windows.Forms.CheckBox
+        $chckSPOSiteDesign.Top = 180
+        $chckSPOSiteDesign.AutoSize = $true;
+        $chckSPOSiteDesign.Name = "chckSPOSiteDesign"
+        $chckSPOSiteDesign.Checked = $true
+        $chckSPOSiteDesign.Text = "Site Designs"
+        $pnlSPO.Controls.Add($chckSPOSiteDesign)
+
         $chckSPOSiteDesignRights = New-Object System.Windows.Forms.CheckBox
-        $chckSPOSiteDesignRights.Top = 180
+        $chckSPOSiteDesignRights.Top = 200
         $chckSPOSiteDesignRights.AutoSize = $true;
         $chckSPOSiteDesignRights.Name = "chckSPOSiteDesignRights"
         $chckSPOSiteDesignRights.Checked = $true
         $chckSPOSiteDesignRights.Text = "Site Design Rights"
         $pnlSPO.Controls.Add($chckSPOSiteDesignRights)
 
-        $chckSPOStorageEntity= New-Object System.Windows.Forms.CheckBox
-        $chckSPOStorageEntity.Top = 200
+        $chckSPOStorageEntity = New-Object System.Windows.Forms.CheckBox
+        $chckSPOStorageEntity.Top = 220
         $chckSPOStorageEntity.AutoSize = $true;
         $chckSPOStorageEntity.Name = "chckSPOStorageEntity"
         $chckSPOStorageEntity.Checked = $true
@@ -356,7 +404,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOStorageEntity)
 
         $chckSPOTenantCDNPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSPOTenantCDNPolicy.Top = 220
+        $chckSPOTenantCDNPolicy.Top = 240
         $chckSPOTenantCDNPolicy.AutoSize = $true;
         $chckSPOTenantCDNPolicy.Name = "chckSPOTenantCDNPolicy"
         $chckSPOTenantCDNPolicy.Checked = $true
@@ -364,7 +412,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOTenantCDNPolicy)
 
         $chckSPOTenantSettings = New-Object System.Windows.Forms.CheckBox
-        $chckSPOTenantSettings.Top = 240
+        $chckSPOTenantSettings.Top = 260
         $chckSPOTenantSettings.AutoSize = $true;
         $chckSPOTenantSettings.Name = "chckSPOTenantSettings"
         $chckSPOTenantSettings.Checked = $true
@@ -372,7 +420,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOTenantSettings)
 
         $chckSPOTheme = New-Object System.Windows.Forms.CheckBox
-        $chckSPOTheme.Top = 260
+        $chckSPOTheme.Top = 280
         $chckSPOTheme.AutoSize = $true;
         $chckSPOTheme.Name = "chckSPOTheme"
         $chckSPOTheme.Checked = $true
@@ -380,7 +428,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOTheme)
 
         $chckSPOUserProfileProperty = New-Object System.Windows.Forms.CheckBox
-        $chckSPOUserProfileProperty.Top = 280
+        $chckSPOUserProfileProperty.Top = 300
         $chckSPOUserProfileProperty.AutoSize = $true;
         $chckSPOUserProfileProperty.Name = "chckSPOUserProfileProperty"
         $chckSPOUserProfileProperty.Checked = $true
@@ -392,7 +440,7 @@ function Show-O365GUI
         $chckAllSharePoint.Top = $topBannerHeight + 40
         $chckAllSharePoint.Checked = $true
         $chckAllSharePoint.AutoSize = $true
-        $chckAllSharePoint.Add_CheckedChanged({SectionChanged -Control $chckAllSharePoint -Panel $pnlSPO})
+        $chckAllSharePoint.Add_CheckedChanged( { SectionChanged -Control $chckAllSharePoint -Panel $pnlSPO })
         $pnlMain.Controls.Add($chckAllSharePoint)
         #endregion
 
@@ -401,20 +449,28 @@ function Show-O365GUI
         $imagePath = $PSScriptRoot + "\..\Dependencies\Images\SecurityAndCompliance.png"
         $imgSC.ImageLocation = $imagePath
         $imgSC.Left = $SecondColumnLeft
-        $imgSC.Top = $topBannerHeight + $pnlSPO.Height + $imgSPO.Height + 75
+        $imgSC.Top = $topBannerHeight + $pnlSPO.Height + $imgSPO.Height + 40
         $imgSC.AutoSize = $true
         $pnlMain.Controls.Add($imgSC)
 
         $pnlSC = New-Object System.Windows.Forms.Panel
-        $pnlSC.Top = $pnlSPO.Height + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 125
+        $pnlSC.Top = $pnlSPO.Height + $topBannerHeight + $imgSPO.Height + $imgSC.Height + 90
         $pnlSC.Left = $SecondColumnLeft
 
-        $pnlSC.Height = 240
+        $pnlSC.Height = 400
         $pnlSC.Width = 300
         $pnlSC.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
+        $chckSCAuditConfigurationPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckSCAuditConfigurationPolicy.Top = 0
+        $chckSCAuditConfigurationPolicy.AutoSize = $true;
+        $chckSCAuditConfigurationPolicy.Name = "chckSCAuditConfigurationPolicy"
+        $chckSCAuditConfigurationPolicy.Checked = $true
+        $chckSCAuditConfigurationPolicy.Text = "Audit Configuration Policies"
+        $pnlSC.Controls.Add($chckSCAuditConfigurationPolicy)
+
         $chckSCCaseHoldPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSCCaseHoldPolicy.Top = 0
+        $chckSCCaseHoldPolicy.Top = 20
         $chckSCCaseHoldPolicy.AutoSize = $true;
         $chckSCCaseHoldPolicy.Name = "chckSCCaseHoldPolicy"
         $chckSCCaseHoldPolicy.Checked = $true
@@ -422,7 +478,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCCaseHoldPolicy)
 
         $chckSCCaseHoldRule = New-Object System.Windows.Forms.CheckBox
-        $chckSCCaseHoldRule.Top = 20
+        $chckSCCaseHoldRule.Top = 40
         $chckSCCaseHoldRule.AutoSize = $true;
         $chckSCCaseHoldRule.Name = "chckSCCaseHoldRule"
         $chckSCCaseHoldRule.Checked = $true
@@ -430,7 +486,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCCaseHoldRule)
 
         $chckSCComplianceCase = New-Object System.Windows.Forms.CheckBox
-        $chckSCComplianceCase.Top = 40
+        $chckSCComplianceCase.Top = 60
         $chckSCComplianceCase.AutoSize = $true;
         $chckSCComplianceCase.Name = "chckSCComplianceCase"
         $chckSCComplianceCase.Checked = $true
@@ -438,7 +494,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCComplianceCase)
 
         $chckSCComplianceSearch = New-Object System.Windows.Forms.CheckBox
-        $chckSCComplianceSearch.Top = 60
+        $chckSCComplianceSearch.Top = 80
         $chckSCComplianceSearch.AutoSize = $true;
         $chckSCComplianceSearch.Name = "chckSCComplianceSearch"
         $chckSCComplianceSearch.Checked = $true
@@ -446,7 +502,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCComplianceSearch)
 
         $chckSCComplianceSearchAction = New-Object System.Windows.Forms.CheckBox
-        $chckSCComplianceSearchAction.Top = 80
+        $chckSCComplianceSearchAction.Top = 100
         $chckSCComplianceSearchAction.AutoSize = $true;
         $chckSCComplianceSearchAction.Name = "chckSCComplianceSearchAction"
         $chckSCComplianceSearchAction.Checked = $true
@@ -454,7 +510,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCComplianceSearchAction)
 
         $chckSCComplianceTag = New-Object System.Windows.Forms.CheckBox
-        $chckSCComplianceTag.Top = 100
+        $chckSCComplianceTag.Top = 120
         $chckSCComplianceTag.AutoSize = $true;
         $chckSCComplianceTag.Name = "chckSCComplianceTag"
         $chckSCComplianceTag.Checked = $true
@@ -462,7 +518,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCComplianceTag)
 
         $chckSCDLPCompliancePolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSCDLPCompliancePolicy.Top = 120
+        $chckSCDLPCompliancePolicy.Top = 140
         $chckSCDLPCompliancePolicy.AutoSize = $true;
         $chckSCDLPCompliancePolicy.Name = "chckSCDLPCompliancePolicy"
         $chckSCDLPCompliancePolicy.Checked = $true
@@ -470,15 +526,63 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCDLPCompliancePolicy)
 
         $chckSCDLPComplianceRule = New-Object System.Windows.Forms.CheckBox
-        $chckSCDLPComplianceRule.Top = 140
+        $chckSCDLPComplianceRule.Top = 160
         $chckSCDLPComplianceRule.AutoSize = $true;
         $chckSCDLPComplianceRule.Name = "chckSCDLPComplianceRule"
         $chckSCDLPComplianceRule.Checked = $true
         $chckSCDLPComplianceRule.Text = "Data Loss Prevention Compliance Rule"
         $pnlSC.Controls.Add($chckSCDLPComplianceRule)
 
+        $chckSCFilePlanPropertyAuthority = New-Object System.Windows.Forms.CheckBox
+        $chckSCFilePlanPropertyAuthority.Top = 180
+        $chckSCFilePlanPropertyAuthority.AutoSize = $true;
+        $chckSCFilePlanPropertyAuthority.Name = "chckSCFilePlanPropertyAuthority"
+        $chckSCFilePlanPropertyAuthority.Checked = $true
+        $chckSCFilePlanPropertyAuthority.Text = "File Plan Property Authority"
+        $pnlSC.Controls.Add($chckSCFilePlanPropertyAuthority)
+
+        $chckSCFilePlanPropertyCategory = New-Object System.Windows.Forms.CheckBox
+        $chckSCFilePlanPropertyCategory.Top = 200
+        $chckSCFilePlanPropertyCategory.AutoSize = $true;
+        $chckSCFilePlanPropertyCategory.Name = "chckSCFilePlanPropertyCategory"
+        $chckSCFilePlanPropertyCategory.Checked = $true
+        $chckSCFilePlanPropertyCategory.Text = "File Plan Property Category"
+        $pnlSC.Controls.Add($chckSCFilePlanPropertyCategory)
+
+        $chckSCFilePlanPropertyCitation = New-Object System.Windows.Forms.CheckBox
+        $chckSCFilePlanPropertyCitation.Top = 220
+        $chckSCFilePlanPropertyCitation.AutoSize = $true;
+        $chckSCFilePlanPropertyCitation.Name = "chckSCFilePlanPropertyCitation"
+        $chckSCFilePlanPropertyCitation.Checked = $true
+        $chckSCFilePlanPropertyCitation.Text = "File Plan Property Citation"
+        $pnlSC.Controls.Add($chckSCFilePlanPropertyCitation)
+
+        $chckSCFilePlanPropertyDepartment = New-Object System.Windows.Forms.CheckBox
+        $chckSCFilePlanPropertyDepartment.Top = 240
+        $chckSCFilePlanPropertyDepartment.AutoSize = $true;
+        $chckSCFilePlanPropertyDepartment.Name = "chckSCFilePlanPropertyDepartment"
+        $chckSCFilePlanPropertyDepartment.Checked = $true
+        $chckSCFilePlanPropertyDepartment.Text = "File Plan Property Department"
+        $pnlSC.Controls.Add($chckSCFilePlanPropertyDepartment)
+
+        $chckSCFilePlanPropertyReferenceId = New-Object System.Windows.Forms.CheckBox
+        $chckSCFilePlanPropertyReferenceId.Top = 260
+        $chckSCFilePlanPropertyReferenceId.AutoSize = $true;
+        $chckSCFilePlanPropertyReferenceId.Name = "chckSCFilePlanPropertyReferenceId"
+        $chckSCFilePlanPropertyReferenceId.Checked = $true
+        $chckSCFilePlanPropertyReferenceId.Text = "File Plan Property Reference ID"
+        $pnlSC.Controls.Add($chckSCFilePlanPropertyReferenceId)
+
+        $chckSCFilePlanPropertySubCategory= New-Object System.Windows.Forms.CheckBox
+        $chckSCFilePlanPropertySubCategory.Top = 280
+        $chckSCFilePlanPropertySubCategory.AutoSize = $true;
+        $chckSCFilePlanPropertySubCategory.Name = "chckSCFilePlanPropertySubCategory"
+        $chckSCFilePlanPropertySubCategory.Checked = $true
+        $chckSCFilePlanPropertySubCategory.Text = "File Plan Property Sub-Category"
+        $pnlSC.Controls.Add($chckSCFilePlanPropertySubCategory)
+
         $chckSCRetentionCompliancePolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSCRetentionCompliancePolicy.Top = 160
+        $chckSCRetentionCompliancePolicy.Top = 300
         $chckSCRetentionCompliancePolicy.AutoSize = $true;
         $chckSCRetentionCompliancePolicy.Name = "chckSCRetentionCompliancePolicy"
         $chckSCRetentionCompliancePolicy.Checked = $true
@@ -486,15 +590,23 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCRetentionCompliancePolicy)
 
         $chckSCRetentionComplianceRule = New-Object System.Windows.Forms.CheckBox
-        $chckSCRetentionComplianceRule.Top = 180
+        $chckSCRetentionComplianceRule.Top = 320
         $chckSCRetentionComplianceRule.AutoSize = $true;
         $chckSCRetentionComplianceRule.Name = "chckSCRetentionComplianceRule"
         $chckSCRetentionComplianceRule.Checked = $true
         $chckSCRetentionComplianceRule.Text = "Retention Compliance Rule"
         $pnlSC.Controls.Add($chckSCRetentionComplianceRule)
 
+        $chckSCSensitivityLabel = New-Object System.Windows.Forms.CheckBox
+        $chckSCSensitivityLabel.Top = 340
+        $chckSCSensitivityLabel.AutoSize = $true;
+        $chckSCSensitivityLabel.Name = "chckSCSensitivityLabel"
+        $chckSCSensitivityLabel.Checked = $true
+        $chckSCSensitivityLabel.Text = "Sensitivity Label"
+        $pnlSC.Controls.Add($chckSCSensitivityLabel)
+
         $chckSCSupervisoryReviewPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSCSupervisoryReviewPolicy.Top = 200
+        $chckSCSupervisoryReviewPolicy.Top = 360
         $chckSCSupervisoryReviewPolicy.AutoSize = $true;
         $chckSCSupervisoryReviewPolicy.Name = "chckSCSupervisoryReviewPolicy"
         $chckSCSupervisoryReviewPolicy.Checked = $true
@@ -502,7 +614,7 @@ function Show-O365GUI
         $pnlSC.Controls.Add($chckSCSupervisoryReviewPolicy)
 
         $chckSCSupervisoryReviewRule = New-Object System.Windows.Forms.CheckBox
-        $chckSCSupervisoryReviewRule.Top = 220
+        $chckSCSupervisoryReviewRule.Top = 380
         $chckSCSupervisoryReviewRule.AutoSize = $true;
         $chckSCSupervisoryReviewRule.Name = "chckSCSupervisoryReviewRule"
         $chckSCSupervisoryReviewRule.Checked = $true
@@ -514,7 +626,7 @@ function Show-O365GUI
         $chckAllSC.Top = $topBannerHeight + 440
         $chckAllSC.Checked = $true
         $chckAllSC.AutoSize = $true
-        $chckAllSC.Add_CheckedChanged({SectionChanged -Control $chckAllSC -Panel $pnlSC})
+        $chckAllSC.Add_CheckedChanged( { SectionChanged -Control $chckAllSC -Panel $pnlSC })
         $pnlMain.Controls.Add($chckAllSC)
         #endregion
 
@@ -530,28 +642,92 @@ function Show-O365GUI
         $pnlTeams = New-Object System.Windows.Forms.Panel
         $pnlTeams.Top = 88 + $topBannerHeight
         $pnlTeams.Left = $ThirdColumnLeft
-        $pnlTeams.Height = 60
+        $pnlTeams.Height = 220
         $pnlTeams.Width = 300
         $pnlTeams.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
+        $chckTeamsCallingPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsCallingPolicy.Top = 0
+        $chckTeamsCallingPolicy.AutoSize = $true;
+        $chckTeamsCallingPolicy.Name = "chckTeamsCallingPolicy"
+        $chckTeamsCallingPolicy.Checked = $true
+        $chckTeamsCallingPolicy.Text = "Calling Policies"
+        $pnlTeams.Controls.Add($chckTeamsCallingPolicy)
+
         $chckTeamsChannel = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsChannel.Top = 0
+        $chckTeamsChannel.Top = 20
         $chckTeamsChannel.AutoSize = $true;
         $chckTeamsChannel.Name = "chckTeamsChannel"
         $chckTeamsChannel.Checked = $true
         $chckTeamsChannel.Text = "Channels"
         $pnlTeams.Controls.Add($chckTeamsChannel)
 
+        $chckTeamsChannelsPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsChannelsPolicy.Top = 40
+        $chckTeamsChannelsPolicy.AutoSize = $true;
+        $chckTeamsChannelsPolicy.Name = "chckTeamsChannelsPolicy"
+        $chckTeamsChannelsPolicy.Checked = $true
+        $chckTeamsChannelsPolicy.Text = "Channel Policies"
+        $pnlTeams.Controls.Add($chckTeamsChannelsPolicy)
+
+        $chckTeamsClientConfiguration = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsClientConfiguration.Top = 60
+        $chckTeamsClientConfiguration.AutoSize = $true;
+        $chckTeamsClientConfiguration.Name = "chckTeamsClientConfiguration"
+        $chckTeamsClientConfiguration.Checked = $true
+        $chckTeamsClientConfiguration.Text = "Client Configuration"
+        $pnlTeams.Controls.Add($chckTeamsClientConfiguration)
+
+        $chckTeamsMeetingBroadcastConfiguration = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsMeetingBroadcastConfiguration.Top = 80
+        $chckTeamsMeetingBroadcastConfiguration.AutoSize = $true;
+        $chckTeamsMeetingBroadcastConfiguration.Name = "chckTeamsMeetingBroadcastConfiguration"
+        $chckTeamsMeetingBroadcastConfiguration.Checked = $true
+        $chckTeamsMeetingBroadcastConfiguration.Text = "Meeting Broadcast Configuration"
+        $pnlTeams.Controls.Add($chckTeamsMeetingBroadcastConfiguration)
+
+        $chckTeamsMeetingConfiguration = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsMeetingConfiguration.Top = 100
+        $chckTeamsMeetingConfiguration.AutoSize = $true;
+        $chckTeamsMeetingConfiguration.Name = "chckTeamsMeetingConfiguration"
+        $chckTeamsMeetingConfiguration.Checked = $true
+        $chckTeamsMeetingConfiguration.Text = "Meeting Configuration"
+        $pnlTeams.Controls.Add($chckTeamsMeetingConfiguration)
+
+        $chckTeamsMeetingPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsMeetingPolicy.Top = 120
+        $chckTeamsMeetingPolicy.AutoSize = $true;
+        $chckTeamsMeetingPolicy.Name = "chckTeamsMeetingPolicy"
+        $chckTeamsMeetingPolicy.Checked = $true
+        $chckTeamsMeetingPolicy.Text = "Meeting Policies"
+        $pnlTeams.Controls.Add($chckTeamsMeetingPolicy)
+
+        $chckTeamsMessagingPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsMessagingPolicy.Top = 140
+        $chckTeamsMessagingPolicy.AutoSize = $true;
+        $chckTeamsMessagingPolicy.Name = "chckTeamsMessagingPolicy"
+        $chckTeamsMessagingPolicy.Checked = $true
+        $chckTeamsMessagingPolicy.Text = "Messaging Policies"
+        $pnlTeams.Controls.Add($chckTeamsMessagingPolicy)
+
         $chckTeamsTeam = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsTeam.Top = 20
+        $chckTeamsTeam.Top = 160
         $chckTeamsTeam.AutoSize = $true;
         $chckTeamsTeam.Name = "chckTeamsTeam"
         $chckTeamsTeam.Checked = $true
         $chckTeamsTeam.Text = "Teams"
         $pnlTeams.Controls.Add($chckTeamsTeam)
 
+        $chckTeamsUpgradeConfiguration = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsUpgradeConfiguration.Top = 180
+        $chckTeamsUpgradeConfiguration.AutoSize = $true;
+        $chckTeamsUpgradeConfiguration.Name = "chckTeamsUpgradeConfiguration"
+        $chckTeamsUpgradeConfiguration.Checked = $true
+        $chckTeamsUpgradeConfiguration.Text = "Upgrade Configuration"
+        $pnlTeams.Controls.Add($chckTeamsUpgradeConfiguration)
+
         $chckTeamsUser = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsUser.Top = 40
+        $chckTeamsUser.Top = 200
         $chckTeamsUser.AutoSize = $true;
         $chckTeamsUser.Name = "chckTeamsUser"
         $chckTeamsUser.Checked = $true
@@ -563,7 +739,7 @@ function Show-O365GUI
         $chckAllTeams.Top = $topBannerHeight + 40
         $chckAllTeams.Checked = $true
         $chckAllTeams.AutoSize = $true
-        $chckAllTeams.Add_CheckedChanged({SectionChanged -Control $chckAllTeams -Panel $pnlTeams})
+        $chckAllTeams.Add_CheckedChanged( { SectionChanged -Control $chckAllTeams -Panel $pnlTeams })
         $pnlMain.Controls.Add($chckAllTeams)
         #endregion
 
@@ -599,13 +775,49 @@ function Show-O365GUI
         $chckAllOD.Enabled = $false #TODO - Reactivate after SPO Mgmt Shell bug fix
         $chckAllOD.Checked = $false #TODO - Reactivate after SPO Mgmt Shell bug fix
         $chckAllOD.AutoSize = $true
-        $chckAllOD.Add_CheckedChanged({SectionChanged -Control $chckAllOD -Panel $pnlOD})
+        $chckAllOD.Add_CheckedChanged( { SectionChanged -Control $chckAllOD -Panel $pnlOD })
         $pnlMain.Controls.Add($chckAllOD)
+        #endregion
+
+        #region PowerApps
+        $imgPP = New-Object System.Windows.Forms.PictureBox
+        $imagePath = $PSScriptRoot + "\..\Dependencies\Images\PowerApps.png"
+        $imgPP.ImageLocation = $imagePath
+        $imgPP.Left = $fourthColumnLeft
+        $imgPP.Top = $topBannerHeight + $pnlOd.Height + 100
+        $imgPP.AutoSize = $true
+        $pnlMain.Controls.Add($imgPP)
+
+        $pnlPP = New-Object System.Windows.Forms.Panel
+        $pnlPP.Top = 88 + $topBannerHeight + $pnlOD.Height + 100
+        $pnlPP.Left = $fourthColumnLeft
+        $pnlPP.Height = 20
+        $pnlPP.Width = 300
+        $pnlPP.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+
+        $chckPPPowerAppsEnvironment = New-Object System.Windows.Forms.CheckBox
+        $chckPPPowerAppsEnvironment.Top = 0
+        $chckPPPowerAppsEnvironment.AutoSize = $true;
+        $chckPPPowerAppsEnvironment.Name = "chckPPPowerAppsEnvironment"
+        $chckPPPowerAppsEnvironment.Checked = $true
+        $chckPPPowerAppsEnvironment.Enabled = $true
+        $chckPPPowerAppsEnvironment.Text = "PowerApps Environment"
+        $pnlPP.Controls.Add($chckPPPowerAppsEnvironment)
+
+        $chckAllPP = New-Object System.Windows.Forms.CheckBox
+        $chckAllPP.Left = $fourthColumnLeft + 280
+        $chckAllPP.Top = $topBannerHeight + $pnlOD.Height + 135
+        $chckAllPP.Enabled = $true
+        $chckAllPP.Checked = $true
+        $chckAllPP.AutoSize = $true
+        $chckAllPP.Add_CheckedChanged( { SectionChanged -Control $chckAllPP -Panel $pnlPP })
+        $pnlMain.Controls.Add($chckAllPP)
         #endregion
 
         $pnlMain.Controls.Add($pnlO365)
         $pnlMain.Controls.Add($pnlExo)
         $pnlMain.Controls.Add($pnlOD)
+        $pnlMain.Controls.Add($pnlPP)
         $pnlMain.Controls.Add($pnlSPO)
         $pnlMain.Controls.Add($pnlSC)
         $pnlMain.Controls.Add($pnlTeams)
@@ -629,7 +841,7 @@ function Show-O365GUI
         $btnClear.BackColor = [System.Drawing.Color]::IndianRed
         $btnClear.ForeColor = [System.Drawing.Color]::White
         $btnClear.Text = "Unselect All"
-        $btnClear.Add_Click({SelectComponentsForMode($pnlMain, 0)})
+        $btnClear.Add_Click( { SelectComponentsForMode($pnlMain, 0) })
         $panelMenu.Controls.Add($btnClear);
 
         $lblFarmAccount = New-Object System.Windows.Forms.Label
@@ -663,12 +875,12 @@ function Show-O365GUI
         $txtPassword.Width = 175
         $txtPassword.PasswordChar = "*"
         $txtPassword.Font = [System.Drawing.Font]::new($txtPassword.Font.Name, 10)
-        $txtPassword.Add_KeyDown({
-            if($_.KeyCode -eq [System.Windows.Forms.Keys]::Enter)
-            {
-                $btnExtract.PerformClick()
-            }
-        })
+        $txtPassword.Add_KeyDown( {
+                if ($_.KeyCode -eq [System.Windows.Forms.Keys]::Enter)
+                {
+                    $btnExtract.PerformClick()
+                }
+            })
         $panelMenu.Controls.Add($txtPassword)
 
         $btnExtract = New-Object System.Windows.Forms.Button
@@ -679,40 +891,40 @@ function Show-O365GUI
         $btnExtract.BackColor = [System.Drawing.Color]::ForestGreen
         $btnExtract.ForeColor = [System.Drawing.Color]::White
         $btnExtract.Text = "Start Extraction"
-        $btnExtract.Add_Click({
-            if($txtPassword.Text.Length -gt 0)
-            {
-                $form.Hide()
-                $SelectedComponents = @()
-                foreach ($panel in ($form.Controls[0].Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Panel"}))
+        $btnExtract.Add_Click( {
+                if ($txtPassword.Text.Length -gt 0)
                 {
-                    foreach ($checkbox in ($panel.Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Checkbox"}))
+                    $form.Hide()
+                    $SelectedComponents = @()
+                    foreach ($panel in ($form.Controls[0].Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Panel" }))
                     {
-                        if ($checkbox.Checked)
+                        foreach ($checkbox in ($panel.Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Checkbox" }))
                         {
-                            $SelectedComponents += $checkbox.Name
+                            if ($checkbox.Checked)
+                            {
+                                $SelectedComponents += $checkbox.Name
+                            }
                         }
                     }
-                }
 
-                try
-                {
-                    $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force))
-                    Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
-                                                   -ComponentsToExtract $SelectedComponents `
-                                                   -Path $Path
+                    try
+                    {
+                        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force))
+                        Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                            -ComponentsToExtract $SelectedComponents `
+                            -Path $Path
+                    }
+                    catch
+                    {
+                        $Message = "Could not initiate the ReverseDSC Extraction"
+                        New-Office365DSCLogEntry -Error $_ -Message $Message_
+                    }
                 }
-                catch
+                else
                 {
-                    $Message = "Could not initiate the ReverseDSC Extraction"
-                    New-Office365DSCLogEntry -Error $_ -Message $Message_
+                    [System.Windows.Forms.MessageBox]::Show("Please provide a password for the Tenant Admin Account")
                 }
-            }
-            else
-            {
-                [System.Windows.Forms.MessageBox]::Show("Please provide a password for the Tenant Admin Account")
-            }
-        })
+            })
         $panelMenu.Controls.Add($btnExtract);
 
         $pnlMain.Controls.Add($panelMenu);
@@ -731,23 +943,26 @@ function Show-O365GUI
     }
 }
 
-function SelectComponentsForMode($panelMain, $mode){
+function SelectComponentsForMode($panelMain, $mode)
+{
     $components = $null
-    if($mode -eq 1)
+    if ($mode -eq 1)
     {
         $components = $liteComponents
     }
-    elseif($mode -eq 2)
+    elseif ($mode -eq 2)
     {
         $components = $defaultComponents
     }
-    foreach($parent in $panelMain.Controls)
+    foreach ($parent in $panelMain.Controls)
     {
-        if($parent.GetType().ToString() -eq "System.Windows.Forms.Panel")
+        if ($parent.GetType().ToString() -eq "System.Windows.Forms.Panel")
         {
-            foreach($control in ([System.Windows.Forms.Panel]$parent).Controls){
-                try{
-                    if($mode -ne 3)
+            foreach ($control in ([System.Windows.Forms.Panel]$parent).Controls)
+            {
+                try
+                {
+                    if ($mode -ne 3)
                     {
                         $control.Checked = $false
                     }
@@ -762,14 +977,15 @@ function SelectComponentsForMode($panelMain, $mode){
                 }
             }
         }
-        elseif($parent.GetType().ToString() -eq "System.Windows.Forms.Checkbox")
+        elseif ($parent.GetType().ToString() -eq "System.Windows.Forms.Checkbox")
         {
             ([System.Windows.Forms.Checkbox]$parent).Checked = $false
         }
     }
-    foreach($control in $components)
+    foreach ($control in $components)
     {
-        try{
+        try
+        {
             $control.Checked = $true
         }
         catch

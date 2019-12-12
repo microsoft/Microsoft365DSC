@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "EXOAntiPhishRule"
+    -DscResource "EXOAntiPhishRule" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -192,7 +194,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Get AntiphishRule fails" -Fixture{
+        Context -Name "Get AntiphishRule fails" -Fixture {
             $testParams = @{
                 Identity           = 'contoso.com'
                 AntiPhishPolicy    = 'TestPolicy'
@@ -200,7 +202,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Present"
             }
 
-            Mock -CommandName Get-AntiPhishRule -MockWith{
+            Mock -CommandName Get-AntiPhishRule -MockWith {
                 throw "Error Getting AntiPhishRules"
             }
 
@@ -215,9 +217,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Identity           = 'contoso.com'
-                AntiPhishPolicy    = 'TestPolicy'
-                GlobalAdminAccount           = $GlobalAdminAccount
+                GlobalAdminAccount = $GlobalAdminAccount
             }
 
             It "Should Reverse Engineer resource from the Export method" {

@@ -1,0 +1,9 @@
+[ClassVersion("1.0.0.0"), FriendlyName("SCFilePlanPropertyCitation")]
+class MSFT_SCFilePlanPropertyCitation : OMI_BaseResource
+{
+    [Key, Description("The Name parameter specifies the unique name of the citation.")] String Name;
+    [Write, Description("URL of the citation.")] String CitationUrl;
+    [Write, Description("Jurisdiction of the citation.")] String CitationJurisdiction;
+    [Write, Description("Specify if this citation should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};

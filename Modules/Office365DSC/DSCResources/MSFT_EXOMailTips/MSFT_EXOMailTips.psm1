@@ -29,7 +29,7 @@ function Get-TargetResource
         $MailTipsExternalRecipientsTipsEnabled,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -39,20 +39,26 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of Mailtips for $Organization"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = @{
-        Organization = $Organization
-        MailTipsAllTipsEnabled = $null
-        MailTipsGroupMetricsEnabled = $null
-        MailTipsLargeAudienceThreshold = $null
-        MailTipsMailboxSourcedTipsEnabled = $null
+        Organization                          = $Organization
+        MailTipsAllTipsEnabled                = $null
+        MailTipsGroupMetricsEnabled           = $null
+        MailTipsLargeAudienceThreshold        = $null
+        MailTipsMailboxSourcedTipsEnabled     = $null
         MailTipsExternalRecipientsTipsEnabled = $null
-        Ensure = "Absent"
-        GlobalAdminAccount = $null
+        Ensure                                = "Absent"
+        GlobalAdminAccount                    = $null
     }
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $OrgConfig = Get-OrganizationConfig
 
@@ -63,14 +69,14 @@ function Get-TargetResource
     }
 
     $result = @{
-        Organization = $Organization
-        MailTipsAllTipsEnabled = $OrgConfig.MailTipsAllTipsEnabled
-        MailTipsGroupMetricsEnabled = $OrgConfig.MailTipsGroupMetricsEnabled
-        MailTipsLargeAudienceThreshold = $OrgConfig.MailTipsLargeAudienceThreshold
-        MailTipsMailboxSourcedTipsEnabled = $OrgConfig.MailTipsMailboxSourcedTipsEnabled
+        Organization                          = $Organization
+        MailTipsAllTipsEnabled                = $OrgConfig.MailTipsAllTipsEnabled
+        MailTipsGroupMetricsEnabled           = $OrgConfig.MailTipsGroupMetricsEnabled
+        MailTipsLargeAudienceThreshold        = $OrgConfig.MailTipsLargeAudienceThreshold
+        MailTipsMailboxSourcedTipsEnabled     = $OrgConfig.MailTipsMailboxSourcedTipsEnabled
         MailTipsExternalRecipientsTipsEnabled = $OrgConfig.MailTipsExternalRecipientsTipsEnabled
-        Ensure = "Present"
-        GlobalAdminAccount = $GlobalAdminAccount
+        Ensure                                = "Present"
+        GlobalAdminAccount                    = $GlobalAdminAccount
     }
 
     Write-Verbose -Message "Found configuration of the Mailtips for $($Organization)"
@@ -108,7 +114,7 @@ function Set-TargetResource
         $MailTipsExternalRecipientsTipsEnabled,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure,
 
@@ -118,11 +124,17 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Mailtips for $Organization"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $OrgConfig = Get-TargetResource @PSBoundParameters
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     # CASE : MailTipsAllTipsEnabled is used
 
@@ -189,7 +201,7 @@ function Test-TargetResource
         $MailTipsExternalRecipientsTipsEnabled,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure,
 
@@ -206,13 +218,14 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("MailTipsAllTipsEnabled",
-                                                                   "MailTipsGroupMetricsEnabled",
-                                                                   "MailTipsLargeAudienceThreshold",
-                                                                   "MailTipsMailboxSourcedTipsEnabled",
-                                                                   "MailTipsExternalRecipientsTipsEnabled",
-                                                                   "Ensure")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("MailTipsAllTipsEnabled",
+        "MailTipsGroupMetricsEnabled",
+        "MailTipsLargeAudienceThreshold",
+        "MailTipsMailboxSourcedTipsEnabled",
+        "MailTipsExternalRecipientsTipsEnabled",
+        "Ensure")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -233,6 +246,12 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        EXOMailTips " + (New-GUID).ToString() + "`r`n"

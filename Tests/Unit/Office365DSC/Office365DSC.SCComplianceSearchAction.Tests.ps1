@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SCComplianceSearchAction"
+    -DscResource "SCComplianceSearchAction" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -32,7 +34,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Mock -CommandName Get-ComplianceCase{
+        Mock -CommandName Get-ComplianceCase {
             return @{
                 Name = "Test Compliance Case"
             }
@@ -115,12 +117,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             $testParams = @{
-                Action                              = "Purge";
-                SearchName                          = "Test Search";
-                GlobalAdminAccount                  = $GlobalAdminAccount;
-                IncludeCredential                   = $False;
-                RetryOnError                        = $False;
-                Ensure                              = "Present";
+                Action             = "Purge";
+                SearchName         = "Test Search";
+                GlobalAdminAccount = $GlobalAdminAccount;
+                IncludeCredential  = $False;
+                RetryOnError       = $False;
+                Ensure             = "Present";
             }
 
             Mock -CommandName Get-ComplianceSearchAction -MockWith {
@@ -274,14 +276,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-ComplianceSearchAction -MockWith {
                 return @{
                     IncludeSharePointDocumentVersions   = $False;
-                        Action                              = "Export";
-                        SearchName                          = "Test Search";
-                        FileTypeExclusionsForUnindexedItems = $null;
-                        IncludeCredential                   = $False;
-                        RetryOnError                        = $False;
-                        ActionScope                         = "IndexedItemsOnly";
-                        EnableDedupe                        = $False;
-                        Results                             = 'Container url:
+                    Action                              = "Export";
+                    SearchName                          = "Test Search";
+                    FileTypeExclusionsForUnindexedItems = $null;
+                    IncludeCredential                   = $False;
+                    RetryOnError                        = $False;
+                    ActionScope                         = "IndexedItemsOnly";
+                    EnableDedupe                        = $False;
+                    Results                             = 'Container url:
                             https://gabwedisccan.blob.core.windows.net/267bbbb1-2630-41ba-d56b-08d73612df43;
                             SAS token: <Specify -IncludeCredential parameter to show the SAS token>;
                             Scenario: RetentionReports; Scope: IndexedItemsOnly; Scope details:

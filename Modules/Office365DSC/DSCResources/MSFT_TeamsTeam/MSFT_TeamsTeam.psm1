@@ -23,7 +23,7 @@ function Get-TargetResource
         $MailNickName,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $Owner,
 
         [Parameter()]
@@ -108,6 +108,13 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Team $DisplayName"
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     $nullReturn = @{
         DisplayName                       = $DisplayName
         GroupId                           = $GroupID
@@ -136,8 +143,8 @@ function Get-TargetResource
     }
 
     Write-Verbose -Message "Checking for existance of Team $DisplayName"
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform MicrosoftTeams
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform MicrosoftTeams
 
     $CurrentParameters = $PSBoundParameters
 
@@ -168,10 +175,14 @@ function Get-TargetResource
             }
         }
 
-        $Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object {$_.Role -eq "owner"}
+        $Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object { $_.Role -eq "owner" }
+        $OwnersArray = @()
         if ($null -ne $Owners)
         {
-            $Owners = $Owners.User.ToString()
+            foreach ($owner in $Owners.User)
+            {
+                $OwnersArray += $owner[0].ToString()
+            }
         }
         Write-Verbose -Message "Found Team $($team.DisplayName)."
 
@@ -179,7 +190,7 @@ function Get-TargetResource
             DisplayName                       = $team.DisplayName
             GroupID                           = $team.GroupId
             Description                       = $team.Description
-            Owner                             = $Owners
+            Owner                             = $OwnersArray
             MailNickName                      = $team.MailNickName
             Visibility                        = $team.Visibility
             AllowAddRemoveApps                = $team.AllowAddRemoveApps
@@ -233,7 +244,7 @@ function Set-TargetResource
         $MailNickName,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $Owner,
 
         [Parameter()]
@@ -318,8 +329,15 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Team $DisplayName"
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform MicrosoftTeams
+        -Platform MicrosoftTeams
 
     $team = Get-TargetResource @PSBoundParameters
 
@@ -349,6 +367,10 @@ function Set-TargetResource
             $CurrentParameters.Remove("GroupID")
         }
         Write-Verbose -Message "Creating team $DisplayName"
+        if ($null -ne $Owner)
+        {
+            $CurrentParameters.Owner = $Owner[0]
+        }
         New-Team @CurrentParameters
     }
     elseif ($Ensure -eq "Absent" -and ($team.Ensure -eq "Present"))
@@ -383,7 +405,7 @@ function Test-TargetResource
         $MailNickName,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $Owner,
 
         [Parameter()]
@@ -483,8 +505,9 @@ function Test-TargetResource
     }
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -498,26 +521,52 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateLength(1, 256)]
-        $DisplayName,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $result.Remove("GroupID")
-    if ("" -eq $result.Owner)
+    $InformationPreference = 'Continue'
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform MicrosoftTeams
+
+    $teams = Get-Team
+    $i = 1
+    $content = ""
+    $organization = $GlobalAdminAccount.UserName.Split('@')[1]
+    foreach ($team in $teams)
     {
-        $result.Remove("Owner")
+        Write-Information "    - [$i/$($teams.Length)] $($team.DisplayName)"
+        $params = @{
+            DisplayName        = $team.DisplayName
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $result.Remove("GroupID")
+        if ("" -eq $result.Owner)
+        {
+            $result.Remove("Owner")
+        }
+        $content += "        TeamsTeam " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $partialContent += "        }`r`n"
+        if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+        }
+        $content += $partialContent
+        $i++
     }
-    $content = "        TeamsTeam " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+
     return $content
 }
 

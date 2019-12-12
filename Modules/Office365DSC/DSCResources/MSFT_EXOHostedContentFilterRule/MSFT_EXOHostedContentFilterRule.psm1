@@ -59,9 +59,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of HostedContentFilterRule for $Identity"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     Write-Verbose -Message "Global ExchangeOnlineSession status:"
     Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
@@ -87,24 +93,21 @@ function Get-TargetResource
     else
     {
         $result = @{
-            Ensure = 'Present'
+            Ensure                    = 'Present'
+            Identity                  = $Identity
+            HostedContentFilterPolicy = $HostedContentFilterRule.HostedContentFilterPolicy
+            Comments                  = $HostedContentFilterRule.Comments
+            Enabled                   = $false
+            ExceptIfRecipientDomainIs = $HostedContentFilterRule.ExceptIfRecipientDomainIs
+            ExceptIfSentTo            = $HostedContentFilterRule.ExceptIfSentTo
+            ExceptIfSentToMemberOf    = $HostedContentFilterRule.ExceptIfSentToMemberOf
+            Priority                  = $HostedContentFilterRule.Priority
+            RecipientDomainIs         = $HostedContentFilterRule.RecipientDomainIs
+            SentTo                    = $HostedContentFilterRule.SentTo
+            SentToMemberOf            = $HostedContentFilterRule.SentToMemberOf
+            GlobalAdminAccount        = $GlobalAdminAccount
         }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-        {
-            if ($null -ne $HostedContentFilterRule.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $HostedContentFilterRule.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
 
-        }
         if ('Enabled' -eq $HostedContentFilterRule.State)
         {
             # Accounts for Get-HostedContentFilterRule returning 'State' instead of 'Enabled' used by New/Set
@@ -181,9 +184,15 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of HostedContentFilterRule for $Identity"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     Write-Verbose -Message "Global ExchangeOnlineSession status:"
     Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
@@ -200,7 +209,7 @@ function Set-TargetResource
     {
         if ($PSBoundParameters.Enabled -and ('Disabled' -eq $HostedContentFilterRule.State))
         {
-             # New-HostedContentFilterRule has the Enabled parameter, Set-HostedContentFilterRule does not.
+            # New-HostedContentFilterRule has the Enabled parameter, Set-HostedContentFilterRule does not.
             # There doesn't appear to be any way to change the Enabled state of a rule once created.
             Write-Verbose -Message "Removing HostedContentFilterRule $($Identity) in order to change Enabled state."
             Remove-HostedContentFilterRule -Identity $Identity -Confirm:$false
@@ -290,8 +299,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -316,6 +326,12 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        EXOHostedContentFilterRule " + (New-GUID).ToString() + "`r`n"

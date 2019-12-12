@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SCRetentionCompliancePolicy"
+    -DscResource "SCRetentionCompliancePolicy" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -70,31 +72,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Policy already exists" -Fixture {
             $testParams = @{
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
-                ExchangeLocation   = "https://contoso.sharepoint.com/sites/demo"
-                ExchangeLocationException = "https://contoso.sharepoint.com"
-                OneDriveLocation = "https://contoso.sharepoint.com/sites/demo"
-                OneDriveLocationException = "https://contoso.com"
-                PublicFolderLocation = "\\contoso\PF"
-                SkypeLocation = "https://contoso.sharepoint.com/sites/demo"
-                SkypeLocationException = "https://contoso.sharepoint.com/"
-                SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
+                Ensure                      = 'Present'
+                GlobalAdminAccount          = $GlobalAdminAccount
+                ExchangeLocation            = "https://contoso.sharepoint.com/sites/demo"
+                ExchangeLocationException   = "https://contoso.sharepoint.com"
+                OneDriveLocation            = "https://contoso.sharepoint.com/sites/demo"
+                OneDriveLocationException   = "https://contoso.com"
+                PublicFolderLocation        = "\\contoso\PF"
+                SkypeLocation               = "https://contoso.sharepoint.com/sites/demo"
+                SkypeLocationException      = "https://contoso.sharepoint.com/"
+                SharePointLocation          = "https://contoso.sharepoint.com/sites/demo"
                 SharePointLocationException = "https://contoso.com"
-                Name               = 'TestPolicy'
+                Name                        = 'TestPolicy'
             }
 
             Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
                 return @{
-                    Name               = "TestPolicy"
-                    ExchangeLocation   = "https://contoso.sharepoint.com/sites/demo"
-                    ExchangeLocationException = "https://contoso.sharepoint.com"
-                    OneDriveLocation = "https://contoso.sharepoint.com/sites/demo"
-                    OneDriveLocationException = "https://contoso.com"
-                    PublicFolderLocation = "\\contoso\PF"
-                    SkypeLocation = "https://contoso.sharepoint.com/sites/demo"
-                    SkypeLocationException = "https://contoso.sharepoint.com/"
-                    SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
+                    Name                        = "TestPolicy"
+                    ExchangeLocation            = "https://contoso.sharepoint.com/sites/demo"
+                    ExchangeLocationException   = "https://contoso.sharepoint.com"
+                    OneDriveLocation            = "https://contoso.sharepoint.com/sites/demo"
+                    OneDriveLocationException   = "https://contoso.com"
+                    PublicFolderLocation        = "\\contoso\PF"
+                    SkypeLocation               = "https://contoso.sharepoint.com/sites/demo"
+                    SkypeLocationException      = "https://contoso.sharepoint.com/"
+                    SharePointLocation          = "https://contoso.sharepoint.com/sites/demo"
                     SharePointLocationException = "https://contoso.com"
                 }
             }
@@ -147,8 +149,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-RetentionCompliancePolicy -MockWith {
                 return @{
-                    Name                         = "Test Policy"
-                    SharePointLocation           = "https://o365dsc1.sharepoint.com"
+                    Name               = "Test Policy"
+                    SharePointLocation = "https://o365dsc1.sharepoint.com"
                 }
             }
 

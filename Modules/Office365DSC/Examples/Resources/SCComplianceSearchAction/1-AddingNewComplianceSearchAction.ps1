@@ -16,13 +16,13 @@ Configuration Example
     {
         SCComplianceSearchAction DemoPurge
         {
-            Action               = "Purge";
-            GlobalAdminAccount   = $credsGlobalAdmin;
-            PurgeType            = "SoftDelete";
-            IncludeCredential    = $True;
-            Ensure               = "Present";
-            RetryOnError         = $False;
-            SearchName           = "Demo Search";
+            Action             = "Purge";
+            GlobalAdminAccount = $credsGlobalAdmin;
+            PurgeType          = "SoftDelete";
+            IncludeCredential  = $True;
+            Ensure             = "Present";
+            RetryOnError       = $False;
+            SearchName         = "Demo Search";
         }
         SCComplianceSearchAction DemoExport
         {

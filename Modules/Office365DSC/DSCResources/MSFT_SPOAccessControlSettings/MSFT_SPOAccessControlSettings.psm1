@@ -54,7 +54,7 @@ function Get-TargetResource
         $EmailAttestationReAuthDays,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -64,9 +64,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SharePoint Online Access Control Settings"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
     $nullReturn = @{
         IsSingleInstance             = 'Yes'
         DisplayStartASiteOption      = $null
@@ -168,7 +174,7 @@ function Set-TargetResource
         $EmailAttestationReAuthDays,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -178,15 +184,21 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of SharePoint Online Access Control Settings"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("IsSingleInstance")
 
-    if($IPAddressAllowList -eq "")
+    if ($IPAddressAllowList -eq "")
     {
         Write-Verbose -Message "The IPAddressAllowList is not configured, for that the IPAddressEnforcement parameter can not be set and will be removed"
         $CurrentParameters.Remove("IPAddressEnforcement")
@@ -251,7 +263,7 @@ function Test-TargetResource
         $EmailAttestationReAuthDays,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -268,20 +280,21 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("IsSingleInstance", `
-                                                                   "GlobalAdminAccount", `
-                                                                   "DisplayStartASiteOption", `
-                                                                   "StartASiteFormUrl", `
-                                                                   "IPAddressEnforcement", `
-                                                                   "IPAddressAllowList", `
-                                                                   "IPAddressWACTokenLifetime", `
-                                                                   "CommentsOnSitePagesDisabled", `
-                                                                   "SocialBarOnSitePagesDisabled", `
-                                                                   "DisallowInfectedFileDownload", `
-                                                                   "ExternalServicesEnabled", `
-                                                                   "EmailAttestationRequired", `
-                                                                   "EmailAttestationReAuthDays")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("IsSingleInstance", `
+            "GlobalAdminAccount", `
+            "DisplayStartASiteOption", `
+            "StartASiteFormUrl", `
+            "IPAddressEnforcement", `
+            "IPAddressAllowList", `
+            "IPAddressWACTokenLifetime", `
+            "CommentsOnSitePagesDisabled", `
+            "SocialBarOnSitePagesDisabled", `
+            "DisallowInfectedFileDownload", `
+            "ExternalServicesEnabled", `
+            "EmailAttestationRequired", `
+            "EmailAttestationReAuthDays")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -295,20 +308,27 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Yes')]
-        [String]
-        $IsSingleInstance,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $params = @{
+        IsSingleInstance   = 'Yes'
+        GlobalAdminAccount = $GlobalAdminAccount
+    }
+    $result = Get-TargetResource @params
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "SPOAccessControlSettings " + (New-GUID).ToString() + "`r`n"
-    $content += "{`r`n"
-    $content += Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += "}`r`n"
+    $content = "        SPOAccessControlSettings " + (New-GUID).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $content += "        }`r`n"
     return $content
 }
 

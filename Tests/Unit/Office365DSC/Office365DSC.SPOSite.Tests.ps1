@@ -3,15 +3,17 @@ param(
     [Parameter()]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\Stubs\Office365.psm1" `
-                                         -Resolve)
+            -ChildPath "..\Stubs\Office365.psm1" `
+            -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\UnitTestHelper.psm1" `
-                                -Resolve)
+        -ChildPath "..\UnitTestHelper.psm1" `
+        -Resolve)
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                              -DscResource "SPOSite"
+    -DscResource "SPOSite" -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -662,31 +664,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 else
                 {
                     return @{
-                        Url                                         = "https://contoso.sharepoint.com/sites/TestSite"
-                        Owner                                       = "testuser@contoso.com"
-                        StorageQuota                                = 1000
-                        Ensure                                      = "Present"
-                        LocaleId                                    = 1033
-                        Template                                    = "STS#3"
-                        CompatibilityLevel                          = 15
-                        Title                                       = "TestSite"
-                        DenyAddAndCustomizePages                    = $false
-                        StorageQuotaWarningLevel                    = 25574400
-                        LockState                                   = "Unlock"
-                        SharingCapability                           = "Disabled"
-                        CommentsOnSitePagesDisabled                 = $false
-                        SocialBarOnSitePagesDisabled                = $false
-                        DisableAppViews                             = "NotDisabled"
-                        DisableCompanyWideSharingLinks              = "NotDisabled"
-                        DisableFlows                                = "NotDisabled"
-                        RestrictedToGeo                             = "BlockMoveOnly"
-                        SharingDomainRestrictionMode                = "None"
-                        SharingAllowedDomainList                    = ""
-                        SharingBlockedDomainList                    = ""
-                        ShowPeoplePickerSuggestionsForGuestUsers    = $false
-                        DefaultSharingLinkType                      = "None"
-                        DefaultLinkPermission                       = "None"
-                        HubSiteId                                   = "fcc3c848-6d2f-4821-a56c-980eea7990c5"
+                        Url                                      = "https://contoso.sharepoint.com/sites/TestSite"
+                        Owner                                    = "testuser@contoso.com"
+                        StorageQuota                             = 1000
+                        Ensure                                   = "Present"
+                        LocaleId                                 = 1033
+                        Template                                 = "STS#3"
+                        CompatibilityLevel                       = 15
+                        Title                                    = "TestSite"
+                        DenyAddAndCustomizePages                 = $false
+                        StorageQuotaWarningLevel                 = 25574400
+                        LockState                                = "Unlock"
+                        SharingCapability                        = "Disabled"
+                        CommentsOnSitePagesDisabled              = $false
+                        SocialBarOnSitePagesDisabled             = $false
+                        DisableAppViews                          = "NotDisabled"
+                        DisableCompanyWideSharingLinks           = "NotDisabled"
+                        DisableFlows                             = "NotDisabled"
+                        RestrictedToGeo                          = "BlockMoveOnly"
+                        SharingDomainRestrictionMode             = "None"
+                        SharingAllowedDomainList                 = ""
+                        SharingBlockedDomainList                 = ""
+                        ShowPeoplePickerSuggestionsForGuestUsers = $false
+                        DefaultSharingLinkType                   = "None"
+                        DefaultLinkPermission                    = "None"
+                        HubSiteId                                = "fcc3c848-6d2f-4821-a56c-980eea7990c5"
                     }
                 }
             }
@@ -735,8 +737,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             $global:O365DscSiteCreated = $false
             It "should restore the deleted site from the recycle bin" {
-               Set-TargetResource @testParams
-               Assert-MockCalled Restore-SPODeletedSite
+                Set-TargetResource @testParams
+                Assert-MockCalled Restore-SPODeletedSite
             }
         }
 
@@ -772,31 +774,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-SPOSite -MockWith {
                 return @{
-                    Url                                         = "https://contoso.sharepoint.com/sites/TestSite"
-                    Owner                                       = "testuser@contoso.com"
-                    StorageQuota                                = 1000
-                    Ensure                                      = "Present"
-                    LocaleId                                    = 1033
-                    Template                                    = "STS#3"
-                    CompatibilityLevel                          = 15
-                    Title                                       = "TestSite"
-                    DenyAddAndCustomizePages                    = $false
-                    StorageQuotaWarningLevel                    = 25574400
-                    LockState                                   = "Unlock"
-                    SharingCapability                           = "Disabled"
-                    CommentsOnSitePagesDisabled                 = $false
-                    SocialBarOnSitePagesDisabled                = $false
-                    DisableAppViews                             = "NotDisabled"
-                    DisableCompanyWideSharingLinks              = "NotDisabled"
-                    DisableFlows                                = "NotDisabled"
-                    RestrictedToGeo                             = "BlockMoveOnly"
-                    SharingDomainRestrictionMode                = "None"
-                    SharingAllowedDomainList                    = ""
-                    SharingBlockedDomainList                    = ""
-                    ShowPeoplePickerSuggestionsForGuestUsers    = $false
-                    DefaultSharingLinkType                      = "None"
-                    DefaultLinkPermission                       = "None"
-                    HubSiteId                                   = "00000000-0000-0000-0000-000000000000"
+                    Url                                      = "https://contoso.sharepoint.com/sites/TestSite"
+                    Owner                                    = "testuser@contoso.com"
+                    StorageQuota                             = 1000
+                    Ensure                                   = "Present"
+                    LocaleId                                 = 1033
+                    Template                                 = "STS#3"
+                    CompatibilityLevel                       = 15
+                    Title                                    = "TestSite"
+                    DenyAddAndCustomizePages                 = $false
+                    StorageQuotaWarningLevel                 = 25574400
+                    LockState                                = "Unlock"
+                    SharingCapability                        = "Disabled"
+                    CommentsOnSitePagesDisabled              = $false
+                    SocialBarOnSitePagesDisabled             = $false
+                    DisableAppViews                          = "NotDisabled"
+                    DisableCompanyWideSharingLinks           = "NotDisabled"
+                    DisableFlows                             = "NotDisabled"
+                    RestrictedToGeo                          = "BlockMoveOnly"
+                    SharingDomainRestrictionMode             = "None"
+                    SharingAllowedDomainList                 = ""
+                    SharingBlockedDomainList                 = ""
+                    ShowPeoplePickerSuggestionsForGuestUsers = $false
+                    DefaultSharingLinkType                   = "None"
+                    DefaultLinkPermission                    = "None"
+                    HubSiteId                                = "00000000-0000-0000-0000-000000000000"
                 }
             }
 
@@ -814,36 +816,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "should delete the site" {
                 Set-TargetResource @testParams
                 Assert-MockCalled Remove-SPOSite
-             }
-         }
+            }
+        }
 
         Context -Name "Group#0 site does not exist" -Fixture {
             $testParams = @{
-                Url                                      = "https://contoso.sharepoint.com/sites/groupsite"
-                Owner                                    = "testuser@contoso.com"
-                StorageQuota                             = 1000
-                GlobalAdminAccount                       = $GlobalAdminAccount
-                Ensure                                   = "Present"
-                LocaleId                                 = 1033
-                Template                                 = "GROUP#0"
-                CompatibilityLevel                       = 15
-                Title                                    = "groupsite"
-                DenyAddAndCustomizePages                 = $false
-                StorageQuotaWarningLevel                 = 25574400
-                LockState                                = "Unlock"
-                SharingCapability                        = "Disabled"
-                CommentsOnSitePagesDisabled              = $false
-                SocialBarOnSitePagesDisabled             = $false
-                DisableAppViews                          = "NotDisabled"
-                DisableCompanyWideSharingLinks           = "NotDisabled"
-                DisableFlows                             = "NotDisabled"
-                RestrictedToGeo                          = "BlockMoveOnly"
-                SharingDomainRestrictionMode             = "None"
-                SharingAllowedDomainList                 = ""
-                SharingBlockedDomainList                 = ""
-                ShowPeoplePickerSuggestionsForGuestUsers = $false
-                DefaultSharingLinkType                   = "None"
-                DefaultLinkPermission                    = "None"
+                Url                                         = "https://contoso.sharepoint.com/sites/groupsite"
+                Owner                                       = "testuser@contoso.com"
+                StorageQuota                                = 1000
+                GlobalAdminAccount                          = $GlobalAdminAccount
+                Ensure                                      = "Present"
+                LocaleId                                    = 1033
+                Template                                    = "GROUP#0"
+                CompatibilityLevel                          = 15
+                Title                                       = "groupsite"
+                DenyAddAndCustomizePages                    = $false
+                StorageQuotaWarningLevel                    = 25574400
+                LockState                                   = "Unlock"
+                SharingCapability                           = "Disabled"
+                CommentsOnSitePagesDisabled                 = $false
+                SocialBarOnSitePagesDisabled                = $false
+                DisableAppViews                             = "NotDisabled"
+                DisableCompanyWideSharingLinks              = "NotDisabled"
+                DisableFlows                                = "NotDisabled"
+                RestrictedToGeo                             = "BlockMoveOnly"
+                SharingDomainRestrictionMode                = "None"
+                SharingAllowedDomainList                    = ""
+                SharingBlockedDomainList                    = ""
+                ShowPeoplePickerSuggestionsForGuestUsers    = $false
+                DefaultSharingLinkType                      = "None"
+                DefaultLinkPermission                       = "None"
                 AnonymousLinkExpirationInDays               = "12"
                 OverrideTenantAnonymousLinkExpirationPolicy = $true
             }
@@ -864,42 +866,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "should not create the site and highlight that it should be created via the O365 group" {
                 { Set-TargetResource @testParams } | Should Throw "Group based sites (GROUP#0) should be created as part of an O365 group. Make sure to specify it as a configuration item"
-             }
-         }
-
-         Context -Name "Group#0 site already exists but is not configured as desired" -Fixture {
-            $testParams = @{
-                Ensure                                   = "Present"
-                Url                                      = "https://contoso.sharepoint.com/sites/testgroup"
-                Owner                                    = "testuser@contoso.com"
-                StorageQuota                             = 1000
-                GlobalAdminAccount                       = $GlobalAdminAccount
-                LocaleId                                 = 1033
-                Template                                 = "GROUP#0"
-                CompatibilityLevel                       = 15
-                Title                                    = "testgroup"
-                DenyAddAndCustomizePages                 = $false
-                StorageQuotaWarningLevel                 = 25574400
-                LockState                                = "Unlock"
-                SharingCapability                        = "Disabled"
-                CommentsOnSitePagesDisabled              = $false
-                SocialBarOnSitePagesDisabled             = $false
-                DisableAppViews                          = "NotDisabled"
-                DisableCompanyWideSharingLinks           = "NotDisabled"
-                DisableFlows                             = "NotDisabled"
-                RestrictedToGeo                          = "BlockMoveOnly"
-                SharingDomainRestrictionMode             = "None"
-                SharingAllowedDomainList                 = ""
-                SharingBlockedDomainList                 = ""
-                ShowPeoplePickerSuggestionsForGuestUsers = $false
-                DefaultSharingLinkType                   = "None"
-                DefaultLinkPermission                    = "None"
-                AnonymousLinkExpirationInDays               = "12"
-                OverrideTenantAnonymousLinkExpirationPolicy = $true
             }
+        }
 
-            Mock -CommandName Get-SPOSite -MockWith {
-                return @{
+        Context -Name "Group#0 site already exists but is not configured as desired" -Fixture {
+            $testParams = @{
+                Ensure                                      = "Present"
                 Url                                         = "https://contoso.sharepoint.com/sites/testgroup"
                 Owner                                       = "testuser@contoso.com"
                 StorageQuota                                = 1000
@@ -911,7 +883,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DenyAddAndCustomizePages                    = $false
                 StorageQuotaWarningLevel                    = 25574400
                 LockState                                   = "Unlock"
-                SharingCapability                           = "ExistingExternalUserSharingOnly"
+                SharingCapability                           = "Disabled"
                 CommentsOnSitePagesDisabled                 = $false
                 SocialBarOnSitePagesDisabled                = $false
                 DisableAppViews                             = "NotDisabled"
@@ -924,9 +896,39 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 ShowPeoplePickerSuggestionsForGuestUsers    = $false
                 DefaultSharingLinkType                      = "None"
                 DefaultLinkPermission                       = "None"
-                HubSiteId                                   = "00000000-0000-0000-0000-000000000000"
                 AnonymousLinkExpirationInDays               = "12"
                 OverrideTenantAnonymousLinkExpirationPolicy = $true
+            }
+
+            Mock -CommandName Get-SPOSite -MockWith {
+                return @{
+                    Url                                         = "https://contoso.sharepoint.com/sites/testgroup"
+                    Owner                                       = "testuser@contoso.com"
+                    StorageQuota                                = 1000
+                    GlobalAdminAccount                          = $GlobalAdminAccount
+                    LocaleId                                    = 1033
+                    Template                                    = "GROUP#0"
+                    CompatibilityLevel                          = 15
+                    Title                                       = "testgroup"
+                    DenyAddAndCustomizePages                    = $false
+                    StorageQuotaWarningLevel                    = 25574400
+                    LockState                                   = "Unlock"
+                    SharingCapability                           = "ExistingExternalUserSharingOnly"
+                    CommentsOnSitePagesDisabled                 = $false
+                    SocialBarOnSitePagesDisabled                = $false
+                    DisableAppViews                             = "NotDisabled"
+                    DisableCompanyWideSharingLinks              = "NotDisabled"
+                    DisableFlows                                = "NotDisabled"
+                    RestrictedToGeo                             = "BlockMoveOnly"
+                    SharingDomainRestrictionMode                = "None"
+                    SharingAllowedDomainList                    = ""
+                    SharingBlockedDomainList                    = ""
+                    ShowPeoplePickerSuggestionsForGuestUsers    = $false
+                    DefaultSharingLinkType                      = "None"
+                    DefaultLinkPermission                       = "None"
+                    HubSiteId                                   = "00000000-0000-0000-0000-000000000000"
+                    AnonymousLinkExpirationInDays               = "12"
+                    OverrideTenantAnonymousLinkExpirationPolicy = $true
                 }
             }
 
@@ -948,7 +950,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Url = "https://contoso.com/sites/TestSite"
+                Url                = "https://contoso.com/sites/TestSite"
                 Owner              = "testuser@contoso.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }

@@ -48,9 +48,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesign for $Title"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
     $nullReturn = @{
         Title               = $Title
         SiteScriptNames     = $SiteScriptNames
@@ -76,8 +82,12 @@ function Get-TargetResource
     $scriptTitles = @()
     foreach ($scriptId in $siteDesign.SiteScriptIds)
     {
-        $siteScript = Get-PnPSiteScript -Identity $scriptId
-        $scriptTitles += $siteScript.Title
+        $siteScript = Get-PnPSiteScript -Identity $scriptId -ErrorAction SilentlyContinue
+
+        if ($null -ne $siteScript)
+        {
+            $scriptTitles += $siteScript.Title
+        }
     }
     ## Todo need to see if we can get this somehow from PNP module instead of hard coded in script
     ## https://github.com/SharePoint/PnP-PowerShell/blob/master/Commands/Enums/SiteWebTemplate.cs
@@ -154,9 +164,15 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for SPO SiteDesign for $Title"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $curSiteDesign = Get-TargetResource @PSBoundParameters
 
@@ -186,10 +202,10 @@ function Set-TargetResource
         if ($null -ne $siteDesign)
         {
             Write-Verbose -Message "Updating current site design $Title"
-            Set-PnPSiteDesign  -Identity $siteDesign.Id  @CurrentParameters
+            Set-PnPSiteDesign -Identity $siteDesign.Id  @CurrentParameters
         }
     }
-    elseif (($Ensure -eq "Absent"  -and $curSiteDesign.Ensure -eq "Present"))
+    elseif (($Ensure -eq "Absent" -and $curSiteDesign.Ensure -eq "Present"))
     {
         $siteDesign = Get-PnPSiteDesign -Identity $Title -ErrorAction SilentlyContinue
         if ($null -ne $siteDesign)
@@ -260,8 +276,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -275,20 +292,41 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Title,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        SPOSiteDesign " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        -Platform PnP
+
+    $content = ''
+    $i = 1
+
+    [array]$designs = Get-PnPSiteDesign
+
+    foreach ($design in $designs)
+    {
+        Write-Information "    [$i/$($designs.Length)] $($design.Title)"
+        $params = @{
+            Title              = $design.Title
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content += "        SPOSiteDesign " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        $i++
+    }
     return $content
 }
 

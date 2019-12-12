@@ -3,16 +3,18 @@ param(
     [Parameter()]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\Stubs\Office365.psm1" `
-                                         -Resolve)
+            -ChildPath "..\Stubs\Office365.psm1" `
+            -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\UnitTestHelper.psm1" `
-                                -Resolve)
+        -ChildPath "..\UnitTestHelper.psm1" `
+        -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                              -DscResource "O365Group"
+    -DscResource "O365Group" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -27,11 +29,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "When the group doesn't already exist" -Fixture {
             $testParams = @{
-                DisplayName = "Test Group"
-                MailNickName = "TestGroup"
-                Description = "This is a test"
-                ManagedBy = "JohnSmith@contoso.onmicrosoft.com"
-                Ensure = "Present"
+                DisplayName        = "Test Group"
+                MailNickName       = "TestGroup"
+                Description        = "This is a test"
+                ManagedBy          = "JohnSmith@contoso.onmicrosoft.com"
+                Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -50,22 +52,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "When the group already exists" -Fixture {
             $testParams = @{
-                DisplayName = "Test Group"
-                MailNickName = "TestGroup"
-                ManagedBy = "Bob.Houle@contoso.onmicrosoft.com"
-                Description = "This is a test"
-                Ensure = "Present"
+                DisplayName        = "Test Group"
+                MailNickName       = "TestGroup"
+                ManagedBy          = "Bob.Houle@contoso.onmicrosoft.com"
+                Description        = "This is a test"
+                Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-AzureADGroup -MockWith {
                 return @{
-                    DisplayName = "Test Group"
-                    ObjectId = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
-                    Members = @("John.Smith@contoso.onmcirosoft.com")
+                    DisplayName  = "Test Group"
+                    ObjectId     = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
+                    Members      = @("John.Smith@contoso.onmcirosoft.com")
                     MailNickName = "TestGroup"
-                    Owners = @("Bob.Houle@contoso.onmcirosoft.com")
-                    Description = "This is a test"
+                    Owners       = @("Bob.Houle@contoso.onmcirosoft.com")
+                    Description  = "This is a test"
                 }
             }
 
@@ -96,40 +98,40 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Office 365 Group - When the group already exists but with different members" -Fixture {
             $testParams = @{
-                DisplayName = "Test Group"
-                MailNickName = "TestGroup"
-                Description = "This is a test"
-                Members = @("GoodUser1", "GoodUser2")
-                ManagedBy = @("JohnSmith@contoso.onmicrosoft.com", "Bob.Houle@contoso.onmicrosoft.com")
-                Ensure = "Present"
+                DisplayName        = "Test Group"
+                MailNickName       = "TestGroup"
+                Description        = "This is a test"
+                Members            = @("GoodUser1", "GoodUser2")
+                ManagedBy          = @("JohnSmith@contoso.onmicrosoft.com", "Bob.Houle@contoso.onmicrosoft.com")
+                Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-UnifiedGroupLinks
             {
                 return (@{
-                    LinkType = "Members"
-                    Identity = "Test Group"
-                    Name = "GoodUser1"
-                },
-                @{
-                    LinkType = "Members"
-                    Identity = "Test Group"
-                    Name = "BadUser1"
-                },
-                @{
-                    LinkType = "Members"
-                    Identity = "Test Group"
-                    Name = "GoodUser2"
-                })
+                        LinkType = "Members"
+                        Identity = "Test Group"
+                        Name     = "GoodUser1"
+                    },
+                    @{
+                        LinkType = "Members"
+                        Identity = "Test Group"
+                        Name     = "BadUser1"
+                    },
+                    @{
+                        LinkType = "Members"
+                        Identity = "Test Group"
+                        Name     = "GoodUser2"
+                    })
             }
 
             Mock -CommandName Get-AzureADGroup -MockWith {
                 return @{
-                    DisplayName = "Test Group"
+                    DisplayName  = "Test Group"
                     MailNickName = "TestGroup"
-                    Description = "This is a test"
-                    ObjectID = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
+                    Description  = "This is a test"
+                    ObjectID     = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
                 }
             }
 
@@ -170,18 +172,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                DisplayName = "Test Group"
-                ManagedBy = "JohnSmith@contoso.onmicrosoft.com"
-                MailNickName = "TestGroup"
+                DisplayName        = "Test Group"
+                ManagedBy          = "JohnSmith@contoso.onmicrosoft.com"
+                MailNickName       = "TestGroup"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-AzureADGroup -MockWith {
                 return @{
-                    DisplayName = "Test Group"
+                    DisplayName  = "Test Group"
                     MailNickName = "TestGroup"
-                    Description = "This is a test"
-                    ObjectID = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
+                    Description  = "This is a test"
+                    ObjectID     = "a53dbbd6-7e9b-4df9-841a-a2c3071a1770"
                 }
             }
 

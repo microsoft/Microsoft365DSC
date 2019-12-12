@@ -3,16 +3,18 @@ param(
     [Parameter()]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\Stubs\Office365.psm1" `
-                                         -Resolve)
+            -ChildPath "..\Stubs\Office365.psm1" `
+            -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\UnitTestHelper.psm1" `
-                                -Resolve)
+        -ChildPath "..\UnitTestHelper.psm1" `
+        -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                              -DscResource "EXOMailTips"
+    -DscResource "EXOMailTips" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -27,10 +29,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "MailTips are Disabled and should be Enabled" -Fixture {
             $testParams = @{
-                Organization = "contoso.onmicrosoft.com"
+                Organization           = "contoso.onmicrosoft.com"
                 MailTipsAllTipsEnabled = $True
-                Ensure = "Present"
-                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure                 = "Present"
+                GlobalAdminAccount     = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
@@ -54,10 +56,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "MailTipsGroupMetricsEnabled are Disabled and should be Enabled" -Fixture {
             $testParams = @{
-                Organization = "contoso.onmicrosoft.com"
+                Organization                = "contoso.onmicrosoft.com"
                 MailTipsGroupMetricsEnabled = $True
-                Ensure = "Present"
-                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure                      = "Present"
+                GlobalAdminAccount          = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
@@ -81,10 +83,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "MailTipsLargeAudienceThreshold are 25 and should be 50" -Fixture {
             $testParams = @{
-                Organization = "contoso.onmicrosoft.com"
+                Organization                   = "contoso.onmicrosoft.com"
                 MailTipsLargeAudienceThreshold = 50
-                Ensure = "Present"
-                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure                         = "Present"
+                GlobalAdminAccount             = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
@@ -108,10 +110,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "MailTipsMailboxSourcedTipsEnabled are Disabled and should be Enabled" -Fixture {
             $testParams = @{
-                Organization = "contoso.onmicrosoft.com"
+                Organization                      = "contoso.onmicrosoft.com"
                 MailTipsMailboxSourcedTipsEnabled = $True
-                Ensure = "Present"
-                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure                            = "Present"
+                GlobalAdminAccount                = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
@@ -135,10 +137,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "MailTipsExternalRecipientsTipsEnabled are Disabled and should be Enabled" -Fixture {
             $testParams = @{
-                Organization = "contoso.onmicrosoft.com"
+                Organization                          = "contoso.onmicrosoft.com"
                 MailTipsExternalRecipientsTipsEnabled = $True
-                Ensure = "Present"
-                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure                                = "Present"
+                GlobalAdminAccount                    = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
@@ -162,22 +164,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "MailTips are Enabled and should be Enabled" -Fixture {
             $testParams = @{
-                Organization = "contoso.onmicrosoft.com"
-                MailTipsAllTipsEnabled = $True
-                MailTipsLargeAudienceThreshold = 10
-                MailTipsMailboxSourcedTipsEnabled = $True
-                MailTipsGroupMetricsEnabled = $True
+                Organization                          = "contoso.onmicrosoft.com"
+                MailTipsAllTipsEnabled                = $True
+                MailTipsLargeAudienceThreshold        = 10
+                MailTipsMailboxSourcedTipsEnabled     = $True
+                MailTipsGroupMetricsEnabled           = $True
                 MailTipsExternalRecipientsTipsEnabled = $True
-                Ensure = "Present"
-                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure                                = "Present"
+                GlobalAdminAccount                    = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
                 return @{
-                    MailTipsAllTipsEnabled = $True
-                    MailTipsLargeAudienceThreshold = 10
-                    MailTipsMailboxSourcedTipsEnabled = $True
-                    MailTipsGroupMetricsEnabled = $True
+                    MailTipsAllTipsEnabled                = $True
+                    MailTipsLargeAudienceThreshold        = 10
+                    MailTipsMailboxSourcedTipsEnabled     = $True
+                    MailTipsGroupMetricsEnabled           = $True
                     MailTipsExternalRecipientsTipsEnabled = $True
                 }
             }
@@ -193,10 +195,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Organization Configuration is null" -Fixture {
             $testParams = @{
-                Organization = "contoso.onmicrosoft.com"
+                Organization           = "contoso.onmicrosoft.com"
                 MailTipsAllTipsEnabled = $True
-                Ensure = "Present"
-                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure                 = "Present"
+                GlobalAdminAccount     = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
@@ -210,17 +212,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Organization = "contoso.onmicrosoft.com"
+                Organization       = "contoso.onmicrosoft.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
                 return @{
-                    Organization = $Organization
-                    MailTipsAllTipsEnabled = $True
-                    MailTipsGroupMetricsEnabled = $True
-                    MailTipsLargeAudienceThreshold = $True
-                    MailTipsMailboxSourcedTipsEnabled = $True
+                    Organization                          = $Organization
+                    MailTipsAllTipsEnabled                = $True
+                    MailTipsGroupMetricsEnabled           = $True
+                    MailTipsLargeAudienceThreshold        = $True
+                    MailTipsMailboxSourcedTipsEnabled     = $True
                     MailTipsExternalRecipientsTipsEnabled = $True
                 }
             }

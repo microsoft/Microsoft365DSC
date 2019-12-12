@@ -1,0 +1,7 @@
+[ClassVersion("1.0.0.0"), FriendlyName("SCFilePlanPropertyDepartment")]
+class MSFT_SCFilePlanPropertyDepartment : OMI_BaseResource
+{
+    [Key, Description("The Name parameter specifies the unique name of the department.")] String Name;
+    [Write, Description("Specify if this department should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};

@@ -17,7 +17,7 @@ function Get-TargetResource
         $Aliases,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -27,22 +27,28 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of Office 365 Shared Mailbox $DisplayName"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = @{
-        DisplayName = $DisplayName
+        DisplayName        = $DisplayName
         PrimarySMTPAddress = $null
         GlobalAdminAccount = $null
-        Ensure = "Absent"
+        Ensure             = "Absent"
     }
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $mailboxes = Get-Mailbox
     $mailbox = $mailboxes | Where-Object -FilterScript {
-                                $_.RecipientTypeDetails -eq "SharedMailbox" -and `
-                                $_.Identity -eq $DisplayName
-                            }
+        $_.RecipientTypeDetails -eq "SharedMailbox" -and `
+            $_.Identity -eq $DisplayName
+    }
 
     if ($null -eq $mailbox)
     {
@@ -64,10 +70,10 @@ function Get-TargetResource
     #endregion
 
     $result = @{
-        DisplayName = $DisplayName
+        DisplayName        = $DisplayName
         PrimarySMTPAddress = $mailbox.PrimarySMTPAddress.ToString()
-        Aliases = $CurrentAliases
-        Ensure = "Present"
+        Aliases            = $CurrentAliases
+        Ensure             = "Present"
         GlobalAdminAccount = $GlobalAdminAccount
     }
 
@@ -93,7 +99,7 @@ function Set-TargetResource
         $Aliases,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -103,6 +109,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Shared Mailbox $DisplayName"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $currentMailbox = Get-TargetResource @PSBoundParameters
 
@@ -118,7 +130,7 @@ function Set-TargetResource
 
     $CurrentParameters = $PSBoundParameters
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     # CASE: Mailbox doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentMailbox.Ensure -eq "Absent")
@@ -133,7 +145,7 @@ function Set-TargetResource
         $proxyAddresses = $emails -Split ','
         $CurrentParameters.Aliases = $proxyAddresses
         New-MailBox -Name $DisplayName -PrimarySMTPAddress $PrimarySMTPAddress -Shared:$true
-        Set-Mailbox -Identity $DisplayName -EmailAddresses @{add=$Aliases}
+        Set-Mailbox -Identity $DisplayName -EmailAddresses @{add = $Aliases }
     }
     # CASE: Mailbox exists but it shouldn't;
     elseif ($Ensure -eq "Absent" -and $currentMailbox.Ensure -eq "Present")
@@ -162,7 +174,7 @@ function Set-TargetResource
             $CurrentParameters.Aliases = $proxyAddresses
 
             Write-Verbose -Message "Adding the following email aliases: $($emails)"
-            Set-Mailbox -Identity $DisplayName -EmailAddresses @{add=$Aliases}
+            Set-Mailbox -Identity $DisplayName -EmailAddresses @{add = $Aliases }
         }
     }
 }
@@ -186,7 +198,7 @@ function Test-TargetResource
         $Aliases,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -196,6 +208,12 @@ function Test-TargetResource
     )
 
     Write-Verbose -Message "Testing configuration of Office 365 Shared Mailbox $DisplayName"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -203,11 +221,12 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "DisplayName", `
-                                                                   "PrimarySMTPAddress",
-                                                                   "Aliases")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("Ensure", `
+            "DisplayName", `
+            "PrimarySMTPAddress",
+        "Aliases")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -233,7 +252,7 @@ function Export-TargetResource
     $modulePath = $PSScriptRoot + "\MSFT_EXOSharedMailbox.psm1"
     $content = "        EXOSharedMailbox " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath -UseGetTargetResource
+    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
     $content += "        }`r`n"
     return $content

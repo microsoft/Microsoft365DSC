@@ -5,9 +5,9 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Private','Public')]
+        [ValidateSet('Private', 'Public')]
         [System.String]
-        $CdnType,
+        $CDNType,
 
         [Parameter()]
         [System.String[]]
@@ -23,17 +23,30 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPOTenantCdnPolicy {$CDNType}"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
-    $Policies = Get-PnPTenantCdnPolicies -CDNType $CDNType
+    try
+    {
+        $Policies = Get-PnPTenantCdnPolicies -CDNType $CDNType -ErrorAction Stop
 
-    return @{
-        CDNType                              = $CDNType
-        ExcludeRestrictedSiteClassifications = $Policies["ExcludeRestrictedSiteClassifications"].Split(',')
-        IncludeFileExtensions                = $Policies["IncludeFileExtensions"].Split(',')
-        GlobalAdminAccount                   = $GlobalAdminAccount
+        return @{
+            CDNType                              = $CDNType
+            ExcludeRestrictedSiteClassifications = $Policies["ExcludeRestrictedSiteClassifications"].Split(',')
+            IncludeFileExtensions                = $Policies["IncludeFileExtensions"].Split(',')
+            GlobalAdminAccount                   = $GlobalAdminAccount
+        }
+    }
+    catch
+    {
+        return $null
     }
 }
 
@@ -43,9 +56,9 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Private','Public')]
+        [ValidateSet('Private', 'Public')]
         [System.String]
-        $CdnType,
+        $CDNType,
 
         [Parameter()]
         [System.String[]]
@@ -61,9 +74,15 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for SPOTenantCDNPolicy {$CDNType}"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $curPolicies = Get-TargetResource @PSBoundParameters
 
@@ -77,21 +96,21 @@ function Set-TargetResource
         {
             $stringValue += $entry + ","
         }
-        $stringValue = $stringValue.Remove($stringValue.Length -1, 1)
+        $stringValue = $stringValue.Remove($stringValue.Length - 1, 1)
         Set-PnPTenantCdnPolicy -CDNType $CDNType `
-                               -PolicyType 'IncludeFileExtensions' `
-                               -PolicyValue $stringValue
+            -PolicyType 'IncludeFileExtensions' `
+            -PolicyValue $stringValue
     }
 
     if ($null -ne (Compare-Object -ReferenceObject $curPolicies.ExcludeRestrictedSiteClassifications `
-                                  -DifferenceObject $ExcludeRestrictedSiteClassifications))
+                -DifferenceObject $ExcludeRestrictedSiteClassifications))
     {
         Write-Verbose "Found difference in ExcludeRestrictedSiteClassifications"
 
 
         Set-PnPTenantCdnPolicy -CDNType $CDNType `
-                               -PolicyType 'ExcludeRestrictedSiteClassifications' `
-                               -PolicyValue $stringValue
+            -PolicyType 'ExcludeRestrictedSiteClassifications' `
+            -PolicyValue $stringValue
     }
 }
 
@@ -102,9 +121,9 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Private','Public')]
+        [ValidateSet('Private', 'Public')]
         [System.String]
-        $CdnType,
+        $CDNType,
 
         [Parameter()]
         [System.String[]]
@@ -127,10 +146,11 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("CDNType", `
-                                                                   "ExcludeRestrictedSiteClassifications", `
-                                                                   "IncludeFileExtensions")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("CDNType", `
+            "ExcludeRestrictedSiteClassifications", `
+            "IncludeFileExtensions")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -148,20 +168,30 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $params = @{
         CDNType            = 'Public'
         GlobalAdminAccount = $GlobalAdminAccount
     }
     $result = Get-TargetResource @params
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        SPOTenantCDNPolicy " + (New-Guid).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    $content = ""
+    if ($null -ne $result)
+    {
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content += "        SPOTenantCDNPolicy " + (New-Guid).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+    }
 
 
     $params = @{
@@ -169,12 +199,15 @@ function Export-TargetResource
         GlobalAdminAccount = $GlobalAdminAccount
     }
     $result = Get-TargetResource @params
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content += "        SPOTenantCDNPolicy " + (New-Guid).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    if ($null -ne $result)
+    {
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content += "        SPOTenantCDNPolicy " + (New-Guid).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+    }
     return $content
 }
 

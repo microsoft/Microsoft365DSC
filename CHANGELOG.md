@@ -2,6 +2,77 @@
 
 ## UNRELEASED
 
+## 1.0.1.1395
+
+* EXOOrganizationConfig
+  * Initial Release;
+* EXOClientAccessRule
+  * Fixed issue with Get-TargetResource not
+    returning all values;
+* O365OrgCustomizationSetting
+  * Inital Release;
+* PPPowerAppsEnvironment
+  * Initial Release;
+* SCAuditConfigurationSettings
+  * Initial Release;
+* SCComplianceTag
+  * Changed ReviewerEmail to type String array;
+* SCDLPComplianceRule
+  * Fixed issue with the extraction of NotifyAllowOverride;
+* SCFilePlanPropertyAuthority
+  * Initial Release;
+* SCFilePlanPropertyCategory
+  * Initial Release;
+* SCFilePlanPropertyCitation
+  * Initial Release;
+* SCFilePlanPropertyDepartment
+  * Initial Release;
+* SCFilePlanPropertyReferenceID
+  * Initial Release;
+* SCFilePlanPropertySubCategory
+  * Initial Release;
+* SPOPropertyBag
+  * Added multithreading;
+* SPOSharingSettings
+  * Added ExistingExternalUserSharingOnly as a supported value
+    for SharingCapabilities;
+* SPOTheme
+  * Fixed an issue with the Set-TargetResource
+    still using SPO management shell cmdlets instead of PnP
+* SPOUserProfileProperty
+  * Introduced Multi-Threading
+* TeamsCallingPolicy
+  * Initial Release;
+* TeamsChannelsPolicy
+  * Initial Release;
+* TeamsClientConfiguration
+  * Initial Release;
+* TeamsMeetingBroadcastConfiguration
+  * Initial Release;
+* TeamsMeetingConfiguration
+  * Initial Release;
+* TeamsMeetingPolicy
+  * Initial Release;
+* TeamsMessagingPolicy
+  * Initial Release;
+* TeamsUpgradeConfiguration
+  * Initial Release;
+* TeamsUser
+  * Introduced Multi-Threading;
+  * Fixed an issue with User's Principal Name;
+* Metadata
+  * Updated MicrosoftTeams dependency to version 1.0.3;
+  * Updated MSCloudLoginAssistant dependency to version
+    0.8.2;
+  * Updated SharePointPnPPowerShellOnline dependency
+    to version 3.16.1912.0;
+  * Updated ReverseDSC dependency to version 2.0.0.0;
+* Misc
+  * Added new Telemetry Engine;
+  * Added new Dynamic Stubs Generation feature;
+
+## 1.0.0.1048
+
 * SCCaseHoldPolicy
   * New Resource;
 * SCComplianceCase
@@ -22,12 +93,13 @@
   * Added workload selectors to the GUI interface;
 * Metadata
   * Updated MSCloudLoginAssistant dependency
-    to version 0.7.5;
+    to version 0.8.3;
   * Updated ReverseDSC dependency
     to version 1.9.4.6;
   * Updated Microsoft.Online.SharePoint.PowerShell dependency
-    to version 16.0.19223.12000
-  * UPdated SharePointPnPPowerShellOnline dependency
+    to version 16.0.19223.12000;
+  * Updated MicrosoftTeams dependency to version 1.0.0.2;
+  * Updated SharePointPnPPowerShellOnline dependency
     to version 3.14.1910.0
 
 ## 1.0.0.846
@@ -93,13 +165,13 @@
     to version 3.11.1907.0
 * BREAKING CHANGES
   * O365Group
-    * ManagedBy is now a mandatory property
+    * ManagedBy is now a mandatory property;
   * SPOSite
     * Owner is now a mandatory property
 * Modules
   * Added embedded Log Engine
 * SCRetentionCompliancePolicy
-  * Initial Release
+  * Initial Release;
 * SCRetentionComplianceRule
   * Initial Release
 * SCSupervisoryReviewPolicy
@@ -107,5 +179,5 @@
 * SCSupervisoryReviewRule
   * Initial Release
 * SPOSite
-  * Added default value for Storage Quota
-  * Fixed an issue with site creation that could result in infinite loops
+  * Added default value for Storage Quota;
+  * Fixed an issue with site creation that could result in infinite loops;
