@@ -29,6 +29,8 @@
   * Initial Release;
 * SPOPropertyBag
   * Added multithreading;
+*SPOSiteGroup
+  *Initial Release
 * SPOTheme
   * Fixed an issue with the Set-TargetResource
     still using SPO management shell cmdlets instead of PnP

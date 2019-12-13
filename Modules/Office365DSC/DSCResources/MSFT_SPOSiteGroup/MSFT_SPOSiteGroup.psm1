@@ -51,49 +51,6 @@ function Get-TargetResource
         Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                           -Platform SharePointOnline `
                           -ErrorAction SilentlyContinue
-        
-        #checking if the site actually exists
-        try
-        {
-            $site = Get-SPOSite $Url
-        }
-        catch
-        {
-            if ($null -eq $site)
-            {
-                $Message = "The specified site collection doesn't exist."
-                New-Office365DSCLogEntry -Error $_ -Message $Message
-                throw $Message
-                return $nullReturn
-            }
-        }
-        try
-        {
-            $siteGroup = Get-SPOSiteGroup -Site $Url -Group $Identity
-        }
-        catch
-        {
-            if($Error[0].Exception.Message -eq "Group cannot be found.")
-            {
-                write-verbose -Message "Site group $($Identity) could not be found on site $($Url)"
-                
-            }
-        }
-        if($null -eq $siteGroup)
-        {
-            return $nullReturn
-        }
-        else
-        {
-            return @{
-                Url                = $Url
-                Identity           = $siteGroup.Title
-                Owner              = $siteGroup.OwnerLoginName
-                PermissionLevels   = $siteGroup.Roles
-                GlobalAdminAccount = $GlobalAdminAccount
-                Ensure             = "Present"
-            }
-        }
     }
     catch
     {
@@ -102,9 +59,51 @@ function Get-TargetResource
             $Message = "Make sure that you are connected to SharePoint Online"
             New-Office365DSCLogEntry -Error $_ -Message $Message
             throw $Message
+            return $nullReturn
+        }
+        
+    }
+    #checking if the site actually exists
+    try
+    {
+        $site = Get-SPOSite $Url
+    }
+    catch
+    {
+        if ($null -eq $site)
+        {
+            $Message = "The specified site collection doesn't exist."
+            New-Office365DSCLogEntry -Error $_ -Message $Message
+            throw $Message
+            return $nullReturn
+        }
+    }
+    try
+    {
+        $siteGroup = Get-SPOSiteGroup -Site $Url -Group $Identity
+    }
+    catch
+    {
+        if($Error[0].Exception.Message -eq "Group cannot be found.")
+        {
+            write-verbose -Message "Site group $($Identity) could not be found on site $($Url)"
             
         }
+    }
+    if($null -eq $siteGroup)
+    {
         return $nullReturn
+    }
+    else
+    {
+        return @{
+            Url                = $Url
+            Identity           = $siteGroup.Title
+            Owner              = $siteGroup.OwnerLoginName
+            PermissionLevels   = $siteGroup.Roles
+            GlobalAdminAccount = $GlobalAdminAccount
+            Ensure             = "Present"
+        }
     }
 }
 
@@ -268,16 +267,16 @@ function Test-TargetResource
     Write-Verbose -Message "Testing SPOSiteGroups for {$Url}"
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
+    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "Url", `
-                                                                   "Identity", `
-                                                                   "Owner", `
-                                                                   "PermissionLevels"
-                                                )
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

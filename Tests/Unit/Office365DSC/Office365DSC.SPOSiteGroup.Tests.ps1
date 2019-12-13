@@ -25,7 +25,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
         # Test contexts
-        Context -Name "Check SiteGroups " -Fixture {
+        Context -Name "SiteGroup does not exist " -Fixture {
             $testParams = @{
                 URL                 = "https://contoso.sharepoint.com/sites/TestSite"
                 Identity            = "TestSiteGroup"
@@ -69,7 +69,57 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Context -Name "Check existing SiteGroup " -Fixture {
+        Context -Name "SiteGroup exists but is not in the desired state (PermissionLevel missing" -Fixture {
+            $testParams = @{
+                URL                 = "https://contoso.sharepoint.com/sites/TestSite"
+                Identity            = "TestSiteGroup"
+                Owner               = "admin@Office365DSC.onmicrosoft.com"
+                PermissionLevels    = @("Edit", "Read")
+                Ensure              = "Present"
+                GlobalAdminAccount  = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-SPOSiteGroup -MockWith {
+                return @{
+                    URL                 = "https://contoso.sharepoint.com/sites/TestSite"
+                    Identity            = "TestSiteGroup"
+                    Owner               = "admin@Office365DSC.onmicrosoft.com"
+                    PermissionLevels    = @("Read")
+                }
+            }
+
+            Mock -CommandName Set-SPOSiteGroup -MockWith {
+            }
+
+            Mock -CommandName Get-TargetResource -MockWith{
+                return @{
+                    Ensure = "Present"
+                }
+            }
+
+            Mock -CommandName Compare-Object -MockWith {
+                return @{
+                    SideIndicator = "<="
+                }
+            }
+
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            }
+
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
+            }
+
+            It "Updates the site group in the Set method" {
+                Set-TargetResource @testParams
+                Assert-MockCalled -CommandName Set-SPOSiteGroup -Exactly 1
+                Assert-MockCalled -CommandName New-SPOSiteGroup -Exactly 0
+            }
+
+        }
+
+        Context -Name "SiteGroup exists and is in the desired state " -Fixture {
             $testParams = @{
                 URL                 = "https://contoso.sharepoint.com/sites/TestSite"
                 Identity            = "TestSiteGroup"
@@ -85,24 +135,69 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     URL                 = "https://contoso.sharepoint.com/sites/TestSite"
                     Identity            = "TestSiteGroup"
                     Owner               = "admin@Office365DSC.onmicrosoft.com"
-                    PermissionLevels    = @("Edit")
+                    PermissionLevels    = @("Edit", "Read")
                 }
-            }
-
-            Mock -CommandName Set-SPOSiteGroup -MockWith {
-                return $null
             }
 
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
 
-            It "Should return false from the Test method" {
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $true
+            }
+
+            #It "Should not update site group in the Set method" {
+            #    Set-TargetResource @testParams
+            #    Assert-MockCalled -CommandName Set-SPOSiteGroup -Exactly 0
+            #    Assert-MockCalled -CommandName New-SPOSiteGroup -Exactly 0
+            #    Assert-MockCalled -CommandName Remove-SPOSiteGroup -Exactly 0
+            #}
+
+        }
+
+        Context -Name "SiteGroup exists but should not" -Fixture {
+            $testParams = @{
+                URL                 = "https://contoso.sharepoint.com/sites/TestSite"
+                Identity            = "TestSiteGroup"
+                Owner               = "admin@Office365DSC.onmicrosoft.com"
+                PermissionLevels    = @("Edit", "Read")
+                Ensure              = "Absent"
+                GlobalAdminAccount  = $GlobalAdminAccount
+            }
+
+
+            Mock -CommandName Get-SPOSiteGroup -MockWith {
+                return @{
+                    URL                 = "https://contoso.sharepoint.com/sites/TestSite"
+                    Identity            = "TestSiteGroup"
+                    Owner               = "admin@Office365DSC.onmicrosoft.com"
+                    PermissionLevels    = @("Edit", "Read")
+                }
+            }
+
+            Mock -CommandName Set-SPOSiteGroup -MockWith{
+            }
+
+            Mock -CommandName New-SPOSiteGroup -MockWith{
+            }
+
+            Mock -CommandName Remove-SPOSiteGroup -MockWith{
+            }
+
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            }
+
+            It "Should return true from the Test method" {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-            It "Updates the site group in the Set method" {
+            It "Should remove the site group" {
                 Set-TargetResource @testParams
+                Assert-MockCalled -CommandName Set-SPOSiteGroup -Exactly 0
+                Assert-MockCalled -CommandName New-SPOSiteGroup -Exactly 0
+                Assert-MockCalled -CommandName Remove-SPOSiteGroup -Exactly 1
             }
 
         }
