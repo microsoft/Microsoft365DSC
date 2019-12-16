@@ -8,8 +8,8 @@ param(
 )
 
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\UnitTestHelper.psm1" `
-        -Resolve)
+            -ChildPath "..\UnitTestHelper.psm1" `
+            -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
     -DscResource "SPOSiteGroup"
@@ -156,7 +156,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Context -Name "SiteGroup exists but should not" -Fixture {
+        Context -Name "SiteGroup exists but should not exist" -Fixture {
             $testParams = @{
                 URL                 = "https://contoso.sharepoint.com/sites/TestSite"
                 Identity            = "TestSiteGroup"
