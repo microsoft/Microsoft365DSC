@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+* TeamsGuestCallingConfiguration
+  * Initial Release;
+
 ## 1.0.1.1395
 
 * EXOOrganizationConfig

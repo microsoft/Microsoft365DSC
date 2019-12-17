@@ -673,6 +673,13 @@ Configuration Master
             LogoURL                     = "https://github.com/Microsoft/Office365DSC/Logo.png";
         }
 
+        TeamsGuestCallingConfiguration GuestCallingConfig
+        {
+            Identity            = "Global";
+            AllowPrivateCalling = $True;
+            GlobalAdminAccount  = $GlobalAdmin;
+        }
+
         TeamsMessagingPolicy SampleTeamsMessage
         {
             Identity                      = "TestPolicy"
