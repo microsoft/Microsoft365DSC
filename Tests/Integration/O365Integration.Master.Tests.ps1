@@ -248,7 +248,7 @@ Configuration Master
         PPPowerAppsEnvironment IntegrationPAEnvironment
         {
             DisplayName          = "Integration PowerApps Environment";
-            Ensure               = "Present";
+            Ensure               = "Present"
             EnvironmentSKU       = "Production";
             GlobalAdminAccount   = $GlobalAdmin;
             Location             = "canada";
