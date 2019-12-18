@@ -119,7 +119,7 @@ Configuration Master
             PopEnabled         = $True;
             Identity           = $CASIdentity;
             Ensure             = "Present";
-            ImapEnabled        = $True;
+            ImapEnabled        = $True
         }
 
         EXOClientAccessRule ClientAccessRule
