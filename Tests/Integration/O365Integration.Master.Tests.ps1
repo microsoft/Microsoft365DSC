@@ -107,7 +107,7 @@ Configuration Master
         }#>
 
         $CASIdentity = 'ExchangeOnlineEssentials-759100cd-4fb6-46db-80ae-bb0ef4bd92b0'
-        if ($Environment -eq 'GCCH')
+        if ($Environment -eq 'GCC')
         {
             $CASIdentity = 'ExchangeOnlineEssentials-84fb79e4-1527-4f11-b2b9-48635783fcb2'
         }

@@ -62,7 +62,15 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
 
-    $label = Get-Label -Identity $Name -ErrorAction SilentlyContinue
+    try
+    {
+        $label = Get-Label -Identity $Name -ErrorAction SilentlyContinue
+    }
+    catch
+    {
+        Write-Warning "Get-Label is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+    }
+
     if ($null -eq $label)
     {
         Write-Verbose -Message "Sensitiivity label $($Name) does not exist."
@@ -206,7 +214,15 @@ function Set-TargetResource
         $CreationParams.Remove("Disabled")
 
         Write-Verbose "Creating new Sensitiivity label $Name calling the New-Label cmdlet."
-        New-Label @CreationParams
+
+        try
+        {
+            New-Label @CreationParams
+        }
+        catch
+        {
+            Write-Warning "New-Label is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+        }
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $label.Ensure))
     {
@@ -228,14 +244,30 @@ function Set-TargetResource
         $SetParams.Remove("GlobalAdminAccount")
         $SetParams.Remove("Ensure")
         $SetParams.Remove("Name")
-        Set-Label @SetParams -Identity $Name
+
+        try
+        {
+            Set-Label @SetParams -Identity $Name
+        }
+        catch
+        {
+            Write-Warning "Set-Label is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+        }
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $label.Ensure))
     {
         # If the label exists and it shouldn't, simply remove it;Need to force deletoion
         Write-Verbose -message "Deleteing Sensitiivity label $Name."
-        Remove-Label -Identity $Name -Confirm:$false
-        Remove-Label -Identity $Name -Confirm:$false -forcedeletion:$true
+
+        try
+        {
+            Remove-Label -Identity $Name -Confirm:$false
+            Remove-Label -Identity $Name -Confirm:$false -forcedeletion:$true
+        }
+        catch
+        {
+            Write-Warning "Remove-Label is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+        }
     }
 }
 function Test-TargetResource
@@ -349,38 +381,45 @@ function Export-TargetResource
     Test-MSCloudLogin -Platform 'SecurityComplianceCenter' `
         -CloudCredential $GlobalAdminAccount
 
-    [array]$labels = Get-Label
-
-    $content = ""
-    $i = 1
-    foreach ($label in $labels)
+    try
     {
-        Write-Information "    -[$i/$($labels.Count)] $($label.Name)"
-        $params = @{
-            Name               = $label.Name
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        [array]$labels = Get-Label
 
-        if ($null -ne $result.AdvancedSettings)
+        $content = ""
+        $i = 1
+        foreach ($label in $labels)
         {
-            $result.AdvancedSettings = ConvertTo-AdvancedSettingsString -AdvancedSettings $result.AdvancedSettings
-        }
+            Write-Information "    -[$i/$($labels.Count)] $($label.Name)"
+            $params = @{
+                Name               = $label.Name
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
 
-        if ($null -ne $result.LocaleSettings)
-        {
-            $result.LocaleSettings = ConvertTo-LocaleSettingsString -LocaleSettings $result.LocaleSettings
+            if ($null -ne $result.AdvancedSettings)
+            {
+                $result.AdvancedSettings = ConvertTo-AdvancedSettingsString -AdvancedSettings $result.AdvancedSettings
+            }
+
+            if ($null -ne $result.LocaleSettings)
+            {
+                $result.LocaleSettings = ConvertTo-LocaleSettingsString -LocaleSettings $result.LocaleSettings
+            }
+            $content += "        SCSensitivityLabel " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AdvancedSettings"
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "LocaleSettings"
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += $currentDSCBlock
+            $content += "        }`r`n"
+            $i++
         }
-        $content += "        SCSensitivityLabel " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AdvancedSettings"
-        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "LocaleSettings"
-        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += $currentDSCBlock
-        $content += "        }`r`n"
-        $i++
+    }
+    catch
+    {
+        Write-Warning "Get-Label is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
     }
     return $content
 }
