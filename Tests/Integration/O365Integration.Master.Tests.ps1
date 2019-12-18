@@ -14,7 +14,7 @@ param
 
     [Parameter()]
     [System.String]
-    [ValidateSet('Public', 'GCCH', 'Germany', 'China')]
+    [ValidateSet('Public', 'GCC', 'GCCH', 'Germany', 'China')]
     $Environment = 'Public'
 )
 
@@ -32,7 +32,7 @@ Configuration Master
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Public', 'GCCH', 'Germany', 'China')]
+        [ValidateSet('Public', 'GCC', 'GCCH', 'Germany', 'China')]
         $Environment = 'Public'
     )
 
