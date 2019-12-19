@@ -352,7 +352,7 @@ Configuration Master
             Name                 = "Integration Hold"
             PublicFolderLocation = "All";
             Comment              = "This is a test for integration"
-            Ensure               = "Present";
+            Ensure               = "Present"
             Enabled              = $True;
             GlobalAdminAccount   = $GlobalAdmin;
         }
