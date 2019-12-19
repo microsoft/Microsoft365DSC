@@ -17,7 +17,7 @@ Configuration Example
         SPOSiteGroup ee4a977d-4d7d-4968-9238-2a1702aa699c
         {
             Url                                         = "https://office365dsc.sharepoint.com/sites/testsite1"
-            Identity                                    = "TestSiteGroup1"
+            Identity                                    = "TestSiteGroup"
             Owner                                       = "admin@Office365DSC.onmicrosoft.com"
             PermissionLevels                            = @("Edit", "Read")
             Ensure                                      = "Present"
