@@ -388,7 +388,7 @@ Configuration Master
         {
             Name               = "MyDLPPolicy"
             Comment            = "Test Policy"
-            Priority           = 1
+            Priority           = 0
             SharePointLocation = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
