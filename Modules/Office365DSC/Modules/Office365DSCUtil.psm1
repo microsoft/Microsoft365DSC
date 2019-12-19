@@ -1373,7 +1373,7 @@ function Test-Office365DSCParameterState
         [System.String]
         $Source = 'Generic'
     )
-    $VerbosePreference = "SilentlyContinue"
+    $VerbosePreference = "Continue"
     $WarningPreference = "SilentlyContinue"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -1617,13 +1617,17 @@ function Test-Office365DSCParameterState
         $driftedValue = ''
         foreach ($key in $DriftedParameters.Keys)
         {
-            $driftedValue += $key + "|"
+            Write-Verbose -Message "Detected Drifted Parameter [$Source]$key"
+            #region Telemetry
+            $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+            $driftedData.Add("Event", "DriftedParameter")
+            $driftedData.Add("Parameter", "[$Source]$key")
+            Add-O365DSCTelemetryEvent -Type "DriftInfo" -Data $driftedData
+            #endregion
             $EventMessage += "            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n"
         }
         #region Telemetry
-        $driftedValue = $driftedValue.Remove($driftedValue.Length -1, 1)
         $data.Add("Event", "ConfigurationDrift")
-        $data.Add("Parameters", $driftedValue)
         #endregion
         $EventMessage += "        </ParametersNotInDesiredState>`r`n"
         $EventMessage += "    </ConfigurationDrift>`r`n"
@@ -1956,4 +1960,39 @@ function ConvertTo-SPOUserProfilePropertyInstanceString
         $results += $content
     }
     return $results
+}
+
+function Install-O365DSCDevBranch
+{
+    [CmdletBinding()]
+    param()
+    #region Download and Extract Dev branch's ZIP
+    $url         = "https://github.com/microsoft/Office365DSC/archive/Dev.zip"
+    $output      = "$($env:Temp)\dev.zip"
+    $extractPath = $env:Temp + "\O365Dev"
+
+    Invoke-WebRequest -Uri $url -OutFile $output
+
+    Expand-Archive $output -DestinationPath $extractPath -Force
+    #endregion
+
+    #region Install All Dependencies
+    $manifest = Import-PowerShellDataFile "$extractPath\Office365DSC-Dev\Modules\Office365DSC\Office365DSC.psd1"
+    $dependencies = $manifest.RequiredModules
+    foreach ($dependency in $dependencies)
+    {
+        Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force
+        Import-Module $dependency.ModuleName -Force
+    }
+    #endregion
+
+    #region Install O365DSC
+    $defaultPath = 'C:\Program Files\WindowsPowerShell\Modules\Office365DSC\'
+    $currentVersionPath = $defaultPath + $($manifest.ModuleVersion)
+    if (Test-Path $currentVersionPath)
+    {
+        Remove-Item $currentVersionPath -Recurse -Confirm:$false
+    }
+    Copy-Item "$extractPath\Office365DSC-Dev\Modules\Office365DSC" -Destination $currentVersionPath -Recurse -Force
+    #endregion
 }

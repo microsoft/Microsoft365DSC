@@ -10,7 +10,12 @@ param
 
     [Parameter(Mandatory = $true)]
     [System.String]
-    $Domain
+    $Domain,
+
+    [Parameter()]
+    [System.String]
+    [ValidateSet('Public', 'GCC', 'GCCH', 'Germany', 'China')]
+    $Environment = 'Public'
 )
 
 Configuration Master
@@ -23,7 +28,12 @@ Configuration Master
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Domain
+        $Domain,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Public', 'GCC', 'GCCH', 'Germany', 'China')]
+        $Environment = 'Public'
     )
 
     Import-DscResource -ModuleName Office365DSC
@@ -96,13 +106,18 @@ Configuration Master
             Ensure                  = "Present"
         }#>
 
+        $CASIdentity = 'ExchangeOnlineEssentials-759100cd-4fb6-46db-80ae-bb0ef4bd92b0'
+        if ($Environment -eq 'GCCH')
+        {
+            $CASIdentity = 'ExchangeOnlineEssentials-84fb79e4-1527-4f11-b2b9-48635783fcb2'
+        }
         EXOCASMailboxPlan CASMailboxPlan
         {
             ActiveSyncEnabled  = $True;
             OwaMailboxPolicy   = "OwaMailboxPolicy-Default";
             GlobalAdminAccount = $GlobalAdmin;
             PopEnabled         = $True;
-            Identity           = "ExchangeOnlineEssentials-759100cd-4fb6-46db-80ae-bb0ef4bd92b0";
+            Identity           = $CASIdentity;
             Ensure             = "Present";
             ImapEnabled        = $True;
         }
@@ -333,7 +348,7 @@ Configuration Master
         SCCaseHoldPolicy DemoCaseHoldPolicy
         {
             Case                 = "Integration Case";
-            ExchangeLocation     = "SharePointConference2019@o365dsc.onmicrosoft.com";
+            ExchangeLocation     = "John.Smith@$Domain";
             Name                 = "Integration Hold"
             PublicFolderLocation = "All";
             Comment              = "This is a test for integration"
@@ -461,7 +476,7 @@ Configuration Master
         SCSupervisoryReviewRule SRRule
         {
             Name               = "DemoRule"
-            Condition          = "(Reviewee:adminnonmfa@$Domain)"
+            Condition          = "(Reviewee:admin@$Domain)"
             SamplingRate       = 100
             Policy             = 'MySRPolicy'
             Ensure             = "Present"
@@ -480,7 +495,7 @@ Configuration Master
         {
             Title              = "Classic Site"
             Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
-            Owner              = "adminnonMFA@$Domain"
+            Owner              = "admin@$Domain"
             Template           = "STS#0"
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
@@ -490,7 +505,7 @@ Configuration Master
         {
             Title              = "Modern Site"
             Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
-            Owner              = "adminnonmfa@$Domain"
+            Owner              = "admin@$Domain"
             Template           = "STS#3"
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
@@ -551,7 +566,7 @@ Configuration Master
 
         SPOUserProfileProperty SPOUserProfileProperty
         {
-            UserName           = "adminnonmfa@$Domain"
+            UserName           = "admin@$Domain"
             Properties         = @(
                 MSFT_SPOUserProfilePropertyInstance
                 {
@@ -601,6 +616,41 @@ Configuration Master
             Identity                    = "Integration Channel Policy";
         }
 
+        TeamsMeetingBroadcastConfiguration MeetingBroadcastConfiguration
+        {
+            Identity                            = 'Global'
+            AllowSdnProviderForBroadcastMeeting = $True
+            SupportURL                          = "https://support.office.com/home/contact"
+            SdnProviderName                     = "hive"
+            SdnLicenseId                        = "5c12d0-d52950-e03e66-92b587"
+            SdnApiTemplateUrl                   = "https://api.hivestreaming.com/v1/eventadmin?partner_token={0}"
+            GlobalAdminAccount                  = $GlobalAdmin
+        }
+
+        TeamsMeetingPolicy DemoMeetingPolicy
+        {
+            AllowAnonymousUsersToStartMeeting          = $False;
+            AllowChannelMeetingScheduling              = $True;
+            AllowCloudRecording                        = $True;
+            AllowExternalParticipantGiveRequestControl = $False;
+            AllowIPVideo                               = $True;
+            AllowMeetNow                               = $True;
+            AllowOutlookAddIn                          = $True;
+            AllowParticipantGiveRequestControl         = $True;
+            AllowPowerPointSharing                     = $True;
+            AllowPrivateMeetingScheduling              = $True;
+            AllowSharedNotes                           = $True;
+            AllowTranscription                         = $False;
+            AllowWhiteboard                            = $True;
+            AutoAdmittedUsers                          = "Everyone";
+            Description                                = "Integration Meeting Policy";
+            Ensure                                     = "Present";
+            GlobalAdminAccount                         = $GlobalAdmin;
+            Identity                                   = "Integration Meeting Policy";
+            MediaBitRateKb                             = 50000;
+            ScreenSharingMode                          = "EntireScreen";
+        }
+
         TeamsTeam TeamAlpha
         {
             DisplayName          = "Alpha Team"
@@ -627,6 +677,25 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
             DependsON          = @("[O365User]JohnSmith", "[TeamsTeam]TeamAlpha")
+        }
+
+        TeamsMeetingConfiguration MeetingConfiguration
+        {
+            ClientAppSharingPort        = 50040;
+            ClientAppSharingPortRange   = 20;
+            ClientAudioPort             = 50000;
+            ClientAudioPortRange        = 21;
+            ClientMediaPortRangeEnabled = $True;
+            ClientVideoPort             = 50020;
+            ClientVideoPortRange        = 20;
+            CustomFooterText            = "This is some custom footer text";
+            DisableAnonymousJoin        = $False;
+            EnableQoS                   = $False;
+            GlobalAdminAccount          = $GlobalAdmin;
+            HelpURL                     = "https://github.com/Microsoft/Office365DSC/Help";
+            Identity                    = "Global";
+            LegalURL                    = "https://github.com/Microsoft/Office365DSC/Legal";
+            LogoURL                     = "https://github.com/Microsoft/Office365DSC/Logo.png";
         }
 
         TeamsMessagingPolicy SampleTeamsMessage
@@ -711,7 +780,6 @@ Configuration Master
     }
 }
 
-
 $ConfigurationData = @{
     AllNodes = @(
         @{
@@ -724,5 +792,5 @@ $ConfigurationData = @{
 # Compile and deploy configuration
 $password = ConvertTo-SecureString $GlobalAdminPassword -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential ($GlobalAdminUser, $password)
-Master -ConfigurationData $ConfigurationData -GlobalAdmin $credential -Domain $Domain
+Master -ConfigurationData $ConfigurationData -GlobalAdmin $credential -Domain $Domain -Environment $Environment
 Start-DscConfiguration Master -Wait -Force -Verbose

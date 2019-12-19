@@ -61,7 +61,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $RestrictedSenderList,
+        $RestrictedSenderList = $null,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -84,7 +84,7 @@ function Get-TargetResource
     {
         $config = Get-CsTeamsClientConfiguration
 
-        return @{
+        $result = @{
             Identity                         = $config.Identity
             AllowBox                         = $config.AllowBox
             AllowDropBox                     = $config.AllowDropBox
@@ -101,6 +101,11 @@ function Get-TargetResource
             RestrictedSenderList             = $config.RestrictedSenderList
             GlobalAdminAccount               = $GlobalAdminAccount
         }
+        if ([System.String]::IsNullOrEmpty($RestrictedSenderList))
+        {
+            $result.Remove("RestrictedSenderList") | Out-Null
+        }
+        return $result
     }
     catch
     {
@@ -170,7 +175,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $RestrictedSenderList,
+        $RestrictedSenderList = $null,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -192,6 +197,10 @@ function Set-TargetResource
     $SetParams = $PSBoundParameters
     $SetParams.Remove("GlobalAdminAccount")
 
+    if ([System.String]::IsNullOrEmpty($RestrictedSenderList))
+    {
+        $SetParams.Remove("RestrictedSenderList") | Out-Null
+    }
     Set-CsTeamsClientConfiguration @SetParams
 }
 
@@ -258,7 +267,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $RestrictedSenderList,
+        $RestrictedSenderList = $null,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -274,10 +283,15 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+
+    if ([System.String]::IsNullOrEmpty($RestrictedSenderList))
+    {
+        $ValuesToCheck.Remove("RestrictedSenderList") | Out-Null
+    }
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

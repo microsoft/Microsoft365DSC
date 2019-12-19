@@ -38,12 +38,21 @@ function Add-O365DSCTelemetryEvent
         $Metrics
     )
 
-    if ($null -eq $env:O365DSCTelemetryEnabled -or $env:O365DSCTelemetryEnabled)
+    $TelemetryEnabled = [System.Environment]::GetEnvironmentVariable('O365DSCTelemetryEnabled', `
+        [System.EnvironmentVariableTarget]::Machine)
+    if ($null -eq $TelemetryEnabled -or $TelemetryEnabled)
     {
         $TelemetryClient = Get-ApplicationInsightsTelemetryClient
 
         try
         {
+            $ProjectName = [System.Environment]::GetEnvironmentVariable('O365DSCTelemetryProjectName', `
+                [System.EnvironmentVariableTarget]::Machine)
+
+            if ($null -ne $ProjectName)
+            {
+                $Data.Add("ProjectName", $ProjectName)
+            }
             $TelemetryClient.TrackEvent($Type, $Data, $Metrics)
             $TelemetryClient.Flush()
         }
@@ -64,7 +73,11 @@ function Set-O365DSCTelemetryOption
 
         [Parameter()]
         [System.String]
-        $InstrumentationKey
+        $InstrumentationKey,
+
+        [Parameter()]
+        [System.String]
+        $ProjectName
     )
 
     if ($null -ne $Enabled)
@@ -77,5 +90,32 @@ function Set-O365DSCTelemetryOption
     {
         [System.Environment]::SetEnvironmentVariable('O365DSCTelemetryInstrumentationKey', $InstrumentationKey, `
             [System.EnvironmentVariableTarget]::Machine)
+    }
+
+    if ($null -ne $ProjectName)
+    {
+        [System.Environment]::SetEnvironmentVariable('O365DSCTelemetryProjectName', $ProjectName, `
+            [System.EnvironmentVariableTarget]::Machine)
+    }
+}
+
+function Get-O365DSCTelemetryOption
+{
+    [CmdletBinding()]
+    param()
+
+    try
+    {
+        return @{
+            Enabled = [System.Environment]::GetEnvironmentVariable('O365DSCTelemetryEnabled', `
+                [System.EnvironmentVariableTarget]::Machine)
+            InstrumentationKey = [System.Environment]::GetEnvironmentVariable('O365DSCTelemetryInstrumentationKey', `
+                [System.EnvironmentVariableTarget]::Machine)
+            ProjectName = [System.Environment]::GetEnvironmentVariable('O365DSCTelemetryProjectName', `
+            [System.EnvironmentVariableTarget]::Machine)
+        }
+    }
+    catch {
+        throw $_
     }
 }

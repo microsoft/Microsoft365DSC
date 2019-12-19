@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## 1.0.1.1395
+
 * EXOOrganizationConfig
   * Initial Release;
 * EXOClientAccessRule
@@ -13,6 +15,8 @@
   * Initial Release;
 * SCAuditConfigurationSettings
   * Initial Release;
+* SCComplianceTag
+  * Changed ReviewerEmail to type String array;
 * SCDLPComplianceRule
   * Fixed issue with the extraction of NotifyAllowOverride;
 * SCFilePlanPropertyAuthority
@@ -31,6 +35,9 @@
   * Added multithreading;
 *SPOSiteGroup
   *Initial Release
+* SPOSharingSettings
+  * Added ExistingExternalUserSharingOnly as a supported value
+    for SharingCapabilities;
 * SPOTheme
   * Fixed an issue with the Set-TargetResource
     still using SPO management shell cmdlets instead of PnP
@@ -42,10 +49,19 @@
   * Initial Release;
 * TeamsClientConfiguration
   * Initial Release;
+* TeamsMeetingBroadcastConfiguration
+  * Initial Release;
+* TeamsMeetingConfiguration
+  * Initial Release;
+* TeamsMeetingPolicy
+  * Initial Release;
+* TeamsMessagingPolicy
+  * Initial Release;
 * TeamsUpgradeConfiguration
   * Initial Release;
 * TeamsUser
   * Introduced Multi-Threading;
+  * Fixed an issue with User's Principal Name;
 * Metadata
   * Updated MicrosoftTeams dependency to version 1.0.3;
   * Updated MSCloudLoginAssistant dependency to version
@@ -55,6 +71,7 @@
   * Updated ReverseDSC dependency to version 2.0.0.0;
 * Misc
   * Added new Telemetry Engine;
+  * Added new Dynamic Stubs Generation feature;
 
 ## 1.0.0.1048
 

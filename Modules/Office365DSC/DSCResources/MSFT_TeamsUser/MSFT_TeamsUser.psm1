@@ -329,9 +329,9 @@ function Export-TargetResource
                                 $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
                                 $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
                                 $partialContent += "        }`r`n"
-                                if ($partialContent.ToLower().Contains($principal.ToLower()))
+                                if ($partialContent.ToLower().Contains($organization.ToLower()))
                                 {
-                                    $partialContent = $partialContent -ireplace [regex]::Escape($principal), "`$OrganizationName"
+                                    $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
                                 }
                                 $content += $partialContent
                                 $i++
