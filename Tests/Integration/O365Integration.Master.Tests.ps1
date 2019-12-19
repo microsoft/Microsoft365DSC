@@ -353,7 +353,7 @@ Configuration Master
             PublicFolderLocation = "All";
             Comment              = "This is a test for integration"
             Ensure               = "Present"
-            Enabled              = $True;
+            Enabled              = $True
             GlobalAdminAccount   = $GlobalAdmin;
         }
 
