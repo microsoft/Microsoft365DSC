@@ -69,7 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Context -Name "SiteGroup exists but is not in the desired state (PermissionLevel missing" -Fixture {
+        Context -Name "SiteGroup exists but is not in the desired state (PermissionLevel missing)" -Fixture {
             $testParams = @{
                 URL                 = "https://contoso.sharepoint.com/sites/TestSite"
                 Identity            = "TestSiteGroup"
@@ -81,26 +81,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-SPOSiteGroup -MockWith {
                 return @{
-                    URL                 = "https://contoso.sharepoint.com/sites/TestSite"
-                    Identity            = "TestSiteGroup"
-                    Owner               = "admin@Office365DSC.onmicrosoft.com"
-                    PermissionLevels    = @("Read")
+                    URL              = "https://contoso.sharepoint.com/sites/TestSite"
+                    Title            = "TestSiteGroup"
+                    OwnerLogin       = "admin@Office365DSC.onmicrosoft.com"
+                    Roles            = @("Read")
                 }
             }
 
             Mock -CommandName Set-SPOSiteGroup -MockWith {
             }
 
-            Mock -CommandName Get-TargetResource -MockWith{
-                return @{
-                    Ensure = "Present"
-                }
-            }
-
-            Mock -CommandName Compare-Object -MockWith {
-                return @{
-                    SideIndicator = "<="
-                }
+            Mock -CommandName New-SPOSiteGroup -MockWith {
             }
 
             It "Should return present from the Get method" {
@@ -133,10 +124,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-SPOSiteGroup -MockWith {
                 return @{
                     URL                 = "https://contoso.sharepoint.com/sites/TestSite"
-                    Identity            = "TestSiteGroup"
-                    Owner               = "admin@Office365DSC.onmicrosoft.com"
-                    PermissionLevels    = @("Edit", "Read")
+                    Title               = "TestSiteGroup"
+                    OwnerLoginName      = "admin@Office365DSC.onmicrosoft.com"
+                    Roles               = @("Edit", "Read")
                 }
+            }
+
+            Mock -CommandName Set-SPOSiteGroup -MockWith {
+            }
+
+            Mock -CommandName New-SPOSiteGroup -MockWith {
+            }
+
+            Mock -CommandName Remove-SPOSiteGroup -MockWith {
             }
 
             It "Should return present from the Get method" {
@@ -147,13 +147,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $true
             }
 
-            #It "Should not update site group in the Set method" {
-            #    Set-TargetResource @testParams
-            #    Assert-MockCalled -CommandName Set-SPOSiteGroup -Exactly 0
-            #    Assert-MockCalled -CommandName New-SPOSiteGroup -Exactly 0
-            #    Assert-MockCalled -CommandName Remove-SPOSiteGroup -Exactly 0
-            #}
-
+            It "Should not update site group in the Set method" {
+                Set-TargetResource @testParams
+                Assert-MockCalled -CommandName New-SPOSiteGroup -Exactly 0
+                Assert-MockCalled -CommandName Remove-SPOSiteGroup -Exactly 0
+            }
         }
 
         Context -Name "SiteGroup exists but should not exist" -Fixture {
@@ -169,10 +167,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-SPOSiteGroup -MockWith {
                 return @{
-                    URL                 = "https://contoso.sharepoint.com/sites/TestSite"
-                    Identity            = "TestSiteGroup"
-                    Owner               = "admin@Office365DSC.onmicrosoft.com"
-                    PermissionLevels    = @("Edit", "Read")
+                    URL              = "https://contoso.sharepoint.com/sites/TestSite"
+                    Title            = "TestSiteGroup"
+                    OwnerLogin       = "admin@Office365DSC.onmicrosoft.com"
+                    Roles            = @("Edit", "Read")
                 }
             }
 
@@ -202,7 +200,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
@@ -211,9 +208,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-SPOSiteGroup -MockWith {
                 return @{
                     URL                 = "https://contoso.sharepoint.com/sites/TestSite"
-                    Identity            = "TestSiteGroup"
-                    Owner               = "admin@Office365DSC.onmicrosoft.com"
-                    PermissionLevels    = @("Edit", "Read")
+                    Title               = "TestSiteGroup"
+                    OwnerLogin          = "admin@Office365DSC.onmicrosoft.com"
+                    Roles               = @("Edit", "Read")
                 }
             }
 
@@ -221,9 +218,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Export-TargetResource @testParams
             }
         }
-
     }
 }
-
 
 Invoke-Command -ScriptBlock $Global:DscHelper.CleanupScript -NoNewScope

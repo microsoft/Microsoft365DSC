@@ -202,12 +202,19 @@ function Set-TargetResource
         }
         elseif($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -eq 0)
         {
-            $SiteGroupSettings = @{
-                Site                     = $Url
-                Identity                 = $Identity
-                Owner                    = $Owner
+            if(($Identity -eq $currentValues.Identity)-and ($Owner -eq $currentlValues.Owner))
+            {
+                Write-Verbose -Message "All values are configured as desired"
             }
-            Set-SPOSiteGroup @SiteGroupSettings
+            else
+            {
+                $SiteGroupSettings = @{
+                    Site                     = $Url
+                    Identity                 = $Identity
+                    Owner                    = $Owner
+                }
+                Set-SPOSiteGroup @SiteGroupSettings
+            }
         }
         else
         {
