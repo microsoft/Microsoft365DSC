@@ -325,11 +325,11 @@ function Export-TargetResource
         {
             $siteGroups = Get-SPOSiteGroup -Site $site.Url
         }
-       catch
-       {
-        $message = $Error[0].Exception.Message   
-        Write-Warning -Message $message 
-       }
+        catch
+        {
+            $message = $Error[0].Exception.Message   
+            Write-Warning -Message $message 
+        }
         foreach ($siteGroup in $siteGroups)
         {
             $params = @{
