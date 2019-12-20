@@ -11,11 +11,11 @@ function Get-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Owner,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String[]]
         $PermissionLevels,
 
@@ -119,11 +119,11 @@ function Set-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Owner,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String[]]
         $PermissionLevels,
 
@@ -253,11 +253,11 @@ function Test-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Owner,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String[]]
         $PermissionLevels,
 
