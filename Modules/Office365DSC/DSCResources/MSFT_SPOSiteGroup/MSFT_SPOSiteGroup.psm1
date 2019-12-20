@@ -84,13 +84,13 @@ function Get-TargetResource
     }
     catch
     {
-        if($Error[0].Exception.Message -eq "Group cannot be found.")
+        if ($Error[0].Exception.Message -eq "Group cannot be found.")
         {
             write-verbose -Message "Site group $($Identity) could not be found on site $($Url)"
             
         }
     }
-    if($null -eq $siteGroup)
+    if ($null -eq $siteGroup)
     {
         return $nullReturn
     }
@@ -150,7 +150,7 @@ function Set-TargetResource
                       -ErrorAction SilentlyContinue
 
     $currentValues = Get-TargetResource @PSBoundParameters
-    if($Ensure -eq "Present"-and $currentValues.Ensure -eq "Absent")
+    if ($Ensure -eq "Present"-and $currentValues.Ensure -eq "Absent")
     {
         $SiteGroupSettings = @{
             Site = $Url
@@ -167,9 +167,9 @@ function Set-TargetResource
         $compareOutput = Compare-Object -ReferenceObject $RefferenceObjectRoles -DifferenceObject $DifferenceObjectRoles
         $PermissionLevelsToAdd = @()
         $PermissionLevelsToRemove = @()
-        foreach($entry in $compareOutput)
+        foreach ($entry in $compareOutput)
         {
-            if($entry.SideIndicator -eq "<=")
+            if ($entry.SideIndicator -eq "<=")
             {
                 Write-Verbose -Message "Permissionlevels to add: $($entry.InputObject)"
                 $PermissionLevelsToAdd +=$entry.InputObject
@@ -180,7 +180,7 @@ function Set-TargetResource
                 $PermissionLevelsToRemove += $entry.InputObject
             }
         }
-        if($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -ne 0)
+        if ($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -ne 0)
         {
             $SiteGroupSettings = @{
                 Site                     = $Url
@@ -190,7 +190,7 @@ function Set-TargetResource
             }
             Set-SPOSiteGroup @SiteGroupSettings
         }
-        elseif($PermissionLevelsToRemove.Count -eq 0 -and $PermissionLevelsToAdd.Count -ne 0)
+        elseif ($PermissionLevelsToRemove.Count -eq 0 -and $PermissionLevelsToAdd.Count -ne 0)
         {
             $SiteGroupSettings = @{
                 Site                     = $Url
@@ -200,9 +200,9 @@ function Set-TargetResource
             }
             Set-SPOSiteGroup @SiteGroupSettings
         }
-        elseif($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -eq 0)
+        elseif ($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -eq 0)
         {
-            if(($Identity -eq $currentValues.Identity)-and ($Owner -eq $currentlValues.Owner))
+            if (($Identity -eq $currentValues.Identity)-and ($Owner -eq $currentlValues.Owner))
             {
                 Write-Verbose -Message "All values are configured as desired"
             }
@@ -229,7 +229,7 @@ function Set-TargetResource
         }
         
     }
-    elseif($Ensure -eq "Absent" -and $currentValues.Ensure -eq "Present")
+    elseif ($Ensure -eq "Absent" -and $currentValues.Ensure -eq "Present")
     {
         $SiteGroupSettings = @{
             Site     = $Url
@@ -322,7 +322,7 @@ function Export-TargetResource
     {
         Write-Information "    [$i/$($sites.Length)] SPOSite groups for {$($site.Url)}"
         $siteGroups = Get-SPOSiteGroup -Site $site.Url
-        foreach($siteGroup in $siteGroups)
+        foreach ($siteGroup in $siteGroups)
         {
             $params = @{
                 Url                = $site.Url
