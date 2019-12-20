@@ -182,13 +182,14 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove("GlobalAdminAccount") | Out-Null
+    $ValuesToCheck.Remove("Palette") | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "Name", `
-            "IsInverted")
+        -ValuesToCheck $ValuesToCheck.Keys
 
     if ($TestResult)
     {

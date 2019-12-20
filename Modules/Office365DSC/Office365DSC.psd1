@@ -53,7 +53,7 @@
     RequiredModules   = @(
         @{
             ModuleName      = "ReverseDSC"
-            RequiredVersion = "2.0.0.0"
+            RequiredVersion = "2.0.0.2"
         },
         @{
             ModuleName      = "MSOnline"
