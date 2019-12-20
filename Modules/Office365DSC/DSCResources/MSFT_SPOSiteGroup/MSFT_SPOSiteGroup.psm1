@@ -321,7 +321,15 @@ function Export-TargetResource
     foreach ($site in $sites)
     {
         Write-Information "    [$i/$($sites.Length)] SPOSite groups for {$($site.Url)}"
-        $siteGroups = Get-SPOSiteGroup -Site $site.Url
+        try
+        {
+            $siteGroups = Get-SPOSiteGroup -Site $site.Url
+        }
+       catch
+       {
+        $message = $Error[0].Exception.Message   
+        Write-Warning -Message $message 
+       }
         foreach ($siteGroup in $siteGroups)
         {
             $params = @{
