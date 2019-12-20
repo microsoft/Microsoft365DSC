@@ -448,6 +448,7 @@ Configuration Master
         {
             Name               = "MyRCPolicy"
             Comment            = "Test Policy"
+            SharePointLocation = "https://$($Domain.Split('.')[0]).sharepoint.com"
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }
