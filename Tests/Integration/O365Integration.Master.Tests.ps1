@@ -245,13 +245,18 @@ Configuration Master
             DependsOn          = "[O365User]JohnSmith"
         }
 
+        $location = 'canada'
+        if ($Environment -eq 'GCC')
+        {
+            $location = 'unitedstates'
+        }
         PPPowerAppsEnvironment IntegrationPAEnvironment
         {
             DisplayName          = "Integration PowerApps Environment";
             Ensure               = "Present"
             EnvironmentSKU       = "Production";
             GlobalAdminAccount   = $GlobalAdmin;
-            Location             = "canada";
+            Location             = $location;
         }
 
         SCAuditConfigurationPolicy SharePointAuditPolicy
@@ -506,7 +511,7 @@ Configuration Master
         {
             Title              = "Modern Site"
             Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
-            Owner              = "admin@$Domain"
+            Owner              = $GlobalAdmin.UserName
             Template           = "STS#3"
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
@@ -712,61 +717,64 @@ Configuration Master
             Ensure                        = "Present"
         }
 
-        SCSensitivityLabel SCSenLabel
+        if ($Environment -ne 'GCC')
         {
-            Name               = "Demo Label"
-            Comment            = "Demo label comment"
-            ToolTip            = "Demo tool tip"
-            DisplayName        = "Demo label"
+            SCSensitivityLabel SCSenLabel
+            {
+                Name               = "Demo Label"
+                Comment            = "Demo label comment"
+                ToolTip            = "Demo tool tip"
+                DisplayName        = "Demo label"
 
-            LocaleSettings     = @(
-                MSFT_SCLabelLocaleSettings
-                {
-                    LocaleKey = "DisplayName"
-                    Settings  = @(
-                        MSFT_SCLabelSetting
-                        {
-                            Key   = "en-us"
-                            Value = "English Display Names"
-                        }
-                        MSFT_SCLabelSetting
-                        {
-                            Key   = "fr-fr"
-                            Value = "Nom da'ffichage francais"
-                        }
-                    )
-                }
-                MSFT_SCLabelLocaleSettings
-                {
-                    LocaleKey = "StopColor"
-                    Settings  = @(
-                        MSFT_SCLabelSetting
-                        {
-                            Key   = "en-us"
-                            Value = "RedGreen"
-                        }
-                        MSFT_SCLabelSetting
-                        {
-                            Key   = "fr-fr"
-                            Value = "Rouge"
-                        }
-                    )
-                }
-            )
-            AdvancedSettings   = @(
-                MSFT_SCLabelSetting
-                {
-                    Key   = "AllowedLevel"
-                    Value = @("Sensitive", "Classified")
-                }
-                MSFT_SCLabelSetting
-                {
-                    Key   = "LabelStatus"
-                    Value = "Enabled"
-                }
-            )
-            GlobalAdminAccount = $GlobalAdmin
-            Ensure             = "Present"
+                LocaleSettings     = @(
+                    MSFT_SCLabelLocaleSettings
+                    {
+                        LocaleKey = "DisplayName"
+                        Settings  = @(
+                            MSFT_SCLabelSetting
+                            {
+                                Key   = "en-us"
+                                Value = "English Display Names"
+                            }
+                            MSFT_SCLabelSetting
+                            {
+                                Key   = "fr-fr"
+                                Value = "Nom da'ffichage francais"
+                            }
+                        )
+                    }
+                    MSFT_SCLabelLocaleSettings
+                    {
+                        LocaleKey = "StopColor"
+                        Settings  = @(
+                            MSFT_SCLabelSetting
+                            {
+                                Key   = "en-us"
+                                Value = "RedGreen"
+                            }
+                            MSFT_SCLabelSetting
+                            {
+                                Key   = "fr-fr"
+                                Value = "Rouge"
+                            }
+                        )
+                    }
+                )
+                AdvancedSettings   = @(
+                    MSFT_SCLabelSetting
+                    {
+                        Key   = "AllowedLevel"
+                        Value = @("Sensitive", "Classified")
+                    }
+                    MSFT_SCLabelSetting
+                    {
+                        Key   = "LabelStatus"
+                        Value = "Enabled"
+                    }
+                )
+                GlobalAdminAccount = $GlobalAdmin
+                Ensure             = "Present"
+            }
         }
     }
 }
