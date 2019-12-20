@@ -245,18 +245,18 @@ Configuration Master
             DependsOn          = "[O365User]JohnSmith"
         }
 
-        $location = 'canada'
-        if ($Environment -eq 'GCC')
+        # TODO - Investigate for GCC
+        if ($Environment -ne 'GCC')
         {
-            $location = 'unitedstates'
-        }
-        PPPowerAppsEnvironment IntegrationPAEnvironment
-        {
-            DisplayName          = "Integration PowerApps Environment";
-            Ensure               = "Present"
-            EnvironmentSKU       = "Production";
-            GlobalAdminAccount   = $GlobalAdmin;
-            Location             = $location;
+            $location = 'canada'
+            PPPowerAppsEnvironment IntegrationPAEnvironment
+            {
+                DisplayName          = "Integration PowerApps Environment";
+                Ensure               = "Present"
+                EnvironmentSKU       = "Production";
+                GlobalAdminAccount   = $GlobalAdmin;
+                Location             = $location;
+            }
         }
 
         SCAuditConfigurationPolicy SharePointAuditPolicy
@@ -453,7 +453,6 @@ Configuration Master
         {
             Name               = "MyRCPolicy"
             Comment            = "Test Policy"
-            SharePointLocation = "https://$($Domain.Split('.')[0]).sharepoint.com"
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }
@@ -501,7 +500,7 @@ Configuration Master
         {
             Title              = "Classic Site"
             Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
-            Owner              = "admin@$Domain"
+            Owner              = $GlobalAdmin.UserName
             Template           = "STS#0"
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
@@ -560,18 +559,22 @@ Configuration Master
             )
         }
 
-        SPOUserProfileProperty SPOUserProfileProperty
+        # TODO - Investigate this for GCC
+        if ($Environment -ne 'GCC')
         {
-            UserName           = "admin@$Domain"
-            Properties         = @(
-                MSFT_SPOUserProfilePropertyInstance
-                {
-                    Key   = "FavoriteFood"
-                    Value = "Pasta"
-                }
-            )
-            GlobalAdminAccount = $GlobalAdmin
-            Ensure             = "Present"
+            SPOUserProfileProperty SPOUserProfileProperty
+            {
+                UserName           = "admin@$Domain"
+                Properties         = @(
+                    MSFT_SPOUserProfilePropertyInstance
+                    {
+                        Key   = "FavoriteFood"
+                        Value = "Pasta"
+                    }
+                )
+                GlobalAdminAccount = $GlobalAdmin
+                Ensure             = "Present"
+            }
         }
 
         TeamsUpgradeConfiguration UpgradeConfig
