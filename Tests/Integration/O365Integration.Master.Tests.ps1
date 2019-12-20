@@ -473,7 +473,7 @@ Configuration Master
         {
             Name               = "MySRPolicy"
             Comment            = "Test Policy"
-            Reviewers          = @("admin@$Domain")
+            Reviewers          = @($GlobalAdmin.UserName)
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }
@@ -481,7 +481,7 @@ Configuration Master
         SCSupervisoryReviewRule SRRule
         {
             Name               = "DemoRule"
-            Condition          = "(Reviewee:admin@$Domain)"
+            Condition          = "(Reviewee:$($GlobalAdmin.UserName))"
             SamplingRate       = 100
             Policy             = 'MySRPolicy'
             Ensure             = "Present"
@@ -560,7 +560,7 @@ Configuration Master
         }
 
         # TODO - Investigate this for GCC
-        if ($Environment -ne 'GCC')
+        <#if ($Environment -ne 'GCC')
         {
             SPOUserProfileProperty SPOUserProfileProperty
             {
@@ -575,7 +575,7 @@ Configuration Master
                 GlobalAdminAccount = $GlobalAdmin
                 Ensure             = "Present"
             }
-        }
+        }#>
 
         TeamsUpgradeConfiguration UpgradeConfig
         {
