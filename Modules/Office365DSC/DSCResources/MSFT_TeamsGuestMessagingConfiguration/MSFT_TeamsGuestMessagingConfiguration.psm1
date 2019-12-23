@@ -47,7 +47,7 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of Teams Guest Messaging"
+    Write-Verbose -Message "Getting configuration of Teams Guest Messaging settings"
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -93,66 +93,44 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $LogoURL,
-
-        [Parameter()]
-        [System.String]
-        $LegalURL,
-
-        [Parameter()]
-        [System.String]
-        $HelpURL,
-
-        [Parameter()]
-        [System.String]
-        $CustomFooterText,
+        [System.Boolean]
+        $AllowUserEditMessage,
 
         [Parameter()]
         [System.Boolean]
-        $DisableAnonymousJoin,
+        $AllowUserDeleteMessage,
 
         [Parameter()]
         [System.Boolean]
-        $EnableQoS,
-
-        [Parameter()]
-        [System.UInt32]
-        [ValidateRange(1024, 65535)]
-        $ClientAudioPort = 50000,
-
-        [Parameter()]
-        [System.UInt32]
-        $ClientAudioPortRange = 20,
-
-        [Parameter()]
-        [System.UInt32]
-        [ValidateRange(1024, 65535)]
-        $ClientVideoPort = 50020,
-
-        [Parameter()]
-        [System.UInt32]
-        $ClientVideoPortRange = 20,
-
-        [Parameter()]
-        [System.UInt32]
-        [ValidateRange(1024, 65535)]
-        $ClientAppSharingPort = 50040,
-
-        [Parameter()]
-        [System.UInt32]
-        $ClientAppSharingPortRange = 20,
+        $AllowUserChat,
 
         [Parameter()]
         [System.Boolean]
-        $ClientMediaPortRangeEnabled,
+        $AllowGiphy,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Moderate", "Strict")]
+        $GiphyRatingType = 'Moderate',
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowStickers,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveReader,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of Teams Meetings"
+    Write-Verbose -Message "Setting configuration of Teams Guest Messaging settings"
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -165,9 +143,9 @@ function Set-TargetResource
         -Platform SkypeForBusiness
 
     $SetParams = $PSBoundParameters
-    $SetParams.Remove("GlobalAdminAccount")
+    $SetParams.Remove("GlobalAdminAccount") | Out-Null
 
-    Set-CsTeamsMeetingConfiguration @SetParams
+    Set-CsTeamsGuestMessagingConfiguration @SetParams
 }
 
 function Test-TargetResource
@@ -182,66 +160,44 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $LogoURL,
-
-        [Parameter()]
-        [System.String]
-        $LegalURL,
-
-        [Parameter()]
-        [System.String]
-        $HelpURL,
-
-        [Parameter()]
-        [System.String]
-        $CustomFooterText,
+        [System.Boolean]
+        $AllowUserEditMessage,
 
         [Parameter()]
         [System.Boolean]
-        $DisableAnonymousJoin,
+        $AllowUserDeleteMessage,
 
         [Parameter()]
         [System.Boolean]
-        $EnableQoS,
-
-        [Parameter()]
-        [System.UInt32]
-        [ValidateRange(1024, 65535)]
-        $ClientAudioPort = 50000,
-
-        [Parameter()]
-        [System.UInt32]
-        $ClientAudioPortRange = 20,
-
-        [Parameter()]
-        [System.UInt32]
-        [ValidateRange(1024, 65535)]
-        $ClientVideoPort = 50020,
-
-        [Parameter()]
-        [System.UInt32]
-        $ClientVideoPortRange = 20,
-
-        [Parameter()]
-        [System.UInt32]
-        [ValidateRange(1024, 65535)]
-        $ClientAppSharingPort = 50040,
-
-        [Parameter()]
-        [System.UInt32]
-        $ClientAppSharingPortRange = 20,
+        $AllowUserChat,
 
         [Parameter()]
         [System.Boolean]
-        $ClientMediaPortRangeEnabled,
+        $AllowGiphy,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Moderate", "Strict")]
+        $GiphyRatingType = 'Moderate',
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowStickers,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveReader,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of Teams Client"
+    Write-Verbose -Message "Testing configuration of Teams Guest Messaging settings"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -286,7 +242,7 @@ function Export-TargetResource
     }
     $result = Get-TargetResource @params
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        TeamsMeetingConfiguration " + (New-GUID).ToString() + "`r`n"
+    $content = "        TeamsGuestMessagingConfiguration " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
