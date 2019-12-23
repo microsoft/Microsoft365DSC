@@ -50,7 +50,7 @@ function Get-TargetResource
 
     try
     {
-        $config = Get-CsTeamsMeetingBroadcastPolicy -Identity $Identity
+        $config = Get-CsTeamsMeetingBroadcastPolicy -Identity $Identity -ErrorAction SilentlyContinue
         if ($null -ne $config)
         {
             return @{
