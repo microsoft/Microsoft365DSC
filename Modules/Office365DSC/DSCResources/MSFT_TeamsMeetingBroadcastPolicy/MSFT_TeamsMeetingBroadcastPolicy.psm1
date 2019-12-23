@@ -54,7 +54,7 @@ function Get-TargetResource
         if ($null -ne $config)
         {
             return @{
-                Identity                        = $config.Identity
+                Identity                        = $Identity
                 AllowBroadcastScheduling        = $config.AllowBroadcastScheduling
                 AllowBroadcastTranscription     = $config.AllowBroadcastTranscription
                 BroadcastAttendeeVisibilityMode = $config.BroadcastAttendeeVisibilityMode
