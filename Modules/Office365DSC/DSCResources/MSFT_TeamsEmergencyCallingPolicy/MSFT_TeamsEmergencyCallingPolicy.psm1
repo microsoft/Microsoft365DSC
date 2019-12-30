@@ -60,7 +60,7 @@ function Get-TargetResource
         }
     }
     Write-Verbose -Message "Found Teams Emergency Calling Policy {$Identity}"
-    return @{
+    $result = @{
         Identity                  = $Identity
         Description               = $policy.Description
         NotificationDialOutNumber = $policy.NotificationDialOutNumber
@@ -69,6 +69,13 @@ function Get-TargetResource
         Ensure                    = "Present"
         GlobalAdminAccount        = $GlobalAdminAccount
     }
+
+    if ([System.String]::IsNullOrEmpty($result.NotificationMode))
+    {
+        $result.Remove("NotificationMode") | Out-Null
+    }
+
+    return $result
 }
 
 function Set-TargetResource
