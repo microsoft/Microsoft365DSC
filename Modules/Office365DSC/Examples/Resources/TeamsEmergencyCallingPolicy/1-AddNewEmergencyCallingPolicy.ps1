@@ -20,6 +20,8 @@ Configuration Example
             NotificationDialOutNumber = "+1234567890";
             NotificationGroup         = 'john.smith@contoso.com';
             NotificationMode          = "NotificationOnly";
+            Ensure                    = 'Present'
+            GlobalAdminAccount        = $credsGlobalAdmin
         }
     }
 }
