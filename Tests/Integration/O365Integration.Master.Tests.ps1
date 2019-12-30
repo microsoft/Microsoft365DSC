@@ -626,6 +626,23 @@ Configuration Master
             GlobalAdminAccount                  = $GlobalAdmin
         }
 
+        TeamsEmergencyCallRoutingPolicy EmergencyCallRoutingPolicyExample
+        {
+            AllowEnhancedEmergencyServices = $False;
+            Description                    = "Description";
+            EmergencyNumbers               = @(
+                MSFT_TeamsEmergencyNumber
+                {
+                    EmergencyDialString = '123456'
+                    EmergencyDialMask   = '123'
+                    OnlinePSTNUsage     = ''
+                }
+            );
+            Ensure                         = "Present";
+            GlobalAdminAccount             = $GlobalAdmin;
+            Identity                       = "Integration Test";
+        }
+
         TeamsMeetingPolicy DemoMeetingPolicy
         {
             AllowAnonymousUsersToStartMeeting          = $False;
