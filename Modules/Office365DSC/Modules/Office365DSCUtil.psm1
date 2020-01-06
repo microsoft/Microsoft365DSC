@@ -1614,17 +1614,24 @@ function Test-Office365DSCParameterState
                                     $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
                                 }
 
-                                $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
-                                    -DesiredValues $AllDesiredValuesAsArray
-                                if ($null -ne $arrayCompare)
+                                if ($null -ne $DesiredValues.$fieldName -and $null -eq $CurrentValues.$fieldName)
                                 {
-                                    foreach ($item in $arrayCompare)
-                                    {
-                                        $EventValue = "<CurrentValue>[$($item.PropertyName)]$($item.CurrentValue)</CurrentValue>"
-                                        $EventValue += "<DesiredValue>[$($item.PropertyName)]$($item.DesiredValue)</DesiredValue>"
-                                        $DriftedParameters.Add($fieldName, $EventValue)
-                                    }
                                     $returnValue = $false
+                                }
+                                else
+                                {
+                                    $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
+                                    -DesiredValues $AllDesiredValuesAsArray
+                                    if ($null -ne $arrayCompare)
+                                    {
+                                        foreach ($item in $arrayCompare)
+                                        {
+                                            $EventValue = "<CurrentValue>[$($item.PropertyName)]$($item.CurrentValue)</CurrentValue>"
+                                            $EventValue += "<DesiredValue>[$($item.PropertyName)]$($item.DesiredValue)</DesiredValue>"
+                                            $DriftedParameters.Add($fieldName, $EventValue)
+                                        }
+                                        $returnValue = $false
+                                    }
                                 }
                             }
                             default

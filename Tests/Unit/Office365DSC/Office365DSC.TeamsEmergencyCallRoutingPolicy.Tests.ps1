@@ -132,11 +132,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     AllowEnhancedEmergencyServices = $False;
                     Description                    = "Drifted"; #drift
-                    EmergencyNumbers               = @{
+                    EmergencyNumbers               = @(@{
                             EmergencyDialString = '123456'
                             EmergencyDialMask   = '123'
                             OnlinePSTNUsage     = ''
-                    }
+                    })
                     Identity                       = "UnitTest";
                 }
             }
