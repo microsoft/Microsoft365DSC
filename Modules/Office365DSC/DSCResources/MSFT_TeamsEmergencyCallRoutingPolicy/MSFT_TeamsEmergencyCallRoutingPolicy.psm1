@@ -129,9 +129,9 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating a new Teams Emergency Call Routing Policy {$Identity}"
         $numbers = @()
-        if ($null -ne $EmergencyNumbers)
+        if ($null -ne $SetParameters["EmergencyNumbers"])
         {
-            foreach ($number in $EmergencyNumbers)
+            foreach ($number in $SetParameters["EmergencyNumbers"])
             {
                 $curNumber = New-CsTeamsEmergencyNumber @number
                 $numbers += $curNumber
@@ -146,9 +146,9 @@ function Set-TargetResource
         # into the Set-CsTeamsEmergencyCallRoutingPolicy cmdlet.
         Write-Verbose -Message "Updating settings for Teams Emergency Call Routing Policy {$Identity}"
         $numbers = @()
-        if ($null -ne $EmergencyNumbers)
+        if ($null -ne $SetParameters["EmergencyNumbers"])
         {
-            foreach ($number in $EmergencyNumbers)
+            foreach ($number in $SetParameters["EmergencyNumbers"])
             {
                 $curNumber = New-CsTeamsEmergencyNumber @number
                 $numbers += $curNumber
