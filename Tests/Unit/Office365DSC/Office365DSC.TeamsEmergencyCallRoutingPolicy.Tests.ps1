@@ -29,6 +29,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName New-CsTeamsEmergencyCallRoutingPolicy -MockWith {
         }
 
+        Mock -CommandName New-CsTeamsEmergencyNumber -MockWith {
+            return New-Object PSObject
+        }
+
         Mock -CommandName Set-CsTeamsEmergencyCallRoutingPolicy -MockWith {
         }
 

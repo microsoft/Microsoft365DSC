@@ -128,13 +128,32 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating a new Teams Emergency Call Routing Policy {$Identity}"
+        $numbers = @()
+        if ($null -ne $EmergencyNumbers)
+        {
+            foreach ($number in $EmergencyNumbers)
+            {
+                $curNumber = New-CsTeamsEmergencyNumber -EmergencyDialString $number
+                $numbers += $curNumber
+            }
+            $SetParameters.EmergencyNumbers = $numbers
+        }
         New-CsTeamsEmergencyCallRoutingPolicy @SetParameters
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
         # If we get here, it's because the Test-TargetResource detected a drift, therefore we always call
         # into the Set-CsTeamsEmergencyCallRoutingPolicy cmdlet.
-        Write-Verbose -Message "Updating settings for Teams Emergency Call Routing Policy {$Identity}"
+        Write-Verbose -Message "Updating settings for Teams Emergency Call Routing Policy {$Identity}"$numbers = @()
+        if ($null -ne $EmergencyNumbers)
+        {
+            foreach ($number in $EmergencyNumbers)
+            {
+                $curNumber = New-CsTeamsEmergencyNumber -EmergencyDialString $number
+                $numbers += $curNumber
+            }
+            $SetParameters.EmergencyNumbers = $numbers
+        }
         Set-CsTeamsEmergencyCallRoutingPolicy @SetParameters
     }
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
