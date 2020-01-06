@@ -1450,7 +1450,12 @@ function Test-Office365DSCParameterState
                                 $currentEntry = @{ }
                                 foreach ($prop in $item.CIMInstanceProperties)
                                 {
-                                    $currentEntry.Add($prop.Name, $prop.Value)
+                                    $value = $prop.Value
+                                    if ([System.String]::IsNullOrEmpty($value))
+                                    {
+                                        $value = $null
+                                    }
+                                    $currentEntry.Add($prop.Name, $value)
                                 }
                                 $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
                             }
@@ -1587,6 +1592,38 @@ function Test-Office365DSCParameterState
                                     $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
                                     $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
                                     $DriftedParameters.Add($fieldName, $EventValue)
+                                    $returnValue = $false
+                                }
+                            }
+                            "Hashtable"
+                            {
+                                Write-Verbose -Message "The current property {$fieldName} is a Hashtable"
+                                $AllDesiredValuesAsArray = @()
+                                foreach ($item in $DesiredValues.$fieldName)
+                                {
+                                    $currentEntry = @{ }
+                                    foreach ($key in $item.Keys)
+                                    {
+                                        $value = $item.$key
+                                        if ([System.String]::IsNullOrEmpty($value))
+                                        {
+                                            $value = $null
+                                        }
+                                        $currentEntry.Add($key, $value)
+                                    }
+                                    $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
+                                }
+
+                                $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
+                                    -DesiredValues $AllDesiredValuesAsArray
+                                if ($null -ne $arrayCompare)
+                                {
+                                    foreach ($item in $arrayCompare)
+                                    {
+                                        $EventValue = "<CurrentValue>[$($item.PropertyName)]$($item.CurrentValue)</CurrentValue>"
+                                        $EventValue += "<DesiredValue>[$($item.PropertyName)]$($item.DesiredValue)</DesiredValue>"
+                                        $DriftedParameters.Add($fieldName, $EventValue)
+                                    }
                                     $returnValue = $false
                                 }
                             }
