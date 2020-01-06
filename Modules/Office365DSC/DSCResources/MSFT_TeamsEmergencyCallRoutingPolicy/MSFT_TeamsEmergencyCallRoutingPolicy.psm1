@@ -133,7 +133,7 @@ function Set-TargetResource
         {
             foreach ($number in $EmergencyNumbers)
             {
-                $curNumber = New-CsTeamsEmergencyNumber -EmergencyDialString $number
+                $curNumber = New-CsTeamsEmergencyNumber @number
                 $numbers += $curNumber
             }
             $SetParameters.EmergencyNumbers = $numbers
@@ -149,7 +149,7 @@ function Set-TargetResource
         {
             foreach ($number in $EmergencyNumbers)
             {
-                $curNumber = New-CsTeamsEmergencyNumber -EmergencyDialString $number
+                $curNumber = New-CsTeamsEmergencyNumber @number
                 $numbers += $curNumber
             }
             $SetParameters.EmergencyNumbers = $numbers
