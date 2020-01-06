@@ -1620,8 +1620,23 @@ function Test-Office365DSCParameterState
                                 }
                                 else
                                 {
-                                    $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
-                                    -DesiredValues $AllDesiredValuesAsArray
+                                    $AllCurrentValuesAsArray = @()
+                                    foreach ($item in $CurrentValues.$fieldName)
+                                    {
+                                        $currentEntry = @{ }
+                                        foreach ($key in $item.Keys)
+                                        {
+                                            $value = $item.$key
+                                            if ([System.String]::IsNullOrEmpty($value))
+                                            {
+                                                $value = $null
+                                            }
+                                            $currentEntry.Add($key, $value)
+                                        }
+                                        $AllCurrentValuesAsArray += [PSCustomObject]$currentEntry
+                                    }
+                                    $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $AllCurrentValuesAsArray `
+                                    -DesiredValues $AllCurrentValuesAsArray
                                     if ($null -ne $arrayCompare)
                                     {
                                         foreach ($item in $arrayCompare)
