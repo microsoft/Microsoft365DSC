@@ -144,7 +144,8 @@ function Set-TargetResource
     {
         # If we get here, it's because the Test-TargetResource detected a drift, therefore we always call
         # into the Set-CsTeamsEmergencyCallRoutingPolicy cmdlet.
-        Write-Verbose -Message "Updating settings for Teams Emergency Call Routing Policy {$Identity}"$numbers = @()
+        Write-Verbose -Message "Updating settings for Teams Emergency Call Routing Policy {$Identity}"
+        $numbers = @()
         if ($null -ne $EmergencyNumbers)
         {
             foreach ($number in $EmergencyNumbers)
