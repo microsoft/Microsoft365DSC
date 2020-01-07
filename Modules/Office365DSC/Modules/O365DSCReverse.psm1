@@ -2057,7 +2057,7 @@ function Start-O365ConfigurationExtract
     $ComponentsToExtract.Contains("chckTeamsUpgradeConfiguration")) -or
     $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
     {
-        Write-Information "Extracting TeamsUpgradeCOnfiguration..."
+        Write-Information "Extracting TeamsUpgradeConfiguration..."
 
         $ModulePath = Join-Path -Path $PSScriptRoot `
             -ChildPath "..\DSCResources\MSFT_TeamsUpgradeConfiguration\MSFT_TeamsUpgradeConfiguration.psm1" `
