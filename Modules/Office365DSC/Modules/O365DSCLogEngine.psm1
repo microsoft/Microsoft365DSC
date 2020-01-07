@@ -29,7 +29,7 @@ function New-Office365DSCLogEntry
         $driftedData.Add("Exception", $Error.Exception.ToString())
         $driftedData.Add("CustomMessage", $Message)
         $driftedData.Add("Source", $Source)
-        Add-O365DSCTelemetryEvent -Type "ErrorEntry" -Data $driftedData
+        Add-O365DSCTelemetryEvent -Type "Error" -Data $driftedData
         #endregion
 
         # Obtain the ID of the current PowerShell session. While this may
