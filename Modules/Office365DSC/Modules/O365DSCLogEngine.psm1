@@ -13,25 +13,46 @@ function New-Office365DSCLogEntry
 
         [Parameter()]
         [System.String]
-        $Message
+        $Message,
+
+        [Parameter()]
+        [System.String]
+        $Source
     )
 
-    # Obtain the ID of the current PowerShell session. While this may
-    # not be unique, it will;
-    $SessionID = [System.Diagnostics.Process]::GetCurrentProcess().Id.ToString()
+    try
+    {
+        #region Telemetry
+        $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+        $driftedData.Add("Event", "Error")
+        $driftedData.Add("Category", $Error.CategoryInfo.Category.ToString())
+        $driftedData.Add("Exception", $Error.Exception.ToString())
+        $driftedData.Add("CustomMessage", $Message)
+        $driftedData.Add("Source", $Source)
+        Add-O365DSCTelemetryEvent -Type "ErrorEntry" -Data $driftedData
+        #endregion
 
-    # Generate the Error log file name based on the SessionID;
-    $LogFileName = $SessionID + "-O365DSC-ErrorLog.log"
+        # Obtain the ID of the current PowerShell session. While this may
+        # not be unique, it will;
+        $SessionID = [System.Diagnostics.Process]::GetCurrentProcess().Id.ToString()
 
-    # Build up the Error message to append to our log file;
-    $LogContent = "[" + [System.DateTime]::Now.ToString("yyyy/MM/dd hh:mm:ss") + "]`r`n"
-    $LogContent += "{" + $Error.CategoryInfo.Category.ToString() + "}`r`n"
-    $LogContent += $Error.Exception.ToString() + "`r`n"
-    $LogContent += "`"" + $Message + "`"`r`n"
-    $LogContent += "`r`n`r`n"
+        # Generate the Error log file name based on the SessionID;
+        $LogFileName = $SessionID + "-O365DSC-ErrorLog.log"
 
-    # Write the error content into the log file;
-    $LogContent | Out-File $LogFileName -Append
+        # Build up the Error message to append to our log file;
+        $LogContent = "[" + [System.DateTime]::Now.ToString("yyyy/MM/dd hh:mm:ss") + "]`r`n"
+        $LogContent += "{" + $Error.CategoryInfo.Category.ToString() + "}`r`n"
+        $LogContent += $Error.Exception.ToString() + "`r`n"
+        $LogContent += "`"" + $Message + "`"`r`n"
+        $LogContent += "`r`n`r`n"
+
+        # Write the error content into the log file;
+        $LogContent | Out-File $LogFileName -Append
+    }
+    catch
+    {
+        Write-Warning -Message "An error occured logging an exception: $_"
+    }
 }
 
 function Add-O365DSCEvent

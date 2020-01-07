@@ -208,7 +208,7 @@ function Set-TargetResource
     catch
     {
         $Message = "The specified Site Collection {$Url} for SPOHubSite doesn't already exist."
-        New-Office365DSCLogEntry -Error $_ -Message $Message
+        New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
         throw $Message
     }
 
