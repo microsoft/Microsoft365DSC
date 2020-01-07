@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* TeamsGuestCallingConfiguration
+  * Initial Release;
 * TeamsGuestMeetingConfiguration
   * Initial Release;
 * Metadata
