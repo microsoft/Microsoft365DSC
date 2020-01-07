@@ -9,16 +9,25 @@ function Get-TargetResource
         [ValidateSet('Global')]
         $Identity,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Boolean]
-        $AllowPrivateCalling,
+        $AllowIPVideo,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Disabled','EntireScreen','SingleApplication')]
+        $ScreenSharingMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetNow,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of Teams Guest Calling"
+    Write-Verbose -Message "Getting configuration of Teams Guest Meeting settings"
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -32,12 +41,14 @@ function Get-TargetResource
 
     try
     {
-        $config = Get-CsTeamsGuestCallingConfiguration
+        $config = Get-CsTeamsGuestMeetingConfiguration
 
         $result = @{
-            Identity                         = $config.Identity
-            AllowPrivateCalling              = $config.AllowPrivateCalling
-            GlobalAdminAccount               = $GlobalAdminAccount
+            Identity           = $config.Identity
+            AllowIPVideo       = $config.AllowIPVideo
+            ScreenSharingMode  = $config.ScreenSharingMode
+            AllowMeetNow       = $config.AllowMeetNow
+            GlobalAdminAccount = $GlobalAdminAccount
         }
         return $result
     }
@@ -57,16 +68,25 @@ function Set-TargetResource
         [ValidateSet('Global')]
         $Identity,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Boolean]
-        $AllowPrivateCalling,
+        $AllowIPVideo,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Disabled','EntireScreen','SingleApplication')]
+        $ScreenSharingMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetNow,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of Teams Guest Calling"
+    Write-Verbose -Message "Setting configuration of Teams Guest Meeting settings"
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -78,14 +98,10 @@ function Set-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform SkypeForBusiness
 
-    $CurrentValues = Get-TargetResource @PSBoundParameters
     $SetParams = $PSBoundParameters
     $SetParams.Remove("GlobalAdminAccount") | Out-Null
 
-    if ($AllowPrivateCalling -ne $CurrentValues.AllowPrivateCalling)
-    {
-        Set-CsTeamsGuestCallingConfiguration @SetParams
-    }
+    Set-CsTeamsGuestMeetingConfiguration @SetParams
 }
 
 function Test-TargetResource
@@ -99,16 +115,25 @@ function Test-TargetResource
         [ValidateSet('Global')]
         $Identity,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Boolean]
-        $AllowPrivateCalling,
+        $AllowIPVideo,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Disabled','EntireScreen','SingleApplication')]
+        $ScreenSharingMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetNow,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of Teams Guest Calling"
+    Write-Verbose -Message "Testing configuration of Teams Guest Meeting settings"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -149,13 +174,12 @@ function Export-TargetResource
 
 
     $params = @{
-        Identity            = "Global"
-        AllowPrivateCalling = $true
-        GlobalAdminAccount  = $GlobalAdminAccount
+        Identity           = "Global"
+        GlobalAdminAccount = $GlobalAdminAccount
     }
     $result = Get-TargetResource @params
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        TeamsGuestCallingConfiguration " + (New-GUID).ToString() + "`r`n"
+    $content = "        TeamsGuestMeetingConfiguration " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"

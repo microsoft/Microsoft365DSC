@@ -1931,6 +1931,22 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region TeamsGuestMeetingConfiguraton
+    if (($null -ne $ComponentsToExtract -and
+            $ComponentsToExtract.Contains("chckTeamsGuestMeetingConfiguration")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsGuestMeetingConfiguration..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsGuestMeetingConfiguration\MSFT_TeamsGuestMeetingConfiguration.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region TeamsMessagingPolicy
     if (($null -ne $ComponentsToExtract -and
     $ComponentsToExtract.Contains("chckTeamsMessagingPolicy")) -or
