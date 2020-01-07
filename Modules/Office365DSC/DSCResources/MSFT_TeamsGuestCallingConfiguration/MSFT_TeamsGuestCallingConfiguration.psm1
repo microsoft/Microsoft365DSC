@@ -9,7 +9,7 @@ function Get-TargetResource
         [ValidateSet('Global')]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $AllowPrivateCalling,
 
@@ -57,7 +57,7 @@ function Set-TargetResource
         [ValidateSet('Global')]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $AllowPrivateCalling,
 
@@ -99,7 +99,7 @@ function Test-TargetResource
         [ValidateSet('Global')]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $AllowPrivateCalling,
 
