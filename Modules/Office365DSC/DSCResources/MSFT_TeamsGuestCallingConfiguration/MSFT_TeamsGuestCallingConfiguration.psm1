@@ -149,8 +149,9 @@ function Export-TargetResource
 
 
     $params = @{
-        Identity           = "Global"
-        GlobalAdminAccount = $GlobalAdminAccount
+        Identity            = "Global"
+        AllowPrivateCalling = $true
+        GlobalAdminAccount  = $GlobalAdminAccount
     }
     $result = Get-TargetResource @params
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
