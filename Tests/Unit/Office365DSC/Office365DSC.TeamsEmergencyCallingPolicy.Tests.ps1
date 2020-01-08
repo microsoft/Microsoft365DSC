@@ -42,7 +42,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure                    = "Present";
                 GlobalAdminAccount        = $GlobalAdminAccount;
                 Identity                  = "TestPolicy";
-                NotificationDialOutNumber = "12312345678";
+                NotificationDialOutNumber = "+1234567890";
                 NotificationGroup         = "john.smith@contoso.onmicrosoft.com";
                 NotificationMode          = "NotificationOnly";
             }
@@ -107,7 +107,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure                    = "Present";
                 GlobalAdminAccount        = $GlobalAdminAccount;
                 Identity                  = "TestPolicy";
-                NotificationDialOutNumber = "12312345678";
+                NotificationDialOutNumber = "+1234567890";
                 NotificationGroup         = "john.smith@contoso.onmicrosoft.com";
                 NotificationMode          = "NotificationOnly";
             }
@@ -116,7 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     Description               = "Desc";
                     Identity                  = "TestPolicy";
-                    NotificationDialOutNumber = "12312345678";
+                    NotificationDialOutNumber = "+1234567890";
                     NotificationGroup         = "john.smith@contoso.onmicrosoft.com";
                     NotificationMode          = "NotificationOnly";
                 }
@@ -137,7 +137,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure                    = "Absent";
                 GlobalAdminAccount        = $GlobalAdminAccount;
                 Identity                  = "TestPolicy";
-                NotificationDialOutNumber = "12312345678";
+                NotificationDialOutNumber = "+1234567890";
                 NotificationGroup         = "john.smith@contoso.onmicrosoft.com";
                 NotificationMode          = "NotificationOnly";
             }
@@ -146,7 +146,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     Description               = "Desc";
                     Identity                  = "TestPolicy";
-                    NotificationDialOutNumber = "12312345678";
+                    NotificationDialOutNumber = "+1234567890";
                     NotificationGroup         = "john.smith@contoso.onmicrosoft.com";
                     NotificationMode          = "NotificationOnly";
                 }
@@ -174,7 +174,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     Description               = "Desc";
                     Identity                  = "TestPolicy";
-                    NotificationDialOutNumber = "12312345678";
+                    NotificationDialOutNumber = "+1234567890";
                     NotificationGroup         = "john.smith@contoso.onmicrosoft.com";
                     NotificationMode          = "NotificationOnly";
                 }
