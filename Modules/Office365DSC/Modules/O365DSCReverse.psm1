@@ -1931,6 +1931,38 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region TeamsGuestMessagingConfiguration
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckTeamsGuestMessagingConfiguration")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsGuestMessagingConfiguration..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsGuestMessagingConfiguration\MSFT_TeamsGuestMessagingConfiguration.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region TeamsGuestMeetingConfiguraton
+    if (($null -ne $ComponentsToExtract -and
+            $ComponentsToExtract.Contains("chckTeamsGuestMeetingConfiguration")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsGuestMeetingConfiguration..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsGuestMeetingConfiguration\MSFT_TeamsGuestMeetingConfiguration.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region TeamsMessagingPolicy
     if (($null -ne $ComponentsToExtract -and
     $ComponentsToExtract.Contains("chckTeamsMessagingPolicy")) -or
@@ -2052,6 +2084,37 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region TeamsEmergencyCallingPolicy
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckTeamsEmergencyCallingPolicy")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsEmergencyCallingPolicy..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsEmergencyCallingPolicy\MSFT_TeamsEmergencyCallingPolicy.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "TeamsMeetingBroadcastPolicy"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckTeamsMeetingBroadcastPolicy")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsMeetingBroadcastPolicy..."
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsMeetingBroadcastPolicy\MSFT_TeamsMeetingBroadcastPolicy.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region TeamsUpgradeConfiguration
     if (($null -ne $ComponentsToExtract -and
     $ComponentsToExtract.Contains("chckTeamsUpgradeConfiguration")) -or
@@ -2061,6 +2124,22 @@ function Start-O365ConfigurationExtract
 
         $ModulePath = Join-Path -Path $PSScriptRoot `
             -ChildPath "..\DSCResources\MSFT_TeamsUpgradeConfiguration\MSFT_TeamsUpgradeConfiguration.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region TeamsEmergencyCallRoutingPolicy
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckTeamsEmergencyCallRoutingPolicy")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsEmergencyCallRoutingPolicy..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsEmergencyCallRoutingPolicy\MSFT_TeamsEmergencyCallRoutingPolicy.psm1" `
             -Resolve
 
         Import-Module $ModulePath | Out-Null

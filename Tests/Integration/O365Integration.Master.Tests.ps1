@@ -585,6 +585,17 @@ Configuration Master
             SfBMeetingJoinUx     = "NativeLimitedClient"
         }
 
+        TeamsMeetingBroadcastPolicy IntegrationBroadcastPolicy
+        {
+            AllowBroadcastScheduling        = $True;
+            AllowBroadcastTranscription     = $False;
+            BroadcastAttendeeVisibilityMode = "EveryoneInCompany";
+            BroadcastRecordingMode          = "AlwaysEnabled";
+            Ensure                          = "Present";
+            GlobalAdminAccount              = $GlobalAdmin;
+            Identity                        = "IntegrationPolicy";
+        }
+
         TeamsClientConfiguration TeamsClientConfiguration
         {
             AllowBox                         = $True;
@@ -615,6 +626,17 @@ Configuration Master
             Identity                    = "Integration Channel Policy";
         }
 
+        TeamsEmergencyCallingPolicy EmergencyCallingPolicy
+        {
+            Description               = "Integration Test";
+            Identity                  = "Integration Emergency Calling Policy";
+            NotificationDialOutNumber = "12312345678";
+            NotificationGroup         = $GlobalAdmin.UserName;
+            NotificationMode          = "NotificationOnly";
+            Ensure                    = "Present"
+            GlobalAdminAccount        = $GlobalAdmin
+        }
+
         TeamsMeetingBroadcastConfiguration MeetingBroadcastConfiguration
         {
             Identity                            = 'Global'
@@ -624,6 +646,23 @@ Configuration Master
             SdnLicenseId                        = "5c12d0-d52950-e03e66-92b587"
             SdnApiTemplateUrl                   = "https://api.hivestreaming.com/v1/eventadmin?partner_token={0}"
             GlobalAdminAccount                  = $GlobalAdmin
+        }
+
+        TeamsEmergencyCallRoutingPolicy EmergencyCallRoutingPolicyExample
+        {
+            AllowEnhancedEmergencyServices = $False;
+            Description                    = "Description";
+            EmergencyNumbers               = @(
+                MSFT_TeamsEmergencyNumber
+                {
+                    EmergencyDialString = '123456'
+                    EmergencyDialMask   = '123'
+                    OnlinePSTNUsage     = ''
+                }
+            );
+            Ensure                         = "Present";
+            GlobalAdminAccount             = $GlobalAdmin;
+            Identity                       = "Integration Test";
         }
 
         TeamsMeetingPolicy DemoMeetingPolicy
