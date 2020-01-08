@@ -165,6 +165,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name "When the No Optional Parameters are Specified" -Fixture {
+            $testParams = @{
+                GlobalAdminAccount              = $GlobalAdminAccount;
+                Identity                        = "TestPolicy";
+            }
+
+            It "Should throw an error from the Set method" {
+                {Set-TargetResource @testParams} | Should throw `
+                ("You need to specify at least one optional parameter for the Set-TargetResource function" + `
+                " of the [TeamsEmergencyCallingPolicy] instance {MyDemoPolicy}")
+            }
+        }
+
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
