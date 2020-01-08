@@ -8,6 +8,10 @@
   * Initial Release;
 * TeamsGuestMeetingConfiguration
   * Initial Release;
+* TeamsGuestMessagingConfiguration
+  * Initial Release;
+* TeamsMeetingBroadcastPolicy
+  * Initial Release;
 * Metadata
   * Updated ReverseDSC dependency to version 2.0.0.2;
 
