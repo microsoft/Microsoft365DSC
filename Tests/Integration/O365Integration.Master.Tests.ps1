@@ -585,6 +585,17 @@ Configuration Master
             SfBMeetingJoinUx     = "NativeLimitedClient"
         }
 
+        TeamsMeetingBroadcastPolicy IntegrationBroadcastPolicy
+        {
+            AllowBroadcastScheduling        = $True;
+            AllowBroadcastTranscription     = $False;
+            BroadcastAttendeeVisibilityMode = "EveryoneInCompany";
+            BroadcastRecordingMode          = "AlwaysEnabled";
+            Ensure                          = "Present";
+            GlobalAdminAccount              = $GlobalAdmin;
+            Identity                        = "IntegrationPolicy";
+        }
+
         TeamsClientConfiguration TeamsClientConfiguration
         {
             AllowBox                         = $True;
