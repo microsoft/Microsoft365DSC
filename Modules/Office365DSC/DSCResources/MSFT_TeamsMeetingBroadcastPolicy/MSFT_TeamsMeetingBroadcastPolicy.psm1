@@ -116,6 +116,7 @@ function Set-TargetResource
 
     # Check that at least one optional parameter is specified
     $inputValues = $PSBoundParameters
+    $SetParams = $PSBoundParameters
     $inputValues.Remove("GlobalAdminAccount") | Out-Null
     $inputValues.Remove("Identity") | Out-Null
     foreach ($item in $inputValues)
@@ -143,7 +144,6 @@ function Set-TargetResource
         -Platform SkypeForBusiness
 
     $currentValues = Get-TargetResource @PSBoundParameters
-    $SetParams = $PSBoundParameters
     $SetParams.Remove("GlobalAdminAccount") | Out-Null
     $SetParams.Remove("Ensure") | Out-Null
 
