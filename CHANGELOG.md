@@ -4,6 +4,8 @@
 
 * TeamsEmergencyCallingPolicy
   * Initial Release;
+* TeamsEmergencyCallRoutingPolicy
+  * Initial Release;
 * TeamsGuestCallingConfiguration
   * Initial Release;
 * TeamsGuestMeetingConfiguration
