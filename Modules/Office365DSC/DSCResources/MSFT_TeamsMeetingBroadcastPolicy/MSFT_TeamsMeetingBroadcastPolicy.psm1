@@ -114,6 +114,24 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Teams Meeting Broadcast Policy {$Identity}"
 
+    # Check that at least one optional parameter is specified
+    $inputValues = $PSBoundParameters
+    $inputValues.Remove("GlobalAdminAccount") | Out-Null
+    $inputValues.Remove("Identity") | Out-Null
+    foreach ($item in $inputValues)
+    {
+        if ([System.String]::IsNullOrEmpty($item.Value))
+        {
+            $inputValues.Remove($item.key) | Out-Null
+        }
+    }
+
+    if ($inputValues.Count -eq 0)
+    {
+        throw "You need to specify at least one optional parameter for the Set-TargetResource function `
+            of the [TeamsMeetingBroadcastPolicy] instance {$Identity}"
+    }
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -125,7 +143,6 @@ function Set-TargetResource
         -Platform SkypeForBusiness
 
     $currentValues = Get-TargetResource @PSBoundParameters
-    $IsInDesiredState = Test-TargetResource @PSBoundParameters
     $SetParams = $PSBoundParameters
     $SetParams.Remove("GlobalAdminAccount") | Out-Null
     $SetParams.Remove("Ensure") | Out-Null
@@ -136,10 +153,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Present')
     {
-        if ($IsInDesiredState -eq $false)
-        {
-            Set-CSTeamsMeetingBroadcastPolicy @SetParams
-        }
+        Set-CSTeamsMeetingBroadcastPolicy @SetParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
     {
