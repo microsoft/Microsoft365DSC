@@ -6,6 +6,8 @@
   * Initial Release;
 * TeamsGuestMeetingConfiguration
   * Initial Release;
+* TeamsGuestMessagingConfiguration
+  * Initial Release;
 * TeamsMeetingBroadcastPolicy
   * Initial Release;
 * Metadata
