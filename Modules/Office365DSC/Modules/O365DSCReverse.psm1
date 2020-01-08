@@ -2084,10 +2084,26 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region TeamsEmergencyCallingPolicy
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckTeamsEmergencyCallingPolicy")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsEmergencyCallingPolicy..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsEmergencyCallingPolicy\MSFT_TeamsEmergencyCallingPolicy.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "TeamsMeetingBroadcastPolicy"
     if (($null -ne $ComponentsToExtract -and
-    $ComponentsToExtract.Contains("chckTeamsMeetingBroadcastPolicy")) -or
-    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+        $ComponentsToExtract.Contains("chckTeamsMeetingBroadcastPolicy")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
     {
         Write-Information "Extracting TeamsMeetingBroadcastPolicy..."
         $ModulePath = Join-Path -Path $PSScriptRoot `
