@@ -1886,12 +1886,28 @@ function Start-O365ConfigurationExtract
     #region TeamsClientConfiguration
     if (($null -ne $ComponentsToExtract -and
             $ComponentsToExtract.Contains("chckTeamsClientConfiguration")) -or
-        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+            $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
     {
         Write-Information "Extracting TeamsClientConfiguration..."
 
         $ModulePath = Join-Path -Path $PSScriptRoot `
             -ChildPath "..\DSCResources\MSFT_TeamsClientConfiguration\MSFT_TeamsClientConfiguration.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region TeamsGuestCallingConfiguration
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckTeamsGuestCallingConfiguration")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsGuestCallingConfiguration..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsGuestCallingConfiguration\MSFT_TeamsGuestCallingConfiguration.psm1" `
             -Resolve
 
         Import-Module $ModulePath | Out-Null
@@ -1924,6 +1940,22 @@ function Start-O365ConfigurationExtract
 
         $ModulePath = Join-Path -Path $PSScriptRoot `
             -ChildPath "..\DSCResources\MSFT_TeamsGuestMessagingConfiguration\MSFT_TeamsGuestMessagingConfiguration.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region TeamsGuestMeetingConfiguraton
+    if (($null -ne $ComponentsToExtract -and
+            $ComponentsToExtract.Contains("chckTeamsGuestMeetingConfiguration")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsGuestMeetingConfiguration..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsGuestMeetingConfiguration\MSFT_TeamsGuestMeetingConfiguration.psm1" `
             -Resolve
 
         Import-Module $ModulePath | Out-Null
