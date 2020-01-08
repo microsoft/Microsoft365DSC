@@ -1,0 +1,11 @@
+[ClassVersion("1.0.0.0"), FriendlyName("TeamsEmergencyCallingPolicy")]
+class MSFT_TeamsEmergencyCallingPolicy : OMI_BaseResource
+{
+    [Key, Description("Identity of the Teams Emergency Calling Policy.")] String Identity;
+    [Write, Description("Description of the Teams Emergency Calling Policy.")] String Description;
+    [Write, Description("This parameter represents PSTN number which can be dialed out if NotificationMode is set to either of the two Conference values.")] String NotificationDialOutNumber;
+    [Write, Description("NotificationGroup is a email list of users and groups to be notified of an emergency call.")] String NotificationGroup;
+    [Write, Description("The type of conference experience for security desk notification."), ValueMap{"NotificationOnly","ConferenceMuted","ConferenceUnMuted"}, Values{"NotificationOnly","ConferenceMuted","ConferenceUnMuted"}] String NotificationMode;
+    [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Required, Description("Credentials of the Teams Global Admin."), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};

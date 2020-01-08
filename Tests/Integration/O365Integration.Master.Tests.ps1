@@ -626,6 +626,17 @@ Configuration Master
             Identity                    = "Integration Channel Policy";
         }
 
+        TeamsEmergencyCallingPolicy EmergencyCallingPolicy
+        {
+            Description               = "Integration Test";
+            Identity                  = "Integration Emergency Calling Policy";
+            NotificationDialOutNumber = "12312345678";
+            NotificationGroup         = $GlobalAdmin.UserName;
+            NotificationMode          = "NotificationOnly";
+            Ensure                    = "Present"
+            GlobalAdminAccount        = $GlobalAdmin
+        }
+
         TeamsMeetingBroadcastConfiguration MeetingBroadcastConfiguration
         {
             Identity                            = 'Global'

@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* TeamsEmergencyCallingPolicy
+  * Initial Release;
 * TeamsGuestCallingConfiguration
   * Initial Release;
 * TeamsGuestMeetingConfiguration
