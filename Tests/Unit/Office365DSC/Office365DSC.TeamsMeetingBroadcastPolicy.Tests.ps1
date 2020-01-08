@@ -156,8 +156,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should throw an error from the Set method" {
-                {Set-TargetResource @testParams} | Should throw "You need to specify at least one optional parameter for the Set-TargetResource function" + `
-                " of the [TeamsMeetingBroadcastPolicy] instance {MyDemoPolicy}"
+                {Set-TargetResource @testParams} | Should throw `
+                ("You need to specify at least one optional parameter for the Set-TargetResource function" + `
+                " of the [TeamsMeetingBroadcastPolicy] instance {MyDemoPolicy}")
             }
         }
 
