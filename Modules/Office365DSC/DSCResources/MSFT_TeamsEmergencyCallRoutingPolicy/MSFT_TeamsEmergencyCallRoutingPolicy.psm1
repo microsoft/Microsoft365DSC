@@ -101,7 +101,25 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting Teams Emergency Call Routing Policy"
+    Write-Verbose -Message "Setting Teams Emergency Call Routing Policy {$Identity}"
+
+    # Check that at least one optional parameter is specified
+    $inputValues = $PSBoundParameters
+    $inputValues.Remove("GlobalAdminAccount") | Out-Null
+    $inputValues.Remove("Identity") | Out-Null
+    foreach ($item in $inputValues)
+    {
+        if ([System.String]::IsNullOrEmpty($item.Value))
+        {
+            $inputValues.Remove($item.key) | Out-Null
+        }
+    }
+
+    if ($inputValues.Count -eq 0)
+    {
+        throw "You need to specify at least one optional parameter for the Set-TargetResource function `
+            of the [TeamsEmergencyCallRoutingPolicy] instance {$Identity}"
+    }
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
