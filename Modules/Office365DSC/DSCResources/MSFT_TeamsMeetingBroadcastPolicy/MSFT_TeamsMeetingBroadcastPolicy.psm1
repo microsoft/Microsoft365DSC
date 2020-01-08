@@ -36,7 +36,7 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of Teams Meeting Broadcast Policies"
+    Write-Verbose -Message "Getting configuration of Teams Meeting Broadcast Policy {$Identity}"
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -112,7 +112,7 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of Teams Meeting Broadcast Policies"
+    Write-Verbose -Message "Setting configuration of Teams Meeting Broadcast Policy {$Identity}"
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
