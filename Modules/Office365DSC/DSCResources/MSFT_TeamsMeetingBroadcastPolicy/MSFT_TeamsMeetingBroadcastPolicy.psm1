@@ -111,26 +111,23 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-
     Write-Verbose -Message "Setting configuration of Teams Meeting Broadcast Policy {$Identity}"
 
     # Check that at least one optional parameter is specified
-    $inputValues = $PSBoundParameters
-    $SetParams = $PSBoundParameters
-    $inputValues.Remove("GlobalAdminAccount") | Out-Null
-    $inputValues.Remove("Identity") | Out-Null
-    foreach ($item in $inputValues)
+    $inputValues = @()
+    foreach ($item in $PSBoundParameters.Keys)
     {
-        if ([System.String]::IsNullOrEmpty($item.Value))
+        if (-not [System.String]::IsNullOrEmpty($PSBoundParameters.$item) -and $item -ne 'GlobalAdminAccount' `
+            -and $item -ne 'Identity' -and $item -ne 'Ensure')
         {
-            $inputValues.Remove($item.key) | Out-Null
+            $inputValues += $item
         }
     }
 
     if ($inputValues.Count -eq 0)
     {
-        throw "You need to specify at least one optional parameter for the Set-TargetResource function `
-            of the [TeamsMeetingBroadcastPolicy] instance {$Identity}"
+        throw "You need to specify at least one optional parameter for the Set-TargetResource function" + `
+            " of the [TeamsMeetingBroadcastPolicy] instance {$Identity}"
     }
 
     #region Telemetry
@@ -143,6 +140,7 @@ function Set-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform SkypeForBusiness
 
+    $SetParams = $PSBoundParameters
     $currentValues = Get-TargetResource @PSBoundParameters
     $SetParams.Remove("GlobalAdminAccount") | Out-Null
     $SetParams.Remove("Ensure") | Out-Null

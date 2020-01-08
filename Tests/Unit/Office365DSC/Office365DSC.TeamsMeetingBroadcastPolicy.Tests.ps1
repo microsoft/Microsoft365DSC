@@ -63,9 +63,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $true
             }
 
-            It "Should not call anything in the Set method" {
+            It "Should update settings in the Set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled Set-CsTeamsMeetingBroadcastPolicy -Exactly 0
+                Assert-MockCalled Set-CsTeamsMeetingBroadcastPolicy -Exactly 1
                 Assert-MockCalled New-CsTeamsMeetingBroadcastPolicy -Exactly 0
                 Assert-MockCalled Remove-CsTeamsMeetingBroadcastPolicy -Exactly 0
             }
@@ -146,6 +146,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Delete the policy in the Set method" {
                 Set-TargetResource @testParams
                 Assert-MockCalled Remove-CsTeamsMeetingBroadcastPolicy
+            }
+        }
+
+        Context -Name "When the No Optional Parameters are Specified" -Fixture {
+            $testParams = @{
+                GlobalAdminAccount              = $GlobalAdminAccount;
+                Identity                        = "MyDemoPolicy";
+            }
+
+            It "Should throw an error from the Set method" {
+                {Set-TargetResource @testParams} | Should throw "You need to specify at least one optional parameter for the Set-TargetResource function" + `
+                " of the [TeamsMeetingBroadcastPolicy] instance {MyDemoPolicy}"
             }
         }
 
