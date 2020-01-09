@@ -61,7 +61,7 @@ function Get-TargetResource
             throw $Message
             return $nullReturn
         }
-        
+
     }
     #checking if the site actually exists
     try
