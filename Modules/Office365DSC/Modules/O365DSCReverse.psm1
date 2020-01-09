@@ -1752,7 +1752,7 @@ function Start-O365ConfigurationExtract
 
     #region SPOSiteGroups
     if (($null -ne $ComponentsToExtract -and
-            $ComponentsToExtract.Contains("chckSPOSiteGroups")) -or
+            $ComponentsToExtract.Contains("chckSPOSiteGroup")) -or
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("SPO")))
     {
         Write-Information "Extracting SPOSiteGroups..."
