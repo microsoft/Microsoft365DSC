@@ -127,7 +127,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]O365AdminAuditLogConfig"
         }
     }
     #endregion
@@ -197,7 +197,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]EXOOrganizationConfig"
         }
     }
 
@@ -242,7 +242,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]EXOAtpPolicyForO365"
         }
     }
     #endregion
@@ -273,7 +273,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]EXOCASMailboxPlan"
         }
     }
     #endregion
@@ -303,7 +303,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]EXOClientAccessRule"
         }
     }
     #endregion
@@ -346,7 +346,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]EXODkimSigningConfig"
         }
     }
     #endregion
@@ -376,7 +376,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]EXOHostedConnectionFilterPolicy"
         }
     }
     #endregion
@@ -405,7 +405,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]EXOHostedCOntentFilterPolicy"
         }
     }
     #endregion
@@ -435,7 +435,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]EXOHostedContentFilterRule"
         }
     }
     #endregion
@@ -461,7 +461,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]EXOHostedOutboundSpamFilterPolicy"
         }
     }
     #endregion
@@ -498,7 +498,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]EXOSafeAttachmentPolicy"
         }
     }
     #endregion
@@ -535,7 +535,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]EXOSafeAttachmentRule"
         }
     }
     #endregion
@@ -572,7 +572,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]EXOSafeLinksPolicy"
         }
     }
     #endregion
@@ -609,7 +609,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]EXOSafeLinksRule"
         }
     }
     #endregion
@@ -651,7 +651,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]EXOMailTips"
         }
     }
     #endregion
@@ -702,7 +702,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]EXOSharedMailbox"
         }
     }
     #endregion
@@ -806,7 +806,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]O365OrgCustomizationSetting"
         }
     }
     #endregion
@@ -845,7 +845,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]EXOMailboxSettings"
         }
     }
     #endregion
@@ -867,7 +867,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]ODsettings"
         }
     }
     #endregion
@@ -1000,7 +1000,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Security and Compliance Center"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Security and Compliance Center" -Source "[O365DSCReverse]SCComplianceTag"
         }
     }
     #endregion
@@ -1040,7 +1040,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Security and Compliance Center"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Security and Compliance Center" -Source "[O365DSCReverse]SCDLPCompliancePolicy"
         }
     }
     #endregion
@@ -1214,7 +1214,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]SCRetentionCompliancePolicy"
         }
     }
     #endregion
@@ -1271,7 +1271,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]SCRetentionComplianceRule"
         }
     }
     #endregion
@@ -1332,7 +1332,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]SCSupervisoryReviewPolicy"
         }
     }
     #endregion
@@ -1377,7 +1377,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online"
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]SCSupervisoryReviewRule"
         }
     }
     #endregion
@@ -1901,12 +1901,28 @@ function Start-O365ConfigurationExtract
     #region TeamsClientConfiguration
     if (($null -ne $ComponentsToExtract -and
             $ComponentsToExtract.Contains("chckTeamsClientConfiguration")) -or
-        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+            $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
     {
         Write-Information "Extracting TeamsClientConfiguration..."
 
         $ModulePath = Join-Path -Path $PSScriptRoot `
             -ChildPath "..\DSCResources\MSFT_TeamsClientConfiguration\MSFT_TeamsClientConfiguration.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region TeamsGuestCallingConfiguration
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckTeamsGuestCallingConfiguration")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsGuestCallingConfiguration..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsGuestCallingConfiguration\MSFT_TeamsGuestCallingConfiguration.psm1" `
             -Resolve
 
         Import-Module $ModulePath | Out-Null
@@ -1923,6 +1939,38 @@ function Start-O365ConfigurationExtract
 
         $ModulePath = Join-Path -Path $PSScriptRoot `
             -ChildPath "..\DSCResources\MSFT_TeamsCallingPolicy\MSFT_TeamsCallingPolicy.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region TeamsGuestMessagingConfiguration
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckTeamsGuestMessagingConfiguration")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsGuestMessagingConfiguration..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsGuestMessagingConfiguration\MSFT_TeamsGuestMessagingConfiguration.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region TeamsGuestMeetingConfiguraton
+    if (($null -ne $ComponentsToExtract -and
+            $ComponentsToExtract.Contains("chckTeamsGuestMeetingConfiguration")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsGuestMeetingConfiguration..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsGuestMeetingConfiguration\MSFT_TeamsGuestMeetingConfiguration.psm1" `
             -Resolve
 
         Import-Module $ModulePath | Out-Null
@@ -2051,15 +2099,62 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region TeamsEmergencyCallingPolicy
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckTeamsEmergencyCallingPolicy")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsEmergencyCallingPolicy..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsEmergencyCallingPolicy\MSFT_TeamsEmergencyCallingPolicy.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region "TeamsMeetingBroadcastPolicy"
+    if (($null -ne $ComponentsToExtract -and
+        $ComponentsToExtract.Contains("chckTeamsMeetingBroadcastPolicy")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsMeetingBroadcastPolicy..."
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsMeetingBroadcastPolicy\MSFT_TeamsMeetingBroadcastPolicy.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region TeamsUpgradeConfiguration
     if (($null -ne $ComponentsToExtract -and
     $ComponentsToExtract.Contains("chckTeamsUpgradeConfiguration")) -or
     $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
     {
-        Write-Information "Extracting TeamsUpgradeCOnfiguration..."
+        Write-Information "Extracting TeamsUpgradeConfiguration..."
 
         $ModulePath = Join-Path -Path $PSScriptRoot `
             -ChildPath "..\DSCResources\MSFT_TeamsUpgradeConfiguration\MSFT_TeamsUpgradeConfiguration.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
+    #region TeamsEmergencyCallRoutingPolicy
+    if (($null -ne $ComponentsToExtract -and
+    $ComponentsToExtract.Contains("chckTeamsEmergencyCallRoutingPolicy")) -or
+    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("TEAMS")))
+    {
+        Write-Information "Extracting TeamsEmergencyCallRoutingPolicy..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_TeamsEmergencyCallRoutingPolicy\MSFT_TeamsEmergencyCallRoutingPolicy.psm1" `
             -Resolve
 
         Import-Module $ModulePath | Out-Null

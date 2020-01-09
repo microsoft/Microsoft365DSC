@@ -642,7 +642,7 @@ function Show-O365GUI
         $pnlTeams = New-Object System.Windows.Forms.Panel
         $pnlTeams.Top = 88 + $topBannerHeight
         $pnlTeams.Left = $ThirdColumnLeft
-        $pnlTeams.Height = 220
+        $pnlTeams.Height = 240
         $pnlTeams.Width = 300
         $pnlTeams.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -678,8 +678,16 @@ function Show-O365GUI
         $chckTeamsClientConfiguration.Text = "Client Configuration"
         $pnlTeams.Controls.Add($chckTeamsClientConfiguration)
 
+        $chckTeamsGuestCallingConfiguration = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsGuestCallingConfiguration.Top = 80
+        $chckTeamsGuestCallingConfiguration.AutoSize = $true;
+        $chckTeamsGuestCallingConfiguration.Name = "chckTeamsGuestCallingConfiguration"
+        $chckTeamsGuestCallingConfiguration.Checked = $true
+        $chckTeamsGuestCallingConfiguration.Text = "Guest Calling Configuration"
+        $pnlTeams.Controls.Add($chckTeamsGuestCallingConfiguration)
+
         $chckTeamsMeetingBroadcastConfiguration = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsMeetingBroadcastConfiguration.Top = 80
+        $chckTeamsMeetingBroadcastConfiguration.Top = 100
         $chckTeamsMeetingBroadcastConfiguration.AutoSize = $true;
         $chckTeamsMeetingBroadcastConfiguration.Name = "chckTeamsMeetingBroadcastConfiguration"
         $chckTeamsMeetingBroadcastConfiguration.Checked = $true
@@ -687,7 +695,7 @@ function Show-O365GUI
         $pnlTeams.Controls.Add($chckTeamsMeetingBroadcastConfiguration)
 
         $chckTeamsMeetingConfiguration = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsMeetingConfiguration.Top = 100
+        $chckTeamsMeetingConfiguration.Top = 120
         $chckTeamsMeetingConfiguration.AutoSize = $true;
         $chckTeamsMeetingConfiguration.Name = "chckTeamsMeetingConfiguration"
         $chckTeamsMeetingConfiguration.Checked = $true
@@ -695,7 +703,7 @@ function Show-O365GUI
         $pnlTeams.Controls.Add($chckTeamsMeetingConfiguration)
 
         $chckTeamsMeetingPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsMeetingPolicy.Top = 120
+        $chckTeamsMeetingPolicy.Top = 140
         $chckTeamsMeetingPolicy.AutoSize = $true;
         $chckTeamsMeetingPolicy.Name = "chckTeamsMeetingPolicy"
         $chckTeamsMeetingPolicy.Checked = $true
@@ -703,7 +711,7 @@ function Show-O365GUI
         $pnlTeams.Controls.Add($chckTeamsMeetingPolicy)
 
         $chckTeamsMessagingPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsMessagingPolicy.Top = 140
+        $chckTeamsMessagingPolicy.Top = 160
         $chckTeamsMessagingPolicy.AutoSize = $true;
         $chckTeamsMessagingPolicy.Name = "chckTeamsMessagingPolicy"
         $chckTeamsMessagingPolicy.Checked = $true
@@ -711,7 +719,7 @@ function Show-O365GUI
         $pnlTeams.Controls.Add($chckTeamsMessagingPolicy)
 
         $chckTeamsTeam = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsTeam.Top = 160
+        $chckTeamsTeam.Top = 180
         $chckTeamsTeam.AutoSize = $true;
         $chckTeamsTeam.Name = "chckTeamsTeam"
         $chckTeamsTeam.Checked = $true
@@ -719,7 +727,7 @@ function Show-O365GUI
         $pnlTeams.Controls.Add($chckTeamsTeam)
 
         $chckTeamsUpgradeConfiguration = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsUpgradeConfiguration.Top = 180
+        $chckTeamsUpgradeConfiguration.Top = 200
         $chckTeamsUpgradeConfiguration.AutoSize = $true;
         $chckTeamsUpgradeConfiguration.Name = "chckTeamsUpgradeConfiguration"
         $chckTeamsUpgradeConfiguration.Checked = $true
@@ -727,7 +735,7 @@ function Show-O365GUI
         $pnlTeams.Controls.Add($chckTeamsUpgradeConfiguration)
 
         $chckTeamsUser = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsUser.Top = 200
+        $chckTeamsUser.Top = 220
         $chckTeamsUser.AutoSize = $true;
         $chckTeamsUser.Name = "chckTeamsUser"
         $chckTeamsUser.Checked = $true
@@ -917,7 +925,7 @@ function Show-O365GUI
                     catch
                     {
                         $Message = "Could not initiate the ReverseDSC Extraction"
-                        New-Office365DSCLogEntry -Error $_ -Message $Message_
+                        New-Office365DSCLogEntry -Error $_ -Message $Message_ -Source "[O365DSCReverseGUI]"
                     }
                 }
                 else

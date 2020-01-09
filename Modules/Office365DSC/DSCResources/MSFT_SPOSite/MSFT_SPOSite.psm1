@@ -448,14 +448,14 @@ function Set-TargetResource
                     if ($null -ne $siteAlreadyDeleted)
                     {
                         $Message = "The site $($Url) already exists in the deleted sites."
-                        New-Office365DSCLogEntry -Error $_ -Message $Message
+                        New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
                         throw $Message
                     }
                 }
                 catch
                 {
                     $Message = "The site $($Url) does not exist in the deleted sites."
-                    New-Office365DSCLogEntry -Error $_ -Message $Message
+                    New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
                     throw $Message
                 }
             }
