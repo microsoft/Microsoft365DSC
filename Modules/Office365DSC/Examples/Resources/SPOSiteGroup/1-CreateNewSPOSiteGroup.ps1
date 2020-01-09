@@ -22,7 +22,6 @@ Configuration Example
             PermissionLevels                            = @("Edit", "Read")
             Ensure                                      = "Present"
             GlobalAdminAccount                          = $credsGlobalAdmin
-            
         }
 
         SPOSiteGroup adfd6217-29de-4297-95d4-7004455d3daa
@@ -33,7 +32,6 @@ Configuration Example
             PermissionLevels                            = @("Edit", "Read")
             Ensure                                      = "Present"
             GlobalAdminAccount                          = $credsGlobalAdmin
-            
         }
     }
 }
