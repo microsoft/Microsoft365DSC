@@ -352,7 +352,7 @@ function Export-TargetResource
         }
         catch
         {
-            Write-Verbose "There was an issue retrieving the SiteGroups for $Url"
+            Write-Verbose "There was an issue retrieving the SiteGroups for $($Url)"
         }
         $i++
     }
