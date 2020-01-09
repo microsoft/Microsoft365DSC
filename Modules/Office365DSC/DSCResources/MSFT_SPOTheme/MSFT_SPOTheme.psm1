@@ -142,7 +142,7 @@ function Set-TargetResource
         catch
         {
             $Message = "The SPOTheme $($theme) does not exist and for that cannot be removed."
-            New-Office365DSCLogEntry -Error $_ -Message $Message
+            New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
             Write-Error $Message
         }
     }

@@ -175,7 +175,7 @@ function Get-TargetResource
     catch
     {
         $Message = "Failed to get Tenant client sync settings"
-        New-Office365DSCLogEntry -Error $_ -Message $Message
+        New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
         return $nullReturn
     }
 }

@@ -347,7 +347,7 @@ function Set-TargetResource
             {
                 $Message = "License {$($LicenseAssignment)} doesn't exist in tenant."
                 Write-Verbose $Message
-                New-Office365DSCLogEntry -Error $_ -Message $Message
+                New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
             }
         }
         Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
@@ -369,7 +369,7 @@ function Set-TargetResource
         catch
         {
             $Message = "Could not assign license {$($newLicenseAssignment)} to user {$($UserPrincipalName)}"
-            New-Office365DSCLogEntry -Error $_ -Message $Message
+            New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
             throw $Message
         }
     }

@@ -925,7 +925,7 @@ function Show-O365GUI
                     catch
                     {
                         $Message = "Could not initiate the ReverseDSC Extraction"
-                        New-Office365DSCLogEntry -Error $_ -Message $Message_
+                        New-Office365DSCLogEntry -Error $_ -Message $Message_ -Source "[O365DSCReverseGUI]"
                     }
                 }
                 else
