@@ -232,7 +232,7 @@ function Set-TargetResource
             Site     = $Url
             Identity = $Identity
         }
-        Write-Verbose "Removing SPOSiteGroup $($Identity)"
+        Write-Verbose "Removing SPOSiteGroup $Identity"
         Remove-SPOSiteGroup @SiteGroupSettings
     }
 }
