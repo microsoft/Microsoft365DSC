@@ -84,7 +84,7 @@ function Get-TargetResource
         if ($Error[0].Exception.Message -eq "Group cannot be found.")
         {
             write-verbose -Message "Site group $($Identity) could not be found on site $($Url)"
-            
+
         }
     }
     if ($null -eq $siteGroup)
