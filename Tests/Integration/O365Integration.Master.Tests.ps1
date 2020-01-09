@@ -542,6 +542,15 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
         }
 
+        SPOSiteGroup TestSiteGroup
+        {
+            Url                                         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+            Identity                                    = "TestSiteGroup"
+            Owner                                       = $GlobalAdmin.UserName
+            PermissionLevels                            = @("Edit", "Read")
+            Ensure                                      = "Present"
+            GlobalAdminAccount                          = $GlobalAdmin
+        }
         SPOTheme SPTheme01
         {
             GlobalAdminAccount = $GlobalAdmin

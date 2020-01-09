@@ -48,6 +48,8 @@
   * Initial Release;
 * SPOPropertyBag
   * Added multithreading;
+* SPOSiteGroup
+  * Initial Release;
 * SPOSharingSettings
   * Added ExistingExternalUserSharingOnly as a supported value
     for SharingCapabilities;
