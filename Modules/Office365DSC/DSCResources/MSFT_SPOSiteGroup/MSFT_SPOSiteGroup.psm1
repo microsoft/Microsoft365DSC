@@ -154,7 +154,7 @@ function Set-TargetResource
             Group = $Identity
             PermissionLevels = $PermissionLevels
         }
-        Write-Verbose -Message "Site group $($Identity) does not exist, creating it."
+        Write-Verbose -Message "Site group $Identity does not exist, creating it."
         New-SPOSiteGroup @SiteGroupSettings
     }
     elseif ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Present")
