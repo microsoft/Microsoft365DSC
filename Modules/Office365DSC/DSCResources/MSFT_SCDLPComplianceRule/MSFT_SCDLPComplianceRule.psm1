@@ -130,7 +130,7 @@ function Get-TargetResource
             $NotifyAllowOverrideValue = $PolicyRule.NotifyAllowOverride.Replace(' ', '').Split(',')
         }
 
-        $SensitiveInfo = @($PolicyRule.ContentContainsSensitiveInformation[0])
+        [array] $SensitiveInfo = @($PolicyRule.ContentContainsSensitiveInformation[0])
 
         if ($null -ne $SensitiveInfo.groups)
         {
@@ -487,12 +487,18 @@ function Export-TargetResource
     {
         Write-Information "    - [$i/$($rules.Length)] $($rule.Name)"
         $result = Get-TargetResource -Name $rule.Name -Policy $rule.ParentPolicyName -GlobalAdminAccount $GlobalAdminAccount
+
+        $IsCIMArray = $false
+        if ($result.ContentContainsSensitiveInformation.Length -gt 1)
+        {
+            $IsCIMArray = $true
+        }
         $result.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $result.ContentContainsSensitiveInformation
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $partialContent = "        SCDLPComplianceRule " + (New-GUID).ToString() + "`r`n"
         $partialContent += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $true
+        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsCIMArray
 
         $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $partialContent += "        }`r`n"
