@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+* SCComplianceTag
+  * Fix an issue where FIlePlanProperty values returned
+    from Get-TargetResource where always empty;
 * TeamsEmergencyCallingPolicy
   * Initial Release;
 * TeamsEmergencyCallRoutingPolicy
