@@ -339,9 +339,6 @@ function Export-TargetResource
             $params = @{
                 Url                = $site.Url
                 Identity           = $siteGroup.Title
-                Owner              = $siteGroup.OwnerLoginName
-                PermissionLevels   = $siteGroup.Roles
-                GlobalAdminAccount = $GlobalAdminAccount
             }
             try
             {
