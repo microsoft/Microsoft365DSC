@@ -355,7 +355,7 @@ function Export-TargetResource
                 Write-Verbose "There was an issue retrieving the SiteGroups for $($Url)"
             }
         }
-        
+
         $i++
     }
     return $content
