@@ -224,7 +224,7 @@ function Set-TargetResource
             }
             Set-SPOSiteGroup @SiteGroupSettings
         }
-        
+
     }
     elseif ($Ensure -eq "Absent" -and $currentValues.Ensure -eq "Present")
     {
