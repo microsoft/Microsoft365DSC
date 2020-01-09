@@ -328,7 +328,14 @@ function Export-TargetResource
         catch
         {
             $message = $Error[0].Exception.Message
-            Write-Warning -Message $message
+            if($null -ne $message)
+            {
+                Write-Warning -Message $message
+            }
+            else
+            {
+                Write-Verbose -Message "Could not retrieve sitegroups for site $($site.Url)"
+            }
         }
         foreach ($siteGroup in $siteGroups)
         {
