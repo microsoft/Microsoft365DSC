@@ -327,8 +327,8 @@ function Export-TargetResource
         }
         catch
         {
-            $message = $Error[0].Exception.Message   
-            Write-Warning -Message $message 
+            $message = $Error[0].Exception.Message
+            Write-Warning -Message $message
         }
         foreach ($siteGroup in $siteGroups)
         {
@@ -339,21 +339,22 @@ function Export-TargetResource
                 PermissionLevels   = $siteGroup.Roles
                 GlobalAdminAccount = $GlobalAdminAccount
             }
+            try
+            {
+                $result = Get-TargetResource @params
+                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                $content += "        SPOSiteGroups " + (New-GUID).ToString() + "`r`n"
+                $content += "        {`r`n"
+                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                $content += "        }`r`n"
+            }
+            catch
+            {
+                Write-Verbose "There was an issue retrieving the SiteGroups for $($Url)"
+            }
         }
-        try
-        {
-            $result = Get-TargetResource @params
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        SPOSiteGroups " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            $content += "        }`r`n"
-        }
-        catch
-        {
-            Write-Verbose "There was an issue retrieving the SiteGroups for $($Url)"
-        }
+        
         $i++
     }
     return $content
