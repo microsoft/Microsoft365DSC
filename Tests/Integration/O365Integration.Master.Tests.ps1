@@ -550,7 +550,6 @@ Configuration Master
             PermissionLevels                            = @("Edit", "Read")
             Ensure                                      = "Present"
             GlobalAdminAccount                          = $GlobalAdmin
-            
         }
         SPOTheme SPTheme01
         {
