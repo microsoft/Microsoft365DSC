@@ -203,36 +203,26 @@ function Start-O365ConfigurationExtract
     {
         try
         {
-            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                -Platform ExchangeOnline `
-                -ErrorAction SilentlyContinue
-
             if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-AtpPolicyForO365)
             {
                 Write-Information "Extracting EXOAtpPolicyForO365..."
-                $EXOAtpPolicyForO365ModulePath = Join-Path -Path $PSScriptRoot `
+                $ModulePath = Join-Path -Path $PSScriptRoot `
                     -ChildPath "..\DSCResources\MSFT_EXOAtpPolicyForO365\MSFT_EXOAtpPolicyForO365.psm1" `
                     -Resolve
 
-                Import-Module $EXOAtpPolicyForO365ModulePath | Out-Null
+                Import-Module $ModulePath | Out-Null
 
-                $ATPPolicies = Get-AtpPolicyForO365
-                foreach ($atpPolicy in $ATPPolicies)
+                $partialContent = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+
+                if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
                 {
-                    $partialContent = Export-TargetResource -IsSingleInstance "Yes" `
-                        -GlobalAdminAccount $GlobalAdminAccount `
-                        -Identity $atpPolicy.Identity
-
-                    if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
-                    {
-                        $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
-                    }
-                    $DSCContent += $partialContent
+                    $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
                 }
+                $DSCContent += $partialContent
             }
             else
             {
-                Write-Warning "The specified Tenant is not registered for ATP, and therefore can't extract policies"
+                Write-Warning -Message "The specified Tenant is not registered for ATP, and therefore can't extract policies"
             }
         }
         catch
@@ -250,21 +240,13 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting EXOCASMailboxPlan..."
         try
         {
-            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                -Platform ExchangeOnline `
-                -ErrorAction SilentlyContinue
-
-            $CASMailboxPlans = Get-CASMailboxPlan
-            $EXOCASMailboxPlanModulePath = Join-Path -Path $PSScriptRoot `
+            $ModulePath = Join-Path -Path $PSScriptRoot `
                 -ChildPath "..\DSCResources\MSFT_EXOCASMailboxPlan\MSFT_EXOCASMailboxPlan.psm1" `
                 -Resolve
 
-            Import-Module $EXOCASMailboxPlanModulePath | Out-Null
+            Import-Module $ModulePath | Out-Null
 
-            foreach ($CASMailboxPlan in $CASMailboxPlans)
-            {
-                $DSCContent += Export-TargetResource -Identity $CASMailboxPlan.Identity -GlobalAdminAccount $GlobalAdminAccount
-            }
+            $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
         }
         catch
         {
@@ -281,20 +263,12 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting EXOClientAccessRule..."
         try
         {
-            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                -Platform ExchangeOnline `
-                -ErrorAction SilentlyContinue
-
-            $ClientAccessRules = Get-ClientAccessRule
-            $EXOClientAccessRuleModulePath = Join-Path -Path $PSScriptRoot `
+            $ModulePath = Join-Path -Path $PSScriptRoot `
                 -ChildPath "..\DSCResources\MSFT_EXOClientAccessRule\MSFT_EXOClientAccessRule.psm1" `
                 -Resolve
 
-            Import-Module $EXOClientAccessRuleModulePath | Out-Null
-            foreach ($ClientAccessRule in $ClientAccessRules)
-            {
-                $DSCContent += Export-TargetResource -Identity $ClientAccessRule.Identity -Action $ClientAccessRule.Action -GlobalAdminAccount $GlobalAdminAccount
-            }
+            Import-Module $ModulePath | Out-Null
+            $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
         }
         catch
         {
@@ -311,33 +285,12 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting EXODkimSigningConfig..."
         try
         {
-            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                -Platform ExchangeOnline `
-                -ErrorAction SilentlyContinue
-
-            $DkimSigningConfigs = Get-DkimSigningConfig
-            $EXODkimSigningConfigModulePath = Join-Path -Path $PSScriptRoot `
+            $ModulePath = Join-Path -Path $PSScriptRoot `
                 -ChildPath "..\DSCResources\MSFT_EXODkimSigningConfig\MSFT_EXODkimSigningConfig.psm1" `
                 -Resolve
 
-            Import-Module $EXODkimSigningConfigModulePath | Out-Null
-            $i = 1
-            foreach ($DkimSigningConfig in $DkimSigningConfigs)
-            {
-                Write-Verbose -Message "    - [$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)}"
-
-                $partialContent = Export-TargetResource -Identity $DkimSigningConfig.Identity -GlobalAdminAccount $GlobalAdminAccount
-                if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
-                {
-                    $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
-                }
-                if ($partialContent.ToLower().IndexOf($principal.ToLower() + ".") -gt 0)
-                {
-                    $partialContent = $partialContent -ireplace [regex]::Escape($principal + "."), "`$(`$OrganizationName.Split('.')[0])."
-                }
-                $DSCContent += $partialContent
-                $i++
-            }
+            Import-Module $ModulePath | Out-Null
+            $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
         }
         catch
         {
