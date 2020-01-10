@@ -3,7 +3,12 @@ function Get-TargetResource
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
-    (
+    (        
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+        
         [Parameter()]
         [System.String]
         $ConditionalCompany,
@@ -50,32 +55,52 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $ConditionalCustomAttribute1,
+        $ConditionalCustomAttribute5,
 
         [Parameter()]
         [System.String]
-        $ConditionalCustomAttribute1,
+        $ConditionalCustomAttribute6,
 
         [Parameter()]
         [System.String]
-        $ConditionalCustomAttribute1,
+        $ConditionalCustomAttribute7,
 
         [Parameter()]
         [System.String]
-        $ConditionalCustomAttribute1,
+        $ConditionalCustomAttribute8,
 
         [Parameter()]
         [System.String]
-        $ConditionalCustomAttribute1,
+        $ConditionalCustomAttribute9,
 
         [Parameter()]
         [System.String]
-        $ConditionalCustomAttribute1,
+        $ConditionalDepartment,
 
+        [Parameter()]
+        [Sys,tem.String]
+        $ConditionalStateOrProvince,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
-        $Identity,
+        $Container,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
+        [System.String]
+        $IncludedRecipients,
+
+        [Parameter()]
+        [System.String]
+        $RecipientContainer,
+
+        [Parameter()]
+        [System.String]
+        $RecipientFilter,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -87,18 +112,19 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of ClientAccessRule for $Identity"
+    Write-Verbose -Message "Getting configuration of AddressList for $Name"
+
+    #no telemetry
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
+    $AddressLists = Get-AddressList
 
-    $ClientAccessRules = Get-ClientAccessRule
-
-    $ClientAccessRule = $ClientAccessRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    if (-not $ClientAccessRule)
+    $AddressList = $AddressLists | Where-Object -FilterScript { $_.Name -eq $Name }
+    if (-not $AddressList)
     {
-        Write-Verbose -Message "ClientAccessRule $($Identity) does not exist."
+        Write-Verbose -Message "AddressList $($Name) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -106,29 +132,40 @@ function Get-TargetResource
     else
     {
         $result = @{
-            Identity                             = $Identity
-            Action                               = $ClientAccessRule.Action
-            AnyOfAuthenticationTypes             = $ClientAccessRule.AnyOfAuthenticationTypes
-            AnyOfClientIPAddressesOrRanges       = $ClientAccessRule.AnyOfClientIPAddressesOrRanges
-            AnyOfProtocols                       = $ClientAccessRule.AnyOfProtocols
-            Enabled                              = $ClientAccessRule.Enabled
-            ExceptAnyOfAuthenticationTypes       = $ClientAccessRule.ExceptAnyOfAuthenticationTypes
-            ExceptAnyOfClientIPAddressesOrRanges = $ClientAccessRule.ExceptAnyOfClientIPAddressesOrRanges
-            ExceptAnyOfProtocols                 = $ClientAccessRule.ExceptAnyOfProtocols
-            ExceptUsernameMatchesAnyOfPatterns   = $ClientAccessRule.ExceptUsernameMatchesAnyOfPatterns
-            Priority                             = $ClientAccessRule.Priority
-            UserRecipientFilter                  = $ClientAccessRule.UserRecipientFilter
-            UsernameMatchesAnyOfPatterns         = $ClientAccessRule.UsernameMatchesAnyOfPatterns
+            Name                                 = $Name
+            ConditionalCompany                   = $AddressList.ConditionalCompany
+            ConditionalCustomeAttribute1         = $AddressList.ConditionalCustomAttribute1
+            ConditionalCustomeAttribute10        = $AddressList.ConditionalCustomAttribute10
+            ConditionalCustomeAttribute11        = $AddressList.ConditionalCustomAttribute11
+            ConditionalCustomeAttribute12        = $AddressList.ConditionalCustomAttribute12
+            ConditionalCustomeAttribute13        = $AddressList.ConditionalCustomAttribute13
+            ConditionalCustomeAttribute14        = $AddressList.ConditionalCustomAttribute14
+            ConditionalCustomeAttribute15        = $AddressList.ConditionalCustomAttribute15
+            ConditionalCustomeAttribute2         = $AddressList.ConditionalCustomAttribute2
+            ConditionalCustomeAttribute3         = $AddressList.ConditionalCustomAttribute3
+            ConditionalCustomeAttribute4         = $AddressList.ConditionalCustomAttribute4
+            ConditionalCustomeAttribute5         = $AddressList.ConditionalCustomAttribute5
+            ConditionalCustomeAttribute6         = $AddressList.ConditionalCustomAttribute6
+            ConditionalCustomeAttribute7         = $AddressList.ConditionalCustomAttribute7
+            ConditionalCustomeAttribute8         = $AddressList.ConditionalCustomAttribute8
+            ConditionalCustomeAttribute9         = $AddressList.ConditionalCustomAttribute9
+            ConditionalDepartment                = $AddressList.ConditionalDepartment
+            ConditionalStateOrProvince           = $AddressList.ConditionalStateOrProvince
+            Container                            = $AddressList.Container
+            DisplayName                          = $AddressList.DisplayName
+            IncludedRecipients                   = $AddressList.IncludedRecipients
+            RecipientContainer                   = $AddressList.RecipientContainer
+            RecipientFilter                      = $AddressList.RecipientFilter
             Ensure                               = 'Present'
             GlobalAdminAccount                   = $GlobalAdminAccount
         }
 
-        if (-not [System.String]::IsNullOrEmpty($ClientAccessRule.RuleScope))
+        if (-not [System.String]::IsNullOrEmpty($AddressList.RuleScope))
         {
-            $result.Add("RuleScope", $ClientAccessRule.RuleScope)
+            $result.Add("RuleScope", $AddressList.RuleScope)
         }
 
-        Write-Verbose -Message "Found ClientAccessRule $($Identity)"
+        Write-Verbose -Message "Found AddressList $($Identity)"
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
@@ -217,33 +254,33 @@ function Set-TargetResource
         -Platform ExchangeOnline
 
 
-    $ClientAccessRules = Get-ClientAccessRule
+    $AddressLists = Get-ClientAccessRule
 
-    $ClientAccessRule = $ClientAccessRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $ClientAccessRuleParams = $PSBoundParameters
-    $ClientAccessRuleParams.Remove('Ensure') | Out-Null
-    $ClientAccessRuleParams.Remove('GlobalAdminAccount') | Out-Null
-    if ($ClientAccessRuleParams.RuleScope)
+    $AddressList = $AddressLists | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    $AddressListParams = $PSBoundParameters
+    $AddressListParams.Remove('Ensure') | Out-Null
+    $AddressListParams.Remove('GlobalAdminAccount') | Out-Null
+    if ($AddressListParams.RuleScope)
     {
-        $ClientAccessRuleParams += @{
-            Scope = $ClientAccessRuleParams.RuleScope
+        $AddressListParams += @{
+            Scope = $AddressListParams.RuleScope
         }
-        $ClientAccessRuleParams.Remove('RuleScope') | Out-Null
+        $AddressListParams.Remove('RuleScope') | Out-Null
     }
 
-    if (('Present' -eq $Ensure ) -and ($null -eq $ClientAccessRule))
+    if (('Present' -eq $Ensure ) -and ($null -eq $AddressList))
     {
         Write-Verbose -Message "Creating ClientAccessRule $($Identity)."
-        $ClientAccessRuleParams.Add("Name", $Identity)
-        $ClientAccessRuleParams.Remove('Identity') | Out-Null
+        $AddressListParams.Add("Name", $Identity)
+        $AddressListParams.Remove('Identity') | Out-Null
         New-ClientAccessRule @ClientAccessRuleParams
     }
-    elseif (('Present' -eq $Ensure ) -and ($Null -ne $ClientAccessRule))
+    elseif (('Present' -eq $Ensure ) -and ($Null -ne $AddressList))
     {
-        Write-Verbose -Message "Setting ClientAccessRule $($Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $ClientAccessRuleParams)"
+        Write-Verbose -Message "Setting ClientAccessRule $($Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $AddressListParams)"
         Set-ClientAccessRule @ClientAccessRuleParams -Confirm:$false
     }
-    elseif (('Absent' -eq $Ensure ) -and ($null -ne $ClientAccessRule))
+    elseif (('Absent' -eq $Ensure ) -and ($null -ne $AddressList))
     {
         Write-Verbose -Message "Removing ClientAccessRule $($Identity)"
         Remove-ClientAccessRule -Identity $Identity -Confirm:$false
