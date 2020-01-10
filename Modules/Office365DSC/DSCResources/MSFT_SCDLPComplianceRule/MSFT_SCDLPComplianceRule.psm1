@@ -298,7 +298,12 @@ function Set-TargetResource
         $CreationParams = $PSBoundParameters
         if ($null -ne $CreationParams.ContentContainsSensitiveInformation)
         {
-            $CreationParams.ContentContainsSensitiveInformation = Get-SCDLPSensitiveInformation $CreationParams.ContentContainsSensitiveInformation
+            $value = @()
+            foreach ($item in $CreationParams.ContentContainsSensitiveInformation)
+            {
+                $value += Get-SCDLPSensitiveInformation $item
+            }
+            $CreationParams.ContentContainsSensitiveInformation = $value
         }
 
         $CreationParams.Remove("GlobalAdminAccount")
@@ -311,7 +316,13 @@ function Set-TargetResource
     {
         Write-Verbose "Rule {$($CurrentRule.Name)} already exists and needs to. Updating Rule."
         $UpdateParams = $PSBoundParameters
-        $UpdateParams.ContentContainsSensitiveInformation = Get-SCDLPSensitiveInformation -SensitiveInformation $UpdateParams.ContentContainsSensitiveInformation
+
+        $value = @()
+        foreach ($item in $UpdateParams.ContentContainsSensitiveInformation)
+        {
+            $value += Get-SCDLPSensitiveInformation $item
+        }
+        $UpdateParams.ContentContainsSensitiveInformation = Get-SCDLPSensitiveInformation -SensitiveInformation $value
         $UpdateParams.Remove("GlobalAdminAccount")
         $UpdateParams.Remove("Ensure")
         $UpdateParams.Remove("Name")
@@ -565,53 +576,59 @@ function ConvertTo-SCDLPSensitiveInformationString
 function Get-SCDLPSensitiveInformation
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
+    [OutputType([System.Object[]])]
     param
     (
         [Parameter(Mandatory = $true)]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [System.Object[]]
         $SensitiveInformation
     )
 
-    $result = @{
-        name = $SensitiveInformation.name
-    }
+    $returnValue = @()
 
-    if ($null -ne $SensitiveInformation.id)
+    foreach ($item in $SensitiveInformation)
     {
-        $result.Add("id", $SensitiveInformation.id)
-    }
+        $result = @{
+            name = $item.name
+        }
 
-    if ($null -ne $SensitiveInformation.maxconfidence)
-    {
-        $result.Add("maxconfidence", $SensitiveInformation.maxconfidence)
-    }
+        if ($null -ne $item.id)
+        {
+            $result.Add("id", $item.id)
+        }
 
-    if ($null -ne $SensitiveInformation.minconfidence)
-    {
-        $result.Add("minconfidence", $SensitiveInformation.minconfidence)
-    }
+        if ($null -ne $item.maxconfidence)
+        {
+            $result.Add("maxconfidence", $item.maxconfidence)
+        }
 
-    if ($null -ne $SensitiveInformation.rulePackId)
-    {
-        $result.Add("rulePackId", $SensitiveInformation.rulePackId)
-    }
+        if ($null -ne $item.minconfidence)
+        {
+            $result.Add("minconfidence", $item.minconfidence)
+        }
 
-    if ($null -ne $SensitiveInformation.classifiertype)
-    {
-        $result.Add("classifiertype", $SensitiveInformation.classifiertype)
-    }
+        if ($null -ne $item.rulePackId)
+        {
+            $result.Add("rulePackId", $item.rulePackId)
+        }
 
-    if ($null -ne $SensitiveInformation.mincount)
-    {
-        $result.Add("mincount", $SensitiveInformation.mincount)
-    }
+        if ($null -ne $item.classifiertype)
+        {
+            $result.Add("classifiertype", $item.classifiertype)
+        }
 
-    if ($null -ne $SensitiveInformation.maxcount)
-    {
-        $result.Add("maxcount", $SensitiveInformation.maxcount)
+        if ($null -ne $item.mincount)
+        {
+            $result.Add("mincount", $item.mincount)
+        }
+
+        if ($null -ne $item.maxcount)
+        {
+            $result.Add("maxcount", $item.maxcount)
+        }
+        $returnValue += $result
     }
-    return $result
+    return $returnValue
 }
 
 Export-ModuleMember -Function *-TargetResource

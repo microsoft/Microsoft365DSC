@@ -406,7 +406,7 @@ Configuration Master
             BlockAccess                         = $True;
             Ensure                              = "Present";
             GlobalAdminAccount                  = $GlobalAdmin
-            ContentContainsSensitiveInformation = MSFT_SCDLPSensitiveInformation
+            ContentContainsSensitiveInformation = @(MSFT_SCDLPSensitiveInformation
             {
                 name = 'U.S. Social Security Number (SSN)'
                 id = 'a44669fe-0d48-453d-a9b1-2cc83f2cba77'
@@ -415,7 +415,17 @@ Configuration Master
                 classifiertype = 'Content'
                 mincount = '1'
                 maxcount = '-1'
-            };
+            }
+            MSFT_SCDLPSensitiveInformation
+            {
+                name = 'Azure DocumentDB Auth Key'
+                id = '0f587d92-eb28-44a9-bd1c-90f2892b47aa'
+                maxconfidence = '100'
+                minconfidence = '85'
+                classifiertype = 'Content'
+                mincount = '1'
+                maxcount = '-1'
+            })
         }
 
         SCFilePlanPropertyAuthority FilePlanPropertyAuthority
