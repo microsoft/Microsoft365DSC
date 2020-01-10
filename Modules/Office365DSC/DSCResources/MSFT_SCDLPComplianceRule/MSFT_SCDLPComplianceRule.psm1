@@ -31,7 +31,7 @@ function Get-TargetResource
         $Comment,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ContentContainsSensitiveInformation,
 
         [Parameter()]
@@ -218,7 +218,7 @@ function Set-TargetResource
         $Comment,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ContentContainsSensitiveInformation,
 
         [Parameter()]
@@ -361,7 +361,7 @@ function Test-TargetResource
         $Comment,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ContentContainsSensitiveInformation,
 
         [Parameter()]

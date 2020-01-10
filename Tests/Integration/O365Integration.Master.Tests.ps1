@@ -408,7 +408,13 @@ Configuration Master
             GlobalAdminAccount                  = $GlobalAdmin
             ContentContainsSensitiveInformation = MSFT_SCDLPSensitiveInformation
             {
-                name = "U.S. Social Security Number (SSN)"
+                name = 'U.S. Social Security Number (SSN)'
+                id = 'a44669fe-0d48-453d-a9b1-2cc83f2cba77'
+                maxconfidence = '100'
+                minconfidence = '-1'
+                classifiertype = 'Content'
+                mincount = '1'
+                maxcount = '-1'
             };
         }
 
