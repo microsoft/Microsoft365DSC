@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* SCDLPComplianceRule
+  * Fixed an issue with multiple SensitiveInformation objects;
 * TeamsEmergencyCallingPolicy
   * Initial Release;
 * TeamsEmergencyCallRoutingPolicy
