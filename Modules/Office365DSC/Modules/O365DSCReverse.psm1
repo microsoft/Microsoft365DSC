@@ -106,24 +106,12 @@ function Start-O365ConfigurationExtract
         Write-Information "Extracting O365AdminAuditLogConfig..."
         try
         {
-            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                -Platform ExchangeOnline `
-                -ErrorAction SilentlyContinue
-
-            $O365AdminAuditLogConfig = Get-AdminAuditLogConfig
-
-            $O365AdminAuditLogConfigModulePath = Join-Path -Path $PSScriptRoot `
+            $ModulePath = Join-Path -Path $PSScriptRoot `
                 -ChildPath "..\DSCResources\MSFT_O365AdminAuditLogConfig\MSFT_O365AdminAuditLogConfig.psm1" `
                 -Resolve
 
-            $value = "Disabled"
-            if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
-            {
-                $value = "Enabled"
-            }
-
-            Import-Module $O365AdminAuditLogConfigModulePath | Out-Null
-            $DSCContent += Export-TargetResource -UnifiedAuditLogIngestionEnabled $value -GlobalAdminAccount $GlobalAdminAccount -IsSingleInstance 'Yes'
+            Import-Module $ModulePath | Out-Null
+            $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
         }
         catch
         {
@@ -171,12 +159,19 @@ function Start-O365ConfigurationExtract
     {
         Write-Information "Extracting EXOAntiPhishRule..."
 
-        $ModulePath = Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\DSCResources\MSFT_EXOAntiPhishRule\MSFT_EXOAntiPhishRule.psm1" `
-            -Resolve
+        try
+        {
+            $ModulePath = Join-Path -Path $PSScriptRoot `
+                -ChildPath "..\DSCResources\MSFT_EXOAntiPhishRule\MSFT_EXOAntiPhishRule.psm1" `
+                -Resolve
 
-        Import-Module $ModulePath | Out-Null
-        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+            Import-Module $ModulePath | Out-Null
+            $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Could not connect to Exchange Online" -Source "[O365DSCReverse]EXOAntiPhishRule"
+        }
     }
     #endregion
 
