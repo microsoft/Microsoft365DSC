@@ -31,7 +31,7 @@ function Get-TargetResource
         $Comment,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ContentContainsSensitiveInformation,
 
         [Parameter()]
@@ -129,6 +129,22 @@ function Get-TargetResource
         {
             $NotifyAllowOverrideValue = $PolicyRule.NotifyAllowOverride.Replace(' ', '').Split(',')
         }
+
+        [array] $SensitiveInfo = @($PolicyRule.ContentContainsSensitiveInformation[0])
+
+        if ($null -ne $SensitiveInfo.groups)
+        {
+            $groups = $SensitiveInfo.groups
+            $SensitiveInfo = @()
+            foreach ($group in $groups)
+            {
+                foreach ($siEntry in $group.sensitivetypes)
+                {
+                    $SensitiveInfo += [System.Collections.Hashtable]$siEntry
+                }
+            }
+        }
+
         $result = @{
             Ensure                              = 'Present'
             Name                                = $PolicyRule.Name
@@ -137,7 +153,7 @@ function Get-TargetResource
             BlockAccess                         = $PolicyRule.BlockAccess
             BlockAccessScope                    = $PolicyRule.BlockAccessScope
             Comment                             = $PolicyRule.Comment
-            ContentContainsSensitiveInformation = $PolicyRule.ContentContainsSensitiveInformation[0]
+            ContentContainsSensitiveInformation = $SensitiveInfo
             ContentPropertyContainsWords        = $PolicyRule.ContentPropertyContainsWords
             Disabled                            = $PolicyRule.Disabled
             GenerateAlert                       = $PolicyRule.GenerateAlert
@@ -202,7 +218,7 @@ function Set-TargetResource
         $Comment,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ContentContainsSensitiveInformation,
 
         [Parameter()]
@@ -282,7 +298,12 @@ function Set-TargetResource
         $CreationParams = $PSBoundParameters
         if ($null -ne $CreationParams.ContentContainsSensitiveInformation)
         {
-            $CreationParams.ContentContainsSensitiveInformation = Get-SCDLPSensitiveInformation $CreationParams.ContentContainsSensitiveInformation
+            $value = @()
+            foreach ($item in $CreationParams.ContentContainsSensitiveInformation)
+            {
+                $value += Get-SCDLPSensitiveInformation $item
+            }
+            $CreationParams.ContentContainsSensitiveInformation = $value
         }
 
         $CreationParams.Remove("GlobalAdminAccount")
@@ -295,7 +316,13 @@ function Set-TargetResource
     {
         Write-Verbose "Rule {$($CurrentRule.Name)} already exists and needs to. Updating Rule."
         $UpdateParams = $PSBoundParameters
-        $UpdateParams.ContentContainsSensitiveInformation = Get-SCDLPSensitiveInformation -SensitiveInformation $UpdateParams.ContentContainsSensitiveInformation
+
+        $value = @()
+        foreach ($item in $UpdateParams.ContentContainsSensitiveInformation)
+        {
+            $value += Get-SCDLPSensitiveInformation $item
+        }
+        $UpdateParams.ContentContainsSensitiveInformation = Get-SCDLPSensitiveInformation -SensitiveInformation $value
         $UpdateParams.Remove("GlobalAdminAccount")
         $UpdateParams.Remove("Ensure")
         $UpdateParams.Remove("Name")
@@ -345,7 +372,7 @@ function Test-TargetResource
         $Comment,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ContentContainsSensitiveInformation,
 
         [Parameter()]
@@ -453,6 +480,9 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
 
+    Test-MSCloudLogin -Platform SecurityComplianceCenter `
+        -CloudCredential $GlobalAdminAccount
+
     $InformationPreference = "Continue"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -468,12 +498,18 @@ function Export-TargetResource
     {
         Write-Information "    - [$i/$($rules.Length)] $($rule.Name)"
         $result = Get-TargetResource -Name $rule.Name -Policy $rule.ParentPolicyName -GlobalAdminAccount $GlobalAdminAccount
-        $result.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -SensitiveInformationHash $result.ContentContainsSensitiveInformation
+
+        $IsCIMArray = $false
+        if ($result.ContentContainsSensitiveInformation.Length -gt 1)
+        {
+            $IsCIMArray = $true
+        }
+        $result.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $result.ContentContainsSensitiveInformation
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $partialContent = "        SCDLPComplianceRule " + (New-GUID).ToString() + "`r`n"
         $partialContent += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation"
+        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsCIMArray
 
         $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $partialContent += "        }`r`n"
@@ -487,101 +523,112 @@ function Export-TargetResource
 function ConvertTo-SCDLPSensitiveInformationString
 {
     [CmdletBinding()]
-    [OutputType([System.String])]
+    [OutputType([System.String[]])]
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]
-        $SensitiveInformationHash
+        [System.Object[]]
+        $InformationArray
     )
+    $result = @()
 
-    $StringContent = "MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
-    $StringContent += "                name = '$($SensitiveInformationHash.name)'`r`n"
-
-    if ($null -ne $SensitiveInformationHash.id)
+    foreach ($SensitiveInformationHash in $InformationArray)
     {
-        $StringContent += "                id = '$($SensitiveInformationHash.id)'`r`n"
-    }
+        $StringContent = "MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
+        $StringContent += "                name = '$($SensitiveInformationHash.name)'`r`n"
 
-    if ($null -ne $SensitiveInformationHash.maxconfidence)
-    {
-        $StringContent += "                maxconfidence = '$($SensitiveInformationHash.maxconfidence)'`r`n"
-    }
+        if ($null -ne $SensitiveInformationHash.id)
+        {
+            $StringContent += "                id = '$($SensitiveInformationHash.id)'`r`n"
+        }
 
-    if ($null -ne $SensitiveInformationHash.minconfidence)
-    {
-        $StringContent += "                minconfidence = '$($SensitiveInformationHash.minconfidence)'`r`n"
-    }
+        if ($null -ne $SensitiveInformationHash.maxconfidence)
+        {
+            $StringContent += "                maxconfidence = '$($SensitiveInformationHash.maxconfidence)'`r`n"
+        }
 
-    if ($null -ne $SensitiveInformationHash.classifiertype)
-    {
-        $StringContent += "                classifiertype = '$($SensitiveInformationHash.classifiertype)'`r`n"
-    }
+        if ($null -ne $SensitiveInformationHash.minconfidence)
+        {
+            $StringContent += "                minconfidence = '$($SensitiveInformationHash.minconfidence)'`r`n"
+        }
 
-    if ($null -ne $SensitiveInformationHash.mincount)
-    {
-        $StringContent += "                mincount = '$($SensitiveInformationHash.mincount)'`r`n"
-    }
+        if ($null -ne $SensitiveInformationHash.classifiertype)
+        {
+            $StringContent += "                classifiertype = '$($SensitiveInformationHash.classifiertype)'`r`n"
+        }
 
-    if ($null -ne $SensitiveInformationHash.maxcount)
-    {
-        $StringContent += "                maxcount = '$($SensitiveInformationHash.maxcount)'`r`n"
-    }
+        if ($null -ne $SensitiveInformationHash.mincount)
+        {
+            $StringContent += "                mincount = '$($SensitiveInformationHash.mincount)'`r`n"
+        }
 
-    $StringContent += "            }"
-    return $StringContent
+        if ($null -ne $SensitiveInformationHash.maxcount)
+        {
+            $StringContent += "                maxcount = '$($SensitiveInformationHash.maxcount)'`r`n"
+        }
+
+        $StringContent += "            }`r`n"
+        $result += $StringContent
+    }
+    return $result
 }
 
 function Get-SCDLPSensitiveInformation
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
+    [OutputType([System.Object[]])]
     param
     (
         [Parameter(Mandatory = $true)]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [System.Object[]]
         $SensitiveInformation
     )
 
-    $result = @{
-        name = $SensitiveInformation.name
-    }
+    $returnValue = @()
 
-    if ($null -ne $SensitiveInformation.id)
+    foreach ($item in $SensitiveInformation)
     {
-        $result.Add("id", $SensitiveInformation.id)
-    }
+        $result = @{
+            name = $item.name
+        }
 
-    if ($null -ne $SensitiveInformation.maxconfidence)
-    {
-        $result.Add("maxconfidence", $SensitiveInformation.maxconfidence)
-    }
+        if ($null -ne $item.id)
+        {
+            $result.Add("id", $item.id)
+        }
 
-    if ($null -ne $SensitiveInformation.minconfidence)
-    {
-        $result.Add("minconfidence", $SensitiveInformation.minconfidence)
-    }
+        if ($null -ne $item.maxconfidence)
+        {
+            $result.Add("maxconfidence", $item.maxconfidence)
+        }
 
-    if ($null -ne $SensitiveInformation.rulePackId)
-    {
-        $result.Add("rulePackId", $SensitiveInformation.rulePackId)
-    }
+        if ($null -ne $item.minconfidence)
+        {
+            $result.Add("minconfidence", $item.minconfidence)
+        }
 
-    if ($null -ne $SensitiveInformation.classifiertype)
-    {
-        $result.Add("classifiertype", $SensitiveInformation.classifiertype)
-    }
+        if ($null -ne $item.rulePackId)
+        {
+            $result.Add("rulePackId", $item.rulePackId)
+        }
 
-    if ($null -ne $SensitiveInformation.mincount)
-    {
-        $result.Add("mincount", $SensitiveInformation.mincount)
-    }
+        if ($null -ne $item.classifiertype)
+        {
+            $result.Add("classifiertype", $item.classifiertype)
+        }
 
-    if ($null -ne $SensitiveInformation.maxcount)
-    {
-        $result.Add("maxcount", $SensitiveInformation.maxcount)
+        if ($null -ne $item.mincount)
+        {
+            $result.Add("mincount", $item.mincount)
+        }
+
+        if ($null -ne $item.maxcount)
+        {
+            $result.Add("maxcount", $item.maxcount)
+        }
+        $returnValue += $result
     }
-    return $result
+    return $returnValue
 }
 
 Export-ModuleMember -Function *-TargetResource
