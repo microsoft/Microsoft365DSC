@@ -525,10 +525,6 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $UserPrincipalName,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -538,20 +534,50 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-    $PSBoundParameters.Add("Password", $GlobalAdminAccount)
-    $result = Get-TargetResource @PSBoundParameters
-    $content = ""
-    if ($null -ne $result.UserPrincipalName)
+
+    Test-MSCloudLogin -Platform MSOnline -CloudCredential $GlobalAdminAccount
+    $users = Get-MsolUser
+    $content = ''
+    $partialContent = ""
+    $i = 1
+    foreach ($user in $users)
     {
-        $result.Password = Resolve-Credentials -UserName "globaladmin"
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $modulePath = $PSScriptRoot + "\MSFT_O365User.psm1"
-        $content = "        O365User " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath
-        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Password"
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
+        Write-Information "    - [$i/$($users.Length)] $($user.UserPrincipalName)"
+        $userUPN = $user.UserPrincipalName
+        if ($userUPN)
+        {
+            $params = @{
+                UserPrincipalName   = $userUPN
+                GlobalAdminAccount  = $GlobalAdminAccount
+                Password            = $GlobalAdminAccount
+            }
+
+            $result = Get-TargetResource @params
+            $content = ""
+            if ($null -ne $result.UserPrincipalName)
+            {
+                $result.Password = Resolve-Credentials -UserName "globaladmin"
+                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                $modulePath = $PSScriptRoot + "\MSFT_O365User.psm1"
+                $content += "        O365User " + (New-GUID).ToString() + "`r`n"
+                $content += "        {`r`n"
+                $partialContent = Get-DSCBlock -Params $result -ModulePath $modulePath
+                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "Password"
+                if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
+                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+                }
+
+                if ($partialContent.ToLower().IndexOf($principal.ToLower()) -gt 0)
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape($principal.ToLower()), "`$(`$OrganizationName.Split('.')[0])"
+                }
+                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                $content += "        }`r`n"
+            }
+        }
+        $i++
     }
     return $content
 }

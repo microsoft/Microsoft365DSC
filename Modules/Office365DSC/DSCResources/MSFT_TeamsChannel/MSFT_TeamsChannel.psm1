@@ -270,13 +270,36 @@ function Export-TargetResource
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        TeamsChannel " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform MicrosoftTeams
+
+    $teams = Get-Team
+    $j = 1
+    $content = ''
+    foreach ($team in $Teams)
+    {
+        $channels = Get-TeamChannel -GroupId $team.GroupId
+        $i = 1
+        Write-Information "    > [$j/$($Teams.Length)] Team {$($team.DisplayName)}"
+        foreach ($channel in $channels)
+        {
+            Write-Information "        - [$i/$($channels.Length)] $($channel.DisplayName)"
+            $params = @{
+                TeamName           = $team.DisplayName
+                DisplayName        = $channel.DisplayName
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        TeamsChannel " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
+            $i++
+        }
+        $j++
+    }
     return $content
 }
 

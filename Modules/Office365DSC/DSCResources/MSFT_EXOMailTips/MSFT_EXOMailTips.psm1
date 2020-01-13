@@ -239,10 +239,6 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Organization,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -252,12 +248,34 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-    $result = Get-TargetResource @PSBoundParameters
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform ExchangeOnline `
+        -ErrorAction SilentlyContinue
+
+    $params = @{
+        GlobalAdminAccount = $GlobalAdminAccount
+        Organization       = $GlobalAdminAccount.UserName.Split("@")[1]
+    }
+    $result = Get-TargetResource @params
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        EXOMailTips " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $partialContent += Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+    if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+    {
+        $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $organization + "`""), "`$OrganizationName"
+    }
+    if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+    {
+        $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
+    }
+    if ($partialContent.ToLower().IndexOf($principal.ToLower() + ".") -gt 0)
+    {
+        $partialContent = $partialContent -ireplace [regex]::Escape($principal + "."), "`$(`$OrganizationName.Split('.')[0])."
+    }
+    $content += $partialContent
     $content += "        }`r`n"
     return $content
 }

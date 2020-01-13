@@ -189,14 +189,6 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Path,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -206,14 +198,66 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        SPOApp " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $convertedContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += $convertedContent
-    $content += "        }`r`n"
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
+    $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
+    Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
+        -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
+
+    if (-not [string]::IsNullOrEmpty($tenantAppCatalogUrl))
+    {
+        $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
+        $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+        $allFiles = $spfxFiles + $appFiles
+        $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
+        $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
+
+        $partialContent = ""
+        $content = ''
+        $i = 1
+        foreach ($file in $allFiles)
+        {
+            Write-Information "    - [$i/$($allFiles.Length)] $($file.Name)"
+            $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl }
+
+            $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
+            $app = Get-PnpApp -Identity $identity -ErrorAction SilentlyContinue
+
+            if ($null -eq $app)
+            {
+                $app = Get-PnpApp -Identity $file.Title -ErrorAction SilentlyContinue
+            }
+            if ($null -ne $app)
+            {
+                $params = @{
+                    GlobalAdminAccount = $GlobalAdminAccount
+                    Identity           = $identity
+                    Path               = ("`$PSScriptRoot\" + $file.Name)
+                }
+                $result = Get-TargetResource @params
+                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                $content += "        SPOApp " + (New-GUID).ToString() + "`r`n"
+                $content += "        {`r`n"
+                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+                $convertedContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                $content += $convertedContent
+                $content += "        }`r`n"
+            }
+            $i++
+        }
+        foreach ($file in $allFiles)
+        {
+            $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
+            $appFileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length - 1]
+             Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $appFileName -AsFile | Out-Null
+        }
+    }
+    else
+    {
+        Write-Information "    * App Catalog is not configured on tenant. Cannot extract information about SharePoint apps."
+    }
     return $content
 }
 

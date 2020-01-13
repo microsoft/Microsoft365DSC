@@ -315,6 +315,23 @@ function Export-TargetResource
         Start-Sleep -Seconds 1
     } while ($count -ne 0)
     Write-Progress -Activity "SPOUserProfileProperty Extraction" -PercentComplete 100 -Status "Completed" -Completed
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
+    if ($GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
+    }
+    if ($result.ToLower().Contains($organization.ToLower()) -or `
+            $result.ToLower().Contains($principal.ToLower()))
+    {
+        $result = $result -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
+        $result = $result -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+    }
     return $result
 }
 
