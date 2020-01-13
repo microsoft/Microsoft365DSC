@@ -369,23 +369,26 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-    $ClientAccessRules = Get-ClientAccessRule
-
-    $content = ""
-    foreach ($ClientAccessRule in $ClientAccessRules)
+    if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-ClientAccessRule)
     {
-        $params = @{
-            Identity           = $ClientAccessRule.Identity
-            Action             = $ClientAccessRule
-            GlobalAdminAccount = $GlobalAdminAccount
+        $ClientAccessRules = Get-ClientAccessRule
+
+        $content = ""
+        foreach ($ClientAccessRule in $ClientAccessRules)
+        {
+            $params = @{
+                Identity           = $ClientAccessRule.Identity
+                Action             = $ClientAccessRule.Action
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        EXOClientAccessRule " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
         }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        EXOClientAccessRule " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
     }
     return $content
 }

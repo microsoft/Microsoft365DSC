@@ -51,11 +51,6 @@ function Get-TargetResource
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ('Default' -ne $Identity)
-    {
-        throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Identity value of 'Default'"
-    }
-
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
@@ -140,11 +135,6 @@ function Set-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-
-    if ('Default' -ne $Identity)
-    {
-        throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Identity value of 'Default'"
-    }
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
@@ -252,7 +242,7 @@ function Export-TargetResource
     {
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
-            IsSingleInstance   = $true
+            IsSingleInstance   = 'Yes'
             Identity           = $HostedOutboundSpamFilterPolicy.Identity
         }
         $result = Get-TargetResource @params

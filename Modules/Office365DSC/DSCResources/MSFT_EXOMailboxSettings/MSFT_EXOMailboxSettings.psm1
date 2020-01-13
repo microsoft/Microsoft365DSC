@@ -187,6 +187,8 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -194,8 +196,7 @@ function Export-TargetResource
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline `
-        -ErrorAction SilentlyContinue
+        -Platform ExchangeOnline
 
     $mailboxes = Get-Mailbox
 
@@ -205,7 +206,7 @@ function Export-TargetResource
     {
         Write-Information "    - [$i/$($mailboxes.Length)] $($mailbox.Name)"
         $mailboxName = $mailbox.Name
-        if ($mailboxName)
+        if (![System.String]::IsNullOrEmpty($mailboxName))
         {
             $params = @{
                 GlobalAdminAccount = $GlobalAdminAccount

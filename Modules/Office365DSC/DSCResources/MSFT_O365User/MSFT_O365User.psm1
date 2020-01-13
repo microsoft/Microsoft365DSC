@@ -536,6 +536,17 @@ function Export-TargetResource
     #endregion
 
     Test-MSCloudLogin -Platform MSOnline -CloudCredential $GlobalAdminAccount
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
+    if ($GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
+    }
     $users = Get-MsolUser
     $content = ''
     $partialContent = ""
@@ -544,7 +555,7 @@ function Export-TargetResource
     {
         Write-Information "    - [$i/$($users.Length)] $($user.UserPrincipalName)"
         $userUPN = $user.UserPrincipalName
-        if ($userUPN)
+        if (-not [System.String]::IsNullOrEmpty($userUPN))
         {
             $params = @{
                 UserPrincipalName   = $userUPN
@@ -558,11 +569,11 @@ function Export-TargetResource
             {
                 $result.Password = Resolve-Credentials -UserName "globaladmin"
                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                $modulePath = $PSScriptRoot + "\MSFT_O365User.psm1"
                 $content += "        O365User " + (New-GUID).ToString() + "`r`n"
                 $content += "        {`r`n"
-                $partialContent = Get-DSCBlock -Params $result -ModulePath $modulePath
+                $partialContent = Get-DSCBlock -Params $result -ModulePath  $PSScriptRoot
                 $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "Password"
+                $partialContent += Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
                 if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
                 {
                     $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
@@ -573,7 +584,7 @@ function Export-TargetResource
                 {
                     $partialContent = $partialContent -ireplace [regex]::Escape($principal.ToLower()), "`$(`$OrganizationName.Split('.')[0])"
                 }
-                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                $content += $partialContent
                 $content += "        }`r`n"
             }
         }

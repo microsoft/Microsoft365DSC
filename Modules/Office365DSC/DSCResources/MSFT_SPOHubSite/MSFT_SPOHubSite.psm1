@@ -453,6 +453,8 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -492,7 +494,6 @@ function Export-TargetResource
         $content += "        {`r`n"
         $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
-        $partialContent = Export-TargetResource -Url $hub.SiteUrl -GlobalAdminAccount $GlobalAdminAccount
         if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
             $partialContent.ToLower().Contains($principal.ToLower()))
         {

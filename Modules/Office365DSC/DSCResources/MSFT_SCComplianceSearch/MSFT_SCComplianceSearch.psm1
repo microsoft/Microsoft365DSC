@@ -333,7 +333,6 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount

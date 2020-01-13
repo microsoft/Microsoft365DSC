@@ -330,9 +330,9 @@ function Export-TargetResource
         -Platform ExchangeOnline `
         -ErrorAction SilentlyContinue
     $content = ''
-    $SafeAttachmentRules = Get-SafeAttachmentRule
     if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
     {
+        $SafeAttachmentRules = Get-SafeAttachmentRule
         foreach ($SafeAttachmentRule in $SafeAttachmentRules)
         {
             $params = @{

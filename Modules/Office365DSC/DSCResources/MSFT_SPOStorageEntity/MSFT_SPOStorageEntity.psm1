@@ -250,17 +250,11 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Key,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $SiteUrl,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -294,8 +288,8 @@ function Export-TargetResource
             GlobalAdminAccount = $GlobalAdminAccount
             Key                = $storageEntity.Key
             SiteUrl            = $centralAdminUrl
-
         }
+
         Write-Information "    [$i/$($storageEntities.Length)] {$($storageEntity.Key)}"
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"

@@ -192,6 +192,8 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -201,7 +203,9 @@ function Export-TargetResource
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PnP
+
     $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
+
     Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
         -CloudCredential $GlobalAdminAccount `
         -Platform PnP
@@ -217,10 +221,11 @@ function Export-TargetResource
         $partialContent = ""
         $content = ''
         $i = 1
+        $Global:filesToDownload = @()
         foreach ($file in $allFiles)
         {
             Write-Information "    - [$i/$($allFiles.Length)] $($file.Name)"
-            $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl }
+            $Global:filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl }
 
             $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
             $app = Get-PnpApp -Identity $identity -ErrorAction SilentlyContinue

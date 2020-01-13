@@ -245,30 +245,44 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-    $ATPPolicies = Get-AtpPolicyForO365
-    $content = ""
-    foreach ($atpPolicy in $ATPPolicies)
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
+    if ($GlobalAdminAccount.UserName.Contains("@"))
     {
-        $params = @{
-            IsSingleInstance   = 'Yes'
-            Identity           = $atpPolicy.Identity
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
-        $result = Get-TargetResource @params
-        if ($result.Ensure -eq "Present")
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+        if ($organization.IndexOf(".") -gt 0)
         {
-            $organization = $GlobalAdminAccount.UserName.Split("@")[1]
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        EXOAtpPolicyForO365 " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $currentDSCBlock += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
-            if ($currentDSCBlock.ToLower().IndexOf($organization.ToLower()) -gt 0)
-            {
-                $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape($organization), "`$OrganizationName"
+            $principal = $organization.Split(".")[0]
+        }
+    }
+    if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-AtpPolicyForO365)
+    {
+        $ATPPolicies = Get-AtpPolicyForO365
+        $content = ""
+        foreach ($atpPolicy in $ATPPolicies)
+        {
+            $params = @{
+                IsSingleInstance   = 'Yes'
+                Identity           = $atpPolicy.Identity
+                GlobalAdminAccount = $GlobalAdminAccount
             }
-            $content += $currentDSCBlock
-            $content += "        }`r`n"
+            $result = Get-TargetResource @params
+            if ($result.Ensure -eq "Present")
+            {
+                $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                $content += "        EXOAtpPolicyForO365 " + (New-GUID).ToString() + "`r`n"
+                $content += "        {`r`n"
+                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+                $currentDSCBlock += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
+                if ($currentDSCBlock.ToLower().IndexOf($organization.ToLower()) -gt 0)
+                {
+                    $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape($organization), "`$OrganizationName"
+                }
+                $content += $currentDSCBlock
+                $content += "        }`r`n"
+            }
         }
     }
     return $content
