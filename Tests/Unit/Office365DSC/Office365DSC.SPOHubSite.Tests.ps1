@@ -39,7 +39,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-SPOSite -MockWith {
-                throw
+
             }
 
             It "Should return absent from the Get method" {

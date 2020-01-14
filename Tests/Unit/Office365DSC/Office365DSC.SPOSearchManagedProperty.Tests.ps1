@@ -229,7 +229,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Safe                        = $false
                 Aliases                     = @("Alias1")
                 TokenNormalization          = $true
-                CompleteMatching            = $false
+                CompleteMatching            = $true
                 LanguageNeutralTokenization = $true
                 FinerQueryTokenization      = $false
                 CompanyNameExtraction       = $true
