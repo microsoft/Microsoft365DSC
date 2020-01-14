@@ -225,7 +225,7 @@ function Export-TargetResource
         foreach ($file in $allFiles)
         {
             Write-Information "    - [$i/$($allFiles.Length)] $($file.Name)"
-            $Global:filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl }
+            $Global:filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl}
 
             $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
             $app = Get-PnpApp -Identity $identity -ErrorAction SilentlyContinue
@@ -252,11 +252,15 @@ function Export-TargetResource
             }
             $i++
         }
+
+        Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
+            -CloudCredential $GlobalAdminAccount `
+            -Platform PnP
         foreach ($file in $allFiles)
         {
             $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
             $appFileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length - 1]
-             Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $appFileName -AsFile | Out-Null
+            Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $appFileName -AsFile -Force | Out-Null
         }
     }
     else

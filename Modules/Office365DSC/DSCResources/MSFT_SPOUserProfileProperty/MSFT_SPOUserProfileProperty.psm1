@@ -206,12 +206,6 @@ function Export-TargetResource
         $batchSize = 1
     }
 
-    # Define the Path of the Util module. This is due to the fact that inside the Start-Job
-    # the module is not imported and simply doing Import-Module Office365DSC doesn't work.
-    # Therefore, in order to be able to call into Invoke-O365DSCCommand we need to implicitly
-    # load the module.
-    $UtilModulePath = $PSScriptRoot + "\..\..\Modules\Office365DSCUtil.psm1"
-
     # For each batch of 8 items, start and asynchronous background PowerShell job. Each
     # job will be given the name of the current resource followed by its ID;
     $i = 1
@@ -228,17 +222,13 @@ function Export-TargetResource
                 $ScriptRoot,
 
                 [Parameter(Mandatory = $true)]
-                [System.String]
-                $UtilModulePath,
-
-                [Parameter(Mandatory = $true)]
                 [System.Management.Automation.PSCredential]
                 $GlobalAdminAccount
             )
 
             # Implicitly load the Office365DSCUtil.psm1 module in order to be able to call
             # into the Invoke-O36DSCCommand cmdlet;
-            Import-Module $UtilModulePath -Force
+            Import-Module ($ScriptRoot + "\MSFT_SPOUserProfileProperty.psm1") -Force | Out-Null
 
             # Invoke the logic that extracts the all the Property Bag values of the current site using the
             # the invokation wrapper that handles throttling;
@@ -260,7 +250,9 @@ function Export-TargetResource
 
                         if ($result.Ensure -eq "Present")
                         {
-                            Import-Module $params.UtilModulePath -Force | Out-Null
+                            Import-Module ($params.ScriptRoot + "\..\..\Modules\Office365DSCUtil.psm1") -Force | Out-Null
+                            Import-Module ($params.ScriptRoot + "\..\..\Modules\O365DSCTelemetryEngine.psm1") -Force | Out-Null
+
                             $result.Properties = ConvertTo-SPOUserProfilePropertyInstanceString -Properties $result.Properties
                             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
                             $content += "        SPOUserProfileProperty " + (New-GUID).ToString() + "`r`n"
@@ -278,7 +270,7 @@ function Export-TargetResource
                 return $content
             }
             return $returnValue
-        } -ArgumentList @($batch, $PSScriptRoot, $UtilModulePath, $GlobalAdminAccount) | Out-Null
+        } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount) | Out-Null
         $i++
     }
 

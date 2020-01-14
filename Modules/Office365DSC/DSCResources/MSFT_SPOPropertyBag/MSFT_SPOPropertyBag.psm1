@@ -215,7 +215,8 @@ function Export-TargetResource
     # the module is not imported and simply doing Import-Module Office365DSC doesn't work.
     # Therefore, in order to be able to call into Invoke-O365DSCCommand we need to implicitly
     # load the module.
-    $UtilModulePath = $PSScriptRoot + "\..\..\Modules\Office365DSCUtil.psm1"
+    $UtilModulePaths = @(, `
+        $PSScriptRoot + "\..\..\Modules\O365DSCTelemetryEngine.psm1")
 
     # For each batch of 8 items, start and asynchronous background PowerShell job. Each
     # job will be given the name of the current resource followed by its ID;
@@ -233,17 +234,13 @@ function Export-TargetResource
                 $ScriptRoot,
 
                 [Parameter(Mandatory = $true)]
-                [System.String]
-                $UtilModulePath,
-
-                [Parameter(Mandatory = $true)]
                 [System.Management.Automation.PSCredential]
                 $GlobalAdminAccount
             )
 
             # Implicitly load the Office365DSCUtil.psm1 module in order to be able to call
             # into the Invoke-O36DSCCommand cmdlet;
-            Import-Module $UtilModulePath -Force
+            Import-Module ($ScriptRoot + "\..\..\Modules\Office365DSCUtil.psm1") -Force | Out-Null
 
             # Invoke the logic that extracts the all the Property Bag values of the current site using the
             # the invokation wrapper that handles throttling;
@@ -280,7 +277,8 @@ function Export-TargetResource
                                 }
 
                                 $CurrentModulePath = $params.ScriptRoot + "\MSFT_SPOPropertyBag.psm1"
-                                Import-Module $CurrentModulePath -Force
+                                Import-Module $CurrentModulePath -Force | Out-Null
+                                Import-Module ($params.ScriptRoot + "\..\..\Modules\O365DSCTelemetryEngine.psm1") -Force | Out-Null
                                 $result = Get-TargetResource @getValues
                                 $result.Value = [System.String]$result.Value
                                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
@@ -300,7 +298,7 @@ function Export-TargetResource
                 return $content
             }
             return $returnValue
-        } -ArgumentList @($batch, $PSScriptRoot, $UtilModulePath, $GlobalAdminAccount) | Out-Null
+        } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount) | Out-Null
         $i++
     }
 
