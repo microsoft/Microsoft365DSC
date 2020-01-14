@@ -174,9 +174,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Key                = "DSCKey"
                 GlobalAdminAccount = $GlobalAdminAccount
-                SiteUrl            = "https://contoso-admin.sharepoint.com"
             }
 
             Mock -CommandName Get-PnPStorageEntity -MockWith {

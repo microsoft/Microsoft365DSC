@@ -198,8 +198,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Identity             = 'contoso.com'
                 GlobalAdminAccount   = $GlobalAdminAccount
-
-                SafeAttachmentPolicy = 'TestPolicy'
             }
 
             It "Should Reverse Engineer resource from the Export method" {

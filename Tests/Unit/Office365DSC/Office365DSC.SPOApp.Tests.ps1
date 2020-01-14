@@ -104,8 +104,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Ident              = "MyTestApp"
-                Path               = "C:\Test\MyTestApp.sppkg"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

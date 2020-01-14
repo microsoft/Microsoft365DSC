@@ -216,11 +216,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "When Invalid values are used" -Fixture {
             $testParams = @{
-                Name                        = "TestMP"
-                Type                        = "Text"
-                LanguageNeutralTokenization = $true
-                CompleteMatching            = $true
-                Ensure                      = "Present"
                 GlobalAdminAccount          = $GlobalAdminAccount
             }
 

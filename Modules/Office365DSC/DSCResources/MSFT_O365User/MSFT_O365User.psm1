@@ -573,7 +573,7 @@ function Export-TargetResource
                 $content += "        {`r`n"
                 $partialContent = Get-DSCBlock -Params $result -ModulePath  $PSScriptRoot
                 $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "Password"
-                $partialContent += Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
                 if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
                 {
                     $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"

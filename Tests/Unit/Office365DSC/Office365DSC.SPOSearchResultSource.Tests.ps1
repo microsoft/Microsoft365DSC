@@ -125,11 +125,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the Result Source already exists" -Fixture {
             $Script:RecentExtract = $null
             $testParams = @{
-                Name               = "This is a Test"
-                Description        = "New Result Source"
-                Protocol           = "Local"
-                Type               = "SharePoint"
-                Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
             Mock -CommandName Get-PnPSearchConfiguration -MockWith {
