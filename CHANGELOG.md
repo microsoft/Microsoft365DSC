@@ -20,6 +20,8 @@
   * Streamlined the looping logic to simplify development process
     for new resources;
 * Metadata
+  * Updated Microsoft.Online.SharePoint.PowerShell to version
+    16.0.19515.12000;
   * Updated ReverseDSC dependency to version 2.0.0.2;
   * Updated SharePointPnPPowerShellOnline to version 3.17.2001.2;
 

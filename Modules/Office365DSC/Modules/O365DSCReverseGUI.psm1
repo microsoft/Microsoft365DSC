@@ -91,7 +91,7 @@ function Show-O365GUI
         $chckO365OrgCustomizationSetting.AutoSize = $true;
         $chckO365OrgCustomizationSetting.Name = "chckO365OrgCustomizationSetting"
         $chckO365OrgCustomizationSetting.Checked = $true
-        $chckO365OrgCustomizationSetting.Text = "Office 365 Organization Customization Setting"
+        $chckO365OrgCustomizationSetting.Text = "Organization Customization Settings"
         $pnlO365.Controls.Add($chckO365OrgCustomizationSetting);
 
         $chckO365User = New-Object System.Windows.Forms.CheckBox
@@ -300,7 +300,7 @@ function Show-O365GUI
         $pnlSPO = New-Object System.Windows.Forms.Panel
         $pnlSPO.Top = 88 + $topBannerHeight
         $pnlSPO.Left = $SecondColumnLeft
-        $pnlSPO.Height = 320
+        $pnlSPO.Height = 340
         $pnlSPO.Width = 300
         $pnlSPO.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -395,8 +395,17 @@ function Show-O365GUI
         $chckSPOSiteDesignRights.Text = "Site Design Rights"
         $pnlSPO.Controls.Add($chckSPOSiteDesignRights)
 
+        $chckSPOSiteGroup = New-Object System.Windows.Forms.CheckBox
+        $chckSPOSiteGroup.Top = 220
+        $chckSPOSiteGroup.AutoSize = $true;
+        $chckSPOSiteGroup.Name = "chckSPOSiteGroup"
+        $chckSPOSiteGroup.Checked = $false #TODO enable after SPO Mgmt Shell bug is fixed
+        $chckSPOSiteGroup.Enabled = $false #TODO enable after SPO Mgmt Shell bug is fixed
+        $chckSPOSiteGroup.Text = "Site Groups"
+        $pnlSPO.Controls.Add($chckSPOSiteGroup)
+
         $chckSPOStorageEntity = New-Object System.Windows.Forms.CheckBox
-        $chckSPOStorageEntity.Top = 220
+        $chckSPOStorageEntity.Top = 240
         $chckSPOStorageEntity.AutoSize = $true;
         $chckSPOStorageEntity.Name = "chckSPOStorageEntity"
         $chckSPOStorageEntity.Checked = $true
@@ -404,7 +413,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOStorageEntity)
 
         $chckSPOTenantCDNPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckSPOTenantCDNPolicy.Top = 240
+        $chckSPOTenantCDNPolicy.Top = 260
         $chckSPOTenantCDNPolicy.AutoSize = $true;
         $chckSPOTenantCDNPolicy.Name = "chckSPOTenantCDNPolicy"
         $chckSPOTenantCDNPolicy.Checked = $true
@@ -412,7 +421,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOTenantCDNPolicy)
 
         $chckSPOTenantSettings = New-Object System.Windows.Forms.CheckBox
-        $chckSPOTenantSettings.Top = 260
+        $chckSPOTenantSettings.Top = 280
         $chckSPOTenantSettings.AutoSize = $true;
         $chckSPOTenantSettings.Name = "chckSPOTenantSettings"
         $chckSPOTenantSettings.Checked = $true
@@ -420,7 +429,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOTenantSettings)
 
         $chckSPOTheme = New-Object System.Windows.Forms.CheckBox
-        $chckSPOTheme.Top = 280
+        $chckSPOTheme.Top = 300
         $chckSPOTheme.AutoSize = $true;
         $chckSPOTheme.Name = "chckSPOTheme"
         $chckSPOTheme.Checked = $true
@@ -428,7 +437,7 @@ function Show-O365GUI
         $pnlSPO.Controls.Add($chckSPOTheme)
 
         $chckSPOUserProfileProperty = New-Object System.Windows.Forms.CheckBox
-        $chckSPOUserProfileProperty.Top = 300
+        $chckSPOUserProfileProperty.Top = 320
         $chckSPOUserProfileProperty.AutoSize = $true;
         $chckSPOUserProfileProperty.Name = "chckSPOUserProfileProperty"
         $chckSPOUserProfileProperty.Checked = $true
@@ -642,7 +651,7 @@ function Show-O365GUI
         $pnlTeams = New-Object System.Windows.Forms.Panel
         $pnlTeams.Top = 88 + $topBannerHeight
         $pnlTeams.Left = $ThirdColumnLeft
-        $pnlTeams.Height = 240
+        $pnlTeams.Height = 340
         $pnlTeams.Width = 300
         $pnlTeams.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -678,24 +687,64 @@ function Show-O365GUI
         $chckTeamsClientConfiguration.Text = "Client Configuration"
         $pnlTeams.Controls.Add($chckTeamsClientConfiguration)
 
+        $chckTeamsEmergencyCallingPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsEmergencyCallingPolicy.Top = 80
+        $chckTeamsEmergencyCallingPolicy.AutoSize = $true;
+        $chckTeamsEmergencyCallingPolicy.Name = "chckTeamsEmergencyCallingPolicy"
+        $chckTeamsEmergencyCallingPolicy.Checked = $true
+        $chckTeamsEmergencyCallingPolicy.Text = "Emergency Calling Policies"
+        $pnlTeams.Controls.Add($chckTeamsEmergencyCallingPolicy)
+
+        $chckTeamsCallRoutingPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsCallRoutingPolicy.Top = 100
+        $chckTeamsCallRoutingPolicy.AutoSize = $true;
+        $chckTeamsCallRoutingPolicy.Name = "chckTeamsCallRoutingPolicy"
+        $chckTeamsCallRoutingPolicy.Checked = $true
+        $chckTeamsCallRoutingPolicy.Text = "Emergency Call Routing Policies"
+        $pnlTeams.Controls.Add($chckTeamsCallRoutingPolicy)
+
         $chckTeamsGuestCallingConfiguration = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsGuestCallingConfiguration.Top = 80
+        $chckTeamsGuestCallingConfiguration.Top = 120
         $chckTeamsGuestCallingConfiguration.AutoSize = $true;
         $chckTeamsGuestCallingConfiguration.Name = "chckTeamsGuestCallingConfiguration"
         $chckTeamsGuestCallingConfiguration.Checked = $true
         $chckTeamsGuestCallingConfiguration.Text = "Guest Calling Configuration"
         $pnlTeams.Controls.Add($chckTeamsGuestCallingConfiguration)
 
+        $chckTeamsGuestMeetingConfiguration = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsGuestMeetingConfiguration.Top = 140
+        $chckTeamsGuestMeetingConfiguration.AutoSize = $true;
+        $chckTeamsGuestMeetingConfiguration.Name = "chckTeamsGuestMeetingConfiguration"
+        $chckTeamsGuestMeetingConfiguration.Checked = $true
+        $chckTeamsGuestMeetingConfiguration.Text = "Guest Meeting Configuration"
+        $pnlTeams.Controls.Add($chckTeamsGuestMeetingConfiguration)
+
+        $chckTeamsGuestMessagingConfiguration = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsGuestMessagingConfiguration.Top = 160
+        $chckTeamsGuestMessagingConfiguration.AutoSize = $true;
+        $chckTeamsGuestMessagingConfiguration.Name = "chckTeamsGuestMessagingConfiguration"
+        $chckTeamsGuestMessagingConfiguration.Checked = $true
+        $chckTeamsGuestMessagingConfiguration.Text = "Guest Messaging Configuration"
+        $pnlTeams.Controls.Add($chckTeamsGuestMessagingConfiguration)
+
         $chckTeamsMeetingBroadcastConfiguration = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsMeetingBroadcastConfiguration.Top = 100
+        $chckTeamsMeetingBroadcastConfiguration.Top = 180
         $chckTeamsMeetingBroadcastConfiguration.AutoSize = $true;
         $chckTeamsMeetingBroadcastConfiguration.Name = "chckTeamsMeetingBroadcastConfiguration"
         $chckTeamsMeetingBroadcastConfiguration.Checked = $true
         $chckTeamsMeetingBroadcastConfiguration.Text = "Meeting Broadcast Configuration"
         $pnlTeams.Controls.Add($chckTeamsMeetingBroadcastConfiguration)
 
+        $chckTeamsMeetingBroadcastPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsMeetingBroadcastPolicy.Top = 200
+        $chckTeamsMeetingBroadcastPolicy.AutoSize = $true;
+        $chckTeamsMeetingBroadcastPolicy.Name = "chckTeamsMeetingBroadcastPolicy"
+        $chckTeamsMeetingBroadcastPolicy.Checked = $true
+        $chckTeamsMeetingBroadcastPolicy.Text = "Meeting Broadcast Policies"
+        $pnlTeams.Controls.Add($chckTeamsMeetingBroadcastPolicy)
+
         $chckTeamsMeetingConfiguration = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsMeetingConfiguration.Top = 120
+        $chckTeamsMeetingConfiguration.Top = 220
         $chckTeamsMeetingConfiguration.AutoSize = $true;
         $chckTeamsMeetingConfiguration.Name = "chckTeamsMeetingConfiguration"
         $chckTeamsMeetingConfiguration.Checked = $true
@@ -703,7 +752,7 @@ function Show-O365GUI
         $pnlTeams.Controls.Add($chckTeamsMeetingConfiguration)
 
         $chckTeamsMeetingPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsMeetingPolicy.Top = 140
+        $chckTeamsMeetingPolicy.Top = 240
         $chckTeamsMeetingPolicy.AutoSize = $true;
         $chckTeamsMeetingPolicy.Name = "chckTeamsMeetingPolicy"
         $chckTeamsMeetingPolicy.Checked = $true
@@ -711,7 +760,7 @@ function Show-O365GUI
         $pnlTeams.Controls.Add($chckTeamsMeetingPolicy)
 
         $chckTeamsMessagingPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsMessagingPolicy.Top = 160
+        $chckTeamsMessagingPolicy.Top = 260
         $chckTeamsMessagingPolicy.AutoSize = $true;
         $chckTeamsMessagingPolicy.Name = "chckTeamsMessagingPolicy"
         $chckTeamsMessagingPolicy.Checked = $true
@@ -719,7 +768,7 @@ function Show-O365GUI
         $pnlTeams.Controls.Add($chckTeamsMessagingPolicy)
 
         $chckTeamsTeam = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsTeam.Top = 180
+        $chckTeamsTeam.Top = 280
         $chckTeamsTeam.AutoSize = $true;
         $chckTeamsTeam.Name = "chckTeamsTeam"
         $chckTeamsTeam.Checked = $true
@@ -727,7 +776,7 @@ function Show-O365GUI
         $pnlTeams.Controls.Add($chckTeamsTeam)
 
         $chckTeamsUpgradeConfiguration = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsUpgradeConfiguration.Top = 200
+        $chckTeamsUpgradeConfiguration.Top = 300
         $chckTeamsUpgradeConfiguration.AutoSize = $true;
         $chckTeamsUpgradeConfiguration.Name = "chckTeamsUpgradeConfiguration"
         $chckTeamsUpgradeConfiguration.Checked = $true
@@ -735,7 +784,7 @@ function Show-O365GUI
         $pnlTeams.Controls.Add($chckTeamsUpgradeConfiguration)
 
         $chckTeamsUser = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsUser.Top = 220
+        $chckTeamsUser.Top = 320
         $chckTeamsUser.AutoSize = $true;
         $chckTeamsUser.Name = "chckTeamsUser"
         $chckTeamsUser.Checked = $true
@@ -808,14 +857,12 @@ function Show-O365GUI
         $chckPPPowerAppsEnvironment.AutoSize = $true;
         $chckPPPowerAppsEnvironment.Name = "chckPPPowerAppsEnvironment"
         $chckPPPowerAppsEnvironment.Checked = $true
-        $chckPPPowerAppsEnvironment.Enabled = $true
         $chckPPPowerAppsEnvironment.Text = "PowerApps Environment"
         $pnlPP.Controls.Add($chckPPPowerAppsEnvironment)
 
         $chckAllPP = New-Object System.Windows.Forms.CheckBox
         $chckAllPP.Left = $fourthColumnLeft + 280
         $chckAllPP.Top = $topBannerHeight + $pnlOD.Height + 135
-        $chckAllPP.Enabled = $true
         $chckAllPP.Checked = $true
         $chckAllPP.AutoSize = $true
         $chckAllPP.Add_CheckedChanged( { SectionChanged -Control $chckAllPP -Panel $pnlPP })
