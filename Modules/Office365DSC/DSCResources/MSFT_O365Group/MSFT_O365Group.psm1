@@ -397,7 +397,7 @@ function Export-TargetResource
         {
             $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$(`$OrganizationName.Split('.')[0])"
         }
-        $partialContent += $partialContent
+        $content += $partialContent
         $content += "        }`r`n"
         $i++
     }
