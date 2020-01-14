@@ -216,11 +216,43 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "When Invalid values are used" -Fixture {
             $testParams = @{
+                Name                        = "TestMP"
+                Type                        = "Text"
+                Description                 = "This is a test"
+                Searchable                  = $false
+                FullTextContext             = 0
+                Queryable                   = $false
+                Retrievable                 = $false
+                AllowMultipleValues         = $false
+                Refinable                   = "Yes"
+                Sortable                    = "Yes"
+                Safe                        = $false
+                Aliases                     = @("Alias1")
+                TokenNormalization          = $true
+                CompleteMatching            = $false
+                LanguageNeutralTokenization = $true
+                FinerQueryTokenization      = $false
+                CompanyNameExtraction       = $true
+                Ensure                      = "Present"
                 GlobalAdminAccount          = $GlobalAdminAccount
             }
 
             It "Should throw and errors" {
                 { Set-TargetResource @testParams } | Should Throw "You cannot have CompleteMatching set to True if LanguageNeutralTokenization is set to True"
+            }
+        }
+
+        Context -Name "ReverseDSC Tests" -Fixture {
+            $testParams = @{
+                GlobalAdminAccount          = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-PnPSearchConfiguration -MockWith {
+                return $existingValueXML
+            }
+
+            It "Should Reverse Engineer resource from the Export method" {
+                Export-TargetResource @testParams
             }
         }
     }

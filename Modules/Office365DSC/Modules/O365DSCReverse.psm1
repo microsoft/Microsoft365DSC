@@ -203,7 +203,8 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region Copy Downloaded files back into output folder
-    if ($Global:filesToDownload.Count -gt 0)
+    $filesToDownload = Get-AllSPOPackages -GlobalAdminAccount $GlobalAdminAccount
+    if ($filesToDownload.Count -gt 0)
     {
         foreach ($fileToCopy in $Global:filesToDownload)
         {

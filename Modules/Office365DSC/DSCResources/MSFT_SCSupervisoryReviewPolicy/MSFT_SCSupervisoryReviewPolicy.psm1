@@ -198,7 +198,17 @@ function Export-TargetResource
         -ErrorAction SilentlyContinue
 
     $policies = Get-SupervisoryReviewPolicyV2
-    $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
+    if ($GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
+    }
 
     $totalPolicies = $policies.Length
     if ($null -eq $totalPolicies)

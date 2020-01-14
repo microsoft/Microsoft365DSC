@@ -212,20 +212,16 @@ function Export-TargetResource
 
     if (-not [string]::IsNullOrEmpty($tenantAppCatalogUrl))
     {
-        $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
-        $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
-        $allFiles = $spfxFiles + $appFiles
+        $filesToDownload = Get-AllSPOPackages -GlobalAdminAccount $GlobalAdminAccount
         $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
         $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
 
         $partialContent = ""
         $content = ''
         $i = 1
-        $Global:filesToDownload = @()
-        foreach ($file in $allFiles)
+        foreach ($file in $filesToDownload)
         {
-            Write-Information "    - [$i/$($allFiles.Length)] $($file.Name)"
-            $Global:filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl}
+            Write-Information "    - [$i/$($filesToDownload.Length)] $($file.Name)"
 
             $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
             $app = Get-PnpApp -Identity $identity -ErrorAction SilentlyContinue
@@ -256,7 +252,7 @@ function Export-TargetResource
         Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
             -CloudCredential $GlobalAdminAccount `
             -Platform PnP
-        foreach ($file in $allFiles)
+        foreach ($file in $filesToDownload)
         {
             $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
             $appFileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length - 1]

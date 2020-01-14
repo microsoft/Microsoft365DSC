@@ -20,6 +20,17 @@ function Remove-PSSession{
     )
 }
 
+function Get-SPOAdministrationUrl
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+}
+
 function Test-MSCloudLogin
 {
     [CmdletBinding()]

@@ -2055,3 +2055,35 @@ function Install-O365DSCDevBranch
     Copy-Item "$extractPath\Office365DSC-Dev\Modules\Office365DSC" -Destination $currentVersionPath -Recurse -Force
     #endregion
 }
+
+function Get-AllSPOPackages
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
+
+    $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
+
+    Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
+        -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
+
+    $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
+    $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+
+    $allFiles = $spfxFiles + $appFiles
+    $filesToDOwnload = @()
+
+    foreach ($file in $allFiles)
+    {
+        $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title}
+    }
+    return $filesToDownload
+}

@@ -217,7 +217,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
                 return @{
-                    Organization                          = $Organization
+                    Organization                          = "contoso.onmicrosoft.com"
                     MailTipsAllTipsEnabled                = $True
                     MailTipsGroupMetricsEnabled           = $True
                     MailTipsLargeAudienceThreshold        = $True

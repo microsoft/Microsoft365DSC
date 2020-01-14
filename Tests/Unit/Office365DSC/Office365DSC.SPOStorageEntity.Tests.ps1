@@ -26,6 +26,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
+
+        Mock -CommandName Get-SPOAdministrationUrl -MockWith {
+
+        }
+
         # Test contexts
         Context -Name "Check SPOStorageEntity" -Fixture {
             $testParams = @{
@@ -179,7 +184,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPStorageEntity -MockWith {
                 return @{
-                    Key = "DSCKey"
+                    Key         = "DSCKey"
+                    Value       = "Test storage entity"
+                    EntityScope = "Site"
+                    Description = "Description created by DSC"
+                    Comment     = "Comment from DSC"
                 }
             }
 
