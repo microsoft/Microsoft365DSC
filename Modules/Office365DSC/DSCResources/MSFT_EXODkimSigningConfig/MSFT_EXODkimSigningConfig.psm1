@@ -248,10 +248,6 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -261,13 +257,52 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        EXODkimSigningConfig " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
-    $content += "        }`r`n"
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform ExchangeOnline
+
+    if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-DkimSigningConfig)
+    {
+        $DkimSigningConfigs = Get-DkimSigningConfig
+
+        $i = 1
+        $content = ""
+        $organization = ""
+        $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
+        if ($GlobalAdminAccount.UserName.Contains("@"))
+        {
+            $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+            if ($organization.IndexOf(".") -gt 0)
+            {
+                $principal = $organization.Split(".")[0]
+            }
+        }
+        foreach ($DkimSigningConfig in $DkimSigningConfigs)
+        {
+            Write-Verbose -Message "    - [$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)}"
+            $params = @{
+                Identity           = $DkimSigningConfig.Identity
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        EXODkimSigningConfig " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
+            }
+            if ($partialContent.ToLower().IndexOf($principal.ToLower() + ".") -gt 0)
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape($principal + "."), "`$(`$OrganizationName.Split('.')[0])."
+            }
+            $content += Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName 'GlobalAdminAccount'
+            $content += "        }`r`n"
+            $i++
+        }
+    }
     return $content
 }
 

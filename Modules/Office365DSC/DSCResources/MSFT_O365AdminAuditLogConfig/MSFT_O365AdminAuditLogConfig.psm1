@@ -184,20 +184,6 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Yes')]
-        [String]
-        $IsSingleInstance,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [string]$Ensure = 'Present',
-
-        [Parameter(Mandatory = $true)]
-        [ValidateSet('Enabled', 'Disabled')]
-        [System.String]
-        $UnifiedAuditLogIngestionEnabled,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -207,7 +193,22 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-    $result = Get-TargetResource @PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform ExchangeOnline
+
+    $O365AdminAuditLogConfig = Get-AdminAuditLogConfig
+    $value = "Disabled"
+    if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
+    {
+        $value = "Enabled"
+    }
+
+    $params = @{
+        IsSingleInstance                = 'Yes'
+        UnifiedAuditLogIngestionEnabled = $value
+        GlobalAdminAccount              = $GlobalAdminAccount
+    }
+    $result = Get-TargetResource @params
 
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        O365AdminAuditLogConfig " + (New-GUID).ToString() + "`r`n"

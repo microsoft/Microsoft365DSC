@@ -190,8 +190,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Identity           = 'contoso.com'
-                Action             = 'DenyAccess'
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

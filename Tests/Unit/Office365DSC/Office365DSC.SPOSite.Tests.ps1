@@ -950,8 +950,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Url                = "https://contoso.com/sites/TestSite"
-                Owner              = "testuser@contoso.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

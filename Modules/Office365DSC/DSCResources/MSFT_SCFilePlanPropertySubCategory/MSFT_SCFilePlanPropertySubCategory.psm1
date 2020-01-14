@@ -185,7 +185,7 @@ function Export-TargetResource
     #endregion
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
-    $Properties = Get-FilePlanPropertySubCategory
+    [array]$Properties = Get-FilePlanPropertySubCategory
 
     $i = 1
     $content = ""

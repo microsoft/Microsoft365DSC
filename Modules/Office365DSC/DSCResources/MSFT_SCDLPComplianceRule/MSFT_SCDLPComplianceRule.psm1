@@ -506,12 +506,12 @@ function Export-TargetResource
         }
         $result.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $result.ContentContainsSensitiveInformation
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $partialContent = "        SCDLPComplianceRule " + (New-GUID).ToString() + "`r`n"
-        $partialContent += "        {`r`n"
+        $DSCContent = "        SCDLPComplianceRule " + (New-GUID).ToString() + "`r`n"
+        $DSCContent += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsCIMArray
 
-        $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $partialContent += "        }`r`n"
         $DSCContent += $partialContent
         $i++

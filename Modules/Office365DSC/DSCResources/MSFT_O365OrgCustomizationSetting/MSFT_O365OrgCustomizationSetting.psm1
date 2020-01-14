@@ -28,7 +28,7 @@ function Get-TargetResource
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
     $orgConfig = Get-OrganizationConfig
@@ -130,6 +130,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)

@@ -26,6 +26,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
+
+        Mock -CommandName Get-SPOAdministrationUrl -MockWith {
+            return 'https://contoso-admin.sharepoint.com'
+        }
+
         # Test contexts
         Context -Name "Check SPOStorageEntity" -Fixture {
             $testParams = @{
@@ -169,19 +174,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-
-
-
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Key                = "DSCKey"
                 GlobalAdminAccount = $GlobalAdminAccount
-                SiteUrl            = "https://contoso-admin.sharepoint.com"
             }
 
             Mock -CommandName Get-PnPStorageEntity -MockWith {
                 return @{
-                    Key = "DSCKey"
+                    Key                = "DSCKey"
+                    Value              = "Test storage entity"
+                    EntityScope        = "Site"
+                    Description        = "Description created by DSC"
+                    Comment            = "Comment from DSC"
+                    Ensure             = "Present"
+                    SiteUrl            = "https://contoso-admin.sharepoint.com"
+                    GlobalAdminAccount = $GlobalAdminAccount
                 }
             }
 

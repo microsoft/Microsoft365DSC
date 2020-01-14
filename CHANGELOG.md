@@ -19,8 +19,12 @@
   * Initial Release;
 * TeamsMeetingBroadcastPolicy
   * Initial Release;
+* ReverseDSC
+  * Streamlined the looping logic to simplify development process
+    for new resources;
 * Metadata
   * Updated ReverseDSC dependency to version 2.0.0.2;
+  * Updated SharePointPnPPowerShellOnline to version 3.17.2001.2;
 
 ## 1.0.1.1395
 

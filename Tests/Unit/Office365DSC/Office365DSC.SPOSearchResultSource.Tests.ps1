@@ -152,6 +152,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
             }
         }
+
+        Context -Name "ReverseDSC Tests" -Fixture {
+            $testParams = @{
+                GlobalAdminAccount          = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-PnPSearchConfiguration -MockWith {
+                return $existingValueXML
+            }
+
+            It "Should Reverse Engineer resource from the Export method" {
+                Export-TargetResource @testParams
+            }
+        }
     }
 }
 
