@@ -38,7 +38,7 @@ function Get-TargetResource
         Write-Verbose -Message "Connecting to PnP from the Get method"
         Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
             -ConnectionUrl $Url `
-            -Platform PnP
+            -Platform PnP | Out-Null
         Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
         $property = Get-PnPPropertyBag
         Write-Verbose -Message "Properties obtained correctly"
@@ -211,13 +211,6 @@ function Export-TargetResource
         $batchSize = 1
     }
 
-    # Define the Path of the Util module. This is due to the fact that inside the Start-Job
-    # the module is not imported and simply doing Import-Module Office365DSC doesn't work.
-    # Therefore, in order to be able to call into Invoke-O365DSCCommand we need to implicitly
-    # load the module.
-    $UtilModulePaths = @(, `
-        $PSScriptRoot + "\..\..\Modules\O365DSCTelemetryEngine.psm1")
-
     # For each batch of 8 items, start and asynchronous background PowerShell job. Each
     # job will be given the name of the current resource followed by its ID;
     $i = 1
@@ -237,6 +230,7 @@ function Export-TargetResource
                 [System.Management.Automation.PSCredential]
                 $GlobalAdminAccount
             )
+            $WarningPreference = 'SilentlyContinue'
 
             # Implicitly load the Office365DSCUtil.psm1 module in order to be able to call
             # into the Invoke-O36DSCCommand cmdlet;
@@ -246,6 +240,7 @@ function Export-TargetResource
             # the invokation wrapper that handles throttling;
             $returnValue = ""
             $returnValue += Invoke-O365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
+                $VerbosePreference = 'SilentlyContinue'
                 $params = $args[0]
                 $content = ""
                 foreach ($item in $params.instances)
@@ -257,7 +252,7 @@ function Export-TargetResource
                         {
                             Test-MSCloudLogin -CloudCredential $params.GlobalAdminAccount `
                                 -ConnectionUrl $siteUrl `
-                                -Platform PnP
+                                -Platform PnP | Out-Null
                         }
                         catch
                         {
@@ -316,12 +311,12 @@ function Export-TargetResource
             if ($job.JobStateInfo.State -eq "Complete")
             {
                 $result += Receive-Job -name $job.name
-                Remove-Job -name $job.name
+                Remove-Job -name $job.name | Out-Null
                 $jobsCompleted++
             }
             elseif ($job.JobStateInfo.State -eq 'Failed')
             {
-                Remove-Job -name $job.name
+                Remove-Job -name $job.name | Out-Null
                 Write-Warning "{$($job.name)} failed"
                 break
             }

@@ -225,6 +225,7 @@ function Export-TargetResource
                 [System.Management.Automation.PSCredential]
                 $GlobalAdminAccount
             )
+            $WarningPreference = 'SilentlyContinue'
 
             # Implicitly load the Office365DSCUtil.psm1 module in order to be able to call
             # into the Invoke-O36DSCCommand cmdlet;
@@ -233,6 +234,7 @@ function Export-TargetResource
             # Invoke the logic that extracts the all the Property Bag values of the current site using the
             # the invokation wrapper that handles throttling;
             $returnValue = Invoke-O365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
+                $WarningPreference = 'SilentlyContinue'
                 $params = $args[0]
                 $content = ""
                 foreach ($instance in $params.Instances)

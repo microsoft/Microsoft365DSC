@@ -29,7 +29,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of member $User to Team $TeamName"
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform MicrosoftTeams
 
     $nullReturn = @{
@@ -232,6 +232,7 @@ function Export-TargetResource
     $result = ""
 
     # Get all Site Collections in tenant;
+    Test-MSCloudLogin -Platform MicrosoftTeams -CloudCredential $GlobalAdminAccount
     $instances = Get-Team
     if ($instances.Length -ge $MaxProcesses)
     {
@@ -263,6 +264,7 @@ function Export-TargetResource
                 [System.Management.Automation.PSCredential]
                 $GlobalAdminAccount
             )
+            $WarningPreference = 'SilentlyContinue'
 
             Import-Module ($ScriptRoot + "\..\..\Modules\Office365DSCUtil.psm1") -Force | Out-Null
 
@@ -270,6 +272,7 @@ function Export-TargetResource
             # the invokation wrapper that handles throttling;
             $returnValue = ""
             $returnValue += Invoke-O365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
+                $WarningPreference = 'SilentlyContinue'
                 $params = $args[0]
                 $content = ""
                 $j = 1
@@ -286,7 +289,6 @@ function Export-TargetResource
                         $principal = $organization.Split(".")[0]
                     }
                 }
-                $InformationPreference = 'Continue'
                 foreach ($item in $params.Instances)
                 {
                     foreach ($team in $item)
@@ -314,8 +316,8 @@ function Export-TargetResource
                                 Import-Module ($params.ScriptRoot + "\..\..\Modules\O365DSCTelemetryEngine.psm1") -Force | Out-Null
                                 $result = Get-TargetResource @getParams
                                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                                $partialContent = "        TeamsUser " + (New-GUID).ToString() + "`r`n"
-                                $partialContent += "        {`r`n"
+                                $content += "        TeamsUser " + (New-GUID).ToString() + "`r`n"
+                                $content += "        {`r`n"
                                 $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
                                 $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
                                 $partialContent += "        }`r`n"

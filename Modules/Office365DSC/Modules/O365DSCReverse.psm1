@@ -206,7 +206,7 @@ function Start-O365ConfigurationExtract
     $filesToDownload = Get-AllSPOPackages -GlobalAdminAccount $GlobalAdminAccount
     if ($filesToDownload.Count -gt 0)
     {
-        foreach ($fileToCopy in $Global:filesToDownload)
+        foreach ($fileToCopy in $filesToDownload)
         {
             $filePath = Join-Path $env:Temp $fileToCopy.Name -Resolve
             $destPath = Join-Path $OutputDSCPath $fileToCopy.Name

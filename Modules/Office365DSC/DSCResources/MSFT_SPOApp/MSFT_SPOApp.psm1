@@ -49,7 +49,7 @@ function Get-TargetResource
     try
     {
         Test-MSCloudLogin -Platform PnP `
-            -O365Credential $GlobalAdminAccount
+            -CloudCredential $GlobalAdminAccount
         $app = Get-PnPApp -Identity $Identity -ErrorAction SilentlyContinue
         if ($null -eq $app)
         {
@@ -228,6 +228,7 @@ function Export-TargetResource
 
             if ($null -eq $app)
             {
+                $identity = $file.Title
                 $app = Get-PnpApp -Identity $file.Title -ErrorAction SilentlyContinue
             }
             if ($null -ne $app)
