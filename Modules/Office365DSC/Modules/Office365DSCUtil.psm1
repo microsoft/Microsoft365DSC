@@ -1750,6 +1750,10 @@ function Export-O365Configuration
         $FileName,
 
         [Parameter()]
+        [System.String]
+        $ConfigurationName,
+
+        [Parameter()]
         [System.String[]]
         $ComponentsToExtract,
 
@@ -1766,6 +1770,7 @@ function Export-O365Configuration
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $WarningPreference - 'SilentlyContinue'
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -1796,6 +1801,7 @@ function Export-O365Configuration
                 -Workloads $Workloads `
                 -Path $Path -FileName $FileName `
                 -MaxProcesses $MaxProcesses `
+                -ConfigurationName $ConfigurationName `
                 -Quiet
         }
         elseif ($null -ne $ComponentsToExtract)
@@ -1804,6 +1810,7 @@ function Export-O365Configuration
                 -ComponentsToExtract $ComponentsToExtract `
                 -Path $Path -FileName $FileName `
                 -MaxProcesses $MaxProcesses `
+                -ConfigurationName $ConfigurationName `
                 -Quiet
         }
         else
@@ -1812,6 +1819,7 @@ function Export-O365Configuration
                 -AllComponents `
                 -Path $Path -FileName $FileName `
                 -MaxProcesses $MaxProcesses `
+                -ConfigurationName $ConfigurationName `
                 -Quiet
         }
     }
@@ -1933,8 +1941,8 @@ function Invoke-O365DSCCommand
         $Backoff = 2
     )
 
-    $InformationPreference = 'Continue'
-    $WarningPreference = 'Continue'
+    $InformationPreference = 'SilentlyContinue'
+    $WarningPreference = 'SilentlyContinue'
     $ErrorActionPreference = 'Stop'
     try
     {

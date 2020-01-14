@@ -28,6 +28,10 @@ function Start-O365ConfigurationExtract
         $FileName,
 
         [Parameter()]
+        [System.String]
+        $ConfigurationName = 'O365TenantConfig',
+
+        [Parameter()]
         [ValidateRange(1, 100)]
         $MaxProcesses = 16,
 
@@ -36,6 +40,10 @@ function Start-O365ConfigurationExtract
         [System.String[]]
         $Workloads
     )
+
+    $InformationPreference = "Continue"
+    $VerbosePreference = "SilentlyContinue"
+    $WarningPreference = "SilentlyContinue"
 
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
@@ -49,9 +57,6 @@ function Start-O365ConfigurationExtract
         }
     }
 
-    $InformationPreference = "Continue"
-    $VerbosePreference = "SilentlyContinue"
-    $WarningPreference = "SilentlyContinue"
     $AzureAutomation = $false
 
     $DSCContent = "param (`r`n"
@@ -60,13 +65,20 @@ function Start-O365ConfigurationExtract
     $DSCContent += "    `$GlobalAdminAccount`r`n"
     $DSCContent += ")`r`n`r`n"
 
-    $ConfigName = "O365TenantConfig"
     if (-not [System.String]::IsNullOrEmpty($FileName))
     {
         $FileParts = $FileName.Split('.')
-        $ConfigName = $FileName.Replace('.' + $FileParts[$FileParts.Length - 1], "")
+
+        if ([System.String]::IsNullOrEmpty($ConfigurationName))
+        {
+            $ConfigurationName = $FileName.Replace('.' + $FileParts[$FileParts.Length - 1], "")
+        }
     }
-    $DSCContent += "Configuration $ConfigName`r`n{`r`n"
+    if ([System.String]::IsNullOrEmpty($ConfigurationName))
+    {
+        $ConfigurationName = 'O365TenantConfig'
+    }
+    $DSCContent += "Configuration $ConfigurationName`r`n{`r`n"
     $DSCContent += "    param (`r`n"
     $DSCContent += "        [parameter()]`r`n"
     $DSCContent += "        [System.Management.Automation.PSCredential]`r`n"
