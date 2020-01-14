@@ -1373,8 +1373,6 @@ function Test-Office365DSCParameterState
         [System.String]
         $Source = 'Generic'
     )
-    $VerbosePreference = "Continue"
-    $WarningPreference = "SilentlyContinue"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", "$Source")
@@ -1752,6 +1750,10 @@ function Export-O365Configuration
         $FileName,
 
         [Parameter()]
+        [System.String]
+        $ConfigurationName,
+
+        [Parameter()]
         [System.String[]]
         $ComponentsToExtract,
 
@@ -1768,6 +1770,7 @@ function Export-O365Configuration
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $WarningPreference - 'SilentlyContinue'
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -1798,6 +1801,7 @@ function Export-O365Configuration
                 -Workloads $Workloads `
                 -Path $Path -FileName $FileName `
                 -MaxProcesses $MaxProcesses `
+                -ConfigurationName $ConfigurationName `
                 -Quiet
         }
         elseif ($null -ne $ComponentsToExtract)
@@ -1806,6 +1810,7 @@ function Export-O365Configuration
                 -ComponentsToExtract $ComponentsToExtract `
                 -Path $Path -FileName $FileName `
                 -MaxProcesses $MaxProcesses `
+                -ConfigurationName $ConfigurationName `
                 -Quiet
         }
         else
@@ -1814,6 +1819,7 @@ function Export-O365Configuration
                 -AllComponents `
                 -Path $Path -FileName $FileName `
                 -MaxProcesses $MaxProcesses `
+                -ConfigurationName $ConfigurationName `
                 -Quiet
         }
     }
@@ -1935,8 +1941,8 @@ function Invoke-O365DSCCommand
         $Backoff = 2
     )
 
-    $InformationPreference = 'Continue'
-    $WarningPreference = 'Continue'
+    $InformationPreference = 'SilentlyContinue'
+    $WarningPreference = 'SilentlyContinue'
     $ErrorActionPreference = 'Stop'
     try
     {
@@ -2054,4 +2060,36 @@ function Install-O365DSCDevBranch
     }
     Copy-Item "$extractPath\Office365DSC-Dev\Modules\Office365DSC" -Destination $currentVersionPath -Recurse -Force
     #endregion
+}
+
+function Get-AllSPOPackages
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
+
+    $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
+
+    Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
+        -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
+
+    $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
+    $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+
+    $allFiles = $spfxFiles + $appFiles
+    $filesToDOwnload = @()
+
+    foreach ($file in $allFiles)
+    {
+        $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title}
+    }
+    return $filesToDownload
 }

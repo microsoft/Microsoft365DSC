@@ -184,31 +184,48 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-    $result = Get-TargetResource @PSBoundParameters
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform ExchangeOnline
 
-    $content = ""
-    if ($result.Ensure -eq "Present")
+    $mailboxes = Get-Mailbox
+
+    $i = 1
+    $content = ''
+    foreach ($mailbox in $mailboxes)
     {
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $modulePath = $PSScriptRoot + "\MSFT_EXOMailboxSettings.psm1"
-        $content = "        EXOMailboxSettings " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
+        Write-Information "    - [$i/$($mailboxes.Length)] $($mailbox.Name)"
+        $mailboxName = $mailbox.Name
+        if (![System.String]::IsNullOrEmpty($mailboxName))
+        {
+            $params = @{
+                GlobalAdminAccount = $GlobalAdminAccount
+                DisplayName        = $mailboxName
+            }
+            $result = Get-TargetResource @params
+
+            if ($result.Ensure -eq "Present")
+            {
+                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                $modulePath = $PSScriptRoot + "\MSFT_EXOMailboxSettings.psm1"
+                $content += "        EXOMailboxSettings " + (New-GUID).ToString() + "`r`n"
+                $content += "        {`r`n"
+                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath
+                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                $content += "        }`r`n"
+            }
+        }
+        $i++
     }
     return $content
 }

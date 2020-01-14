@@ -194,27 +194,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Get AntiphishRule fails" -Fixture {
-            $testParams = @{
-                Identity           = 'contoso.com'
-                AntiPhishPolicy    = 'TestPolicy'
-                GlobalAdminAccount = $GlobalAdminAccount
-                Ensure             = "Present"
-            }
-
-            Mock -CommandName Get-AntiPhishRule -MockWith {
-                throw "Error Getting AntiPhishRules"
-            }
-
-            It "Should return false from Test" {
-                Test-TargetResource @testParams | Should Be $false
-            }
-
-            It "Should return Absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
-            }
-        }
-
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount

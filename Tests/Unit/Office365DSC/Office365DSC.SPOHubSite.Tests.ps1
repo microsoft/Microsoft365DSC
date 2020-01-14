@@ -23,6 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
         Mock -CommandName Test-MSCloudLogin -MockWith { }
+        Mock -CommandName New-Office365DSCLogEntry -MockWith {}
 
         # Test contexts
         Context -Name "When the site doesn't already exist" -Fixture {
@@ -51,7 +52,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should throw error in the Set method" {
-                { Set-TargetResource @testParams } | Should throw "The specified Site Collection {$($testPArams.Url)} for SPOHubSite doesn't already exist."
+                { Set-TargetResource @testParams } | Should throw "The specified Site Collection {$($testParams.Url)} for SPOHubSite doesn't already exist."
             }
         }
 
@@ -324,7 +325,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Url                = "https://contoso.com/sites/TestSite"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

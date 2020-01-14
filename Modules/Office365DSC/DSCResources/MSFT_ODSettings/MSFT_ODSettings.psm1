@@ -444,7 +444,7 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPReference = 'Continue'
-    Write-Information "Extracting ODSettings..."
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)

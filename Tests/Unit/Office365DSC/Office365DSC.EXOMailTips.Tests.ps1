@@ -20,7 +20,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.onmicrosoft.com", $secpasswd)
 
         Mock -CommandName Test-MSCloudLogin -MockWith {
 
@@ -212,13 +212,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Organization       = "contoso.onmicrosoft.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
                 return @{
-                    Organization                          = $Organization
+                    Organization                          = "contoso.onmicrosoft.com"
                     MailTipsAllTipsEnabled                = $True
                     MailTipsGroupMetricsEnabled           = $True
                     MailTipsLargeAudienceThreshold        = $True
