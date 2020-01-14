@@ -639,3 +639,22 @@ function Remove-SafeLinksRule
     )
 }
 #endregion
+
+function New-Office365DSCLogEntry
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Error,
+
+        [Parameter()]
+        [System.String]
+        $Message,
+
+        [Parameter()]
+        [System.String]
+        $Source
+    )
+}

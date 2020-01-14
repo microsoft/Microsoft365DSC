@@ -23,6 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
         Mock -CommandName Test-MSCloudLogin -MockWith { }
+        Mock -CommandName New-Office365DSCLogEntry -MockWith {}
 
         # Test contexts
         Context -Name "When the site doesn't already exist" -Fixture {
@@ -39,7 +40,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-SPOSite -MockWith {
-
+                throw
             }
 
             It "Should return absent from the Get method" {
@@ -51,7 +52,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should throw error in the Set method" {
-                { Set-TargetResource @testParams } | Should throw "The specified Site Collection {$($testPArams.Url)} for SPOHubSite doesn't already exist."
+                { Set-TargetResource @testParams } | Should throw "The specified Site Collection {$($testParams.Url)} for SPOHubSite doesn't already exist."
             }
         }
 

@@ -334,8 +334,8 @@ function Export-TargetResource
             }
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $partialContent = "        SCCaseHoldPolicy " + (New-GUID).ToString() + "`r`n"
-            $partialContent += "        {`r`n"
+            $dscContent += "        SCCaseHoldPolicy " + (New-GUID).ToString() + "`r`n"
+            $dscContent += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $partialContent += "        }`r`n"
