@@ -334,7 +334,7 @@ function Export-TargetResource
             $content += "        SCRetentionComplianceRule " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $partialContent += Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
             if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
                     $partialContent.ToLower().Contains($principal.ToLower()))
             {

@@ -337,7 +337,7 @@ function Export-TargetResource
             $partialContent = "        SCCaseHoldPolicy " + (New-GUID).ToString() + "`r`n"
             $partialContent += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $partialContent += "        }`r`n"
             $dscContent += $partialContent
             $j++

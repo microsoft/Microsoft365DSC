@@ -317,7 +317,7 @@ function Export-TargetResource
                                 $partialContent = "        TeamsUser " + (New-GUID).ToString() + "`r`n"
                                 $partialContent += "        {`r`n"
                                 $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
-                                $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
                                 $partialContent += "        }`r`n"
                                 if ($partialContent.ToLower().Contains($organization.ToLower()))
                                 {
