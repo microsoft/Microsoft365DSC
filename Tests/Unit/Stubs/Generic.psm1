@@ -658,3 +658,14 @@ function New-Office365DSCLogEntry
         $Source
     )
 }
+
+function Confirm-ImportedCmdletIsAvailable
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CmdletName
+    )
+}

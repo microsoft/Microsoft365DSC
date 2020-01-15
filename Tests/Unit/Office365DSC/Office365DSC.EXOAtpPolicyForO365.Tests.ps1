@@ -20,7 +20,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.com", $secpasswd)
 
         Mock -CommandName Close-SessionsAndReturnError -MockWith {
 
@@ -44,6 +44,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Mock -CommandName Set-AtpPolicyForO365 -MockWith {
 
+        }
+
+        Mock -CommandName Confirm-ImportedCmdletIsAvailable -MockWith {
+            return $true
         }
 
         # Test contexts
@@ -111,6 +115,43 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the Set method" {
                 Set-TargetResource @testParams
+            }
+        }
+
+        Context -Name "AtpPolicyForO365 does not exist" -Fixture {
+            $testParams = @{
+                IsSingleInstance          = 'Yes'
+                Ensure                    = 'Present'
+                Identity                  = 'Invalid'
+                GlobalAdminAccount        = $GlobalAdminAccount
+                AllowClickThrough         = $false
+                BlockUrls                 = @()
+                EnableATPForSPOTeamsODB   = $true
+                EnableSafeLinksForClients = $true
+                TrackClicks               = $true
+            }
+            Mock -CommandName Get-AtpPolicyForO365 -MockWith {
+                return @{
+                    Ensure                    = 'Present'
+                    Identity                  = 'Default2' # Drift
+                    AllowClickThrough         = $false
+                    BlockUrls                 = @()
+                    EnableATPForSPOTeamsODB   = $false
+                    EnableSafeLinksForClients = $false
+                    TrackClicks               = $false
+                }
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should Be $false
+            }
+
+            It "Should return Absent from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be 'Absent'
+            }
+
+            It "Should throw an Error from the Set method" {
+                {Set-TargetResource @testParams} | Should Throw "EXOAtpPolicyForO365 configurations MUST specify Identity value of 'Default'"
             }
         }
 
