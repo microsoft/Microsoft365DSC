@@ -120,7 +120,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPTenant -MockWith {
                 return @{
-                    GlobalAdminAccount                         = $GlobalAdminAccount
                     SharingCapability                          = 'ExternalUserSharingOnly'
                     ShowEveryoneClaim                          = $false
                     ShowAllUsersClaim                          = $false
