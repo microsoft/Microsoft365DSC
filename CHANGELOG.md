@@ -17,6 +17,7 @@
 * TeamsMeetingBroadcastPolicy
   * Initial Release;
 * ReverseDSC
+  * Updated Graphical User Interface with new resources;
   * Streamlined the looping logic to simplify development process
     for new resources;
 * Metadata
