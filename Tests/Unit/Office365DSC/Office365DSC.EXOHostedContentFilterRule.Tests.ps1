@@ -202,6 +202,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It "Should Reverse Engineer resource from the Export method" {
                 Export-TargetResource @testParams
             }
+
+            Mock -CommandName Get-HostedContentFilterRule -MockWith {
+                return @{
+                    Identity = 'TestRule'
+                }
+            }
         }
     }
 }

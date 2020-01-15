@@ -180,6 +180,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
+            Mock -CommandName Get-SafeAttachmentPolicy -MockWith {
+                return @{
+                    Identity = 'TestSafeAttachmentPolicy'
+                }
+            }
+
             It "Should Reverse Engineer resource from the Export method" {
                 Export-TargetResource @testParams
             }

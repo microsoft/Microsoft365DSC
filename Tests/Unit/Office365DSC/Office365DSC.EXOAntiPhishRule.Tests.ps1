@@ -147,9 +147,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-AntiPhishRule -MockWith {
                 return @{
-                    Ensure                    = 'Present'
                     Identity                  = 'TestRule'
-                    GlobalAdminAccount        = $GlobalAdminAccount
                     AntiPhishPolicy           = 'TestPolicy'
                     Enabled                   = $true
                     Priority                  = 0
@@ -197,6 +195,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-AntiPhishRule -MockWith {
+                return @{
+                    Identity                  = 'TestRule'
+                    AntiPhishPolicy           = 'TestPolicy'
+                    Enabled                   = $true
+                    Priority                  = 0
+                    ExceptIfRecipientDomainIs = @('notdev.contoso.com')
+                    ExceptIfSentTo            = @('nottest@contoso.com')
+                    ExceptIfSentToMemberOf    = @('UnSpecial Group')
+                    RecipientDomainIs         = @('contoso.com')
+                    SentTo                    = @('wrongperson@contoso.com', 'someone@contoso.com')
+                    SentToMemberOf            = @('Some Group', 'Some Other Group', 'DeletedGroup')
+                }
             }
 
             It "Should Reverse Engineer resource from the Export method" {

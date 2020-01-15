@@ -193,6 +193,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
+            Mock -CommandName Get-ClientAccessRule -MockWith {
+                return @{
+                    Identity = 'ExampleCASRule'
+                }
+            }
+
             It "Should Reverse Engineer resource from the Export method" {
                 Export-TargetResource @testParams
             }

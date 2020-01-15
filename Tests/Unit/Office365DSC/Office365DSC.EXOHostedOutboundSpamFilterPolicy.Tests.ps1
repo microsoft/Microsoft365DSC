@@ -101,10 +101,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Get-HostedOutboundSpamFilterPolicy -MockWith {
                 return @{
-                    IsSingleInstance                          = 'Yes'
-                    Ensure                                    = 'Present'
                     Identity                                  = 'Default'
-                    GlobalAdminAccount                        = $GlobalAdminAccount
                     AdminDisplayName                          = $null
                     BccSuspiciousOutboundMail                 = $false
                     BccSuspiciousOutboundAdditionalRecipients = @()

@@ -122,6 +122,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
+            Mock -CommandName Get-MailboxRegionalConfiguration -MockWith {
+                return @{
+                    TimeZone = "Eastern Standard Time"
+                    Language = @{
+                        Name = "en-US"
+                    }
+                }
+            }
+
             It "Should Reverse Engineer resource from the Export method" {
                 Export-TargetResource @testParams
             }

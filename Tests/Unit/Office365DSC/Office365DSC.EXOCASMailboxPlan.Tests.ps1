@@ -118,9 +118,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-CASMailboxPlan -MockWith {
                 return @{
-                    Ensure             = 'Present'
                     Identity           = 'ExchangeOnlineEnterprise-6f6c267b-f8db-4020-b441-f7bd966a0ca0'
-                    GlobalAdminAccount = $GlobalAdminAccount
                     ActiveSyncEnabled  = $true
                     ImapEnabled        = $true
                     OwaMailboxPolicy   = 'OwaMailboxPolicy-Default'
