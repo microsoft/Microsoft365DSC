@@ -240,7 +240,7 @@ function Set-TargetResource
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message "Could not create a new SCCOmplianceSearchAction" -Source $MyInvocation.MyCommand.ModuleName
+            New-Office365DSCLogEntry -Error $_ -Message "Could not create a new SCComplianceSearchAction" -Source $MyInvocation.MyCommand.ModuleName
             Write-Verbose -Message "An error occured creating a new SCComplianceSearchAction"
             throw $_
         }
