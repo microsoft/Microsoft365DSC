@@ -233,10 +233,10 @@ function Export-TargetResource
 
     # Get all Site Collections in tenant;
     Test-MSCloudLogin -Platform MicrosoftTeams -CloudCredential $GlobalAdminAccount
-    $instances = Get-Team
+    [array]$instances = Get-Team
     if ($instances.Length -ge $MaxProcesses)
     {
-        $instances = Split-ArrayByParts -Array $instances -Parts $MaxProcesses
+        [array]$instances = Split-ArrayByParts -Array $instances -Parts $MaxProcesses
         $batchSize = $instances[0].Length
     }
     else
@@ -245,7 +245,7 @@ function Export-TargetResource
         $batchSize = 1
     }
 
-    # For each batch of 8 items, start and asynchronous background PowerShell job. Each
+    # For each batch of items, start and asynchronous background PowerShell job. Each
     # job will be given the name of the current resource followed by its ID;
     $i = 1
     foreach ($batch in $instances)
