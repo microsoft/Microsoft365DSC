@@ -17,12 +17,12 @@ install:
         Install-Module Microsoft.PowerApps.Administration.PowerShell -RequiredVersion 2.0.26 -Force
 
         $webClient = new-object System.Net.WebClient
-        $url = "https://github.com/Microsoft/Office365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_9119-1200_x64_en-us.msi?raw=true"
+        $url = "https://github.com/Microsoft/Office365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_19515-12000_x64_en-us.msi?raw=true"
         $path = $PSScriptRoot + "\SharePointOnlineManagementShell.msi"
         $webClient.DownloadFile($url, $path)
         msiexec /i $path /quiet /qn /norestart
 
-        Install-Module Microsoft.Online.SharePoint.PowerShell -RequiredVersion 16.0.19223.12000 -Force
+        Install-Module Microsoft.Online.SharePoint.PowerShell -RequiredVersion 16.0.19515.12000 -Force
         Import-Module Microsoft.Online.SharePoint.PowerShell -Force
         Import-Module SharePointPnpPowerShellOnline -Force
         Import-Module MSCloudLoginAssistant -Force
