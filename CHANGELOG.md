@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+* SCComplianceTag
+  * Fix an issue where FilePlanProperty values returned
+    from Get-TargetResource where always empty;
 * SCDLPComplianceRule
   * Fixed an issue with multiple SensitiveInformation objects;
 * TeamsEmergencyCallingPolicy
