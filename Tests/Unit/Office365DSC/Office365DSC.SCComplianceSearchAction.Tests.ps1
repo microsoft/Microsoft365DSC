@@ -169,7 +169,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SearchName                          = "Test Search";
                     FileTypeExclusionsForUnindexedItems = $null;
                     IncludeCredential                   = $False;
-                    RetryOnError                        = $False;
+                    Retry                               = $False;
                     ActionScope                         = "IndexedItemsOnly";
                     EnableDedupe                        = $False;
                     Results                             = 'Container url:
@@ -216,7 +216,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SearchName                          = "Test Search";
                     FileTypeExclusionsForUnindexedItems = $null;
                     IncludeCredential                   = $False;
-                    RetryOnError                        = $False;
+                    Retry                               = $False;
                     ActionScope                         = "IndexedItemsOnly";
                     EnableDedupe                        = $False;
                     Results                             = 'Container url:
@@ -269,7 +269,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SearchName                          = "Test Search";
                     FileTypeExclusionsForUnindexedItems = $null;
                     IncludeCredential                   = $False;
-                    RetryOnError                        = $False;
+                    Retry                               = $False;
                     ActionScope                         = "IndexedItemsOnly";
                     EnableDedupe                        = $False;
                     Results                             = 'Container url:
@@ -326,7 +326,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SearchName                          = "Test Search";
                     FileTypeExclusionsForUnindexedItems = $null;
                     IncludeCredential                   = $False;
-                    RetryOnError                        = $False;
+                    Retry                               = $False;
                     ActionScope                         = "IndexedItemsOnly";
                     EnableDedupe                        = $False;
                     Results                             = 'Container url:
