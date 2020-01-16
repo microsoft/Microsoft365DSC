@@ -372,6 +372,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
+            Mock -CommandName Get-HostedContentFilterPolicy -MockWith {
+                return @{
+                    Identity = 'TestPolicy'
+                }
+            }
+
             It "Should Reverse Engineer resource from the Export method" {
                 Export-TargetResource @testParams
             }

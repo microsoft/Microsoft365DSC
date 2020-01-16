@@ -658,3 +658,25 @@ function New-Office365DSCLogEntry
         $Source
     )
 }
+
+function Confirm-ImportedCmdletIsAvailable
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CmdletName
+    )
+}
+
+function Get-AllSPOPackages
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+}

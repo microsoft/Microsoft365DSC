@@ -26,6 +26,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
+        Mock -CommandName Get-PnPTenantAppCatalogUrl -MockWith {
+            return "https://contoso-admin.sharepoint.com"
+        }
+
         # Test contexts
         Context -Name "When the app doesn't already exist in the catalog" -Fixture {
             $testParams = @{
@@ -105,6 +109,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -Command Get-AllSPOPackages -MockWith {
+                return @(@{
+                    Name  = "TestPkg.sppkg"
+                    Site  = "https://contoso.sharepoint.com/sites/apps"
+                    Title = "Test Pkg"
+                },
+                @{
+                    Name  = "TestApp.app"
+                    Site  = "https://contoso.sharepoint.com/sites/apps"
+                    Title = "Test App"
+                }
+                )
             }
 
             Mock -CommandName Get-PnPApp -MockWith {

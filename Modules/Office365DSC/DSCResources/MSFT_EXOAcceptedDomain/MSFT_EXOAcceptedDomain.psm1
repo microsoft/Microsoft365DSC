@@ -251,7 +251,7 @@ function Export-TargetResource
 
         $Params = @{
             Identity           = $domain.Identity
-            GLobalAdminAccount = $GlobalAdminAccount
+            GlobalAdminAccount = $GlobalAdminAccount
         }
         $result = Get-TargetResource @Params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"

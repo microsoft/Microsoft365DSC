@@ -96,9 +96,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-SafeLinksPolicy -MockWith {
                 return @{
-                    Ensure                   = 'Present'
                     Identity                 = 'TestSafeLinksPolicy'
-                    GlobalAdminAccount       = $GlobalAdminAccount
                     AdminDisplayName         = 'Test SafeLinks Policy'
                     DoNotAllowClickThrough   = $true
                     DoNotRewriteUrls         = @('test.contoso.com', 'test.fabrikam.org')
@@ -196,6 +194,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-SafeLinksPolicy -MockWith {
+                return @{
+                    Identity                 = 'TestSafeLinksPolicy'
+                    AdminDisplayName         = 'Test SafeLinks Policy'
+                    DoNotAllowClickThrough   = $true
+                    DoNotRewriteUrls         = @('test.contoso.com', 'test.fabrikam.org')
+                    DoNotTrackUserClicks     = $true
+                    EnableForInternalSenders = $false
+                    IsEnabled                = $false
+                    ScanUrls                 = $false
+                }
             }
 
             It "Should Reverse Engineer resource from the Export method" {

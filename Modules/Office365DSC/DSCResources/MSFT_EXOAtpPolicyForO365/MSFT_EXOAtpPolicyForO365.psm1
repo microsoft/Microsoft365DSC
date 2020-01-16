@@ -64,7 +64,7 @@ function Get-TargetResource
         if (-not $AtpPolicyForO365)
         {
             Write-Verbose -Message "AtpPolicyForO365 $($Identity) does not exist."
-            return $nullResult
+            return $nullReturn
         }
         else
         {
@@ -87,7 +87,7 @@ function Get-TargetResource
     catch
     {
         Write-Warning $_.Exception
-        return $nullResult
+        return $nullReturn
     }
 }
 

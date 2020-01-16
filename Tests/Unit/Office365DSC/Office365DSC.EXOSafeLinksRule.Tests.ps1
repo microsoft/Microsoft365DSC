@@ -187,6 +187,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
+            Mock -CommandName Get-SafeLinksRule -MockWith {
+                return @{
+                    Identity = 'TestRule'
+                }
+            }
+
             It "Should Reverse Engineer resource from the Export method" {
                 Export-TargetResource @testParams
             }

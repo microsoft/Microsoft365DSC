@@ -1216,6 +1216,7 @@ function Set-EXOHostedContentFilterRule
 function Confirm-ImportedCmdletIsAvailable
 {
     [CmdletBinding()]
+    [OutputType([System.Boolean])]
     param
     (
         [Parameter(Mandatory = $true)]

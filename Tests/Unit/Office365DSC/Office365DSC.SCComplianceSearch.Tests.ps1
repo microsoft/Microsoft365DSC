@@ -156,6 +156,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
+            Mock -CommandName Get-ComplianceSearch -MockWith {
+                return @{
+                    Name                                  = "Demo Compliance Search";
+                    Case                                  = "Test Search Case"
+                    Language                              = @{
+                        TwoLetterISOLanguageName = "iv";
+                    }
+                    AllowNotFoundExchangeLocationsEnabled = $False;
+                    SharePointLocation                    = @("https://tailspintoys.com")
+                }
+            }
+
             It "Should Reverse Engineer resource from the Export method" {
                 Export-TargetResource @testParams
             }

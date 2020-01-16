@@ -256,6 +256,11 @@ function Export-TargetResource
         -Platform ExchangeOnline `
         -ErrorAction SilentlyContinue
 
+    $organization = ""
+    if ($GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+    }
     $mailboxes = Get-Mailbox
     $mailboxes = $mailboxes | Where-Object -FilterScript { $_.RecipientTypeDetails -eq "SharedMailbox" }
     $content = ''
