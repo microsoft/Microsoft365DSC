@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+* EXOHostedOutboundSpamFilterPolicy
+  * Fixed an error where the resource was not being extracted via
+    the Graphical User Interface;
 * SCComplianceTag
   * Fix an issue where FilePlanProperty values returned
     from Get-TargetResource where always empty;
