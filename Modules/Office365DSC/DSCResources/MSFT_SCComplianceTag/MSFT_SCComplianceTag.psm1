@@ -71,8 +71,7 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
 
-    $tagObjects = Get-ComplianceTag
-    $tagObject = $tagObjects | Where-Object { $_.Name -eq $Name }
+    $tagObject = Get-ComplianceTag -Identity $Name -ErrorAction SilentlyContinue
 
     if ($null -eq $tagObject)
     {
@@ -441,13 +440,12 @@ function Get-SCFilePlanProperty
         return $null
     }
     $JSONObject = ConvertFrom-JSON $Metadata
-    $result = @{
-        FilePlanPropertyDepartment  = $JSONObject.Settings["FilePlanPropertyDepartment"].Value
-        FilePlanPropertyCategory    = $JSONObject.Settings["FilePlanPropertyCategory"].Value
-        FilePlanPropertySubcategory = $JSONObject.Settings["FilePlanPropertySubcategory"].Value
-        FilePlanPropertyCitation    = $JSONObject.Settings["FilePlanPropertyCitation"].Value
-        FilePlanPropertyReferenceId = $JSONObject.Settings["FilePlanPropertyReferenceId"].Value
-        FilePlanPropertyAuthority   = $JSONObject.Settings["FilePlanPropertyAuthority"].Value
+
+    $result = @{}
+
+    foreach ($item in $JSONObject.Settings)
+    {
+        $result.Add($item.Key, $item.Value)
     }
 
     return $result

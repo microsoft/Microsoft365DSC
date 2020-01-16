@@ -149,20 +149,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-ComplianceTag -MockWith {
                 return @{
-
+                    Name              = "TestRule"
+                    Comment           = "This is a test Rule"
+                    RetentionAction   = "Keep"
+                    RetentionDuration = "1025"
+                    FilePlanMetadata  = '{"Settings":[
+                        {"Key":"FilePlanPropertyDepartment","Value":"DemoDept"},
+                        {"Key":"FilePlanPropertyCitation","Value":"DemoCit"},
+                        {"Key":"FilePlanPropertyReferenceId","Value":"DemoRef"},
+                        {"Key":"FilePlanPropertyAuthority","Value":"DemoAuth"},
+                        {"Key":"FilePlanPropertyCategory","Value":"DemoCat"},
+                        {"Key":"FilePlanPropertySubcategory","Value":"DemoSub"}]}'
+                    RetentionType     = "ModificationAgeInDays"
                 }
             }
 
-            It 'Should return True from the Test method' {
-                Test-TargetResource @testParams | Should Be $True
+            It 'Should return False from the Test method' {
+                Test-TargetResource @testParams | Should Be $False
             }
 
             It 'Should delete from the Set method' {
                 Set-TargetResource @testParams
+                Assert-MockCalled -CommandName Remove-ComplianceTag -Exactly 1
             }
 
-            It 'Should return Absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
+            It 'Should return Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
         }
 
