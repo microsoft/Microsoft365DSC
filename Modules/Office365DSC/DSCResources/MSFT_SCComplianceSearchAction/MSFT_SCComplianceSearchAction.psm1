@@ -94,7 +94,7 @@ function Get-TargetResource
                 FileTypeExclusionsForUnindexedItems = $FileTypeExclusion
                 EnableDedupe                        = $EnableDedupe
                 IncludeSharePointDocumentVersions   = $IncludeSP
-                RetryOnError                        = $currentAction.RetryOnError
+                RetryOnError                        = $currentAction.Retry
                 ActionScope                         = $ScopeValue
                 GlobalAdminAccount                  = $GlobalAdminAccount
                 Ensure                              = 'Present'
@@ -107,7 +107,7 @@ function Get-TargetResource
                 Action             = $currentAction.Action
                 SearchName         = $currentAction.SearchName
                 PurgeType          = $PurgeTP
-                RetryOnError       = $currentAction.RetryOnError
+                RetryOnError       = $currentAction.Retry
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = 'Present'
             }
