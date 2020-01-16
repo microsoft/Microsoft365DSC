@@ -207,8 +207,16 @@ function Show-O365GUI
         $chckEXOHostedContentFilterRule.Text = "Hosted Content Filter Rule"
         $pnlExo.Controls.Add($chckEXOHostedContentFilterRule)
 
+        $chckEXOHostedOutboundSpamFilterPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckEXOHostedOutboundSpamFilterPolicy.Top = 200
+        $chckEXOHostedOutboundSpamFilterPolicy.AutoSize = $true;
+        $chckEXOHostedOutboundSpamFilterPolicy.Name = "chckEXOHostedOutboundSpamFilterPolicy"
+        $chckEXOHostedOutboundSpamFilterPolicy.Checked = $true
+        $chckEXOHostedOutboundSpamFilterPolicy.Text = "Hosted Outbound Spam Filter Policy"
+        $pnlExo.Controls.Add($chckEXOHostedOutboundSpamFilterPolicy)
+
         $chckEXOMailboxSettings = New-Object System.Windows.Forms.CheckBox
-        $chckEXOMailboxSettings.Top = 200
+        $chckEXOMailboxSettings.Top = 220
         $chckEXOMailboxSettings.AutoSize = $true;
         $chckEXOMailboxSettings.Name = "chckEXOMailboxSettings"
         $chckEXOMailboxSettings.Checked = $true
@@ -216,7 +224,7 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOMailboxSettings)
 
         $chckEXOMailTips = New-Object System.Windows.Forms.CheckBox
-        $chckEXOMailTips.Top = 220
+        $chckEXOMailTips.Top = 240
         $chckEXOMailTips.AutoSize = $true;
         $chckEXOMailTips.Name = "chckEXOMailTips"
         $chckEXOMailTips.Checked = $true
@@ -224,20 +232,12 @@ function Show-O365GUI
         $pnlExo.Controls.Add($chckEXOMailTips);
 
         $chckEXOOrganizationConfig = New-Object System.Windows.Forms.CheckBox
-        $chckEXOOrganizationConfig.Top = 240
+        $chckEXOOrganizationConfig.Top = 260
         $chckEXOOrganizationConfig.AutoSize = $true;
         $chckEXOOrganizationConfig.Name = "chckEXOOrganizationConfig"
         $chckEXOOrganizationConfig.Checked = $true
         $chckEXOOrganizationConfig.Text = "Organization Config"
         $pnlExo.Controls.Add($chckEXOOrganizationConfig);
-
-        $chckEXOOutboundSpamFilterPolicy = New-Object System.Windows.Forms.CheckBox
-        $chckEXOOutboundSpamFilterPolicy.Top = 260
-        $chckEXOOutboundSpamFilterPolicy.AutoSize = $true;
-        $chckEXOOutboundSpamFilterPolicy.Name = "chckEXOOutboundSpamFilterPolicy"
-        $chckEXOOutboundSpamFilterPolicy.Checked = $true
-        $chckEXOOutboundSpamFilterPolicy.Text = "Outbound Spam Filter Policy"
-        $pnlExo.Controls.Add($chckEXOOutboundSpamFilterPolicy)
 
         $chckEXOSafeAttachmentPolicy = New-Object System.Windows.Forms.CheckBox
         $chckEXOSafeAttachmentPolicy.Top = 280
