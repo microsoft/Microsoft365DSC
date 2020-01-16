@@ -42,7 +42,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return $null
             }
 
-            Mock -CommandName Get-SPOSiteGroup -MockWith { 
+            Mock -CommandName Get-SPOSiteGroup -MockWith {
                 return $null
             }
 
@@ -123,7 +123,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount  = $GlobalAdminAccount
             }
 
-
             Mock -CommandName Get-SPOSiteGroup -MockWith {
                 return @{
                     URL                 = "https://contoso.sharepoint.com/sites/TestSite"
@@ -200,12 +199,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Assert-MockCalled -CommandName New-SPOSiteGroup -Exactly 0
                 Assert-MockCalled -CommandName Remove-SPOSiteGroup -Exactly 1
             }
-
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-SPOSite -MockWith {
+                return @{
+                    Url = "https://contoso.sharepoint.com"
+                }
             }
 
             Mock -CommandName Get-SPOSiteGroup -MockWith {

@@ -46,23 +46,9 @@ function Get-TargetResource
         Ensure             = "Absent"
     }
 
-    try
-    {
-        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                          -Platform SharePointOnline `
-                          -ErrorAction SilentlyContinue
-    }
-    catch
-    {
-        if ($error[0].Exception.Message -like "No connection available")
-        {
-            $Message = "Make sure that you are connected to SharePoint Online"
-            New-Office365DSCLogEntry -Error $_ -Message $Message
-            throw $Message
-            return $nullReturn
-        }
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SharePointOnline
 
-    }
     #checking if the site actually exists
     try
     {

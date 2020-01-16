@@ -48,6 +48,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
+        Mock -CommandName Confirm-ImportedCmdletIsAvailable -MockWith {
+            return $true
+        }
+
         # Test contexts
         Context -Name "DkimSigningConfig creation." -Fixture {
             $testParams = @{

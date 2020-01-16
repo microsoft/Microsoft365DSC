@@ -669,3 +669,14 @@ function Confirm-ImportedCmdletIsAvailable
         $CmdletName
     )
 }
+
+function Get-AllSPOPackages
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+}
