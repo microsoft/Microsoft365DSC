@@ -147,7 +147,7 @@ function Start-O365ConfigurationExtract
         }
         catch
         {
-            New-Office365DSCLogEntry -Error $_ -Message $ResourceModule.FullName -Source "[O365DSCReverse]$($ResourceModule.FullName)"
+            New-Office365DSCLogEntry -Error $_ -Message $ResourceModule.Name -Source "[O365DSCReverse]$($ResourceModule.Name)"
         }
     }
 
