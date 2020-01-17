@@ -4,7 +4,6 @@ class MSFT_EXOOutboundConnector : OMI_BaseResource
 {
     [Key, Description("The Identity parameter specifies the outbound connector that you want to modify.")] String Identity;
     [Write, Description("Specifies whether connector is enabled.")] Boolean Enabled;
-    [Write, Description("The name of the connector.")] String Name;
     [Write, Description("Specifies whether connector should use MXRecords for target resolution.")] Boolean UseMXRecord;
     [Write, Description("The Comment parameter specifies an optional comment.")] String Comment;
     [Write, Description("The ConnectorSource parameter specifies how the connector is created. DO NOT CHANGE THIS! values are Default (the default) | Migrated | HybridWizard "), ValueMap{"Default","Migrated","HybridWizard"}, Values{"Default","Migrated","HybridWizard"}] String ConnectorSource;

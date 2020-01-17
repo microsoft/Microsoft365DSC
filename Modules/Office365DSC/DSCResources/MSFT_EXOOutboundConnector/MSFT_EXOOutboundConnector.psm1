@@ -300,7 +300,7 @@ function Test-TargetResource
         $TlsDomain = @(),
 
         [Parameter()]
-        [ValidateSet('EncryptionOnly', 'CertificateValidation', 'DomainValidation')]
+        [ValidateSet('EncryptionOnly', 'CertificateValidation', 'DomainValidation', $Null)]
         [System.String]
         $TlsSettings,
 

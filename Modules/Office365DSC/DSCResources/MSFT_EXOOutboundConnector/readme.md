@@ -1,58 +1,52 @@
+# EXOOutboundConnector
+
 # Description
 
-Use the New-OutboundConnector cmdlet to create a new Outbound connector in your cloud-based organization.
-https://docs.microsoft.com/en-us/powershell/module/exchange/mail-flow/new-outboundconnector
+Create a new Inbound connector in your cloud-based organization.
+Reference: https://docs.microsoft.com/en-us/powershell/module/exchange/mail-flow/new-OutboundConnector
 
-For information about the parameter sets in the Syntax section below, see Exchange cmdlet syntax (https://docs.microsoft.com/powershell/exchange/exchange-server/exchange-cmdlet-syntax).
-Syntax
-PowerShell
+## Parameters
 
-Copy
-New-OutboundConnector
-   [-Name] <String>
-   [-AllAcceptedDomains <Boolean>]
-   [-CloudServicesMailEnabled <Boolean>]
-   [-Comment <String>]
-   [-Confirm]
-   [-ConnectorSource <TenantConnectorSource>]
-   [-ConnectorType <TenantConnectorType>]
-   [-Enabled <Boolean>]
-   [-IsTransportRuleScoped <Boolean>]
-   [-LinkForModifiedConnector <Guid>]
-   [-RecipientDomains <MultiValuedProperty>]
-   [-RouteAllMessagesViaOnPremises <Boolean>]
-   [-SmartHosts <MultiValuedProperty>]
-   [-TestMode <Boolean>]
-   [-TlsDomain <SmtpDomainWithSubdomains>]
-   [-TlsSettings <TlsAuthLevel>]
-   [-UseMXRecord <Boolean>]
-   [-WhatIf]
-   [<CommonParameters>]
+OutboundConnector
 
-This resource allows to configure Exchange Online Oubound Connectors.
-https://docs.microsoft.com/en-us/powershell/module/exchange/mail-flow/set-outboundconnector
+- Required: Yes
+- Description: The Identity of the OutboundConnector to associate with this Inbound connector.
 
+Ensure
 
-Set-OutboundConnector
-   [-Identity] <OutboundConnectorIdParameter>
-   [-AllAcceptedDomains <$true | $false>]
-   [-CloudServicesMailEnabled <$true | $false>]
-   [-Comment <String>]
-   [-Confirm]
-   [-ConnectorSource <Default | Migrated | HybridWizard | AdminUI>]
-   [-ConnectorType <OnPremises | Partner>]
-   [-Enabled <$true | $false>]
-   [-IsTransportRuleScoped <$true | $false>]
-   [-IsValidated <$true | $false>]
-   [-LastValidationTimestamp <DateTime>]
-   [-Name <String>]
-   [-RecipientDomains <MultiValuedProperty>]
-   [-RouteAllMessagesViaOnPremises <$true | $false>]
-   [-SmartHosts <MultiValuedProperty>]
-   [-TestMode <$true | $false>]
-   [-TlsDomain <SmtpDomainWithSubdomains>]
-   [-TlsSettings <EncryptionOnly | CertificateValidation | DomainValidation>]
-   [-UseMXRecord <$true | $false>]
-   [-ValidationRecipients <String[]>]
-   [-WhatIf]
-   [<CommonParameters>]
+- Required: No (Defaults to 'Present')
+- Description: Specifies if the configuration should be `Present` or `Absent`
+
+GlobalAdminAccount
+
+- Required: Yes
+- Description: Credentials of an Office365 Global Admin
+
+Identity
+
+- Required: Yes
+- Description: Name of the OutboundConnector
+
+## Example
+
+```PowerShell
+        OutboundConnector TestOutboundConnector {
+                Ensure                        = 'Present'
+                GlobalAdminAccount            = $GlobalAdminAccount
+                Identity                      = 'TestOutboundConnector'
+                CloudServicesMailEnabled      = $false
+                Comment                       = 'Test outbound connector'
+                Enabled                       = $true
+                ConnectorSource               = 'Default'
+                ConnectorType                 = 'Partner'
+                IsTransportRuleScoped         = $false
+                RecipientDomains              = @('fabrikam.com', 'contoso.com')
+                RouteAllMessagesViaOnPremises = $false
+                SmartHosts                    = @('mail.contoso.com')
+                TestMode                      = $false
+                TlsDomain                     = '*.contoso.com'
+                TlsSettings                   = 'EncryptionOnly'
+                UseMxRecord                   = $false
+                ValidationRecipients          = @('test@contoso.com', 'contoso.org')
+        }
+```
