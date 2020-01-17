@@ -10,7 +10,8 @@ Reference: https://docs.microsoft.com/en-us/powershell/module/exchange/mail-flow
 OutboundConnector
 
 - Required: Yes
-- Description: The Identity of the OutboundConnector to associate with this Inbound connector.
+- Description: The Identity of the OutboundConnector
+to associate with this Inbound connector.
 
 Ensure
 
@@ -30,23 +31,23 @@ Identity
 ## Example
 
 ```PowerShell
-        OutboundConnector TestOutboundConnector {
-                Ensure                        = 'Present'
-                GlobalAdminAccount            = $GlobalAdminAccount
-                Identity                      = 'TestOutboundConnector'
-                CloudServicesMailEnabled      = $false
-                Comment                       = 'Test outbound connector'
-                Enabled                       = $true
-                ConnectorSource               = 'Default'
-                ConnectorType                 = 'Partner'
-                IsTransportRuleScoped         = $false
-                RecipientDomains              = @('fabrikam.com', 'contoso.com')
-                RouteAllMessagesViaOnPremises = $false
-                SmartHosts                    = @('mail.contoso.com')
-                TestMode                      = $false
-                TlsDomain                     = '*.contoso.com'
-                TlsSettings                   = 'EncryptionOnly'
-                UseMxRecord                   = $false
-                ValidationRecipients          = @('test@contoso.com', 'contoso.org')
-        }
+OutboundConnector TestOutboundConnector {
+        Ensure                        = 'Present'
+        GlobalAdminAccount            = $GlobalAdminAccount
+        Identity                      = 'TestOutboundConnector'
+        CloudServicesMailEnabled      = $false
+        Comment                       = 'Test outbound connector'
+        Enabled                       = $true
+        ConnectorSource               = 'Default'
+        ConnectorType                 = 'Partner'
+        IsTransportRuleScoped         = $false
+        RecipientDomains              = @('fabrikam.com', 'contoso.com')
+        RouteAllMessagesViaOnPremises = $false
+        SmartHosts                    = @('mail.contoso.com')
+        TestMode                      = $false
+        TlsDomain                     = '*.contoso.com'
+        TlsSettings                   = 'EncryptionOnly'
+        UseMxRecord                   = $false
+        ValidationRecipients          = @('test@contoso.com', 'contoso.org')
+}
 ```

@@ -10,7 +10,8 @@ Reference: https://docs.microsoft.com/en-us/powershell/module/exchange/federatio
 IntraOrganizationConnector
 
 - Required: Yes
-- Description: The Identity of the IntraOrganizationConnector to associate with this IntraOrganizationConnector.
+- Description: The Identity of the IntraOrganizationConnector
+to associate with this IntraOrganizationConnector.
 
 Ensure
 
@@ -30,12 +31,12 @@ Identity
 ## Example
 
 ```PowerShell
-        IntraOrganizationConnector TestIntraOrganizationConnector {
-                Ensure               = 'Present'
-                GlobalAdminAccount   = $GlobalAdminAccount
-                Identity             = 'TestIntraOrganizationConnector'
-                DiscoveryEndpoint    = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc'
-                Enabled              = $true
-                TargetAddressDomains = @('contoso.com', 'contoso.org')
-        }
+IntraOrganizationConnector TestIntraOrganizationConnector {
+        Ensure               = 'Present'
+        GlobalAdminAccount   = $GlobalAdminAccount
+        Identity             = 'TestIntraOrganizationConnector'
+        DiscoveryEndpoint    = 'https://FQDN/autodiscover/autodiscover.svc'
+        Enabled              = $true
+        TargetAddressDomains = @('contoso.com', 'contoso.org')
+}
 ```
