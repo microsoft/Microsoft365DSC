@@ -59,7 +59,7 @@ function Get-TargetResource
         $TlsDomain = @(),
 
         [Parameter()]
-        [ValidateSet('EncryptionOnly', 'CertificateValidation', 'DomainValidation', $Null)]
+        [ValidateSet('EncryptionOnly', 'CertificateValidation', 'DomainValidation')]
         [System.String]
         $TlsSettings,
 
@@ -186,7 +186,7 @@ function Set-TargetResource
         $TlsDomain = @(),
 
         [Parameter()]
-        [ValidateSet('EncryptionOnly', 'CertificateValidation', 'DomainValidation', $Null)]
+        [ValidateSet('EncryptionOnly', 'CertificateValidation', 'DomainValidation')]
         [System.String]
         $TlsSettings,
 
@@ -300,7 +300,7 @@ function Test-TargetResource
         $TlsDomain = @(),
 
         [Parameter()]
-        [ValidateSet('EncryptionOnly', 'CertificateValidation', 'DomainValidation', $Null)]
+        [ValidateSet('EncryptionOnly', 'CertificateValidation', 'DomainValidation')]
         [System.String]
         $TlsSettings,
 
