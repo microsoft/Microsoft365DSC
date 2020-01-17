@@ -9,10 +9,6 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $Name,
-
-        [Parameter()]
         [System.String[]]
         $AssociatedAcceptedDomains = @(),
 
@@ -101,7 +97,6 @@ function Get-TargetResource
             ConnectorSource              = $InboundConnector.ConnectorSource
             ConnectorType                = $InboundConnector.ConnectorType
             Enabled                      = $InboundConnector.Enabled
-            Name                         = $InBoundConnector.Name
             RequireTls                   = $InboundConnector.RequireTls
             RestrictDomainsToCertificate = $InboundConnector.RestrictDomainsToCertificate
             RestrictDomainsToIPAddresses = $InboundConnector.RestrictDomainsToIPAddresses
@@ -202,11 +197,11 @@ function Set-TargetResource
     $InboundConnectorParams = $PSBoundParameters
     $InboundConnectorParams.Remove('Ensure') | Out-Null
     $InboundConnectorParams.Remove('GlobalAdminAccount') | Out-Null
-    $InboundConnectorParams.Add("Name", $Identity)
 
     if (('Present' -eq $Ensure ) -and ($null -eq $InboundConnector))
     {
         Write-Verbose -Message "Creating InboundConnector $($Identity)."
+        $InboundConnectorParams.Add("Name", $Identity)
         $InboundConnectorParams.Remove('Identity') | Out-Null
         New-InboundConnector @InboundConnectorParams
     }

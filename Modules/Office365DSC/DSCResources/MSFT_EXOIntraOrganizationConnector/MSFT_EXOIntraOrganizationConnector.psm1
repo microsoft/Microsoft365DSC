@@ -17,10 +17,6 @@ function Get-TargetResource
         $Enabled,
 
         [Parameter()]
-        [System.String]
-        $Name,
-
-        [Parameter()]
         [System.String[]]
         $TargetAddressDomains = @(),
 
@@ -55,7 +51,6 @@ function Get-TargetResource
             Identity             = $Identity
             DiscoveryEndpoint    = $IntraOrganizationConnector.DiscoveryEndpoint.ToString()
             Enabled              = $IntraOrganizationConnector.Enabled
-            Name                 = $IntraOrganizationConnector.Name
             TargetAddressDomains = $IntraOrganizationConnector.TargetAddressDomains
             GlobalAdminAccount   = $GlobalAdminAccount
             Ensure               = 'Present'
@@ -108,11 +103,11 @@ function Set-TargetResource
     $IntraOrganizationConnectorParams = $PSBoundParameters
     $IntraOrganizationConnectorParams.Remove('Ensure') | Out-Null
     $IntraOrganizationConnectorParams.Remove('GlobalAdminAccount') | Out-Null
-    $IntraOrganizationConnectorParams.Add("Name", $Identity)
 
     if (('Present' -eq $Ensure ) -and ($null -eq $IntraOrganizationConnector))
     {
         Write-Verbose -Message "Creating IntraOrganizationConnector $($Identity)."
+        $IntraOrganizationConnectorParams.Add("Name", $Identity)
         $IntraOrganizationConnectorParams.Remove('Identity') | Out-Null
         New-IntraOrganizationConnector @IntraOrganizationConnectorParams
     }

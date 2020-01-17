@@ -35,10 +35,6 @@ function Get-TargetResource
         $Enabled,
 
         [Parameter()]
-        [System.String]
-        $Name,
-
-        [Parameter()]
         [System.Boolean]
         $IsTransportRuleScoped,
 
@@ -110,7 +106,6 @@ function Get-TargetResource
             ConnectorSource               = $OutBoundConnector.ConnectorSource
             ConnectorType                 = $OutBoundConnector.ConnectorType
             Enabled                       = $OutBoundConnector.Enabled
-            Name                          = $OutBoundConnector.Name
             IsTransportRuleScoped         = $OutBoundConnector.IsTransportRuleScoped
             RecipientDomains              = $OutBoundConnector.RecipientDomains
             RouteAllMessagesViaOnPremises = $OutBoundConnector.RouteAllMessagesViaOnPremises
@@ -223,11 +218,12 @@ function Set-TargetResource
     $OutBoundConnectorParams = $PSBoundParameters
     $OutBoundConnectorParams.Remove('Ensure') | Out-Null
     $OutBoundConnectorParams.Remove('GlobalAdminAccount') | Out-Null
-    $OutBoundConnectorParams.Add("Name", $Identity)
+
 
     if (('Present' -eq $Ensure ) -and ($null -eq $OutBoundConnector))
     {
         Write-Verbose -Message "Creating OutBoundConnector $($Identity)."
+        $OutBoundConnectorParams.Add("Name", $Identity)
         $OutBoundConnectorParams.Remove('Identity') | Out-Null
         New-OutBoundConnector @OutBoundConnectorParams
     }
