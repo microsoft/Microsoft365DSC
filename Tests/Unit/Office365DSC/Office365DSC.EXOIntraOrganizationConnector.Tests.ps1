@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+        -ChildPath "..\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "EXOIntraOrganizationConnector"
+    -DscResource "EXOIntraOrganizationConnector" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -116,12 +118,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-IntraOrganizationConnector -MockWith {
                 return @{
-                Ensure               = 'Present'
-                GlobalAdminAccount   = $GlobalAdminAccount
-                Identity             = 'TestIntraOrganizationConnector'
-                DiscoveryEndpoint    = 'https://Discovery.Contoso.org/autodiscover/autodiscover.svc'
-                Enabled              = $true
-                TargetAddressDomains = @('contoso.com', 'contoso.de')                }
+                    Ensure               = 'Present'
+                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Identity             = 'TestIntraOrganizationConnector'
+                    Name                 = 'TestIntraOrganizationConnector'
+                    DiscoveryEndpoint    = 'https://Discovery.Contoso.org/autodiscover/autodiscover.svc'
+                    Enabled              = $true
+                    TargetAddressDomains = @('contoso.com', 'contoso.de')
+                }
             }
 
             It 'Should return false from the Test method' {
@@ -133,6 +137,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure               = 'Present'
                     GlobalAdminAccount   = $GlobalAdminAccount
                     Identity             = 'TestIntraOrganizationConnector'
+                    Name                 = 'TestIntraOrganizationConnector'
                     DiscoveryEndpoint    = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc'
                     Enabled              = $true
                     TargetAddressDomains = @('contoso.com', 'contoso.org')
@@ -146,14 +151,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "IntraOrganizationConnector removal." -Fixture {
             $testParams = @{
-                Ensure             = 'Absent'
+                Ensure             = 'Present'
                 GlobalAdminAccount = $GlobalAdminAccount
                 Identity           = 'TestIntraOrganizationConnector'
+                DiscoveryEndpoint  = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc'
             }
 
             Mock -CommandName Get-IntraOrganizationConnector -MockWith {
                 return @{
-                    Identity = 'TestIntraOrganizationConnector'
+                    #Identity = 'TestIntraOrganizationConnector'
+                    #DiscoveryEndpoint = 'https://ExternalDiscovery.Contoso.com/autodiscover/autodiscover.svc'
                 }
             }
 

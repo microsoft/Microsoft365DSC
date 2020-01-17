@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+        -ChildPath "..\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "EXOInboundConnector"
+    -DscResource "EXOInboundConnector" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -49,22 +51,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "InboundConnector creation." -Fixture {
             $testParams = @{
-                Ensure                        = 'Present'
-                GlobalAdminAccount            = $GlobalAdminAccount
-                Identity                      = 'TestInboundConnector'
-                AssociatedAcceptedDomains     = @('test@contoso.com', 'contoso.org')
-                CloudServicesMailEnabled      = $false
-                Comment                       = 'Test Inbound connector'
-                ConnectorSource               = 'HybridWizard'
-                ConnectorType                 = 'onPremises'
-                Enabled                       = $true
-                RequireTls                    = $true
-                RestrictDomainsToCertificate  = $false
-                RestrictDomainsToIPAddresses  = $true
-                SenderDomains                 = @('fabrikam.com', 'contoso.com')
-                SenderIPAddresses             = '192.168.2.11'
-                TlsSenderCertificateName      = '*.contoso.com'
-                TreatMessagesAsInternal       = $true
+                Ensure                       = 'Present'
+                GlobalAdminAccount           = $GlobalAdminAccount
+                Identity                     = 'TestInboundConnector'
+                Name                         = 'TestInboundConnector'
+                AssociatedAcceptedDomains    = @('test@contoso.com', 'contoso.org')
+                CloudServicesMailEnabled     = $false
+                Comment                      = 'Test Inbound connector'
+                ConnectorSource              = 'HybridWizard'
+                ConnectorType                = 'onPremises'
+                Enabled                      = $true
+                RequireTls                   = $true
+                RestrictDomainsToCertificate = $false
+                RestrictDomainsToIPAddresses = $true
+                SenderDomains                = @('fabrikam.com', 'contoso.com')
+                SenderIPAddresses            = '192.168.2.11'
+                TlsSenderCertificateName     = '*.contoso.com'
+                TreatMessagesAsInternal      = $true
             }
 
             Mock -CommandName Get-InboundConnector -MockWith {
@@ -92,6 +95,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure                       = 'Present'
                 GlobalAdminAccount           = $GlobalAdminAccount
                 Identity                     = 'TestInboundConnector'
+                Name                         = 'TestInboundConnector'
                 AssociatedAcceptedDomains    = @('contoso.com', 'contoso.org')
                 CloudServicesMailEnabled     = $false
                 Comment                      = 'Test Inbound connector'
@@ -110,22 +114,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-InboundConnector -MockWith {
                 return @{
-                Ensure                       = 'Present'
-                GlobalAdminAccount           = $GlobalAdminAccount
-                Identity                     = 'TestInboundConnector'
-                AssociatedAcceptedDomains    = @('contoso.com', 'contoso.org')
-                CloudServicesMailEnabled     = $false
-                Comment                      = 'Test Inbound connector'
-                ConnectorSource              = 'HybridWizard'
-                ConnectorType                = 'onPremises'
-                Enabled                      = $true
-                RequireTls                   = $true
-                RestrictDomainsToCertificate = $false
-                RestrictDomainsToIPAddresses = $true
-                SenderDomains                = @('fabrikam.com', 'contoso.com')
-                SenderIPAddresses            = @('192.168.2.11')
-                TlsSenderCertificateName     = '*.contoso.com'
-                TreatMessagesAsInternal      = $true
+                    Ensure                       = 'Present'
+                    GlobalAdminAccount           = $GlobalAdminAccount
+                    Identity                     = 'TestInboundConnector'
+                    Name                         = 'TestInboundConnector'
+                    AssociatedAcceptedDomains    = @('contoso.com', 'contoso.org')
+                    CloudServicesMailEnabled     = $false
+                    Comment                      = 'Test Inbound connector'
+                    ConnectorSource              = 'HybridWizard'
+                    ConnectorType                = 'onPremises'
+                    Enabled                      = $true
+                    RequireTls                   = $true
+                    RestrictDomainsToCertificate = $false
+                    RestrictDomainsToIPAddresses = $true
+                    SenderDomains                = @('fabrikam.com', 'contoso.com')
+                    SenderIPAddresses            = @('192.168.2.11')
+                    TlsSenderCertificateName     = '*.contoso.com'
+                    TreatMessagesAsInternal      = $true
                 }
             }
 
@@ -139,6 +144,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure                       = 'Present'
                 GlobalAdminAccount           = $GlobalAdminAccount
                 Identity                     = 'TestInboundConnector'
+                Name                         = 'TestInboundConnector'
                 AssociatedAcceptedDomains    = @('test@contoso.com', 'contoso.org')
                 CloudServicesMailEnabled     = $false
                 Comment                      = 'Test Inbound connector'
@@ -160,6 +166,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                       = 'Present'
                     GlobalAdminAccount           = $GlobalAdminAccount
                     Identity                     = 'TestInboundConnector'
+                    Name                         = 'TestInboundConnector'
                     AssociatedAcceptedDomains    = @('test@contoso.com', 'contoso.org')
                     CloudServicesMailEnabled     = $true
                     Comment                      = 'Test Inbound connector'
