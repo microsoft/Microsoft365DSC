@@ -1,6 +1,6 @@
 # EXOOutboundConnector
 
-# Description
+## Description
 
 Create a new Inbound connector in your cloud-based organization.
 Reference: https://docs.microsoft.com/en-us/powershell/module/exchange/mail-flow/new-OutboundConnector

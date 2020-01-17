@@ -1,6 +1,6 @@
 # EXOIntraOrganizationConnector
 
-# Description
+## Description
 
 Create a new EXOIntraOrganizationConnector in your cloud-based organization.
 Reference: https://docs.microsoft.com/en-us/powershell/module/exchange/federation-and-hybrid/new-intraorganizationconnector
