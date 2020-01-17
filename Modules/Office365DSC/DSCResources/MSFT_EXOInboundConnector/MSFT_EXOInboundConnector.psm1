@@ -128,10 +128,6 @@ function Set-TargetResource
         [System.String]
         $Identity,
 
-        #[Parameter()]
-        #[System.String]
-        #$Name,
-
         [Parameter()]
         [System.String[]]
         $AssociatedAcceptedDomains = @(),
@@ -235,10 +231,6 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
-
-        [Parameter()]
-        [System.String]
-        $Name,
 
         [Parameter()]
         [System.String[]]

@@ -84,10 +84,6 @@ function Set-TargetResource
         [System.Boolean]
         $Enabled,
 
-        #[Parameter()]
-        #[System.String]
-        #$Name,
-
         [Parameter()]
         [System.String[]]
         $TargetAddressDomains = @(),
@@ -149,10 +145,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $Enabled,
-
-        [Parameter()]
-        [System.String]
-        $Name,
 
         [Parameter()]
         [System.String[]]

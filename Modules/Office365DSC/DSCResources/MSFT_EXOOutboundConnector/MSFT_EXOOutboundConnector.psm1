@@ -166,10 +166,6 @@ function Set-TargetResource
         [System.Boolean]
         $Enabled,
 
-        #[Parameter()]
-        #[System.String]
-        #$Name,
-
         [Parameter()]
         [System.Boolean]
         $IsTransportRuleScoped,
@@ -256,10 +252,6 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
-
-        [Parameter()]
-        [System.String]
-        $Name,
 
         [Parameter()]
         [System.Boolean]
