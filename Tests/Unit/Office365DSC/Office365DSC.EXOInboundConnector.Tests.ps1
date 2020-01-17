@@ -54,7 +54,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure                       = 'Present'
                 GlobalAdminAccount           = $GlobalAdminAccount
                 Identity                     = 'TestInboundConnector'
-                Name                         = 'TestInboundConnector'
                 AssociatedAcceptedDomains    = @('test@contoso.com', 'contoso.org')
                 CloudServicesMailEnabled     = $false
                 Comment                      = 'Test Inbound connector'
@@ -95,7 +94,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure                       = 'Present'
                 GlobalAdminAccount           = $GlobalAdminAccount
                 Identity                     = 'TestInboundConnector'
-                Name                         = 'TestInboundConnector'
                 AssociatedAcceptedDomains    = @('contoso.com', 'contoso.org')
                 CloudServicesMailEnabled     = $false
                 Comment                      = 'Test Inbound connector'
@@ -117,7 +115,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                       = 'Present'
                     GlobalAdminAccount           = $GlobalAdminAccount
                     Identity                     = 'TestInboundConnector'
-                    Name                         = 'TestInboundConnector'
                     AssociatedAcceptedDomains    = @('contoso.com', 'contoso.org')
                     CloudServicesMailEnabled     = $false
                     Comment                      = 'Test Inbound connector'
@@ -144,7 +141,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure                       = 'Present'
                 GlobalAdminAccount           = $GlobalAdminAccount
                 Identity                     = 'TestInboundConnector'
-                Name                         = 'TestInboundConnector'
                 AssociatedAcceptedDomains    = @('test@contoso.com', 'contoso.org')
                 CloudServicesMailEnabled     = $false
                 Comment                      = 'Test Inbound connector'
@@ -166,7 +162,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                       = 'Present'
                     GlobalAdminAccount           = $GlobalAdminAccount
                     Identity                     = 'TestInboundConnector'
-                    Name                         = 'TestInboundConnector'
                     AssociatedAcceptedDomains    = @('test@contoso.com', 'contoso.org')
                     CloudServicesMailEnabled     = $true
                     Comment                      = 'Test Inbound connector'

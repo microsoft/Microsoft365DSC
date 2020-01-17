@@ -202,13 +202,11 @@ function Set-TargetResource
         -Platform ExchangeOnline
 
     $InboundConnectors = Get-InboundConnector
-
     $InboundConnector = $InboundConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
     $InboundConnectorParams = $PSBoundParameters
     $InboundConnectorParams.Remove('Ensure') | Out-Null
     $InboundConnectorParams.Remove('GlobalAdminAccount') | Out-Null
     $InboundConnectorParams.Add("Name", $Identity)
-
 
     if (('Present' -eq $Ensure ) -and ($null -eq $InboundConnector))
     {
