@@ -47,7 +47,7 @@ function Get-TargetResource
 
     $AllAcceptedDomains = Get-AcceptedDomain
 
-    $AcceptedDomain = ($AllAcceptedDomains | Where-Object -FilterScript { $_.Identity -IMatch $Identity })
+    $AcceptedDomain = $AllAcceptedDomains | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
     if ($null -eq $AcceptedDomain)
     {
