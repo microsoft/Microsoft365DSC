@@ -245,7 +245,7 @@ Configuration Master
             DependsOn          = "[O365User]JohnSmith"
         }
 
-        # Current issue with PowerApps module
+        # TODO - Re-assess current issue with PowerApps module
         <#if ($Environment -ne 'GCC')
         {
             $location = 'canada'
