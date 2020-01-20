@@ -351,6 +351,7 @@ function Export-TargetResource
     $elapsedTime = 0
     do
     {
+        $InformationPreference = 'SilentlyContinue'
         $jobs = Get-Job | Where-Object -FilterScript { $_.Name -like '*TeamsUser*' }
         $count = $jobs.Length
         foreach ($job in $jobs)
