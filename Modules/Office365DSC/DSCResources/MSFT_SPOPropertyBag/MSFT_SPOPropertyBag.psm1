@@ -304,6 +304,7 @@ function Export-TargetResource
     $elapsedTime = 0
     do
     {
+        $InformationPreference = 'SilentlyContinue'
         $jobs = Get-Job | Where-Object -FilterScript { $_.Name -like '*SPOPropertyBag*' }
         $count = $jobs.Length
         foreach ($job in $jobs)
