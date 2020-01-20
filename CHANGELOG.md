@@ -10,6 +10,9 @@
     from Get-TargetResource where always empty;
 * SCDLPComplianceRule
   * Fixed an issue with multiple SensitiveInformation objects;
+* SCFilePlanPropertySubCategory
+  * Fixed an issue where the Sub-Categories were not properly extracted,
+    whenever the parent category is custom;
 * TeamsEmergencyCallingPolicy
   * Initial Release;
 * TeamsEmergencyCallRoutingPolicy

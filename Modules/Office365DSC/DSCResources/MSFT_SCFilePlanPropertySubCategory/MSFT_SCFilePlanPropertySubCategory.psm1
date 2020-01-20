@@ -41,10 +41,10 @@ function Get-TargetResource
         Write-Warning "Invalid Parent Category {$Category} detected in the Get-TargetResource"
         return $empty
     }
-    $parentId = $parent.Id.Replace("CN=", "")
 
+    $parentId = $parent.Guid
     $property = Get-FilePlanPropertySubCategory | Where-Object -FilterScript { $_.DisplayName -eq $Name -and `
-            $_.ParentId -eq $parentId }
+        $_.ParentId -eq $parentId }
 
     if ($null -eq $property)
     {
@@ -191,7 +191,7 @@ function Export-TargetResource
     $content = ""
     foreach ($Property in $Properties)
     {
-        $parent = Get-FilePlanPropertyCategory | Where-Object -FilterScript { $_.Id -like "*$($property.ParentId)*" }
+        $parent = Get-FilePlanPropertyCategory | Where-Object -FilterScript { $_.Guid -like "*$($property.ParentId)*" }
         Write-Information "    - [$i/$($Properties.Length)] $($Property.Name)"
         $params = @{
             Name               = $Property.DisplayName
