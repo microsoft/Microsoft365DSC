@@ -50,7 +50,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-FilePlanPropertyCategory -MockWith {
                 return @(@{
                         DisplayName = "Parent"
-                        Id          = "11111-22222-33333-44444-55555"
+                        GUID          = "11111-22222-33333-44444-55555"
                     })
             }
 
@@ -82,7 +82,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-FilePlanPropertyCategory -MockWith {
                 return @(@{
                         DisplayName = "Parent"
-                        Id          = "CN=11111-22222-33333-44444-55555"
+                        GUID          = "11111-22222-33333-44444-55555"
                     })
             }
 
@@ -117,7 +117,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-FilePlanPropertyCategory -MockWith {
                 return @(@{
                         DisplayName = "Parent"
-                        Id          = "11111-22222-33333-44444-55555"
+                        GUID          = "11111-22222-33333-44444-55555"
                     })
             }
 
@@ -149,7 +149,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-FilePlanPropertyCategory -MockWith {
                 return @(@{
                         DisplayName = "Parent"
-                        Id          = "11111-22222-33333-44444-55555"
+                        Guid          = "11111-22222-33333-44444-55555"
                     })
             }
 
