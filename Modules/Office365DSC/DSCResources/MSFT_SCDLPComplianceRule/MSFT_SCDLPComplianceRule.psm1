@@ -506,7 +506,7 @@ function Export-TargetResource
         }
         $result.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $result.ContentContainsSensitiveInformation
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $DSCContent = "        SCDLPComplianceRule " + (New-GUID).ToString() + "`r`n"
+        $DSCContent += "        SCDLPComplianceRule " + (New-GUID).ToString() + "`r`n"
         $DSCContent += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsCIMArray
@@ -535,7 +535,7 @@ function ConvertTo-SCDLPSensitiveInformationString
     foreach ($SensitiveInformationHash in $InformationArray)
     {
         $StringContent = "MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
-        $StringContent += "                name = '$($SensitiveInformationHash.name)'`r`n"
+        $StringContent += "                name = '$($SensitiveInformationHash.name.Replace("'", "''"))'`r`n"
 
         if ($null -ne $SensitiveInformationHash.id)
         {

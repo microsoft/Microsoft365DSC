@@ -1771,7 +1771,8 @@ function Export-O365Configuration
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $WarningPreference - 'SilentlyContinue'
+    $InformationPreference = 'SilentlyContinue'
+    $WarningPreference = 'SilentlyContinue'
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
