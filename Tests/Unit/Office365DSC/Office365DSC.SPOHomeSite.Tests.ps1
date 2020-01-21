@@ -38,7 +38,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return $null
             }
 
-            It "Should return absent from the Get method" {
+            It "Should return Absent from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Absent"
             }
 
@@ -58,7 +58,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "https://contoso.sharepoint.com/sites/homesite"
             }
 
-            Mock -CommandName  Remove-PnPHomeSite -MockWith {
+            Mock -CommandName Remove-PnPHomeSite -MockWith {
 
             }
 
@@ -108,14 +108,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-            It "Should set the correct site" {
-                Set-TargetResource @testParams | Should Throw "The specified Site Collection $($testParams.Url) for SPOHomeSite doesn't exist."
+            It "Should throw an error" {
+                { Set-TargetResource @testParams } | Should Throw "The specified Site Collection $($testParams.Url) for SPOHomeSite doesn't exist."
                 Assert-MockCalled Get-SPOSite
                 Assert-MockCalled New-Office365DSCLogEntry
             }
+        }
+
+        Context -Name "It should set the home site" -Fixture {
+            $testParams = @{
+                IsSingleInstance   = "Yes"
+                Url                = "https://contoso.sharepoint.com/sites/homesite"
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = "Present"
+            }
+
+            Mock -CommandName Get-SPOHomeSite -MockWith {
+                return "https://contoso.sharepoint.com/sites/homesite1"
+            }
+
+            Mock -CommandName Set-PnPHomeSite -MockWith {
+            }
 
             Mock -CommandName Get-SPOSite -MockWith {
-                return ""
+
             }
 
             It "Should set the correct site" {
@@ -127,7 +143,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                IsSingleInstance = "Yes"
+                IsSingleInstance   = "Yes"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
