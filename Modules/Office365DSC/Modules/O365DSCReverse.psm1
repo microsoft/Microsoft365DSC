@@ -243,9 +243,9 @@ function Start-O365ConfigurationExtract
     #endregion
 
     #region Copy Downloaded files back into output folder
-    if ($null -ne $ComponentsToExtract -and
-        $ComponentsToExtract.Contains("chckSPOApp")) -or
-    $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains('SPO'))
+    if (($null -ne $ComponentsToExtract -and
+            $ComponentsToExtract.Contains("chckSPOApp")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains('SPO')))
     {
         $filesToDownload = Get-AllSPOPackages -GlobalAdminAccount $GlobalAdminAccount
         if ($filesToDownload.Count -gt 0)
