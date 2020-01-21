@@ -245,8 +245,8 @@ Configuration Master
             DependsOn          = "[O365User]JohnSmith"
         }
 
-        # TODO - Investigate for GCC
-        if ($Environment -ne 'GCC')
+        # TODO - Re-assess current issue with PowerApps module
+        <#if ($Environment -ne 'GCC')
         {
             $location = 'canada'
             PPPowerAppsEnvironment IntegrationPAEnvironment
@@ -257,7 +257,7 @@ Configuration Master
                 GlobalAdminAccount   = $GlobalAdmin;
                 Location             = $location;
             }
-        }
+        }#>
 
         SCAuditConfigurationPolicy SharePointAuditPolicy
         {

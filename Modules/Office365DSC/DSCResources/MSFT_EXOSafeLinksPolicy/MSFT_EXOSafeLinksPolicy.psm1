@@ -82,23 +82,16 @@ function Get-TargetResource
     else
     {
         $result = @{
-            Ensure = 'Present'
-        }
-
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -inotmatch 'Ensure' }))
-        {
-            if ($null -ne $SafeLinksPolicy.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $SafeLinksPolicy.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
+            Identity                 = $SafeLinksPolicy.Identity
+            AdminDisplayName         = $SafeLinksPolicy.AdminDisplayName
+            DoNotAllowClickThrough   = $SafeLinksPolicy.DoNotAllowClickThrough
+            DoNotRewriteUrls         = $SafeLinksPolicy.DoNotRewriteUrls
+            DoNotTrackUserClicks     = $SafeLinksPolicy.DoNotTrackUserClicks
+            EnableForInternalSenders = $SafeLinksPolicy.EnableForInternalSenders
+            IsEnabled                = $SafeLinksPolicy.IsEnabled
+            ScanUrls                 = $SafeLinksPolicy.ScanUrls
+            Ensure                   = 'Present'
+            GlobalAdminAccount       = $GlobalAdminAccount
         }
 
         Write-Verbose -Message "Found SafeLinksPolicy $($Identity)"
@@ -273,6 +266,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -284,11 +278,13 @@ function Export-TargetResource
         -Platform ExchangeOnline `
         -ErrorAction SilentlyContinue
     $content = ''
-    if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
+    if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeLinksPolicy)
     {
-        $SafeLinksPolicies = Get-SafeLinksPolicy
+        [array]$SafeLinksPolicies = Get-SafeLinksPolicy
+        $i = 1
         foreach ($SafeLinksPolicy in $SafeLinksPolicies)
         {
+            Write-Information "    - [$i/$($SafeLinksPolicies.Length)] $($SafeLinksPolicy.Name)"
             $params = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 Identity           = $SafeLinksPolicy.Identity
@@ -300,6 +296,7 @@ function Export-TargetResource
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $content += "        }`r`n"
+            $i++
         }
     }
     else
