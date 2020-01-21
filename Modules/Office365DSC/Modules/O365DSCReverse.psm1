@@ -106,28 +106,56 @@ function Start-O365ConfigurationExtract
     Save-Credentials -UserName "globaladmin"
 
     $ResourcesPath = Join-Path -Path $PSScriptRoot `
-                               -ChildPath "..\DSCResources\" `
-                               -Resolve
-    $AllResources = Get-ChildItem $ResourcesPath -Recurse | Where-Object {$_.Name -like 'MSFT_*.psm1'}
+        -ChildPath "..\DSCResources\" `
+        -Resolve
+    $AllResources = Get-ChildItem $ResourcesPath -Recurse | Where-Object { $_.Name -like 'MSFT_*.psm1' }
 
     foreach ($ResourceModule in $AllResources)
     {
         try
         {
             $resourceName = $ResourceModule.Name.Split('.')[0].Replace('MSFT_', '')
-            $currentWorkload = $ResourceName.Substring(0,2)
+            $currentWorkload = $ResourceName.Substring(0, 2)
             switch ($currentWorkload)
             {
-                'O3' {$currentWorkload = 'O365'; break}
-                'OD' {$currentWorkload = 'OD'; break}
-                'PP' {$currentWorkload = 'PP'; break}
-                'SC' {$currentWorkload = 'SC'; break}
-                'SP' {$currentWorkload = 'SPO'; break}
-                'TE' {$currentWorkload = 'TEAMS'; break}
-                default {$currentWorkload = $null; break}
+                'O3'
+                {
+                    $currentWorkload = 'O365';
+                    break
+                }
+                'OD'
+                {
+                    $currentWorkload = 'OD';
+                    break
+                }
+                'PP'
+                {
+                    $currentWorkload = 'PP';
+                    break
+                }
+                'SC'
+                {
+                    $currentWorkload = 'SC';
+                    break
+                }
+                'SP'
+                {
+                    $currentWorkload = 'SPO';
+                    break
+                }
+                'TE'
+                {
+                    $currentWorkload = 'TEAMS';
+                    break
+                }
+                default
+                {
+                    $currentWorkload = $null;
+                    break
+                }
             }
             if (($null -ne $ComponentsToExtract -and
-                $ComponentsToExtract.Contains("chck" + $resourceName)) -or
+                    $ComponentsToExtract.Contains("chck" + $resourceName)) -or
                 $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains($currentWorkload)))
             {
                 Import-Module $ResourceModule.FullName | Out-Null
@@ -216,8 +244,8 @@ function Start-O365ConfigurationExtract
 
     #region Copy Downloaded files back into output folder
     if (($null -ne $ComponentsToExtract -and
-                $ComponentsToExtract.Contains("chckSPOApp")) -or
-                $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains('SPO')))
+            $ComponentsToExtract.Contains("chckSPOApp")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains('SPO')))
     {
         $filesToDownload = Get-AllSPOPackages -GlobalAdminAccount $GlobalAdminAccount
         if ($filesToDownload.Count -gt 0)
