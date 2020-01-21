@@ -12,6 +12,9 @@
   * Fixed an issue with multiple SensitiveInformation objects;
   * Fixed an issue where extraction failed if the name of the
     Sensitive Information property contained apostrophes;
+* SCFilePlanPropertySubCategory
+  * Fixed an issue where the Sub-Categories were not properly extracted,
+    whenever the parent category is custom;
 * TeamsEmergencyCallingPolicy
   * Initial Release;
 * TeamsEmergencyCallRoutingPolicy
