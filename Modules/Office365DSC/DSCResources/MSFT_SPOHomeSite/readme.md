@@ -8,3 +8,4 @@ SharePoint Home.
 > This setting is not applied immediately and can take several hours to be fully
 > available within the tenant. Please use this resource with caution, as a direct
 > test run can lead to incorrect status results.
+> For more details about setting the home site, go to> aka.ms/homesites
