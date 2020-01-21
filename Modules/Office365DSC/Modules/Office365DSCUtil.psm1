@@ -2083,7 +2083,7 @@ function Get-AllSPOPackages
         -CloudCredential $GlobalAdminAccount `
         -Platform PnP
 
-    $filesToDOwnload = @()
+    $filesToDownload = @()
 
     if ($null -ne $tenantAppCatalogUrl)
     {
