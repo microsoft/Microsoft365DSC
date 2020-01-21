@@ -94,22 +94,18 @@ function Get-TargetResource
     {
         $result = @{
             Ensure = 'Present'
-        }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-        {
-            if ($null -ne $SafeAttachmentRule.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $SafeAttachmentRule.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
-
+            Identity                  = $SafeAttachmentRule.Identity
+            SafeAttachmentPolicy      = $SafeAttachmentRule.SafeAttachmentPolicy
+            Comments                  = $SafeAttachmentRule.Comments
+            Enabled                   = $true
+            ExceptIfRecipientDomainIs = $SafeAttachmentRule.ExceptIfRecipientDomainIs
+            ExceptIfSentTo            = $SafeAttachmentRule.ExceptIfSentTo
+            ExceptIfSentToMemberOf    = $SafeAttachmentRule.ExceptIfSentToMemberOf
+            Priority                  = $SafeAttachmentRule.Priority
+            RecipientDomainIs         = $SafeAttachmentRule.RecipientDomainIs
+            SentTo                    = $SafeAttachmentRule.SentTo
+            SentToMemberOf            = $SafeAttachmentRule.SentToMemberOf
+            GlobalAdminAccount        = $GlobalAdminAccount
         }
         if ('Enabled' -eq $SafeAttachmentRule.State)
         {
@@ -319,6 +315,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -332,9 +329,11 @@ function Export-TargetResource
     $content = ''
     if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
     {
-        $SafeAttachmentRules = Get-SafeAttachmentRule
+        [array]$SafeAttachmentRules = Get-SafeAttachmentRule
+        $i = 1
         foreach ($SafeAttachmentRule in $SafeAttachmentRules)
         {
+            Write-Information "    - [$i/$($SafeAttachmentRules.Length)] $($SafeAttachmentRule.Identity)"
             $params = @{
                 Identity             = $SafeAttachmentRule.Identity
                 SafeAttachmentPolicy = $SafeAttachmentRule.SafeAttachmentPolicy
@@ -347,6 +346,7 @@ function Export-TargetResource
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $content += "        }`r`n"
+            $i++
         }
     }
     else
