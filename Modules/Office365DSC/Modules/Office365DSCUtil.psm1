@@ -1771,7 +1771,8 @@ function Export-O365Configuration
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $WarningPreference - 'SilentlyContinue'
+    $InformationPreference = 'SilentlyContinue'
+    $WarningPreference = 'SilentlyContinue'
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -2082,15 +2083,19 @@ function Get-AllSPOPackages
         -CloudCredential $GlobalAdminAccount `
         -Platform PnP
 
-    $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
-    $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+    $filesToDownload = @()
 
-    $allFiles = $spfxFiles + $appFiles
-    $filesToDOwnload = @()
-
-    foreach ($file in $allFiles)
+    if ($null -ne $tenantAppCatalogUrl)
     {
-        $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title}
+        $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
+        $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+
+        $allFiles = $spfxFiles + $appFiles
+
+        foreach ($file in $allFiles)
+        {
+            $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title}
+        }
     }
     return $filesToDownload
 }
