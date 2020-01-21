@@ -283,6 +283,7 @@ function Export-TargetResource
     $elapsedTime = 0
     do
     {
+        $InformationPreference = 'SilentlyContinue'
         $jobs = Get-Job | Where-Object -FilterScript { $_.Name -like '*SPOUserProfileProperty*' }
         $count = $jobs.Length
         foreach ($job in $jobs)
