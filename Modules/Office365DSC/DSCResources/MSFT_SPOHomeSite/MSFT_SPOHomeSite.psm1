@@ -38,25 +38,27 @@ function Get-TargetResource
     {
         Write-Verbose -Message "Getting current home site collection settings"
         $homeSiteUrl = Get-SPOHomeSite
-        if ($null -eq $url)
+        if ($null -eq $homeSiteUrl)
         {
             Write-Verbose -Message "There is no Home Site Collection set."
             return $nullReturn
         }
-
-        $nullReturn = @{
-            $IsSingleInstance  = $IsSingleInstance
-            $Url               = $homeSiteUrl
-            Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdminAccount
+        else
+        {
+            $result = @{
+                $IsSingleInstance  = $IsSingleInstance
+                $Url               = $homeSiteUrl
+                Ensure             = "Present"
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            return $result
         }
-        return $result
     }
     catch
     {
         Write-Verbose -Message "There was an error in the SPOHomeSite resource."
-        return $nullReturn
     }
+    return $nullReturn
 }
 
 function Set-TargetResource
@@ -103,7 +105,7 @@ function Set-TargetResource
         }
         catch
         {
-            $Message = "The specified Site Collection {$Url} for SPOHomeSite doesn't exist."
+            $Message = "The specified Site Collection $($Url) for SPOHomeSite doesn't exist."
             New-Office365DSCLogEntry -Error $_ -Message $Message
             throw $Message
         }
