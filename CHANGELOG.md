@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+* EXOAcceptedDomain
+  * Fixed an issue where the domains were not properly extracted
+    if multiple domain matches a similar pattern;
 * EXOHostedOutboundSpamFilterPolicy
   * Fixed an error where the resource was not being extracted via
     the Graphical User Interface;
