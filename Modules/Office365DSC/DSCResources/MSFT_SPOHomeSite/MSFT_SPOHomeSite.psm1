@@ -29,7 +29,7 @@ function Get-TargetResource
         -Platform PnP
 
     $nullReturn = @{
-        $IsSingleInstance  = $IsSingleInstance
+        IsSingleInstance   = $IsSingleInstance
         Ensure             = "Absent"
         GlobalAdminAccount = $GlobalAdminAccount
     }
@@ -46,7 +46,7 @@ function Get-TargetResource
         else
         {
             $result = @{
-                $IsSingleInstance  = $IsSingleInstance
+                IsSingleInstance   = $IsSingleInstance
                 $Url               = $homeSiteUrl
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
