@@ -164,8 +164,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Identity           = 'contoso.com'
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-HostedConnectionFilterPolicy -MockWith {
+                return @{
+                    Identity = 'TestPolicy'
+                }
             }
 
             It "Should Reverse Engineer resource from the Export method" {

@@ -208,7 +208,7 @@ function Set-TargetResource
     catch
     {
         $Message = "The specified Site Collection {$Url} for SPOHubSite doesn't already exist."
-        New-Office365DSCLogEntry -Error $_ -Message $Message
+        New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
         throw $Message
     }
 
@@ -450,27 +450,60 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Url,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = "`$Credsglobaladmin"
 
-    $content = "        SPOHubSite " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SharePointOnline
+
+    $hubSites = Get-SPOHubSite
+
+    $i = 1
+    $content = ''
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
+    if ($GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
+    }
+    foreach ($hub in $hubSites)
+    {
+        Write-Information "    - [$i/$($hubSites.Length)] $($hub.SiteUrl)"
+        $params = @{
+            GlobalAdminAccount = $GlobalAdminAccount
+            Url                = $hub.SiteUrl
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = "`$Credsglobaladmin"
+
+        $content += "        SPOHubSite " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+        if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+            $partialContent.ToLower().Contains($principal.ToLower()))
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
+            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+        }
+        $content += $partialContent
+        $content += "        }`r`n"
+        $i++
+    }
     return $content
 }
 

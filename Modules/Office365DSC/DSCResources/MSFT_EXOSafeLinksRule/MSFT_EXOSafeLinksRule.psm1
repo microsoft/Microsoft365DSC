@@ -58,6 +58,7 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
+    $InformationPreference = 'Continue'
     Write-Verbose -Message "Setting configuration of SafeLinksRule for $Identity"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -82,24 +83,21 @@ function Get-TargetResource
     else
     {
         $result = @{
-            Ensure = 'Present'
+            Identity                  = $SafeLinksRule.Identity
+            SafeLinksPolicy           = $SafeLinksRule.SafeLinksPolicy
+            Comments                  = $SafeLinksRule.Comments
+            Enabled                   = $true
+            ExceptIfRecipientDomainIs = $SafeLinksRule.ExceptIfRecipientDomainIs
+            ExceptIfSentTo            = $SafeLinksRule.ExceptIfSentTo
+            ExceptIfSentToMemberOf    = $SafeLinksRule.ExceptIfSentToMemberOf
+            Priority                  = $SafeLinksRule.Priority
+            RecipientDomainIs         = $SafeLinksRule.RecipientDomainIs
+            SentTo                    = $SafeLinksRule.SentTo
+            SentToMemberOf            = $SafeLinksRule.SentToMemberOf
+            GlobalAdminAccount        = $GlobalAdminAccount
+            Ensure                    = 'Present'
         }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-        {
-            if ($null -ne $SafeLinksRule.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $SafeLinksRule.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
 
-        }
         if ('Enabled' -eq $SafeLinksRule.State)
         {
             # Accounts for Get-SafeLinksRule returning 'State' instead of 'Enabled' used by New/Set
@@ -305,30 +303,48 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $SafeLinksPolicy,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        EXOSafeLinksRule " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform ExchangeOnline `
+        -ErrorAction SilentlyContinue
+    $content = ''
+    if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeLinksRule)
+    {
+        [array]$SafeLinksRules = Get-SafeLinksRule
+        $i = 1
+        foreach ($SafeLinksRule in $SafeLinksRules)
+        {
+            Write-Information "    - [$i/$($SafeLinksRules.Length)] $($SafeLinksRule.Identity)"
+            $params = @{
+                Identity           = $SafeLinksRule.Identity
+                SafeLinksPolicy    = $SafeLinksRule.SafeLinksPolicy
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        EXOSafeLinksRule " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
+            $i++
+        }
+    }
+    else
+    {
+        Write-Information "The current tenant is not registered to allow for Safe Links Rules."
+    }
     return $content
 }
 

@@ -448,14 +448,14 @@ function Set-TargetResource
                     if ($null -ne $siteAlreadyDeleted)
                     {
                         $Message = "The site $($Url) already exists in the deleted sites."
-                        New-Office365DSCLogEntry -Error $_ -Message $Message
+                        New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
                         throw $Message
                     }
                 }
                 catch
                 {
                     $Message = "The site $($Url) does not exist in the deleted sites."
-                    New-Office365DSCLogEntry -Error $_ -Message $Message
+                    New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
                     throw $Message
                 }
             }
@@ -662,36 +662,71 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Url,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Owner,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    if ($result.RestrictedToGeo -eq "Unknown")
-    {
-        $result.Remove("RestrictedToGeo")
-    }
-    $result.Remove("HubUrl")
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SharePointOnline
+    $invalidTemplates = @("SRCHCEN#0", "GROUP#0", "SPSMSITEHOST#0", "POINTPUBLISHINGHUB#0", "POINTPUBLISHINGTOPIC#0")
+    $sites = Get-SPOSite -Limit All | Where-Object -FilterScript { $_.Template -notin $invalidTemplates }
 
-    $content = "        SPOSite " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    $partialContent = ""
+    $content = ''
+    $i = 1
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
+    if ($GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
+    }
+    foreach ($site in $sites)
+    {
+        Write-Information "    - [$i/$($sites.Length)] $($site.Url)"
+        $params = @{
+            GlobalAdminAccount = $GlobalAdminAccount
+            Url                = $site.Url
+            Owner              = "Reverse"
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        if ($result.RestrictedToGeo -eq "Unknown")
+        {
+            $result.Remove("RestrictedToGeo")
+        }
+        $result.Remove("HubUrl")
+
+        $content += "        SPOSite " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+        if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape($principal + ".sharepoint.com"), "`$(`$OrganizationName.Split('.')[0]).sharepoint.com"
+        }
+        if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+        }
+        if ($partialContent.ToLower().Contains("@" + $principal.ToLower()))
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$OrganizationName.Split('.')[0])"
+        }
+        $content += $partialContent
+        $content += "        }`r`n"
+        $i++
+    }
     return $content
 }
 

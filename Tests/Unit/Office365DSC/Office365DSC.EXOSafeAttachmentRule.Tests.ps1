@@ -196,10 +196,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Identity             = 'contoso.com'
                 GlobalAdminAccount   = $GlobalAdminAccount
+            }
 
-                SafeAttachmentPolicy = 'TestPolicy'
+            Mock -CommandName Get-SafeAttachmentRule -MockWith {
+                return @{
+                    Identity = 'TestRule'
+                }
             }
 
             It "Should Reverse Engineer resource from the Export method" {

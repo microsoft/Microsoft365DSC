@@ -93,7 +93,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPTenant -MockWith {
                 return @{
-                    GlobalAdminAccount           = $GlobalAdminAccount
                     DisplayStartASiteOption      = $false
                     StartASiteFormUrl            = "https://o365dsc1.sharepoint.com"
                     IPAddressEnforcement         = $false

@@ -142,7 +142,7 @@ function Set-TargetResource
         catch
         {
             $Message = "The SPOTheme $($theme) does not exist and for that cannot be removed."
-            New-Office365DSCLogEntry -Error $_ -Message $Message
+            New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
             Write-Error $Message
         }
     }
@@ -182,13 +182,14 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove("GlobalAdminAccount") | Out-Null
+    $ValuesToCheck.Remove("Palette") | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "Name", `
-            "IsInverted")
+        -ValuesToCheck $ValuesToCheck.Keys
 
     if ($TestResult)
     {

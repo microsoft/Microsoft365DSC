@@ -213,6 +213,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
+                MaxProcesses       = 16
             }
 
             Mock -CommandName Get-Team -MockWith {

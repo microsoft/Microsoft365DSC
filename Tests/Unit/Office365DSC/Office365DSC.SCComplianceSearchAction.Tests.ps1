@@ -156,7 +156,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 EnableDedupe                        = $False;
             }
 
-
             Mock -CommandName Get-ComplianceSearch -MockWith {
                 return @{
                     Name = "Test Search"
@@ -170,7 +169,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SearchName                          = "Test Search";
                     FileTypeExclusionsForUnindexedItems = $null;
                     IncludeCredential                   = $False;
-                    RetryOnError                        = $False;
+                    Retry                               = $False;
                     ActionScope                         = "IndexedItemsOnly";
                     EnableDedupe                        = $False;
                     Results                             = 'Container url:
@@ -183,12 +182,59 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Failed sources: 0; Total estimated bytes: 259,252; Total estimated items: 3;
                     Total transferred bytes: 259,252; Total transferred items: 3; Progress: 100.00
                     %; Completed time: 2019-09-10 5:18:34 PM; Duration: 00:00:16.6967563; Export
-                    status: Completed'
+                    status: Completed;'
                 }
             }
 
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should Be $false
+            It 'Should return true from the Test method' {
+                Test-TargetResource @testParams | Should Be $true
+            }
+
+            It 'Should return Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            }
+        }
+
+        Context -Name "Action is set to 'Purge'" -Fixture {
+            $testParams = @{
+                Action                              = "Purge";
+                SearchName                          = "Test Search";
+                GlobalAdminAccount                  = $GlobalAdminAccount;
+                Ensure                              = "Present";
+            }
+
+            Mock -CommandName Get-ComplianceSearch -MockWith {
+                return @{
+                    Name = "Test Search"
+                }
+            }
+
+            Mock -CommandName Get-ComplianceSearchAction -MockWith {
+                return @{
+                    IncludeSharePointDocumentVersions   = $False;
+                    Action                              = "Purge";
+                    SearchName                          = "Test Search";
+                    FileTypeExclusionsForUnindexedItems = $null;
+                    IncludeCredential                   = $False;
+                    Retry                               = $False;
+                    ActionScope                         = "IndexedItemsOnly";
+                    EnableDedupe                        = $False;
+                    Results                             = 'Container url:
+                    https://gabwedisccan.blob.core.windows.net/267bbbb1-2630-41ba-d56b-08d73612df43;
+                    SAS token: <Specify -IncludeCredential parameter to show the SAS token>;
+                    Scenario: RetentionReports; Purge Type: Delete; Scope: IndexedItemsOnly; Scope details:
+                    AllUnindexed; Max unindexed size: 0; File type exclusions for unindexed: <null>;
+                    Total sources: 0; Include SharePoint versions: False; Enable dedupe: False;
+                    Reference action: "<null>"; Region: ; Started sources: 1; Succeeded sources: 1;
+                    Failed sources: 0; Total estimated bytes: 259,252; Total estimated items: 3;
+                    Total transferred bytes: 259,252; Total transferred items: 3; Progress: 100.00
+                    %; Completed time: 2019-09-10 5:18:34 PM; Duration: 00:00:16.6967563; Export
+                    status: Completed;'
+                }
+            }
+
+            It 'Should return true from the Test method' {
+                Test-TargetResource @testParams | Should Be $true
             }
 
             It 'Should return Present from the Get method' {
@@ -223,7 +269,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SearchName                          = "Test Search";
                     FileTypeExclusionsForUnindexedItems = $null;
                     IncludeCredential                   = $False;
-                    RetryOnError                        = $False;
+                    Retry                               = $False;
                     ActionScope                         = "IndexedItemsOnly";
                     EnableDedupe                        = $False;
                     Results                             = 'Container url:
@@ -280,7 +326,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SearchName                          = "Test Search";
                     FileTypeExclusionsForUnindexedItems = $null;
                     IncludeCredential                   = $False;
-                    RetryOnError                        = $False;
+                    Retry                               = $False;
                     ActionScope                         = "IndexedItemsOnly";
                     EnableDedupe                        = $False;
                     Results                             = 'Container url:

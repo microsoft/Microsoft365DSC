@@ -135,8 +135,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
-                Name               = "Test Policy"
-                Reviewers          = @("admin@contoso.com")
             }
 
             Mock -CommandName Get-SupervisoryReviewPolicyV2 -MockWith {

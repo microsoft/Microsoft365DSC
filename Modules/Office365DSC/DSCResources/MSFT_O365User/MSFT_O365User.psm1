@@ -347,7 +347,7 @@ function Set-TargetResource
             {
                 $Message = "License {$($LicenseAssignment)} doesn't exist in tenant."
                 Write-Verbose $Message
-                New-Office365DSCLogEntry -Error $_ -Message $Message
+                New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
             }
         }
         Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
@@ -369,7 +369,7 @@ function Set-TargetResource
         catch
         {
             $Message = "Could not assign license {$($newLicenseAssignment)} to user {$($UserPrincipalName)}"
-            New-Office365DSCLogEntry -Error $_ -Message $Message
+            New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
             throw $Message
         }
     }
@@ -525,10 +525,6 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $UserPrincipalName,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -538,20 +534,61 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-    $PSBoundParameters.Add("Password", $GlobalAdminAccount)
-    $result = Get-TargetResource @PSBoundParameters
-    $content = ""
-    if ($null -ne $result.UserPrincipalName)
+
+    Test-MSCloudLogin -Platform MSOnline -CloudCredential $GlobalAdminAccount
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
+    if ($GlobalAdminAccount.UserName.Contains("@"))
     {
-        $result.Password = Resolve-Credentials -UserName "globaladmin"
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $modulePath = $PSScriptRoot + "\MSFT_O365User.psm1"
-        $content = "        O365User " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath
-        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Password"
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
+    }
+    $users = Get-MsolUser
+    $content = ''
+    $partialContent = ""
+    $i = 1
+    foreach ($user in $users)
+    {
+        Write-Information "    - [$i/$($users.Length)] $($user.UserPrincipalName)"
+        $userUPN = $user.UserPrincipalName
+        if (-not [System.String]::IsNullOrEmpty($userUPN))
+        {
+            $params = @{
+                UserPrincipalName   = $userUPN
+                GlobalAdminAccount  = $GlobalAdminAccount
+                Password            = $GlobalAdminAccount
+            }
+
+            $result = Get-TargetResource @params
+            $content = ""
+            if ($null -ne $result.UserPrincipalName)
+            {
+                $result.Password = Resolve-Credentials -UserName "globaladmin"
+                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                $content += "        O365User " + (New-GUID).ToString() + "`r`n"
+                $content += "        {`r`n"
+                $partialContent = Get-DSCBlock -Params $result -ModulePath  $PSScriptRoot
+                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "Password"
+                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+                if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
+                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+                }
+
+                if ($partialContent.ToLower().IndexOf($principal.ToLower()) -gt 0)
+                {
+                    $partialContent = $partialContent -ireplace [regex]::Escape($principal.ToLower()), "`$(`$OrganizationName.Split('.')[0])"
+                }
+                $content += $partialContent
+                $content += "        }`r`n"
+            }
+        }
+        $i++
     }
     return $content
 }

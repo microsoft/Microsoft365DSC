@@ -23,6 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
         Mock -CommandName Test-MSCloudLogin -MockWith { }
+        Mock -CommandName New-Office365DSCLogEntry -MockWith {}
 
         # Test contexts
         Context -Name "When the site doesn't already exist" -Fixture {
@@ -51,7 +52,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should throw error in the Set method" {
-                { Set-TargetResource @testParams } | Should throw "The specified Site Collection {$($testPArams.Url)} for SPOHubSite doesn't already exist."
+                { Set-TargetResource @testParams } | Should throw "The specified Site Collection {$($testParams.Url)} for SPOHubSite doesn't already exist."
             }
         }
 
@@ -222,6 +223,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description          = "Wrong Description"
                     RequiresJoinApproval = $false
                     SiteDesignId         = "e8eba920-9cca-4de8-b5aa-1da75a2a893c"
+                    SiteUrl              = 'https://contoso.hub.sharepoint.com'
                 }
                 return $returnVal
             }
@@ -324,15 +326,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Url                = "https://contoso.com/sites/TestSite"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-SPOSite -MockWith {
                 return @{
-                    Url    = "https://contoso.com/sites/TestSite"
-                    Ensure = "Present"
+                    IsHubSite = $true
                 }
+            }
+
+            Mock -CommandName Get-SPOHubSite -MockWith {
+                $returnVal = @{
+                    Permissions          = @(
+                        @{
+                            PrincipalName = "i:0#.f|membership|wrongadmin@contoso.onmicrosoft.com"
+                        },
+                        @{
+                            PrincipalName = "c:0o.c|federateddirectoryclaimprovider|bfc75218-faac-4202-bf33-3a8ba2e2b4a7"
+                        }
+                    )
+                    LogoUrl              = "https://contoso.sharepoint.com/sites/Marketing/SiteAssets/hublogo.png"
+                    Title                = "Wrong Title"
+                    Description          = "Wrong Description"
+                    RequiresJoinApproval = $false
+                    SiteDesignId         = "e8eba920-9cca-4de8-b5aa-1da75a2a893c"
+                    SiteUrl              = 'https://contoso.hub.sharepoint.com'
+                }
+                return $returnVal
             }
 
             It "Should Reverse Engineer resource from the Export method" {

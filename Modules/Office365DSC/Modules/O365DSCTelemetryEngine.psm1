@@ -40,7 +40,7 @@ function Add-O365DSCTelemetryEvent
 
     $TelemetryEnabled = [System.Environment]::GetEnvironmentVariable('O365DSCTelemetryEnabled', `
         [System.EnvironmentVariableTarget]::Machine)
-    if ($null -eq $TelemetryEnabled -or $TelemetryEnabled)
+    if ($null -eq $TelemetryEnabled -or $TelemetryEnabled -eq $true)
     {
         $TelemetryClient = Get-ApplicationInsightsTelemetryClient
 

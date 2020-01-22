@@ -20,6 +20,17 @@ function Remove-PSSession{
     )
 }
 
+function Get-SPOAdministrationUrl
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+}
+
 function Test-MSCloudLogin
 {
     [CmdletBinding()]
@@ -628,3 +639,44 @@ function Remove-SafeLinksRule
     )
 }
 #endregion
+
+function New-Office365DSCLogEntry
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Error,
+
+        [Parameter()]
+        [System.String]
+        $Message,
+
+        [Parameter()]
+        [System.String]
+        $Source
+    )
+}
+
+function Confirm-ImportedCmdletIsAvailable
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CmdletName
+    )
+}
+
+function Get-AllSPOPackages
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+}

@@ -405,11 +405,6 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Yes')]
-        [String]
-        $IsSingleInstance,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -419,7 +414,12 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-    $result = Get-TargetResource @PSBoundParameters
+
+    $params = @{
+        IsSingleInstance   = 'Yes'
+        GlobalAdminAccount = $GlobalAdminAccount
+    }
+    $result = Get-TargetResource @params
     if ($null -eq $result.MaxCompatibilityLevel)
     {
         $result.Remove("MaxCompatibilityLevel")

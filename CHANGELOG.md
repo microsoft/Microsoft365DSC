@@ -1,6 +1,46 @@
 # Change log for Office365Dsc
 
-## UNRELEASED
+## 1.0.2.1583
+
+* EXOAcceptedDomain
+  * Fixed an issue where the domains were not properly extracted
+    if multiple domain matches a similar pattern;
+* EXOHostedOutboundSpamFilterPolicy
+  * Fixed an error where the resource was not being extracted via
+    the Graphical User Interface;
+* SCComplianceTag
+  * Fix an issue where FilePlanProperty values returned
+    from Get-TargetResource where always empty;
+* SCDLPComplianceRule
+  * Fixed an issue with multiple SensitiveInformation objects;
+  * Fixed an issue where extraction failed if the name of the
+    Sensitive Information property contained apostrophes;
+* SCFilePlanPropertySubCategory
+  * Fixed an issue where the Sub-Categories were not properly extracted,
+    whenever the parent category is custom;
+* TeamsEmergencyCallingPolicy
+  * Initial Release;
+* TeamsEmergencyCallRoutingPolicy
+  * Initial Release;
+* TeamsGuestCallingConfiguration
+  * Initial Release;
+* TeamsGuestMeetingConfiguration
+  * Initial Release;
+* TeamsGuestMessagingConfiguration
+  * Initial Release;
+* TeamsMeetingBroadcastPolicy
+  * Initial Release;
+* ReverseDSC
+  * Updated Graphical User Interface with new resources;
+  * Streamlined the looping logic to simplify development process
+    for new resources;
+* Metadata
+  * Updated Microsoft.Online.SharePoint.PowerShell to version
+    16.0.19515.12000;
+  * Updated ReverseDSC dependency to version 2.0.0.2;
+  * Updated SharePointPnPPowerShellOnline to version 3.17.2001.2;
+* SPOHomeSite
+  * Initial Release;
 
 ## 1.0.1.1395
 
@@ -33,6 +73,8 @@
   * Initial Release;
 * SPOPropertyBag
   * Added multithreading;
+* SPOSiteGroup
+  * Initial Release;
 * SPOSharingSettings
   * Added ExistingExternalUserSharingOnly as a supported value
     for SharingCapabilities;

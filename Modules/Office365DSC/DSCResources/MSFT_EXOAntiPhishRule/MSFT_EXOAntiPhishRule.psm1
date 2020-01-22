@@ -78,7 +78,7 @@ function Get-TargetResource
     }
     catch
     {
-        New-Office365DSCLogEntry -Error $_ -Message "Couldn't get AntiPhishRules"
+        New-Office365DSCLogEntry -Error $_ -Message "Couldn't get AntiPhishRules" -Source $MyInvocation.MyCommand.ModuleName
     }
 
     if ($null -ne $AntiPhishRules)

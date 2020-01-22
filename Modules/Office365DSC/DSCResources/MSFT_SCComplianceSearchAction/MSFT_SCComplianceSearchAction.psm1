@@ -233,7 +233,42 @@ function Set-TargetResource
         Write-Verbose -Message "Creating new Compliance Search Action calling the New-ComplianceSearchAction cmdlet"
 
         Write-Verbose -Message "Set-TargetResource Creation Parameters: `n $(Convert-O365DscHashtableToString -Hashtable $CreationParams)"
-        New-ComplianceSearchAction @CreationParams
+
+        try
+        {
+            New-ComplianceSearchAction @CreationParams -ErrorAction Stop
+        }
+        catch
+        {
+            if ($_.Exception -like "*Please update the search results to get the most current estimate.*")
+            {
+                try
+                {
+                    Write-Verbose "Starting Compliance Search $SearchName"
+                    Start-ComplianceSearch -Identity $SearchName
+
+                    $loop = 1
+                    do
+                    {
+                        $status = (Get-ComplianceSearch -Identity $SearchName).Status
+                        Write-Verbose -Message "($loop) Waiting for 60 seconds for Compliance Search $SearchName to complete."
+                        Start-Sleep -Seconds 60
+                        $loop++
+                    } while ($status -ne 'Completed' -or $loop -lt 10)
+                    New-ComplianceSearchAction @CreationParams -ErrorAction Stop
+                }
+                catch
+                {
+                    New-ComplianceSearchAction @CreationParams -ErrorAction Stop
+                }
+            }
+            else
+            {
+                New-Office365DSCLogEntry -Error $_ -Message "Could not create a new SCComplianceSearchAction" -Source $MyInvocation.MyCommand.ModuleName
+                Write-Verbose -Message "An error occured creating a new SCComplianceSearchAction"
+                throw $_
+            }
+        }
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
     {

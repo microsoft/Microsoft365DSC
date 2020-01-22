@@ -175,7 +175,7 @@ function Get-TargetResource
     catch
     {
         $Message = "Failed to get Tenant client sync settings"
-        New-Office365DSCLogEntry -Error $_ -Message $Message
+        New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
         return $nullReturn
     }
 }
@@ -444,7 +444,7 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPReference = 'Continue'
-    Write-Information "Extracting ODSettings..."
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)

@@ -48,6 +48,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
+        Mock -CommandName Confirm-ImportedCmdletIsAvailable -MockWith {
+            return $true
+        }
+
         # Test contexts
         Context -Name "DkimSigningConfig creation." -Fixture {
             $testParams = @{
@@ -164,8 +168,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Identity           = 'contoso.com'
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-DkimSigningConfig -MockWith {
+                return @{
+                    Identity = 'contoso.com'
+                }
             }
 
             It "Should Reverse Engineer resource from the Export method" {

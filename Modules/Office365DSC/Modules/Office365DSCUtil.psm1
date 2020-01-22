@@ -1216,6 +1216,7 @@ function Set-EXOHostedContentFilterRule
 function Confirm-ImportedCmdletIsAvailable
 {
     [CmdletBinding()]
+    [OutputType([System.Boolean])]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -1373,8 +1374,6 @@ function Test-Office365DSCParameterState
         [System.String]
         $Source = 'Generic'
     )
-    $VerbosePreference = "Continue"
-    $WarningPreference = "SilentlyContinue"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", "$Source")
@@ -1450,7 +1449,12 @@ function Test-Office365DSCParameterState
                                 $currentEntry = @{ }
                                 foreach ($prop in $item.CIMInstanceProperties)
                                 {
-                                    $currentEntry.Add($prop.Name, $prop.Value)
+                                    $value = $prop.Value
+                                    if ([System.String]::IsNullOrEmpty($value))
+                                    {
+                                        $value = $null
+                                    }
+                                    $currentEntry.Add($prop.Name, $value)
                                 }
                                 $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
                             }
@@ -1590,6 +1594,60 @@ function Test-Office365DSCParameterState
                                     $returnValue = $false
                                 }
                             }
+                            "Hashtable"
+                            {
+                                Write-Verbose -Message "The current property {$fieldName} is a Hashtable"
+                                $AllDesiredValuesAsArray = @()
+                                foreach ($item in $DesiredValues.$fieldName)
+                                {
+                                    $currentEntry = @{ }
+                                    foreach ($key in $item.Keys)
+                                    {
+                                        $value = $item.$key
+                                        if ([System.String]::IsNullOrEmpty($value))
+                                        {
+                                            $value = $null
+                                        }
+                                        $currentEntry.Add($key, $value)
+                                    }
+                                    $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
+                                }
+
+                                if ($null -ne $DesiredValues.$fieldName -and $null -eq $CurrentValues.$fieldName)
+                                {
+                                    $returnValue = $false
+                                }
+                                else
+                                {
+                                    $AllCurrentValuesAsArray = @()
+                                    foreach ($item in $CurrentValues.$fieldName)
+                                    {
+                                        $currentEntry = @{ }
+                                        foreach ($key in $item.Keys)
+                                        {
+                                            $value = $item.$key
+                                            if ([System.String]::IsNullOrEmpty($value))
+                                            {
+                                                $value = $null
+                                            }
+                                            $currentEntry.Add($key, $value)
+                                        }
+                                        $AllCurrentValuesAsArray += [PSCustomObject]$currentEntry
+                                    }
+                                    $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $AllCurrentValuesAsArray `
+                                    -DesiredValues $AllCurrentValuesAsArray
+                                    if ($null -ne $arrayCompare)
+                                    {
+                                        foreach ($item in $arrayCompare)
+                                        {
+                                            $EventValue = "<CurrentValue>[$($item.PropertyName)]$($item.CurrentValue)</CurrentValue>"
+                                            $EventValue += "<DesiredValue>[$($item.PropertyName)]$($item.DesiredValue)</DesiredValue>"
+                                            $DriftedParameters.Add($fieldName, $EventValue)
+                                        }
+                                        $returnValue = $false
+                                    }
+                                }
+                            }
                             default
                             {
                                 Write-Verbose -Message ("Unable to compare property $fieldName " + `
@@ -1693,6 +1751,10 @@ function Export-O365Configuration
         $FileName,
 
         [Parameter()]
+        [System.String]
+        $ConfigurationName,
+
+        [Parameter()]
         [System.String[]]
         $ComponentsToExtract,
 
@@ -1709,6 +1771,8 @@ function Export-O365Configuration
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'SilentlyContinue'
+    $WarningPreference = 'SilentlyContinue'
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -1739,6 +1803,7 @@ function Export-O365Configuration
                 -Workloads $Workloads `
                 -Path $Path -FileName $FileName `
                 -MaxProcesses $MaxProcesses `
+                -ConfigurationName $ConfigurationName `
                 -Quiet
         }
         elseif ($null -ne $ComponentsToExtract)
@@ -1747,6 +1812,7 @@ function Export-O365Configuration
                 -ComponentsToExtract $ComponentsToExtract `
                 -Path $Path -FileName $FileName `
                 -MaxProcesses $MaxProcesses `
+                -ConfigurationName $ConfigurationName `
                 -Quiet
         }
         else
@@ -1755,6 +1821,7 @@ function Export-O365Configuration
                 -AllComponents `
                 -Path $Path -FileName $FileName `
                 -MaxProcesses $MaxProcesses `
+                -ConfigurationName $ConfigurationName `
                 -Quiet
         }
     }
@@ -1876,8 +1943,8 @@ function Invoke-O365DSCCommand
         $Backoff = 2
     )
 
-    $InformationPreference = 'Continue'
-    $WarningPreference = 'Continue'
+    $InformationPreference = 'SilentlyContinue'
+    $WarningPreference = 'SilentlyContinue'
     $ErrorActionPreference = 'Stop'
     try
     {
@@ -1995,4 +2062,40 @@ function Install-O365DSCDevBranch
     }
     Copy-Item "$extractPath\Office365DSC-Dev\Modules\Office365DSC" -Destination $currentVersionPath -Recurse -Force
     #endregion
+}
+
+function Get-AllSPOPackages
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
+
+    $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
+
+    Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
+        -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
+
+    $filesToDownload = @()
+
+    if ($null -ne $tenantAppCatalogUrl)
+    {
+        $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
+        $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+
+        $allFiles = $spfxFiles + $appFiles
+
+        foreach ($file in $allFiles)
+        {
+            $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title}
+        }
+    }
+    return $filesToDownload
 }

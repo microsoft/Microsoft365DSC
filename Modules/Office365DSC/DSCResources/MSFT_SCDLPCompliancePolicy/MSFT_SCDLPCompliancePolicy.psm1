@@ -463,10 +463,6 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -476,13 +472,35 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        SCDLPCompliancePolicy " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SecurityComplianceCenter `
+        -ErrorAction SilentlyContinue
+    $policies = Get-DLPCompliancePolicy | Where-Object -FilterScript { $_.Mode -ne 'PendingDeletion' }
+
+    $totalPolicies = $policies.Length
+    if ($null -eq $totalPolicies)
+    {
+        $totalPolicies = 1
+    }
+    $i = 1
+    $content = ''
+    foreach ($policy in $policies)
+    {
+        Write-Information "    - [$i/$($totalPolicies)] $($policy.Name)"
+        $params = @{
+            GlobalAdminAccount = $GlobalAdminAccount
+            Name               = $policy.Name
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content += "        SCDLPCompliancePolicy " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        $i++
+    }
     return $content
 }
 
