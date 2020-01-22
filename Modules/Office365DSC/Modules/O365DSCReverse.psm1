@@ -225,7 +225,8 @@ function Start-O365ConfigurationExtract
             Write-Information "Directory `"$OutputDSCPath`" doesn't exist; creating..."
             New-Item -Path $OutputDSCPath -ItemType Directory | Out-Null
             if ($?)
-            { break
+            {
+                break
             }
         }
         catch
