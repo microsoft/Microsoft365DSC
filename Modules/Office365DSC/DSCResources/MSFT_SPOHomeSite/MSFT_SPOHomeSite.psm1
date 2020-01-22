@@ -37,7 +37,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting current home site collection settings"
-        $homeSiteUrl = Get-SPOHomeSite
+        $homeSiteUrl = Get-PnPHomeSite
         if ($null -eq $homeSiteUrl)
         {
             Write-Verbose -Message "There is no Home Site Collection set."
@@ -88,20 +88,16 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration for home site '$Url'"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-        -Platform SharePointOnline
-
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform PnP
 
     $currentValues = Get-TargetResource @PSBoundParameters
 
-    if ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Absent" `
-            -or $Ensure -eq "Present" -and $currentValues.Ensure -eq "Present")
+    if ($Ensure -eq "Present")
     {
         try
         {
             Write-Verbose -Message "Setting home site collection $Url"
-            Get-SPOSite $Url
+            Get-PnPTenantSite -Url $Url
         }
         catch
         {
@@ -113,7 +109,8 @@ function Set-TargetResource
         Write-Verbose -Message "Configuring site collection as Home Site"
         Set-PnPHomeSite -Url $Url
     }
-    else
+
+    if ($Ensure -eq "Absent" -and $currentValues.Ensure -eq "Present")
     {
         # Remove home site
         Remove-PnPHomeSite -Force
@@ -175,15 +172,16 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Yes")]
-        [String]
-        $IsSingleInstance,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
+
+    $params = @{
+        IsSingleInstance   = "Yes"
+        GlobalAdminAccount = $GlobalAdminAccount
+    }
+
+    $result = Get-TargetResource @params
     $result.GlobalAdminAccount = "`$Credsglobaladmin"
 
     $content = "        SPOHomeSite " + (New-GUID).ToString() + "`r`n"

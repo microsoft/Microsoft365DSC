@@ -34,7 +34,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Absent"
             }
 
-            Mock -CommandName Get-SPOHomeSite -MockWith {
+            Mock -CommandName Get-PnPHomeSite -MockWith {
                 return $null
             }
 
@@ -54,7 +54,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Absent"
             }
 
-            Mock -CommandName Get-SPOHomeSite -MockWith {
+            Mock -CommandName Get-PnPHomeSite -MockWith {
                 return "https://contoso.sharepoint.com/sites/homesite"
             }
 
@@ -84,11 +84,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Present"
             }
 
-            Mock -CommandName Get-SPOHomeSite -MockWith {
+            Mock -CommandName Get-PnPHomeSite -MockWith {
                 return "https://contoso.sharepoint.com/sites/homesite"
             }
 
-            Mock -CommandName Get-SPOSite -MockWith {
+            Mock -CommandName Get-PnPTenantSite -MockWith {
                 throw
             }
 
@@ -110,7 +110,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should throw an error" {
                 { Set-TargetResource @testParams } | Should Throw "The specified Site Collection $($testParams.Url) for SPOHomeSite doesn't exist."
-                Assert-MockCalled Get-SPOSite
+                Assert-MockCalled Get-PnPTenantSite
                 Assert-MockCalled New-Office365DSCLogEntry
             }
         }
@@ -123,31 +123,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Present"
             }
 
-            Mock -CommandName Get-SPOHomeSite -MockWith {
+            Mock -CommandName Get-PnPHomeSite -MockWith {
                 return "https://contoso.sharepoint.com/sites/homesite1"
             }
 
             Mock -CommandName Set-PnPHomeSite -MockWith {
             }
 
-            Mock -CommandName Get-SPOSite -MockWith {
+            Mock -CommandName Get-PnPTenantSite -MockWith {
 
             }
 
             It "Should set the correct site" {
                 Set-TargetResource @testParams
-                Assert-MockCalled Get-SPOSite
+                Assert-MockCalled Get-PnPTenantSite
                 Assert-MockCalled Set-PnPHomeSite
             }
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                IsSingleInstance   = "Yes"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-SPOHomeSite -MockWith {
+            Mock -CommandName Get-PnPHomeSite -MockWith {
                 return "https://contoso.sharepoint.com/sites/TestSite"
             }
 

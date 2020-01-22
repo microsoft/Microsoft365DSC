@@ -14,7 +14,7 @@ Configuration Example
 
     node localhost
     {
-        SPOHomeSite "ff4a977d-4d7d-4968-9238-2a1702aa699c"
+        SPOHomeSite "SetMarketingSiteCollectionAsHomeSite"
         {
             IsSingleInstance     = "Yes"
             Url                  = "https://office365dsc.sharepoint.com/sites/Marketing"
