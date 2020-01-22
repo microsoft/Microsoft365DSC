@@ -1,6 +1,6 @@
 # Change log for Office365Dsc
 
-## UNRELEASED
+## 1.0.2.1583
 
 * EXOAcceptedDomain
   * Fixed an issue where the domains were not properly extracted
