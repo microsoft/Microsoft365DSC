@@ -353,6 +353,15 @@ function Show-O365GUI
         $chckSPOHubSite.Text = "Hub Sites"
         $pnlSPO.Controls.Add($chckSPOHubSite)
 
+        $chckSPOHomeSite = New-Object System.Windows.Forms.CheckBox
+        $chckSPOHomeSite.Top = 40
+        $chckSPOHomeSite.AutoSize = $true;
+        $chckSPOHomeSite.Name = "chckSPOHomeSite"
+        $chckSPOHomeSite.Checked = $true
+        $chckSPOHomeSite.Enabled = $true
+        $chckSPOHomeSite.Text = "Home Site"
+        $pnlSPO.Controls.Add($chckSPOHomeSite)
+
         $chckSPOPropertyBag = New-Object System.Windows.Forms.CheckBox
         $chckSPOPropertyBag.Top = 60
         $chckSPOPropertyBag.AutoSize = $true;
