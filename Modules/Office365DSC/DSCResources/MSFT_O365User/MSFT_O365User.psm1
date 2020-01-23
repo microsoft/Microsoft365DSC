@@ -564,7 +564,6 @@ function Export-TargetResource
             }
 
             $result = Get-TargetResource @params
-            $content = ""
             if ($null -ne $result.UserPrincipalName)
             {
                 $result.Password = Resolve-Credentials -UserName "globaladmin"
