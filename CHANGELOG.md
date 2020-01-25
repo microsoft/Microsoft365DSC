@@ -1,5 +1,10 @@
 # Change log for Office365Dsc
 
+## UNRELEASED
+
+* Metadata
+  * Updated MSCloudLoginAssistant dependency to 0.8.4;
+
 ## 1.0.2.1583
 
 * EXOAcceptedDomain
