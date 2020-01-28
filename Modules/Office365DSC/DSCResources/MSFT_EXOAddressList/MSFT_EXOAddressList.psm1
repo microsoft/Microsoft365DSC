@@ -83,20 +83,12 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $Container,
-
-        [Parameter()]
-        [System.String]
         $DisplayName,
 
         [Parameter()]
         [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
         [System.String]
         $IncludedRecipients,
-
-        [Parameter()]
-        [System.String]
-        $RecipientContainer,
 
         [Parameter()]
         [System.String]
@@ -113,8 +105,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AddressList for $Name"
-
-    #no telemetry
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
@@ -151,10 +141,8 @@ function Get-TargetResource
             ConditionalCustomeAttribute9         = $AddressList.ConditionalCustomAttribute9
             ConditionalDepartment                = $AddressList.ConditionalDepartment
             ConditionalStateOrProvince           = $AddressList.ConditionalStateOrProvince
-            Container                            = $AddressList.Container
             DisplayName                          = $AddressList.DisplayName
             IncludedRecipients                   = $AddressList.IncludedRecipients
-            RecipientContainer                   = $AddressList.RecipientContainer
             RecipientFilter                      = $AddressList.RecipientFilter
             Ensure                               = 'Present'
             GlobalAdminAccount                   = $GlobalAdminAccount
@@ -175,68 +163,96 @@ function Set-TargetResource
 {
     [CmdletBinding()]
     param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
+    (        
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('AllowAccess', 'DenyAccess')]
         [System.String]
-        $Action,
-
+        $Name,
+        
         [Parameter()]
-        [ValidateSet('AdfsAuthentication', 'BasicAuthentication', 'CertificateBasedAuthentication', 'NonBasicAuthentication', 'OAuthAuthentication')]
-        [System.String[]]
-        $AnyOfAuthenticationTypes = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $AnyOfClientIPAddressesOrRanges = @(),
-
-        [Parameter()]
-        [ValidateSet('ExchangeActiveSync', 'ExchangeAdminCenter', 'ExchangeWebServices', 'IMAP4', 'OfflineAddressBook', 'OutlookAnywhere', 'OutlookWebApp', 'POP3', 'PowerShellWebServices', 'RemotePowerShell', 'REST', 'UniversalOutlook')]
-        [System.String[]]
-        $AnyOfProtocols = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled = $true,
-
-        [Parameter()]
-        [ValidateSet('AdfsAuthentication', 'BasicAuthentication', 'CertificateBasedAuthentication', 'NonBasicAuthentication', 'OAuthAuthentication')]
-        [System.String[]]
-        $ExceptAnyOfAuthenticationTypes = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptAnyOfClientIPAddressesOrRanges = @(),
-
-        [Parameter()]
-        [ValidateSet('ExchangeActiveSync', 'ExchangeAdminCenter', 'ExchangeWebServices', 'IMAP4', 'OfflineAddressBook', 'OutlookAnywhere', 'OutlookWebApp', 'POP3', 'PowerShellWebServices', 'RemotePowerShell', 'REST', 'UniversalOutlook')]
-        [System.String[]]
-        $ExceptAnyOfProtocols = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptUsernameMatchesAnyOfPatterns = @(),
-
-        [Parameter()]
-        [uint32]
-        $Priority,
-
-        [Parameter()]
-        [ValidateSet('All', 'Users')]
         [System.String]
-        $RuleScope,
+        $ConditionalCompany,
 
         [Parameter()]
         [System.String]
-        $UserRecipientFilter,
+        $ConditionalCustomAttribute1,
+        
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute10,
 
         [Parameter()]
-        [System.String[]]
-        $UsernameMatchesAnyOfPatterns = @(),
+        [System.String]
+        $ConditionalCustomAttribute11,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute12,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute13,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute14,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute15,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute2,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute3,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute4,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute5,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute6,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute7,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute8,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute9,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalDepartment,
+
+        [Parameter()]
+        [Sys,tem.String]
+        $ConditionalStateOrProvince,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
+        [System.String]
+        $IncludedRecipients,
+
+        [Parameter()]
+        [System.String]
+        $RecipientFilter,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -248,26 +264,19 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of ClientAccessRule for $Identity"
+    Write-Verbose -Message "Setting AddressList configuration for $Identity"
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
 
-    $AddressLists = Get-ClientAccessRule
+    $AddressLists = Get-AddressList
 
     $AddressList = $AddressLists | Where-Object -FilterScript { $_.Identity -eq $Identity }
     $AddressListParams = $PSBoundParameters
     $AddressListParams.Remove('Ensure') | Out-Null
     $AddressListParams.Remove('GlobalAdminAccount') | Out-Null
-    if ($AddressListParams.RuleScope)
-    {
-        $AddressListParams += @{
-            Scope = $AddressListParams.RuleScope
-        }
-        $AddressListParams.Remove('RuleScope') | Out-Null
-    }
-
+   
     if (('Present' -eq $Ensure ) -and ($null -eq $AddressList))
     {
         Write-Verbose -Message "Creating ClientAccessRule $($Identity)."
@@ -292,68 +301,96 @@ function Test-TargetResource
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
+    (        
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('AllowAccess', 'DenyAccess')]
         [System.String]
-        $Action,
-
+        $Name,
+        
         [Parameter()]
-        [ValidateSet('AdfsAuthentication', 'BasicAuthentication', 'CertificateBasedAuthentication', 'NonBasicAuthentication', 'OAuthAuthentication')]
-        [System.String[]]
-        $AnyOfAuthenticationTypes = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $AnyOfClientIPAddressesOrRanges = @(),
-
-        [Parameter()]
-        [ValidateSet('ExchangeActiveSync', 'ExchangeAdminCenter', 'ExchangeWebServices', 'IMAP4', 'OfflineAddressBook', 'OutlookAnywhere', 'OutlookWebApp', 'POP3', 'PowerShellWebServices', 'RemotePowerShell', 'REST', 'UniversalOutlook')]
-        [System.String[]]
-        $AnyOfProtocols = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled = $true,
-
-        [Parameter()]
-        [ValidateSet('AdfsAuthentication', 'BasicAuthentication', 'CertificateBasedAuthentication', 'NonBasicAuthentication', 'OAuthAuthentication')]
-        [System.String[]]
-        $ExceptAnyOfAuthenticationTypes = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptAnyOfClientIPAddressesOrRanges = @(),
-
-        [Parameter()]
-        [ValidateSet('ExchangeActiveSync', 'ExchangeAdminCenter', 'ExchangeWebServices', 'IMAP4', 'OfflineAddressBook', 'OutlookAnywhere', 'OutlookWebApp', 'POP3', 'PowerShellWebServices', 'RemotePowerShell', 'REST', 'UniversalOutlook')]
-        [System.String[]]
-        $ExceptAnyOfProtocols = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptUsernameMatchesAnyOfPatterns = @(),
-
-        [Parameter()]
-        [uint32]
-        $Priority,
-
-        [Parameter()]
-        [ValidateSet('All', 'Users')]
         [System.String]
-        $RuleScope,
+        $ConditionalCompany,
 
         [Parameter()]
         [System.String]
-        $UserRecipientFilter,
+        $ConditionalCustomAttribute1,
+        
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute10,
 
         [Parameter()]
-        [System.String[]]
-        $UsernameMatchesAnyOfPatterns = @(),
+        [System.String]
+        $ConditionalCustomAttribute11,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute12,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute13,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute14,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute15,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute2,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute3,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute4,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute5,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute6,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute7,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute8,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalCustomAttribute9,
+
+        [Parameter()]
+        [System.String]
+        $ConditionalDepartment,
+
+        [Parameter()]
+        [Sys,tem.String]
+        $ConditionalStateOrProvince,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
+        [System.String]
+        $IncludedRecipients,
+
+        [Parameter()]
+        [System.String]
+        $RecipientFilter,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -365,7 +402,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of ClientAccessRule for $Identity"
+    Write-Verbose -Message "Testing configuration of AddressLists for $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -392,18 +429,11 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter(Mandatory = $true)]
-        [ValidateSet('AllowAccess', 'DenyAccess')]
-        [System.String]
-        $Action,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = "Continue"
+
     $result = Get-TargetResource @PSBoundParameters
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        EXOClientAccessRule " + (New-GUID).ToString() + "`r`n"
