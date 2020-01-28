@@ -2099,3 +2099,30 @@ function Get-AllSPOPackages
     }
     return $filesToDownload
 }
+
+function Remove-NullEntriesFromHashtable
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.COllections.HashTable]
+        $Hash
+    )
+
+    $keysToRemove = @()
+    foreach ($key in $Hash.Keys)
+    {
+        if ([System.String]::IsNullOrEmpty($Hash.$key))
+        {
+            $keysToRemove += $key
+        }
+    }
+
+    foreach ($key in $keysToRemove)
+    {
+        $Hash.Remove($key) | Out-Null
+    }
+
+    return $Hash
+}
