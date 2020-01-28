@@ -148,6 +148,22 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
+    #region "EXOAddressList"
+    if (($null -ne $ComponentsToExtract -and
+            $ComponentsToExtract.Contains("chckEXOAddressList")) -or
+        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains("EXO")))
+    {
+        Write-Information "Extracting EXOAddressLists..."
+
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "..\DSCResources\MSFT_EXOAcceptedDomain\MSFT_EXOAddressList.psm1" `
+            -Resolve
+
+        Import-Module $ModulePath | Out-Null
+        $DSCContent += Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+    }
+    #endregion
+
     #region "EXOAntiPhishPolicy"
     if (($null -ne $ComponentsToExtract -and
             $ComponentsToExtract.Contains("chckEXOAntiPhishPolicy")) -or
