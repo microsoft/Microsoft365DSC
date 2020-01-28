@@ -40,42 +40,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "AddressList doesn't exist but should." -Fixture {
             $testParams = @{
-                Identity           = 'All Users'
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
+                Identity            = 'All Users'
+                DisplayName         = 'All Users'
+                RecipientFilter     = 'testfilter'
+                Ensure              = 'Present'
+                GlobalAdminAccount  = $GlobalAdminAccount
                 
             }
 
             Mock -CommandName Get-AddressList -MockWith {
-                return @{
-                    Name       = 'different.contoso.com'
-                    IsVerified = $true
-                }
+                return $null
             }
 
-            Mock -CommandName Get-AcceptedDomain -MockWith {
-                return @{
-                    DomainType      = 'Authoritative'
-                    Identity        = 'different.contoso.com'
-                    MatchSubDomains = $false
-                    OutboundOnly    = $false
-                }
+            It 'Should return Absent from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should Be 'Absent'
             }
 
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should Be $false
+            It 'Should return False from the Test method' {
+                Test-TargetResouce @testParams | Should Be $false
             }
 
-            Mock -CommandName Set-AcceptedDomain -MockWith {
-                return @{
-                    DomainType         = 'Authoritative'
-                    Ensure             = 'Present'
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    Identity           = 'contoso.com'
-                }
-            }
-
-            It "Should call the Set method" {
+            It "Should create the AddressList in the Set method" {
                 Set-TargetResource @testParams
             }
 
