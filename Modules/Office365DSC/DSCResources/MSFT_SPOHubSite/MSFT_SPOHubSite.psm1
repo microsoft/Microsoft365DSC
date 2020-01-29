@@ -71,7 +71,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting hub site collection $Url"
-        $site = Get-SPOSite $Url
+        $site = Get-PnPTenantSite -Url $Url
         if ($null -eq $site)
         {
             Write-Verbose -Message "The specified Site Collection doesn't already exist."
@@ -85,7 +85,7 @@ function Get-TargetResource
         }
         else
         {
-            $hubSite = Get-PnPHubSite -Identity $site
+            $hubSite = Get-PnPHubSite -Identity $Url
 
             $principals = @()
             foreach ($permission in $hubSite.Permissions.PrincipalName)
@@ -203,7 +203,7 @@ function Set-TargetResource
     try
     {
         Write-Verbose -Message "Setting hub site collection $Url"
-        $site = Get-SPOSite $Url
+        $site = Get-PnPTenantSite $Url
     }
     catch
     {
@@ -217,9 +217,10 @@ function Set-TargetResource
     if ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Configuring site collection as Hub Site"
-        Register-PnPHubSite -Site $site -Principals $AllowedToJoin | Out-Null
+        Register-PnPHubSite -Site $site.Url | Out-Null
+
         $params = @{
-            Identity = $site
+            Identity = $site.Url
         }
 
         if ($PSBoundParameters.ContainsKey("Title") -eq $true)
@@ -274,14 +275,14 @@ function Set-TargetResource
                     }
                 }
             }
-            Grant-PnPHubSiteRights -Identity $site -Principals $AllowedToJoin -Rights Join | Out-Null
+            Grant-PnPHubSiteRights -Identity $site.Url -Principals $AllowedToJoin -Rights Join | Out-Null
         }
     }
     elseif ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Present")
     {
         Write-Verbose -Message "Updating Hub Site settings"
         $params = @{
-            Identity = $site
+            Identity = $site.Url
         }
 
         if ($PSBoundParameters.ContainsKey("Title") -eq $true -and
@@ -357,12 +358,12 @@ function Set-TargetResource
                                 }
                             }
                         }
-                        Grant-PnPHubSiteRights -Identity $site -Principals $item.InputObject -Rights Join | Out-Null
+                        Grant-PnPHubSiteRights -Identity $site.Url -Principals $item.InputObject -Rights 'Join' | Out-Null
                     }
                     else
                     {
                         # Remove item from principals
-                        Revoke-PnPHubSiteRights -Identity $site -Principals $item.InputObject | Out-Null
+                        Grant-PnPHubSiteRights -Identity $site.Url -Principals $item.InputObject -Rights 'None' | Out-Null
                     }
                 }
             }
@@ -371,7 +372,7 @@ function Set-TargetResource
     else
     {
         # Remove hub site
-        Unregister-PnPHubSite -Identity $site -Force
+        Unregister-PnPHubSite -Site $site.Url
     }
 }
 
