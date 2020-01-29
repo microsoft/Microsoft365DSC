@@ -152,12 +152,12 @@ function Get-TargetResource
     #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-        -Platform SharePointOnline
+        -Platform PnP
 
     $nullReturn = @{
         Url                                         = $Url
         Owner                                       = $null
-        #TimeZoneId                                 = $null
+        TimeZoneId                                  = $null
         LocaleId                                    = $null
         Template                                    = $null
         ResourceQuota                               = $null
@@ -192,7 +192,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting site collection $Url"
-        $site = Get-SPOSite $Url
+        $site = Get-PnPTenantSite $Url
         if ($null -eq $site)
         {
             Write-Verbose -Message "The specified Site Collection doesn't exist."
@@ -207,7 +207,7 @@ function Get-TargetResource
         if ($site.HubSiteId -ne "00000000-0000-0000-0000-000000000000")
         {
             $hubId = $site.HubSiteId
-            $hubSites = Get-SPOHubSite
+            $hubSites = Get-PnPHubSite
 
             $hubSite = $hubSites | Where-Object -FilterScript { $_.Id -eq $site.HubSiteId }
             if ($null -ne $hubSite)
@@ -436,28 +436,15 @@ function Set-TargetResource
         Write-Verbose -Message "Removing site $($Url)"
         try
         {
-            Remove-SPOSite -Identity $Url -Confirm:$false
+            Remove-PnPTenantSite -Identity $Url -Confirm:$false -SkipRecycleBin
         }
         catch
         {
             if ($Error[0].Exception.Message -eq "File Not Found")
             {
-                try
-                {
-                    $siteAlreadyDeleted = Get-SPODeletedSite -Identity $Url
-                    if ($null -ne $siteAlreadyDeleted)
-                    {
-                        $Message = "The site $($Url) already exists in the deleted sites."
-                        New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
-                        throw $Message
-                    }
-                }
-                catch
-                {
-                    $Message = "The site $($Url) does not exist in the deleted sites."
-                    New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
-                    throw $Message
-                }
+                $Message = "The site $($Url) does not exist."
+                New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+                throw $Message
             }
         }
     }
@@ -672,10 +659,12 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
+
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SharePointOnline
+        -Platform PnP
+
     $invalidTemplates = @("SRCHCEN#0", "GROUP#0", "SPSMSITEHOST#0", "POINTPUBLISHINGHUB#0", "POINTPUBLISHINGTOPIC#0")
-    $sites = Get-SPOSite -Limit All | Where-Object -FilterScript { $_.Template -notin $invalidTemplates }
+    $sites = Get-PnPTenantSite | Where-Object -FilterScript { $_.Template -notin $invalidTemplates }
 
     $partialContent = ""
     $content = ''
@@ -706,6 +695,7 @@ function Export-TargetResource
             $result.Remove("RestrictedToGeo")
         }
         $result.Remove("HubUrl")
+        $result = Remove-NullEntriesFromHashTable -Hash $result
 
         $content += "        SPOSite " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
@@ -880,23 +870,17 @@ function Set-SPOSiteConfiguration
         $IsSecondTry = $false
     )
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-        -Platform SharePointOnline
-    $deletedSite = Get-SPODeletedSite | Where-Object -FilterScript { $_.Url -eq $Url }
-    if ($deletedSite)
-    {
-        Write-Verbose -Message "A site with URL $($URL) was found in the Recycle Bin."
-        Write-Verbose -Message "Restoring deleted SPOSite $($Url)"
-        Restore-SPODeletedSite $deletedSite
-        Start-Sleep -Seconds 5
-    }
+        -Platform PnP
+
     try
     {
-        $site = Get-SPOSite $Url
+        $site = Get-PnPTenantSite $Url
     }
     catch
     {
         Write-Verbose -Message "Site does not exist. Creating it"
     }
+
     if ($null -ne $site)
     {
         Write-Verbose -Message "Configuring site collection $Url"
@@ -1030,7 +1014,7 @@ function Set-SPOSiteConfiguration
             }
             if ($CurrentParameters.Count -gt 0)
             {
-                Set-SPOSite -Identity $Url @CurrentParameters -NoWait
+                Set-PnPTenantSite -Identity $Url @CurrentParameters -NoWait
             }
         }
         else
@@ -1041,14 +1025,13 @@ function Set-SPOSiteConfiguration
                 {
                     if ($site.HubSiteId -ne "00000000-0000-0000-0000-000000000000")
                     {
-                        Remove-SPOHubSiteAssociation -Site $Url
+                        Remove-PnPHubSiteAssociation -Site $Url
                     }
                 }
                 else
                 {
-                    $hubSites = Get-SPOHubSite
+                    $hubSite = Get-PnPHubSite -Identity $HubUrl
 
-                    $hubSite = $hubSites | Where-Object -FilterScript { $_.SiteUrl -eq $HubUrl }
                     if ($null -eq $hubSite)
                     {
                         throw ("Specified HubUrl ($HubUrl) is not a Hub site. Make sure you " + `
@@ -1057,7 +1040,7 @@ function Set-SPOSiteConfiguration
 
                     if ($site.HubSiteId -ne $hubSite.Id)
                     {
-                        Add-SPOHubSiteAssociation -Site $Url -HubSite $HubUrl
+                        Add-PnPHubSiteAssociation -Site $Url -HubSite $HubUrl
                     }
                 }
             }
@@ -1122,11 +1105,11 @@ function Set-SPOSiteConfiguration
             }
             if ($CurrentParameters.SharingCapability -and $CurrentParameters.DenyAddAndCustomizePages)
             {
-                Write-Warning -Message "Setting the DenyAddAndCustomizePages and the SharingCapability property via Set-SPOSite at the same time might cause the DenyAddAndCustomizePages property not to be configured as desired."
+                Write-Warning -Message "Setting the DenyAddAndCustomizePages and the SharingCapability property via Set-PnPSite at the same time might cause the DenyAddAndCustomizePages property not to be configured as desired."
             }
             if ($CurrentParameters.StorageQuotaWarningLevel)
             {
-                Write-Warning -Message "StorageQuotaWarningLevel can not be configured via Set-SPOSite"
+                Write-Warning -Message "StorageQuotaWarningLevel can not be configured via Set-PnPSite"
             }
             if ($SharingDomainRestrictionMode -eq "")
             {
@@ -1192,7 +1175,8 @@ function Set-SPOSiteConfiguration
                     }
                 }
             }
-            if (($site.SharingCapability -ne "ExternalUserAndGuestSharing") -or ((Get-SPOTenant).SharingCapability -ne "ExternalUserAndGuestSharing") -and ($DefaultSharingLinkType -eq "AnonymousAccess"))
+            $TenantInfo = Get-SPOTenant
+            if (($site.SharingCapability -ne "ExternalUserAndGuestSharing") -or ($TenantInfo.SharingCapability -ne "ExternalUserAndGuestSharing") -and ($DefaultSharingLinkType -eq "AnonymousAccess"))
             {
                 Write-Verbose -Message "Anonymous sharing has to be enabled in the SharingCapability on site and tenant level first before DefaultSharingLinkType can be set to Anonymous Access"
                 if ($CurrentParameters.ContainsKey("DefaultSharingLinkType"))
@@ -1200,7 +1184,7 @@ function Set-SPOSiteConfiguration
                     $CurrentParameters.Remove("DefaultSharingLinkType")
                 }
             }
-            if ((Get-SPOTenant).showPeoplePickerSuggestionsForGuestUsers -eq $false)
+            if ($TenantInfo.showPeoplePickerSuggestionsForGuestUsers -eq $false)
             {
                 Write-Verbose -Message "ShowPeoplePickerSuggestionsForGuestUsers for this site cannot be set since it is set to false on tenant level"
                 if ($CurrentParameters.ContainsKey("showPeoplePickerSuggestionsForGuestUsers"))
@@ -1248,7 +1232,7 @@ function Set-SPOSiteConfiguration
             }
             if ($CurrentParameters.Count -gt 0)
             {
-                Set-SPOSite -Identity $Url @CurrentParameters -NoWait
+                Set-PnPTenantSite -Identity $Url @CurrentParameters -NoWait
             }
         }
     }
@@ -1271,7 +1255,7 @@ function Set-SPOSiteConfiguration
                 Template           = $Template
             }
 
-            New-SPOSite @siteCreation
+            New-PnPTenantSite @siteCreation
 
             if (-not $IsSecondTry)
             {
