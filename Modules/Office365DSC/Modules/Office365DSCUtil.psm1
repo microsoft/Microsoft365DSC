@@ -1711,27 +1711,6 @@ function Test-Office365DSCParameterState
     return $returnValue
 }
 
-function Get-UsersLicenses
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount -Platform MSOnline
-
-    Write-Verbose -Message "Store all users licenses information in Global Variable for future usage."
-
-    #Store information to be able to check later if the users is correctly licensed for features.
-    if ($null -eq $Global:UsersLicenses)
-    {
-        $Global:UsersLicenses = Get-MsolUser -All | Select-Object UserPrincipalName, isLicensed, Licenses
-    }
-    Return $Global:UsersLicenses
-}
-
 <# This is the main Office365DSC.Reverse function that extracts the DSC configuration from an existing
    Office 365 Tenant. #>
 function Export-O365Configuration

@@ -56,10 +56,6 @@
             RequiredVersion = "2.0.0.2"
         },
         @{
-            ModuleName      = "MSOnline"
-            RequiredVersion = "1.1.183.17"
-        },
-        @{
             ModuleName      = "SharePointPnPPowerShellOnline"
             RequiredVersion = "3.17.2001.2"
         },
