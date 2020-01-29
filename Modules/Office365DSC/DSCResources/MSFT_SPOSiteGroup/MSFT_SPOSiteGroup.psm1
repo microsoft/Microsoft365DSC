@@ -47,12 +47,12 @@ function Get-TargetResource
     }
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SharePointOnline
+        -Platform PnP
 
     #checking if the site actually exists
     try
     {
-        $site = Get-SPOSite $Url
+        $site = Get-PnPTenantSite $Url
     }
     catch
     {
@@ -63,7 +63,11 @@ function Get-TargetResource
     }
     try
     {
-        $siteGroup = Get-SPOSiteGroup -Site $Url -Group $Identity
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+            -Platform PnP `
+            -ConnectionUrl $Url
+        $siteGroup = Get-PnPGroup -Identity $Identity
+        $sitePermissions = Get-PnPGroupPermissions -Identity $Identity
     }
     catch
     {
@@ -71,6 +75,19 @@ function Get-TargetResource
         {
             write-verbose -Message "Site group $($Identity) could not be found on site $($Url)"
 
+        }
+    }
+
+    try
+    {
+
+    }
+    catch
+    {
+        if ($_.Exception -like '*Access denied*')
+        {
+            Write-Warning -Message "The specified account does not have access to the permissions list for {$Url}"
+            return $nullReturn
         }
     }
     if ($null -eq $siteGroup)
@@ -82,8 +99,8 @@ function Get-TargetResource
         return @{
             Url                = $Url
             Identity           = $siteGroup.Title
-            Owner              = $siteGroup.OwnerLoginName
-            PermissionLevels   = $siteGroup.Roles
+            Owner              = $siteGroup.Owner.LoginName
+            PermissionLevels   = $sitePermissions.RoleTypeKind
             GlobalAdminAccount = $GlobalAdminAccount
             Ensure             = "Present"
         }
@@ -129,7 +146,7 @@ function Set-TargetResource
     #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform SharePointOnline `
+                      -Platform PnP `
                       -ErrorAction SilentlyContinue
 
     $currentValues = Get-TargetResource @PSBoundParameters
@@ -141,7 +158,7 @@ function Set-TargetResource
             PermissionLevels = $PermissionLevels
         }
         Write-Verbose -Message "Site group $Identity does not exist, creating it."
-        New-SPOSiteGroup @SiteGroupSettings
+        New-PnPGroup @SiteGroupSettings
     }
     elseif ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Present")
     {
@@ -171,7 +188,7 @@ function Set-TargetResource
                 Owner                    = $Owner
                 PermissionLevelsToRemove = $PermissionLevelsToRemove
             }
-            Set-SPOSiteGroup @SiteGroupSettings
+            Set-PnPGroup @SiteGroupSettings
         }
         elseif ($PermissionLevelsToRemove.Count -eq 0 -and $PermissionLevelsToAdd.Count -ne 0)
         {
@@ -181,7 +198,7 @@ function Set-TargetResource
                 Owner                    = $Owner
                 PermissionLevelsToAdd    = $PermissionLevelsToAdd
             }
-            Set-SPOSiteGroup @SiteGroupSettings
+            Set-PnPGroup @SiteGroupSettings
         }
         elseif ($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -eq 0)
         {
@@ -196,7 +213,7 @@ function Set-TargetResource
                     Identity                 = $Identity
                     Owner                    = $Owner
                 }
-                Set-SPOSiteGroup @SiteGroupSettings
+                Set-PnPGroup @SiteGroupSettings
             }
         }
         else
@@ -208,7 +225,7 @@ function Set-TargetResource
                 PermissionLevelsToAdd    = $PermissionLevelsToAdd
                 PermissionLevelsToRemove = $PermissionLevelsToRemove
             }
-            Set-SPOSiteGroup @SiteGroupSettings
+            Set-PnPGroup @SiteGroupSettings
         }
 
     }
@@ -219,7 +236,7 @@ function Set-TargetResource
             Identity = $Identity
         }
         Write-Verbose "Removing SPOSiteGroup $Identity"
-        Remove-SPOSiteGroup @SiteGroupSettings
+        Remove-PnPGroup @SiteGroupSettings
     }
 }
 
@@ -292,12 +309,12 @@ function Export-TargetResource
 
     $InformationPreference = 'Continue'
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform SharePointOnline `
+                      -Platform PnP `
                       -ErrorAction SilentlyContinue
 
     #Loop through all sites
     #for each site loop through all site groups and retrieve parameters
-    $sites = Get-SPOSite -limit All
+    $sites = Get-PnPTenantSite
 
     $i = 1
     $content = ""
@@ -306,7 +323,10 @@ function Export-TargetResource
         Write-Information "    [$i/$($sites.Length)] SPOSite groups for {$($site.Url)}"
         try
         {
-            $siteGroups = Get-SPOSiteGroup -Site $site.Url
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+                -Platform PnP `
+                -ConnectionUrl $site.Url
+            $siteGroups = Get-PnPGroup
         }
         catch
         {

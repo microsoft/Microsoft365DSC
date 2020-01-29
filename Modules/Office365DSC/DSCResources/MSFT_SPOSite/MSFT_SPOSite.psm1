@@ -424,7 +424,7 @@ function Set-TargetResource
     #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-        -Platform SharePointOnline
+        -Platform PnP
 
     if ($Ensure -eq "Present")
     {
