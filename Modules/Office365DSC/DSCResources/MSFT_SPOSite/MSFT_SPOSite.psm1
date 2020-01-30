@@ -10,69 +10,67 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Owner,
-
-        [Parameter()]
-        [System.UInt32]
-        $StorageQuota,
-
-        [Parameter()]
-        [System.String]
         $Title,
 
-        [Parameter()]
-        [System.UInt32]
-        $CompatibilityLevel,
-
-        [Parameter()]
-        [System.UInt32]
-        $LocaleId,
-
-        [Parameter()]
-        [System.UInt32]
-        $ResourceQuota,
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('CommunicationSite', 'TeamSite')]
+        $Type,
 
         [Parameter()]
         [System.String]
-        $Template,
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $HubUrl,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableFlows,
+
+        [Parameter()]
+        [System.String]
+        $LogoFilePath,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
+        $SharingCapabilities,
 
         [Parameter()]
         [System.UInt32]
-        $TimeZoneId,
+        $StorageMaximumLevel,
+
+        [Parameter()]
+        [System.UInt32]
+        $StorageWarningLevel,
 
         [Parameter()]
         [System.Boolean]
         $AllowSelfServiceUpgrade,
 
         [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
         [System.Boolean]
-        $DenyAddAndCustomizePages,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("NoAccess", "Unlock")]
-        $LockState,
-
-        [Parameter()]
-        [System.UInt32]
-        $ResourceQuotaWarningLevel,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
-        $SharingCapability,
-
-        [Parameter()]
-        [System.UInt32]
-        $StorageQuotaWarningLevel,
-
-        [Parameter()]
-        [System.boolean]
         $CommentsOnSitePagesDisabled,
 
         [Parameter()]
-        [System.boolean]
-        $SocialBarOnSitePagesDisabled,
+        [System.String]
+        [ValidateSet("None", "View", "Edit")]
+        $DefaultLinkPermission,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("None", "AnonymousAccess", "Internal", "Direct")]
+        $DefaultSharingLinkType,
 
         [Parameter()]
         [System.String]
@@ -85,9 +83,12 @@ function Get-TargetResource
         $DisableCompanyWideSharingLinks,
 
         [Parameter()]
-        [System.String]
-        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
-        $DisableFlows,
+        [System.Boolean]
+        $DisableSharingForNonOwners,
+
+        [Parameter()]
+        [System.UInt32]
+        $LocaleId,
 
         [Parameter()]
         [System.String]
@@ -95,43 +96,12 @@ function Get-TargetResource
         $RestrictedToGeo,
 
         [Parameter()]
-        [System.String]
-        $SharingAllowedDomainList,
-
-        [Parameter()]
-        [System.String]
-        $SharingBlockedDomainList,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("None", "AllowList", "BlockList")]
-        $SharingDomainRestrictionMode,
-
-        [Parameter()]
         [System.Boolean]
-        $ShowPeoplePickerSuggestionsForGuestUsers,
+        $SocialBarOnSitePagesDisabled,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "AnonymousAccess", "Internal", "Direct")]
-        $DefaultSharingLinkType,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("None", "View", "Edit")]
-        $DefaultLinkPermission,
-
-        [Parameter()]
-        [System.String]
-        $HubUrl,
-
-        [Parameter()]
-        [System.UInt32]
-        $AnonymousLinkExpirationInDays,
-
-        [Parameter()]
-        [System.Boolean]
-        $OverrideTenantAnonymousLinkExpirationPolicy,
+        $SiteDesign,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -155,64 +125,35 @@ function Get-TargetResource
         -Platform PnP
 
     $nullReturn = @{
-        Url                                         = $Url
-        Owner                                       = $null
-        TimeZoneId                                  = $null
-        LocaleId                                    = $null
-        Template                                    = $null
-        ResourceQuota                               = $null
-        StorageQuota                                = $null
-        CompatibilityLevel                          = $null
-        Title                                       = $null
-        AllowSelfServiceUpgrade                     = $null
-        DenyAddAndCustomizePages                    = $null
-        LockState                                   = $null
-        ResourceQuotaWarningLevel                   = $null
-        SharingCapability                           = $null
-        StorageQuotaWarningLevel                    = $null
-        CommentsOnSitePagesDisabled                 = $null
-        SocialBarOnSitePagesDisabled                = $null
-        DisableAppViews                             = $null
-        DisableCompanyWideSharingLinks              = $null
-        DisableFlows                                = $null
-        RestrictedToGeo                             = $null
-        SharingAllowedDomainList                    = $null
-        SharingBlockedDomainList                    = $null
-        SharingDomainRestrictionMode                = $null
-        ShowPeoplePickerSuggestionsForGuestUsers    = $null
-        DefaultSharingLinkType                      = $null
-        DefaultLinkPermission                       = $null
-        HubUrl                                      = $null
-        AnonymousLinkExpirationInDays               = $null
-        OverrideTenantAnonymousLinkExpirationPolicy = $null
-        Ensure                                      = "Absent"
-        GlobalAdminAccount                          = $GlobalAdminAccount
+        Url                = $Url
+        Title              = $Title
+        Type               = $Type
+        Ensure             = "Absent"
+        GlobalAdminAccount = $GlobalAdminAccount
     }
 
     try
     {
         Write-Verbose -Message "Getting site collection $Url"
-        $site = Get-PnPTenantSite $Url
+
+        $site = Get-PnPTenantSite -Url $Url
         if ($null -eq $site)
         {
-            Write-Verbose -Message "The specified Site Collection doesn't exist."
+            Write-Verbose -Message "The specified Site Collection {$Url} doesn't exist."
             return $nullReturn
         }
 
-        $DenyAddAndCustomizePagesValue = $false
-        if ($site.DenyAddAndCustomizePages -eq "Enabled")
-        {
-            $DenyAddAndCustomizePagesValue = $true
-        }
-        if ($site.HubSiteId -ne "00000000-0000-0000-0000-000000000000")
+        $CurrentHubUrl = $null
+        if ($null -ne $site.HubSiteId)
         {
             $hubId = $site.HubSiteId
-            $hubSites = Get-PnPHubSite
+            Write-Verbose -Message "Site {$Url} is associated with HubSite {$hubId}"
+            $hubSite = Get-PnPHubSite -Identity $hubId
 
-            $hubSite = $hubSites | Where-Object -FilterScript { $_.Id -eq $site.HubSiteId }
             if ($null -ne $hubSite)
             {
-                $hubUrl = $hubSite.SiteUrl
+                $CurrentHubUrl = $hubSite.SiteUrl
+                Write-Verbose -Message "Found {$Url} hub association with {$CurrentHubUrl}"
             }
             else
             {
@@ -220,53 +161,37 @@ function Get-TargetResource
             }
         }
 
-        if ($site.DenyAddAndCustomizePages -eq "Enabled")
-        {
-            $denyAddAndCustomizePages = $true
-        }
-        else
-        {
-            $denyAddAndCustomizePages = $false
-        }
-
         return @{
-            Url                                         = $site.Url
-            Owner                                       = $site.Owner
-            #TimeZoneId                                 = $site.TimeZoneId
-            LocaleId                                    = $site.LocaleId
-            Template                                    = $site.Template
-            ResourceQuota                               = $site.ResourceQuota
-            StorageQuota                                = $site.StorageQuota
-            CompatibilityLevel                          = $site.CompatibilityLevel
-            Title                                       = $site.Title
-            AllowSelfServiceUpgrade                     = $site.AllowSelfServiceUpgrade
-            DenyAddAndCustomizePages                    = $DenyAddAndCustomizePagesValue
-            LockState                                   = $site.LockState
-            ResourceQuotaWarningLevel                   = $site.ResourceQuotaWarningLevel
-            SharingCapability                           = $site.SharingCapability
-            StorageQuotaWarningLevel                    = $site.StorageQuotaWarningLevel
-            CommentsOnSitePagesDisabled                 = $site.CommentsOnSitePagesDisabled
-            SocialBarOnSitePagesDisabled                = $site.SocialBarOnSitePagesDisabled
-            DisableAppViews                             = $site.DisableAppViews
-            DisableCompanyWideSharingLinks              = $site.DisableCompanyWideSharingLinks
-            DisableFlows                                = $site.DisableFlows
-            RestrictedToGeo                             = $site.RestrictedToGeo
-            SharingAllowedDomainList                    = $site.SharingAllowedDomainList
-            SharingBlockedDomainList                    = $site.SharingBlockedDomainList
-            SharingDomainRestrictionMode                = $site.SharingDomainRestrictionMode
-            ShowPeoplePickerSuggestionsForGuestUsers    = $site.ShowPeoplePickerSuggestionsForGuestUsers
-            DefaultSharingLinkType                      = $site.DefaultSharingLinkType
-            DefaultLinkPermission                       = $site.DefaultLinkPermission
-            HubUrl                                      = $hubUrl
-            AnonymousLinkExpirationInDays               = $site.AnonymousLinkExpirationInDays
-            OverrideTenantAnonymousLinkExpirationPolicy = $site.OverrideTenantAnonymousLinkExpirationPolicy
-            GlobalAdminAccount                          = $GlobalAdminAccount
-            Ensure                                      = "Present"
+            Url                            = $Url
+            Title                          = $site.Title
+            Type                           = $Type
+            Description                    = $site.Description
+            HubUrl                         = $CurrentHubUrl
+            Classification                 = $site.Classification
+            DisableFlows                   = $site.DisableFlows
+            LogoFilePath                   = $LogoFilePath
+            SharingCapabilities            = $site.SharingCapabilities
+            StorageMaximumLevel            = $site.StorageMaximumLevel
+            StorageWarningLevel            = $site.StorageWarningLevel
+            AllowSelfServiceUpgrade        = $site.AllowSelfServiceUpgrade
+            Owners                         = $site.Owner
+            CommentsOnSitePagesDisabled    = $site.CommentsOnSitePagesDisabled
+            DefaultLinkPermission          = $site.DefaultLinkPermission
+            DefaultSharingLinkType         = $site.DefaultSharingLinkType
+            DisableAppViews                = $site.DisableAppViews
+            DisableCompanyWideSharingLinks = $site.DisableCompanyWideSharingLinks
+            DisableSharingForNonOwners     = $DisableSharingForNonOwners
+            LocaleId                       = $site.Lcid
+            RestrictedToGeo                = $site.RestrictedToRegion
+            SocialBarOnSitePagesDisabled   = $site.SocialBarOnSitePagesDisabled
+            SiteDesign                     = $SiteDesign
+            Ensure                         = 'Present'
+            GlobalAdminAccount             = $GlobalAdminAccount
         }
     }
     catch
     {
-        Write-Verbose -Message "The specified Site Collection doesn't exist."
+        Write-Verbose -Message "The specified Site Collection {$Url} doesn't exist."
         return $nullReturn
     }
 }
@@ -282,69 +207,67 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Owner,
-
-        [Parameter()]
-        [System.UInt32]
-        $StorageQuota = 26214400,
-
-        [Parameter()]
-        [System.String]
         $Title,
 
-        [Parameter()]
-        [System.UInt32]
-        $CompatibilityLevel,
-
-        [Parameter()]
-        [System.UInt32]
-        $LocaleId,
-
-        [Parameter()]
-        [System.UInt32]
-        $ResourceQuota,
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('CommunicationSite', 'TeamSite')]
+        $Type,
 
         [Parameter()]
         [System.String]
-        $Template,
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $HubUrl,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableFlows,
+
+        [Parameter()]
+        [System.String]
+        $LogoFilePath,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
+        $SharingCapabilities,
 
         [Parameter()]
         [System.UInt32]
-        $TimeZoneId,
+        $StorageMaximumLevel,
+
+        [Parameter()]
+        [System.UInt32]
+        $StorageWarningLevel,
 
         [Parameter()]
         [System.Boolean]
         $AllowSelfServiceUpgrade,
 
         [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
         [System.Boolean]
-        $DenyAddAndCustomizePages,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("NoAccess", "Unlock")]
-        $LockState,
-
-        [Parameter()]
-        [System.UInt32]
-        $ResourceQuotaWarningLevel,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
-        $SharingCapability,
-
-        [Parameter()]
-        [System.UInt32]
-        $StorageQuotaWarningLevel,
-
-        [Parameter()]
-        [System.boolean]
         $CommentsOnSitePagesDisabled,
 
         [Parameter()]
-        [System.boolean]
-        $SocialBarOnSitePagesDisabled,
+        [System.String]
+        [ValidateSet("None", "View", "Edit")]
+        $DefaultLinkPermission,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("None", "AnonymousAccess", "Internal", "Direct")]
+        $DefaultSharingLinkType,
 
         [Parameter()]
         [System.String]
@@ -357,9 +280,12 @@ function Set-TargetResource
         $DisableCompanyWideSharingLinks,
 
         [Parameter()]
-        [System.String]
-        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
-        $DisableFlows,
+        [System.Boolean]
+        $DisableSharingForNonOwners,
+
+        [Parameter()]
+        [System.UInt32]
+        $LocaleId,
 
         [Parameter()]
         [System.String]
@@ -367,43 +293,12 @@ function Set-TargetResource
         $RestrictedToGeo,
 
         [Parameter()]
-        [System.String]
-        $SharingAllowedDomainList,
-
-        [Parameter()]
-        [System.String]
-        $SharingBlockedDomainList,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("None", "AllowList", "BlockList")]
-        $SharingDomainRestrictionMode,
-
-        [Parameter()]
         [System.Boolean]
-        $ShowPeoplePickerSuggestionsForGuestUsers,
+        $SocialBarOnSitePagesDisabled,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "AnonymousAccess", "Internal", "Direct")]
-        $DefaultSharingLinkType,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("None", "View", "Edit")]
-        $DefaultLinkPermission,
-
-        [Parameter()]
-        [System.String]
-        $HubUrl,
-
-        [Parameter()]
-        [System.UInt32]
-        $AnonymousLinkExpirationInDays,
-
-        [Parameter()]
-        [System.Boolean]
-        $OverrideTenantAnonymousLinkExpirationPolicy,
+        $SiteDesign,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -446,24 +341,10 @@ function Set-TargetResource
         }
         Write-Verbose -Message "Site {$Url} doesn't exist. Creating it."
         New-PnPTenantSite @CreationParams
-
-        $UpdateParams = @{
-            Title                   = $Title
-            Sharing                 = $SharingCapability
-            StorageMaximumLevel     = $StorageQuota
-            StorageWarningLevel     = $StorageQuotaWarningLevel
-            UserCodeMaximumLevel    = $ResourceQuota
-            UserCodeWarningLevel    = $ResourceQuotaWarningLevel
-            AllowSelfServiceUpgrade = $AllowSelfServiceUpgrade
-            Owners                  = $Owner
-            NoScriptSite            = $DenyAddAndCustomizePages
-            DefaultLinkPermission   = $DefaultLinkPermission
-            DefaultSharingLinkType  = $DefaultSharingLinkType
-        }
         Write-Verbose -Message "Updating settings on newly created site {$Url}"
         New-PnPTenantSite @CreationParams
 
-        if (-not [System.String]::IsNullOrEmpty($HubUrl)])
+        if (-not [System.String]::IsNullOrEmpty($HubUrl))
         {
             Write-Verbose "Assigning newly created site {$Url} to Hub Site {$HubUrl}"
             $hubSite = Get-PnPHubSite -Identity $HubUrl
@@ -542,69 +423,67 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Owner,
-
-        [Parameter()]
-        [System.UInt32]
-        $StorageQuota = 26214400,
-
-        [Parameter()]
-        [System.String]
         $Title,
 
-        [Parameter()]
-        [System.UInt32]
-        $CompatibilityLevel,
-
-        [Parameter()]
-        [System.UInt32]
-        $LocaleId,
-
-        [Parameter()]
-        [System.UInt32]
-        $ResourceQuota,
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('CommunicationSite', 'TeamSite')]
+        $Type,
 
         [Parameter()]
         [System.String]
-        $Template,
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $HubUrl,
+
+        [Parameter()]
+        [System.String]
+        $Classification,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableFlows,
+
+        [Parameter()]
+        [System.String]
+        $LogoFilePath,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
+        $SharingCapabilities,
 
         [Parameter()]
         [System.UInt32]
-        $TimeZoneId,
+        $StorageMaximumLevel,
+
+        [Parameter()]
+        [System.UInt32]
+        $StorageWarningLevel,
 
         [Parameter()]
         [System.Boolean]
         $AllowSelfServiceUpgrade,
 
         [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
         [System.Boolean]
-        $DenyAddAndCustomizePages,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("NoAccess", "Unlock")]
-        $LockState,
-
-        [Parameter()]
-        [System.UInt32]
-        $ResourceQuotaWarningLevel,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
-        $SharingCapability,
-
-        [Parameter()]
-        [System.UInt32]
-        $StorageQuotaWarningLevel,
-
-        [Parameter()]
-        [System.boolean]
         $CommentsOnSitePagesDisabled,
 
         [Parameter()]
-        [System.boolean]
-        $SocialBarOnSitePagesDisabled,
+        [System.String]
+        [ValidateSet("None", "View", "Edit")]
+        $DefaultLinkPermission,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("None", "AnonymousAccess", "Internal", "Direct")]
+        $DefaultSharingLinkType,
 
         [Parameter()]
         [System.String]
@@ -617,9 +496,12 @@ function Test-TargetResource
         $DisableCompanyWideSharingLinks,
 
         [Parameter()]
-        [System.String]
-        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
-        $DisableFlows,
+        [System.Boolean]
+        $DisableSharingForNonOwners,
+
+        [Parameter()]
+        [System.UInt32]
+        $LocaleId,
 
         [Parameter()]
         [System.String]
@@ -627,43 +509,12 @@ function Test-TargetResource
         $RestrictedToGeo,
 
         [Parameter()]
-        [System.String]
-        $SharingAllowedDomainList,
-
-        [Parameter()]
-        [System.String]
-        $SharingBlockedDomainList,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("None", "AllowList", "BlockList")]
-        $SharingDomainRestrictionMode,
-
-        [Parameter()]
         [System.Boolean]
-        $ShowPeoplePickerSuggestionsForGuestUsers,
+        $SocialBarOnSitePagesDisabled,
 
         [Parameter()]
         [System.String]
-        [ValidateSet("None", "AnonymousAccess", "Internal", "Direct")]
-        $DefaultSharingLinkType,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("None", "View", "Edit")]
-        $DefaultLinkPermission,
-
-        [Parameter()]
-        [System.String]
-        $HubUrl,
-
-        [Parameter()]
-        [System.UInt32]
-        $AnonymousLinkExpirationInDays,
-
-        [Parameter()]
-        [System.Boolean]
-        $OverrideTenantAnonymousLinkExpirationPolicy,
+        $SiteDesign,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -714,8 +565,9 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PnP
 
-    $invalidTemplates = @("SRCHCEN#0", "GROUP#0", "SPSMSITEHOST#0", "POINTPUBLISHINGHUB#0", "POINTPUBLISHINGTOPIC#0")
-    $sites = Get-PnPTenantSite | Where-Object -FilterScript { $_.Template -notin $invalidTemplates }
+    $CommunicationSites = Get-PnPTenantSite -Template 'SITEPAGEPUBLISHING#0'
+    $TeamSites          = Get-PnPTenantSite -Template 'GROUP#0'
+    $sites = $CommunicationSites + $TeamSites
 
     $partialContent = ""
     $content = ''
@@ -734,18 +586,19 @@ function Export-TargetResource
     foreach ($site in $sites)
     {
         Write-Information "    - [$i/$($sites.Length)] $($site.Url)"
+        $Type = "CommunicationSite"
+        if ($site.Template -eq 'GROUP#0')
+        {
+            $Type = "TeamSite"
+        }
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             Url                = $site.Url
-            Owner              = "Reverse"
+            Type               = $Type
+            Title              = $site.Title
         }
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        if ($result.RestrictedToGeo -eq "Unknown")
-        {
-            $result.Remove("RestrictedToGeo")
-        }
-        $result.Remove("HubUrl")
         $result = Remove-NullEntriesFromHashTable -Hash $result
 
         $content += "        SPOSite " + (New-GUID).ToString() + "`r`n"
