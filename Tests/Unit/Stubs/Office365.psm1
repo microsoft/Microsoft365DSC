@@ -104,11 +104,7 @@ function Add-AzureADMSLifecyclePolicyGroup
     param(
         [Parameter()]
         [System.String]
-        ${Id},
-
-        [Parameter()]
-        [System.String]
-        ${GroupId}
+        ${Id}
     )
 }
 function Add-AzureADServicePrincipalOwner
@@ -194,9 +190,7 @@ function Enable-AzureADDirectoryRole
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.String]
-        ${RoleTemplateId}
+
     )
 }
 function Get-AzureADApplication
@@ -674,9 +668,7 @@ function Get-AzureADExtensionProperty
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${IsSyncedFromOnPremises}
+
     )
 }
 function Get-AzureADGroup
@@ -849,13 +841,7 @@ function Get-AzureADObjectByObjectId
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${ObjectIds},
 
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${Types}
     )
 }
 function Get-AzureADServiceAppRoleAssignedTo
@@ -1268,141 +1254,7 @@ function New-AzureADApplication
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.AddIn]]
-        ${AddIns},
 
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${AllowGuestsSignIn},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${AllowPassthroughUsers},
-
-        [Parameter()]
-        [System.String]
-        ${AppLogoUrl},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.AppRole]]
-        ${AppRoles},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${AvailableToOtherTenants},
-
-        [Parameter()]
-        [System.String]
-        ${DisplayName},
-
-        [Parameter()]
-        [System.String]
-        ${ErrorUrl},
-
-        [Parameter()]
-        [System.String]
-        ${GroupMembershipClaims},
-
-        [Parameter()]
-        [System.String]
-        ${Homepage},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${IdentifierUris},
-
-        [Parameter()]
-        [Microsoft.Open.AzureAD.Model.InformationalUrl]
-        ${InformationalUrls},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${IsDeviceOnlyAuthSupported},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${IsDisabled},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.KeyCredential]]
-        ${KeyCredentials},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${KnownClientApplications},
-
-        [Parameter()]
-        [System.String]
-        ${LogoutUrl},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${Oauth2AllowImplicitFlow},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${Oauth2AllowUrlPathMatching},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.OAuth2Permission]]
-        ${Oauth2Permissions},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${Oauth2RequirePostResponse},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${OrgRestrictions},
-
-        [Parameter()]
-        [Microsoft.Open.AzureAD.Model.OptionalClaims]
-        ${OptionalClaims},
-
-        [Parameter()]
-        [Microsoft.Open.AzureAD.Model.ParentalControlSettings]
-        ${ParentalControlSettings},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.PasswordCredential]]
-        ${PasswordCredentials},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.PreAuthorizedApplication]]
-        ${PreAuthorizedApplications},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${PublicClient},
-
-        [Parameter()]
-        [System.String]
-        ${PublisherDomain},
-
-        [Parameter()]
-        [System.String]
-        ${RecordConsentConditions},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${ReplyUrls},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.RequiredResourceAccess]]
-        ${RequiredResourceAccess},
-
-        [Parameter()]
-        [System.String]
-        ${SamlMetadataUrl},
-
-        [Parameter()]
-        [System.String]
-        ${SignInAudience},
-
-        [Parameter()]
-        [System.String]
-        ${WwwHomepage}
     )
 }
 function New-AzureADApplicationExtensionProperty
@@ -1411,19 +1263,7 @@ function New-AzureADApplicationExtensionProperty
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId},
-
-        [Parameter()]
-        [System.String]
-        ${Name},
-
-        [Parameter()]
-        [System.String]
-        ${DataType},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${TargetObjects}
+        ${ObjectId}
     )
 }
 function New-AzureADApplicationKeyCredential
@@ -1538,107 +1378,21 @@ function New-AzureADDevice
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${AccountEnabled},
 
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.AlternativeSecurityId]]
-        ${AlternativeSecurityIds},
-
-        [Parameter()]
-        [System.Nullable`1[System.DateTime]]
-        ${ApproximateLastLogonTimeStamp},
-
-        [Parameter()]
-        [System.String]
-        ${DeviceId},
-
-        [Parameter()]
-        [System.String]
-        ${DeviceMetadata},
-
-        [Parameter()]
-        [System.Nullable`1[System.Int32]]
-        ${DeviceObjectVersion},
-
-        [Parameter()]
-        [System.String]
-        ${DeviceOSType},
-
-        [Parameter()]
-        [System.String]
-        ${DeviceOSVersion},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${DevicePhysicalIds},
-
-        [Parameter()]
-        [System.String]
-        ${DeviceTrustType},
-
-        [Parameter()]
-        [System.String]
-        ${DisplayName},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${IsCompliant},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${IsManaged},
-
-        [Parameter()]
-        [System.String]
-        ${ProfileType},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${SystemLabels}
     )
 }
 function New-AzureADDomain
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${IsDefault},
 
-        [Parameter()]
-        [System.String]
-        ${Name},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${SupportedServices}
     )
 }
 function New-AzureADGroup
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.String]
-        ${Description},
 
-        [Parameter()]
-        [System.String]
-        ${DisplayName},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${MailEnabled},
-
-        [Parameter()]
-        [System.String]
-        ${MailNickName},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${SecurityEnabled}
     )
 }
 function New-AzureADGroupAppRoleAssignment
@@ -1647,98 +1401,28 @@ function New-AzureADGroupAppRoleAssignment
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId},
-
-        [Parameter()]
-        [System.String]
-        ${Id},
-
-        [Parameter()]
-        [System.String]
-        ${PrincipalId},
-
-        [Parameter()]
-        [System.String]
-        ${ResourceId}
+        ${ObjectId}
     )
 }
 function New-AzureADMSGroup
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.String]
-        ${Description},
 
-        [Parameter()]
-        [System.String]
-        ${DisplayName},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${MailEnabled},
-
-        [Parameter()]
-        [System.String]
-        ${MailNickname},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${SecurityEnabled},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${GroupTypes},
-
-        [Parameter()]
-        [System.String]
-        ${Visibility}
     )
 }
 function New-AzureADMSGroupLifecyclePolicy
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Nullable`1[System.Int32]]
-        ${GroupLifetimeInDays},
 
-        [Parameter()]
-        [System.String]
-        ${ManagedGroupTypes},
-
-        [Parameter()]
-        [System.String]
-        ${AlternateNotificationEmails}
     )
 }
 function New-AzureADMSInvitation
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.String]
-        ${InvitedUserDisplayName},
 
-        [Parameter()]
-        [System.String]
-        ${InvitedUserEmailAddress},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${SendInvitationMessage},
-
-        [Parameter()]
-        [System.String]
-        ${InviteRedirectUrl},
-
-        [Parameter()]
-        [Microsoft.Open.MSGraph.Model.InvitedUserMessageInfo]
-        ${InvitedUserMessageInfo},
-
-        [Parameter()]
-        [System.String]
-        ${InvitedUserType}
     )
 }
 function New-AzureADServiceAppRoleAssignment
@@ -1747,88 +1431,14 @@ function New-AzureADServiceAppRoleAssignment
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId},
-
-        [Parameter()]
-        [System.String]
-        ${Id},
-
-        [Parameter()]
-        [System.String]
-        ${PrincipalId},
-
-        [Parameter()]
-        [System.String]
-        ${ResourceId}
+        ${ObjectId}
     )
 }
 function New-AzureADServicePrincipal
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.String]
-        ${AccountEnabled},
 
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${AlternativeNames},
-
-        [Parameter()]
-        [System.String]
-        ${AppId},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${AppRoleAssignmentRequired},
-
-        [Parameter()]
-        [System.String]
-        ${DisplayName},
-
-        [Parameter()]
-        [System.String]
-        ${ErrorUrl},
-
-        [Parameter()]
-        [System.String]
-        ${Homepage},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.KeyCredential]]
-        ${KeyCredentials},
-
-        [Parameter()]
-        [System.String]
-        ${LogoutUrl},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.PasswordCredential]]
-        ${PasswordCredentials},
-
-        [Parameter()]
-        [System.String]
-        ${PublisherName},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${ReplyUrls},
-
-        [Parameter()]
-        [System.String]
-        ${SamlMetadataUrl},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${ServicePrincipalNames},
-
-        [Parameter()]
-        [System.String]
-        ${ServicePrincipalType},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${Tags}
     )
 }
 function New-AzureADServicePrincipalKeyCredential
@@ -1902,137 +1512,7 @@ function New-AzureADUser
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Collections.Generic.Dictionary`2[System.String,System.String]]
-        ${ExtensionProperty},
 
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${AccountEnabled},
-
-        [Parameter()]
-        [System.String]
-        ${AgeGroup},
-
-        [Parameter()]
-        [System.String]
-        ${City},
-
-        [Parameter()]
-        [System.String]
-        ${ConsentProvidedForMinor},
-
-        [Parameter()]
-        [System.String]
-        ${Country},
-
-        [Parameter()]
-        [System.String]
-        ${CreationType},
-
-        [Parameter()]
-        [System.String]
-        ${Department},
-
-        [Parameter()]
-        [System.String]
-        ${DisplayName},
-
-        [Parameter()]
-        [System.String]
-        ${FacsimileTelephoneNumber},
-
-        [Parameter()]
-        [System.String]
-        ${GivenName},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${IsCompromised},
-
-        [Parameter()]
-        [System.String]
-        ${ImmutableId},
-
-        [Parameter()]
-        [System.String]
-        ${JobTitle},
-
-        [Parameter()]
-        [System.String]
-        ${MailNickName},
-
-        [Parameter()]
-        [System.String]
-        ${Mobile},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${OtherMails},
-
-        [Parameter()]
-        [System.String]
-        ${PasswordPolicies},
-
-        [Parameter()]
-        [Microsoft.Open.AzureAD.Model.PasswordProfile]
-        ${PasswordProfile},
-
-        [Parameter()]
-        [System.String]
-        ${PhysicalDeliveryOfficeName},
-
-        [Parameter()]
-        [System.String]
-        ${PostalCode},
-
-        [Parameter()]
-        [System.String]
-        ${PreferredLanguage},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${ShowInAddressList},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.SignInName]]
-        ${SignInNames},
-
-        [Parameter()]
-        [System.String]
-        ${State},
-
-        [Parameter()]
-        [System.String]
-        ${StreetAddress},
-
-        [Parameter()]
-        [System.String]
-        ${Surname},
-
-        [Parameter()]
-        [System.String]
-        ${TelephoneNumber},
-
-        [Parameter()]
-        [System.String]
-        ${UsageLocation},
-
-        [Parameter()]
-        [System.String]
-        ${UserPrincipalName},
-
-        [Parameter()]
-        [System.String]
-        ${UserState},
-
-        [Parameter()]
-        [System.String]
-        ${UserStateChangedOn},
-
-        [Parameter()]
-        [System.String]
-        ${UserType}
     )
 }
 function New-AzureADUserAppRoleAssignment
@@ -2041,19 +1521,7 @@ function New-AzureADUserAppRoleAssignment
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId},
-
-        [Parameter()]
-        [System.String]
-        ${Id},
-
-        [Parameter()]
-        [System.String]
-        ${PrincipalId},
-
-        [Parameter()]
-        [System.String]
-        ${ResourceId}
+        ${ObjectId}
     )
 }
 function Remove-AzureADApplication
@@ -2313,11 +1781,7 @@ function Remove-AzureADMSLifecyclePolicyGroup
     param(
         [Parameter()]
         [System.String]
-        ${Id},
-
-        [Parameter()]
-        [System.String]
-        ${GroupId}
+        ${Id}
     )
 }
 function Remove-AzureADOAuth2PermissionGrant
@@ -2463,11 +1927,7 @@ function Restore-AzureADDeletedApplication
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${IdentifierUris}
+        ${ObjectId}
     )
 }
 function Restore-AzureADMSDeletedDirectoryObject
@@ -2552,143 +2012,7 @@ function Set-AzureADApplication
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.AddIn]]
-        ${AddIns},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${AllowGuestsSignIn},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${AllowPassthroughUsers},
-
-        [Parameter()]
-        [System.String]
-        ${AppLogoUrl},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.AppRole]]
-        ${AppRoles},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${AvailableToOtherTenants},
-
-        [Parameter()]
-        [System.String]
-        ${DisplayName},
-
-        [Parameter()]
-        [System.String]
-        ${ErrorUrl},
-
-        [Parameter()]
-        [System.String]
-        ${GroupMembershipClaims},
-
-        [Parameter()]
-        [System.String]
-        ${Homepage},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${IdentifierUris},
-
-        [Parameter()]
-        [Microsoft.Open.AzureAD.Model.InformationalUrl]
-        ${InformationalUrls},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${IsDeviceOnlyAuthSupported},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${IsDisabled},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.KeyCredential]]
-        ${KeyCredentials},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${KnownClientApplications},
-
-        [Parameter()]
-        [System.String]
-        ${LogoutUrl},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${Oauth2AllowImplicitFlow},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${Oauth2AllowUrlPathMatching},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.OAuth2Permission]]
-        ${Oauth2Permissions},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${Oauth2RequirePostResponse},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${OrgRestrictions},
-
-        [Parameter()]
-        [Microsoft.Open.AzureAD.Model.OptionalClaims]
-        ${OptionalClaims},
-
-        [Parameter()]
-        [Microsoft.Open.AzureAD.Model.ParentalControlSettings]
-        ${ParentalControlSettings},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.PasswordCredential]]
-        ${PasswordCredentials},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.PreAuthorizedApplication]]
-        ${PreAuthorizedApplications},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${PublicClient},
-
-        [Parameter()]
-        [System.String]
-        ${PublisherDomain},
-
-        [Parameter()]
-        [System.String]
-        ${RecordConsentConditions},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${ReplyUrls},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.RequiredResourceAccess]]
-        ${RequiredResourceAccess},
-
-        [Parameter()]
-        [System.String]
-        ${SamlMetadataUrl},
-
-        [Parameter()]
-        [System.String]
-        ${SignInAudience},
-
-        [Parameter()]
-        [System.String]
-        ${WwwHomepage}
+        ${ObjectId}
     )
 }
 function Set-AzureADApplicationLogo
@@ -2839,67 +2163,7 @@ function Set-AzureADDevice
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${AccountEnabled},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.AlternativeSecurityId]]
-        ${AlternativeSecurityIds},
-
-        [Parameter()]
-        [System.Nullable`1[System.DateTime]]
-        ${ApproximateLastLogonTimeStamp},
-
-        [Parameter()]
-        [System.String]
-        ${DeviceId},
-
-        [Parameter()]
-        [System.String]
-        ${DeviceMetadata},
-
-        [Parameter()]
-        [System.Nullable`1[System.Int32]]
-        ${DeviceObjectVersion},
-
-        [Parameter()]
-        [System.String]
-        ${DeviceOSType},
-
-        [Parameter()]
-        [System.String]
-        ${DeviceOSVersion},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${DevicePhysicalIds},
-
-        [Parameter()]
-        [System.String]
-        ${DeviceTrustType},
-
-        [Parameter()]
-        [System.String]
-        ${DisplayName},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${IsCompliant},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${IsManaged},
-
-        [Parameter()]
-        [System.String]
-        ${ProfileType},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${SystemLabels}
+        ${ObjectId}
     )
 }
 function Set-AzureADDomain
@@ -2908,15 +2172,7 @@ function Set-AzureADDomain
     param(
         [Parameter()]
         [System.String]
-        ${Name},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${IsDefault},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${SupportedServices}
+        ${Name}
     )
 }
 function Set-AzureADGroup
@@ -2925,27 +2181,7 @@ function Set-AzureADGroup
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId},
-
-        [Parameter()]
-        [System.String]
-        ${Description},
-
-        [Parameter()]
-        [System.String]
-        ${DisplayName},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${MailEnabled},
-
-        [Parameter()]
-        [System.String]
-        ${MailNickName},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${SecurityEnabled}
+        ${ObjectId}
     )
 }
 function Set-AzureADMSGroup
@@ -2954,35 +2190,7 @@ function Set-AzureADMSGroup
     param(
         [Parameter()]
         [System.String]
-        ${Id},
-
-        [Parameter()]
-        [System.String]
-        ${Description},
-
-        [Parameter()]
-        [System.String]
-        ${DisplayName},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${MailEnabled},
-
-        [Parameter()]
-        [System.String]
-        ${MailNickname},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${SecurityEnabled},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${GroupTypes},
-
-        [Parameter()]
-        [System.String]
-        ${Visibility}
+        ${Id}
     )
 }
 function Set-AzureADMSGroupLifecyclePolicy
@@ -2991,19 +2199,7 @@ function Set-AzureADMSGroupLifecyclePolicy
     param(
         [Parameter()]
         [System.String]
-        ${Id},
-
-        [Parameter()]
-        [System.Nullable`1[System.Int32]]
-        ${GroupLifetimeInDays},
-
-        [Parameter()]
-        [System.String]
-        ${ManagedGroupTypes},
-
-        [Parameter()]
-        [System.String]
-        ${AlternateNotificationEmails}
+        ${Id}
     )
 }
 function Set-AzureADServicePrincipal
@@ -3012,96 +2208,14 @@ function Set-AzureADServicePrincipal
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId},
-
-        [Parameter()]
-        [System.String]
-        ${AccountEnabled},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${AlternativeNames},
-
-        [Parameter()]
-        [System.String]
-        ${AppId},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${AppRoleAssignmentRequired},
-
-        [Parameter()]
-        [System.String]
-        ${DisplayName},
-
-        [Parameter()]
-        [System.String]
-        ${ErrorUrl},
-
-        [Parameter()]
-        [System.String]
-        ${Homepage},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.KeyCredential]]
-        ${KeyCredentials},
-
-        [Parameter()]
-        [System.String]
-        ${LogoutUrl},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.PasswordCredential]]
-        ${PasswordCredentials},
-
-        [Parameter()]
-        [System.String]
-        ${PublisherName},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${ReplyUrls},
-
-        [Parameter()]
-        [System.String]
-        ${SamlMetadataUrl},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${ServicePrincipalNames},
-
-        [Parameter()]
-        [System.String]
-        ${ServicePrincipalType},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${Tags}
+        ${ObjectId}
     )
 }
 function Set-AzureADTenantDetail
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${MarketingNotificationEmails},
 
-        [Parameter()]
-        [Microsoft.Open.AzureAD.Model.PrivacyProfile]
-        ${PrivacyProfile},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${SecurityComplianceNotificationMails},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${SecurityComplianceNotificationPhones},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${TechnicalNotificationMails}
     )
 }
 function Set-AzureADTrustedCertificateAuthority
@@ -3119,139 +2233,7 @@ function Set-AzureADUser
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId},
-
-        [Parameter()]
-        [System.Collections.Generic.Dictionary`2[System.String,System.String]]
-        ${ExtensionProperty},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${AccountEnabled},
-
-        [Parameter()]
-        [System.String]
-        ${AgeGroup},
-
-        [Parameter()]
-        [System.String]
-        ${City},
-
-        [Parameter()]
-        [System.String]
-        ${ConsentProvidedForMinor},
-
-        [Parameter()]
-        [System.String]
-        ${Country},
-
-        [Parameter()]
-        [System.String]
-        ${CreationType},
-
-        [Parameter()]
-        [System.String]
-        ${Department},
-
-        [Parameter()]
-        [System.String]
-        ${DisplayName},
-
-        [Parameter()]
-        [System.String]
-        ${FacsimileTelephoneNumber},
-
-        [Parameter()]
-        [System.String]
-        ${GivenName},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${IsCompromised},
-
-        [Parameter()]
-        [System.String]
-        ${ImmutableId},
-
-        [Parameter()]
-        [System.String]
-        ${JobTitle},
-
-        [Parameter()]
-        [System.String]
-        ${MailNickName},
-
-        [Parameter()]
-        [System.String]
-        ${Mobile},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[System.String]]
-        ${OtherMails},
-
-        [Parameter()]
-        [System.String]
-        ${PasswordPolicies},
-
-        [Parameter()]
-        [Microsoft.Open.AzureAD.Model.PasswordProfile]
-        ${PasswordProfile},
-
-        [Parameter()]
-        [System.String]
-        ${PhysicalDeliveryOfficeName},
-
-        [Parameter()]
-        [System.String]
-        ${PostalCode},
-
-        [Parameter()]
-        [System.String]
-        ${PreferredLanguage},
-
-        [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${ShowInAddressList},
-
-        [Parameter()]
-        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.SignInName]]
-        ${SignInNames},
-
-        [Parameter()]
-        [System.String]
-        ${State},
-
-        [Parameter()]
-        [System.String]
-        ${StreetAddress},
-
-        [Parameter()]
-        [System.String]
-        ${Surname},
-
-        [Parameter()]
-        [System.String]
-        ${TelephoneNumber},
-
-        [Parameter()]
-        [System.String]
-        ${UsageLocation},
-
-        [Parameter()]
-        [System.String]
-        ${UserPrincipalName},
-
-        [Parameter()]
-        [System.String]
-        ${UserState},
-
-        [Parameter()]
-        [System.String]
-        ${UserStateChangedOn},
-
-        [Parameter()]
-        [System.String]
-        ${UserType}
+        ${ObjectId}
     )
 }
 function Set-AzureADUserExtension
@@ -60625,45 +59607,19 @@ param(
 function Ensure-PnPFolder
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='Site Relative Folder Path')]
-    [string]
-    ${SiteRelativePath},
+    param(
+        [Parameter()]
+        [System.String]
+        ${SiteRelativePath},
 
-    [Parameter(HelpMessage='The web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Web},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Resolve-PnPFolder', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Execute-PnPQuery
 {
@@ -61356,100 +60312,64 @@ param(
 }
 function Add-PnPField
 {
-    [CmdletBinding(DefaultParameterSetName='Add field to list')]
-param(
-    [Parameter(ParameterSetName='Add field to list', ValueFromPipeline=$true, HelpMessage='The name of the list, its ID or an actual list object where this field needs to be added')]
-    [Parameter(ParameterSetName='Add field reference to list', Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The name of the list, its ID or an actual list object where this field needs to be added')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        ${List},
 
-    [Parameter(ParameterSetName='Add field reference to list', Mandatory=$true, HelpMessage='The name of the field, its ID or an actual field object that needs to be added')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
-    ${Field},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        ${Field},
 
-    [Parameter(ParameterSetName='Add field to list', Mandatory=$true, HelpMessage='The display name of the field')]
-    [Parameter(ParameterSetName='Add field to web', Mandatory=$true, HelpMessage='The display name of the field')]
-    [string]
-    ${DisplayName},
+        [Parameter()]
+        [System.String]
+        ${DisplayName},
 
-    [Parameter(ParameterSetName='Add field to list', Mandatory=$true, HelpMessage='The internal name of the field')]
-    [Parameter(ParameterSetName='Add field to web', Mandatory=$true, HelpMessage='The internal name of the field')]
-    [string]
-    ${InternalName},
+        [Parameter()]
+        [System.String]
+        ${InternalName},
 
-    [Parameter(ParameterSetName='Add field to list', Mandatory=$true, HelpMessage='The type of the field like Choice, Note, MultiChoice. For a complete list of field types visit https://docs.microsoft.com/dotnet/api/microsoft.sharepoint.client.fieldtype')]
-    [Parameter(ParameterSetName='Add field to web', Mandatory=$true, HelpMessage='The type of the field like Choice, Note, MultiChoice. For a complete list of field types visit https://docs.microsoft.com/dotnet/api/microsoft.sharepoint.client.fieldtype')]
-    [Microsoft.SharePoint.Client.FieldType]
-    ${Type},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.FieldType]
+        ${Type},
 
-    [Parameter(ParameterSetName='Add field to list', HelpMessage='The ID of the field, must be unique')]
-    [Parameter(ParameterSetName='Add field to web', HelpMessage='The ID of the field, must be unique')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${Id},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        ${Id},
 
-    [Parameter(ParameterSetName='Add field to list', HelpMessage='Switch Parameter if this field must be added to the default view')]
-    [Parameter(ParameterSetName='Add field by XML to list', HelpMessage='Switch Parameter if this field must be added to the default view')]
-    [switch]
-    ${AddToDefaultView},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${AddToDefaultView},
 
-    [Parameter(ParameterSetName='Add field to list', HelpMessage='Switch Parameter if the field is a required field')]
-    [Parameter(ParameterSetName='Add field by XML to list', HelpMessage='Switch Parameter if the field is a required field')]
-    [switch]
-    ${Required},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${Required},
 
-    [Parameter(ParameterSetName='Add field to list', HelpMessage='The group name to where this field belongs to')]
-    [Parameter(ParameterSetName='Add field by XML to list', HelpMessage='The group name to where this field belongs to')]
-    [string]
-    ${Group},
+        [Parameter()]
+        [System.String]
+        ${Group},
 
-    [Parameter(ParameterSetName='Add field to list', HelpMessage='The Client Side Component Id to set to the field')]
-    [Parameter(ParameterSetName='Add field to web', HelpMessage='The Client Side Component Id to set to the field')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${ClientSideComponentId},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        ${ClientSideComponentId},
 
-    [Parameter(ParameterSetName='Add field to list', HelpMessage='The Client Side Component Properties to set to the field')]
-    [Parameter(ParameterSetName='Add field to web', HelpMessage='The Client Side Component Properties to set to the field')]
-    [string]
-    ${ClientSideComponentProperties},
+        [Parameter()]
+        [System.String]
+        ${ClientSideComponentProperties},
 
-    [Obsolete('Not in use')]
-    [Microsoft.SharePoint.Client.AddFieldOptions]
-    ${FieldOptions},
+        [Parameter()]
+        [Microsoft.SharePoint.Client.AddFieldOptions]
+        ${FieldOptions},
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Web},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Add-PnPField', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Add-PnPFieldFromXml
 {
@@ -64037,100 +62957,48 @@ param(
 function Get-PnPAppInstance
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='Specifies the Id of the App Instance')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.AppPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.AppPipeBind]
+        ${Identity},
 
-    [Parameter(HelpMessage='The web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Web},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPAppInstance', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPApplicationCustomizer
 {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
-param(
-    [Parameter(ParameterSetName='Custom Action Id', HelpMessage='Identity of the SharePoint Framework client side extension application customizer to return. Omit to return all SharePoint Frameworkclient side extension application customizer.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        ${Identity},
 
-    [Parameter(ParameterSetName='Client Side Component Id', Mandatory=$true, HelpMessage='The Client Side Component Id of the SharePoint Framework client side extension application customizer found in the manifest for which existing custom action(s) should be removed')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${ClientSideComponentId},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        ${ClientSideComponentId},
 
-    [Parameter(HelpMessage='Scope of the SharePoint Framework client side extension application customizer, either Web, Site or All to return both (all is the default)')]
-    [SharePointPnP.PowerShell.Commands.Enums.CustomActionScope]
-    ${Scope},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Enums.CustomActionScope]
+        ${Scope},
 
-    [Parameter(HelpMessage='Switch parameter if an exception should be thrown if the requested SharePoint Frameworkclient side extension application customizer does not exist (true) or if omitted, nothing will be returned in case the SharePoint Framework client side extension application customizer does not exist')]
-    [switch]
-    ${ThrowExceptionIfCustomActionNotFound},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${ThrowExceptionIfCustomActionNotFound},
 
-    [Parameter(HelpMessage='The web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Web},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPApplicationCustomizer', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPAuditing
 {
@@ -64275,53 +63143,27 @@ param()
 function Get-PnPCustomAction
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Identity of the CustomAction to return. Omit to return all CustomActions.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        ${Identity},
 
-    [Parameter(HelpMessage='Scope of the CustomAction, either Web, Site or All to return both')]
-    [SharePointPnP.PowerShell.Commands.Enums.CustomActionScope]
-    ${Scope},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Enums.CustomActionScope]
+        ${Scope},
 
-    [Parameter(HelpMessage='Switch parameter if an exception should be thrown if the requested CustomAction does not exist (true) or if omitted, nothing will be returned in case the CustomAction does not exist')]
-    [switch]
-    ${ThrowExceptionIfCustomActionNotFound},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${ThrowExceptionIfCustomActionNotFound},
 
-    [Parameter(HelpMessage='The web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Web},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPCustomAction', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPDefaultColumnValues
 {
@@ -64352,92 +63194,40 @@ param(
 function Get-PnPDocumentSetTemplate
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Either specify a name, an id, a document set template object or a content type object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.DocumentSetPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.DocumentSetPipeBind]
+        ${Identity},
 
-    [Parameter(HelpMessage='The web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Web},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPDocumentSetTemplate', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPEventReceiver
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='List', HelpMessage='The list object from which to get the event receiver object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        ${List},
 
-    [Parameter(ValueFromPipeline=$true, HelpMessage='The Guid of the event receiver')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.EventReceiverPipeBind]
-    ${Identity},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.EventReceiverPipeBind]
+        ${Identity},
 
-    [Parameter(HelpMessage='The web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Web},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPEventReceiver', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPException
 {
@@ -64451,104 +63241,52 @@ param(
 function Get-PnPFeature
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='The feature ID or name to query for, Querying by name is not supported in version 15 of the Client Side Object Model')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FeaturePipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FeaturePipeBind]
+        ${Identity},
 
-    [Parameter(HelpMessage='The scope of the feature. Defaults to Web.')]
-    [SharePointPnP.PowerShell.Commands.Enums.FeatureScope]
-    ${Scope},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Enums.FeatureScope]
+        ${Scope},
 
-    [Parameter(HelpMessage='The web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Web},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPFeature', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPField
 {
     [CmdletBinding()]
-param(
-    [Parameter(ValueFromPipeline=$true, HelpMessage='The list object or name where to get the field from')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        ${List},
 
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='The field object or name to get')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
-    ${Identity},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.FieldPipeBind]
+        ${Identity},
 
-    [Parameter(HelpMessage='Filter to the specified group')]
-    [string]
-    ${Group},
+        [Parameter()]
+        [System.String]
+        ${Group},
 
-    [Parameter(HelpMessage='Search site hierarchy for fields')]
-    [switch]
-    ${InSiteHierarchy},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${InSiteHierarchy},
 
-    [Parameter(HelpMessage='The web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Web},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPField', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPFile
 {
@@ -64602,50 +63340,23 @@ param(
 function Get-PnPFolder
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='Folder By Url', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Site or server relative URL of the folder to retrieve. In the case of a server relative url, make sure that the url starts with the managed path as the current web.')]
-    [Alias('RelativeUrl')]
-    [string]
-    ${Url},
+    param(
+        [Parameter()]
+        [System.String]
+        ${Url},
 
-    [Parameter(ParameterSetName='Folders In List', Mandatory=$true, Position=1, HelpMessage='Name, ID or instance of a list or document library to retrieve the folders residing in it for.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        ${List},
 
-    [Parameter(HelpMessage='The web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Web},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPFolder', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPFolderItem
 {
@@ -64683,59 +63394,32 @@ param(
 }
 function Get-PnPGroup
 {
-    [CmdletBinding(DefaultParameterSetName='All')]
-param(
-    [Parameter(ParameterSetName='ByName', Position=0, ValueFromPipeline=$true, HelpMessage='Get a specific group by name')]
-    [Alias('Name')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        ${Identity},
 
-    [Parameter(ParameterSetName='Members', HelpMessage='Retrieve the associated member group')]
-    [switch]
-    ${AssociatedMemberGroup},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${AssociatedMemberGroup},
 
-    [Parameter(ParameterSetName='Visitors', HelpMessage='Retrieve the associated visitor group')]
-    [switch]
-    ${AssociatedVisitorGroup},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${AssociatedVisitorGroup},
 
-    [Parameter(ParameterSetName='Owners', HelpMessage='Retrieve the associated owner group')]
-    [switch]
-    ${AssociatedOwnerGroup},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${AssociatedOwnerGroup},
 
-    [Parameter(HelpMessage='The web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Web},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPGroup', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPGroupMembers
 {
@@ -64914,49 +63598,23 @@ param(
 function Get-PnPList
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='The ID, name or Url (Lists/MyList) of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        ${Identity},
 
-    [Parameter(HelpMessage='Switch parameter if an exception should be thrown if the requested list does not exist (true) or if omitted, nothing will be returned in case the list does not exist')]
-    [switch]
-    ${ThrowExceptionIfListNotFound},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${ThrowExceptionIfListNotFound},
 
-    [Parameter(HelpMessage='The web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Web},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPList', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPListInformationRightsManagement
 {
@@ -65298,56 +63956,28 @@ param(
 }
 function Get-PnPRecycleBinItem
 {
-    [CmdletBinding(DefaultParameterSetName='All')]
-param(
-    [Parameter(ParameterSetName='Identity', HelpMessage='Returns a recycle bin item with a specific identity')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${Identity},
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        ${Identity},
 
-    [Parameter(ParameterSetName='FirstStage', HelpMessage='Return all items in the first stage recycle bin')]
-    [switch]
-    ${FirstStage},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${FirstStage},
 
-    [Parameter(ParameterSetName='SecondStage', HelpMessage='Return all items in the second stage recycle bin')]
-    [switch]
-    ${SecondStage},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${SecondStage},
 
-    [Parameter(ParameterSetName='FirstStage', HelpMessage='Limits return results to specified amount')]
-    [Parameter(ParameterSetName='SecondStage', HelpMessage='Limits return results to specified amount')]
-    [Parameter(ParameterSetName='All', HelpMessage='Limits return results to specified amount')]
-    [int]
-    ${RowLimit},
+        [Parameter()]
+        [System.Int32]
+        ${RowLimit},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPRecycleBinItem', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPRequestAccessEmails
 {
@@ -65457,37 +64087,11 @@ param(
 function Get-PnPSite
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPSite', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPSiteClassification
 {
@@ -65712,49 +64316,23 @@ param(
 function Get-PnPSubWebs
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='If provided, only the subsite with the provided Id, GUID or the Web instance will be returned')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Identity},
 
-    [Parameter(HelpMessage='If provided, recursion through all subsites and their children will take place to return them as well')]
-    [switch]
-    ${Recurse},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${Recurse},
 
-    [Parameter(HelpMessage='The web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Web},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPSubWebs', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPTaxonomyItem
 {
@@ -65997,155 +64575,73 @@ param(
 function Get-PnPTerm
 {
     [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='By Term Id', Mandatory=$true, HelpMessage='The Id or Name of a Term')]
-    [Parameter(ParameterSetName='By Termset', HelpMessage='The Id or Name of a Term')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
-    ${Identity},
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
+        ${Identity},
 
-    [Parameter(ParameterSetName='By Termset', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Name of the termset to check.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
-    ${TermSet},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
+        ${TermSet},
 
-    [Parameter(ParameterSetName='By Termset', Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Name of the termgroup to check.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
-    ${TermGroup},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
+        ${TermGroup},
 
-    [Parameter(ParameterSetName='By Term Id', HelpMessage='Term store to check; if not specified the default term store is used.')]
-    [Parameter(ParameterSetName='By Termset', HelpMessage='Term store to check; if not specified the default term store is used.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
-    ${TermStore},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        ${TermStore},
 
-    [Parameter(ParameterSetName='By Termset', HelpMessage='Find the first term recursively matching the label in a term hierarchy.')]
-    [switch]
-    ${Recursive},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${Recursive},
 
-    [Parameter(HelpMessage='Includes the hierarchy of child terms if available')]
-    [switch]
-    ${IncludeChildTerms},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${IncludeChildTerms},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPTerm', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPTermGroup
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='Name of the taxonomy term group to retrieve.')]
-    [Alias('GroupName')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermGroup]]
-    ${Identity},
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermGroup]]
+        ${Identity},
 
-    [Parameter(HelpMessage='Term store to check; if not specified the default term store is used.')]
-    [Alias('TermStoreName')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
-    ${TermStore},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        ${TermStore},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPTermGroup', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPTermSet
 {
     [CmdletBinding()]
-param(
-    [Parameter(HelpMessage='The Id or Name of a termset')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
-    ${Identity},
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermSet]]
+        ${Identity},
 
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Name of the term group to check.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
-    ${TermGroup},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TermGroupPipeBind]
+        ${TermGroup},
 
-    [Parameter(HelpMessage='Term store to check; if not specified the default term store is used.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
-    ${TermStore},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
+        ${TermStore},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPTermSet', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPTheme
 {
@@ -66262,88 +64758,36 @@ param(
 function Get-PnPView
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID or Url of the list.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${List},
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        ${List},
 
-    [Parameter(HelpMessage='The ID or name of the view')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ViewPipeBind]
-    ${Identity},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ViewPipeBind]
+        ${Identity},
 
-    [Parameter(HelpMessage='The web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Web},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPView', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPWeb
 {
     [CmdletBinding()]
-param(
-    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='The guid of the web or web object')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Identity},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Get-PnPWeb', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Get-PnPWebhookSubscriptions
 {
@@ -66906,53 +65350,27 @@ param(
 function Measure-PnPList
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        ${Identity},
 
-    [Parameter(HelpMessage='Show item level statistics')]
-    [switch]
-    ${ItemLevel},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${ItemLevel},
 
-    [Parameter(HelpMessage='Show items with broken permissions')]
-    [switch]
-    ${BrokenPermissions},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${BrokenPermissions},
 
-    [Parameter(HelpMessage='The web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Web},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Measure-PnPList', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Measure-PnPResponseTime
 {
@@ -67429,49 +65847,23 @@ param(
 function New-PnPSite
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, HelpMessage='Specifies with type of site to create.')]
-    [SharePointPnP.PowerShell.Commands.Enums.SiteType]
-    ${Type},
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Enums.SiteType]
+        ${Type},
 
-    [Parameter(HelpMessage='If specified the site will be associated to the hubsite as identified by this id')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
-    ${HubSiteId},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
+        ${HubSiteId},
 
-    [Parameter(HelpMessage='If specified the cmdlet will wait until the site has been fully created and all site artifacts have been provisioned by SharePoint. Notice that this can take a while.')]
-    [switch]
-    ${Wait},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${Wait},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\New-PnPSite', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function New-PnPTenantSequence
 {
@@ -69291,45 +67683,19 @@ param(
 function Resolve-PnPFolder
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, HelpMessage='Site Relative Folder Path')]
-    [string]
-    ${SiteRelativePath},
+    param(
+        [Parameter()]
+        [System.String]
+        ${SiteRelativePath},
 
-    [Parameter(HelpMessage='The web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Web},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Resolve-PnPFolder', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Restore-PnPDeletedUnifiedGroup
 {
@@ -69666,86 +68032,59 @@ param(
 function Set-PnPClientSidePage
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name/identity of the page')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
-    ${Identity},
+    param(
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ClientSidePagePipeBind]
+        ${Identity},
 
-    [Parameter(HelpMessage='Sets the name of the page.')]
-    [string]
-    ${Name},
+        [Parameter()]
+        [System.String]
+        ${Name},
 
-    [Parameter(HelpMessage='Sets the title of the page.')]
-    [string]
-    ${Title},
+        [Parameter()]
+        [System.String]
+        ${Title},
 
-    [Parameter(HelpMessage='Sets the layout type of the page. (Default = Article)')]
-    [OfficeDevPnP.Core.Pages.ClientSidePageLayoutType]
-    ${LayoutType},
+        [Parameter()]
+        [OfficeDevPnP.Core.Pages.ClientSidePageLayoutType]
+        ${LayoutType},
 
-    [Parameter(HelpMessage='Allows to promote the page for a specific purpose (HomePage | NewsPage)')]
-    [SharePointPnP.PowerShell.Commands.ClientSidePages.ClientSidePagePromoteType]
-    ${PromoteAs},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.ClientSidePages.ClientSidePagePromoteType]
+        ${PromoteAs},
 
-    [Parameter(HelpMessage='Enables or Disables the comments on the page')]
-    [switch]
-    ${CommentsEnabled},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${CommentsEnabled},
 
-    [Parameter(HelpMessage='Publishes the page once it is saved.')]
-    [switch]
-    ${Publish},
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        ${Publish},
 
-    [Parameter(HelpMessage='Sets the page header type')]
-    [OfficeDevPnP.Core.Pages.ClientSidePageHeaderType]
-    ${HeaderType},
+        [Parameter()]
+        [OfficeDevPnP.Core.Pages.ClientSidePageHeaderType]
+        ${HeaderType},
 
-    [Parameter(HelpMessage='Specify either the name, ID or an actual content type.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
-    ${ContentType},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ContentTypePipeBind]
+        ${ContentType},
 
-    [Parameter(HelpMessage='Thumbnail Url')]
-    [string]
-    ${ThumbnailUrl},
+        [Parameter()]
+        [System.String]
+        ${ThumbnailUrl},
 
-    [Parameter(HelpMessage='Sets the message for publishing the page.')]
-    [Obsolete('This parameter value will be ignored')]
-    [string]
-    ${PublishMessage},
+        [Parameter()]
+        [System.String]
+        ${PublishMessage},
 
-    [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
-    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        ${Web},
 
-    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
-    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-    ${Connection})
-
-
-dynamicparam
-{
-    try {
-        $targetCmd = $ExecutionContext.InvokeCommand.GetCommand('SharePointPnPPowerShellOnline\Set-PnPClientSidePage', [System.Management.Automation.CommandTypes]::Cmdlet, $PSBoundParameters)
-        $dynamicParams = @($targetCmd.Parameters.GetEnumerator() | Microsoft.PowerShell.Core\Where-Object { $_.Value.IsDynamic })
-        if ($dynamicParams.Length -gt 0)
-        {
-            $paramDictionary = [Management.Automation.RuntimeDefinedParameterDictionary]::new()
-            foreach ($param in $dynamicParams)
-            {
-                $param = $param.Value
-
-                if(-not $MyInvocation.MyCommand.Parameters.ContainsKey($param.Name))
-                {
-                    $dynParam = [Management.Automation.RuntimeDefinedParameter]::new($param.Name, $param.ParameterType, $param.Attributes)
-                    $paramDictionary.Add($param.Name, $dynParam)
-                }
-            }
-            return $paramDictionary
-        }
-    } catch {
-        throw
-    }
-}
-
+        [Parameter()]
+        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+        ${Connection}
+    )
 }
 function Set-PnPClientSideText
 {

@@ -426,14 +426,94 @@ function Set-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform PnP
 
-    if ($Ensure -eq "Present")
+    $CurrentValues = Get-TargetResource @PSBoundParameters
+    $CurrentParameters = $PSBoundParameters
+    $CurrentParameters.Remove("Ensure") | Out-Null
+    $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
+    if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
-        $CurrentParameters = $PSBoundParameters
-        Set-SPOSiteConfiguration @CurrentParameters
+        $CreationParams = @{
+            Title                     = $Title
+            Url                       = $Url
+            Owner                     = $Owner
+            TimeZone                  = $TimeZoneID
+            Lcid                      = $LocaleID
+            Template                  = $Template
+            ResourceQuota             = $ResourceQuota
+            ResourceQuotaWarningLevel = $ResourceQuatoWarningLevel
+            StorageQuota              = $Storage
+            StorageQuotaWarningLevel  = $StorageQuotaWarningLevel
+        }
+        Write-Verbose -Message "Site {$Url} doesn't exist. Creating it."
+        New-PnPTenantSite @CreationParams
+
+        $UpdateParams = @{
+            Title                   = $Title
+            Sharing                 = $SharingCapability
+            StorageMaximumLevel     = $StorageQuota
+            StorageWarningLevel     = $StorageQuotaWarningLevel
+            UserCodeMaximumLevel    = $ResourceQuota
+            UserCodeWarningLevel    = $ResourceQuotaWarningLevel
+            AllowSelfServiceUpgrade = $AllowSelfServiceUpgrade
+            Owners                  = $Owner
+            NoScriptSite            = $DenyAddAndCustomizePages
+            DefaultLinkPermission   = $DefaultLinkPermission
+            DefaultSharingLinkType  = $DefaultSharingLinkType
+        }
+        Write-Verbose -Message "Updating settings on newly created site {$Url}"
+        New-PnPTenantSite @CreationParams
+
+        if (-not [System.String]::IsNullOrEmpty($HubUrl)])
+        {
+            Write-Verbose "Assigning newly created site {$Url} to Hub Site {$HubUrl}"
+            $hubSite = Get-PnPHubSite -Identity $HubUrl
+
+            if ($null -eq $hubSite)
+            {
+                throw ("Specified HubUrl ($HubUrl) is not a Hub site. Make sure you " + `
+                    "have promoted that to a Hub site first.")
+            }
+
+            if ($site.HubSiteId -ne $hubSite.Id)
+            {
+                Add-PnPHubSiteAssociation -Site $Url -HubSite $HubUrl
+            }
+        }
     }
-    elseif ($Ensure -eq "Absent")
+    elseif ($Ensure -eq "Present" -and $CurrentValues.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing site $($Url)"
+        Write-Verbose -Message "Site {$Url} already exists, updating its settings"
+        Set-PnPTenantSite @CurrentParameters
+
+        if ($PSBoundParameters.ContainsKey("HubUrl"))
+        {
+            if ($HubUrl -eq "")
+            {
+                if ($site.HubSiteId -ne "00000000-0000-0000-0000-000000000000")
+                {
+                    Remove-PnPHubSiteAssociation -Site $Url
+                }
+            }
+            else
+            {
+                $hubSite = Get-PnPHubSite -Identity $HubUrl
+
+                if ($null -eq $hubSite)
+                {
+                    throw ("Specified HubUrl ($HubUrl) is not a Hub site. Make sure you " + `
+                        "have promoted that to a Hub site first.")
+                }
+
+                if ($site.HubSiteId -ne $hubSite.Id)
+                {
+                    Add-PnPHubSiteAssociation -Site $Url -HubSite $HubUrl
+                }
+            }
+        }
+    }
+    elseif ($Ensure -eq "Absent" -and $CurrentValues.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Removing site {$Url}"
         try
         {
             Remove-PnPTenantSite -Identity $Url -Confirm:$false -SkipRecycleBin
@@ -601,41 +681,12 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+    $CurrentValues.Remove("GlobalAdminAccount") | Out-Null
+    $keysToCheck = $CurrentValues.Keys
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "Url", `
-            "Title", `
-            "Owner", `
-            "StorageQuota", `
-            "CompatibilityLevel", `
-            "LocaleId", `
-            "ResourceQuota", `
-            "Template", `
-            "TimeZoneId", `
-            "AllowSelfServiceUpgrade", `
-            "DenyAddAndCustomizePages", `
-            "LockState", `
-            "ResourceQuotaWarningLevel", `
-            "SharingCapability", `
-            "StorageQuotaWarningLevel", `
-            "CommentsOnSitePagesDisabled", `
-            "SocialBarOnSitePagesDisabled", `
-            "DisableAppViews", `
-            "DisableCompanyWideSharingLinks", `
-            "DisableFlows", `
-            "RestrictedToGeo", `
-            "SharingAllowedDomainList", `
-            "SharingBlockedDomainList", `
-            "SharingDomainRestrictionMode", `
-            "ShowPeoplePickerSuggestionsForGuestUsers", `
-            "DefaultSharingLinkType", `
-            "DefaultLinkPermission", `
-            "HubUrl", `
-            "AnonymousLinkExpirationInDays", `
-            "OverrideTenantAnonymousLinkExpirationPolicy"
-    )
+        -ValuesToCheck $keysToCheck
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -721,551 +772,3 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
-
-function Set-SPOSiteConfiguration
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Url,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Owner,
-
-        [Parameter()]
-        [System.UInt32]
-        $StorageQuota = 26214400,
-
-        [Parameter()]
-        [System.String]
-        $Title,
-
-        [Parameter()]
-        [System.UInt32]
-        $CompatibilityLevel,
-
-        [Parameter()]
-        [System.UInt32]
-        $LocaleId,
-
-        [Parameter()]
-        [System.UInt32]
-        $ResourceQuota,
-
-        [Parameter()]
-        [System.String]
-        $Template,
-
-        [Parameter()]
-        [System.UInt32]
-        $TimeZoneId,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowSelfServiceUpgrade,
-
-        [Parameter()]
-        [System.Boolean]
-        $DenyAddAndCustomizePages,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("NoAccess", "Unlock")]
-        $LockState,
-
-        [Parameter()]
-        [System.UInt32]
-        $ResourceQuotaWarningLevel,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
-        $SharingCapability,
-
-        [Parameter()]
-        [System.UInt32]
-        $StorageQuotaWarningLevel,
-
-        [Parameter()]
-        [System.boolean]
-        $CommentsOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.boolean]
-        $SocialBarOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
-        $DisableAppViews,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
-        $DisableCompanyWideSharingLinks,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("Unknown", "Disabled", "NotDisabled")]
-        $DisableFlows,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("BlockMoveOnly", "BlockFull")]
-        $RestrictedToGeo,
-
-        [Parameter()]
-        [System.String]
-        $SharingAllowedDomainList,
-
-        [Parameter()]
-        [System.String]
-        $SharingBlockedDomainList,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("None", "AllowList", "BlockList")]
-        $SharingDomainRestrictionMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $ShowPeoplePickerSuggestionsForGuestUsers,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("None", "AnonymousAccess", "Internal", "Direct")]
-        $DefaultSharingLinkType,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("None", "View", "Edit")]
-        $DefaultLinkPermission,
-
-        [Parameter()]
-        [System.String]
-        $HubUrl,
-
-        [Parameter()]
-        [System.UInt32]
-        $AnonymousLinkExpirationInDays,
-
-        [Parameter()]
-        [System.Boolean]
-        $OverrideTenantAnonymousLinkExpirationPolicy,
-
-        [Parameter()]
-        [ValidateSet("Present", "Absent")]
-        [System.String]
-        $Ensure = "Present",
-
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount,
-
-        [Parameter()]
-        [System.Boolean]
-        $IsSecondTry = $false
-    )
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-        -Platform PnP
-
-    try
-    {
-        $site = Get-PnPTenantSite $Url
-    }
-    catch
-    {
-        Write-Verbose -Message "Site does not exist. Creating it"
-    }
-
-    if ($null -ne $site)
-    {
-        Write-Verbose -Message "Configuring site collection $Url"
-        if ($site.LockState -eq "NoAccess")
-        {
-            $CurrentParameters = $PSBoundParameters
-            Write-Debug "The site $url currently is in Lockstate NoAccess and for that cannot be changed"
-            if ($CurrentParameters.ContainsKey("GlobalAdminAccount"))
-            {
-                $CurrentParameters.Remove("GlobalAdminAccount")
-            }
-            if ($CurrentParameters.ContainsKey("Ensure"))
-            {
-                $CurrentParameters.Remove("Ensure")
-            }
-            if ($CurrentParameters.ContainsKey("AllowSelfServiceUpgrade"))
-            {
-                $CurrentParameters.Remove("AllowSelfServiceUpgrade")
-            }
-            if ($CurrentParameters.ContainsKey("DenyAddAndCustomizePages"))
-            {
-                $CurrentParameters.Remove("DenyAddAndCustomizePages")
-            }
-            if ($CurrentParameters.ContainsKey("ResourceQuotaWarningLevel"))
-            {
-                $CurrentParameters.Remove("ResourceQuotaWarningLevel")
-            }
-            if ($CurrentParameters.ContainsKey("SharingCapability"))
-            {
-                $CurrentParameters.Remove("SharingCapability")
-            }
-            if ($CurrentParameters.ContainsKey("StorageQuotaWarningLevel"))
-            {
-                $CurrentParameters.Remove("StorageQuotaWarningLevel")
-            }
-            if ($CurrentParameters.ContainsKey("CommentsOnSitePagesDisabled"))
-            {
-                $CurrentParameters.Remove("CommentsOnSitePagesDisabled")
-            }
-            if ($CurrentParameters.ContainsKey("SocialBarOnSitePagesDisabled"))
-            {
-                $CurrentParameters.Remove("SocialBarOnSitePagesDisabled")
-            }
-            if ($CurrentParameters.ContainsKey("DisableAppViews"))
-            {
-                $CurrentParameters.Remove("DisableAppViews")
-            }
-            if ($CurrentParameters.ContainsKey("DisableCompanyWideSharingLinks"))
-            {
-                $CurrentParameters.Remove("DisableCompanyWideSharingLinks")
-            }
-            if ($CurrentParameters.ContainsKey("DisableFlows"))
-            {
-                $CurrentParameters.Remove("DisableFlows")
-            }
-            if ($CurrentParameters.ContainsKey("RestrictedToGeo"))
-            {
-                $CurrentParameters.Remove("RestrictedToGeo")
-            }
-            if ($CurrentParameters.ContainsKey("SharingAllowedDomainList"))
-            {
-                $CurrentParameters.Remove("SharingAllowedDomainList")
-            }
-            if ($CurrentParameters.ContainsKey("SharingBlockedDomainList"))
-            {
-                $CurrentParameters.Remove("SharingBlockedDomainList")
-            }
-            if ($CurrentParameters.ContainsKey("SharingDomainRestrictionMode"))
-            {
-                $CurrentParameters.Remove("SharingDomainRestrictionMode")
-            }
-            if ($CurrentParameters.ContainsKey("ShowPeoplePickerSuggestionsForGuestUsers"))
-            {
-                $CurrentParameters.Remove("ShowPeoplePickerSuggestionsForGuestUsers")
-            }
-            if ($CurrentParameters.ContainsKey("DefaultSharingLinkType"))
-            {
-                $CurrentParameters.Remove("DefaultSharingLinkType")
-            }
-            if ($CurrentParameters.ContainsKey("DefaultLinkPermission"))
-            {
-                $CurrentParameters.Remove("DefaultLinkPermission")
-            }
-            if ($CurrentParameters.ContainsKey("CompatibilityLevel"))
-            {
-                $CurrentParameters.Remove("CompatibilityLevel")
-            }
-            if ($CurrentParameters.ContainsKey("Template"))
-            {
-                $CurrentParameters.Remove("Template")
-            }
-            if ($CurrentParameters.ContainsKey("LocaleId"))
-            {
-                $CurrentParameters.Remove("LocaleId")
-            }
-            if ($CurrentParameters.ContainsKey("Url"))
-            {
-                $CurrentParameters.Remove("Url")
-            }
-            if ($CurrentParameters.ContainsKey("Owner"))
-            {
-                $CurrentParameters.Remove("Owner")
-            }
-            if ($CurrentParameters.ContainsKey("StorageQuota"))
-            {
-                $CurrentParameters.Remove("StorageQuota")
-            }
-            if ($CurrentParameters.ContainsKey("Title"))
-            {
-                $CurrentParameters.Remove("Title")
-            }
-            if ($CurrentParameters.ContainsKey("ResourceQuota"))
-            {
-                $CurrentParameters.Remove("ResourceQuota")
-            }
-            if ($CurrentParameters.ContainsKey("TimeZoneId"))
-            {
-                $CurrentParameters.Remove("TimeZoneId")
-            }
-            if ($CurrentParameters.ContainsKey("HubUrl"))
-            {
-                $CurrentParameters.Remove("HubUrl")
-            }
-            if ($CurrentParameters.ContainsKey("AnonymousLinkExpirationInDays"))
-            {
-                $CurrentParameters.Remove("AnonymousLinkExpirationInDays")
-            }
-            if ($CurrentParameters.ContainsKey("OverrideTenantAnonymousLinkExpirationPolicy"))
-            {
-                $CurrentParameters.Remove("OverrideTenantAnonymousLinkExpirationPolicy")
-            }
-            if ($CurrentParameters.Count -gt 0)
-            {
-                Set-PnPTenantSite -Identity $Url @CurrentParameters -NoWait
-            }
-        }
-        else
-        {
-            if ($PSBoundParameters.ContainsKey("HubUrl"))
-            {
-                if ($HubUrl -eq "")
-                {
-                    if ($site.HubSiteId -ne "00000000-0000-0000-0000-000000000000")
-                    {
-                        Remove-PnPHubSiteAssociation -Site $Url
-                    }
-                }
-                else
-                {
-                    $hubSite = Get-PnPHubSite -Identity $HubUrl
-
-                    if ($null -eq $hubSite)
-                    {
-                        throw ("Specified HubUrl ($HubUrl) is not a Hub site. Make sure you " + `
-                                "have promoted that to a Hub site first.")
-                    }
-
-                    if ($site.HubSiteId -ne $hubSite.Id)
-                    {
-                        Add-PnPHubSiteAssociation -Site $Url -HubSite $HubUrl
-                    }
-                }
-            }
-
-            $CurrentParameters = $PSBoundParameters
-            #Sites based on the GROUP#0 template should not be created via SharePoint but rather as part of an Office 365 group.
-            #Once a site based on the GROUP#0 template has been created not all properties can be configured as they can be for other sitetemplates for that they will be removed
-            if ($CurrentParameters.Template -eq "GROUP#0")
-            {
-                if ($CurrentParameters.ContainsKey("Title"))
-                {
-                    $CurrentParameters.Remove("Title")
-                }
-                if ($CurrentParameters.ContainsKey("CompatibilityLevel"))
-                {
-                    $CurrentParameters.Remove("CompatibilityLevel")
-                }
-                if ($CurrentParameters.ContainsKey("LocaleId"))
-                {
-                    $CurrentParameters.Remove("LocaleId")
-                }
-                if ($CurrentParameters.ContainsKey("Template"))
-                {
-                    $CurrentParameters.Remove("Template")
-                }
-                if ($CurrentParameters.ContainsKey("TimeZoneId"))
-                {
-                    $CurrentParameters.Remove("TimeZoneId")
-                }
-                if ($CurrentParameters.ContainsKey("CommentsOnSitePagesDisabled"))
-                {
-                    $CurrentParameters.Remove("CommentsOnSitePagesDisabled")
-                }
-                if ($CurrentParameters.ContainsKey("DisableAppViews"))
-                {
-                    $CurrentParameters.Remove("DisableAppViews")
-                }
-                if ($CurrentParameters.ContainsKey("DisableFlows"))
-                {
-                    $CurrentParameters.Remove("DisableFlows")
-                }
-                if ($CurrentParameters.ContainsKey("RestrictedToGeo"))
-                {
-                    $CurrentParameters.Remove("RestrictedToGeo")
-                }
-                if ($CurrentParameters.ContainsKey("SharingAllowedDomainList"))
-                {
-                    $CurrentParameters.Remove("SharingAllowedDomainList")
-                }
-                if ($CurrentParameters.ContainsKey("SharingBlockedDomainList"))
-                {
-                    $CurrentParameters.Remove("SharingBlockedDomainList")
-                }
-                if ($CurrentParameters.ContainsKey("SharingDomainRestrictionMode"))
-                {
-                    $CurrentParameters.Remove("SharingDomainRestrictionMode")
-                }
-                if ($CurrentParameters.ContainsKey("HubUrl"))
-                {
-                    $CurrentParameters.Remove("HubUrl")
-                }
-            }
-            if ($CurrentParameters.SharingCapability -and $CurrentParameters.DenyAddAndCustomizePages)
-            {
-                Write-Warning -Message "Setting the DenyAddAndCustomizePages and the SharingCapability property via Set-PnPSite at the same time might cause the DenyAddAndCustomizePages property not to be configured as desired."
-            }
-            if ($CurrentParameters.StorageQuotaWarningLevel)
-            {
-                Write-Warning -Message "StorageQuotaWarningLevel can not be configured via Set-PnPSite"
-            }
-            if ($SharingDomainRestrictionMode -eq "")
-            {
-                Write-Verbose -Message "SharingDomainRestrictionMode is empty. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
-                if ($CurrentParameters.ContainsKey("ShareingAllowedDomainList"))
-                {
-                    $CurrentParameters.Remove("SharingAllowedDomainList")
-                }
-                if ($CurrentParameters.ContainsKey("SharingBlockedDomainList"))
-                {
-                    $CurrentParameters.Remove("SharingBlockedDomainList")
-                }
-            }
-            if ($SharingDomainRestrictionMode -eq "None")
-            {
-                Write-Verbose -Message "SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
-                if ($CurrentParameters.ContainsKey("SharingAllowedDomainList"))
-                {
-                    $CurrentParameters.Remove("SharingAllowedDomainList")
-                }
-                if ($CurrentParameters.ContainsKey("SharingBlockedDomainList"))
-                {
-                    $CurrentParameters.Remove("SharingBlockedDomainList")
-                }
-            }
-            elseif ($SharingDomainRestrictionMode -eq "AllowList")
-            {
-                Write-Verbose -Message "SharingDomainRestrictionMode is set to AllowList. For that SharingBlockedDomainList cannot be configured"
-                if ($CurrentParameters.ContainsKey("SharingBlockedDomainList"))
-                {
-                    $CurrentParameters.Remove("SharingBlockedDomainList")
-                }
-                if ($SharingAllowedDomainList -eq "")
-                {
-                    Write-Verbose -Message "No allowed domains specified. Not taking any action"
-                    if ($CurrentParameters.ContainsKey("SharingAllowedDomainList"))
-                    {
-                        $CurrentParameters.Remove("SharingAllowedDomainList")
-                    }
-                    if ($CurrentParameters.ContainsKey("SharingDomainRestrictionMode"))
-                    {
-                        $CurrentParameters.Remove("SharingDomainRestrictionMode")
-                    }
-                }
-            }
-            elseif ($SharingDomainRestrictionMode -eq "BlockList")
-            {
-                Write-Verbose -Message "SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured"
-                if ($CurrentParameters.ContainsKey("SharingAllowedDomainList"))
-                {
-                    $CurrentParameters.Remove("SharingAllowedDomainList")
-                }
-                if ($SharingBlockedDomainList -eq "")
-                {
-                    Write-Verbose -Message "No blocked domains specified. Not taking any action"
-                    if ($CurrentParameters.ContainsKey("SharingBlockedDomainList"))
-                    {
-                        $CurrentParameters.Remove("SharingBlockedDomainList")
-                    }
-                    if ($CurrentParameters.ContainsKey("SharingDomainRestrictionMode"))
-                    {
-                        $CurrentParameters.Remove("SharingDomainRestrictionMode")
-                    }
-                }
-            }
-            $TenantInfo = Get-SPOTenant
-            if (($site.SharingCapability -ne "ExternalUserAndGuestSharing") -or ($TenantInfo.SharingCapability -ne "ExternalUserAndGuestSharing") -and ($DefaultSharingLinkType -eq "AnonymousAccess"))
-            {
-                Write-Verbose -Message "Anonymous sharing has to be enabled in the SharingCapability on site and tenant level first before DefaultSharingLinkType can be set to Anonymous Access"
-                if ($CurrentParameters.ContainsKey("DefaultSharingLinkType"))
-                {
-                    $CurrentParameters.Remove("DefaultSharingLinkType")
-                }
-            }
-            if ($TenantInfo.showPeoplePickerSuggestionsForGuestUsers -eq $false)
-            {
-                Write-Verbose -Message "ShowPeoplePickerSuggestionsForGuestUsers for this site cannot be set since it is set to false on tenant level"
-                if ($CurrentParameters.ContainsKey("showPeoplePickerSuggestionsForGuestUsers"))
-                {
-                    $CurrentParameters.Remove("showPeoplePickerSuggestionsForGuestUsers")
-                }
-            }
-            if ($OverrideTenantAnonymousLinkExpirationPolicy -eq $false)
-            {
-                Write-Verbose -Message "As long as property <OverrideTenantAnonymousLinkExpirationPolicy> is set to false property <AnonymousLinkExpirationInDays> will not take any effect."
-                write-verbose -Message "$($OverrideTenantAnonymousLinkExpirationPolicy)"
-                write-verbose -Message "$($AnonymousLinkExpirationInDays)"
-            }
-            if ($CurrentParameters.ContainsKey("GlobalAdminAccount"))
-            {
-                $CurrentParameters.Remove("GlobalAdminAccount")
-            }
-            if ($CurrentParameters.ContainsKey("Ensure"))
-            {
-                $CurrentParameters.Remove("Ensure")
-            }
-            if ($CurrentParameters.ContainsKey("Url"))
-            {
-                $CurrentParameters.Remove("Url")
-            }
-            if ($CurrentParameters.ContainsKey("CompatibilityLevel"))
-            {
-                $CurrentParameters.Remove("CompatibilityLevel")
-            }
-            if ($CurrentParameters.ContainsKey("Template"))
-            {
-                $CurrentParameters.Remove("Template")
-            }
-            if ($CurrentParameters.ContainsKey("LocaleId"))
-            {
-                $CurrentParameters.Remove("LocaleId")
-            }
-            if ($CurrentParameters.ContainsKey("HubUrl"))
-            {
-                $CurrentParameters.Remove("HubUrl")
-            }
-            if ($CurrentParameters.ContainsKey("IsSecondTry"))
-            {
-                $CurrentParameters.Remove("IsSecondTry")
-            }
-            if ($CurrentParameters.Count -gt 0)
-            {
-                Set-PnPTenantSite -Identity $Url @CurrentParameters -NoWait
-            }
-        }
-    }
-    else
-    {
-        if ($PSBoundParameters.Template -eq "GROUP#0")
-        {
-            throw "Group based sites (GROUP#0) should be created as part of an O365 group. Make sure to specify it as a configuration item"
-        }
-        else
-        {
-            Write-Verbose -Message "Creating site collection $Url"
-            $siteCreation = @{
-                Url                = $Url
-                Owner              = $Owner
-                StorageQuota       = $StorageQuota
-                Title              = $Title
-                CompatibilityLevel = $CompatibilityLevel
-                LocaleId           = $LocaleId
-                Template           = $Template
-            }
-
-            New-PnPTenantSite @siteCreation
-
-            if (-not $IsSecondTry)
-            {
-                $CurrentParameters4Config = $PSBoundParameters
-                Set-SPOSiteConfiguration @CurrentParameters4Config -IsSecondTry $true
-            }
-            else
-            {
-                throw "There was an error trying to create SPOSite $Url"
-            }
-        }
-    }
-}

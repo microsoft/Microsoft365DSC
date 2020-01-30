@@ -1387,7 +1387,7 @@ function Test-Office365DSCParameterState
             -and ($DesiredValues.GetType().Name -ne "CimInstance") `
             -and ($DesiredValues.GetType().Name -ne "PSBoundParametersDictionary"))
     {
-        throw ("Property 'DesiredValues' in Test-SPDscParameterState must be either a " + `
+        throw ("Property 'DesiredValues' in Test-Office365DscParameterState must be either a " + `
                 "Hashtable or CimInstance. Type detected was $($DesiredValues.GetType().Name)")
     }
 
@@ -1420,7 +1420,7 @@ function Test-Office365DSCParameterState
                 }
                 else
                 {
-                    $CheckDesiredValue = Test-SPDSCObjectHasProperty -Object $DesiredValues -PropertyName $_
+                    $CheckDesiredValue = Test-Office365DSCObjectHasProperty -Object $DesiredValues -PropertyName $_
                 }
 
                 if ($CheckDesiredValue)
@@ -1653,7 +1653,7 @@ function Test-Office365DSCParameterState
                                 Write-Verbose -Message ("Unable to compare property $fieldName " + `
                                         "as the type ($($desiredType.Name)) is " + `
                                         "not handled by the " + `
-                                        "Test-SPDscParameterState cmdlet")
+                                        "Test-Office365DscParameterState cmdlet")
                                 $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
                                 $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
                                 $DriftedParameters.Add($fieldName, $EventValue)

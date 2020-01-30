@@ -67,7 +67,6 @@ function Get-TargetResource
             -Platform PnP `
             -ConnectionUrl $Url
         $siteGroup = Get-PnPGroup -Identity $Identity
-        $sitePermissions = Get-PnPGroupPermissions -Identity $Identity
     }
     catch
     {
@@ -77,10 +76,14 @@ function Get-TargetResource
 
         }
     }
+    if ($null -eq $siteGroup)
+    {
+        return $nullReturn
+    }
 
     try
     {
-
+        $sitePermissions = Get-PnPGroupPermissions -Identity $Identity -ErrorAction Stop
     }
     catch
     {
@@ -90,20 +93,18 @@ function Get-TargetResource
             return $nullReturn
         }
     }
-    if ($null -eq $siteGroup)
+    $permissions = @()
+    foreach ($entry in $sitePermissions.RoleTypeKind)
     {
-        return $nullReturn
+        $permissions += $entry.ToString()
     }
-    else
-    {
-        return @{
-            Url                = $Url
-            Identity           = $siteGroup.Title
-            Owner              = $siteGroup.Owner.LoginName
-            PermissionLevels   = $sitePermissions.RoleTypeKind
-            GlobalAdminAccount = $GlobalAdminAccount
-            Ensure             = "Present"
-        }
+    return @{
+        Url                = $Url
+        Identity           = $siteGroup.Title
+        Owner              = $siteGroup.Owner.LoginName
+        PermissionLevels   = $permissions
+        GlobalAdminAccount = $GlobalAdminAccount
+        Ensure             = "Present"
     }
 }
 
@@ -153,9 +154,8 @@ function Set-TargetResource
     if ($Ensure -eq "Present"-and $currentValues.Ensure -eq "Absent")
     {
         $SiteGroupSettings = @{
-            Site = $Url
-            Group = $Identity
-            PermissionLevels = $PermissionLevels
+            Title = $Identity
+            Owner = $Owner
         }
         Write-Verbose -Message "Site group $Identity does not exist, creating it."
         New-PnPGroup @SiteGroupSettings
@@ -183,22 +183,22 @@ function Set-TargetResource
         if ($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -ne 0)
         {
             $SiteGroupSettings = @{
-                Site                     = $Url
                 Identity                 = $Identity
                 Owner                    = $Owner
-                PermissionLevelsToRemove = $PermissionLevelsToRemove
             }
             Set-PnPGroup @SiteGroupSettings
+
+            Set-PnPGroupPermissions -Identity $Identity -RemoveRole $PermissionLevelsToRemove
         }
         elseif ($PermissionLevelsToRemove.Count -eq 0 -and $PermissionLevelsToAdd.Count -ne 0)
         {
             $SiteGroupSettings = @{
-                Site                     = $Url
                 Identity                 = $Identity
                 Owner                    = $Owner
-                PermissionLevelsToAdd    = $PermissionLevelsToAdd
             }
             Set-PnPGroup @SiteGroupSettings
+
+            Set-PnPGroupPermissions -Identity $Identity -AddRole $PermissionLevelsToAdd
         }
         elseif ($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -eq 0)
         {
@@ -209,7 +209,6 @@ function Set-TargetResource
             else
             {
                 $SiteGroupSettings = @{
-                    Site                     = $Url
                     Identity                 = $Identity
                     Owner                    = $Owner
                 }
@@ -219,20 +218,18 @@ function Set-TargetResource
         else
         {
             $SiteGroupSettings = @{
-                Site                     = $Url
                 Identity                 = $Identity
                 Owner                    = $Owner
-                PermissionLevelsToAdd    = $PermissionLevelsToAdd
-                PermissionLevelsToRemove = $PermissionLevelsToRemove
             }
             Set-PnPGroup @SiteGroupSettings
+
+            Set-PnPGroupPermissions -Identity $Identity -AddRole $PermissionLevelsToAdd -RemoveRole $PermissionLevelsToRemove
         }
 
     }
     elseif ($Ensure -eq "Absent" -and $currentValues.Ensure -eq "Present")
     {
         $SiteGroupSettings = @{
-            Site     = $Url
             Identity = $Identity
         }
         Write-Verbose "Removing SPOSiteGroup $Identity"
@@ -342,6 +339,15 @@ function Export-TargetResource
         }
         foreach ($siteGroup in $siteGroups)
         {
+            try
+            {
+                $sitePerm = Get-PnPGroupPermissions -Identity $siteGroup.Title -ErrorAction Stop
+            }
+            catch
+            {
+                Write-Warning -Message "The specified account does not have access to the permissions list for {$Url}"
+                break
+            }
             $params = @{
                 Url                = $site.Url
                 Identity           = $siteGroup.Title
@@ -350,6 +356,7 @@ function Export-TargetResource
             try
             {
                 $result = Get-TargetResource @params
+                $result = Remove-NullEntriesFromHashtable -Hash $result
                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
                 $content += "        SPOSiteGroup " + (New-GUID).ToString() + "`r`n"
                 $content += "        {`r`n"

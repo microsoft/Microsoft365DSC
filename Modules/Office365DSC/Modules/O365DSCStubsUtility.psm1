@@ -91,11 +91,10 @@ function Get-O365StubFiles
             Write-Progress -Activity "Generating Stubs" -Status $cmdlet.Name -PercentComplete (($i/$cmdlets.Length)*100)
             $signature = $null
             $metadata = New-Object -TypeName System.Management.Automation.CommandMetaData -ArgumentList $cmdlet
-
-            if ($metadata.DefaultParameterSetName -ne 'InvokeByDynamicParameters')
+            $definition = [System.Management.Automation.ProxyCommand]::Create($metadata)
+            if ($metadata.DefaultParameterSetName -ne 'InvokeByDynamicParameters' -and `
+                $definition.IndexOf('$dynamicParams') -eq -1)
             {
-                $definition = [System.Management.Automation.ProxyCommand]::Create($metadata)
-
                 foreach ($line in $definition -split "`n")
                 {
                     if ($line.Trim() -eq 'begin')
@@ -108,22 +107,20 @@ function Get-O365StubFiles
             }
             else
             {
-                $parameters = (Get-Command $cmdlet).Parameters
+                $metadata = New-Object -TypeName System.Management.Automation.CommandMetaData -ArgumentList $cmdlet
+                $parameters = $metadata.Parameters
                 $StubContent += "function $($cmdlet.Name)`n{`r`n    [CmdletBinding()]`r`n    param(`r`n"
                 foreach ($key in $parameters.Keys)
                 {
                     $parameter = $parameters.$key
-                    if ($parameter.ParameterType.ToString() -ne 'System.Management.Automation.ActionPreference' -and `
-                        $parameter.ParameterType.ToString() -ne 'System.Management.Automation.SwitchParameter' -and `
-                        $key -ne 'InformationVariable' -and $key -ne 'WarningVariable' -and $key -ne 'ErrorVariable' -and `
-                        $key -ne 'OutVariable' -and $key -ne 'OutBuffer' -and $key -ne 'PipelineVariable')
-                    {
-                        $StubContent += "        [Parameter()]`r`n"
-                        $StubContent += "        [$($parameter.ParameterType.ToString())]`r`n"
-                        $StubContent += "        `${$key},`r`n`r`n"
-                    }
+                    $StubContent += "        [Parameter()]`r`n"
+                    $StubContent += "        [$($parameter.ParameterType.ToString())]`r`n"
+                    $StubContent += "        `${$key},`r`n`r`n"
                 }
-                $StubContent = $StubContent.Remove($StubContent.Length-5, 5)
+                if ($parameters.Keys.Count -gt 0)
+                {
+                    $StubContent = $StubContent.Remove($StubContent.Length-5, 5)
+                }
                 $StubContent += "`r`n    )`r`n}`n"
             }
             $i ++
