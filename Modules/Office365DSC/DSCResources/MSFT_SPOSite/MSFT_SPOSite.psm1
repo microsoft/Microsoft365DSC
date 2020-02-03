@@ -40,7 +40,7 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
-        $SharingCapabilities,
+        $Sharing,
 
         [Parameter()]
         [System.UInt32]
@@ -55,8 +55,8 @@ function Get-TargetResource
         $AllowSelfServiceUpgrade,
 
         [Parameter()]
-        [System.String[]]
-        $Owners,
+        [System.String]
+        $Owner,
 
         [Parameter()]
         [System.Boolean]
@@ -170,11 +170,11 @@ function Get-TargetResource
             Classification                 = $site.Classification
             DisableFlows                   = $site.DisableFlows
             LogoFilePath                   = $LogoFilePath
-            SharingCapabilities            = $site.SharingCapabilities
+            Sharing                        = $site.SharingCapabilities
             StorageMaximumLevel            = $site.StorageMaximumLevel
             StorageWarningLevel            = $site.StorageWarningLevel
             AllowSelfServiceUpgrade        = $site.AllowSelfServiceUpgrade
-            Owners                         = $site.Owner
+            Owner                          = $site.Owner
             CommentsOnSitePagesDisabled    = $site.CommentsOnSitePagesDisabled
             DefaultLinkPermission          = $site.DefaultLinkPermission
             DefaultSharingLinkType         = $site.DefaultSharingLinkType
@@ -237,7 +237,7 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
-        $SharingCapabilities,
+        $Sharing,
 
         [Parameter()]
         [System.UInt32]
@@ -252,8 +252,8 @@ function Set-TargetResource
         $AllowSelfServiceUpgrade,
 
         [Parameter()]
-        [System.String[]]
-        $Owners,
+        [System.String]
+        $Owner,
 
         [Parameter()]
         [System.Boolean]
@@ -453,7 +453,7 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
-        $SharingCapabilities,
+        $Sharing,
 
         [Parameter()]
         [System.UInt32]
@@ -468,8 +468,8 @@ function Test-TargetResource
         $AllowSelfServiceUpgrade,
 
         [Parameter()]
-        [System.String[]]
-        $Owners,
+        [System.String
+        $Owner,
 
         [Parameter()]
         [System.Boolean]
