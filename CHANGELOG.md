@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* SPOSite
+  * Refactor to use PnP and expose updated parameters;
 * Metadata
   * Updated MSCloudLoginAssistant dependency to 1.0.0;
   * Updated Microsoft.PowerApps.Administration.PowerShell
