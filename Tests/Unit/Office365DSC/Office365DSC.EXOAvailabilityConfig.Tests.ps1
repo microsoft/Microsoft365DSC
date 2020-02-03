@@ -7,12 +7,15 @@ param(
             -Resolve)
 )
 
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+        -ChildPath "..\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "EXOAvailabilityConfig"
+    -DscResource "EXOAvailabilityConfig" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -66,8 +69,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
             }
 
-            It "Should return Present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            It "Should return Absent from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
             }
         }
 
