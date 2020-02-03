@@ -13,13 +13,13 @@ function Get-TargetResource
         $Title,
 
         [Parameter(Mandatory = $true)]
+        [System.UInt32]
+        $TimeZoneId,
+
+        [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('CommunicationSite', 'TeamSite')]
         $Type,
-
-        [Parameter()]
-        [System.String]
-        $Description,
 
         [Parameter()]
         [System.String]
@@ -144,7 +144,7 @@ function Get-TargetResource
         }
 
         $CurrentHubUrl = $null
-        if ($null -ne $site.HubSiteId)
+        if ($null -ne $site.HubSiteId -and $site.HubSiteId -ne '00000000-0000-0000-0000-000000000000')
         {
             $hubId = $site.HubSiteId
             Write-Verbose -Message "Site {$Url} is associated with HubSite {$hubId}"
@@ -161,14 +161,20 @@ function Get-TargetResource
             }
         }
 
+        $DisableFlowValue = $true
+        if ($site.DisableFlows -eq 'NotDisabled')
+        {
+            $DisableFlowValue = $false
+        }
+
         return @{
             Url                            = $Url
             Title                          = $site.Title
             Type                           = $Type
-            Description                    = $site.Description
+            TimeZoneId                     = $site.TimeZoneId
             HubUrl                         = $CurrentHubUrl
             Classification                 = $site.Classification
-            DisableFlows                   = $site.DisableFlows
+            DisableFlows                   = $DisableFlowValue
             LogoFilePath                   = $LogoFilePath
             Sharing                        = $site.SharingCapabilities
             StorageMaximumLevel            = $site.StorageMaximumLevel
@@ -210,13 +216,13 @@ function Set-TargetResource
         $Title,
 
         [Parameter(Mandatory = $true)]
+        [System.UInt32]
+        $TimeZoneId,
+
+        [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('CommunicationSite', 'TeamSite')]
         $Type,
-
-        [Parameter()]
-        [System.String]
-        $Description,
 
         [Parameter()]
         [System.String]
@@ -318,7 +324,7 @@ function Set-TargetResource
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PnP
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -327,51 +333,75 @@ function Set-TargetResource
     $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
+        $TemplateValue = "GROUP#0"
+        if ($Type -eq 'CommunicationSite')
+        {
+            $TemplateValue = "SITEPAGEPUBLISHING#0"
+        }
         $CreationParams = @{
-            Title                     = $Title
-            Url                       = $Url
-            Owner                     = $Owner
-            TimeZone                  = $TimeZoneID
-            Lcid                      = $LocaleID
-            Template                  = $Template
-            ResourceQuota             = $ResourceQuota
-            ResourceQuotaWarningLevel = $ResourceQuatoWarningLevel
-            StorageQuota              = $Storage
-            StorageQuotaWarningLevel  = $StorageQuotaWarningLevel
+            Title          = $Title
+            Url            = $Url
+            Template       = $TemplateValue
+            Owner          = $Owner
+            Lcid           = $LocaleID
+            TimeZone       = $TimeZoneID
         }
         Write-Verbose -Message "Site {$Url} doesn't exist. Creating it."
-        New-PnPTenantSite @CreationParams
-        Write-Verbose -Message "Updating settings on newly created site {$Url}"
-        New-PnPTenantSite @CreationParams
-
-        if (-not [System.String]::IsNullOrEmpty($HubUrl))
+        New-PnPTenantSite @CreationParams | Out-Null
+    }
+    elseif ($Ensure -eq "Absent" -and $CurrentValues.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing site {$Url}"
+        try
         {
-            Write-Verbose "Assigning newly created site {$Url} to Hub Site {$HubUrl}"
-            $hubSite = Get-PnPHubSite -Identity $HubUrl
-
-            if ($null -eq $hubSite)
+            Remove-PnPTenantSite -Url $Url -Confirm:$false -SkipRecycleBin -Force
+        }
+        catch
+        {
+            if ($Error[0].Exception.Message -eq "File Not Found")
             {
-                throw ("Specified HubUrl ($HubUrl) is not a Hub site. Make sure you " + `
-                    "have promoted that to a Hub site first.")
-            }
-
-            if ($site.HubSiteId -ne $hubSite.Id)
-            {
-                Add-PnPHubSiteAssociation -Site $Url -HubSite $HubUrl
+                $Message = "The site $($Url) does not exist."
+                New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+                throw $Message
             }
         }
     }
-    elseif ($Ensure -eq "Present" -and $CurrentValues.Ensure -eq 'Present')
+    if ($Ensure -ne 'Absent')
     {
         Write-Verbose -Message "Site {$Url} already exists, updating its settings"
-        Set-PnPTenantSite @CurrentParameters
 
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount -Platform PnP -ConnectionUrl $Url
+        $UpdateParams = @{
+            Classification                 = $Classification
+            DisableFlows                   = $DisableFlows
+            LogoFilePath                   = $LogoFilePath
+            Sharing                        = $Sharing
+            StorageMaximumLevel            = $StorageMaximumLevel
+            StorageWarningLevel            = $StorageWarningLevel
+            AllowSelfServiceUpgrade        = $AllowSelfServiceUpgrade
+            Owners                         = $Owner
+            CommentsOnSitePagesDisabled    = $CommentsOnSitePagesDisabled
+            DefaultLinkPermission          = $DefaultLinkPermission
+            DefaultSharingLinkType         = $DefaultSharingLinkType
+            DisableAppViews                = $DisableAppViews
+            DisableCompanyWideSharingLinks = $DisableCompanyWideSharingLinks
+            DisableSharingForNonOwners     = $DisableSharingForNonOwners
+            LocaleId                       = $LocaleId
+            RestrictedToGeo                = $RestrictedToGeo
+            SocialBarOnSitePagesDisabled   = $SocialBarOnSitePagesDisabled
+        }
+
+        $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
+
+        Set-PnPSite @UpdateParams
+        Write-Verbose -Message "Settings Updated"
         if ($PSBoundParameters.ContainsKey("HubUrl"))
         {
-            if ($HubUrl -eq "")
+            if ([System.String]::IsNullOrEmpty($HubUrl))
             {
                 if ($site.HubSiteId -ne "00000000-0000-0000-0000-000000000000")
                 {
+                    Write-Verbose -Message "Removing Hub Site Association for {$Url}"
                     Remove-PnPHubSiteAssociation -Site $Url
                 }
             }
@@ -387,25 +417,9 @@ function Set-TargetResource
 
                 if ($site.HubSiteId -ne $hubSite.Id)
                 {
+                    Write-Verbose -Message "Adding Hub Association on {$HubUrl} for site {$Url}"
                     Add-PnPHubSiteAssociation -Site $Url -HubSite $HubUrl
                 }
-            }
-        }
-    }
-    elseif ($Ensure -eq "Absent" -and $CurrentValues.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "Removing site {$Url}"
-        try
-        {
-            Remove-PnPTenantSite -Identity $Url -Confirm:$false -SkipRecycleBin
-        }
-        catch
-        {
-            if ($Error[0].Exception.Message -eq "File Not Found")
-            {
-                $Message = "The site $($Url) does not exist."
-                New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
-                throw $Message
             }
         }
     }
@@ -426,13 +440,13 @@ function Test-TargetResource
         $Title,
 
         [Parameter(Mandatory = $true)]
+        [System.UInt32]
+        $TimeZoneId,
+
+        [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('CommunicationSite', 'TeamSite')]
         $Type,
-
-        [Parameter()]
-        [System.String]
-        $Description,
 
         [Parameter()]
         [System.String]
@@ -468,7 +482,7 @@ function Test-TargetResource
         $AllowSelfServiceUpgrade,
 
         [Parameter()]
-        [System.String
+        [System.String]
         $Owner,
 
         [Parameter()]
@@ -565,9 +579,7 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PnP
 
-    $CommunicationSites = Get-PnPTenantSite -Template 'SITEPAGEPUBLISHING#0'
-    $TeamSites          = Get-PnPTenantSite -Template 'GROUP#0'
-    $sites = $CommunicationSites + $TeamSites
+    $sites = Get-PnPTenantSite
 
     $partialContent = ""
     $content = ''
@@ -596,6 +608,7 @@ function Export-TargetResource
             Url                = $site.Url
             Type               = $Type
             Title              = $site.Title
+            TimeZoneId         = $site.TimeZoneID
         }
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"

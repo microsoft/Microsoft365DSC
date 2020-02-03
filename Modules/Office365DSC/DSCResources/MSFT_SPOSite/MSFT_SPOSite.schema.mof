@@ -3,17 +3,19 @@ class MSFT_SPOSite : OMI_BaseResource
 {
     [Key, Description("The URL of the site collection.")] string Url;
     [Required, Description("The title of the site collection.")] string Title;
+    [Required, Description("TimeZone ID of the site collection.")] uint32 TimeZoneID;
     [Required, Description("Specifies with type of site to create.")] string Type;
-    [Write, Description("Specifies the description of the new site collection.")] string Description;
     [Write, Description("The URL of the Hub site the site collection needs to get connected to.")] string HubUrl;
     [Write, Description("Specifies the classification of the new site collection.")] string Classification;
-    [Write, Description("Disables Microsoft Flow for this site.")] string DisableFlows;
+    [Write, Description("Disables Microsoft Flow for this site.")] boolean DisableFlows;
     [Write, Description("Sets the logo if the site is modern team site.")] string LogoFilePath;
     [Write, Description("Specifies what the sharing capabilities are for the site. Possible values: Disabled, ExternalUserSharingOnly, ExternalUserAndGuestSharing, ExistingExternalUserSharingOnly."), ValueMap{"Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing"}, Values{"Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing"}] string Sharing;
     [Write, Description("Specifies the storage quota for this site collection in megabytes. This value must not exceed the company's available quota.")] uint32 StorageMaximumLevel;
     [Write, Description("Specifies the warning level for the storage quota in megabytes. This value must not exceed the values set for the StorageMaximumLevel parameter.")] uint32 StorageWarningLevel;
     [Write, Description("Specifies if the site administrator can upgrade the site collection.")] boolean AllowSelfServiceUpgrade;
     [Write, Description("Specifies the owner of the site.")] string Owner;
+    [Write, Description("Specifies if comments on site pages are enabled or disabled.")] boolean CommentsOnSitePagesDisabled;
+    [Write, Description("Specifies to prevent non-owners from inviting new users to the site.")] boolean DisableSharingForNonOwners;
     [Write, Description("Specifies the default link permission for the site collection. None - Respect the organization default link permission. View - Sets the default link permission for the site to 'view' permissions. Edit - Sets the default link permission for the site to 'edit' permissions."), ValueMap{"None", "View", "Edit"}, Values{"None", "View", "Edit"}] string DefaultLinkPermission;
     [Write, Description("Specifies the default link type for the site collection. None - Respect the organization default sharing link type. AnonymousAccess - Sets the default sharing link for this site to an Anonymous Access or Anyone link. Internal - Sets the default sharing link for this site to the 'organization' link or company shareable link. Direct - Sets the default sharing link for this site to the 'Specific people' link."), ValueMap{"None", "AnonymousAccess", "Internal", "Direct"}, Values{"None", "AnonymousAccess", "Internal", "Direct"}] string DefaultSharingLinkType;
     [Write, Description("Disables App Views."), ValueMap{"Unknown", "Disabled", "NotDisabled"}, Values{"Unknown", "Disabled", "NotDisabled"}] string DisableAppViews;
