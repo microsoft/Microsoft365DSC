@@ -118,6 +118,11 @@ function Start-O365ConfigurationExtract
             $currentWorkload = $ResourceName.Substring(0, 2)
             switch ($currentWorkload.ToUpper())
             {
+                'EX'
+                {
+                    $currentWorkload = 'EXO';
+                    break
+                }
                 'O3'
                 {
                     $currentWorkload = 'O365';

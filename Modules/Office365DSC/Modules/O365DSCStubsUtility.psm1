@@ -110,12 +110,28 @@ function Get-O365StubFiles
                 $metadata = New-Object -TypeName System.Management.Automation.CommandMetaData -ArgumentList $cmdlet
                 $parameters = $metadata.Parameters
                 $StubContent += "function $($cmdlet.Name)`n{`r`n    [CmdletBinding()]`r`n    param(`r`n"
+                if ($parameters.Count -eq 0 -or ($parameters.Count -eq 1 -and $parameters.Keys[0] -eq 'ObjectId'))
+                {
+                    $parameters = $cmdlet.Parameters
+                }
+                $invalidTypes = @("ActionPreference", `
+                    "SwitchParameter")
+                $invalidParameters = @("ErrorVariable", `
+                    "InformationVariable", `
+                    "WarningVariable", `
+                    "OutVariable", `
+                    "OutBuffer", `
+                    "PipelineVariable")
                 foreach ($key in $parameters.Keys)
                 {
-                    $parameter = $parameters.$key
-                    $StubContent += "        [Parameter()]`r`n"
-                    $StubContent += "        [$($parameter.ParameterType.ToString())]`r`n"
-                    $StubContent += "        `${$key},`r`n`r`n"
+                    if ($parameters.$key.ParameterType.Name -notin $invalidTypes -and `
+                        $key -notin $invalidParameters)
+                    {
+                        $parameter = $parameters.$key
+                        $StubContent += "        [Parameter()]`r`n"
+                        $StubContent += "        [$($parameter.ParameterType.ToString())]`r`n"
+                        $StubContent += "        `${$key},`r`n`r`n"
+                    }
                 }
                 if ($parameters.Keys.Count -gt 0)
                 {

@@ -190,7 +190,9 @@ function Enable-AzureADDirectoryRole
 {
     [CmdletBinding()]
     param(
-
+        [Parameter()]
+        [System.String]
+        ${RoleTemplateId}
     )
 }
 function Get-AzureADApplication
@@ -668,7 +670,9 @@ function Get-AzureADExtensionProperty
 {
     [CmdletBinding()]
     param(
-
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsSyncedFromOnPremises}
     )
 }
 function Get-AzureADGroup
@@ -841,7 +845,13 @@ function Get-AzureADObjectByObjectId
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${ObjectIds},
 
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${Types}
     )
 }
 function Get-AzureADServiceAppRoleAssignedTo
@@ -1254,7 +1264,141 @@ function New-AzureADApplication
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.AddIn]]
+        ${AddIns},
 
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${AllowGuestsSignIn},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${AllowPassthroughUsers},
+
+        [Parameter()]
+        [System.String]
+        ${AppLogoUrl},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.AppRole]]
+        ${AppRoles},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${AvailableToOtherTenants},
+
+        [Parameter()]
+        [System.String]
+        ${DisplayName},
+
+        [Parameter()]
+        [System.String]
+        ${ErrorUrl},
+
+        [Parameter()]
+        [System.String]
+        ${GroupMembershipClaims},
+
+        [Parameter()]
+        [System.String]
+        ${Homepage},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${IdentifierUris},
+
+        [Parameter()]
+        [Microsoft.Open.AzureAD.Model.InformationalUrl]
+        ${InformationalUrls},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsDeviceOnlyAuthSupported},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsDisabled},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.KeyCredential]]
+        ${KeyCredentials},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${KnownClientApplications},
+
+        [Parameter()]
+        [System.String]
+        ${LogoutUrl},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${Oauth2AllowImplicitFlow},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${Oauth2AllowUrlPathMatching},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.OAuth2Permission]]
+        ${Oauth2Permissions},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${Oauth2RequirePostResponse},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${OrgRestrictions},
+
+        [Parameter()]
+        [Microsoft.Open.AzureAD.Model.OptionalClaims]
+        ${OptionalClaims},
+
+        [Parameter()]
+        [Microsoft.Open.AzureAD.Model.ParentalControlSettings]
+        ${ParentalControlSettings},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.PasswordCredential]]
+        ${PasswordCredentials},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.PreAuthorizedApplication]]
+        ${PreAuthorizedApplications},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${PublicClient},
+
+        [Parameter()]
+        [System.String]
+        ${PublisherDomain},
+
+        [Parameter()]
+        [System.String]
+        ${RecordConsentConditions},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${ReplyUrls},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.RequiredResourceAccess]]
+        ${RequiredResourceAccess},
+
+        [Parameter()]
+        [System.String]
+        ${SamlMetadataUrl},
+
+        [Parameter()]
+        [System.String]
+        ${SignInAudience},
+
+        [Parameter()]
+        [System.String]
+        ${WwwHomepage}
     )
 }
 function New-AzureADApplicationExtensionProperty
@@ -1263,7 +1407,19 @@ function New-AzureADApplicationExtensionProperty
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId}
+        ${ObjectId},
+
+        [Parameter()]
+        [System.String]
+        ${Name},
+
+        [Parameter()]
+        [System.String]
+        ${DataType},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${TargetObjects}
     )
 }
 function New-AzureADApplicationKeyCredential
@@ -1378,21 +1534,107 @@ function New-AzureADDevice
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${AccountEnabled},
 
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.AlternativeSecurityId]]
+        ${AlternativeSecurityIds},
+
+        [Parameter()]
+        [System.Nullable`1[System.DateTime]]
+        ${ApproximateLastLogonTimeStamp},
+
+        [Parameter()]
+        [System.String]
+        ${DeviceId},
+
+        [Parameter()]
+        [System.String]
+        ${DeviceMetadata},
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        ${DeviceObjectVersion},
+
+        [Parameter()]
+        [System.String]
+        ${DeviceOSType},
+
+        [Parameter()]
+        [System.String]
+        ${DeviceOSVersion},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${DevicePhysicalIds},
+
+        [Parameter()]
+        [System.String]
+        ${DeviceTrustType},
+
+        [Parameter()]
+        [System.String]
+        ${DisplayName},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsCompliant},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsManaged},
+
+        [Parameter()]
+        [System.String]
+        ${ProfileType},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${SystemLabels}
     )
 }
 function New-AzureADDomain
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsDefault},
 
+        [Parameter()]
+        [System.String]
+        ${Name},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${SupportedServices}
     )
 }
 function New-AzureADGroup
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.String]
+        ${Description},
 
+        [Parameter()]
+        [System.String]
+        ${DisplayName},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${MailEnabled},
+
+        [Parameter()]
+        [System.String]
+        ${MailNickName},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${SecurityEnabled}
     )
 }
 function New-AzureADGroupAppRoleAssignment
@@ -1401,28 +1643,98 @@ function New-AzureADGroupAppRoleAssignment
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId}
+        ${ObjectId},
+
+        [Parameter()]
+        [System.String]
+        ${Id},
+
+        [Parameter()]
+        [System.String]
+        ${PrincipalId},
+
+        [Parameter()]
+        [System.String]
+        ${ResourceId}
     )
 }
 function New-AzureADMSGroup
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.String]
+        ${Description},
 
+        [Parameter()]
+        [System.String]
+        ${DisplayName},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${MailEnabled},
+
+        [Parameter()]
+        [System.String]
+        ${MailNickname},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${SecurityEnabled},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${GroupTypes},
+
+        [Parameter()]
+        [System.String]
+        ${Visibility}
     )
 }
 function New-AzureADMSGroupLifecyclePolicy
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        ${GroupLifetimeInDays},
 
+        [Parameter()]
+        [System.String]
+        ${ManagedGroupTypes},
+
+        [Parameter()]
+        [System.String]
+        ${AlternateNotificationEmails}
     )
 }
 function New-AzureADMSInvitation
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.String]
+        ${InvitedUserDisplayName},
 
+        [Parameter()]
+        [System.String]
+        ${InvitedUserEmailAddress},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${SendInvitationMessage},
+
+        [Parameter()]
+        [System.String]
+        ${InviteRedirectUrl},
+
+        [Parameter()]
+        [Microsoft.Open.MSGraph.Model.InvitedUserMessageInfo]
+        ${InvitedUserMessageInfo},
+
+        [Parameter()]
+        [System.String]
+        ${InvitedUserType}
     )
 }
 function New-AzureADServiceAppRoleAssignment
@@ -1431,14 +1743,88 @@ function New-AzureADServiceAppRoleAssignment
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId}
+        ${ObjectId},
+
+        [Parameter()]
+        [System.String]
+        ${Id},
+
+        [Parameter()]
+        [System.String]
+        ${PrincipalId},
+
+        [Parameter()]
+        [System.String]
+        ${ResourceId}
     )
 }
 function New-AzureADServicePrincipal
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.String]
+        ${AccountEnabled},
 
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${AlternativeNames},
+
+        [Parameter()]
+        [System.String]
+        ${AppId},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${AppRoleAssignmentRequired},
+
+        [Parameter()]
+        [System.String]
+        ${DisplayName},
+
+        [Parameter()]
+        [System.String]
+        ${ErrorUrl},
+
+        [Parameter()]
+        [System.String]
+        ${Homepage},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.KeyCredential]]
+        ${KeyCredentials},
+
+        [Parameter()]
+        [System.String]
+        ${LogoutUrl},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.PasswordCredential]]
+        ${PasswordCredentials},
+
+        [Parameter()]
+        [System.String]
+        ${PublisherName},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${ReplyUrls},
+
+        [Parameter()]
+        [System.String]
+        ${SamlMetadataUrl},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${ServicePrincipalNames},
+
+        [Parameter()]
+        [System.String]
+        ${ServicePrincipalType},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${Tags}
     )
 }
 function New-AzureADServicePrincipalKeyCredential
@@ -1512,7 +1898,137 @@ function New-AzureADUser
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Collections.Generic.Dictionary`2[System.String,System.String]]
+        ${ExtensionProperty},
 
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${AccountEnabled},
+
+        [Parameter()]
+        [System.String]
+        ${AgeGroup},
+
+        [Parameter()]
+        [System.String]
+        ${City},
+
+        [Parameter()]
+        [System.String]
+        ${ConsentProvidedForMinor},
+
+        [Parameter()]
+        [System.String]
+        ${Country},
+
+        [Parameter()]
+        [System.String]
+        ${CreationType},
+
+        [Parameter()]
+        [System.String]
+        ${Department},
+
+        [Parameter()]
+        [System.String]
+        ${DisplayName},
+
+        [Parameter()]
+        [System.String]
+        ${FacsimileTelephoneNumber},
+
+        [Parameter()]
+        [System.String]
+        ${GivenName},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsCompromised},
+
+        [Parameter()]
+        [System.String]
+        ${ImmutableId},
+
+        [Parameter()]
+        [System.String]
+        ${JobTitle},
+
+        [Parameter()]
+        [System.String]
+        ${MailNickName},
+
+        [Parameter()]
+        [System.String]
+        ${Mobile},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${OtherMails},
+
+        [Parameter()]
+        [System.String]
+        ${PasswordPolicies},
+
+        [Parameter()]
+        [Microsoft.Open.AzureAD.Model.PasswordProfile]
+        ${PasswordProfile},
+
+        [Parameter()]
+        [System.String]
+        ${PhysicalDeliveryOfficeName},
+
+        [Parameter()]
+        [System.String]
+        ${PostalCode},
+
+        [Parameter()]
+        [System.String]
+        ${PreferredLanguage},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${ShowInAddressList},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.SignInName]]
+        ${SignInNames},
+
+        [Parameter()]
+        [System.String]
+        ${State},
+
+        [Parameter()]
+        [System.String]
+        ${StreetAddress},
+
+        [Parameter()]
+        [System.String]
+        ${Surname},
+
+        [Parameter()]
+        [System.String]
+        ${TelephoneNumber},
+
+        [Parameter()]
+        [System.String]
+        ${UsageLocation},
+
+        [Parameter()]
+        [System.String]
+        ${UserPrincipalName},
+
+        [Parameter()]
+        [System.String]
+        ${UserState},
+
+        [Parameter()]
+        [System.String]
+        ${UserStateChangedOn},
+
+        [Parameter()]
+        [System.String]
+        ${UserType}
     )
 }
 function New-AzureADUserAppRoleAssignment
@@ -1521,7 +2037,19 @@ function New-AzureADUserAppRoleAssignment
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId}
+        ${ObjectId},
+
+        [Parameter()]
+        [System.String]
+        ${Id},
+
+        [Parameter()]
+        [System.String]
+        ${PrincipalId},
+
+        [Parameter()]
+        [System.String]
+        ${ResourceId}
     )
 }
 function Remove-AzureADApplication
@@ -1927,7 +2455,11 @@ function Restore-AzureADDeletedApplication
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId}
+        ${ObjectId},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${IdentifierUris}
     )
 }
 function Restore-AzureADMSDeletedDirectoryObject
@@ -2012,7 +2544,143 @@ function Set-AzureADApplication
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId}
+        ${ObjectId},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.AddIn]]
+        ${AddIns},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${AllowGuestsSignIn},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${AllowPassthroughUsers},
+
+        [Parameter()]
+        [System.String]
+        ${AppLogoUrl},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.AppRole]]
+        ${AppRoles},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${AvailableToOtherTenants},
+
+        [Parameter()]
+        [System.String]
+        ${DisplayName},
+
+        [Parameter()]
+        [System.String]
+        ${ErrorUrl},
+
+        [Parameter()]
+        [System.String]
+        ${GroupMembershipClaims},
+
+        [Parameter()]
+        [System.String]
+        ${Homepage},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${IdentifierUris},
+
+        [Parameter()]
+        [Microsoft.Open.AzureAD.Model.InformationalUrl]
+        ${InformationalUrls},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsDeviceOnlyAuthSupported},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsDisabled},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.KeyCredential]]
+        ${KeyCredentials},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${KnownClientApplications},
+
+        [Parameter()]
+        [System.String]
+        ${LogoutUrl},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${Oauth2AllowImplicitFlow},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${Oauth2AllowUrlPathMatching},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.OAuth2Permission]]
+        ${Oauth2Permissions},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${Oauth2RequirePostResponse},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${OrgRestrictions},
+
+        [Parameter()]
+        [Microsoft.Open.AzureAD.Model.OptionalClaims]
+        ${OptionalClaims},
+
+        [Parameter()]
+        [Microsoft.Open.AzureAD.Model.ParentalControlSettings]
+        ${ParentalControlSettings},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.PasswordCredential]]
+        ${PasswordCredentials},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.PreAuthorizedApplication]]
+        ${PreAuthorizedApplications},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${PublicClient},
+
+        [Parameter()]
+        [System.String]
+        ${PublisherDomain},
+
+        [Parameter()]
+        [System.String]
+        ${RecordConsentConditions},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${ReplyUrls},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.RequiredResourceAccess]]
+        ${RequiredResourceAccess},
+
+        [Parameter()]
+        [System.String]
+        ${SamlMetadataUrl},
+
+        [Parameter()]
+        [System.String]
+        ${SignInAudience},
+
+        [Parameter()]
+        [System.String]
+        ${WwwHomepage}
     )
 }
 function Set-AzureADApplicationLogo
@@ -2163,7 +2831,67 @@ function Set-AzureADDevice
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId}
+        ${ObjectId},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${AccountEnabled},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.AlternativeSecurityId]]
+        ${AlternativeSecurityIds},
+
+        [Parameter()]
+        [System.Nullable`1[System.DateTime]]
+        ${ApproximateLastLogonTimeStamp},
+
+        [Parameter()]
+        [System.String]
+        ${DeviceId},
+
+        [Parameter()]
+        [System.String]
+        ${DeviceMetadata},
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        ${DeviceObjectVersion},
+
+        [Parameter()]
+        [System.String]
+        ${DeviceOSType},
+
+        [Parameter()]
+        [System.String]
+        ${DeviceOSVersion},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${DevicePhysicalIds},
+
+        [Parameter()]
+        [System.String]
+        ${DeviceTrustType},
+
+        [Parameter()]
+        [System.String]
+        ${DisplayName},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsCompliant},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsManaged},
+
+        [Parameter()]
+        [System.String]
+        ${ProfileType},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${SystemLabels}
     )
 }
 function Set-AzureADDomain
@@ -2181,7 +2909,27 @@ function Set-AzureADGroup
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId}
+        ${ObjectId},
+
+        [Parameter()]
+        [System.String]
+        ${Description},
+
+        [Parameter()]
+        [System.String]
+        ${DisplayName},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${MailEnabled},
+
+        [Parameter()]
+        [System.String]
+        ${MailNickName},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${SecurityEnabled}
     )
 }
 function Set-AzureADMSGroup
@@ -2208,14 +2956,96 @@ function Set-AzureADServicePrincipal
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId}
+        ${ObjectId},
+
+        [Parameter()]
+        [System.String]
+        ${AccountEnabled},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${AlternativeNames},
+
+        [Parameter()]
+        [System.String]
+        ${AppId},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${AppRoleAssignmentRequired},
+
+        [Parameter()]
+        [System.String]
+        ${DisplayName},
+
+        [Parameter()]
+        [System.String]
+        ${ErrorUrl},
+
+        [Parameter()]
+        [System.String]
+        ${Homepage},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.KeyCredential]]
+        ${KeyCredentials},
+
+        [Parameter()]
+        [System.String]
+        ${LogoutUrl},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.PasswordCredential]]
+        ${PasswordCredentials},
+
+        [Parameter()]
+        [System.String]
+        ${PublisherName},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${ReplyUrls},
+
+        [Parameter()]
+        [System.String]
+        ${SamlMetadataUrl},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${ServicePrincipalNames},
+
+        [Parameter()]
+        [System.String]
+        ${ServicePrincipalType},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${Tags}
     )
 }
 function Set-AzureADTenantDetail
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${MarketingNotificationEmails},
 
+        [Parameter()]
+        [Microsoft.Open.AzureAD.Model.PrivacyProfile]
+        ${PrivacyProfile},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${SecurityComplianceNotificationMails},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${SecurityComplianceNotificationPhones},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${TechnicalNotificationMails}
     )
 }
 function Set-AzureADTrustedCertificateAuthority
@@ -2233,7 +3063,139 @@ function Set-AzureADUser
     param(
         [Parameter()]
         [System.String]
-        ${ObjectId}
+        ${ObjectId},
+
+        [Parameter()]
+        [System.Collections.Generic.Dictionary`2[System.String,System.String]]
+        ${ExtensionProperty},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${AccountEnabled},
+
+        [Parameter()]
+        [System.String]
+        ${AgeGroup},
+
+        [Parameter()]
+        [System.String]
+        ${City},
+
+        [Parameter()]
+        [System.String]
+        ${ConsentProvidedForMinor},
+
+        [Parameter()]
+        [System.String]
+        ${Country},
+
+        [Parameter()]
+        [System.String]
+        ${CreationType},
+
+        [Parameter()]
+        [System.String]
+        ${Department},
+
+        [Parameter()]
+        [System.String]
+        ${DisplayName},
+
+        [Parameter()]
+        [System.String]
+        ${FacsimileTelephoneNumber},
+
+        [Parameter()]
+        [System.String]
+        ${GivenName},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsCompromised},
+
+        [Parameter()]
+        [System.String]
+        ${ImmutableId},
+
+        [Parameter()]
+        [System.String]
+        ${JobTitle},
+
+        [Parameter()]
+        [System.String]
+        ${MailNickName},
+
+        [Parameter()]
+        [System.String]
+        ${Mobile},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${OtherMails},
+
+        [Parameter()]
+        [System.String]
+        ${PasswordPolicies},
+
+        [Parameter()]
+        [Microsoft.Open.AzureAD.Model.PasswordProfile]
+        ${PasswordProfile},
+
+        [Parameter()]
+        [System.String]
+        ${PhysicalDeliveryOfficeName},
+
+        [Parameter()]
+        [System.String]
+        ${PostalCode},
+
+        [Parameter()]
+        [System.String]
+        ${PreferredLanguage},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${ShowInAddressList},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.AzureAD.Model.SignInName]]
+        ${SignInNames},
+
+        [Parameter()]
+        [System.String]
+        ${State},
+
+        [Parameter()]
+        [System.String]
+        ${StreetAddress},
+
+        [Parameter()]
+        [System.String]
+        ${Surname},
+
+        [Parameter()]
+        [System.String]
+        ${TelephoneNumber},
+
+        [Parameter()]
+        [System.String]
+        ${UsageLocation},
+
+        [Parameter()]
+        [System.String]
+        ${UserPrincipalName},
+
+        [Parameter()]
+        [System.String]
+        ${UserState},
+
+        [Parameter()]
+        [System.String]
+        ${UserStateChangedOn},
+
+        [Parameter()]
+        [System.String]
+        ${UserType}
     )
 }
 function Set-AzureADUserExtension
@@ -27000,13 +27962,17 @@ param(
     [System.Object]
     ${AdminDisplayName},
 
-    [Alias('vb')]
-    [switch]
-    ${Verbose},
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
 
     [Alias('wv')]
     [System.Object]
     ${WarningVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
 
     [Alias('db')]
     [switch]
@@ -27016,16 +27982,9 @@ param(
     [System.Object]
     ${PipelineVariable},
 
-    [Alias('infa')]
-    [System.Object]
-    ${InformationAction},
-
     [Alias('cf')]
     [switch]
     ${Confirm},
-
-    [System.Object]
-    ${EnableAuthenticationSoftPassSafetyTip},
 
     [Alias('ob')]
     [System.Object]
@@ -27051,13 +28010,7 @@ param(
     ${OutVariable},
 
     [System.Object]
-    ${EnableAuthenticationSafetyTip},
-
-    [System.Object]
     ${Enabled},
-
-    [System.Object]
-    ${TreatSoftPassAsAuthenticated},
 
     [Alias('iv')]
     [System.Object]
@@ -42692,10 +43645,6 @@ param(
     [switch]
     ${Verbose},
 
-    [Alias('wi')]
-    [switch]
-    ${WhatIf},
-
     [Alias('wv')]
     [System.Object]
     ${WarningVariable},
@@ -42716,9 +43665,6 @@ param(
     [switch]
     ${Confirm},
 
-    [System.Object]
-    ${EnableAuthenticationSoftPassSafetyTip},
-
     [Alias('ob')]
     [System.Object]
     ${OutBuffer},
@@ -42737,17 +43683,15 @@ param(
     [System.Object]
     ${WarningAction},
 
-    [System.Object]
-    ${EnableAuthenticationSafetyTip},
-
-    [System.Object]
-    ${Enabled},
+    [Alias('wi')]
+    [switch]
+    ${WhatIf},
 
     [switch]
     ${MakeDefault},
 
     [System.Object]
-    ${TreatSoftPassAsAuthenticated},
+    ${Enabled},
 
     [Alias('iv')]
     [System.Object]
@@ -60339,14 +61283,6 @@ function Add-PnPField
         ${Id},
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${AddToDefaultView},
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${Required},
-
-        [Parameter()]
         [System.String]
         ${Group},
 
@@ -62988,10 +63924,6 @@ function Get-PnPApplicationCustomizer
         ${Scope},
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${ThrowExceptionIfCustomActionNotFound},
-
-        [Parameter()]
         [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
         ${Web},
 
@@ -63153,10 +64085,6 @@ function Get-PnPCustomAction
         ${Scope},
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${ThrowExceptionIfCustomActionNotFound},
-
-        [Parameter()]
         [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
         ${Web},
 
@@ -63274,10 +64202,6 @@ function Get-PnPField
         [Parameter()]
         [System.String]
         ${Group},
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${InSiteHierarchy},
 
         [Parameter()]
         [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
@@ -63399,18 +64323,6 @@ function Get-PnPGroup
         [Parameter()]
         [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
         ${Identity},
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${AssociatedMemberGroup},
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${AssociatedVisitorGroup},
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${AssociatedOwnerGroup},
 
         [Parameter()]
         [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
@@ -63602,10 +64514,6 @@ function Get-PnPList
         [Parameter()]
         [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
         ${Identity},
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${ThrowExceptionIfListNotFound},
 
         [Parameter()]
         [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
@@ -63963,14 +64871,6 @@ function Get-PnPRecycleBinItem
         ${Identity},
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${FirstStage},
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${SecondStage},
-
-        [Parameter()]
         [System.Int32]
         ${RowLimit},
 
@@ -64322,10 +65222,6 @@ function Get-PnPSubWebs
         ${Identity},
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${Recurse},
-
-        [Parameter()]
         [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
         ${Web},
 
@@ -64591,14 +65487,6 @@ function Get-PnPTerm
         [Parameter()]
         [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind`1[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
         ${TermStore},
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${Recursive},
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${IncludeChildTerms},
 
         [Parameter()]
         [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
@@ -65356,14 +66244,6 @@ function Measure-PnPList
         ${Identity},
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${ItemLevel},
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${BrokenPermissions},
-
-        [Parameter()]
         [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
         ${Web},
 
@@ -65855,10 +66735,6 @@ function New-PnPSite
         [Parameter()]
         [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GuidPipeBind]
         ${HubSiteId},
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${Wait},
 
         [Parameter()]
         [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
@@ -68052,14 +68928,6 @@ function Set-PnPClientSidePage
         [Parameter()]
         [SharePointPnP.PowerShell.Commands.ClientSidePages.ClientSidePagePromoteType]
         ${PromoteAs},
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${CommentsEnabled},
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        ${Publish},
 
         [Parameter()]
         [OfficeDevPnP.Core.Pages.ClientSidePageHeaderType]

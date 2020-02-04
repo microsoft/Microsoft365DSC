@@ -517,7 +517,8 @@ Configuration Master
             Title              = "Classic Site"
             Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
             Owner              = $GlobalAdmin.UserName
-            Template           = "STS#0"
+            Type               = "TeamSite"
+            TimeZoneID         = 10
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
         }
@@ -527,7 +528,8 @@ Configuration Master
             Title              = "Modern Site"
             Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
             Owner              = $GlobalAdmin.UserName
-            Template           = "STS#3"
+            Type               = "CommunicationSite"
+            TimeZoneID         = 10
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
         }
