@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+* EXOHostedOutboundSpamFilterPolicy
+  * BREAKING CHANGE: Remove IsSingleInstance and added
+    Identity as key;
 * SPOSite
   * Refactor to use PnP and expose updated parameters;
 * Metadata

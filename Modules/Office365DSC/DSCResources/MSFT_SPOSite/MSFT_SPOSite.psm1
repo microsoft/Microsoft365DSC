@@ -386,7 +386,8 @@ function Set-TargetResource
             DisableAppViews                = $DisableAppViews
             DisableCompanyWideSharingLinks = $DisableCompanyWideSharingLinks
             DisableSharingForNonOwners     = $DisableSharingForNonOwners
-            LocaleId                       = $LocaleId
+            #LCID Cannot be set after a Template has been applied;
+            #LocaleId                       = $LocaleId
             RestrictedToGeo                = $RestrictedToGeo
             SocialBarOnSitePagesDisabled   = $SocialBarOnSitePagesDisabled
         }
