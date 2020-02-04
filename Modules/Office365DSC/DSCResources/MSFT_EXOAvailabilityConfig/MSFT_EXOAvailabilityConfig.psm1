@@ -145,14 +145,28 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $OrgWideAccount,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
+
+    $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        -Platform ExchangeOnline
+
+    $AvailabilityConfig = Get-AvailabilityConfig
+
+    $Params = @{
+        OrgWideAccount     = $AvailabilityConfig.OrgWideAccount.ToString()
+        GlobalAdminAccount = $GlobalAdminAccount
+    }
+
+    $result = Get-TargetResource @Params
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        EXOAvailabilityConfig " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
