@@ -17,22 +17,20 @@ Configuration Example
         SPOSite DemoSite
         {
             Url                                         = "https://contoso.sharepoint.com/sites/testsite1"
-            StorageQuota                                = 26214400
+            StorageMaximumLevel                         = 26214400
             LocaleId                                    = 1033
             Template                                    = "STS#3"
             GlobalAdminAccount                          = $credsGlobalAdmin
             Owner                                       = "admin@contoso.onmicrosoft.com"
             Title                                       = "TestSite"
+            TimeZoneId                                  = 13
             Ensure                                      = "Present"
-            StorageQuotaWarningLevel                    = 25574400
+            StorageWarningLevel                         = 25574400
             SharingCapability                           = "Disabled"
             CommentsOnSitePagesDisabled                 = $false
             DisableAppViews                             = "NotDisabled"
             DisableCompanyWideSharingLinks              = "NotDisabled"
             DisableFlows                                = $false
-            SharingDomainRestrictionMode                = "None"
-            SharingAllowedDomainList                    = ""
-            SharingBlockedDomainList                    = ""
             DefaultSharingLinkType                      = "None"
             DefaultLinkPermission                       = "None"
         }
