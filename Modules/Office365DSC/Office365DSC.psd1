@@ -61,7 +61,7 @@
         },
         @{
             ModuleName      = "Microsoft.Online.SharePoint.PowerShell"
-            RequiredVersion = "16.0.19515.12000"
+            RequiredVersion = "16.0.19724.12000"
         },
         @{
             ModuleName      = "MicrosoftTeams"

@@ -39,17 +39,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DisableAppViews                = "NotDisabled";
                 DisableCompanyWideSharingLinks = "NotDisabled";
                 DisableFlows                   = $False;
-                DisableSharingForNonOwners     = $False;
                 Ensure                         = "Present";
                 GlobalAdminAccount             = $GlobalAdminAccount;
                 LocaleId                       = 1033;
-                RestrictedToGeo                = "Unknown";
-                SocialBarOnSitePagesDisabled   = $False;
                 StorageMaximumLevel            = 26214400;
                 StorageWarningLevel            = 25574400;
                 Title                          = "CommNik";
                 HubUrl                         = "https://contoso.sharepoint.com/sites/hub"
-                Type                           = "CommunicationSite";
+                Template                       = "STS#3";
             }
 
             Mock -CommandName New-PnPTenantSite -MockWith {
@@ -99,7 +96,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 )
             }
 
-            Mock -CommandName Set-PnPSite -MockWith { }
+            Mock -CommandName Set-PnPTenantSite -MockWith { }
             Mock -CommandName Add-PnPHubSiteAssociation -MockWith { }
 
             $global:O365DscSiteCreated = $false
@@ -117,15 +114,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
                 Assert-MockCalled New-PnPTenantSite
                 Assert-MockCalled Add-PnPHubSiteAssociation
-                Assert-MockCalled Set-PnPSite
+                Assert-MockCalled Set-PnPTenantSite
             }
         }
 
         Context -Name "The site already exists" -Fixture {
             $testParams = @{
                 Url                            = "https://contoso.sharepoint.com/sites/TestSite"
-                Owner                          = "testuser@contoso.com"
                 TimeZoneID                     = 10
+                Owner                          = "testuser@contoso.com"
                 AllowSelfServiceUpgrade        = $True;
                 CommentsOnSitePagesDisabled    = $False;
                 DefaultLinkPermission          = "None";
@@ -133,16 +130,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DisableAppViews                = "NotDisabled";
                 DisableCompanyWideSharingLinks = "NotDisabled";
                 DisableFlows                   = $False;
-                DisableSharingForNonOwners     = $False;
                 Ensure                         = "Present";
                 GlobalAdminAccount             = $GlobalAdminAccount;
                 LocaleId                       = 1033;
-                RestrictedToGeo                = "Unknown";
-                SocialBarOnSitePagesDisabled   = $False;
                 StorageMaximumLevel            = 26214400;
                 StorageWarningLevel            = 25574400;
                 Title                          = "CommNik";
-                Type                           = "CommunicationSite";
+                HubUrl                         = "https://contoso.sharepoint.com/sites/hub"
+                Template                       = "STS#3";
             }
 
             Mock -CommandName Get-PnPTenantSite -MockWith {
@@ -164,8 +159,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     StorageMaximumLevel            = 26214400;
                     StorageWarningLevel            = 25574400;
                     Title                          = "CommNik";
-                    Template                       = "SITEPAGEPUBLISHING#0";
-                    HubUrl                         = "https://contoso.sharepoint.com/sites/hub"
+                    Template                       = "STS#3";
+                    HubSiteId                      = "fcc3c848-6d2f-4821-a56c-980eea7990c5"
                 }
             }
 
@@ -213,25 +208,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The site already exists, with incorrect settings" -Fixture {
             $testParams = @{
                 Url                            = "https://contoso.sharepoint.com/sites/TestSite"
-                Owner                          = "testuser@contoso.com"
                 TimeZoneID                     = 10
+                Owner                          = "testuser@contoso.com"
                 AllowSelfServiceUpgrade        = $True;
-                CommentsOnSitePagesDisabled    = $True; #Drifted
+                CommentsOnSitePagesDisabled    = $False;
                 DefaultLinkPermission          = "None";
                 DefaultSharingLinkType         = "None";
                 DisableAppViews                = "NotDisabled";
                 DisableCompanyWideSharingLinks = "NotDisabled";
                 DisableFlows                   = $False;
-                DisableSharingForNonOwners     = $False;
                 Ensure                         = "Present";
                 GlobalAdminAccount             = $GlobalAdminAccount;
                 LocaleId                       = 1033;
-                RestrictedToGeo                = "Unknown";
-                SocialBarOnSitePagesDisabled   = $False;
                 StorageMaximumLevel            = 26214400;
                 StorageWarningLevel            = 25574400;
                 Title                          = "CommNik";
-                Type                           = "CommunicationSite";
+                HubUrl                         = "https://contoso.sharepoint.com/sites/hub"
+                Template                       = "STS#3";
             }
 
             Mock -CommandName Get-PnPTenantSite -MockWith {
@@ -306,8 +299,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The site exists, but association with Hub site will be removed" -Fixture {
             $testParams = @{
                 Url                            = "https://contoso.sharepoint.com/sites/TestSite"
-                Owner                          = "testuser@contoso.com"
                 TimeZoneID                     = 10
+                Owner                          = "testuser@contoso.com"
                 AllowSelfServiceUpgrade        = $True;
                 CommentsOnSitePagesDisabled    = $False;
                 DefaultLinkPermission          = "None";
@@ -315,17 +308,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DisableAppViews                = "NotDisabled";
                 DisableCompanyWideSharingLinks = "NotDisabled";
                 DisableFlows                   = $False;
-                DisableSharingForNonOwners     = $False;
                 Ensure                         = "Present";
                 GlobalAdminAccount             = $GlobalAdminAccount;
                 LocaleId                       = 1033;
-                RestrictedToGeo                = "Unknown";
-                SocialBarOnSitePagesDisabled   = $False;
                 StorageMaximumLevel            = 26214400;
                 StorageWarningLevel            = 25574400;
                 Title                          = "CommNik";
-                Type                           = "CommunicationSite";
-                HubUrl                         = "" #Drift
+                HubUrl                         = "https://contoso.sharepoint.com/sites/hub"
+                Template                       = "STS#3";
             }
 
             Mock -CommandName Get-PnPTenantSite -MockWith {
@@ -400,8 +390,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Deleted existing site" -Fixture {
             $testParams = @{
                 Url                            = "https://contoso.sharepoint.com/sites/TestSite"
-                Owner                          = "testuser@contoso.com"
                 TimeZoneID                     = 10
+                Owner                          = "testuser@contoso.com"
                 AllowSelfServiceUpgrade        = $True;
                 CommentsOnSitePagesDisabled    = $False;
                 DefaultLinkPermission          = "None";
@@ -409,16 +399,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DisableAppViews                = "NotDisabled";
                 DisableCompanyWideSharingLinks = "NotDisabled";
                 DisableFlows                   = $False;
-                DisableSharingForNonOwners     = $False;
-                Ensure                         = "Absent";
+                Ensure                         = "Present";
                 GlobalAdminAccount             = $GlobalAdminAccount;
                 LocaleId                       = 1033;
-                RestrictedToGeo                = "Unknown";
-                SocialBarOnSitePagesDisabled   = $False;
                 StorageMaximumLevel            = 26214400;
                 StorageWarningLevel            = 25574400;
                 Title                          = "CommNik";
-                Type                           = "CommunicationSite";
+                HubUrl                         = "https://contoso.sharepoint.com/sites/hub"
+                Template                       = "STS#3";
             }
 
             Mock -CommandName Get-PnPTenantSite -MockWith {

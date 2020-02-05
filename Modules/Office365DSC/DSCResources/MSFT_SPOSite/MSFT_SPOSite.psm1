@@ -18,16 +18,11 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('CommunicationSite', 'TeamSite')]
-        $Type,
+        $Template,
 
         [Parameter()]
         [System.String]
         $HubUrl,
-
-        [Parameter()]
-        [System.String]
-        $Classification,
 
         [Parameter()]
         [System.Boolean]
@@ -35,12 +30,8 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $LogoFilePath,
-
-        [Parameter()]
-        [System.String]
         [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
-        $Sharing,
+        $SharingCapability,
 
         [Parameter()]
         [System.UInt32]
@@ -83,25 +74,8 @@ function Get-TargetResource
         $DisableCompanyWideSharingLinks,
 
         [Parameter()]
-        [System.Boolean]
-        $DisableSharingForNonOwners,
-
-        [Parameter()]
         [System.UInt32]
         $LocaleId,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
-        $RestrictedToGeo,
-
-        [Parameter()]
-        [System.Boolean]
-        $SocialBarOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.String]
-        $SiteDesign,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -113,7 +87,6 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration for site collection $Url"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -127,7 +100,7 @@ function Get-TargetResource
     $nullReturn = @{
         Url                = $Url
         Title              = $Title
-        Type               = $Type
+        Template           = $Template
         Ensure             = "Absent"
         GlobalAdminAccount = $GlobalAdminAccount
     }
@@ -136,7 +109,7 @@ function Get-TargetResource
     {
         Write-Verbose -Message "Getting site collection $Url"
 
-        $site = Get-PnPTenantSite -Url $Url
+        $site = Get-PnPTenantSite -Url $Url -ErrorAction 'SilentlyContinue'
         if ($null -eq $site)
         {
             Write-Verbose -Message "The specified Site Collection {$Url} doesn't exist."
@@ -148,7 +121,7 @@ function Get-TargetResource
         {
             $hubId = $site.HubSiteId
             Write-Verbose -Message "Site {$Url} is associated with HubSite {$hubId}"
-            $hubSite = Get-PnPHubSite -Identity $hubId
+            $hubSite = Get-PnPHubSite | Where-Object -FilterScript {$_.ID -eq $hubId}
 
             if ($null -ne $hubSite)
             {
@@ -170,13 +143,13 @@ function Get-TargetResource
         return @{
             Url                            = $Url
             Title                          = $site.Title
-            Type                           = $Type
+            Template                       = $site.Template
             TimeZoneId                     = $site.TimeZoneId
             HubUrl                         = $CurrentHubUrl
             Classification                 = $site.Classification
             DisableFlows                   = $DisableFlowValue
             LogoFilePath                   = $LogoFilePath
-            Sharing                        = $site.SharingCapabilities
+            SharingCapability              = $site.SharingCapabilities
             StorageMaximumLevel            = $site.StorageMaximumLevel
             StorageWarningLevel            = $site.StorageWarningLevel
             AllowSelfServiceUpgrade        = $site.AllowSelfServiceUpgrade
@@ -221,16 +194,11 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('CommunicationSite', 'TeamSite')]
-        $Type,
+        $Template,
 
         [Parameter()]
         [System.String]
         $HubUrl,
-
-        [Parameter()]
-        [System.String]
-        $Classification,
 
         [Parameter()]
         [System.Boolean]
@@ -238,12 +206,8 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $LogoFilePath,
-
-        [Parameter()]
-        [System.String]
         [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
-        $Sharing,
+        $SharingCapability,
 
         [Parameter()]
         [System.UInt32]
@@ -286,25 +250,8 @@ function Set-TargetResource
         $DisableCompanyWideSharingLinks,
 
         [Parameter()]
-        [System.Boolean]
-        $DisableSharingForNonOwners,
-
-        [Parameter()]
         [System.UInt32]
         $LocaleId,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
-        $RestrictedToGeo,
-
-        [Parameter()]
-        [System.Boolean]
-        $SocialBarOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.String]
-        $SiteDesign,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -333,21 +280,34 @@ function Set-TargetResource
     $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
-        $TemplateValue = "GROUP#0"
-        if ($Type -eq 'CommunicationSite')
-        {
-            $TemplateValue = "SITEPAGEPUBLISHING#0"
-        }
         $CreationParams = @{
             Title          = $Title
             Url            = $Url
-            Template       = $TemplateValue
+            Template       = $Template
             Owner          = $Owner
             Lcid           = $LocaleID
             TimeZone       = $TimeZoneID
         }
         Write-Verbose -Message "Site {$Url} doesn't exist. Creating it."
         New-PnPTenantSite @CreationParams | Out-Null
+
+        $site = $null
+        $circuitBreaker = 0
+        do
+        {
+            Write-Verbose -Message "Waiting for another 15 seconds for site to be ready."
+            Start-Sleep -Seconds 15
+            try
+            {
+                $site = Get-PnPTenantSite -Url $Url -ErrorAction Stop
+            }
+            catch
+            {
+                $site = @{Status = 'Creating'}
+            }
+            $circuitBreaker++
+        } while ($site.Status -eq 'Creating' -and $circuitBreaker -lt 20)
+        Write-Verbose -Message "Site {$url} has been successfully created and is {$($site.Status)}."
     }
     elseif ($Ensure -eq "Absent" -and $CurrentValues.Ensure -eq 'Present')
     {
@@ -370,12 +330,15 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Site {$Url} already exists, updating its settings"
 
-        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount -Platform PnP -ConnectionUrl $Url
+        $DisableFlowsValue = 'NotDisabled'
+        if ($DisableFlows)
+        {
+            $DisableFlowsValue = 'Disabled'
+        }
         $UpdateParams = @{
-            Classification                 = $Classification
-            DisableFlows                   = $DisableFlows
-            LogoFilePath                   = $LogoFilePath
-            Sharing                        = $Sharing
+            Url                            = $Url
+            DisableFlows                   = $DisableFlowsValue
+            SharingCapability              = $SharingCapability
             StorageMaximumLevel            = $StorageMaximumLevel
             StorageWarningLevel            = $StorageWarningLevel
             AllowSelfServiceUpgrade        = $AllowSelfServiceUpgrade
@@ -385,16 +348,14 @@ function Set-TargetResource
             DefaultSharingLinkType         = $DefaultSharingLinkType
             DisableAppViews                = $DisableAppViews
             DisableCompanyWideSharingLinks = $DisableCompanyWideSharingLinks
-            DisableSharingForNonOwners     = $DisableSharingForNonOwners
             #LCID Cannot be set after a Template has been applied;
             #LocaleId                       = $LocaleId
-            RestrictedToGeo                = $RestrictedToGeo
-            SocialBarOnSitePagesDisabled   = $SocialBarOnSitePagesDisabled
         }
 
         $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
 
-        Set-PnPSite @UpdateParams
+        Set-PnPTenantSite @UpdateParams -ErrorAction Stop
+
         Write-Verbose -Message "Settings Updated"
         if ($PSBoundParameters.ContainsKey("HubUrl"))
         {
@@ -446,16 +407,11 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('CommunicationSite', 'TeamSite')]
-        $Type,
+        $Template,
 
         [Parameter()]
         [System.String]
         $HubUrl,
-
-        [Parameter()]
-        [System.String]
-        $Classification,
 
         [Parameter()]
         [System.Boolean]
@@ -463,12 +419,8 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $LogoFilePath,
-
-        [Parameter()]
-        [System.String]
         [ValidateSet("Disabled", "ExistingExternalUserSharingOnly", "ExternalUserSharingOnly", "ExternalUserAndGuestSharing")]
-        $Sharing,
+        $SharingCapability,
 
         [Parameter()]
         [System.UInt32]
@@ -511,25 +463,8 @@ function Test-TargetResource
         $DisableCompanyWideSharingLinks,
 
         [Parameter()]
-        [System.Boolean]
-        $DisableSharingForNonOwners,
-
-        [Parameter()]
         [System.UInt32]
         $LocaleId,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
-        $RestrictedToGeo,
-
-        [Parameter()]
-        [System.Boolean]
-        $SocialBarOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.String]
-        $SiteDesign,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -599,15 +534,10 @@ function Export-TargetResource
     foreach ($site in $sites)
     {
         Write-Information "    - [$i/$($sites.Length)] $($site.Url)"
-        $Type = "CommunicationSite"
-        if ($site.Template -eq 'GROUP#0')
-        {
-            $Type = "TeamSite"
-        }
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             Url                = $site.Url
-            Type               = $Type
+            Template           = $site.Template
             Title              = $site.Title
             TimeZoneId         = $site.TimeZoneID
         }

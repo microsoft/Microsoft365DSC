@@ -8,6 +8,8 @@
 * SPOSite
   * Refactor to use PnP and expose updated parameters;
 * Metadata
+  * Updated Microsoft.Online.SharePoint.PowerShell dependency
+    to version 16.0.19724.12000;
   * Updated MSCloudLoginAssistant dependency to 1.0.0;
   * Updated Microsoft.PowerApps.Administration.PowerShell
     dependency to 2.0.37;
