@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* TeamsGuestMessagingConfiguration
+  * Added value NoRestriction for GiphyRatingValues;
 * Metadata
   * Updated MSCloudLoginAssistant dependency to 0.8.4;
   * Updated Microsoft.PowerApps.Administration.PowerShell

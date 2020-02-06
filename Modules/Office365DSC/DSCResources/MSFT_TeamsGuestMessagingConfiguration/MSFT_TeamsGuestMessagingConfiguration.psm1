@@ -27,7 +27,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Moderate", "Strict")]
+        [ValidateSet("Moderate", "Strict", "NoRestriction")]
         $GiphyRatingType = 'Moderate',
 
         [Parameter()]
@@ -110,7 +110,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Moderate", "Strict")]
+        [ValidateSet("Moderate", "Strict", "NoRestriction")]
         $GiphyRatingType = 'Moderate',
 
         [Parameter()]
@@ -195,7 +195,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Moderate", "Strict")]
+        [ValidateSet("Moderate", "Strict", "NoRestriction")]
         $GiphyRatingType = 'Moderate',
 
         [Parameter()]
