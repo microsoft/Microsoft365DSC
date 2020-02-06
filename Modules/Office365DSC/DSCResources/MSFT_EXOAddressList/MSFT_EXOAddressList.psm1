@@ -426,22 +426,39 @@ function Export-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.String])]
-    param
-    (
+    [CmdletBinding()]
+    param (
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = "Continue"
+    $InformationPreference = 'Continue'
 
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        EXOClientAccessRule " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        -Platform ExchangeOnline
+
+    $i = 1
+    [array]$policies = Get-Addresslist
+    $content = ''
+
+    foreach ($policy in $policies)
+    {
+        Write-Information "    [$i/$($policies.count)] $($policy.Identity)"
+        $params = @{
+            Identity           = $policy.Identity
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+        $result = Test-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName 'globaladmin'
+        $content += "      AddressList" + (New-Guid).ToString() + "`r`n"
+        $content += "      {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "      }`r`n"
+        $i ++
+    }
     return $content
+
 }
 
 Export-ModuleMember -Function *-TargetResource
