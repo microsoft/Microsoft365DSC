@@ -16,12 +16,8 @@ Configuration Example
     {
         EXOAddressList OrgWide
         {
-            Organization                          = "contoso.com"
-            MailTipsAllTipsEnabled                = $True
-            MailTipsGroupMetricsEnabled           = $True
-            MailTipsLargeAudienceThreshold        = 100
-            MailTipsMailboxSourcedTipsEnabled     = $True
-            MailTipsExternalRecipientsTipsEnabled = $True
+            Name                                  = "All Users"
+            
             Ensure                                = "Present"
             GlobalAdminAccount                    = $credsGlobalAdmin
         }
