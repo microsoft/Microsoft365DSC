@@ -7,6 +7,8 @@
     Identity as key;
 * SPOSite
   * Refactor to use PnP and expose updated parameters;
+* TeamsGuestMessagingConfiguration
+  * Added value NoRestriction for GiphyRatingValues;
 * Metadata
   * Updated MSCloudLoginAssistant dependency to 1.0.0;
   * Updated Microsoft.PowerApps.Administration.PowerShell
