@@ -1,9 +1,9 @@
 [ClassVersion("1.0.0.0"), FriendlyName("EXOOwaMailboxPolicy")]
 class MSFT_EXOOwaMailboxPolicy : OMI_BaseResource
 {
-    [Key, Description("")] String Name;
+    [Key, Description("The Name parameter specifies the unique name for the policy. The maximum length is 64 characters.")] String Name;
 
-    [Write, Description("The ActionForUnknownFileAndMIMETypes parameter specifies how to handle file types that aren't specified in the Allow, Block, and Force Save lists for file types and MIME types")] String ActionForUnknownFileAndMIMETypes;
+    [Write, Description("The ActionForUnknownFileAndMIMETypes parameter specifies how to handle file types that aren't specified in the Allow, Block, and Force Save lists for file types and MIME types"), ValueMap{"Allow","ForceSave","Block"}, Values{"Allow","ForceSave","Block"}] String ActionForUnknownFileAndMIMETypes;
 
     [Write, Description("The ActiveSyncIntegrationEnabled parameter specifies whether to enable or disable Exchange ActiveSync settings in Outlook on the web. ")] Boolean ActiveSyncIntegrationEnabled;
 
@@ -23,7 +23,7 @@ class MSFT_EXOOwaMailboxPolicy : OMI_BaseResource
 
     [Write, Description("The ClassicAttachmentsEnabled parameter specifies whether users can attach local files as regular email attachments in Outlook on the web.")] Boolean ClassicAttachmentsEnabled;
 
-    [Write, Description("The ConditionalAccessPolicy parameter specifies the Outlook on the Web Policy for limited access. For this feature to work properly, you also need to configure a Conditional Access policy in the Azure Active Directory Portal.")] String ConditionalAccessPolicy;
+    [Write, Description("The ConditionalAccessPolicy parameter specifies the Outlook on the Web Policy for limited access. For this feature to work properly, you also need to configure a Conditional Access policy in the Azure Active Directory Portal."), ValueMap{"Off","ReadOnly","ReadOnlyPlusAttachmentsBlocked"}, Values{"Off","ReadOnly","ReadOnlyPlusAttachmentsBlocked"}] String ConditionalAccessPolicy;
 
     [Write, Description("The DefaultTheme parameter specifies the default theme that's used in Outlook on the web when the user hasn't selected a theme. The default value is blank ($null).")] String DefaultTheme;
 
@@ -59,7 +59,7 @@ class MSFT_EXOOwaMailboxPolicy : OMI_BaseResource
 
     [Write, Description("The InstantMessagingEnabled parameter specifies whether instant messaging is available in Outlook on the web.")] Boolean InstantMessagingEnabled;
 
-    [Write, Description("The InstantMessagingType parameter specifies the type of instant messaging provider in Outlook on the web.")] String InstantMessagingType;
+    [Write, Description("The InstantMessagingType parameter specifies the type of instant messaging provider in Outlook on the web."), ValueMap{"None","Ocs"}, Values{"None","Ocs"}] String InstantMessagingType;
 
     [Write, Description("The InterestingCalendarsEnabled parameter specifies whether interesting calendars are available in Outlook on the web.")] Boolean InterestingCalendarsEnabled;
 
@@ -83,7 +83,7 @@ class MSFT_EXOOwaMailboxPolicy : OMI_BaseResource
 
     [Write, Description("The OnSendAddinsEnabled parameter specifies whether to enable or disable on send add-ins in Outlook on the web (add-ins that support events when a user clicks Send).")] Boolean OnSendAddinsEnabled;
 
-    [Write, Description("The OutboundCharset parameter specifies the character set that's used for outgoing messages in Outlook on the web.")] String OutboundCharset;
+    [Write, Description("The OutboundCharset parameter specifies the character set that's used for outgoing messages in Outlook on the web."), ValueMap{"AutoDetect","AlwaysUTF8","UserLanguageChoice"}, Values{"AutoDetect","AlwaysUTF8","UserLanguageChoice"}] String OutboundCharset;
 
     [Write, Description("The OutlookBetaToggleEnabled parameter specifies whether to enable or disable the Outlook on the web Preview toggle. The Preview toggle allows users to try the new Outlook on the web experience.")] Boolean OutlookBetaToggleEnabled;
 
@@ -151,7 +151,7 @@ class MSFT_EXOOwaMailboxPolicy : OMI_BaseResource
 
     [Write, Description("The WeatherEnabled parameter specifies whether to enable or disable weather information in the calendar in Outlook on the web.")] Boolean WeatherEnabled;
 
-    [Write, Description("The WebPartsFrameOptionsType parameter specifies what sources can access web parts in IFRAME or FRAME elements in Outlook on the web.")] String WebPartsFrameOptionsType;
+    [Write, Description("The WebPartsFrameOptionsType parameter specifies what sources can access web parts in IFRAME or FRAME elements in Outlook on the web."), ValueMap{"None","SameOrigin","Deny"}, Values{"None","SameOrigin","Deny"}] String WebPartsFrameOptionsType;
 
     [Write, Description("Specify if the OWA Mailbox Policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
 
