@@ -125,7 +125,7 @@ function Get-TargetResource
             TargetApplicationUri  = $TargetApplicationUri
             TargetAutodiscoverEpr = $TargetAutodiscoverEpr
             TargetOwaURL          = $TargetOwaURL
-            TargetSharingEpr      = $TargetAutodiscoverEpr
+            TargetSharingEpr      = $TargetSharingEpr
             Ensure                = 'Absent'
             GlobalAdminAccount    = $GlobalAdminAccount
         }
@@ -149,12 +149,44 @@ function Get-TargetResource
             Name                  = $OrganizationRelationship.Name
             OrganizationContact   = $OrganizationRelationship.OrganizationContact
             PhotosEnabled         = $OrganizationRelationship.PhotosEnabled
-            TargetApplicationUri  = $OrganizationRelationship.TargetApplicationUri.ToString()
-            TargetAutodiscoverEpr = $OrganizationRelationship.TargetAutodiscoverEpr.ToString()
-            TargetOwaURL          = $OrganizationRelationship.TargetOwaURL
-            TargetSharingEpr      = $OrganizationRelationship.TargetAutodiscoverEpr.ToString()
             Ensure                = 'Present'
             GlobalAdminAccount    = $GlobalAdminAccount
+        }
+
+        if ($OrganizationRelationship.TargetApplicationUri)
+        {
+            $result.Add("TargetApplicationUri", $($OrganizationRelationship.TargetApplicationUri.ToString()))
+        }
+        else
+        {
+            $result.Add("TargetApplicationUri", "")
+        }
+
+        if ($OrganizationRelationship.TargetAutodiscoverEpr)
+        {
+            $result.Add("TargetAutodiscoverEpr", $($OrganizationRelationship.TargetAutodiscoverEpr.ToString()))
+        }
+        else
+        {
+            $result.Add("TargetAutodiscoverEpr", "")
+        }
+
+        if ($OrganizationRelationship.TargetSharingEpr)
+        {
+            $result.Add("TargetSharingEpr", $($OrganizationRelationship.TargetSharingEpr.ToString()))
+        }
+        else
+        {
+            $result.Add("TargetSharingEpr", "")
+        }
+
+        if ($OrganizationRelationship.TargetOwaURL)
+        {
+            $result.Add("TargetOwaURL", $($OrganizationRelationship.TargetOwaURL.ToString()))
+        }
+        else
+        {
+            $result.Add("TargetOwaURL", "")
         }
 
         Write-Verbose -Message "Found Organization Relationship configuration for $($Name)"

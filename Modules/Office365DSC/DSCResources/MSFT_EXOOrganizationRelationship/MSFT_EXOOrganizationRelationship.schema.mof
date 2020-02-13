@@ -4,7 +4,7 @@ class MSFT_EXOOrganizationRelationship : OMI_BaseResource
     [Key, Description("The Name parameter specifies the unique name of the organization relationship. The maximum length is 64 characters.")] String Name;
     [Write, Description("The ArchiveAccessEnabled parameter specifies whether the organization relationship has been configured to provide remote archive access.")] Boolean ArchiveAccessEnabled;
     [Write, Description("The DeliveryReportEnabled parameter specifies whether Delivery Reports should be shared over the organization relationship.")] Boolean DeliveryReportEnabled;
-    [Key, Description("The DomainNames parameter specifies the SMTP domains of the external organization. You can specify multiple domains separated by commas.")] String DomainNames[];
+    [Write, Description("The DomainNames parameter specifies the SMTP domains of the external organization. You can specify multiple domains separated by commas.")] String DomainNames[];
     [Write, Description("The Enabled parameter specifies whether to enable the organization relationship.")] Boolean Enabled;
     [Write, Description("The FreeBusyAccessEnabled parameter specifies whether the organization relationship should be used to retrieve free/busy information from the external organization.")] Boolean FreeBusyAccessEnabled;
     [Write, Description("The FreeBusyAccessLevel parameter specifies the maximum amount of detail returned to the requesting organization. Valid values are: None, AvailabilityOnly or LimitedDetails"), ValueMap{"None","AvailabilityOnly","LimitedDetails"}, Values{"None","AvailabilityOnly","LimitedDetails"}] String FreeBusyAccessLevel;
