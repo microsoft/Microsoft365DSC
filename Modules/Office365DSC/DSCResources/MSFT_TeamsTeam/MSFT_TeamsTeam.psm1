@@ -481,7 +481,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet("Present", "Absent")]
         [System.String]
-        $Ensure = "Present",
+        $Ensure,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
