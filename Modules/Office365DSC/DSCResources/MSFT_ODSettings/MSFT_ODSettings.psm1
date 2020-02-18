@@ -79,7 +79,7 @@ function Get-TargetResource
     #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-        -Platform SharePointOnline
+        -Platform PnP
 
     $nullReturn = @{
         IsSingleInstance                          = "Yes"
@@ -100,8 +100,11 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message "Getting OneDrive quota size for tenant"
-        $tenant = Get-SPOTenant
+        Write-Verbose -Message "Getting Tenant information"
+        $ctx = (Get-PnPConnection).Context
+        $tenant = [Microsoft.Online.SharePoint.TenantAdministration.Tenant]::new($ctx)
+        $ctx.Load($tenant)
+        $ctx.ExecuteQuery();
 
         if ($null -eq $tenant)
         {
@@ -110,40 +113,32 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Getting OneDrive quota size for tenant $($tenant.OneDriveStorageQuota)"
-        Write-Verbose -Message "Getting tenant client sync setting"
-        $tenantRestrictions = Get-SPOTenantSyncClientRestriction
-
-        if ($null -eq $tenantRestrictions)
-        {
-            Write-Verbose -Message "Failed to get Tenant client synce settings!"
-            return $nullReturn
-        }
 
         $GrooveOption = $null
 
-        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $false) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $false))
+        if (($tenant.OptOutOfGrooveBlock -eq $false) -and ($tenant.OptOutOfGrooveSoftBlock -eq $false))
         {
             $GrooveOption = "SoftOptIn"
         }
 
-        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $false) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $true))
+        if (($tenant.OptOutOfGrooveBlock -eq $false) -and ($tenant.OptOutOfGrooveSoftBlock -eq $true))
         {
             $GrooveOption = "HardOptIn"
         }
 
-        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $true) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $true))
+        if (($tenant.OptOutOfGrooveBlock -eq $true) -and ($tenant.OptOutOfGrooveSoftBlock -eq $true))
         {
             $GrooveOption = "OptOut"
         }
 
-        $FixedExcludedFileExtensions = $tenantRestrictions.ExcludedFileExtensions
+        $FixedExcludedFileExtensions = $tenant.ExcludedFileExtensionsForSyncClient
         if ($FixedExcludedFileExtensions.Count -eq 0 -or
             ($FixedExcludedFileExtensions.Count -eq 1 -and $FixedExcludedFileExtensions[0] -eq ""))
         {
             $FixedExcludedFileExtensions = @()
         }
 
-        $FixedAllowedDomainList = $tenantRestrictions.AllowedDomainList
+        $FixedAllowedDomainList = $tenant.AllowedDomainListForSyncClient
         if ($FixedAllowedDomainList.Count -eq 0 -or
             ($FixedAllowedDomainList.Count -eq 1 -and $FixedAllowedDomainList[0] -eq ""))
         {
@@ -157,8 +152,8 @@ function Get-TargetResource
         }
         return @{
             IsSingleInstance                          = "Yes"
-            BlockMacSync                              = $tenantRestrictions.BlockMacSync
-            DisableReportProblemDialog                = $tenantRestrictions.DisableReportProblemDialog
+            BlockMacSync                              = $tenant.BlockMacSync
+            DisableReportProblemDialog                = $tenant.DisableReportProblemDialog
             DomainGuids                               = $FixedAllowedDomainList
             ExcludedFileExtensions                    = $FixedExcludedFileExtensions
             GrooveBlockOption                         = $GrooveOption
