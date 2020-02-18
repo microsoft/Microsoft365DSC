@@ -2111,6 +2111,7 @@ function Execute-CSOMQueryRetry
     [Microsoft.SharePoint.Client.ClientContextExtensions]::ExecuteQueryRetry($context)
 }
 
+# https://social.msdn.microsoft.com/Forums/vstudio/en-US/63e84666-512d-4d56-8bc9-adebf39771fb/powershell-csom-include-additional-properties-in-clientobject?forum=sharepointdevelopment
 <#
 .Synopsis
     Facilitates the loading of specific properties of a Microsoft.SharePoint.Client.ClientObject object or Microsoft.SharePoint.Client.ClientObjectCollection object.
