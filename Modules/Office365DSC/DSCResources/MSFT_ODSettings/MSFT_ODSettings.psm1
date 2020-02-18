@@ -103,28 +103,16 @@ function Get-TargetResource
         Write-Verbose -Message "Getting Tenant information"
         $ctx = (Get-PnPConnection).Context
         $tenant = [Microsoft.Online.SharePoint.TenantAdministration.Tenant]::new($ctx)
-
-
-
         $ctx.Load($tenant)
-
-        # taken from the cmdlet for clientsyncsettings
-        # but it seems that it's loaded by default
-        # $propertiesToLoad = @("IsUnmanagedSyncClientForTenantRestricted"
-        # ,"AllowedDomainListForSyncClient"
-        # ,"BlockMacSync"
-        # ,"ExcludedFileExtensionsForSyncClient"
-        # ,"OptOutOfGrooveBlock"
-        # ,"OptOutOfGrooveSoftBlock"
-        # ,"DisableReportProblemDialog")
-        # Load-CSOMProperties -Object  $tenant -PropertyNames $propertiesToLoad
-        $ctx.ExecuteQuery();
+        Execute-CSOMQueryRetry -Context $ctx
 
         if ($null -eq $tenant)
         {
             Write-Verbose -Message "Failed to get Tenant information"
             return $nullReturn
         }
+
+        Write-Verbose -Message "Getting OneDrive quota size for tenant $($tenant.OneDriveStorageQuota)"
 
         $GrooveOption = $null
 
