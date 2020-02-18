@@ -104,16 +104,20 @@ function Get-TargetResource
         $ctx = (Get-PnPConnection).Context
         $tenant = [Microsoft.Online.SharePoint.TenantAdministration.Tenant]::new($ctx)
 
-        $propertiesToLoad = @("IsUnmanagedSyncClientForTenantRestricted"
-        ,"AllowedDomainListForSyncClient"
-        ,"BlockMacSync"
-        ,"ExcludedFileExtensionsForSyncClient"
-        ,"OptOutOfGrooveBlock"
-        ,"OptOutOfGrooveSoftBlock"
-        ,"DisableReportProblemDialog")
+
 
         $ctx.Load($tenant)
-        Load-CSOMProperties -Object  $tenant -PropertyNames $propertiesToLoad
+
+        # taken from the cmdlet for clientsyncsettings
+        # but it seems that it's loaded by default
+        # $propertiesToLoad = @("IsUnmanagedSyncClientForTenantRestricted"
+        # ,"AllowedDomainListForSyncClient"
+        # ,"BlockMacSync"
+        # ,"ExcludedFileExtensionsForSyncClient"
+        # ,"OptOutOfGrooveBlock"
+        # ,"OptOutOfGrooveSoftBlock"
+        # ,"DisableReportProblemDialog")
+        # Load-CSOMProperties -Object  $tenant -PropertyNames $propertiesToLoad
         $ctx.ExecuteQuery();
 
         if ($null -eq $tenant)
