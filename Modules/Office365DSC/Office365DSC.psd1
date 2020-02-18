@@ -70,15 +70,21 @@
         @{
             ModuleName      = "AzureAD"
             RequiredVersion = "2.0.2.4"
-        },
-        @{
-            ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.0"
-        },
-        @{
-            ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
-            RequiredVersion = "2.0.37"
         }
+        # In SysKit Trace, we provide our own version of MSCloudLoginAssistant
+        # so no need to list it as a dependency
+        # ,
+        # @{
+        #     ModuleName      = "MSCloudLoginAssistant"
+        #     RequiredVersion = "1.0.0"
+        # },
+        # we do not want to immediatelly load powerapp admin module because it uses an old ADAL version
+        # and it messes up everything when office365 dsc is loaded
+        # ,
+        # @{
+        #     ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
+        #     RequiredVersion = "2.0.37"
+        # }
     )
 
     # Assemblies that must be loaded prior to importing this module

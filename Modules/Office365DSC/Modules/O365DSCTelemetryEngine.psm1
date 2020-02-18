@@ -38,6 +38,10 @@ function Add-O365DSCTelemetryEvent
         $Metrics
     )
 
+    # in SysKit we do not want to send any telemetry
+    # at least not to the default Office365DSC project
+	return
+
     $TelemetryEnabled = [System.Environment]::GetEnvironmentVariable('O365DSCTelemetryEnabled', `
         [System.EnvironmentVariableTarget]::Machine)
     if ($null -eq $TelemetryEnabled -or $TelemetryEnabled -eq $true)

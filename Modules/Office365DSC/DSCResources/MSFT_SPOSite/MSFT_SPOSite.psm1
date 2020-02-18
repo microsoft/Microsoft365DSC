@@ -8,7 +8,8 @@ function Get-TargetResource
         [System.String]
         $Url,
 
-        [Parameter(Mandatory = $true)]
+        # Some site collections do not have a title, so we set mandatory to false
+        [Parameter(Mandatory = $false)]
         [System.String]
         $Title,
 
