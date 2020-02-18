@@ -104,7 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-MSOLUser -MockWith {
+            Mock -CommandName Get-AzureADUser -MockWith {
                 return @{
                     UserPrincipalName = "john.smith@contoso.com"
                 }

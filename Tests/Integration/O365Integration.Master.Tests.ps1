@@ -518,6 +518,7 @@ Configuration Master
             Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
             Owner              = $GlobalAdmin.UserName
             Template           = "STS#0"
+            TimeZoneID         = 13
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
         }
@@ -528,6 +529,7 @@ Configuration Master
             Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
             Owner              = $GlobalAdmin.UserName
             Template           = "STS#3"
+            TimeZoneID         = 13
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
         }
@@ -562,8 +564,7 @@ Configuration Master
         {
             Url                                         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
             Identity                                    = "TestSiteGroup"
-            Owner                                       = $GlobalAdmin.UserName
-            PermissionLevels                            = @("Edit", "Read")
+            PermissionLevels                            = @("Editor", "Reader")
             Ensure                                      = "Present"
             GlobalAdminAccount                          = $GlobalAdmin
         }
