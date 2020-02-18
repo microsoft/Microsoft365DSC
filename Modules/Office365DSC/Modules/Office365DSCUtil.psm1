@@ -2100,6 +2100,17 @@ function Get-AllSPOPackages
     return $filesToDownload
 }
 
+function Execute-CSOMQueryRetry
+{
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        [Microsoft.SharePoint.Client.ClientContext] $context
+    )
+
+    [Microsoft.SharePoint.Client.ClientContextExtensions]::ExecuteQueryRetry($context)
+}
+
 <#
 .Synopsis
     Facilitates the loading of specific properties of a Microsoft.SharePoint.Client.ClientObject object or Microsoft.SharePoint.Client.ClientObjectCollection object.

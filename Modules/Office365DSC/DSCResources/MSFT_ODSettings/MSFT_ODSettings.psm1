@@ -104,7 +104,7 @@ function Get-TargetResource
         $ctx = (Get-PnPConnection).Context
         $tenant = [Microsoft.Online.SharePoint.TenantAdministration.Tenant]::new($ctx)
         $ctx.Load($tenant)
-        $ctx.ExecuteQuery();
+        Execute-CSOMQueryRetry -Context $ctx
 
         if ($null -eq $tenant)
         {
