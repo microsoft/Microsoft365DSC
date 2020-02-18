@@ -1900,6 +1900,48 @@ function Split-ArrayByParts
     return , $outArray
 }
 
+function Start-DSCInitializedJob
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        $Name,
+        [Parameter(Mandatory = $true)]
+        [ScriptBlock]
+        $ScriptBlock,
+        [Parameter()]
+        [Object[]]
+        $ArgumentList
+    )
+    
+    $msloginAssistentPath = $PSScriptRoot + "\..\..\MSCloudLoginAssistant\MSCloudLoginAssistant.psd1"
+    $setupAuthScript = " Import-Module '$msloginAssistentPath' -Force | Out-Null;"
+    if($Global:appIdentityParams)
+    {        
+        $setupAuthScript += "Init-ApplicationIdentity -Tenant $($Global:appIdentityParams.Tenant) -AppId $($Global:appIdentityParams.AppId) -AppSecret '$($Global:appIdentityParams.AppSecret)' -CertificateThumbprint '$($Global:appIdentityParams.CertificateThumbprint)' -OnBehalfOfUserPrincipalName '$($Global:appIdentityParams.OnBehalfOfUserPrincipalName)' -TokenCacheLocation '$($Global:appIdentityParams.TokenCacheLocation)';"
+    }
+       
+    $insertPosition = 0
+    if($ScriptBlock.Ast.BeginBlock)
+    {        
+        $insertPosition = $ScriptBlock.Ast.BeginBlock.Statements[0].Extent.StartOffset;
+    }
+    elseif($ScriptBlock.Ast.ProcessBlock)
+    {
+        $insertPosition = $ScriptBlock.Ast.ProcessBlock.Statements[0].Extent.StartOffset;        
+    }
+    elseif($ScriptBlock.Ast.EndBlock)
+    {
+        $insertPosition = $ScriptBlock.Ast.EndBlock.Statements[0].Extent.StartOffset;        
+    }
+    $insertPosition = $insertPosition - $ScriptBlock.StartPosition.Start
+    $strScriptContent = $ScriptBlock.ToString();
+    $strScriptContent = $strScriptContent.Insert($insertPosition - 1, $setupAuthScript +"`n")
+    $newScriptBlock = [ScriptBlock]::Create($strScriptContent)
+    Start-Job -Name $Name -ScriptBlock $newScriptBlock  -ArgumentList $ArgumentList
+}
+
 function Invoke-O365DSCCommand
 {
     [CmdletBinding()]

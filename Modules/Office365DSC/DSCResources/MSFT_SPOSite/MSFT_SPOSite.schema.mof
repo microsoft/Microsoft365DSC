@@ -2,7 +2,7 @@
 class MSFT_SPOSite : OMI_BaseResource
 {
     [Key, Description("The URL of the site collection.")] string Url;
-    [Required, Description("The title of the site collection.")] string Title;
+    [Write, Description("The title of the site collection.")] string Title;
     [Required, Description("TimeZone ID of the site collection.")] uint32 TimeZoneId;
     [Required, Description("Specifies with template of site to create.")] string Template;
     [Write, Description("The URL of the Hub site the site collection needs to get connected to.")] string HubUrl;
@@ -18,6 +18,8 @@ class MSFT_SPOSite : OMI_BaseResource
     [Write, Description("Disables App Views."), ValueMap{"Unknown", "Disabled", "NotDisabled"}, Values{"Unknown", "Disabled", "NotDisabled"}] string DisableAppViews;
     [Write, Description("Disables Company wide sharing links."), ValueMap{"Unknown", "Disabled", "NotDisabled"}, Values{"Unknown", "Disabled", "NotDisabled"}] string DisableCompanyWideSharingLinks;
     [Write, Description("Specifies the language of the new site collection. Defaults to the current language of the web connected to.")] uint32 LocaleId;
-    [Write, Description("Present ensures the site collection exists, absent ensures it is removed"), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
+    [Write, Description("Defines geo-restriction settings for this site"), ValueMap{"NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown"}, Values{"NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown"}] string RestrictedToGeo;
+    [Write, Description("Disables or enables the Social Bar for Site Collection.")] boolean SocialBarOnSitePagesDisabled;
+    [Write, Description("Present ensures the site collection exists, absent ensures it is removed"), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;    
     [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };

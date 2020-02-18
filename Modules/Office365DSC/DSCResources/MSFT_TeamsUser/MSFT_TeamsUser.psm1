@@ -53,7 +53,7 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    Add-O365DSCTelemetryEvent -Data $data
+    #Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
     try
@@ -120,7 +120,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    Add-O365DSCTelemetryEvent -Data $data
+    #Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
@@ -226,7 +226,7 @@ function Export-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    Add-O365DSCTelemetryEvent -Data $data
+    #Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
     $result = ""
@@ -250,7 +250,7 @@ function Export-TargetResource
     $i = 1
     foreach ($batch in $instances)
     {
-        Start-Job -Name "TeamsUser$i" -ScriptBlock {
+        Start-DSCInitializedJob -Name "TeamsUser$i" -ScriptBlock {
             Param(
                 [Parameter(Mandatory = $true)]
                 [System.Object[]]

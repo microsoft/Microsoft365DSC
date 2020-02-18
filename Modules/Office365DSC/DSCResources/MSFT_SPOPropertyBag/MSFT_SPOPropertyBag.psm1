@@ -31,7 +31,7 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    Add-O365DSCTelemetryEvent -Data $data
+    # Add-O365DSCTelemetryEvent -Data $data
     #endregion
     try
     {
@@ -104,7 +104,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    Add-O365DSCTelemetryEvent -Data $data
+    #Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
@@ -192,7 +192,7 @@ function Export-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    Add-O365DSCTelemetryEvent -Data $data
+    # Add-O365DSCTelemetryEvent -Data $data
     #endregion
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PnP
@@ -216,7 +216,7 @@ function Export-TargetResource
     $i = 1
     foreach ($batch in $instances)
     {
-        Start-Job -Name "SPOPropertyBag$i" -ScriptBlock {
+        Start-DSCInitializedJob -Name "SPOPropertyBag$i" -ScriptBlock {
             Param(
                 [Parameter(Mandatory = $true)]
                 [System.Object[]]
@@ -273,7 +273,7 @@ function Export-TargetResource
 
                                 $CurrentModulePath = $params.ScriptRoot + "\MSFT_SPOPropertyBag.psm1"
                                 Import-Module $CurrentModulePath -Force | Out-Null
-                                Import-Module ($params.ScriptRoot + "\..\..\Modules\O365DSCTelemetryEngine.psm1") -Force | Out-Null
+                                # Import-Module ($params.ScriptRoot + "\..\..\Modules\O365DSCTelemetryEngine.psm1") -Force | Out-Null
                                 $result = Get-TargetResource @getValues
                                 $result.Value = [System.String]$result.Value
                                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"

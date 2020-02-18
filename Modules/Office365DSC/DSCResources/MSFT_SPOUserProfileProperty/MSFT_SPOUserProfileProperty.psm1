@@ -27,7 +27,7 @@ function Get-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    Add-O365DSCTelemetryEvent -Data $data
+    # Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
@@ -102,7 +102,7 @@ function Set-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    Add-O365DSCTelemetryEvent -Data $data
+    # Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
@@ -185,7 +185,7 @@ function Export-TargetResource
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
-    Add-O365DSCTelemetryEvent -Data $data
+    # Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
     Test-MSCloudLogin -Platform AzureAD -O365Credential $GlobalAdminAccount
@@ -211,7 +211,7 @@ function Export-TargetResource
     $i = 1
     foreach ($batch in $instances)
     {
-        Start-Job -Name "SPOUserProfileProperty$i" -ScriptBlock {
+        Start-DSCInitializedJob -Name "SPOUserProfileProperty$i" -ScriptBlock {
             Param(
                 [Parameter(Mandatory = $true)]
                 [System.Object[]]
@@ -253,7 +253,7 @@ function Export-TargetResource
                         if ($result.Ensure -eq "Present")
                         {
                             Import-Module ($params.ScriptRoot + "\..\..\Modules\Office365DSCUtil.psm1") -Force | Out-Null
-                            Import-Module ($params.ScriptRoot + "\..\..\Modules\O365DSCTelemetryEngine.psm1") -Force | Out-Null
+                            # Import-Module ($params.ScriptRoot + "\..\..\Modules\O365DSCTelemetryEngine.psm1") -Force | Out-Null
 
                             $result.Properties = ConvertTo-SPOUserProfilePropertyInstanceString -Properties $result.Properties
                             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
