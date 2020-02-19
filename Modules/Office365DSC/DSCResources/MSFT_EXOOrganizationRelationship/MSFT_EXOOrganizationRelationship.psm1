@@ -4,6 +4,11 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [ValidateLength(1, 64)]
+        [System.String]
+        $Name,
+
         [Parameter()]
         [System.Boolean]
         $ArchiveAccessEnabled,
@@ -49,10 +54,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $MailTipsAccessScope,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name,
 
         [Parameter()]
         [System.String]
@@ -199,6 +200,11 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [ValidateLength(1, 64)]
+        [System.String]
+        $Name,
+
         [Parameter()]
         [System.Boolean]
         $ArchiveAccessEnabled,
@@ -244,10 +250,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $MailTipsAccessScope,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name,
 
         [Parameter()]
         [System.String]
@@ -347,7 +349,6 @@ function Set-TargetResource
         Write-Verbose -Message "Organization Relationship '$($Name)' does not exist but it should. Create and configure it."
         # Create Organization Relationship
         New-OrganizationRelationship @NewOrganizationRelationshipParams
-
     }
     # CASE: Organization Relationship exists but it shouldn't;
     elseif ($Ensure -eq "Absent" -and $currentOrgRelationshipConfig.Ensure -eq "Present")
@@ -370,6 +371,11 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [ValidateLength(1, 64)]
+        [System.String]
+        $Name,
+
         [Parameter()]
         [System.Boolean]
         $ArchiveAccessEnabled,
@@ -415,10 +421,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $MailTipsAccessScope,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name,
 
         [Parameter()]
         [System.String]
@@ -520,3 +522,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+
