@@ -5,6 +5,7 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
 
@@ -88,6 +89,7 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
 
@@ -189,6 +191,7 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
 
@@ -284,3 +287,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+
