@@ -79,7 +79,7 @@ function Get-TargetResource
     #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-        -Platform SharePointOnline
+        -Platform PnP
 
     $nullReturn = @{
         IsSingleInstance                          = "Yes"
@@ -100,8 +100,11 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message "Getting OneDrive quota size for tenant"
-        $tenant = Get-SPOTenant
+        Write-Verbose -Message "Getting Tenant information"
+        $ctx = (Get-PnPConnection).Context
+        $tenant = [Microsoft.Online.SharePoint.TenantAdministration.Tenant]::new($ctx)
+        $ctx.Load($tenant)
+        Execute-CSOMQueryRetry -Context $ctx
 
         if ($null -eq $tenant)
         {
@@ -110,40 +113,32 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Getting OneDrive quota size for tenant $($tenant.OneDriveStorageQuota)"
-        Write-Verbose -Message "Getting tenant client sync setting"
-        $tenantRestrictions = Get-SPOTenantSyncClientRestriction
-
-        if ($null -eq $tenantRestrictions)
-        {
-            Write-Verbose -Message "Failed to get Tenant client synce settings!"
-            return $nullReturn
-        }
 
         $GrooveOption = $null
 
-        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $false) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $false))
+        if (($tenant.OptOutOfGrooveBlock -eq $false) -and ($tenant.OptOutOfGrooveSoftBlock -eq $false))
         {
             $GrooveOption = "SoftOptIn"
         }
 
-        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $false) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $true))
+        if (($tenant.OptOutOfGrooveBlock -eq $false) -and ($tenant.OptOutOfGrooveSoftBlock -eq $true))
         {
             $GrooveOption = "HardOptIn"
         }
 
-        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $true) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $true))
+        if (($tenant.OptOutOfGrooveBlock -eq $true) -and ($tenant.OptOutOfGrooveSoftBlock -eq $true))
         {
             $GrooveOption = "OptOut"
         }
 
-        $FixedExcludedFileExtensions = $tenantRestrictions.ExcludedFileExtensions
+        $FixedExcludedFileExtensions = $tenant.ExcludedFileExtensionsForSyncClient
         if ($FixedExcludedFileExtensions.Count -eq 0 -or
             ($FixedExcludedFileExtensions.Count -eq 1 -and $FixedExcludedFileExtensions[0] -eq ""))
         {
             $FixedExcludedFileExtensions = @()
         }
 
-        $FixedAllowedDomainList = $tenantRestrictions.AllowedDomainList
+        $FixedAllowedDomainList = $tenant.AllowedDomainListForSyncClient
         if ($FixedAllowedDomainList.Count -eq 0 -or
             ($FixedAllowedDomainList.Count -eq 1 -and $FixedAllowedDomainList[0] -eq ""))
         {
@@ -157,8 +152,8 @@ function Get-TargetResource
         }
         return @{
             IsSingleInstance                          = "Yes"
-            BlockMacSync                              = $tenantRestrictions.BlockMacSync
-            DisableReportProblemDialog                = $tenantRestrictions.DisableReportProblemDialog
+            BlockMacSync                              = $tenant.BlockMacSync
+            DisableReportProblemDialog                = $tenant.DisableReportProblemDialog
             DomainGuids                               = $FixedAllowedDomainList
             ExcludedFileExtensions                    = $FixedExcludedFileExtensions
             GrooveBlockOption                         = $GrooveOption
@@ -251,85 +246,7 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of OneDrive Settings"
-    #region Telemetry
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    Add-O365DSCTelemetryEvent -Data $data
-    #endregion
-
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-        -Platform SharePointOnline
-
-    ## Configure OneDrive settings
-    ## Parameters below are remove for the Set-SPOTenant cmdlet
-    ## they are used in the Set-SPOTenantSyncClientRestriction cmdlet
-    $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("GlobalAdminAccount")
-
-    if ($CurrentParameters.ContainsKey("BlockMacSync"))
-    {
-        $CurrentParameters.Remove("BlockMacSync")
-    }
-    if ($CurrentParameters.ContainsKey("DomainGuids"))
-    {
-        $CurrentParameters.Remove("DomainGuids")
-    }
-    if ($CurrentParameters.ContainsKey("DisableReportProblemDialog"))
-    {
-        $CurrentParameters.Remove("DisableReportProblemDialog")
-    }
-    if ($CurrentParameters.ContainsKey("ExcludedFileExtensions"))
-    {
-        $CurrentParameters.Remove("ExcludedFileExtensions")
-    }
-    if ($CurrentParameters.ContainsKey("GrooveBlockOption"))
-    {
-        $CurrentParameters.Remove("GrooveBlockOption")
-    }
-    if ($CurrentParameters.ContainsKey("IsSingleInstance"))
-    {
-        $CurrentParameters.Remove("IsSingleInstance")
-    }
-
-    Write-Verbose -Message "Configuring OneDrive settings."
-    Set-SPOTenant @CurrentParameters
-
-    $clientSyncParameters = $PSBoundParameters
-
-    ## Configure Sync Client restrictions
-    ## Set-SPOTenantSyncClientRestriction has different parameter sets and they cannot be combined see article:
-    ## https://docs.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps
-
-    if ($clientSyncParameters.ContainsKey("BlockMacSync") -and $clientSyncParameters.ContainsKey("DomainGuids"))
-    {
-        Set-SPOTenantSyncClientRestriction -BlockMacSync:$BlockMacSync -DomainGuids $DomainGuids -Enable
-    }
-    elseif ($clientSyncParameters.ContainsKey("DomainGuids") -and ($clientSyncParameters.ContainsKey("BlockMacSync") -eq $false))
-    {
-        Set-SPOTenantSyncClientRestriction -DomainGuids $DomainGuids -Enable
-    }
-
-    if ($clientSyncParameters.ContainsKey("ExcludedFileExtensions"))
-    {
-        $BlockedFileTypes = ""
-        foreach ($fileTypes in $ExcludedFileExtensions)
-        {
-            $BlockedFileTypes += $fileTypes + ';'
-        }
-
-        Set-SPOTenantSyncClientRestriction -ExcludedFileExtensions $BlockedFileTypes
-    }
-    if ($clientSyncParameters.ContainsKey("DisableReportProblemDialog"))
-    {
-        Set-SPOTenantSyncClientRestriction -DisableReportProblemDialog $DisableReportProblemDialog
-    }
-
-    if ($clientSyncParameters.ContainsKey("GrooveBlockOption"))
-    {
-        Set-SPOTenantSyncClientRestriction -GrooveBlockOption $GrooveBlockOption
-    }
+    throw "Not implemented"
 }
 
 function Test-TargetResource
@@ -404,33 +321,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of OneDrive Settings"
-
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
-
-    $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("BlockMacSync", `
-            "ExcludedFileExtensions", `
-            "DisableReportProblemDialog", `
-            "GrooveBlockOption", `
-            "DomainGuids", `
-            "OneDriveStorageQuota", `
-            "OrphanedPersonalSitesRetentionPeriod", `
-            "OneDriveForGuestsEnabled", `
-            "ODBAccessRequests", `
-            "ODBMembersCanShare", `
-            "NotifyOwnersWhenInvitationsAccepted", `
-            "NotificationsInOneDriveForBusinessEnabled",
-        "Ensure")
-
-    Write-Verbose -Message "Test-TargetResource returned $TestResult"
-
-    return $TestResult
+    throw "Not implemented"
 }
 
 function Export-TargetResource
@@ -451,9 +342,6 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SharePointOnline `
-        -ErrorAction SilentlyContinue
     $Params = @{
         IsSingleInstance   = 'Yes'
         GlobalAdminAccount = $GlobalAdminAccount
