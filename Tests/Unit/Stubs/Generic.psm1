@@ -8,13 +8,15 @@ function Close-SessionsAndReturnError
     )
 
 }
-function Get-PSSession{
+function Get-PSSession
+{
     [CmdletBinding()]
     param(
     )
 }
 
-function Remove-PSSession{
+function Remove-PSSession
+{
     [CmdletBinding()]
     param(
     )
@@ -35,10 +37,10 @@ function Test-MSCloudLogin
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
-        [ValidateSet("Azure","AzureAD","SharePointOnline","ExchangeOnline", `
-                    "SecurityComplianceCenter","MSOnline","PnP", "PowerPlatforms", `
-                    "MicrosoftTeams","SkypeForBusiness")]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("Azure", "AzureAD", "SharePointOnline", "ExchangeOnline", `
+                "SecurityComplianceCenter", "MSOnline", "PnP", "PowerPlatforms", `
+                "MicrosoftTeams", "SkypeForBusiness")]
         [System.String]
         $Platform,
 
@@ -121,6 +123,66 @@ function Set-AtpPolicyForO365
         [Parameter()]
         [Boolean]
         $TrackClicks = $true
+    )
+}
+
+function Set-AddressBookPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AddressLists,
+
+        [Parameter()]
+        [System.String]
+        $GlobalAddressList,
+
+        [Parameter()]
+        [System.String]
+        $OfflineAddressBook,
+
+        [Parameter()]
+        [System.String]
+        $RoomList
+    )
+}
+
+function New-AddressBookPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AddressLists,
+
+        [Parameter()]
+        [System.String]
+        $GlobalAddressList,
+
+        [Parameter()]
+        [System.String]
+        $OfflineAddressBook,
+
+        [Parameter()]
+        [System.String]
+        $RoomList
     )
 }
 
