@@ -2,4 +2,4 @@
 
 ## Description
 
-This resource configures OnPremises Organization in Exchange Online.
+This resource configures On-Premises Organization in Exchange Online.

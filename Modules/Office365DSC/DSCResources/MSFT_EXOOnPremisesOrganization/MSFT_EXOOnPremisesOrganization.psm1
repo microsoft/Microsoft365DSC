@@ -46,7 +46,7 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting Onpremises Organization configuration for $Identity"
+    Write-Verbose -Message "Getting On-premises Organization configuration for $Identity"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -63,7 +63,7 @@ function Get-TargetResource
 
     if ($null -eq $OnPremisesOrganization)
     {
-        Write-Verbose -Message "Onpremises Organization $($Identity) does not exist."
+        Write-Verbose -Message "On-premises Organization $($Identity) does not exist."
 
         $nullReturn = @{
             Identity                 = $Identity
@@ -95,7 +95,7 @@ function Get-TargetResource
             GlobalAdminAccount       = $GlobalAdminAccount
         }
 
-        Write-Verbose -Message "Found Onpremises Organization $($Identity)"
+        Write-Verbose -Message "Found On-premises Organization $($Identity)"
         return $result
     }
 }
@@ -147,7 +147,7 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting Onpremises Organization configuration for $Identity"
+    Write-Verbose -Message "Setting On-premises Organization configuration for $Identity"
 
     $currentOnPremisesOrganizationConfig = Get-TargetResource @PSBoundParameters
 
@@ -184,25 +184,25 @@ function Set-TargetResource
         Confirm                  = $false
     }
 
-    # CASE: Onpremises Organization doesn't exist but should;
+    # CASE: On-premises Organization doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentOnPremisesOrganizationConfig.Ensure -eq "Absent")
     {
-        Write-Verbose -Message "Onpremises Organization '$($Identity)' does not exist but it should. Create and configure it."
-        # Create Onpremises Organization
+        Write-Verbose -Message "On-premises Organization '$($Identity)' does not exist but it should. Create and configure it."
+        # Create On-premises Organization
         New-OnPremisesOrganization @NewOnPremisesOrganizationParams
 
     }
-    # CASE: Onpremises Organization exists but it shouldn't;
+    # CASE: On-premises Organization exists but it shouldn't;
     elseif ($Ensure -eq "Absent" -and $currentOnPremisesOrganizationConfig.Ensure -eq "Present")
     {
-        Write-Verbose -Message "Onpremises Organization '$($Identity)' exists but it shouldn't. Remove it."
+        Write-Verbose -Message "On-premises Organization '$($Identity)' exists but it shouldn't. Remove it."
         Remove-OnPremisesOrganization -Identity $Identity -Confirm:$false
     }
-    # CASE: Onpremises Organization exists and it should, but has different values than the desired ones
+    # CASE: On-premises Organization exists and it should, but has different values than the desired ones
     elseif ($Ensure -eq "Present" -and $currentOnPremisesOrganizationConfig.Ensure -eq "Present")
     {
-        Write-Verbose -Message "Onpremises Organization '$($Identity)' already exists, but needs updating."
-        Write-Verbose -Message "Setting Onpremises Organization $($Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $SetOnPremisesOrganizationParams)"
+        Write-Verbose -Message "On-premises Organization '$($Identity)' already exists, but needs updating."
+        Write-Verbose -Message "Setting On-premises Organization $($Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $SetOnPremisesOrganizationParams)"
         Set-OnPremisesOrganization @SetOnPremisesOrganizationParams
     }
 }
@@ -255,7 +255,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing Onpremises Organization configuration for $Identity"
+    Write-Verbose -Message "Testing On-premises Organization configuration for $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 

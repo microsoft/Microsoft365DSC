@@ -9,6 +9,6 @@ class MSFT_EXOOnPremisesOrganization : OMI_BaseResource
     [Write, Description("The OrganizationGuid parameter specifies the globally unique identifier (GUID) of the on-premises Exchange organization object in the Office 365 tenant.")] String OrganizationGuid;
     [Write, Description("The OrganizationRelationship parameter specifies the organization relationship configured by the Hybrid Configuration wizard on the Office 365 tenant as part of a hybrid deployment with an on-premises Exchange organization. This organization relationship defines the federated sharing features enabled on the Office 365 tenant.")] String OrganizationRelationship;
     [Write, Description("The Comment parameter specifies an optional comment.")] String Comment;
-    [Write, Description("Specify if the Sharing Policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Specify if the On-Premises Organization should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };

@@ -40,7 +40,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name "OnPremises Organization should exist. OnPremises Organization is missing. Test should fail." -Fixture {
+        Context -Name "On-Premises Organization should exist. On-Premises Organization is missing. Test should fail." -Fixture {
             $testParams = @{
                 Identity                 = "ContosoMail"
                 Comment                  = "Hello World"
@@ -95,7 +95,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "OnPremises Organization should exist. OnPremises Organization exists. Test should pass." -Fixture {
+        Context -Name "On-Premises Organization should exist. On-Premises Organization exists. Test should pass." -Fixture {
             $testParams = @{
                 Identity                 = "ContosoMail"
                 Comment                  = "Hello World"
@@ -131,7 +131,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "OnPremises Organization should exist. OnPremises Organization exists, InboundConnector mismatch. Test should fail." -Fixture {
+        Context -Name "On-Premises Organization should exist. On-Premises Organization exists, InboundConnector mismatch. Test should fail." -Fixture {
             $testParams = @{
                 Identity                 = "ContosoMail"
                 Comment                  = "Hello World"
