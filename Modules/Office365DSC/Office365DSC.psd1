@@ -59,10 +59,11 @@
             ModuleName      = "SharePointPnPPowerShellOnline"
             RequiredVersion = "3.17.2001.2"
         },
-        @{
-            ModuleName      = "Microsoft.Online.SharePoint.PowerShell"
-            RequiredVersion = "16.0.19515.12000"
-        },
+        # The SharePoint online module is no longer required
+        # @{
+        #     ModuleName      = "Microsoft.Online.SharePoint.PowerShell"
+        #     RequiredVersion = "16.0.19515.12000"
+        # },
         @{
             ModuleName      = "MicrosoftTeams"
             RequiredVersion = "1.0.3"
