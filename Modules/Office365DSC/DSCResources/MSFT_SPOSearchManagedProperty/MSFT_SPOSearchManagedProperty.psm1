@@ -89,6 +89,10 @@ function Get-TargetResource
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
+        [System.String]
+        $CentralAdminUrl,
+
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
@@ -102,7 +106,7 @@ function Get-TargetResource
     #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-        -Platform PnP
+        -Platform PnP -ConnectionUrl $CentralAdminUrl
 
     $nullReturn = @{
         Name                        = $Name
@@ -745,8 +749,9 @@ function Export-TargetResource
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
+    $centralAdminUrl = Get-SPOAdministrationUrl -GlobalAdminAccount $GlobalAdminAccount
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-            -Platform PnP
+            -Platform PnP -ConnectionUrl $centralAdminUrl
     $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
     $properties = $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
 
@@ -764,6 +769,7 @@ function Export-TargetResource
                 GlobalAdminAccount = $GlobalAdminAccount
                 Name               = $property.Value.Name
                 Type               = $property.Value.ManagedType
+                CentralAdminUrl    = $centralAdminUrl
         }
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
