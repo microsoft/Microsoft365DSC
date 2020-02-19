@@ -9,6 +9,7 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
+        [ValidateLength(0, 256)]
         [System.String]
         $DomainName,
 
@@ -65,6 +66,7 @@ function Get-TargetResource
         $MeetingForwardNotificationEnabled,
 
         [Parameter()]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
 
@@ -194,6 +196,7 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
+        [ValidateLength(0, 256)]
         [System.String]
         $DomainName,
 
@@ -250,6 +253,7 @@ function Set-TargetResource
         $MeetingForwardNotificationEnabled,
 
         [Parameter()]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
 
@@ -358,6 +362,7 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
+        [ValidateLength(0, 256)]
         [System.String]
         $DomainName,
 
@@ -414,6 +419,7 @@ function Test-TargetResource
         $MeetingForwardNotificationEnabled,
 
         [Parameter()]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
 
@@ -520,3 +526,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+
