@@ -348,8 +348,8 @@ function Show-O365GUI
         $chckSPOHubSite.Top = 40
         $chckSPOHubSite.AutoSize = $true;
         $chckSPOHubSite.Name = "chckSPOHubSite"
-        $chckSPOHubSite.Checked = $false #TODO enable after SPO Mgmt Shell bug is fixed
-        $chckSPOHubSite.Enabled = $false #TODO enable after SPO Mgmt Shell bug is fixed
+        $chckSPOHubSite.Checked = $true
+        $chckSPOHubSite.Enabled = $true
         $chckSPOHubSite.Text = "Hub Sites"
         $pnlSPO.Controls.Add($chckSPOHubSite)
 
@@ -399,8 +399,8 @@ function Show-O365GUI
         $chckSPOSite.Top = 160
         $chckSPOSite.AutoSize = $true;
         $chckSPOSite.Name = "chckSPOSite"
-        $chckSPOSite.Checked = $false #TODO enable after SPO Mgmt Shell bug is fixed
-        $chckSPOSite.Enabled = $false #TODO enable after SPO Mgmt Shell bug is fixed
+        $chckSPOSite.Checked = $true
+        $chckSPOSite.Enabled = $true
         $chckSPOSite.Text = "Site Collections"
         $pnlSPO.Controls.Add($chckSPOSite)
 
@@ -432,8 +432,8 @@ function Show-O365GUI
         $chckSPOSiteGroup.Top = 240
         $chckSPOSiteGroup.AutoSize = $true;
         $chckSPOSiteGroup.Name = "chckSPOSiteGroup"
-        $chckSPOSiteGroup.Checked = $false #TODO enable after SPO Mgmt Shell bug is fixed
-        $chckSPOSiteGroup.Enabled = $false #TODO enable after SPO Mgmt Shell bug is fixed
+        $chckSPOSiteGroup.Checked = $true
+        $chckSPOSiteGroup.Enabled = $true
         $chckSPOSiteGroup.Text = "Site Groups"
         $pnlSPO.Controls.Add($chckSPOSiteGroup)
 
@@ -944,7 +944,7 @@ function Show-O365GUI
         $txtTenantAdmin = New-Object System.Windows.Forms.Textbox
         $txtTenantAdmin.Top = 5
         $txtTenantAdmin.Left = 1060
-        $txtTenantAdmin.Width = 175
+        $txtTenantAdmin.Width = 275
         $txtTenantAdmin.Font = [System.Drawing.Font]::new($txtTenantAdmin.Font.Name, 10)
         $panelMenu.Controls.Add($txtTenantAdmin)
 
@@ -960,7 +960,7 @@ function Show-O365GUI
         $txtPassword = New-Object System.Windows.Forms.Textbox
         $txtPassword.Top = 40
         $txtPassword.Left = 1060
-        $txtPassword.Width = 175
+        $txtPassword.Width = 275
         $txtPassword.PasswordChar = "*"
         $txtPassword.Font = [System.Drawing.Font]::new($txtPassword.Font.Name, 10)
         $txtPassword.Add_KeyDown( {
