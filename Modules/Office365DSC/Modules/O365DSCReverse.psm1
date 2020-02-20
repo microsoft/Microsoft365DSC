@@ -110,6 +110,7 @@ function Start-O365ConfigurationExtract
         -Resolve
     $AllResources = Get-ChildItem $ResourcesPath -Recurse | Where-Object { $_.Name -like 'MSFT_*.psm1' }
 
+    $platformSkipsNotified = @()
     foreach ($ResourceModule in $AllResources)
     {
         try
@@ -177,6 +178,12 @@ function Start-O365ConfigurationExtract
                     }
                     $isAvailable = Check-PlatformAvailability -Platform $platform
                     $shouldSkip = $shouldSkip -or !$isAvailable
+
+                    if(!$isAvailable -and !$platformSkipsNotified.Contains($platform))
+                    {
+                        Write-Error "The [$platform] connection has failed and all of the related resources will be skipped to avoid unnecessary errors."
+                        $platformSkipsNotified += $platform
+                    }
                 }
 
                 if($shouldSkip)
