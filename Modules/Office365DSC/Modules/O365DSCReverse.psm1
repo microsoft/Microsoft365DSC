@@ -164,10 +164,9 @@ function Start-O365ConfigurationExtract
                     $ComponentsToExtract.Contains("chck" + $resourceName)) -or
                 $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains($currentWorkload)))
             {
-
+                $shouldSkip = $false
                 $usedPlatforms = Get-ResourcePlatformUsage -Resource $resourceName -ResourceModuleFilePath $ResourceModule.FullName
 
-                $shouldSkip = $false
                 foreach($platform in $usedPlatforms)
                 {
                     # we will skip PnP if there was a problem connecting to a specific site
@@ -186,7 +185,6 @@ function Start-O365ConfigurationExtract
                     Write-Verbose "Skipped [$resourceName] because of connection problems with the used MsCloudLogin platform"
                     continue;
                 }
-
 
                 Import-Module $ResourceModule.FullName | Out-Null
                 Write-Information "Extracting [$resourceName]..."
@@ -313,7 +311,6 @@ function Start-O365ConfigurationExtract
     }
 }
 
-
 function Check-PlatformAvailability
 {
     [CmdletBinding()]
@@ -328,7 +325,6 @@ function Check-PlatformAvailability
     return $null -eq $faulted -or $faulted -eq $false
 }
 
-
 function Get-ResourcePlatformUsage
 {
     [CmdletBinding()]
@@ -341,10 +337,9 @@ function Get-ResourcePlatformUsage
         [string]
         $ResourceModuleFilePath
     )
-
     $fileContent = Get-Content $ResourceModuleFilePath -Raw
-
     $matches = [Regex]::Matches($fileContent, '-Platform\s+(?<platform>\w+)', [ System.Text.RegularExpressions.RegexOptions]::IgnoreCase);
+
     $platforms = @()
     foreach($match in $matches)
     {
