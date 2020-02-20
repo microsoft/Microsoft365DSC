@@ -159,7 +159,6 @@ function Start-O365ConfigurationExtract
                     break
                 }
             }
-
             if (($null -ne $ComponentsToExtract -and
                     $ComponentsToExtract.Contains("chck" + $resourceName)) -or
                 $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains($currentWorkload)))
