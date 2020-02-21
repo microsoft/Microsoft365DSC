@@ -110,6 +110,7 @@ function Start-O365ConfigurationExtract
         -Resolve
     $AllResources = Get-ChildItem $ResourcesPath -Recurse | Where-Object { $_.Name -like 'MSFT_*.psm1' }
 
+    $platformSkipsNotified = @()
     foreach ($ResourceModule in $AllResources)
     {
         try
@@ -163,6 +164,34 @@ function Start-O365ConfigurationExtract
                     $ComponentsToExtract.Contains("chck" + $resourceName)) -or
                 $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains($currentWorkload)))
             {
+                $shouldSkip = $false
+                $usedPlatforms = Get-ResourcePlatformUsage -Resource $resourceName -ResourceModuleFilePath $ResourceModule.FullName
+
+                foreach($platform in $usedPlatforms)
+                {
+                    # we will skip PnP if there was a problem connecting to a specific site
+                    # it could be a permissions issue
+                    # if it was a problem with connecting to the admin site, then we know that all else will fail as well so no need to continue
+                    if($platform -eq 'PnP' -and $null -ne $Global:SPOAdminUrl -and $Global:SPOConnectionUrl -ne $Global:SPOAdminUrl)
+                    {
+                        continue
+                    }
+                    $isAvailable = Check-PlatformAvailability -Platform $platform
+                    $shouldSkip = $shouldSkip -or !$isAvailable
+
+                    if(!$isAvailable -and !$platformSkipsNotified.Contains($platform))
+                    {
+                        Write-Error "The [$platform] connection has failed and all of the related resources will be skipped to avoid unnecessary errors."
+                        $platformSkipsNotified += $platform
+                    }
+                }
+
+                if($shouldSkip)
+                {
+                    Write-Verbose "Skipped [$resourceName] because of connection problems with the used MsCloudLogin platform"
+                    continue;
+                }
+
                 Import-Module $ResourceModule.FullName | Out-Null
                 Write-Information "Extracting [$resourceName]..."
                 $MaxProcessesExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("MaxProcesses")
@@ -286,4 +315,47 @@ function Start-O365ConfigurationExtract
     {
         Invoke-Item -Path $OutputDSCPath
     }
+}
+
+function Check-PlatformAvailability
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Platform
+    )
+
+    $faulted = Get-Variable -Scope Global "MSCloudLogin${Platform}ConnectionFaulted" -ValueOnly -ErrorAction SilentlyContinue
+    return $null -eq $faulted -or $faulted -eq $false
+}
+
+function Get-ResourcePlatformUsage
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Resource,
+
+        [Parameter(Mandatory = $true)]
+        [string]
+        $ResourceModuleFilePath
+    )
+    $fileContent = Get-Content $ResourceModuleFilePath -Raw
+    $matches = [Regex]::Matches($fileContent, '-Platform\s+(?<platform>\w+)', [ System.Text.RegularExpressions.RegexOptions]::IgnoreCase);
+
+    $platforms = @()
+    foreach($match in $matches)
+    {
+        $platform = $match.Groups["platform"].Value
+        if($platforms.Contains($platform))
+        {
+            continue
+        }
+        $platforms += $platform
+    }
+
+    return $platforms
 }
