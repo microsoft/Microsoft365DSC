@@ -138,7 +138,7 @@ function Get-TargetResource
             $FixedExcludedFileExtensions = @()
         }
 
-        $FixedAllowedDomainList = $tenant.AllowedDomainListForSyncClient
+        $FixedAllowedDomainList = $tenant.AllowedDomainListForSyncClient | ForEach-Object { $_.ToString()}
         if ($FixedAllowedDomainList.Count -eq 0 -or
             ($FixedAllowedDomainList.Count -eq 1 -and $FixedAllowedDomainList[0] -eq ""))
         {
@@ -255,25 +255,21 @@ function Set-TargetResource
     #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-        -Platform SharePointOnline
+        -Platform PnP
 
-    ## Configure OneDrive settings
-    ## Parameters below are remove for the Set-SPOTenant cmdlet
-    ## they are used in the Set-SPOTenantSyncClientRestriction cmdlet
-    $CurrentParameters = $PSBoundParameters
+    $ctx = (Get-PnPConnection).Context
+    $tenant = [Microsoft.Online.SharePoint.TenantAdministration.Tenant]::new($ctx)
+    $ctx.Load($tenant)
+    Execute-CSOMQueryRetry -Context $ctx
+
+     ## Configure OneDrive settings
+    ## Parameters below are removed because they are not directly mapped to the CSOM Tenant object
+    $CurrentParameters =  @{} + $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
 
-    if ($CurrentParameters.ContainsKey("BlockMacSync"))
-    {
-        $CurrentParameters.Remove("BlockMacSync")
-    }
     if ($CurrentParameters.ContainsKey("DomainGuids"))
     {
         $CurrentParameters.Remove("DomainGuids")
-    }
-    if ($CurrentParameters.ContainsKey("DisableReportProblemDialog"))
-    {
-        $CurrentParameters.Remove("DisableReportProblemDialog")
     }
     if ($CurrentParameters.ContainsKey("ExcludedFileExtensions"))
     {
@@ -289,42 +285,50 @@ function Set-TargetResource
     }
 
     Write-Verbose -Message "Configuring OneDrive settings."
-    Set-SPOTenant @CurrentParameters
 
-    $clientSyncParameters = $PSBoundParameters
-
-    ## Configure Sync Client restrictions
-    ## Set-SPOTenantSyncClientRestriction has different parameter sets and they cannot be combined see article:
-    ## https://docs.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps
-
-    if ($clientSyncParameters.ContainsKey("BlockMacSync") -and $clientSyncParameters.ContainsKey("DomainGuids"))
+    foreach($param in $CurrentParameters.GetEnumerator())
     {
-        Set-SPOTenantSyncClientRestriction -BlockMacSync:$BlockMacSync -DomainGuids $DomainGuids -Enable
-    }
-    elseif ($clientSyncParameters.ContainsKey("DomainGuids") -and ($clientSyncParameters.ContainsKey("BlockMacSync") -eq $false))
-    {
-        Set-SPOTenantSyncClientRestriction -DomainGuids $DomainGuids -Enable
+        $propName = $param.Key
+        $tenant.$propName = $param.Value
     }
 
-    if ($clientSyncParameters.ContainsKey("ExcludedFileExtensions"))
+    if ($PSBoundParameters.ContainsKey("DomainGuids"))
     {
-        $BlockedFileTypes = ""
-        foreach ($fileTypes in $ExcludedFileExtensions)
+        $actualDomainGuids = New-Object System.Collections.Generic.List[Guid]
+        foreach($domainGuid in $DomainGuids)
         {
-            $BlockedFileTypes += $fileTypes + ';'
+            [guid]$parsedGuid = [Guid]::Empty
+            if(![Guid]::TryParse($domainGuid, [ref] $parsedGuid))
+            {
+                continue
+            }
+            $actualDomainGuids.Add($parsedGuid)
         }
-
-        Set-SPOTenantSyncClientRestriction -ExcludedFileExtensions $BlockedFileTypes
+        $tenant.AllowedDomainListForSyncClient = $actualDomainGuids
     }
-    if ($clientSyncParameters.ContainsKey("DisableReportProblemDialog"))
+    if ($PSBoundParameters.ContainsKey("ExcludedFileExtensions"))
     {
-        Set-SPOTenantSyncClientRestriction -DisableReportProblemDialog $DisableReportProblemDialog
+        $tenant.ExcludedFileExtensionsForSyncClient = $ExcludedFileExtensions
     }
 
-    if ($clientSyncParameters.ContainsKey("GrooveBlockOption"))
+    if ($PSBoundParameters.ContainsKey("GrooveBlockOption"))
     {
-        Set-SPOTenantSyncClientRestriction -GrooveBlockOption $GrooveBlockOption
+        if ($GrooveBlockOption -eq "OptOut")
+        {
+            $tenant.OptOutOfGrooveBlock = $true;
+            $tenant.OptOutOfGrooveSoftBlock = $true;
+        }
+        elseif ($GrooveBlockOption -eq "HardOptIn")
+        {
+            $tenant.OptOutOfGrooveBlock = $false;
+        }
+        elseif ($GrooveBlockOption -eq "SoftOptIn")
+        {
+            $tenant.OptOutOfGrooveSoftBlock = $false;
+        }
     }
+
+    $ctx.ExecuteQuery()
 }
 
 function Test-TargetResource
@@ -447,7 +451,7 @@ function Export-TargetResource
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SharePointOnline `
+        -Platform PnP `
         -ErrorAction SilentlyContinue
     $Params = @{
         IsSingleInstance   = 'Yes'
