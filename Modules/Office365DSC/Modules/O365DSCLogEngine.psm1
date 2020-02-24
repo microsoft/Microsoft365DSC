@@ -22,8 +22,8 @@ function New-Office365DSCLogEntry
 
     try
     {
-        $VerbosePreference = 'Continue'
         Write-Verbose -Message "Logging a new Error"
+        Write-Error  -ErrorRecord $Error
 
         #region Telemetry
         $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()

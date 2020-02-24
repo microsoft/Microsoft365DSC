@@ -42,8 +42,14 @@ function Start-O365ConfigurationExtract
     )
 
     $InformationPreference = "Continue"
-    $VerbosePreference = "SilentlyContinue"
-    $WarningPreference = "SilentlyContinue"
+
+    $DefaultWarningPreference = $WarningPreference
+    $DefaultVerbosePreference = $VerbosePreference
+
+    # We will set this on our own in app, it is already on SiletntlyContinue by default,
+    # but we dont want it here explicitly overriding the variable
+    # $VerbosePreference = "SilentlyContinue"
+    # $WarningPreference = "SilentlyContinue"
 
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
@@ -210,6 +216,11 @@ function Start-O365ConfigurationExtract
         catch
         {
             New-Office365DSCLogEntry -Error $_ -Message $ResourceModule.Name -Source "[O365DSCReverse]$($ResourceModule.Name)"
+        }
+        finally
+        {
+            $WarningPreference = $DefaultWarningPreference;
+            $VerbosePreference = $DefaultVerbosePreference;
         }
     }
 
