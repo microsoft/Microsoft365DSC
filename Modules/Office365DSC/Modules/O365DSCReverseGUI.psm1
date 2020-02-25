@@ -116,14 +116,14 @@ function Show-O365GUI
         $imagePath = $PSScriptRoot + "\..\Dependencies\Images\Exchange.jpg"
         $imgExo.ImageLocation = $imagePath
         $imgExo.Left = $firstColumnLeft
-        $imgExo.Top = 300 + $topBannerHeight
+        $imgExo.Top = 170 + $topBannerHeight
         $imgExo.AutoSize = $true
         $pnlMain.Controls.Add($imgExo)
 
         $pnlExo = New-Object System.Windows.Forms.Panel
-        $pnlExo.Top = 388 + $topBannerHeight
+        $pnlExo.Top = 258 + $topBannerHeight
         $pnlExo.Left = $firstColumnLeft
-        $pnlExo.Height = 440
+        $pnlExo.Height = 600
         $pnlExo.Width = 300
         $pnlExo.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -303,9 +303,73 @@ function Show-O365GUI
         $chckEXOSharedMailbox.Text = "Shared Mailboxes"
         $pnlExo.Controls.Add($chckEXOSharedMailbox)
 
+        $chckEXOAvailabilityConfig = New-Object System.Windows.Forms.CheckBox
+        $chckEXOAvailabilityConfig.Top = 440
+        $chckEXOAvailabilityConfig.AutoSize = $true;
+        $chckEXOAvailabilityConfig.Name = "chckEXOAvailabilityConfig"
+        $chckEXOAvailabilityConfig.Checked = $true
+        $chckEXOAvailabilityConfig.Text = "Availability Config"
+        $pnlExo.Controls.Add($chckEXOAvailabilityConfig)
+
+        $chckEXOEmailAddressPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckEXOEmailAddressPolicy.Top = 460
+        $chckEXOEmailAddressPolicy.AutoSize = $true;
+        $chckEXOEmailAddressPolicy.Name = "chckEXOEmailAddressPolicy"
+        $chckEXOEmailAddressPolicy.Checked = $true
+        $chckEXOEmailAddressPolicy.Text = "Email Address Policies"
+        $pnlExo.Controls.Add($chckEXOEmailAddressPolicy)
+
+        $chckEXOOnPremisesOrganization = New-Object System.Windows.Forms.CheckBox
+        $chckEXOOnPremisesOrganization.Top = 480
+        $chckEXOOnPremisesOrganization.AutoSize = $true;
+        $chckEXOOnPremisesOrganization.Name = "chckEXOOnPremisesOrganization"
+        $chckEXOOnPremisesOrganization.Checked = $true
+        $chckEXOOnPremisesOrganization.Text = "On-Premises Organizations"
+        $pnlExo.Controls.Add($chckEXOOnPremisesOrganization)
+
+        $chckEXOOrganizationRelationship = New-Object System.Windows.Forms.CheckBox
+        $chckEXOOrganizationRelationship.Top = 500
+        $chckEXOOrganizationRelationship.AutoSize = $true;
+        $chckEXOOrganizationRelationship.Name = "chckEXOOrganizationRelationship"
+        $chckEXOOrganizationRelationship.Checked = $true
+        $chckEXOOrganizationRelationship.Text = "Organization Relationships"
+        $pnlExo.Controls.Add($chckEXOOrganizationRelationship)
+
+        $chckEXOOwaMailboxPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckEXOOwaMailboxPolicy.Top = 520
+        $chckEXOOwaMailboxPolicy.AutoSize = $true;
+        $chckEXOOwaMailboxPolicy.Name = "chckEXOOwaMailboxPolicy"
+        $chckEXOOwaMailboxPolicy.Checked = $true
+        $chckEXOOwaMailboxPolicy.Text = "OWA Mailbox Policies"
+        $pnlExo.Controls.Add($chckEXOOwaMailboxPolicy)
+
+        $chckEXOPolicyTipConfig = New-Object System.Windows.Forms.CheckBox
+        $chckEXOPolicyTipConfig.Top = 540
+        $chckEXOPolicyTipConfig.AutoSize = $true;
+        $chckEXOPolicyTipConfig.Name = "chckEXOPolicyTipConfig"
+        $chckEXOPolicyTipConfig.Checked = $true
+        $chckEXOPolicyTipConfig.Text = "Policy Tip Configs"
+        $pnlExo.Controls.Add($chckEXOPolicyTipConfig)
+
+        $chckEXORemoteDomain = New-Object System.Windows.Forms.CheckBox
+        $chckEXORemoteDomain.Top = 560
+        $chckEXORemoteDomain.AutoSize = $true;
+        $chckEXORemoteDomain.Name = "chckEXORemoteDomain"
+        $chckEXORemoteDomain.Checked = $true
+        $chckEXORemoteDomain.Text = "Remote Domains"
+        $pnlExo.Controls.Add($chckEXORemoteDomain)
+
+        $chckEXOSharingPolicy = New-Object System.Windows.Forms.CheckBox
+        $chckEXOSharingPolicy.Top = 580
+        $chckEXOSharingPolicy.AutoSize = $true;
+        $chckEXOSharingPolicy.Name = "chckEXOSharingPolicy"
+        $chckEXOSharingPolicy.Checked = $true
+        $chckEXOSharingPolicy.Text = "Sharing Policies"
+        $pnlExo.Controls.Add($chckEXOSharingPolicy)
+
         $chckAllEXO = New-Object System.Windows.Forms.CheckBox
         $chckAllEXO.Left = $FirstColumnLeft + 280
-        $chckAllEXO.Top = $topBannerHeight + 340
+        $chckAllEXO.Top = $topBannerHeight + 210
         $chckAllEXO.Checked = $true
         $chckAllEXO.AutoSize = $true
         $chckAllEXO.Add_CheckedChanged( { SectionChanged -Control $chckAllEXO -Panel $pnlEXO })
