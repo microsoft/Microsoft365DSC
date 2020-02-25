@@ -136,7 +136,7 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Export', 'Purge', 'Retention')]
+        [ValidateSet('Export', 'Purge', 'Retention', 'Preview')]
         $Action,
 
         [Parameter(Mandatory = $true)]

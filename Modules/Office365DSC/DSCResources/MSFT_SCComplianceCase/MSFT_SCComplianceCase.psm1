@@ -13,7 +13,7 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("Active", "Closed")]
+        [ValidateSet("Active", "Closed", "ClosedWithError")]
         [System.String]
         $Status = "Active",
 
@@ -82,7 +82,7 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("Active", "Closed")]
+        [ValidateSet("Active", "Closed", "ClosedWithError")]
         [System.String]
         $Status = "Active",
 
@@ -168,7 +168,7 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("Active", "Closed")]
+        [ValidateSet("Active", "Closed", "ClosedWithError")]
         [System.String]
         $Status = "Active",
 
