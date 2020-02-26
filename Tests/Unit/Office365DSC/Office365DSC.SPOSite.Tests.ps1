@@ -26,6 +26,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Mock -CommandName Start-Sleep -MockWith { }
 
+        Mock -CommandName Get-PnPContext -MockWith {
+            $context = @{} | Add-Member -MemberType ScriptMethod -Name ExecuteQuery -Value {
+            } -PassThru
+
+            return $context
+        }
+
         # Test contexts
         Context -Name "When the site doesn't exist" -Fixture {
             $testParams = @{
@@ -60,7 +67,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
                 else
                 {
-                    return $null
+                    $site = @{
+                        Url = "https://contoso.sharepoint.com/sites/TestSite"
+                    }| Add-Member -MemberType ScriptMethod -Name Update -Value {
+                    } -PassThru
+
+                    return $site
                 }
             }
 
@@ -141,7 +153,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-PnPTenantSite -MockWith {
-                return @{
+                $site = @{
                     Url                            = "https://contoso.sharepoint.com/sites/TestSite"
                     Owner                          = "testuser@contoso.com"
                     TimeZoneId                     = 10
@@ -161,7 +173,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Title                          = "CommNik";
                     Template                       = "STS#3";
                     HubSiteId                      = "fcc3c848-6d2f-4821-a56c-980eea7990c5"
-                }
+                }| Add-Member -MemberType ScriptMethod -Name Update -Value {
+                } -PassThru
+
+                return $site
             }
 
             Mock -CommandName Get-PnPHubSite -MockWith {
@@ -228,7 +243,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-PnPTenantSite -MockWith {
-                return @{
+                $site = @{
                     Url                            = "https://contoso.sharepoint.com/sites/TestSite"
                     Owner                          = "testuser@contoso.com"
                     TimeZoneId                     = 10
@@ -248,7 +263,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Title                          = "CommNik";
                     Template                       = "SITEPAGEPUBLISHING#0";
                     HubUrl                         = "https://contoso.sharepoint.com/sites/hub"
-                }
+                }| Add-Member -MemberType ScriptMethod -Name Update -Value {
+                } -PassThru
+
+                return $site
             }
 
             Mock -CommandName Get-PnPHubSite -MockWith {
@@ -319,7 +337,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-PnPTenantSite -MockWith {
-                return @{
+                $site = @{
                     Url                            = "https://contoso.sharepoint.com/sites/TestSite"
                     Owner                          = "testuser@contoso.com"
                     TimeZoneId                     = 10
@@ -339,7 +357,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Title                          = "CommNik";
                     Template                       = "SITEPAGEPUBLISHING#0";
                     HubSiteId                          = "fcc3c848-6d2f-4821-a56c-980eea7990c5"
-                }
+                }| Add-Member -MemberType ScriptMethod -Name Update -Value {
+                } -PassThru
+
+                return $site
             }
 
             Mock -CommandName Get-PnPHubSite -MockWith {
@@ -410,7 +431,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-PnPTenantSite -MockWith {
-                return @{
+                $site = @{
                     Url                            = "https://contoso.sharepoint.com/sites/TestSite"
                     Owner                          = "testuser@contoso.com"
                     TimeZoneId                     = 10
@@ -430,7 +451,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Title                          = "CommNik";
                     Template                       = "SITEPAGEPUBLISHING#0";
                     HubSiteId                          = "fcc3c848-6d2f-4821-a56c-980eea7990c5"
-                }
+                } | Add-Member -MemberType ScriptMethod -Name Update -Value {
+                } -PassThru
+
+                return $site
             }
 
             Mock -CommandName Get-PnPHubSite -MockWith {

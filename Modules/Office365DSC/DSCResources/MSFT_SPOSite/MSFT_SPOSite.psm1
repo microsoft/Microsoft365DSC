@@ -446,23 +446,54 @@ function Set-TargetResource
 
         Set-PnPTenantSite @UpdateParams -ErrorAction Stop
 
+        $site = Get-PnpTenantSite $Url
         #region Ad-Hoc properties
-        if ($DenyAddAndCustomizePages)
+        if (-not [System.String]::IsNullOrEmpty($DenyAddAndCustomizePages))
         {
-            $site.DenyAddAndCustomizePages = 'Enabled'
-        }
-        else
-        {
-            $site.DenyAddAndCustomizePages = 'Disabled'
+            if ($DenyAddAndCustomizePages)
+            {
+                $site.DenyAddAndCustomizePages = 'Enabled'
+            }
+            else
+            {
+                $site.DenyAddAndCustomizePages = 'Disabled'
+            }
         }
 
-        $site.RestrictedToRegion = $RestrictedToRegion
-        $site.SocialBarOnSitePagesDisabled = $SocialBarOnSitePagesDisabled
-        $site.SharingAllowedDomainList = $SharingAllowedDomainList
-        $site.SharingBlockedDomainList = $SharingBlockedDomainList
-        $site.SharingDomainRestrictionMode = $SharingDomainRestrictionMode
-        $site.AnonymousLinkExpirationInDays = $AnonymousLinkExpirationInDays
-        $site.OverrideTenantAnonymousLinkExpirationPolicy = $OverrideTenantAnonymousLinkExpirationPolicy
+        if (-not [System.String]::IsNullOrEmpty($RestrictedToRegion))
+        {
+            $site.RestrictedToRegion = $RestrictedToRegion
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($SocialBarOnSitePagesDisabled))
+        {
+            $site.SocialBarOnSitePagesDisabled = $SocialBarOnSitePagesDisabled
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($SharingAllowedDomainList))
+        {
+            $site.SharingAllowedDomainList = $SharingAllowedDomainList
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($SharingBlockedDomainList))
+        {
+            $site.SharingBlockedDomainList = $SharingBlockedDomainList
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($SharingDomainRestrictionMode))
+        {
+            $site.SharingDomainRestrictionMode = $SharingDomainRestrictionMode
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($AnonymousLinkExpirationInDays))
+        {
+            $site.AnonymousLinkExpirationInDays = $AnonymousLinkExpirationInDays
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($OverrideTenantAnonymousLinkExpirationPolicy))
+        {
+            $site.OverrideTenantAnonymousLinkExpirationPolicy = $OverrideTenantAnonymousLinkExpirationPolicy
+        }
         $site.Update() | Out-Null
         $context.ExecuteQuery()
         #endregion
