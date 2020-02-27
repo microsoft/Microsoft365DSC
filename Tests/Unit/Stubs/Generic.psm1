@@ -8,13 +8,15 @@ function Close-SessionsAndReturnError
     )
 
 }
-function Get-PSSession{
+function Get-PSSession
+{
     [CmdletBinding()]
     param(
     )
 }
 
-function Remove-PSSession{
+function Remove-PSSession
+{
     [CmdletBinding()]
     param(
     )
@@ -35,10 +37,10 @@ function Test-MSCloudLogin
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
-        [ValidateSet("Azure","AzureAD","SharePointOnline","ExchangeOnline", `
-                    "SecurityComplianceCenter","MSOnline","PnP", "PowerPlatforms", `
-                    "MicrosoftTeams","SkypeForBusiness")]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("Azure", "AzureAD", "SharePointOnline", "ExchangeOnline", `
+                "SecurityComplianceCenter", "MSOnline", "PnP", "PowerPlatforms", `
+                "MicrosoftTeams", "SkypeForBusiness")]
         [System.String]
         $Platform,
 
@@ -680,3 +682,85 @@ function Get-AllSPOPackages
         $GlobalAdminAccount
     )
 }
+
+# EXOOfflineAddressBook cmdlets
+function Get-OfflineAddressBook
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Set-OfflineAddressBook
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [ValidateLength(1, 64)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AddressLists = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ConfiguredAttributes = @(),
+
+        [Parameter()]
+        [System.String]
+        $DiffRetentionPeriod,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsDefault,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function New-OfflineAddressBook
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [ValidateLength(1, 64)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AddressLists = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ConfiguredAttributes = @(),
+
+        [Parameter()]
+        [System.String]
+        $DiffRetentionPeriod,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsDefault,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
