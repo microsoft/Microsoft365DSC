@@ -742,3 +742,74 @@ function Get-AllSPOPackages
         $GlobalAdminAccount
     )
 }
+
+# EXOAddressBookPolicy cmdlets
+function Get-AddressBookPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Set-AddressBookPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AddressLists,
+
+        [Parameter()]
+        [System.String]
+        $GlobalAddressList,
+
+        [Parameter()]
+        [System.String]
+        $OfflineAddressBook,
+
+        [Parameter()]
+        [System.String]
+        $RoomList
+    )
+}
+
+function New-AddressBookPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AddressLists,
+
+        [Parameter()]
+        [System.String]
+        $GlobalAddressList,
+
+        [Parameter()]
+        [System.String]
+        $OfflineAddressBook,
+
+        [Parameter()]
+        [System.String]
+        $RoomList
+    )
+}
