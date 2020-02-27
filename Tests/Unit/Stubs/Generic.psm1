@@ -126,6 +126,66 @@ function Set-AtpPolicyForO365
     )
 }
 
+function Set-AddressBookPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AddressLists,
+
+        [Parameter()]
+        [System.String]
+        $GlobalAddressList,
+
+        [Parameter()]
+        [System.String]
+        $OfflineAddressBook,
+
+        [Parameter()]
+        [System.String]
+        $RoomList
+    )
+}
+
+function New-AddressBookPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AddressLists,
+
+        [Parameter()]
+        [System.String]
+        $GlobalAddressList,
+
+        [Parameter()]
+        [System.String]
+        $OfflineAddressBook,
+
+        [Parameter()]
+        [System.String]
+        $RoomList
+    )
+}
+
 function Remove-DkimSigningConfig
 {
     [CmdletBinding()]
@@ -683,6 +743,17 @@ function Get-AllSPOPackages
     )
 }
 
+# EXOAddressBookPolicy cmdlets
+function Get-AddressBookPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
 # EXOOfflineAddressBook cmdlets
 function Get-OfflineAddressBook
 {
@@ -764,3 +835,81 @@ function New-OfflineAddressBook
     )
 }
 
+# EXOAddressBookPolicy cmdlets
+function Get-AddressBookPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Set-AddressBookPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AddressLists,
+
+        [Parameter()]
+        [System.String]
+        $GlobalAddressList,
+
+        [Parameter()]
+        [System.String]
+        $OfflineAddressBook,
+
+        [Parameter()]
+        [System.String]
+        $RoomList,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function New-AddressBookPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AddressLists,
+
+        [Parameter()]
+        [System.String]
+        $GlobalAddressList,
+
+        [Parameter()]
+        [System.String]
+        $OfflineAddressBook,
+
+        [Parameter()]
+        [System.String]
+        $RoomList,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
