@@ -782,7 +782,11 @@ function Set-AddressBookPolicy
 
         [Parameter()]
         [System.String]
-        $RoomList
+        $RoomList,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
     )
 }
 
@@ -810,6 +814,10 @@ function New-AddressBookPolicy
 
         [Parameter()]
         [System.String]
-        $RoomList
+        $RoomList,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
     )
 }
