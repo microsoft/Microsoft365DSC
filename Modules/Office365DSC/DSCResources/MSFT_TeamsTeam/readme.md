@@ -2,13 +2,13 @@
 
 ## Description
 
-This resource configugures or creates a new Team.
+This resource configures or creates a new Team.
 
 ## Parameters
 
 Ensure
 
-- Required: No (Defaults to 'Present')
+- Required: No (defaults to 'Present')
 - Description: `Present` is the only value accepted.
   Configurations using `Ensure = 'Absent'` will throw an Error!
 
@@ -137,16 +137,16 @@ Owner
 Visibility
 
 - Required: No
-- Description: Set to Public to allow all users in your organization to
-  join the group by default. Set to Private to require that an owner
-  approve the join request.
+- Description: Set to "Public" to allow all users in your organization to
+  join the group by default. Set to "Private" to require that an owner
+  approves the join request.
 
 GroupId
 
 - Required: No
 - Description: There can be duplicate DisplayName for Teams so if
   if duplicate Teams exist you can pass in GroupID to filter and
-  retreive unique team.
+  retrieve unique team.
 
 GlobalAdminAccount
 
@@ -178,6 +178,6 @@ GlobalAdminAccount
             AllowCustomMemes                  = $True
             AllowGuestCreateUpdateChannels    = $false
             AllowGuestDeleteChannels          = $false
-            GlobalAdminAccount                =  $GlobalAdminAccount
+            GlobalAdminAccount                = $GlobalAdminAccount
         }
 ```
