@@ -87,7 +87,7 @@ function Get-TargetResource
         $IncludedRecipients,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $RecipientFilter,
 
         [Parameter()]
@@ -277,7 +277,7 @@ function Set-TargetResource
         $IncludedRecipients,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $RecipientFilter,
 
         [Parameter()]
@@ -478,7 +478,7 @@ function Test-TargetResource
         $IncludedRecipients,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $RecipientFilter,
 
         [Parameter()]
