@@ -723,7 +723,11 @@ function Set-OfflineAddressBook
 
         [Parameter()]
         [System.Boolean]
-        $IsDefault
+        $IsDefault,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
     )
 }
 
@@ -752,7 +756,11 @@ function New-OfflineAddressBook
 
         [Parameter()]
         [System.Boolean]
-        $IsDefault
+        $IsDefault,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
     )
 }
 
