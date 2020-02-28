@@ -10,7 +10,7 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('Authoritative')]
+        [ValidateSet('Authoritative','InternalRelay')]
         [System.String]
         $DomainType = 'Authoritative',
 
@@ -118,7 +118,7 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('Authoritative')]
+        [ValidateSet('Authoritative','InternalRelay')]
         [System.String]
         $DomainType = 'Authoritative',
 
@@ -177,7 +177,7 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('Authoritative')]
+        [ValidateSet('Authoritative','InternalRelay')]
         [System.String]
         $DomainType = 'Authoritative',
 

@@ -275,7 +275,7 @@ function Export-TargetResource
                 $content += "        EXOAtpPolicyForO365 " + (New-GUID).ToString() + "`r`n"
                 $content += "        {`r`n"
                 $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                $currentDSCBlock += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
                 if ($currentDSCBlock.ToLower().IndexOf($organization.ToLower()) -gt 0)
                 {
                     $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape($organization), "`$OrganizationName"

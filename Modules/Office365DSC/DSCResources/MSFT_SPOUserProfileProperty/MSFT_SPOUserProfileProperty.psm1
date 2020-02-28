@@ -229,7 +229,7 @@ function Export-TargetResource
 
             # Implicitly load the Office365DSCUtil.psm1 module in order to be able to call
             # into the Invoke-O36DSCCommand cmdlet;
-            Import-Module ($ScriptRoot + "\MSFT_SPOUserProfileProperty.psm1") -Force | Out-Null
+            Import-Module ($ScriptRoot + "\..\..\Modules\Office365DSCUtil.psm1") -Force | Out-Null
 
             # Invoke the logic that extracts the all the Property Bag values of the current site using the
             # the invokation wrapper that handles throttling;

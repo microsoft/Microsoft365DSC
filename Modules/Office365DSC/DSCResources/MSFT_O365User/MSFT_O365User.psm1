@@ -528,6 +528,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -564,7 +565,6 @@ function Export-TargetResource
             }
 
             $result = Get-TargetResource @params
-            $content = ""
             if ($null -ne $result.UserPrincipalName)
             {
                 $result.Password = Resolve-Credentials -UserName "globaladmin"
