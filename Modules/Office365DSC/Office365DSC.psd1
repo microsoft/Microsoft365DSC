@@ -56,10 +56,6 @@
             RequiredVersion = "2.0.0.2"
         },
         @{
-            ModuleName      = "MSOnline"
-            RequiredVersion = "1.1.183.17"
-        },
-        @{
             ModuleName      = "SharePointPnPPowerShellOnline"
             RequiredVersion = "3.18.2002.0"
         },
@@ -77,7 +73,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "0.8.4"
+            RequiredVersion = "1.0.0"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
@@ -134,10 +130,10 @@
             Tags         = 'DesiredStateConfiguration', 'DSC', 'DSCResourceKit', 'DSCResource', 'Office365'
 
             # A URL to the license for this module.
-            LicenseUri   = 'https://github.com/Microsoft/Office365/blob/master/LICENSE'
+            LicenseUri   = 'https://github.com/Microsoft/Office365DSC/blob/master/LICENSE'
 
             # A URL to the main website for this project.
-            ProjectUri   = 'https://github.com/Microsoft/Office365'
+            ProjectUri   = 'https://github.com/Microsoft/Office365DSC'
 
             # A URL to an icon representing this module.
             IconUri      = 'https://github.com/microsoft/Office365DSC/raw/master/Modules/Office365DSC/Dependencies/Images/Logo.png?raw=true'

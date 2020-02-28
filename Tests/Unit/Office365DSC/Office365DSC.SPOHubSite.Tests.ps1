@@ -39,7 +39,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure               = "Present"
             }
 
-            Mock -CommandName Get-SPOSite -MockWith {
+            Mock -CommandName Get-PnPTenantSite -MockWith {
                 throw
             }
 
@@ -63,9 +63,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Absent"
             }
 
-            Mock -CommandName Get-SPOSite -MockWith {
+            Mock -CommandName Get-PnPTenantSite -MockWith {
                 return @{
                     IsHubSite = $false
+                    Url       = 'https://contoso.hub.com'
                 }
             }
 
@@ -85,13 +86,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Absent"
             }
 
-            Mock -CommandName Get-SPOSite -MockWith {
+            Mock -CommandName Get-PnPTenantSite -MockWith {
                 return @{
                     IsHubSite = $true
+                    Url       = 'https://contoso.sharepoint.com'
                 }
             }
 
-            Mock -CommandName Get-SPOHubSite -MockWith {
+            Mock -CommandName Get-PnPHubSite -MockWith {
                 $returnVal = @{
                     Permissions          = @(
                         @{
@@ -110,7 +112,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return $returnVal
             }
 
-            Mock -CommandName Get-MsolGroup -MockWith {
+            Mock -CommandName Get-AzureADGroup -MockWith {
                 return @(
                     @{
                         EmailAddress = "group@contoso.onmicrosoft.com"
@@ -118,7 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 )
             }
 
-            Mock -CommandName Unregister-SPOHubSite -MockWith { }
+            Mock -CommandName Unregister-PnPHubSite -MockWith { }
 
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present"
@@ -130,7 +132,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call mocks in the Set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled Unregister-SPOHubSite
+                Assert-MockCalled Unregister-PnPHubSite
             }
         }
 
@@ -147,13 +149,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure               = "Present"
             }
 
-            Mock -CommandName Get-SPOSite -MockWith {
+            Mock -CommandName Get-PnPTenantSite -MockWith {
                 return @{
                     IsHubSite = $true
+                    Url       = 'https://contoso.sharepoint.com'
                 }
             }
 
-            Mock -CommandName Get-SPOHubSite -MockWith {
+            Mock -CommandName Get-PnPHubSite -MockWith {
                 $returnVal = @{
                     Permissions          = @(
                         @{
@@ -172,13 +175,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return $returnVal
             }
 
-            Mock -CommandName Get-MsolGroup -MockWith {
+            Mock -CommandName Get-AzureADGroup -MockWith {
                 return @{
                     EmailAddress = "group@contoso.onmicrosoft.com"
                 }
             }
 
-            Mock -CommandName Unregister-SPOHubSite -MockWith { }
+            Mock -CommandName Unregister-PnPHubSite -MockWith { }
 
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present"
@@ -202,13 +205,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure               = "Present"
             }
 
-            Mock -CommandName Get-SPOSite -MockWith {
+            Mock -CommandName Get-PnPTenantSite -MockWith {
                 return @{
                     IsHubSite = $true
+                    Url       = 'https://contoso.sharepoint.com'
                 }
             }
 
-            Mock -CommandName Get-SPOHubSite -MockWith {
+            Mock -CommandName Get-PnPHubSite -MockWith {
                 $returnVal = @{
                     Permissions          = @(
                         @{
@@ -228,15 +232,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return $returnVal
             }
 
-            Mock -CommandName Get-MsolGroup -MockWith {
+            Mock -CommandName Get-AzureADGroup -MockWith {
                 return @{
                     EmailAddress = "wronggroup@contoso.onmicrosoft.com"
                 }
             }
 
-            Mock -CommandName Set-SPOHubSite -MockWith { }
-            Mock -CommandName Grant-SPOHubSiteRights -MockWith { }
-            Mock -CommandName Revoke-SPOHubSiteRights -MockWith { }
+            Mock -CommandName Set-PnPHubSite -MockWith { }
+            Mock -CommandName Grant-PnPHubSiteRights -MockWith { }
 
             It "Should return present from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Present"
@@ -248,9 +251,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call mocks in the Set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled Set-SPOHubSite
-                Assert-MockCalled Grant-SPOHubSiteRights
-                Assert-MockCalled Revoke-SPOHubSiteRights
+                Assert-MockCalled Set-PnPHubSite
+                Assert-MockCalled Grant-PnPHubSiteRights
             }
         }
 
@@ -267,20 +269,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure               = "Present"
             }
 
-            Mock -CommandName Get-SPOSite -MockWith {
+            Mock -CommandName Get-PnPTenantSite -MockWith {
                 return @{
                     IsHubSite = $false
+                    Url       = 'https://contoso.sharepoint.com'
                 }
             }
 
-            Mock -CommandName Get-MsolGroup -MockWith {
+            Mock -CommandName Get-AzureADGroup -MockWith {
                 return @{
                     DisplayName = "SecurityGroup"
                 }
             }
 
-            Mock -CommandName Register-SPOHubSite -MockWith { }
-            Mock -CommandName Set-SPOHubSite -MockWith { }
+            Mock -CommandName Register-PnPHubSite -MockWith { }
+            Mock -CommandName Set-PnPHubSite -MockWith { }
 
             It "Should return absent from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be "Absent"
@@ -292,8 +295,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call mocks in the Set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled Register-SPOHubSite
-                Assert-MockCalled Set-SPOHubSite
+                Assert-MockCalled Register-PnPHubSite
+                Assert-MockCalled Set-PnPHubSite
             }
         }
 
@@ -310,14 +313,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure               = "Present"
             }
 
-            Mock -CommandName Get-SPOSite -MockWith {
+            Mock -CommandName Get-PnPTenantSite -MockWith {
                 return @{
                     IsHubSite = $false
+                    Url       = 'https://contoso.sharepoint.com'
                 }
             }
 
-            Mock -CommandName Register-SPOHubSite -MockWith { }
-            Mock -CommandName Set-SPOHubSite -MockWith { }
+            Mock -CommandName Register-PnPHubSite -MockWith { }
+            Mock -CommandName Set-PnPHubSite -MockWith { }
 
             It "Should throw exception the Set method" {
                 { Set-TargetResource @testParams } | Should Throw "Error for principal"
@@ -329,13 +333,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-SPOSite -MockWith {
+            Mock -CommandName Get-PnPTenantSite -MockWith {
                 return @{
                     IsHubSite = $true
+                    Url       = 'https://contoso.sharepoint.com'
                 }
             }
 
-            Mock -CommandName Get-SPOHubSite -MockWith {
+            Mock -CommandName Get-PnPHubSite -MockWith {
                 $returnVal = @{
                     Permissions          = @(
                         @{

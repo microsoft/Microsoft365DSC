@@ -116,8 +116,13 @@ function Start-O365ConfigurationExtract
         {
             $resourceName = $ResourceModule.Name.Split('.')[0].Replace('MSFT_', '')
             $currentWorkload = $ResourceName.Substring(0, 2)
-            switch ($currentWorkload)
+            switch ($currentWorkload.ToUpper())
             {
+                'EX'
+                {
+                    $currentWorkload = 'EXO';
+                    break
+                }
                 'O3'
                 {
                     $currentWorkload = 'O365';
@@ -145,7 +150,7 @@ function Start-O365ConfigurationExtract
                 }
                 'TE'
                 {
-                    $currentWorkload = 'TEAMS';
+                    $currentWorkload = 'Teams';
                     break
                 }
                 default

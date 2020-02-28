@@ -436,8 +436,8 @@ function Show-O365GUI
         $chckSPOHubSite.Top = 40
         $chckSPOHubSite.AutoSize = $true;
         $chckSPOHubSite.Name = "chckSPOHubSite"
-        $chckSPOHubSite.Checked = $false #TODO enable after SPO Mgmt Shell bug is fixed
-        $chckSPOHubSite.Enabled = $false #TODO enable after SPO Mgmt Shell bug is fixed
+        $chckSPOHubSite.Checked = $true
+        $chckSPOHubSite.Enabled = $true
         $chckSPOHubSite.Text = "Hub Sites"
         $pnlSPO.Controls.Add($chckSPOHubSite)
 
@@ -487,8 +487,8 @@ function Show-O365GUI
         $chckSPOSite.Top = 160
         $chckSPOSite.AutoSize = $true;
         $chckSPOSite.Name = "chckSPOSite"
-        $chckSPOSite.Checked = $false #TODO enable after SPO Mgmt Shell bug is fixed
-        $chckSPOSite.Enabled = $false #TODO enable after SPO Mgmt Shell bug is fixed
+        $chckSPOSite.Checked = $true
+        $chckSPOSite.Enabled = $true
         $chckSPOSite.Text = "Site Collections"
         $pnlSPO.Controls.Add($chckSPOSite)
 
@@ -520,8 +520,8 @@ function Show-O365GUI
         $chckSPOSiteGroup.Top = 240
         $chckSPOSiteGroup.AutoSize = $true;
         $chckSPOSiteGroup.Name = "chckSPOSiteGroup"
-        $chckSPOSiteGroup.Checked = $false #TODO enable after SPO Mgmt Shell bug is fixed
-        $chckSPOSiteGroup.Enabled = $false #TODO enable after SPO Mgmt Shell bug is fixed
+        $chckSPOSiteGroup.Checked = $true
+        $chckSPOSiteGroup.Enabled = $true
         $chckSPOSiteGroup.Text = "Site Groups"
         $pnlSPO.Controls.Add($chckSPOSiteGroup)
 

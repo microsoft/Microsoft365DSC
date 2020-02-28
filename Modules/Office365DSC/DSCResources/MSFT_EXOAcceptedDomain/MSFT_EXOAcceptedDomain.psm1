@@ -45,8 +45,10 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
+    Write-Verbose -Message 'Getting all Accepted Domain'
     $AllAcceptedDomains = Get-AcceptedDomain
 
+    Write-Verbose -Message 'Filtering Accepted Domain list by Identity'
     $AcceptedDomain = $AllAcceptedDomains | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
     if ($null -eq $AcceptedDomain)

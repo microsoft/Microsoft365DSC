@@ -188,11 +188,11 @@ function Export-TargetResource
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -Platform MSOnline -O365Credential $GlobalAdminAccount
+    Test-MSCloudLogin -Platform AzureAD -O365Credential $GlobalAdminAccount
     $result = ""
 
     # Get all instances;
-    $instances = Get-MsolUser -All
+    $instances = Get-AzureADUser
 
     # Split the complete list of instances into batches;
     if ($instances.Length -ge $MaxProcesses)

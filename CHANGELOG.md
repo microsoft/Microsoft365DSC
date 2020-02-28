@@ -2,11 +2,16 @@
 
 ## UNRELEASED
 
+* EXOHostedOutboundSpamFilterPolicy
+  * BREAKING CHANGE: Remove IsSingleInstance and added
+    Identity as key;
+* SPOSite
+  * Refactor to use PnP and expose updated parameters;
 * TeamsGuestMessagingConfiguration
   * Added value NoRestriction for GiphyRatingValues;
 * Metadata
+  * Updated MSCloudLoginAssistant dependency to 1.0.0;
   * Updated SharePointPnPPowerShellOnline dependency to 3.18.2002.0;
-  * Updated MSCloudLoginAssistant dependency to 0.8.4;
   * Updated Microsoft.PowerApps.Administration.PowerShell
     dependency to 2.0.37;
 
