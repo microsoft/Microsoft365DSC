@@ -239,6 +239,67 @@ function New-SafeAttachmentPolicy
     )
 }
 
+function Set-MalwareFilterRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter()]
+        [System.String]
+        $MalwareFilterPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @(),
+
+        [Parameter()]
+        [ValidateSet("Present", "Absent")]
+        [System.String]
+        $Ensure = "Present",
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+}
+
 function New-SafeAttachmentRule
 {
     [CmdletBinding()]
