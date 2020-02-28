@@ -1,5 +1,6 @@
 function Get-TargetResource
 {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -390,6 +391,7 @@ function Get-TargetResource
 
 function Set-TargetResource
 {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
     [CmdletBinding()]
     param
     (
@@ -730,6 +732,7 @@ function Set-TargetResource
 
 function Test-TargetResource
 {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
