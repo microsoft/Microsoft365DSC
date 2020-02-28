@@ -16,7 +16,6 @@ DomainType
 
 - Required: No (Defaults to 'Authoritative')
 - Description: The DomainType parameter specifies the accepted domain type.
-  The EXOAcceptedDomain DSC Resource only accepts a value of 'Authoritative'
 
 GlobalAdminAccount
 

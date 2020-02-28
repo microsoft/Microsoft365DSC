@@ -59,7 +59,7 @@ function Get-TargetResource
         $EnableRegionBlockList = $false,
 
         [Parameter()]
-        [ValidatePattern("^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")]
+        [ValidatePattern("^$|^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")]
         [System.String]
         $EndUserSpamNotificationCustomFromAddress,
 
@@ -374,7 +374,7 @@ function Set-TargetResource
         $EnableRegionBlockList = $false,
 
         [Parameter()]
-        [ValidatePattern("^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")]
+        [ValidatePattern("^$|^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")]
         [System.String]
         $EndUserSpamNotificationCustomFromAddress,
 
@@ -651,7 +651,7 @@ function Test-TargetResource
         $EnableRegionBlockList = $false,
 
         [Parameter()]
-        [ValidatePattern("^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")]
+        [ValidatePattern("^$|^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")]
         [System.String]
         $EndUserSpamNotificationCustomFromAddress,
 
