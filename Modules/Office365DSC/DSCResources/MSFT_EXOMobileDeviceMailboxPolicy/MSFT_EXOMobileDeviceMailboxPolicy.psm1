@@ -1,6 +1,7 @@
 function Get-TargetResource
 {
     [CmdletBinding()]
+    [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingConvertToSecureStringWithPlainText', '', Scope='Function', Target='^get|test|set')]
     [OutputType([System.Collections.Hashtable])]
     param
     (
@@ -391,6 +392,7 @@ function Get-TargetResource
 function Set-TargetResource
 {
     [CmdletBinding()]
+    [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingConvertToSecureStringWithPlainText', '', Scope='Function', Target='^get|test|set')]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -731,6 +733,7 @@ function Set-TargetResource
 function Test-TargetResource
 {
     [CmdletBinding()]
+    [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingConvertToSecureStringWithPlainText', '', Scope='Function', Target='^get|test|set')]
     [OutputType([System.Boolean])]
     param
     (
