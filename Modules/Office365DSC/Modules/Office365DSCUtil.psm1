@@ -1919,7 +1919,9 @@ function Start-DSCInitializedJob
     $setupAuthScript = " Import-Module '$msloginAssistentPath' -Force | Out-Null;"
     if($Global:appIdentityParams)
     {
-        $setupAuthScript += "Init-ApplicationIdentity -Tenant $($Global:appIdentityParams.Tenant) -AppId $($Global:appIdentityParams.AppId) -AppSecret '$($Global:appIdentityParams.AppSecret)' -CertificateThumbprint '$($Global:appIdentityParams.CertificateThumbprint)' -OnBehalfOfUserPrincipalName '$($Global:appIdentityParams.OnBehalfOfUserPrincipalName)' -TokenCacheLocation '$($Global:appIdentityParams.TokenCacheLocation)';"
+        $entropyStr = [string]::Join(', ', $Global:appIdentityParams.TokenCacheEntropy)
+        $setupAuthScript += "[byte[]] `$tokenCacheEntropy = $entropyStr;"
+        $setupAuthScript += "Init-ApplicationIdentity -Tenant $($Global:appIdentityParams.Tenant) -AppId $($Global:appIdentityParams.AppId) -AppSecret '$($Global:appIdentityParams.AppSecret)' -CertificateThumbprint '$($Global:appIdentityParams.CertificateThumbprint)' -OnBehalfOfUserPrincipalName '$($Global:appIdentityParams.OnBehalfOfUserPrincipalName)' -TokenCacheLocation '$($Global:appIdentityParams.TokenCacheLocation)' -TokenCacheEntropy `$tokenCacheEntropy -TokenCacheDataProtectionScope $($Global:appIdentityParams.TokenCacheDataProtectionScope);"
     }
 
     $insertPosition = 0
