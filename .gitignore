@@ -9,3 +9,4 @@ Modules/Office365Dsc/DscResource.Tests/*
 node_modules
 node_modules/*
 markdownissues.txt
+start-unittests.ps1
