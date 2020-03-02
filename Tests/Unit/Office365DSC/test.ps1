@@ -1,1 +1,0 @@
-.\Office365DSC.EXOMalwareFilterRule.Tests.ps1
