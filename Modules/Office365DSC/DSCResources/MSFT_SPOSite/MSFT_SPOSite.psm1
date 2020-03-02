@@ -197,7 +197,7 @@ function Get-TargetResource
             StorageMaximumLevel                         = $site.StorageMaximumLevel
             StorageWarningLevel                         = $site.StorageWarningLevel
             AllowSelfServiceUpgrade                     = $site.AllowSelfServiceUpgrade
-            Owner                                       = $site.Owner
+            Owner                                       = $site.OwnerEmail
             CommentsOnSitePagesDisabled                 = $site.CommentsOnSitePagesDisabled
             DefaultLinkPermission                       = $site.DefaultLinkPermission
             DefaultSharingLinkType                      = $site.DefaultSharingLinkType
@@ -713,37 +713,45 @@ function Export-TargetResource
     }
     foreach ($site in $sites)
     {
+        $site = Get-PnPTenantSite -Url $site.Url
         Write-Information "    - [$i/$($sites.Length)] $($site.Url)"
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             Url                = $site.Url
             Template           = $site.Template
-            Owner              = $site.Owner
+            Owner              = $site.OwnerEmail
             Title              = $site.Title
             TimeZoneId         = $site.TimeZoneID
         }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $result = Remove-NullEntriesFromHashTable -Hash $result
+        try
+        {
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $result = Remove-NullEntriesFromHashTable -Hash $result
 
-        $content += "        SPOSite " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
-        if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
-        {
-            $partialContent = $partialContent -ireplace [regex]::Escape($principal + ".sharepoint.com"), "`$(`$OrganizationName.Split('.')[0]).sharepoint.com"
+            $content += "        SPOSite " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+            if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape($principal + ".sharepoint.com"), "`$(`$OrganizationName.Split('.')[0]).sharepoint.com"
+            }
+            if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+            }
+            if ($partialContent.ToLower().Contains("@" + $principal.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$OrganizationName.Split('.')[0])"
+            }
+            $content += $partialContent
+            $content += "        }`r`n"
         }
-        if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+        catch
         {
-            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+            Write-Information $_
         }
-        if ($partialContent.ToLower().Contains("@" + $principal.ToLower()))
-        {
-            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$OrganizationName.Split('.')[0])"
-        }
-        $content += $partialContent
-        $content += "        }`r`n"
         $i++
     }
     return $content
