@@ -155,7 +155,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPTenantSite -MockWith {
                 $site = @{
                     Url                            = "https://contoso.sharepoint.com/sites/TestSite"
-                    Owner                          = "testuser@contoso.com"
+                    OwnerEmail                     = "testuser@contoso.com"
                     TimeZoneId                     = 10
                     AllowSelfServiceUpgrade        = $True;
                     CommentsOnSitePagesDisabled    = $False;
@@ -339,7 +339,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPTenantSite -MockWith {
                 $site = @{
                     Url                            = "https://contoso.sharepoint.com/sites/TestSite"
-                    Owner                          = "testuser@contoso.com"
+                    OwnerEmail                     = "testuser@contoso.com"
                     TimeZoneId                     = 10
                     AllowSelfServiceUpgrade        = $True;
                     CommentsOnSitePagesDisabled    = $False;
@@ -433,7 +433,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPTenantSite -MockWith {
                 $site = @{
                     Url                            = "https://contoso.sharepoint.com/sites/TestSite"
-                    Owner                          = "testuser@contoso.com"
+                    OwnerEmail                     = "testuser@contoso.com"
                     TimeZoneId                     = 10
                     AllowSelfServiceUpgrade        = $True;
                     CommentsOnSitePagesDisabled    = $False;
@@ -520,7 +520,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $CalledOnce = $true
                     return @{
                         Url                            = "https://contoso.sharepoint.com/sites/TestSite"
-                        Owner                          = "testuser@contoso.com"
+                        OwnerEmail                     = "testuser@contoso.com"
                         TimeZoneId                     = 10
                         AllowSelfServiceUpgrade        = $True;
                         CommentsOnSitePagesDisabled    = $False;

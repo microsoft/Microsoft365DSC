@@ -115,7 +115,7 @@ function Start-O365ConfigurationExtract
         try
         {
             $resourceName = $ResourceModule.Name.Split('.')[0].Replace('MSFT_', '')
-            $currentWorkload = $ResourceName.Substring(0, 2)
+            [array]$currentWorkload = $ResourceName.Substring(0, 2)
             switch ($currentWorkload.ToUpper())
             {
                 'EX'
@@ -160,8 +160,8 @@ function Start-O365ConfigurationExtract
                 }
             }
             if (($null -ne $ComponentsToExtract -and
-                    $ComponentsToExtract.Contains("chck" + $resourceName)) -or
-                $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains($currentWorkload)))
+                    $ComponentsToExtract -contains "chck" + $resourceName) -or
+                $AllComponents -or ($null -ne $Workloads -and $Workloads -contains $currentWorkload))
             {
                 Import-Module $ResourceModule.FullName | Out-Null
                 Write-Information "Extracting [$resourceName]..."
