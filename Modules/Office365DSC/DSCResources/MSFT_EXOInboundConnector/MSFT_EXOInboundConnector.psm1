@@ -249,9 +249,9 @@ function Test-TargetResource
         [System.String]
         $ConnectorType,
 
-        #[Parameter()]
-        #[System.Boolean]
-        #$Enabled,
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
         [System.Boolean]
