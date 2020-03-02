@@ -111,6 +111,35 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
+    $nullReturn = @{
+        Name                         = $Name
+        ConditionalCompany           = $ConditionalCompany
+        ConditionalCustomAttribute1  = $ConditionalCustomAttribute1
+        ConditionalCustomAttribute10 = $ConditionalCustomAttribute10
+        ConditionalCustomAttribute11 = $ConditionalCustomAttribute11
+        ConditionalCustomAttribute12 = $ConditionalCustomAttribute12
+        ConditionalCustomAttribute13 = $ConditionalCustomAttribute13
+        ConditionalCustomAttribute14 = $ConditionalCustomAttribute14
+        ConditionalCustomAttribute15 = $ConditionalCustomAttribute15
+        ConditionalCustomAttribute2  = $ConditionalCustomAttribute2
+        ConditionalCustomAttribute3  = $ConditionalCustomAttribute3
+        ConditionalCustomAttribute4  = $ConditionalCustomAttribute4
+        ConditionalCustomAttribute5  = $ConditionalCustomAttribute5
+        ConditionalCustomAttribute6  = $ConditionalCustomAttribute6
+        ConditionalCustomAttribute7  = $ConditionalCustomAttribute7
+        ConditionalCustomAttribute8  = $ConditionalCustomAttribute8
+        ConditionalCustomAttribute9  = $ConditionalCustomAttribute9
+        ConditionalDepartment        = $ConditionalDepartment
+        ConditionalStateOrProvince   = $ConditionalStateOrProvince
+        IncludedRecipients           = $IncludedRecipients
+        RecipientFilter              = $RecipientFilter
+        Ensure                       = 'Absent'
+        GlobalAdminAccount           = $GlobalAdminAccount
+    }
+    if ($null -eq (Get-Command 'Get-GlobalAddressList' -ErrorAction SilentlyContinue))
+    {
+        return $nullReturn
+    }
     $AllGlobalAddressLists = Get-GlobalAddressList
 
     $GlobalAddressList = $AllGlobalAddressLists | Where-Object -FilterScript { $_.Name -eq $Name }
@@ -118,33 +147,6 @@ function Get-TargetResource
     if ($null -eq $GlobalAddressList)
     {
         Write-Verbose -Message "Global Address List $($Name) does not exist."
-
-        $nullReturn = @{
-            Name                         = $Name
-            ConditionalCompany           = $ConditionalCompany
-            ConditionalCustomAttribute1  = $ConditionalCustomAttribute1
-            ConditionalCustomAttribute10 = $ConditionalCustomAttribute10
-            ConditionalCustomAttribute11 = $ConditionalCustomAttribute11
-            ConditionalCustomAttribute12 = $ConditionalCustomAttribute12
-            ConditionalCustomAttribute13 = $ConditionalCustomAttribute13
-            ConditionalCustomAttribute14 = $ConditionalCustomAttribute14
-            ConditionalCustomAttribute15 = $ConditionalCustomAttribute15
-            ConditionalCustomAttribute2  = $ConditionalCustomAttribute2
-            ConditionalCustomAttribute3  = $ConditionalCustomAttribute3
-            ConditionalCustomAttribute4  = $ConditionalCustomAttribute4
-            ConditionalCustomAttribute5  = $ConditionalCustomAttribute5
-            ConditionalCustomAttribute6  = $ConditionalCustomAttribute6
-            ConditionalCustomAttribute7  = $ConditionalCustomAttribute7
-            ConditionalCustomAttribute8  = $ConditionalCustomAttribute8
-            ConditionalCustomAttribute9  = $ConditionalCustomAttribute9
-            ConditionalDepartment        = $ConditionalDepartment
-            ConditionalStateOrProvince   = $ConditionalStateOrProvince
-            IncludedRecipients           = $IncludedRecipients
-            RecipientFilter              = $RecipientFilter
-            Ensure                       = 'Absent'
-            GlobalAdminAccount           = $GlobalAdminAccount
-        }
-
         return $nullReturn
     }
     else
@@ -531,6 +533,10 @@ function Export-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
+    if ($null -eq (Get-Command 'Get-GlobalAddressList' -ErrorAction SilentlyContinue))
+    {
+        return ""
+    }
     [array]$AllGlobalAddressLists = Get-GlobalAddressList
 
     $dscContent = ""
