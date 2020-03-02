@@ -536,8 +536,8 @@ Configuration Master
 
         SPOSite TestWithoutTemplate
         {
-            Title                                       = "Modern Site"
-            Url                                         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+            Title                                       = "No Templates"
+            Url                                         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/NoTemplates"
             Owner                                       = $GlobalAdmin.UserName
             TimeZoneID                                  = 13
             AllowSelfServiceUpgrade                     = $True;
