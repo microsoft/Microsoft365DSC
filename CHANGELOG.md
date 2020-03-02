@@ -10,7 +10,6 @@
 * TeamsGuestMessagingConfiguration
   * Added value NoRestriction for GiphyRatingValues;
 * Metadata
-  * Updated Dependency on AzureAD to 2.0.2.76;
   * Removed dependencyon MSOnline;
   * Updated MSCloudLoginAssistant dependency to 1.0.2;
   * Updated SharePointPnPPowerShellOnline dependency to 3.18.2002.0;

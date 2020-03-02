@@ -69,7 +69,7 @@
         },
         @{
             ModuleName      = "AzureAD"
-            RequiredVersion = "2.0.2.76"
+            RequiredVersion = "2.0.2.4"
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
