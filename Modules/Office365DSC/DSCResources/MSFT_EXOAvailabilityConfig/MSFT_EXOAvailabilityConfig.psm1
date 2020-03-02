@@ -161,6 +161,11 @@ function Export-TargetResource
 
     $AvailabilityConfig = Get-AvailabilityConfig
 
+    if ($null -eq $AvailabilityConfig)
+    {
+        return ""
+    }
+
     $Params = @{
         OrgWideAccount     = $AvailabilityConfig.OrgWideAccount.ToString()
         GlobalAdminAccount = $GlobalAdminAccount

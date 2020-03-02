@@ -102,14 +102,16 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-    Test-MSCloudLogin -Platform MSOnline -O365Credential $GlobalAdminAccount
-    Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
+
+    Test-MSCloudLogin -Platform AzureAD -CloudCredential $GlobalAdminAccount
 
     $nullReturn = @{
         UserPrincipalName  = $null
@@ -126,7 +128,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-        $user = Get-MSOLUser -UserPrincipalName $UserPrincipalName -ErrorAction SilentlyContinue
+        $user = Get-AzureADUser -ObjectId $UserPrincipalName -ErrorAction SilentlyContinue
         if ($null -eq $user)
         {
             Write-Verbose -Message "The specified User doesn't already exist."
@@ -135,39 +137,42 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found User $($UserPrincipalName)"
         $currentLicenseAssignment = @()
-        foreach ($license in $user.Licenses)
+        $skus = Get-AzureADUserLicenseDetail -ObjectId $UserPrincipalName
+        foreach ($sku in $skus)
         {
-            $currentLicenseAssignment += $license.AccountSkuID.ToString()
+            $currentLicenseAssignment += $sku.SkuPartNumber
         }
 
-        $passwordNeverExpires = $user.PasswordNeverExpires
-        if ($null -eq $passwordNeverExpires)
+        if ($user.PasswordPolicies -eq 'NONE')
         {
             $passwordNeverExpires = $true
         }
+        else
+        {
+            $passwordNeverExpires = $false
+        }
 
         $results = @{
-            UserPrincipalName     = $user.UserPrincipalName
+            UserPrincipalName     = $UserPrincipalName
             DisplayName           = $user.DisplayName
-            FirstName             = $user.FirstName
-            LastName              = $user.LastName
+            FirstName             = $user.GivenName
+            LastName              = $user.Surname
             UsageLocation         = $user.UsageLocation
             LicenseAssignment     = $currentLicenseAssignment
             Password              = $Password
             City                  = $user.City
             Country               = $user.Country
             Department            = $user.Department
-            Fax                   = $user.Fax
-            MobilePhone           = $user.MobilePhone
-            Office                = $user.Office
+            Fax                   = $user.FacsimileTelephoneNumber
+            MobilePhone           = $user.Mobile
+            Office                = $user.PhysicalDeliveryOfficeName
             PasswordNeverExpires  = $passwordNeverExpires
-            PhoneNumber           = $user.PhoneNumber
+            PhoneNumber           = $user.TelephoneNumber
             PostalCode            = $user.PostalCode
-            PreferredDataLocation = $user.PreferredDataLocation
             PreferredLanguage     = $user.PreferredLanguage
             State                 = $user.State
             StreetAddress         = $user.StreetAddress
-            Title                 = $user.Title
+            Title                 = $user.JobTitle
             UserType              = $user.UserType
             GlobalAdminAccount    = $GlobalAdminAccount
             Ensure                = "Present"
@@ -287,6 +292,12 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
+    # PreferredDataLocation is no longer an accepted value;
+    if (![System.String]::IsNullOrEmpty($PreferredDataLocation))
+    {
+        Write-Warning "[DEPRECATED] Property PreferredDataLocation is no longer supported by resource O365USer"
+    }
+
     Write-Verbose -Message "Setting configuration of Office 365 User $UserPrincipalName"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -295,75 +306,90 @@ function Set-TargetResource
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-        -Platform MSOnline
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform AzureAD
 
     $user = Get-TargetResource @PSBoundParameters
-    $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("Ensure")
-    $CurrentParameters.Remove("GlobalAdminAccount")
-    $newLicenseAssignment = $LicenseAssignment
+    $PasswordPolicies = $null
+    if ($PasswordNeverExpires)
+    {
+        $PasswordPolicies = 'NONE'
+    }
+    $CreationParams = @{
+        City = $City
+        Country = $Country
+        Department = $Department
+        DisplayName = $DisplayName
+        FacsimileTelephoneNumber = $Fax
+        GivenName = $FirstName
+        JobTitle = $Title
+        Mobile = $MobilePhone
+        PasswordPolicies = $PasswordPolicies
+        PhysicalDeliveryOfficeName = $Office
+        PostalCode = $PostalCode
+        PreferredLanguage = $PreferredLanguage
+        State = $State
+        StreetAddress = $StreetAddress
+        Surname = $LastName
+        TelephoneNumber = $PhoneNumber
+        UsageLocation = $UsageLocation
+        UserPrincipalName = $UserPrincipalName
+        UserType  = $UserType
+    }
+    $CreationParams = Remove-NullEntriesFromHashtable -Hash $CreationParams
+
+    if ($null -ne $LicenseAssignment)
+    {
+        $licenses = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicenses
+
+        foreach ($licenseSkuPart in $LicenseAssignment)
+        {
+            Write-Verbose -Message "Adding License {$licenseSkuPart} to the Queue"
+            $license = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicense
+            $license.SkuId = (Get-AzureADSubscribedSku | Where-Object -Property SkuPartNumber -Value $licenseSkuPart -EQ).SkuID
+
+            # Set the Office license as the license we want to add in the $licenses object
+            $licenses.AddLicenses = $license
+        }
+    }
 
     if ($user.UserPrincipalName)
     {
-        if ($LicenseAssignment.Length -gt 0)
+        Write-Verbose -Message "Updating License Assignment"
+        try
         {
-            Write-Verbose -Message "Comparing License Assignment for user $UserPrincipalName"
-            $diff = Compare-Object -ReferenceObject $user.LicenseAssignment -DifferenceObject $newLicenseAssignment
+            Write-Verbose -Message "Assigning $($licenses.Count) licences to existing user"
+            Set-AzureADUserLicense -ObjectId $UserPrincipalName `
+                -AssignedLicenses $licenses `
+                -ErrorAction SilentlyContinue
+        }
+        catch
+        {
+            $Message = "License {$($LicenseAssignment)} doesn't exist in tenant."
+            Write-Verbose $Message
+            New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
         }
 
-        $CurrentParameters.Remove("LicenseAssignment")
-        if ($Password)
-        {
-            $CurrentParameters.Remove("Password")
-        }
-
-        if ($null -ne $diff)
-        {
-            Write-Verbose -Message "Detected a change in license assignment for user $UserPrincipalName"
-            Write-Verbose -Message "Current License Assignment is $($user.LicenseAssignment)"
-            Write-Verbose -Message "New License Assignment is $($newLicenseAssignment)"
-            $licensesToRemove = @()
-            $licensesToAdd = @()
-            foreach ($difference in $diff)
-            {
-                if ($difference.SideIndicator -eq "<=")
-                {
-                    $licensesToRemove += $difference.InputObject
-                }
-                elseif ($difference.SideIndicator -eq "=>")
-                {
-                    $licensesToAdd += $difference.InputObject
-                }
-            }
-            Write-Verbose -Message "Updating License Assignment"
-            try
-            {
-                Set-MsolUserLicense -UserPrincipalName $UserPrincipalName `
-                    -AddLicenses $LicenseAssignment `
-                    -ErrorAction SilentlyContinue
-            }
-            catch
-            {
-                $Message = "License {$($LicenseAssignment)} doesn't exist in tenant."
-                Write-Verbose $Message
-                New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
-            }
-        }
         Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
-        $user = Set-MsolUser @CurrentParameters
+        $CreationParams.Add("ObjectID", $UserPrincipalName)
+        $user = Set-AzureADUser @CreationParams
     }
     else
     {
         Write-Verbose -Message "Creating Office 365 User $UserPrincipalName"
-        $CurrentParameters.Remove("LicenseAssignment")
-        $user = New-MsolUser @CurrentParameters
+        $CreationParams.Add("AccountEnabled", $true)
+        $PasswordProfile = New-Object -TypeName Microsoft.Open.AzureAD.Model.PasswordProfile
+        $PasswordProfile.Password ='TempP@ss'
+        $CreationParams.Add("PasswordProfile", $PasswordProfile)
+        $CreationParams.Add("MailNickName", $UserPrincipalName.Split('@')[0])
+        $user = New-AzureADUser @CreationParams
+        Set-AzureADUserPassword -ObjectId $UserPrincipalName -Password $Password.Password | Out-Null
 
         try
         {
-            Set-MsolUserLicense -UserPrincipalName $UserPrincipalName `
-                -AddLicenses $licensesToAdd `
-                -RemoveLicenses $licensesToRemove `
+            Write-Verbose -Message "Assigning $($licenses.Count) licences to new user"
+            Set-AzureADUserLicense -ObjectId $UserPrincipalName `
+                -AssignedLicenses $licenses `
                 -ErrorAction SilentlyContinue
         }
         catch
@@ -482,6 +508,7 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing configuration of Office 365 User $UserPrincipalName"
 
+    Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
@@ -506,7 +533,6 @@ function Test-TargetResource
             "PasswordNeverExpires", `
             "PhoneNumber", `
             "PostalCode", `
-            "PreferredDataLocation", `
             "PreferredLanguage", `
             "State", `
             "StreetAddress", `
@@ -536,7 +562,7 @@ function Export-TargetResource
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -Platform MSOnline -CloudCredential $GlobalAdminAccount
+    Test-MSCloudLogin -Platform AzureAD -CloudCredential $GlobalAdminAccount
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
     if ($GlobalAdminAccount.UserName.Contains("@"))
@@ -548,7 +574,7 @@ function Export-TargetResource
             $principal = $organization.Split(".")[0]
         }
     }
-    $users = Get-MsolUser
+    $users = Get-AzureADUser
     $content = ''
     $partialContent = ""
     $i = 1
@@ -565,6 +591,7 @@ function Export-TargetResource
             }
 
             $result = Get-TargetResource @params
+            $result = Remove-NullEntriesFromHashTable -Hash $result
             if ($null -ne $result.UserPrincipalName)
             {
                 $result.Password = Resolve-Credentials -UserName "globaladmin"

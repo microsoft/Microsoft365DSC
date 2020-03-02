@@ -46,24 +46,35 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-    $AllApplicationAccessPolicies = Get-ApplicationAccessPolicy
+    $nullReturn = @{
+        Identity           = $Identity
+        AccessRight        = $AccessRight
+        AppID              = $AppID
+        PolicyScopeGroupId = $PolicyScopeGroupId
+        Description        = $Description
+        Ensure             = 'Absent'
+        GlobalAdminAccount = $GlobalAdminAccount
+    }
+
+    try
+    {
+        $AllApplicationAccessPolicies = Get-ApplicationAccessPolicy -ErrorAction Stop
+    }
+    catch
+    {
+        if ($_.Exception -like "The operation couldn't be performed because object*")
+        {
+            Write-Verbose "Could not obtain Application Access Policies for Tenant"
+            return $nullReturn
+        }
+    }
+
 
     $ApplicationAccessPolicy = $AllApplicationAccessPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
 
     if ($null -eq $ApplicationAccessPolicy)
     {
         Write-Verbose -Message "Application Access Policy $($Identity) does not exist."
-
-        $nullReturn = @{
-            Identity           = $Identity
-            AccessRight        = $AccessRight
-            AppID              = $AppID
-            PolicyScopeGroupId = $PolicyScopeGroupId
-            Description        = $Description
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
-
         return $nullReturn
     }
     else
@@ -255,7 +266,19 @@ function Export-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-    [array]$AllApplicationAccessPolicies = Get-ApplicationAccessPolicy
+    try
+    {
+        [array]$AllApplicationAccessPolicies = Get-ApplicationAccessPolicy -ErrorAction Stop
+    }
+    catch
+    {
+        if ($_.Exception -like "*The operation couldn't be performed because object*")
+        {
+            Write-Verbose "Could not obtain Application Access Policies for Tenant"
+            return ""
+        }
+        throw $_
+    }
 
     $dscContent = ""
     $i = 1

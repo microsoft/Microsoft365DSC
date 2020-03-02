@@ -43,6 +43,20 @@ function Get-TargetResource
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
+    $nullReturn = @{
+        Name                 = $Name
+        AddressLists         = $AddressLists
+        ConfiguredAttributes = $ConfiguredAttributes
+        DiffRetentionPeriod  = $DiffRetentionPeriod
+        IsDefault            = $IsDefault
+        Ensure               = 'Absent'
+        GlobalAdminAccount   = $GlobalAdminAccount
+    }
+
+    if ($null -eq (Get-Command 'Get-OfflineAddressBook' -ErrorAction SilentlyContinue))
+    {
+        return $nullReturn
+    }
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
@@ -53,17 +67,6 @@ function Get-TargetResource
     if ($null -eq $OfflineAddressBook)
     {
         Write-Verbose -Message "Offline Address Book $($Name) does not exist."
-
-        $nullReturn = @{
-            Name                 = $Name
-            AddressLists         = $AddressLists
-            ConfiguredAttributes = $ConfiguredAttributes
-            DiffRetentionPeriod  = $DiffRetentionPeriod
-            IsDefault            = $IsDefault
-            Ensure               = 'Absent'
-            GlobalAdminAccount   = $GlobalAdminAccount
-        }
-
         return $nullReturn
     }
     else
@@ -251,6 +254,11 @@ function Export-TargetResource
     #endregion
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
+
+    if ($null -eq (Get-Command 'Get-OfflineAddressBook' -ErrorAction SilentlyContinue))
+    {
+        return $nullReturn
+    }
 
     [array]$AllOfflineAddressBooks = Get-OfflineAddressBook
 

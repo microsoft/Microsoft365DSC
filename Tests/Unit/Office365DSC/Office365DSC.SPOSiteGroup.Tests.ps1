@@ -38,23 +38,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount  = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-SPOSite -MockWith{
+            Mock -CommandName Get-PnPTenantSite -MockWith{
                 return $null
             }
 
-            Mock -CommandName Get-SPOSiteGroup -MockWith {
+            Mock -CommandName Get-PnPGroup -MockWith {
                 return $null
             }
 
-            Mock -CommandName Set-SPOSiteGroup -MockWith {
+            Mock -CommandName Get-PnPGroup -MockWith {
                 return $null
             }
 
-            Mock -CommandName New-SPOSiteGroup -MockWith {
+            Mock -CommandName Set-PnPGroup -MockWith {
                 return $null
             }
 
-            Mock -CommandName Remove-SPOSiteGroup -MockWith {
+            Mock -CommandName New-PnPGroup -MockWith {
+                return $null
+            }
+
+            Mock -CommandName Remove-PnPGroup -MockWith {
                 return $null
             }
 
@@ -82,19 +86,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount  = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-SPOSiteGroup -MockWith {
+            Mock -CommandName Get-PnPTenantSite -MockWith {
                 return @{
-                    URL              = "https://contoso.sharepoint.com/sites/TestSite"
-                    Title            = "TestSiteGroup"
-                    OwnerLogin       = "admin@Office365DSC.onmicrosoft.com"
-                    Roles            = @("Read")
+                    Url = 'https://contoso.sharepoint.com/sites/TestSite'
                 }
             }
 
-            Mock -CommandName Set-SPOSiteGroup -MockWith {
+            Mock -CommandName Get-PnPGroup -MockWith {
+                return @{
+                    URL              = "https://contoso.sharepoint.com/sites/TestSite"
+                    Title            = "TestSiteGroup"
+                    Owner            = @{
+                        LoginName = "admin@Office365DSC.onmicrosoft.com"
+                    }
+                }
             }
 
-            Mock -CommandName New-SPOSiteGroup -MockWith {
+            Mock -CommandName Get-PnPGroupPermissions -MockWith {
+                return @{
+                    RoleTypeKind = 'Contribute'
+                }
+            }
+
+            Mock -CommandName Set-PnPGroup -MockWith {
+            }
+
+            Mock -CommandName New-PnPGroup -MockWith {
             }
 
             It "Should return present from the Get method" {
@@ -107,8 +124,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Updates the site group in the Set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName Set-SPOSiteGroup -Exactly 1
-                Assert-MockCalled -CommandName New-SPOSiteGroup -Exactly 0
+                Assert-MockCalled -CommandName Set-PnPGroup -Exactly 1
+                Assert-MockCalled -CommandName New-PnPGroup -Exactly 0
             }
 
         }
@@ -123,22 +140,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount  = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-SPOSiteGroup -MockWith {
+            Mock -CommandName Get-PnPGroup -MockWith {
                 return @{
                     URL                 = "https://contoso.sharepoint.com/sites/TestSite"
                     Title               = "TestSiteGroup"
-                    OwnerLoginName      = "admin@Office365DSC.onmicrosoft.com"
-                    Roles               = @("Edit", "Read")
+                    Owner               = @{
+                        LoginName      = "admin@Office365DSC.onmicrosoft.com"
+                    }
                 }
             }
 
-            Mock -CommandName Set-SPOSiteGroup -MockWith {
+            Mock -CommandName Get-PnPGroupPermissions -MockWith {
+                return @(@{
+                    RoleTypeKind = 'Edit'
+                },
+                @{
+                    RoleTypeKind = 'Read'
+                }
+                )
             }
 
-            Mock -CommandName New-SPOSiteGroup -MockWith {
+            Mock -CommandName Set-PnPGroup -MockWith {
             }
 
-            Mock -CommandName Remove-SPOSiteGroup -MockWith {
+            Mock -CommandName New-PnPGroup -MockWith {
+            }
+
+            Mock -CommandName Remove-PnPGroup -MockWith {
             }
 
             It "Should return present from the Get method" {
@@ -151,8 +179,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should not update site group in the Set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName New-SPOSiteGroup -Exactly 0
-                Assert-MockCalled -CommandName Remove-SPOSiteGroup -Exactly 0
+                Assert-MockCalled -CommandName New-PnPGroup -Exactly 0
+                Assert-MockCalled -CommandName Remove-PnPGroup -Exactly 0
             }
         }
 
@@ -167,7 +195,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
 
-            Mock -CommandName Get-SPOSiteGroup -MockWith {
+            Mock -CommandName Get-PnPGroup -MockWith {
                 return @{
                     URL              = "https://contoso.sharepoint.com/sites/TestSite"
                     Title            = "TestSiteGroup"
@@ -176,13 +204,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Set-SPOSiteGroup -MockWith{
+            Mock -CommandName Set-PnPGroup -MockWith{
             }
 
-            Mock -CommandName New-SPOSiteGroup -MockWith{
+            Mock -CommandName New-PnPGroup -MockWith{
             }
 
-            Mock -CommandName Remove-SPOSiteGroup -MockWith{
+            Mock -CommandName Remove-PnPGroup -MockWith{
             }
 
             It "Should return present from the Get method" {
@@ -195,9 +223,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should remove the site group" {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName Set-SPOSiteGroup -Exactly 0
-                Assert-MockCalled -CommandName New-SPOSiteGroup -Exactly 0
-                Assert-MockCalled -CommandName Remove-SPOSiteGroup -Exactly 1
+                Assert-MockCalled -CommandName Set-PnPGroup -Exactly 0
+                Assert-MockCalled -CommandName New-PnPGroup -Exactly 0
+                Assert-MockCalled -CommandName Remove-PnPGroup -Exactly 1
             }
         }
 
@@ -206,13 +234,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-SPOSite -MockWith {
+            Mock -CommandName Get-PnPTenantSite -MockWith {
                 return @{
                     Url = "https://contoso.sharepoint.com"
                 }
             }
 
-            Mock -CommandName Get-SPOSiteGroup -MockWith {
+            Mock -CommandName Get-PnPGroup -MockWith {
                 return @{
                     URL                 = "https://contoso.sharepoint.com/sites/TestSite"
                     Title               = "TestSiteGroup"

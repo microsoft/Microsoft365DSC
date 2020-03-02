@@ -1387,7 +1387,7 @@ function Test-Office365DSCParameterState
             -and ($DesiredValues.GetType().Name -ne "CimInstance") `
             -and ($DesiredValues.GetType().Name -ne "PSBoundParametersDictionary"))
     {
-        throw ("Property 'DesiredValues' in Test-SPDscParameterState must be either a " + `
+        throw ("Property 'DesiredValues' in Test-Office365DscParameterState must be either a " + `
                 "Hashtable or CimInstance. Type detected was $($DesiredValues.GetType().Name)")
     }
 
@@ -1420,7 +1420,7 @@ function Test-Office365DSCParameterState
                 }
                 else
                 {
-                    $CheckDesiredValue = Test-SPDSCObjectHasProperty -Object $DesiredValues -PropertyName $_
+                    $CheckDesiredValue = Test-Office365DSCObjectHasProperty -Object $DesiredValues -PropertyName $_
                 }
 
                 if ($CheckDesiredValue)
@@ -1653,7 +1653,7 @@ function Test-Office365DSCParameterState
                                 Write-Verbose -Message ("Unable to compare property $fieldName " + `
                                         "as the type ($($desiredType.Name)) is " + `
                                         "not handled by the " + `
-                                        "Test-SPDscParameterState cmdlet")
+                                        "Test-Office365DscParameterState cmdlet")
                                 $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
                                 $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
                                 $DriftedParameters.Add($fieldName, $EventValue)
@@ -1709,27 +1709,6 @@ function Test-Office365DSCParameterState
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
     return $returnValue
-}
-
-function Get-UsersLicenses
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount -Platform MSOnline
-
-    Write-Verbose -Message "Store all users licenses information in Global Variable for future usage."
-
-    #Store information to be able to check later if the users is correctly licensed for features.
-    if ($null -eq $Global:UsersLicenses)
-    {
-        $Global:UsersLicenses = Get-MsolUser -All | Select-Object UserPrincipalName, isLicensed, Licenses
-    }
-    Return $Global:UsersLicenses
 }
 
 <# This is the main Office365DSC.Reverse function that extracts the DSC configuration from an existing
@@ -2098,4 +2077,31 @@ function Get-AllSPOPackages
         }
     }
     return $filesToDownload
+}
+
+function Remove-NullEntriesFromHashtable
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.COllections.HashTable]
+        $Hash
+    )
+
+    $keysToRemove = @()
+    foreach ($key in $Hash.Keys)
+    {
+        if ([System.String]::IsNullOrEmpty($Hash.$key))
+        {
+            $keysToRemove += $key
+        }
+    }
+
+    foreach ($key in $keysToRemove)
+    {
+        $Hash.Remove($key) | Out-Null
+    }
+
+    return $Hash
 }

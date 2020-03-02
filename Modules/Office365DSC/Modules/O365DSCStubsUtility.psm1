@@ -45,10 +45,6 @@ function Get-O365StubFiles
             ModuleName = 'Microsoft.TeamsCmdlets.PowerShell.Custom'
         },
         @{
-            Platform   = 'MSOnline'
-            ModuleName = 'MSOnline'
-        },
-        @{
             Platform   = 'PnP'
             ModuleName = 'SharePointPnPPowerShellOnline'
         },
@@ -96,16 +92,53 @@ function Get-O365StubFiles
             $signature = $null
             $metadata = New-Object -TypeName System.Management.Automation.CommandMetaData -ArgumentList $cmdlet
             $definition = [System.Management.Automation.ProxyCommand]::Create($metadata)
-
-            foreach ($line in $definition -split "`n")
+            if ($metadata.DefaultParameterSetName -ne 'InvokeByDynamicParameters' -and `
+                $definition.IndexOf('$dynamicParams') -eq -1)
             {
-                if ($line.Trim() -eq 'begin')
+                foreach ($line in $definition -split "`n")
                 {
-                    break
+                    if ($line.Trim() -eq 'begin')
+                    {
+                        break
+                    }
+                    $signature += $line
                 }
-                $signature += $line
+                $StubContent += "function $($cmdlet.Name)`n{`r`n    $signature}`n"
             }
-            $StubContent += "function $($cmdlet.Name)`n{`r`n    $signature}`n"
+            else
+            {
+                $metadata = New-Object -TypeName System.Management.Automation.CommandMetaData -ArgumentList $cmdlet
+                $parameters = $metadata.Parameters
+                $StubContent += "function $($cmdlet.Name)`n{`r`n    [CmdletBinding()]`r`n    param(`r`n"
+                if ($parameters.Count -eq 0 -or ($parameters.Count -eq 1 -and $parameters.Keys[0] -eq 'ObjectId'))
+                {
+                    $parameters = $cmdlet.Parameters
+                }
+                $invalidTypes = @("ActionPreference", `
+                    "SwitchParameter")
+                $invalidParameters = @("ErrorVariable", `
+                    "InformationVariable", `
+                    "WarningVariable", `
+                    "OutVariable", `
+                    "OutBuffer", `
+                    "PipelineVariable")
+                foreach ($key in $parameters.Keys)
+                {
+                    if ($parameters.$key.ParameterType.Name -notin $invalidTypes -and `
+                        $key -notin $invalidParameters)
+                    {
+                        $parameter = $parameters.$key
+                        $StubContent += "        [Parameter()]`r`n"
+                        $StubContent += "        [$($parameter.ParameterType.ToString())]`r`n"
+                        $StubContent += "        `${$key},`r`n`r`n"
+                    }
+                }
+                if ($parameters.Keys.Count -gt 0)
+                {
+                    $StubContent = $StubContent.Remove($StubContent.Length-5, 5)
+                }
+                $StubContent += "`r`n    )`r`n}`n"
+            }
             $i ++
         }
         Write-Progress -Activity "Generating Stubs" -Completed
