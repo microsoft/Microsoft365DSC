@@ -300,6 +300,8 @@ function Set-MalwareFilterRule
     )
 }
 
+
+
 function New-SafeAttachmentRule
 {
     [CmdletBinding()]
@@ -685,6 +687,17 @@ function Get-SafeLinksPolicy
 }
 
 function Get-SafeLinksRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+
+function get-MalwareFilterRule
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
