@@ -290,13 +290,8 @@ function Set-MalwareFilterRule
         $SentToMemberOf = @(),
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
-        [System.String]
-        $Ensure = "Present",
-
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        [System.Boolean]
+        $Confirm = $false
     )
 }
 
