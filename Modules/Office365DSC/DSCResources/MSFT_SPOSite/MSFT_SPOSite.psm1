@@ -13,10 +13,14 @@ function Get-TargetResource
         $Title,
 
         [Parameter(Mandatory = $true)]
+        [System.String]
+        $Owner,
+
+        [Parameter(Mandatory = $true)]
         [System.UInt32]
         $TimeZoneId,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Template,
 
@@ -44,10 +48,6 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowSelfServiceUpgrade,
-
-        [Parameter()]
-        [System.String]
-        $Owner,
 
         [Parameter()]
         [System.Boolean]
@@ -240,10 +240,14 @@ function Set-TargetResource
         $Title,
 
         [Parameter(Mandatory = $true)]
+        [System.String]
+        $Owner,
+
+        [Parameter(Mandatory = $true)]
         [System.UInt32]
         $TimeZoneId,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Template,
 
@@ -271,10 +275,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowSelfServiceUpgrade,
-
-        [Parameter()]
-        [System.String]
-        $Owner,
 
         [Parameter()]
         [System.Boolean]
@@ -544,10 +544,14 @@ function Test-TargetResource
         $Title,
 
         [Parameter(Mandatory = $true)]
+        [System.String]
+        $Owner,
+
+        [Parameter(Mandatory = $true)]
         [System.UInt32]
         $TimeZoneId,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Template,
 
@@ -575,10 +579,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowSelfServiceUpgrade,
-
-        [Parameter()]
-        [System.String]
-        $Owner,
 
         [Parameter()]
         [System.Boolean]
@@ -718,6 +718,7 @@ function Export-TargetResource
             GlobalAdminAccount = $GlobalAdminAccount
             Url                = $site.Url
             Template           = $site.Template
+            Owner              = $site.Owner
             Title              = $site.Title
             TimeZoneId         = $site.TimeZoneID
         }
