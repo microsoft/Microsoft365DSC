@@ -59,12 +59,12 @@ function Show-O365GUI
         $imagePath = $PSScriptRoot + "\..\Dependencies\Images\Exchange.jpg"
         $imgExo.ImageLocation = $imagePath
         $imgExo.Left = $firstColumnLeft
-        $imgExo.Top = 170 + $topBannerHeight
+        $imgExo.Top = $topBannerHeight
         $imgExo.AutoSize = $true
         $pnlMain.Controls.Add($imgExo)
 
         $pnlExo = New-Object System.Windows.Forms.Panel
-        $pnlExo.Top = 258 + $topBannerHeight
+        $pnlExo.Top = 88 + $topBannerHeight
         $pnlExo.Left = $firstColumnLeft
         $pnlExo.Height = 660
         $pnlExo.Width = 300
@@ -336,7 +336,7 @@ function Show-O365GUI
 
         $chckAllEXO = New-Object System.Windows.Forms.CheckBox
         $chckAllEXO.Left = $FirstColumnLeft + 280
-        $chckAllEXO.Top = $topBannerHeight + 210
+        $chckAllEXO.Top = $topBannerHeight + 40
         $chckAllEXO.Checked = $true
         $chckAllEXO.AutoSize = $true
         $chckAllEXO.Add_CheckedChanged( { SectionChanged -Control $chckAllEXO -Panel $pnlEXO })
@@ -696,7 +696,7 @@ function Show-O365GUI
 
         $chckAllSC = New-Object System.Windows.Forms.CheckBox
         $chckAllSC.Left = $SecondColumnLeft + 280
-        $chckAllSC.Top = $topBannerHeight + 440
+        $chckAllSC.Top = $topBannerHeight + 475
         $chckAllSC.Checked = $true
         $chckAllSC.AutoSize = $true
         $chckAllSC.Add_CheckedChanged( { SectionChanged -Control $chckAllSC -Panel $pnlSC })
@@ -938,13 +938,13 @@ function Show-O365GUI
         $imagePath = $PSScriptRoot + "\..\Dependencies\Images\Office365.jpg"
         $imgO365.ImageLocation = $imagePath
         $imgO365.Left = $fourthColumnLeft
-        $imgO365.Top = $topBannerHeight + $pnlOD.Height + $pnlPP.Height + 135
+        $imgO365.Top = $topBannerHeight + $pnlOD.Height + $pnlPP.Height + 195
         $imgO365.AutoSize = $true
         $pnlMain.Controls.Add($imgO365)
 
         $pnlO365 = New-Object System.Windows.Forms.Panel
-        $pnlO365.Top = $topBannerHeight + $pnlOD.Height + $pnlPP.Height + 135
-        $pnlO365.Left = $firstColumnLeft
+        $pnlO365.Top = $topBannerHeight + $pnlOD.Height + $pnlPP.Height + 290
+        $pnlO365.Left = $fourthColumnLeft
         $pnlO365.Height = 80
         $pnlO365.Width = 300
         $pnlO365.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
@@ -982,8 +982,8 @@ function Show-O365GUI
         $pnlO365.Controls.Add($chckO365User)
 
         $chckAllO365 = New-Object System.Windows.Forms.CheckBox
-        $chckAllO365.Left = $FirstColumnLeft + 280
-        $chckAllO365.Top = $topBannerHeight + 40
+        $chckAllO365.Left = $fourthColumnLeft + 280
+        $chckAllO365.Top = $topBannerHeight + $pnlOD.Height + $pnlPP.Height + 235
         $chckAllO365.Checked = $true
         $chckAllO365.AutoSize = $true
         $chckAllO365.Add_CheckedChanged( { SectionChanged -Control $chckAllO365 -Panel $pnlO365 })
