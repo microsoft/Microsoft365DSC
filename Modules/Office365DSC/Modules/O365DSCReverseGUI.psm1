@@ -54,63 +54,6 @@ function Show-O365GUI
         $pnlMain.Height = $form.Height
         $pnlMain.AutoScroll = $true
 
-        #region Office 365
-        $imgO365 = New-Object System.Windows.Forms.PictureBox
-        $imagePath = $PSScriptRoot + "\..\Dependencies\Images\Office365.jpg"
-        $imgO365.ImageLocation = $imagePath
-        $imgO365.Left = $firstColumnLeft
-        $imgO365.Top = $topBannerHeight
-        $imgO365.AutoSize = $true
-        $pnlMain.Controls.Add($imgO365)
-
-        $pnlO365 = New-Object System.Windows.Forms.Panel
-        $pnlO365.Top = 88 + $topBannerHeight
-        $pnlO365.Left = $firstColumnLeft
-        $pnlO365.Height = 80
-        $pnlO365.Width = 300
-        $pnlO365.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
-
-        $chckO365AdminAuditLogConfig = New-Object System.Windows.Forms.CheckBox
-        $chckO365AdminAuditLogConfig.Top = 0
-        $chckO365AdminAuditLogConfig.AutoSize = $true;
-        $chckO365AdminAuditLogConfig.Name = "chckO365AdminAuditLogConfig"
-        $chckO365AdminAuditLogConfig.Checked = $true
-        $chckO365AdminAuditLogConfig.Text = "Admin Audit Log Config"
-        $pnlO365.Controls.Add($chckO365AdminAuditLogConfig)
-
-        $chckO365Group = New-Object System.Windows.Forms.CheckBox
-        $chckO365Group.Top = 20
-        $chckO365Group.AutoSize = $true;
-        $chckO365Group.Name = "chckO365Group"
-        $chckO365Group.Checked = $true
-        $chckO365Group.Text = "Groups"
-        $pnlO365.Controls.Add($chckO365Group);
-
-        $chckO365OrgCustomizationSetting = New-Object System.Windows.Forms.CheckBox
-        $chckO365OrgCustomizationSetting.Top = 40
-        $chckO365OrgCustomizationSetting.AutoSize = $true;
-        $chckO365OrgCustomizationSetting.Name = "chckO365OrgCustomizationSetting"
-        $chckO365OrgCustomizationSetting.Checked = $true
-        $chckO365OrgCustomizationSetting.Text = "Organization Customization Settings"
-        $pnlO365.Controls.Add($chckO365OrgCustomizationSetting);
-
-        $chckO365User = New-Object System.Windows.Forms.CheckBox
-        $chckO365User.Top = 60
-        $chckO365User.AutoSize = $true;
-        $chckO365User.Name = "chckO365User"
-        $chckO365User.Checked = $true
-        $chckO365User.Text = "Users"
-        $pnlO365.Controls.Add($chckO365User)
-
-        $chckAllO365 = New-Object System.Windows.Forms.CheckBox
-        $chckAllO365.Left = $FirstColumnLeft + 280
-        $chckAllO365.Top = $topBannerHeight + 40
-        $chckAllO365.Checked = $true
-        $chckAllO365.AutoSize = $true
-        $chckAllO365.Add_CheckedChanged( { SectionChanged -Control $chckAllO365 -Panel $pnlO365 })
-        $pnlMain.Controls.Add($chckAllO365)
-        #endregion
-
         #region Exchange
         $imgExo = New-Object System.Windows.Forms.PictureBox
         $imagePath = $PSScriptRoot + "\..\Dependencies\Images\Exchange.jpg"
@@ -988,6 +931,63 @@ function Show-O365GUI
         $chckAllPP.AutoSize = $true
         $chckAllPP.Add_CheckedChanged( { SectionChanged -Control $chckAllPP -Panel $pnlPP })
         $pnlMain.Controls.Add($chckAllPP)
+        #endregion
+
+        #region Office 365
+        $imgO365 = New-Object System.Windows.Forms.PictureBox
+        $imagePath = $PSScriptRoot + "\..\Dependencies\Images\Office365.jpg"
+        $imgO365.ImageLocation = $imagePath
+        $imgO365.Left = $fourthColumnLeft
+        $imgO365.Top = $topBannerHeight + $pnlOD.Height + $pnlPP.Height + 135
+        $imgO365.AutoSize = $true
+        $pnlMain.Controls.Add($imgO365)
+
+        $pnlO365 = New-Object System.Windows.Forms.Panel
+        $pnlO365.Top = $topBannerHeight + $pnlOD.Height + $pnlPP.Height + 135
+        $pnlO365.Left = $firstColumnLeft
+        $pnlO365.Height = 80
+        $pnlO365.Width = 300
+        $pnlO365.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+
+        $chckO365AdminAuditLogConfig = New-Object System.Windows.Forms.CheckBox
+        $chckO365AdminAuditLogConfig.Top = 0
+        $chckO365AdminAuditLogConfig.AutoSize = $true;
+        $chckO365AdminAuditLogConfig.Name = "chckO365AdminAuditLogConfig"
+        $chckO365AdminAuditLogConfig.Checked = $true
+        $chckO365AdminAuditLogConfig.Text = "Admin Audit Log Config"
+        $pnlO365.Controls.Add($chckO365AdminAuditLogConfig)
+
+        $chckO365Group = New-Object System.Windows.Forms.CheckBox
+        $chckO365Group.Top = 20
+        $chckO365Group.AutoSize = $true;
+        $chckO365Group.Name = "chckO365Group"
+        $chckO365Group.Checked = $true
+        $chckO365Group.Text = "Groups"
+        $pnlO365.Controls.Add($chckO365Group);
+
+        $chckO365OrgCustomizationSetting = New-Object System.Windows.Forms.CheckBox
+        $chckO365OrgCustomizationSetting.Top = 40
+        $chckO365OrgCustomizationSetting.AutoSize = $true;
+        $chckO365OrgCustomizationSetting.Name = "chckO365OrgCustomizationSetting"
+        $chckO365OrgCustomizationSetting.Checked = $true
+        $chckO365OrgCustomizationSetting.Text = "Organization Customization Settings"
+        $pnlO365.Controls.Add($chckO365OrgCustomizationSetting);
+
+        $chckO365User = New-Object System.Windows.Forms.CheckBox
+        $chckO365User.Top = 60
+        $chckO365User.AutoSize = $true;
+        $chckO365User.Name = "chckO365User"
+        $chckO365User.Checked = $true
+        $chckO365User.Text = "Users"
+        $pnlO365.Controls.Add($chckO365User)
+
+        $chckAllO365 = New-Object System.Windows.Forms.CheckBox
+        $chckAllO365.Left = $FirstColumnLeft + 280
+        $chckAllO365.Top = $topBannerHeight + 40
+        $chckAllO365.Checked = $true
+        $chckAllO365.AutoSize = $true
+        $chckAllO365.Add_CheckedChanged( { SectionChanged -Control $chckAllO365 -Panel $pnlO365 })
+        $pnlMain.Controls.Add($chckAllO365)
         #endregion
 
         $pnlMain.Controls.Add($pnlO365)
