@@ -6,7 +6,7 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Export', 'Purge', 'Retention')]
+        [ValidateSet('Export', 'Purge', 'Retention', 'Preview')]
         $Action,
 
         [Parameter(Mandatory = $true)]
@@ -136,7 +136,7 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Export', 'Purge', 'Retention')]
+        [ValidateSet('Export', 'Purge', 'Retention', 'Preview')]
         $Action,
 
         [Parameter(Mandatory = $true)]
@@ -211,6 +211,10 @@ function Set-TargetResource
 
         switch ($Action)
         {
+            "Preview"
+            {
+                $CreationParams.Add("Preview", $true)
+            }
             "Export"
             {
                 $CreationParams.Add("Report", $true)
@@ -459,7 +463,17 @@ function Get-ResultProperty
         $PropertyName
     )
 
-    $start = $ResultString.IndexOf($PropertyName) + $PropertyName.Length + 2
+    if([string]::IsNullOrEmpty($ResultString))
+    {
+        return ""
+    }
+    $indexOfPropertName = $ResultString.IndexOf($PropertyName)
+    if($indexOfPropertName -eq -1)
+    {
+        return ""
+    }
+
+    $start = $indexOfPropertName + $PropertyName.Length + 2
     $end = $ResultString.IndexOf(';', $start)
 
     $result = $null
@@ -496,7 +510,7 @@ function Get-CurrentAction
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Export', 'Purge', 'Retention')]
+        [ValidateSet('Export', 'Purge', 'Retention', 'Preview')]
         $Action
     )
     # For the sake of retrieving the current action, search by Action = Export;
@@ -523,7 +537,11 @@ function Get-CurrentAction
         }
     }
 
-    if ($null -eq $currentAction)
+    if ('Preview' -eq $Action)
+    {
+        $currentAction = $currentAction | Where-Object { $_.Action -eq 'Preview' }
+    }
+    elseif ($null -eq $currentAction)
     {
         $currentAction = Get-ComplianceSearchAction -Details | Where-Object { $_.SearchName -eq $SearchName -and $_.Action -eq $Action }
     }
