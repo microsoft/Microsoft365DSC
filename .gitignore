@@ -10,3 +10,6 @@ node_modules
 node_modules/*
 markdownissues.txt
 start-unittests.ps1
+TestDSCresource.ps1
+Modules/Office365DSC/DSCResources/MSFT_EXOMalwareFilterPolicy/Set-MalwareFilterPolicy.txt
+
