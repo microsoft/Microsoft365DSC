@@ -1,6 +1,6 @@
 # Change log for Office365Dsc
 
-## UNRELEASED
+## 1.0.3.1723
 
 * EXOHostedOutboundSpamFilterPolicy
   * BREAKING CHANGE: Remove IsSingleInstance and added
