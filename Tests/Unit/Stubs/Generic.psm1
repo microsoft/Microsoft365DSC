@@ -8,13 +8,15 @@ function Close-SessionsAndReturnError
     )
 
 }
-function Get-PSSession{
+function Get-PSSession
+{
     [CmdletBinding()]
     param(
     )
 }
 
-function Remove-PSSession{
+function Remove-PSSession
+{
     [CmdletBinding()]
     param(
     )
@@ -35,10 +37,10 @@ function Test-MSCloudLogin
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
-        [ValidateSet("Azure","AzureAD","SharePointOnline","ExchangeOnline", `
-                    "SecurityComplianceCenter","MSOnline","PnP", "PowerPlatforms", `
-                    "MicrosoftTeams","SkypeForBusiness")]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("Azure", "AzureAD", "SharePointOnline", "ExchangeOnline", `
+                "SecurityComplianceCenter", "MSOnline", "PnP", "PowerPlatforms", `
+                "MicrosoftTeams", "SkypeForBusiness")]
         [System.String]
         $Platform,
 
@@ -124,6 +126,66 @@ function Set-AtpPolicyForO365
     )
 }
 
+function Set-AddressBookPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AddressLists,
+
+        [Parameter()]
+        [System.String]
+        $GlobalAddressList,
+
+        [Parameter()]
+        [System.String]
+        $OfflineAddressBook,
+
+        [Parameter()]
+        [System.String]
+        $RoomList
+    )
+}
+
+function New-AddressBookPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AddressLists,
+
+        [Parameter()]
+        [System.String]
+        $GlobalAddressList,
+
+        [Parameter()]
+        [System.String]
+        $OfflineAddressBook,
+
+        [Parameter()]
+        [System.String]
+        $RoomList
+    )
+}
+
 function Remove-DkimSigningConfig
 {
     [CmdletBinding()]
@@ -176,6 +238,64 @@ function New-SafeAttachmentPolicy
         $RedirectAddress
     )
 }
+
+function Set-MalwareFilterRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf = @(),
+
+        [Parameter()]
+        [System.String]
+        $MalwareFilterPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm = $false
+    )
+}
+
+
 
 function New-SafeAttachmentRule
 {
@@ -571,6 +691,17 @@ function Get-SafeLinksRule
     )
 }
 
+
+function get-MalwareFilterRule
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
 function Remove-SafeAttachmentPolicy
 {
     [CmdletBinding()]
@@ -678,5 +809,387 @@ function Get-AllSPOPackages
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
+    )
+}
+
+# EXOAddressBookPolicy cmdlets
+function Get-AddressBookPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+# EXOOfflineAddressBook cmdlets
+function Get-OfflineAddressBook
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Set-OfflineAddressBook
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [ValidateLength(1, 64)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AddressLists = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ConfiguredAttributes = @(),
+
+        [Parameter()]
+        [System.String]
+        $DiffRetentionPeriod,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsDefault,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function New-OfflineAddressBook
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [ValidateLength(1, 64)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AddressLists = @(),
+
+        [Parameter()]
+        [System.String[]]
+        $ConfiguredAttributes = @(),
+
+        [Parameter()]
+        [System.String]
+        $DiffRetentionPeriod,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsDefault,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+# EXOAddressBookPolicy cmdlets
+function Get-AddressBookPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Set-AddressBookPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AddressLists,
+
+        [Parameter()]
+        [System.String]
+        $GlobalAddressList,
+
+        [Parameter()]
+        [System.String]
+        $OfflineAddressBook,
+
+        [Parameter()]
+        [System.String]
+        $RoomList,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function New-AddressBookPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AddressLists,
+
+        [Parameter()]
+        [System.String]
+        $GlobalAddressList,
+
+        [Parameter()]
+        [System.String]
+        $OfflineAddressBook,
+
+        [Parameter()]
+        [System.String]
+        $RoomList,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+# EXOGlobalAddressList cmdlets
+function Get-GlobalAddressList
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Set-GlobalAddressList
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [ValidateLength(1, 64)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCompany,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute1,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute10,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute11,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute12,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute13,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute14,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute15,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute2,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute3,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute4,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute5,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute6,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute7,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute8,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute9,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalDepartment,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalStateOrProvince,
+
+        [Parameter()]
+        [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
+        [System.String[]]
+        $IncludedRecipients,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function New-GlobalAddressList
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [ValidateLength(1, 64)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCompany,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute1,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute10,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute11,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute12,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute13,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute14,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute15,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute2,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute3,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute4,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute5,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute6,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute7,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute8,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute9,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalDepartment,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalStateOrProvince,
+
+        [Parameter()]
+        [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
+        [System.String[]]
+        $IncludedRecipients,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
     )
 }

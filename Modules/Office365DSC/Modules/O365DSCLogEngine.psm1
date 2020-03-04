@@ -82,17 +82,21 @@ function Add-O365DSCEvent
 
     try
     {
-        $CurrentLog = Get-EventLog -LogName 'Office365DSC' -Source $Source -ErrorAction SilentlyContinue
-        if ($null -eq $CurrentLog)
-        {
-            $CurrentLog = New-EventLog -LogName 'Office365DSC' -Source $Source -ErrorAction SilentlyContinue
-        }
         [System.Diagnostics.EventLog]::CreateEventSource($Source, "Office365DSC")
     }
     catch
     {
-        Write-Verbose $_
+        try
+        {
+            $CurrentLog = New-EventLog -LogName 'Office365DSC' -Source $Source -ErrorAction Stop
+            [System.Diagnostics.EventLog]::CreateEventSource($Source, "Office365DSC")
+        }
+        catch
+        {
+            Write-Verbose $_
+        }
     }
+
 
     try
     {
