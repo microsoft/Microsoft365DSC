@@ -1,5 +1,9 @@
 # Change log for Office365Dsc
 
+## UNRELEASED
+
+* TODO: Replace with changelog
+
 ## 1.0.3.1723
 
 * EXOHostedOutboundSpamFilterPolicy
