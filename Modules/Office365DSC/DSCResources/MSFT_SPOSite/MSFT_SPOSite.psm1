@@ -719,7 +719,7 @@ function Export-TargetResource
             GlobalAdminAccount = $GlobalAdminAccount
             Url                = $site.Url
             Template           = $site.Template
-            Owner              = $site.OwnerEmail
+            Owner              = $GlobalAdminAccount.UserName # Passing in bogus value to bypass null owner error
             Title              = $site.Title
             TimeZoneId         = $site.TimeZoneID
         }
