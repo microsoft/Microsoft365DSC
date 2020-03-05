@@ -25,6 +25,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
+
+        Mock -CommandName Set-AzureADUser -MockWith {
+        }
+
+        Mock -CommandName Set-AzureADUserLicense -MockWith {
+        }
+
+        Mock -CommandName Set-AzureADUserPassword -MockWith {
+        }
         # Test contexts
         Context -Name "When the user doesn't already exist" -Fixture {
             $testParams = @{
@@ -33,14 +42,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 FirstName          = "John"
                 LastName           = "Smith"
                 UsageLocation      = "US"
-                LicenseAssignment  = @("CONTOSO:ENTERPRISE_PREMIUM")
+                LicenseAssignment  = @("ENTERPRISE_PREMIUM")
                 Password           = $GlobalAdminAccount
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName New-MSOLUser -MockWith {
+            Mock -CommandName New-AzureADUser -MockWith {
                 return @{
                     UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                }
+            }
+
+            Mock -CommandName Get-AzureADSubscribedSku -MockWith {
+                return @{
+                    SkuPartNumber = "ENTERPRISE_PREMIUM"
+                    SkuID = '12345-12345-12345-12345-12345'
                 }
             }
 
@@ -64,25 +80,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 FirstName          = "John"
                 LastName           = "Smith"
                 UsageLocation      = "US"
-                LicenseAssignment  = @("CONTOSO:ENTERPRISE_PREMIUM")
+                LicenseAssignment  = @("ENTERPRISE_PREMIUM")
                 Password           = $GlobalAdminAccount
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-MSOLUser -MockWith {
+            Mock -CommandName Get-AzureADUser -MockWith {
                 return @{
                     UserPrincipalName    = "JohnSmith@contoso.onmicrosoft.com"
                     DisplayName          = "John Smith"
-                    FirstName            = "John"
-                    LastName             = "Smith"
+                    GivenName            = "John"
+                    Surname             = "Smith"
                     UsageLocation        = "US"
-                    Licenses             = @(@{
-                            AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
-                        })
-                    PasswordNeverExpires = $False
+                    PasswordPolicies     = "NONE"
                     Ensure               = "Present"
                 }
+            }
+
+            Mock -CommandName Get-AzureADUserLicenseDetail -MockWith {
+                return @(@{
+                    SkuPartNumber = 'ENTERPRISE_PREMIUM'
+                })
             }
 
             It "Should return present from the Get method" {
@@ -108,19 +127,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount   = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-MSOLUser -MockWith {
+            Mock -CommandName Get-AzureADUser -MockWith {
                 return @{
                     UserPrincipalName    = "JohnSmith@contoso.onmicrosoft.com"
                     DisplayName          = "John Smith"
-                    FirstName            = "John"
-                    LastName             = "Smith"
+                    GivenName            = "John"
+                    Surname             = "Smith"
                     UsageLocation        = "US"
-                    Licenses             = @(@{
-                            AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
-                        })
-                    PasswordNeverExpires = $false
+                    PasswordPolicies     = "NONE"
                     Ensure               = "Present"
                 }
+            }
+
+            Mock -CommandName Get-AzureADUserLicenseDetail -MockWith {
+                return @(@{
+                    SkuPartNumber = 'ENTERPRISE_PREMIUM'
+                })
             }
 
             It "Should return present from the Get method" {
@@ -141,17 +163,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-MSOLUser -MockWith {
+            Mock -CommandName Get-AzureADUser -MockWith {
                 return @{
                     UserPrincipalName    = "JohnSmith@contoso.onmicrosoft.com"
                     DisplayName          = "John Smith"
-                    FirstName            = "John"
-                    LastName             = "Smith"
+                    GivenName            = "John"
+                    Surname              = "Smith"
                     UsageLocation        = "US"
-                    Licenses             = @(@{
-                            AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
-                        })
-                    PasswordNeverExpires = $false
+                    PasswordPolicies     = "NONE"
                     Ensure               = "Present"
                 }
             }

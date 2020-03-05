@@ -49,7 +49,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "HostedOutboundSpamFilterPolicy update not required." -Fixture {
             $testParams = @{
-                IsSingleInstance                          = 'Yes'
                 Ensure                                    = 'Present'
                 Identity                                  = 'Default'
                 GlobalAdminAccount                        = $GlobalAdminAccount
@@ -62,10 +61,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-HostedOutboundSpamFilterPolicy -MockWith {
                 return @{
-                    IsSingleInstance                          = 'Yes'
-                    Ensure                                    = 'Present'
                     Identity                                  = 'Default'
-                    GlobalAdminAccount                        = $GlobalAdminAccount
                     AdminDisplayName                          = 'Default Outbound Spam Filter Policy'
                     BccSuspiciousOutboundMail                 = $true
                     BccSuspiciousOutboundAdditionalRecipients = @()
@@ -89,7 +85,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "HostedOutboundSpamFilterPolicy update needed." -Fixture {
             $testParams = @{
-                IsSingleInstance                          = 'Yes'
                 Ensure                                    = 'Present'
                 Identity                                  = 'Default'
                 GlobalAdminAccount                        = $GlobalAdminAccount

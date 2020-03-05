@@ -50,11 +50,11 @@ function Get-TargetResource
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-        -Platform SharePointOnline
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-        -Platform MSOnline
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform AzureAD
 
     $nullReturn = @{
         Url                  = $Url
@@ -71,7 +71,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting hub site collection $Url"
-        $site = Get-SPOSite $Url
+        $site = Get-PnPTenantSite -Url $Url
         if ($null -eq $site)
         {
             Write-Verbose -Message "The specified Site Collection doesn't already exist."
@@ -85,7 +85,7 @@ function Get-TargetResource
         }
         else
         {
-            $hubSite = Get-SPOHubSite -Identity $site
+            $hubSite = Get-PnPHubSite -Identity $Url
 
             $principals = @()
             foreach ($permission in $hubSite.Permissions.PrincipalName)
@@ -94,7 +94,7 @@ function Get-TargetResource
                 if ($result[0].StartsWith("c") -eq $true)
                 {
                     # Group permissions
-                    $group = Get-MsolGroup -ObjectId $result[2]
+                    $group = Get-AzureADGroup -ObjectId $result[2]
 
                     if ($null -eq $group.EmailAddress)
                     {
@@ -194,16 +194,16 @@ function Set-TargetResource
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-        -Platform SharePointOnline
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-        -Platform MSOnline
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform AzureAD
 
     try
     {
         Write-Verbose -Message "Setting hub site collection $Url"
-        $site = Get-SPOSite $Url
+        $site = Get-PnPTenantSite $Url
     }
     catch
     {
@@ -217,9 +217,10 @@ function Set-TargetResource
     if ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Configuring site collection as Hub Site"
-        Register-SPOHubSite -Site $site -Principals $AllowedToJoin | Out-Null
+        Register-PnPHubSite -Site $site.Url | Out-Null
+
         $params = @{
-            Identity = $site
+            Identity = $site.Url
         }
 
         if ($PSBoundParameters.ContainsKey("Title") -eq $true)
@@ -250,12 +251,12 @@ function Set-TargetResource
         if ($params.Count -ne 1)
         {
             Write-Verbose -Message "Updating Hub Site properties"
-            Set-SPOHubSite @params | Out-Null
+            Set-PnPHubSite @params | Out-Null
         }
 
         if ($PSBoundParameters.ContainsKey("AllowedToJoin") -eq $true)
         {
-            $groups = Get-MsolGroup -All
+            $groups = Get-AzureADGroup
             $regex = "^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
 
             Write-Verbose -Message "Validating AllowedToJoin principals"
@@ -274,14 +275,14 @@ function Set-TargetResource
                     }
                 }
             }
-            Grant-SPOHubSiteRights -Identity $site -Principals $AllowedToJoin -Rights Join | Out-Null
+            Grant-PnPHubSiteRights -Identity $site.Url -Principals $AllowedToJoin -Rights Join | Out-Null
         }
     }
     elseif ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Present")
     {
         Write-Verbose -Message "Updating Hub Site settings"
         $params = @{
-            Identity = $site
+            Identity = $site.Url
         }
 
         if ($PSBoundParameters.ContainsKey("Title") -eq $true -and
@@ -317,7 +318,7 @@ function Set-TargetResource
         if ($params.Count -ne 1)
         {
             Write-Verbose -Message "Updating Hub Site properties"
-            Set-SPOHubSite @params | Out-Null
+            Set-PnPHubSite @params | Out-Null
         }
 
         if ($PSBoundParameters.ContainsKey("AllowedToJoin") -eq $true)
@@ -333,7 +334,7 @@ function Set-TargetResource
 
             if ($null -ne $differences)
             {
-                $groups = Get-MsolGroup -All
+                $groups = Get-AzureADGroup
                 $regex = "^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
 
                 Write-Verbose -Message "Updating Hub Site permissions"
@@ -357,12 +358,12 @@ function Set-TargetResource
                                 }
                             }
                         }
-                        Grant-SPOHubSiteRights -Identity $site -Principals $item.InputObject -Rights Join | Out-Null
+                        Grant-PnPHubSiteRights -Identity $site.Url -Principals $item.InputObject -Rights 'Join' | Out-Null
                     }
                     else
                     {
                         # Remove item from principals
-                        Revoke-SPOHubSiteRights -Identity $site -Principals $item.InputObject | Out-Null
+                        Grant-PnPHubSiteRights -Identity $site.Url -Principals $item.InputObject -Rights 'None' | Out-Null
                     }
                 }
             }
@@ -371,7 +372,7 @@ function Set-TargetResource
     else
     {
         # Remove hub site
-        Unregister-SPOHubSite -Identity $site -Force
+        Unregister-PnPHubSite -Site $site.Url
     }
 }
 
@@ -463,9 +464,9 @@ function Export-TargetResource
     #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SharePointOnline
+        -Platform PnP
 
-    $hubSites = Get-SPOHubSite
+    $hubSites = Get-PnPHubSite
 
     $i = 1
     $content = ''

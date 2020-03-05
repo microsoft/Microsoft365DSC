@@ -5,13 +5,8 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Yes')]
-        [String]
-        $IsSingleInstance,
-
-        [Parameter()]
         [System.String]
-        $Identity = 'Default',
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -68,7 +63,6 @@ function Get-TargetResource
     {
         $result = @{
             Ensure                                    = 'Present'
-            IsSingleInstance                          = 'Yes'
             Identity                                  = $Identity
             AdminDisplayName                          = $HostedOutboundSpamFilterPolicy.AdminDisplayName
             BccSuspiciousOutboundAdditionalRecipients = $HostedOutboundSpamFilterPolicy.BccSuspiciousOutboundAdditionalRecipients
@@ -90,13 +84,8 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Yes')]
-        [String]
-        $IsSingleInstance,
-
-        [Parameter()]
         [System.String]
-        $Identity = 'Default',
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -142,7 +131,6 @@ function Set-TargetResource
     $HostedOutboundSpamFilterPolicyParams = $PSBoundParameters
     $HostedOutboundSpamFilterPolicyParams.Remove('Ensure') | Out-Null
     $HostedOutboundSpamFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
-    $HostedOutboundSpamFilterPolicyParams.Remove('IsSingleInstance') | Out-Null
 
     Write-Verbose -Message "Setting HostedOutboundSpamFilterPolicy $Identity with values: $(Convert-O365DscHashtableToString -Hashtable $HostedOutboundSpamFilterPolicyParams)"
     Set-HostedOutboundSpamFilterPolicy @HostedOutboundSpamFilterPolicyParams
@@ -155,13 +143,8 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Yes')]
-        [String]
-        $IsSingleInstance,
-
-        [Parameter()]
         [System.String]
-        $Identity = 'Default',
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -202,7 +185,6 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
-    $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
     $ValuesToCheck.Remove('Verbose') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
@@ -242,7 +224,6 @@ function Export-TargetResource
     {
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
-            IsSingleInstance   = 'Yes'
             Identity           = $HostedOutboundSpamFilterPolicy.Identity
         }
         $result = Get-TargetResource @params
