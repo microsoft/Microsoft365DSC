@@ -14,3 +14,5 @@ TestDSCresource.ps1
 Modules/Office365DSC/DSCResources/MSFT_EXOMalwareFilterPolicy/Set-MalwareFilterPolicy.txt
 
 Modules/start-extraction.ps1
+Modules/Office365DSC/DSCResources/MSFT_EXOAvailabilityAddressSpace/Add-AvailabilityAddressSpace-parameterset.txt
+*.log
