@@ -198,7 +198,7 @@ function Get-TargetResource
             StorageMaximumLevel                         = $site.StorageMaximumLevel
             StorageWarningLevel                         = $site.StorageWarningLevel
             AllowSelfServiceUpgrade                     = $site.AllowSelfServiceUpgrade
-            Owner                                       = $site.OwnerEmail
+            Owner                                       = $site.Owner
             CommentsOnSitePagesDisabled                 = $site.CommentsOnSitePagesDisabled
             DefaultLinkPermission                       = $site.DefaultLinkPermission
             DefaultSharingLinkType                      = $site.DefaultSharingLinkType
@@ -720,7 +720,7 @@ function Export-TargetResource
             GlobalAdminAccount = $GlobalAdminAccount
             Url                = $site.Url
             Template           = $site.Template
-            Owner              = $site.OwnerEmail
+            Owner              = $site.Owner
             Title              = $site.Title
             TimeZoneId         = $site.TimeZoneID
         }
