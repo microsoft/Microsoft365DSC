@@ -368,7 +368,6 @@ function Set-TargetResource
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("Ensure") | Out-Null
     $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
-    $context = Get-PnPContext
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
         $CreationParams = @{
