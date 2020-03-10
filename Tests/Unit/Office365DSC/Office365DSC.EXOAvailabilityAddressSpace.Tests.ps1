@@ -1,4 +1,5 @@
 [CmdletBinding()]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
 param(
     [Parameter()]
     [string]
