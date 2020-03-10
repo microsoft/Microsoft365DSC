@@ -574,7 +574,7 @@ function Export-TargetResource
             $principal = $organization.Split(".")[0]
         }
     }
-    $users = Get-AzureADUser
+    $users = Get-AzureADUser -All $true
     $content = ''
     $partialContent = ""
     $i = 1
