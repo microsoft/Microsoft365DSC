@@ -14,10 +14,14 @@ function Get-TargetResource
         $Title,
 
         [Parameter(Mandatory = $true)]
+        [System.String]
+        $Owner,
+
+        [Parameter(Mandatory = $true)]
         [System.UInt32]
         $TimeZoneId,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Template,
 
@@ -47,10 +51,6 @@ function Get-TargetResource
         $AllowSelfServiceUpgrade,
 
         [Parameter()]
-        [System.String]
-        $Owner,
-
-        [Parameter()]
         [System.Boolean]
         $CommentsOnSitePagesDisabled,
 
@@ -77,6 +77,44 @@ function Get-TargetResource
         [Parameter()]
         [System.UInt32]
         $LocaleId,
+
+        [Parameter()]
+        [System.Boolean]
+        $DenyAddAndCustomizePages,
+
+        [Parameter()]
+        [System.boolean]
+        $SocialBarOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
+        $RestrictedToRegion,
+
+        [Parameter()]
+        [System.String]
+        $SharingAllowedDomainList,
+
+        [Parameter()]
+        [System.String]
+        $SharingBlockedDomainList,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("None", "AllowList", "BlockList")]
+        $SharingDomainRestrictionMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShowPeoplePickerSuggestionsForGuestUsers,
+
+        [Parameter()]
+        [System.UInt32]
+        $AnonymousLinkExpirationInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $OverrideTenantAnonymousLinkExpirationPolicy,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -141,32 +179,45 @@ function Get-TargetResource
             $DisableFlowValue = $false
         }
 
+        $DenyAddAndCustomizePagesValue = $true
+        if ($site.DenyAddAndCustomizePagesValue -eq 'Enabled')
+        {
+            $DenyAddAndCustomizePagesValue = $false
+        }
+
         return @{
-            Url                            = $Url
-            Title                          = $site.Title
-            Template                       = $site.Template
-            TimeZoneId                     = $site.TimeZoneId
-            HubUrl                         = $CurrentHubUrl
-            Classification                 = $site.Classification
-            DisableFlows                   = $DisableFlowValue
-            LogoFilePath                   = $LogoFilePath
-            SharingCapability              = $site.SharingCapabilities
-            StorageMaximumLevel            = $site.StorageMaximumLevel
-            StorageWarningLevel            = $site.StorageWarningLevel
-            AllowSelfServiceUpgrade        = $site.AllowSelfServiceUpgrade
-            Owner                          = $site.Owner
-            CommentsOnSitePagesDisabled    = $site.CommentsOnSitePagesDisabled
-            DefaultLinkPermission          = $site.DefaultLinkPermission
-            DefaultSharingLinkType         = $site.DefaultSharingLinkType
-            DisableAppViews                = $site.DisableAppViews
-            DisableCompanyWideSharingLinks = $site.DisableCompanyWideSharingLinks
-            DisableSharingForNonOwners     = $DisableSharingForNonOwners
-            LocaleId                       = $site.Lcid
-            RestrictedToGeo                = $site.RestrictedToRegion
-            SocialBarOnSitePagesDisabled   = $site.SocialBarOnSitePagesDisabled
-            SiteDesign                     = $SiteDesign
-            Ensure                         = 'Present'
-            GlobalAdminAccount             = $GlobalAdminAccount
+            Url                                         = $Url
+            Title                                       = $site.Title
+            Template                                    = $site.Template
+            TimeZoneId                                  = $site.TimeZoneId
+            HubUrl                                      = $CurrentHubUrl
+            Classification                              = $site.Classification
+            DisableFlows                                = $DisableFlowValue
+            LogoFilePath                                = $LogoFilePath
+            SharingCapability                           = $site.SharingCapabilities
+            StorageMaximumLevel                         = $site.StorageMaximumLevel
+            StorageWarningLevel                         = $site.StorageWarningLevel
+            AllowSelfServiceUpgrade                     = $site.AllowSelfServiceUpgrade
+            Owner                                       = $site.Owner
+            CommentsOnSitePagesDisabled                 = $site.CommentsOnSitePagesDisabled
+            DefaultLinkPermission                       = $site.DefaultLinkPermission
+            DefaultSharingLinkType                      = $site.DefaultSharingLinkType
+            DisableAppViews                             = $site.DisableAppViews
+            DisableCompanyWideSharingLinks              = $site.DisableCompanyWideSharingLinks
+            DisableSharingForNonOwners                  = $DisableSharingForNonOwners
+            LocaleId                                    = $site.Lcid
+            RestrictedToRegion                          = $RestrictedToRegion
+            SocialBarOnSitePagesDisabled                = $SocialBarOnSitePagesDisabled
+            SiteDesign                                  = $SiteDesign
+            DenyAddAndCustomizePages                    = $DenyAddAndCustomizePagesValue
+            SharingAllowedDomainList                    = $SharingAllowedDomainList
+            SharingBlockedDomainList                    = $SharingBlockedDomainList
+            SharingDomainRestrictionMode                = $SharingDomainRestrictionMode
+            ShowPeoplePickerSuggestionsForGuestUsers    = $ShowPeoplePickerSuggestionsForGuestUsers
+            AnonymousLinkExpirationInDays               = $AnonymousLinkExpirationInDays
+            OverrideTenantAnonymousLinkExpirationPolicy = $OverrideTenantAnonymousLinkExpirationPolicy
+            Ensure                                      = 'Present'
+            GlobalAdminAccount                          = $GlobalAdminAccount
         }
     }
     catch
@@ -190,10 +241,14 @@ function Set-TargetResource
         $Title,
 
         [Parameter(Mandatory = $true)]
+        [System.String]
+        $Owner,
+
+        [Parameter(Mandatory = $true)]
         [System.UInt32]
         $TimeZoneId,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Template,
 
@@ -223,10 +278,6 @@ function Set-TargetResource
         $AllowSelfServiceUpgrade,
 
         [Parameter()]
-        [System.String]
-        $Owner,
-
-        [Parameter()]
         [System.Boolean]
         $CommentsOnSitePagesDisabled,
 
@@ -253,6 +304,44 @@ function Set-TargetResource
         [Parameter()]
         [System.UInt32]
         $LocaleId,
+
+        [Parameter()]
+        [System.Boolean]
+        $DenyAddAndCustomizePages,
+
+        [Parameter()]
+        [System.boolean]
+        $SocialBarOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
+        $RestrictedToRegion,
+
+        [Parameter()]
+        [System.String]
+        $SharingAllowedDomainList,
+
+        [Parameter()]
+        [System.String]
+        $SharingBlockedDomainList,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("None", "AllowList", "BlockList")]
+        $SharingDomainRestrictionMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShowPeoplePickerSuggestionsForGuestUsers,
+
+        [Parameter()]
+        [System.UInt32]
+        $AnonymousLinkExpirationInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $OverrideTenantAnonymousLinkExpirationPolicy,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -357,6 +446,58 @@ function Set-TargetResource
 
         Set-PnPTenantSite @UpdateParams -ErrorAction Stop
 
+        $site = Get-PnpTenantSite $Url
+        #region Ad-Hoc properties
+        if (-not [System.String]::IsNullOrEmpty($DenyAddAndCustomizePages))
+        {
+            if ($DenyAddAndCustomizePages)
+            {
+                $site.DenyAddAndCustomizePages = 'Enabled'
+            }
+            else
+            {
+                $site.DenyAddAndCustomizePages = 'Disabled'
+            }
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($RestrictedToRegion))
+        {
+            $site.RestrictedToRegion = $RestrictedToRegion
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($SocialBarOnSitePagesDisabled))
+        {
+            $site.SocialBarOnSitePagesDisabled = $SocialBarOnSitePagesDisabled
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($SharingAllowedDomainList))
+        {
+            $site.SharingAllowedDomainList = $SharingAllowedDomainList
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($SharingBlockedDomainList))
+        {
+            $site.SharingBlockedDomainList = $SharingBlockedDomainList
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($SharingDomainRestrictionMode))
+        {
+            $site.SharingDomainRestrictionMode = $SharingDomainRestrictionMode
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($AnonymousLinkExpirationInDays))
+        {
+            $site.AnonymousLinkExpirationInDays = $AnonymousLinkExpirationInDays
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($OverrideTenantAnonymousLinkExpirationPolicy))
+        {
+            $site.OverrideTenantAnonymousLinkExpirationPolicy = $OverrideTenantAnonymousLinkExpirationPolicy
+        }
+        $site.Update() | Out-Null
+        $context.ExecuteQuery()
+        #endregion
+
         Write-Verbose -Message "Settings Updated"
         if ($PSBoundParameters.ContainsKey("HubUrl"))
         {
@@ -403,10 +544,14 @@ function Test-TargetResource
         $Title,
 
         [Parameter(Mandatory = $true)]
+        [System.String]
+        $Owner,
+
+        [Parameter(Mandatory = $true)]
         [System.UInt32]
         $TimeZoneId,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Template,
 
@@ -436,10 +581,6 @@ function Test-TargetResource
         $AllowSelfServiceUpgrade,
 
         [Parameter()]
-        [System.String]
-        $Owner,
-
-        [Parameter()]
         [System.Boolean]
         $CommentsOnSitePagesDisabled,
 
@@ -466,6 +607,44 @@ function Test-TargetResource
         [Parameter()]
         [System.UInt32]
         $LocaleId,
+
+        [Parameter()]
+        [System.Boolean]
+        $DenyAddAndCustomizePages,
+
+        [Parameter()]
+        [System.boolean]
+        $SocialBarOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("NoRestriction", "BlockMoveOnly", "BlockFull", "Unknown")]
+        $RestrictedToRegion,
+
+        [Parameter()]
+        [System.String]
+        $SharingAllowedDomainList,
+
+        [Parameter()]
+        [System.String]
+        $SharingBlockedDomainList,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("None", "AllowList", "BlockList")]
+        $SharingDomainRestrictionMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShowPeoplePickerSuggestionsForGuestUsers,
+
+        [Parameter()]
+        [System.UInt32]
+        $AnonymousLinkExpirationInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $OverrideTenantAnonymousLinkExpirationPolicy,
 
         [Parameter()]
         [ValidateSet("Present", "Absent")]
@@ -516,7 +695,7 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PnP
 
-    $sites = Get-PnPTenantSite
+    $sites = Get-PnPTenantSite | Where-Object -FilterScript {$_.Template -ne 'SRCHCEN#0' -and $_.Template -ne 'SPSMSITEHOST#0'}
 
     $partialContent = ""
     $content = ''
@@ -534,36 +713,45 @@ function Export-TargetResource
     }
     foreach ($site in $sites)
     {
+        $site = Get-PnPTenantSite -Url $site.Url
         Write-Information "    - [$i/$($sites.Length)] $($site.Url)"
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             Url                = $site.Url
             Template           = $site.Template
+            Owner              = $site.Owner
             Title              = $site.Title
             TimeZoneId         = $site.TimeZoneID
         }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $result = Remove-NullEntriesFromHashTable -Hash $result
+        try
+        {
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $result = Remove-NullEntriesFromHashTable -Hash $result
 
-        $content += "        SPOSite " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
-        if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
-        {
-            $partialContent = $partialContent -ireplace [regex]::Escape($principal + ".sharepoint.com"), "`$(`$OrganizationName.Split('.')[0]).sharepoint.com"
+            $content += "        SPOSite " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+            if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape($principal + ".sharepoint.com"), "`$(`$OrganizationName.Split('.')[0]).sharepoint.com"
+            }
+            if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+            }
+            if ($partialContent.ToLower().Contains("@" + $principal.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$OrganizationName.Split('.')[0])"
+            }
+            $content += $partialContent
+            $content += "        }`r`n"
         }
-        if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+        catch
         {
-            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+            Write-Information $_
         }
-        if ($partialContent.ToLower().Contains("@" + $principal.ToLower()))
-        {
-            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$OrganizationName.Split('.')[0])"
-        }
-        $content += $partialContent
-        $content += "        }`r`n"
         $i++
     }
     return $content

@@ -114,9 +114,7 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-    $AllRemoteDomains = Get-RemoteDomain
-
-    $RemoteDomain = ($AllRemoteDomains | Where-Object -FilterScript { $_.Identity -IMatch $Identity })
+    $RemoteDomain = Get-RemoteDomain -Identity $Identity -ErrorAction SilentlyContinue
 
     if ($null -eq $RemoteDomain)
     {

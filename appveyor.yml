@@ -1,4 +1,4 @@
-version: 1.0.2.{build}
+version: 1.0.4.{build}
 
 install:
     - git clone https://github.com/PowerShell/DscResource.Tests
@@ -11,9 +11,9 @@ install:
         Install-Module ReverseDSC -RequiredVersion 2.0.0.2 -Force
         Install-Module AzureAD -RequiredVersion 2.0.2.4 -Force
         Install-Module MicrosoftTeams -RequiredVersion 1.0.3 -Force
+        Install-Module MSCloudLoginAssistant -RequiredVersion 1.0.2 -Force
         Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.18.2002.0 -Force
-        Install-Module MSCloudLoginAssistant -RequiredVersion 1.0.0 -Force
-        Install-Module Microsoft.PowerApps.Administration.PowerShell -RequiredVersion 2.0.37 -Force
+        Install-Module Microsoft.PowerApps.Administration.PowerShell -RequiredVersion 2.0.42 -Force
 
         $webClient = new-object System.Net.WebClient
         $url = "https://github.com/Microsoft/Office365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_19515-12000_x64_en-us.msi?raw=true"
