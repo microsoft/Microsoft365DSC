@@ -358,7 +358,7 @@ function Export-TargetResource
     $content = ''
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform AzureAD
-    $groups = Get-AzureADGroup | Where-Object -FilterScript {
+    $groups = Get-AzureADGroup -All $true | Where-Object -FilterScript {
         $_.MailNickName -ne "00000000-0000-0000-0000-000000000000"
     }
 
