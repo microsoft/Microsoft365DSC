@@ -40,7 +40,16 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-    $AvailabilityAddressSpaces = Get-AvailabilityAddressSpace
+    try
+    {
+        $AvailabilityAddressSpaces = Get-AvailabilityAddressSpace -ea stop
+    }
+    catch
+    {
+        New-Office365DSCLogEntry -Error $_ -Message "Couldn't get AvailabilityAddressSpaces" -Source $MyInvocation.MyCommand.ModuleName
+    }
+
+
 
     $AvailabilityAddressSpace = $AvailabilityAddressSpaces | Where-Object -FilterScript { $_.Identity -eq $Identity }
     if ($null -eq $AvailabilityAddressSpace)
@@ -54,10 +63,12 @@ function Get-TargetResource
     {
 
 
-        if ($Null -eq $AvailabilityAddressSpace.TargetAutodiscoverEpr -or $AvailabilityAddressSpace.TargetAutodiscoverEpr -eq "" ) {
+        if ($Null -eq $AvailabilityAddressSpace.TargetAutodiscoverEpr -or $AvailabilityAddressSpace.TargetAutodiscoverEpr -eq "" )
+        {
             $TargetAutodiscoverEpr = ""
         }
-        else {
+        else
+        {
             $TargetAutodiscoverEpr = $AvailabilityAddressSpace.TargetAutodiscoverEpr.tostring()
         }
 
@@ -118,7 +129,15 @@ function Set-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-    $AvailabilityAddressSpaces = Get-AvailabilityAddressSpace
+    try
+    {
+        $AvailabilityAddressSpaces = Get-AvailabilityAddressSpace -ea stop
+    }
+    catch
+    {
+        New-Office365DSCLogEntry -Error $_ -Message "Couldn't get AvailabilityAddressSpaces" -Source $MyInvocation.MyCommand.ModuleName
+    }
+
     $AvailabilityAddressSpace = $AvailabilityAddressSpaces | Where-Object -FilterScript { $_.Identity -eq $Identity }
     $AvailabilityAddressSpaceParams = $PSBoundParameters
     $AvailabilityAddressSpaceParams.Remove('Ensure') | Out-Null
@@ -128,20 +147,48 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating AvailabilityAddressSpace $($Identity)."
         # AvailabilityAddressSpace doe not have a new-AvailabilityAddressSpace cmdlet but instead uses an add-AvailabilityAddressSpace cmdlet
-        add-AvailabilityAddressSpace @AvailabilityAddressSpaceParams
+        try
+        {
+            add-AvailabilityAddressSpace @AvailabilityAddressSpaceParams -ea stop
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Couldn't add new AvailabilityAddressSpace" -Source $MyInvocation.MyCommand.ModuleName
+        }
     }
     elseif (('Present' -eq $Ensure ) -and ($Null -ne $AvailabilityAddressSpace))
     {
         Write-Verbose -Message "Setting AvailabilityAddressSpace $($Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $AvailabilityAddressSpaceParams)"
         # AvailabilityAddressSpace is a special case in that it does not have a "set-AvailabilityAddressSpace" cmdlet. To change values of an existing AvailabilityAddressSpace it must be removed and then added again with add-AvailabilityAddressSpace
+        try
+        {
+            Remove-AvailabilityAddressSpace -identity $Identity -Confirm:$false -ea stop
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Couldn't remove AvailabilityAddressSpace" -Source $MyInvocation.MyCommand.ModuleName
+        }
 
-        Remove-AvailabilityAddressSpace -identity $Identity -Confirm:$false
-        add-AvailabilityAddressSpace @AvailabilityAddressSpaceParams
+        try
+        {
+            add-AvailabilityAddressSpace @AvailabilityAddressSpaceParams -ea stop
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Couldn't add new AvailabilityAddressSpace" -Source $MyInvocation.MyCommand.ModuleName
+        }
     }
     elseif (('Absent' -eq $Ensure ) -and ($null -ne $AvailabilityAddressSpace))
     {
         Write-Verbose -Message "Removing AvailabilityAddressSpace $($Identity)"
-        Remove-AvailabilityAddressSpace -Identity $Identity -Confirm:$false
+        try
+        {
+            Remove-AvailabilityAddressSpace -identity $Identity -Confirm:$false -ea stop
+        }
+        catch
+        {
+            New-Office365DSCLogEntry -Error $_ -Message "Couldn't remove AvailabilityAddressSpace" -Source $MyInvocation.MyCommand.ModuleName
+        }
     }
 }
 function Test-TargetResource
@@ -216,7 +263,15 @@ function Export-TargetResource
         -Platform ExchangeOnline `
         -ErrorAction SilentlyContinue
 
-    [array]$AvailabilityAddressSpaces = Get-AvailabilityAddressSpace
+    try
+    {
+            [array]$AvailabilityAddressSpaces = Get-AvailabilityAddressSpace -ea stop
+    }
+    catch
+    {
+        New-Office365DSCLogEntry -Error $_ -Message "Couldn't get AvailabilityAddressSpaces" -Source $MyInvocation.MyCommand.ModuleName
+    }
+
     $content = ""
     $i = 1
     foreach ($AvailabilityAddressSpace in $AvailabilityAddressSpaces)
