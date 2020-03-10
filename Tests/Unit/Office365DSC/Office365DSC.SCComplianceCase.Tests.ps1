@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SCComplianceCase"
+    -DscResource "SCComplianceCase" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -198,45 +200,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            $testCase1 = @{
+            $testCase = @{
                 Name        = "TestCase1"
                 Status      = "Active"
                 Description = "This is a test Case (1)"
             }
 
-            $testCase2 = @{
-                Name        = "TestCase2"
-                Status      = "Active"
-                Description = "This is a test Case (2)"
+            Mock -CommandName Get-ComplianceCase -MockWith {
+                return $testCase
             }
-
-            Mock -CommandName Get-ComplianceCase -ParameterFilter { $Name -eq "TestCase1" }  -MockWith {
-                return $testCase1
-            }
-
-            Mock -CommandName Get-ComplianceCase -ParameterFilter { $Name -eq "TestCase2" } -MockWith {
-                return $testCase2
-            }
-
-            It "Should Reverse Engineer resource from the Export method when single result" {
-                Mock -CommandName Get-ComplianceCase -MockWith {
-                    return $testCase1
-                }
-
+            It "Should Reverse Engineer resource from the Export method" {
                 $exported = Export-TargetResource @testParams
-                ([regex]::Matches($exported, " SCComplianceCase " )).Count | Should Be 1
+                [regex]::Matches($exported, " SCComplianceCase " )
                 $exported.Contains("TestCase1") | Should Be $true
-            }
-
-            It "Should Reverse Engineer resource from the Export method when multiple results" {
-                Mock -CommandName Get-ComplianceCase -MockWith {
-                    return @($testCase1, $testCase2)
-                }
-
-                $exported = Export-TargetResource @testParams
-                ([regex]::Matches($exported, " SCComplianceCase " )).Count | Should Be 2
-                $exported.Contains("TestCase1") | Should Be $true
-                $exported.Contains("TestCase2") | Should Be $true
             }
         }
     }

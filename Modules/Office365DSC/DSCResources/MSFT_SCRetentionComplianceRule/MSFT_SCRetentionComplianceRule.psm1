@@ -54,6 +54,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of RetentionComplianceRule for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
@@ -146,6 +152,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of RetentionComplianceRule for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
@@ -257,30 +269,83 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Policy,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    $InformationPreference = 'Continue'
 
-    if ([System.String]::IsNullOrEmpty($result.ExpirationDateOption))
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SecurityComplianceCenter `
+        -ErrorAction SilentlyContinue
+
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
+    if ($GlobalAdminAccount.UserName.Contains("@"))
     {
-        $result.Remove("ExpirationDateOption")
-    }
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
 
-    $content = "        SCRetentionComplianceRule " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
+    }
+    $policies = Get-RetentionCompliancePolicy
+
+    $j = 1
+    $content = ''
+    $policiesLength = $policies.Length
+    if ($null -eq $policiesLength)
+    {
+        $policiesLength = 1
+    }
+    foreach ($policy in $policies)
+    {
+        $rules = Get-RetentionComplianceRule -Policy $policy.Name
+        Write-Information "    - Policy [$j/$($policiesLength)] $($policy.Name)"
+        $i = 1
+        $rulesLength = $rules.Length
+        if ($null -eq $rulesLength)
+        {
+            $rulesLength = 1
+        }
+        foreach ($rule in $rules)
+        {
+            Write-Information "        - [$i/$($rulesLength)] $($rule.Name)"
+            $params = @{
+                GlobalAdminAccount = $GlobalAdminAccount
+                Name               = $rule.Name
+                Policy             = $rule.Policy
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+
+            if ([System.String]::IsNullOrEmpty($result.ExpirationDateOption))
+            {
+                $result.Remove("ExpirationDateOption")
+            }
+
+            $content += "        SCRetentionComplianceRule " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+            if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+                    $partialContent.ToLower().Contains($principal.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+            }
+            $content += $partialContent
+            $content += "        }`r`n"
+            $i++
+        }
+        $j++
+    }
     return $content
 }
 

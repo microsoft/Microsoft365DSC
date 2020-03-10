@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365DSC.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SPOSearchResultSource"
+    -DscResource "SPOSearchResultSource" -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -148,6 +150,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Update the managed property in the Set method" {
                 Set-TargetResource @testParams
+            }
+        }
+
+        Context -Name "ReverseDSC Tests" -Fixture {
+            $testParams = @{
+                GlobalAdminAccount          = $GlobalAdminAccount
+            }
+
+            Mock -CommandName Get-PnPSearchConfiguration -MockWith {
+                return $existingValueXML
+            }
+
+            It "Should Reverse Engineer resource from the Export method" {
+                Export-TargetResource @testParams
             }
         }
     }

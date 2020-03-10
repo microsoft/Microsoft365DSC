@@ -10,7 +10,12 @@ param
 
     [Parameter(Mandatory = $true)]
     [System.String]
-    $Domain
+    $Domain,
+
+    [Parameter()]
+    [System.String]
+    [ValidateSet('Public', 'GCC', 'GCCH', 'Germany', 'China')]
+    $Environment = 'Public'
 )
 
 Configuration Master
@@ -23,7 +28,12 @@ Configuration Master
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Domain
+        $Domain,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Public', 'GCC', 'GCCH', 'Germany', 'China')]
+        $Environment = 'Public'
     )
 
     Import-DscResource -ModuleName Office365DSC
@@ -96,15 +106,20 @@ Configuration Master
             Ensure                  = "Present"
         }#>
 
+        $CASIdentity = 'ExchangeOnlineEssentials-759100cd-4fb6-46db-80ae-bb0ef4bd92b0'
+        if ($Environment -eq 'GCC')
+        {
+            $CASIdentity = 'ExchangeOnlineEssentials-84fb79e4-1527-4f11-b2b9-48635783fcb2'
+        }
         EXOCASMailboxPlan CASMailboxPlan
         {
             ActiveSyncEnabled  = $True;
             OwaMailboxPolicy   = "OwaMailboxPolicy-Default";
             GlobalAdminAccount = $GlobalAdmin;
             PopEnabled         = $True;
-            Identity           = "ExchangeOnlineEssentials-759100cd-4fb6-46db-80ae-bb0ef4bd92b0";
+            Identity           = $CASIdentity;
             Ensure             = "Present";
-            ImapEnabled        = $True;
+            ImapEnabled        = $True
         }
 
         EXOClientAccessRule ClientAccessRule
@@ -230,14 +245,19 @@ Configuration Master
             DependsOn          = "[O365User]JohnSmith"
         }
 
-        PPPowerAppsEnvironment IntegrationPAEnvironment
+        # TODO - Re-assess current issue with PowerApps module
+        <#if ($Environment -ne 'GCC')
         {
-            DisplayName          = "Integration PowerApps Environment";
-            Ensure               = "Present";
-            EnvironmentSKU       = "Production";
-            GlobalAdminAccount   = $GlobalAdmin;
-            Location             = "canada";
-        }
+            $location = 'canada'
+            PPPowerAppsEnvironment IntegrationPAEnvironment
+            {
+                DisplayName          = "Integration PowerApps Environment";
+                Ensure               = "Present"
+                EnvironmentSKU       = "Production";
+                GlobalAdminAccount   = $GlobalAdmin;
+                Location             = $location;
+            }
+        }#>
 
         SCAuditConfigurationPolicy SharePointAuditPolicy
         {
@@ -333,12 +353,12 @@ Configuration Master
         SCCaseHoldPolicy DemoCaseHoldPolicy
         {
             Case                 = "Integration Case";
-            ExchangeLocation     = "SharePointConference2019@o365dsc.onmicrosoft.com";
+            ExchangeLocation     = "John.Smith@$Domain";
             Name                 = "Integration Hold"
             PublicFolderLocation = "All";
             Comment              = "This is a test for integration"
-            Ensure               = "Present";
-            Enabled              = $True;
+            Ensure               = "Present"
+            Enabled              = $True
             GlobalAdminAccount   = $GlobalAdmin;
         }
 
@@ -373,7 +393,7 @@ Configuration Master
         {
             Name               = "MyDLPPolicy"
             Comment            = "Test Policy"
-            Priority           = 1
+            Priority           = 0
             SharePointLocation = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
@@ -386,10 +406,26 @@ Configuration Master
             BlockAccess                         = $True;
             Ensure                              = "Present";
             GlobalAdminAccount                  = $GlobalAdmin
-            ContentContainsSensitiveInformation = MSFT_SCDLPSensitiveInformation
+            ContentContainsSensitiveInformation = @(MSFT_SCDLPSensitiveInformation
             {
-                name = "U.S. Social Security Number (SSN)"
-            };
+                name = 'U.S. Social Security Number (SSN)'
+                id = 'a44669fe-0d48-453d-a9b1-2cc83f2cba77'
+                maxconfidence = '100'
+                minconfidence = '-1'
+                classifiertype = 'Content'
+                mincount = '1'
+                maxcount = '-1'
+            }
+            MSFT_SCDLPSensitiveInformation
+            {
+                name = 'Azure DocumentDB Auth Key'
+                id = '0f587d92-eb28-44a9-bd1c-90f2892b47aa'
+                maxconfidence = '100'
+                minconfidence = '85'
+                classifiertype = 'Content'
+                mincount = '1'
+                maxcount = '-1'
+            })
         }
 
         SCFilePlanPropertyAuthority FilePlanPropertyAuthority
@@ -453,7 +489,7 @@ Configuration Master
         {
             Name               = "MySRPolicy"
             Comment            = "Test Policy"
-            Reviewers          = @("admin@$Domain")
+            Reviewers          = @($GlobalAdmin.UserName)
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }
@@ -461,7 +497,7 @@ Configuration Master
         SCSupervisoryReviewRule SRRule
         {
             Name               = "DemoRule"
-            Condition          = "(Reviewee:adminnonmfa@$Domain)"
+            Condition          = "(Reviewee:$($GlobalAdmin.UserName))"
             SamplingRate       = 100
             Policy             = 'MySRPolicy'
             Ensure             = "Present"
@@ -480,8 +516,9 @@ Configuration Master
         {
             Title              = "Classic Site"
             Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Classic"
-            Owner              = "adminnonMFA@$Domain"
+            Owner              = $GlobalAdmin.UserName
             Template           = "STS#0"
+            TimeZoneID         = 13
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
         }
@@ -490,8 +527,34 @@ Configuration Master
         {
             Title              = "Modern Site"
             Url                = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
-            Owner              = "adminnonmfa@$Domain"
+            Owner              = $GlobalAdmin.UserName
             Template           = "STS#3"
+            TimeZoneID         = 13
+            GlobalAdminAccount = $GlobalAdmin
+            Ensure             = "Present"
+        }
+
+        SPOSite TestWithoutTemplate
+        {
+            Title                                       = "No Templates"
+            Url                                         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/NoTemplates"
+            Owner                                       = $GlobalAdmin.UserName
+            TimeZoneID                                  = 13
+            AllowSelfServiceUpgrade                     = $True;
+            AnonymousLinkExpirationInDays               = 0;
+            CommentsOnSitePagesDisabled                 = $False;
+            DefaultLinkPermission                       = "None";
+            DefaultSharingLinkType                      = "None";
+            DenyAddAndCustomizePages                    = $True;
+            DisableAppViews                             = "NotDisabled";
+            DisableCompanyWideSharingLinks              = "NotDisabled";
+            DisableFlows                                = $False;
+            LocaleId                                    = 1033;
+            OverrideTenantAnonymousLinkExpirationPolicy = $False;
+            ShowPeoplePickerSuggestionsForGuestUsers    = $False;
+            SocialBarOnSitePagesDisabled                = $False;
+            StorageMaximumLevel                         = 26214400;
+            StorageWarningLevel                         = 25574400;
             GlobalAdminAccount = $GlobalAdmin
             Ensure             = "Present"
         }
@@ -522,6 +585,14 @@ Configuration Master
             GlobalAdminAccount = $GlobalAdmin
         }
 
+        SPOSiteGroup TestSiteGroup
+        {
+            Url                                         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
+            Identity                                    = "TestSiteGroup"
+            PermissionLevels                            = @("Editor", "Reader")
+            Ensure                                      = "Present"
+            GlobalAdminAccount                          = $GlobalAdmin
+        }
         SPOTheme SPTheme01
         {
             GlobalAdminAccount = $GlobalAdmin
@@ -539,19 +610,23 @@ Configuration Master
             )
         }
 
-        SPOUserProfileProperty SPOUserProfileProperty
+        # TODO - Investigate this for GCC
+        <#if ($Environment -ne 'GCC')
         {
-            UserName           = "adminnonmfa@$Domain"
-            Properties         = @(
-                MSFT_SPOUserProfilePropertyInstance
-                {
-                    Key   = "FavoriteFood"
-                    Value = "Pasta"
-                }
-            )
-            GlobalAdminAccount = $GlobalAdmin
-            Ensure             = "Present"
-        }
+            SPOUserProfileProperty SPOUserProfileProperty
+            {
+                UserName           = "admin@$Domain"
+                Properties         = @(
+                    MSFT_SPOUserProfilePropertyInstance
+                    {
+                        Key   = "FavoriteFood"
+                        Value = "Pasta"
+                    }
+                )
+                GlobalAdminAccount = $GlobalAdmin
+                Ensure             = "Present"
+            }
+        }#>
 
         TeamsUpgradeConfiguration UpgradeConfig
         {
@@ -559,6 +634,17 @@ Configuration Master
             GlobalAdminAccount   = $GlobalAdmin
             IsSingleInstance     = "Yes"
             SfBMeetingJoinUx     = "NativeLimitedClient"
+        }
+
+        TeamsMeetingBroadcastPolicy IntegrationBroadcastPolicy
+        {
+            AllowBroadcastScheduling        = $True;
+            AllowBroadcastTranscription     = $False;
+            BroadcastAttendeeVisibilityMode = "EveryoneInCompany";
+            BroadcastRecordingMode          = "AlwaysEnabled";
+            Ensure                          = "Present";
+            GlobalAdminAccount              = $GlobalAdmin;
+            Identity                        = "IntegrationPolicy";
         }
 
         TeamsClientConfiguration TeamsClientConfiguration
@@ -578,6 +664,80 @@ Configuration Master
             Identity                         = "Global";
             ResourceAccountContentAccess     = "NoAccess";
             RestrictedSenderList             = $null;
+        }
+
+        TeamsChannelsPolicy IntegrationChannelPolicy
+        {
+            AllowOrgWideTeamCreation    = $True;
+            AllowPrivateChannelCreation = $True;
+            AllowPrivateTeamDiscovery   = $True;
+            Description                 = $null;
+            Ensure                      = "Present";
+            GlobalAdminAccount          = $GlobalAdmin;
+            Identity                    = "Integration Channel Policy";
+        }
+
+        TeamsEmergencyCallingPolicy EmergencyCallingPolicy
+        {
+            Description               = "Integration Test";
+            Identity                  = "Integration Emergency Calling Policy";
+            NotificationDialOutNumber = "12312345678";
+            NotificationGroup         = $GlobalAdmin.UserName;
+            NotificationMode          = "NotificationOnly";
+            Ensure                    = "Present"
+            GlobalAdminAccount        = $GlobalAdmin
+        }
+
+        TeamsMeetingBroadcastConfiguration MeetingBroadcastConfiguration
+        {
+            Identity                            = 'Global'
+            AllowSdnProviderForBroadcastMeeting = $True
+            SupportURL                          = "https://support.office.com/home/contact"
+            SdnProviderName                     = "hive"
+            SdnLicenseId                        = "5c12d0-d52950-e03e66-92b587"
+            SdnApiTemplateUrl                   = "https://api.hivestreaming.com/v1/eventadmin?partner_token={0}"
+            GlobalAdminAccount                  = $GlobalAdmin
+        }
+
+        TeamsEmergencyCallRoutingPolicy EmergencyCallRoutingPolicyExample
+        {
+            AllowEnhancedEmergencyServices = $False;
+            Description                    = "Description";
+            EmergencyNumbers               = @(
+                MSFT_TeamsEmergencyNumber
+                {
+                    EmergencyDialString = '123456'
+                    EmergencyDialMask   = '123'
+                    OnlinePSTNUsage     = ''
+                }
+            );
+            Ensure                         = "Present";
+            GlobalAdminAccount             = $GlobalAdmin;
+            Identity                       = "Integration Test";
+        }
+
+        TeamsMeetingPolicy DemoMeetingPolicy
+        {
+            AllowAnonymousUsersToStartMeeting          = $False;
+            AllowChannelMeetingScheduling              = $True;
+            AllowCloudRecording                        = $True;
+            AllowExternalParticipantGiveRequestControl = $False;
+            AllowIPVideo                               = $True;
+            AllowMeetNow                               = $True;
+            AllowOutlookAddIn                          = $True;
+            AllowParticipantGiveRequestControl         = $True;
+            AllowPowerPointSharing                     = $True;
+            AllowPrivateMeetingScheduling              = $True;
+            AllowSharedNotes                           = $True;
+            AllowTranscription                         = $False;
+            AllowWhiteboard                            = $True;
+            AutoAdmittedUsers                          = "Everyone";
+            Description                                = "Integration Meeting Policy";
+            Ensure                                     = "Present";
+            GlobalAdminAccount                         = $GlobalAdmin;
+            Identity                                   = "Integration Meeting Policy";
+            MediaBitRateKb                             = 50000;
+            ScreenSharingMode                          = "EntireScreen";
         }
 
         TeamsTeam TeamAlpha
@@ -608,6 +768,32 @@ Configuration Master
             DependsON          = @("[O365User]JohnSmith", "[TeamsTeam]TeamAlpha")
         }
 
+        TeamsMeetingConfiguration MeetingConfiguration
+        {
+            ClientAppSharingPort        = 50040;
+            ClientAppSharingPortRange   = 20;
+            ClientAudioPort             = 50000;
+            ClientAudioPortRange        = 21;
+            ClientMediaPortRangeEnabled = $True;
+            ClientVideoPort             = 50020;
+            ClientVideoPortRange        = 20;
+            CustomFooterText            = "This is some custom footer text";
+            DisableAnonymousJoin        = $False;
+            EnableQoS                   = $False;
+            GlobalAdminAccount          = $GlobalAdmin;
+            HelpURL                     = "https://github.com/Microsoft/Office365DSC/Help";
+            Identity                    = "Global";
+            LegalURL                    = "https://github.com/Microsoft/Office365DSC/Legal";
+            LogoURL                     = "https://github.com/Microsoft/Office365DSC/Logo.png";
+        }
+
+        TeamsGuestCallingConfiguration GuestCallingConfig
+        {
+            Identity            = "Global";
+            AllowPrivateCalling = $True;
+            GlobalAdminAccount  = $GlobalAdmin;
+        }
+
         TeamsMessagingPolicy SampleTeamsMessage
         {
             Identity                      = "TestPolicy"
@@ -631,65 +817,67 @@ Configuration Master
             Ensure                        = "Present"
         }
 
-        SCSensitivityLabel SCSenLabel
+        if ($Environment -ne 'GCC')
         {
-            Name               = "Demo Label"
-            Comment            = "Demo label comment"
-            ToolTip            = "Demo tool tip"
-            DisplayName        = "Demo label"
+            SCSensitivityLabel SCSenLabel
+            {
+                Name               = "Demo Label"
+                Comment            = "Demo label comment"
+                ToolTip            = "Demo tool tip"
+                DisplayName        = "Demo label"
 
-            LocaleSettings     = @(
-                MSFT_SCLabelLocaleSettings
-                {
-                    LocaleKey = "DisplayName"
-                    Settings  = @(
-                        MSFT_SCLabelSetting
-                        {
-                            Key   = "en-us"
-                            Value = "English Display Names"
-                        }
-                        MSFT_SCLabelSetting
-                        {
-                            Key   = "fr-fr"
-                            Value = "Nom da'ffichage francais"
-                        }
-                    )
-                }
-                MSFT_SCLabelLocaleSettings
-                {
-                    LocaleKey = "StopColor"
-                    Settings  = @(
-                        MSFT_SCLabelSetting
-                        {
-                            Key   = "en-us"
-                            Value = "RedGreen"
-                        }
-                        MSFT_SCLabelSetting
-                        {
-                            Key   = "fr-fr"
-                            Value = "Rouge"
-                        }
-                    )
-                }
-            )
-            AdvancedSettings   = @(
-                MSFT_SCLabelSetting
-                {
-                    Key   = "AllowedLevel"
-                    Value = @("Sensitive", "Classified")
-                }
-                MSFT_SCLabelSetting
-                {
-                    Key   = "LabelStatus"
-                    Value = "Enabled"
-                }
-            )
-            GlobalAdminAccount = $GlobalAdmin
-            Ensure             = "Present"
+                LocaleSettings     = @(
+                    MSFT_SCLabelLocaleSettings
+                    {
+                        LocaleKey = "DisplayName"
+                        Settings  = @(
+                            MSFT_SCLabelSetting
+                            {
+                                Key   = "en-us"
+                                Value = "English Display Names"
+                            }
+                            MSFT_SCLabelSetting
+                            {
+                                Key   = "fr-fr"
+                                Value = "Nom da'ffichage francais"
+                            }
+                        )
+                    }
+                    MSFT_SCLabelLocaleSettings
+                    {
+                        LocaleKey = "StopColor"
+                        Settings  = @(
+                            MSFT_SCLabelSetting
+                            {
+                                Key   = "en-us"
+                                Value = "RedGreen"
+                            }
+                            MSFT_SCLabelSetting
+                            {
+                                Key   = "fr-fr"
+                                Value = "Rouge"
+                            }
+                        )
+                    }
+                )
+                AdvancedSettings   = @(
+                    MSFT_SCLabelSetting
+                    {
+                        Key   = "AllowedLevel"
+                        Value = @("Sensitive", "Classified")
+                    }
+                    MSFT_SCLabelSetting
+                    {
+                        Key   = "LabelStatus"
+                        Value = "Enabled"
+                    }
+                )
+                GlobalAdminAccount = $GlobalAdmin
+                Ensure             = "Present"
+            }
         }
     }
 }
-
 
 $ConfigurationData = @{
     AllNodes = @(
@@ -703,5 +891,5 @@ $ConfigurationData = @{
 # Compile and deploy configuration
 $password = ConvertTo-SecureString $GlobalAdminPassword -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential ($GlobalAdminUser, $password)
-Master -ConfigurationData $ConfigurationData -GlobalAdmin $credential -Domain $Domain
+Master -ConfigurationData $ConfigurationData -GlobalAdmin $credential -Domain $Domain -Environment $Environment
 Start-DscConfiguration Master -Wait -Force -Verbose

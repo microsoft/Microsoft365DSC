@@ -59,6 +59,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AntiPhishRule for $Identity"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
@@ -72,7 +78,7 @@ function Get-TargetResource
     }
     catch
     {
-        New-Office365DSCLogEntry -Error $_ -Message "Couldn't get AntiPhishRules"
+        New-Office365DSCLogEntry -Error $_ -Message "Couldn't get AntiPhishRules" -Source $MyInvocation.MyCommand.ModuleName
     }
 
     if ($null -ne $AntiPhishRules)
@@ -182,6 +188,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of AntiPhishRule for $Identity"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
@@ -315,6 +327,12 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = "Continue"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline `
         -ErrorAction SilentlyContinue

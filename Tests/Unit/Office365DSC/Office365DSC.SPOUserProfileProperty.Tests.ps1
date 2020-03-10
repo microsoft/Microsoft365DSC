@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SPOUserProfileProperty"
+    -DscResource "SPOUserProfileProperty" -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -31,6 +33,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         Mock -CommandName Invoke-O365DSCCommand -MockWith {
+        }
+
+        Mock -CommandName Start-Job -MockWith{
+        }
+
+        Mock -CommandName Get-Job -MockWith{
         }
 
         # Test contexts
@@ -96,7 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-MSOLUser -MockWith {
+            Mock -CommandName Get-AzureADUser -MockWith {
                 return @{
                     UserPrincipalName = "john.smith@contoso.com"
                 }

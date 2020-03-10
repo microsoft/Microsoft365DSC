@@ -39,6 +39,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of Mailtips for $Organization"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = @{
         Organization                          = $Organization
@@ -118,6 +124,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Mailtips for $Organization"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $OrgConfig = Get-TargetResource @PSBoundParameters
 
@@ -227,19 +239,55 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Organization,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
+    $InformationPreference = 'Continue'
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform ExchangeOnline `
+        -ErrorAction SilentlyContinue
+
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
+    if ($GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
+    }
+    $params = @{
+        GlobalAdminAccount = $GlobalAdminAccount
+        Organization       = $organization
+    }
+    $result = Get-TargetResource @params
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        EXOMailTips " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+    $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+    if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+    {
+        $partialContent = $partialContent -ireplace [regex]::Escape("`"" + $organization + "`""), "`$OrganizationName"
+    }
+    if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+    {
+        $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
+    }
+    if ($partialContent.ToLower().IndexOf($principal.ToLower() + ".") -gt 0)
+    {
+        $partialContent = $partialContent -ireplace [regex]::Escape($principal + "."), "`$(`$OrganizationName.Split('.')[0])."
+    }
+    $content += $partialContent
     $content += "        }`r`n"
     return $content
 }

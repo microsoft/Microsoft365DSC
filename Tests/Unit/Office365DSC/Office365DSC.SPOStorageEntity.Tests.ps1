@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SPOStorageEntity"
+    -DscResource "SPOStorageEntity" -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -24,6 +26,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
+
+        Mock -CommandName Get-SPOAdministrationUrl -MockWith {
+            return 'https://contoso-admin.sharepoint.com'
+        }
+
         # Test contexts
         Context -Name "Check SPOStorageEntity" -Fixture {
             $testParams = @{
@@ -167,19 +174,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-
-
-
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Key                = "DSCKey"
                 GlobalAdminAccount = $GlobalAdminAccount
-                SiteUrl            = "https://contoso-admin.sharepoint.com"
             }
 
             Mock -CommandName Get-PnPStorageEntity -MockWith {
                 return @{
-                    Key = "DSCKey"
+                    Key                = "DSCKey"
+                    Value              = "Test storage entity"
+                    EntityScope        = "Site"
+                    Description        = "Description created by DSC"
+                    Comment            = "Comment from DSC"
+                    Ensure             = "Present"
+                    SiteUrl            = "https://contoso-admin.sharepoint.com"
+                    GlobalAdminAccount = $GlobalAdminAccount
                 }
             }
 

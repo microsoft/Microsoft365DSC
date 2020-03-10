@@ -71,6 +71,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of OneDrive Settings"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SharePointOnline
@@ -169,7 +175,7 @@ function Get-TargetResource
     catch
     {
         $Message = "Failed to get Tenant client sync settings"
-        New-Office365DSCLogEntry -Error $_ -Message $Message
+        New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
         return $nullReturn
     }
 }
@@ -246,6 +252,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of OneDrive Settings"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SharePointOnline
@@ -432,7 +444,13 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPReference = 'Continue'
-    Write-Information "Extracting ODSettings..."
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform SharePointOnline `
         -ErrorAction SilentlyContinue

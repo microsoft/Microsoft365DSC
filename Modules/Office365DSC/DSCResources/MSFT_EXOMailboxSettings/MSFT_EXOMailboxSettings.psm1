@@ -27,6 +27,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of Office 365 Mailbox Settings for $DisplayName"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = @{
         DisplayName = $DisplayName
@@ -92,6 +98,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Mailbox Settings for $DisplayName"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
@@ -172,25 +184,48 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
+    $InformationPreference = 'Continue'
 
-    $content = ""
-    if ($result.Ensure -eq "Present")
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform ExchangeOnline
+
+    $mailboxes = Get-Mailbox
+
+    $i = 1
+    $content = ''
+    foreach ($mailbox in $mailboxes)
     {
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $modulePath = $PSScriptRoot + "\MSFT_EXOMailboxSettings.psm1"
-        $content = "        EXOMailboxSettings " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
+        Write-Information "    - [$i/$($mailboxes.Length)] $($mailbox.Name)"
+        $mailboxName = $mailbox.Name
+        if (![System.String]::IsNullOrEmpty($mailboxName))
+        {
+            $params = @{
+                GlobalAdminAccount = $GlobalAdminAccount
+                DisplayName        = $mailboxName
+            }
+            $result = Get-TargetResource @params
+
+            if ($result.Ensure -eq "Present")
+            {
+                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                $modulePath = $PSScriptRoot + "\MSFT_EXOMailboxSettings.psm1"
+                $content += "        EXOMailboxSettings " + (New-GUID).ToString() + "`r`n"
+                $content += "        {`r`n"
+                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath
+                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                $content += "        }`r`n"
+            }
+        }
+        $i++
     }
     return $content
 }

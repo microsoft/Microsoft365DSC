@@ -59,6 +59,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SafeAttachmentRule for $Identity"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
@@ -74,7 +80,7 @@ function Get-TargetResource
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         $Message = "Error calling {Get-SafeAttachmentRule}"
-        New-Office365DSCLogEntry -Error $_ -Message $Message
+        New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
     }
     $SafeAttachmentRule = $SafeAttachmentRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
     if (-not $SafeAttachmentRule)
@@ -88,22 +94,18 @@ function Get-TargetResource
     {
         $result = @{
             Ensure = 'Present'
-        }
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -ne 'Ensure' }))
-        {
-            if ($null -ne $SafeAttachmentRule.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $SafeAttachmentRule.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
-
+            Identity                  = $SafeAttachmentRule.Identity
+            SafeAttachmentPolicy      = $SafeAttachmentRule.SafeAttachmentPolicy
+            Comments                  = $SafeAttachmentRule.Comments
+            Enabled                   = $true
+            ExceptIfRecipientDomainIs = $SafeAttachmentRule.ExceptIfRecipientDomainIs
+            ExceptIfSentTo            = $SafeAttachmentRule.ExceptIfSentTo
+            ExceptIfSentToMemberOf    = $SafeAttachmentRule.ExceptIfSentToMemberOf
+            Priority                  = $SafeAttachmentRule.Priority
+            RecipientDomainIs         = $SafeAttachmentRule.RecipientDomainIs
+            SentTo                    = $SafeAttachmentRule.SentTo
+            SentToMemberOf            = $SafeAttachmentRule.SentToMemberOf
+            GlobalAdminAccount        = $GlobalAdminAccount
         }
         if ('Enabled' -eq $SafeAttachmentRule.State)
         {
@@ -181,6 +183,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of SafeAttachmentRule for $Identity"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
@@ -304,24 +312,47 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $SafeAttachmentPolicy,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        EXOSafeAttachmentRule " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform ExchangeOnline `
+        -ErrorAction SilentlyContinue
+    $content = ''
+    if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeAttachmentRule)
+    {
+        [array]$SafeAttachmentRules = Get-SafeAttachmentRule
+        $i = 1
+        foreach ($SafeAttachmentRule in $SafeAttachmentRules)
+        {
+            Write-Information "    - [$i/$($SafeAttachmentRules.Length)] $($SafeAttachmentRule.Identity)"
+            $params = @{
+                Identity             = $SafeAttachmentRule.Identity
+                SafeAttachmentPolicy = $SafeAttachmentRule.SafeAttachmentPolicy
+                GlobalAdminAccount   = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        EXOSafeAttachmentRule " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
+            $i++
+        }
+    }
+    else
+    {
+        Write-Information "The current tenant doesn't have access to the Safe Attachment Rule API."
+    }
     return $content
 }
 

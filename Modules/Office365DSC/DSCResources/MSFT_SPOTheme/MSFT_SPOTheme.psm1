@@ -27,6 +27,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPO Theme $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform PnP
@@ -85,6 +91,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for SPO Theme $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform PnP
@@ -130,7 +142,7 @@ function Set-TargetResource
         catch
         {
             $Message = "The SPOTheme $($theme) does not exist and for that cannot be removed."
-            New-Office365DSCLogEntry -Error $_ -Message $Message
+            New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
             Write-Error $Message
         }
     }
@@ -170,13 +182,14 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove("GlobalAdminAccount") | Out-Null
+    $ValuesToCheck.Remove("Palette") | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Ensure", `
-            "Name", `
-            "IsInverted")
+        -ValuesToCheck $ValuesToCheck.Keys
 
     if ($TestResult)
     {
@@ -200,6 +213,12 @@ function Export-TargetResource
     )
 
     $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform PnP

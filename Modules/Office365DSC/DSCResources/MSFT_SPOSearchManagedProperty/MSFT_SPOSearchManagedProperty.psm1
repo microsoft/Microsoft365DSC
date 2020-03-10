@@ -94,6 +94,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for Managed Property instance $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform PnP
@@ -287,6 +293,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for Managed Property instance $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform PnP
@@ -709,7 +721,7 @@ function Test-TargetResource
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @("Ensure", `
             "Name",
-        "Type")
+            "Type")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -723,25 +735,45 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name,
-
-        [Parameter(Mandatory = $true)]
-        [ValidateSet("Text", "Integer", "Decimal", "DateTime", "YesNo", "Double", "Binary")]
-        [System.String]
-        $Type,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        SPOSearchManagedProperty " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+            -Platform PnP
+    $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
+    $properties = $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
+
+    $content = ""
+    $i = 1
+    $propertiesLength = $properties.Length
+    if ($null -eq $propertiesLength)
+    {
+        $propertiesLength = 1
+    }
+    foreach ($property in $properties)
+    {
+        Write-Information "    - [$i/$($propertiesLength)] $($property.Value.Name)"
+        $params = @{
+                GlobalAdminAccount = $GlobalAdminAccount
+                Name               = $property.Value.Name
+                Type               = $property.Value.ManagedType
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content += "        SPOSearchManagedProperty " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        $i++
+    }
     return $content
 }
 

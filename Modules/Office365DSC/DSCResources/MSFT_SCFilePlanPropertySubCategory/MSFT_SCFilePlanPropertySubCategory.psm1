@@ -23,6 +23,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SCFilePlanPropertySubCategory for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
@@ -35,10 +41,10 @@ function Get-TargetResource
         Write-Warning "Invalid Parent Category {$Category} detected in the Get-TargetResource"
         return $empty
     }
-    $parentId = $parent.Id.Replace("CN=", "")
 
+    $parentId = $parent.Guid
     $property = Get-FilePlanPropertySubCategory | Where-Object -FilterScript { $_.DisplayName -eq $Name -and `
-            $_.ParentId -eq $parentId }
+        $_.ParentId -eq $parentId }
 
     if ($null -eq $property)
     {
@@ -85,6 +91,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of SCFilePlanPropertySubCategory for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
@@ -165,15 +177,21 @@ function Export-TargetResource
     )
 
     $InformationPreference = "Continue"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
-    $Properties = Get-FilePlanPropertySubCategory
+    [array]$Properties = Get-FilePlanPropertySubCategory
 
     $i = 1
     $content = ""
     foreach ($Property in $Properties)
     {
-        $parent = Get-FilePlanPropertyCategory | Where-Object -FilterScript { $_.Id -like "*$($property.ParentId)*" }
+        $parent = Get-FilePlanPropertyCategory | Where-Object -FilterScript { $_.Guid -like "*$($property.ParentId)*" }
         Write-Information "    - [$i/$($Properties.Length)] $($Property.Name)"
         $params = @{
             Name               = $Property.DisplayName

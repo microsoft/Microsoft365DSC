@@ -9,12 +9,12 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('canada', 'unitesstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
+        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
         $Location,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Trial')]
+        [ValidateSet('Production', 'Trial', 'Sandbox')]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -28,6 +28,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for PowerApps Environment {$DisplayName}"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -Cloud $GlobalAdminAccount `
         -Platform PowerPlatforms
@@ -76,12 +82,12 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('canada', 'unitesstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
+        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
         $Location,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Trial')]
+        [ValidateSet('Production', 'Trial', 'Sandbox')]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -95,6 +101,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for PowerApps Environment {$DisplayName}"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PowerPlatforms
@@ -124,7 +136,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing existing instance of PowerApps environment {$DisplayName}"
-        Remove-AdminPowerAppEnvironment -EnvironmentName -$DisplayName -Confirm:$false | Out-Null
+        Remove-AdminPowerAppEnvironment -EnvironmentName -$DisplayName | Out-Null
     }
 }
 
@@ -139,12 +151,12 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('canada', 'unitesstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
+        [ValidateSet('canada', 'unitedstates', 'europe', 'asia', 'australia', 'india', 'japan', 'unitedkingdom', 'unitedstatesfirstrelease', 'southamerica', 'france', 'usgov')]
         $Location,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Trial')]
+        [ValidateSet('Production', 'Trial', 'Sandbox')]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -187,6 +199,12 @@ function Export-TargetResource
     )
 
     $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PowerPlatforms

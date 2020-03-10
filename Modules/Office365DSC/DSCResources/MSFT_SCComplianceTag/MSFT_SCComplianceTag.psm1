@@ -33,7 +33,7 @@ function Get-TargetResource
         $Notes,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ReviewerEmail,
 
         [Parameter()]
@@ -61,12 +61,17 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of ComplianceTag for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
 
-    $tagObjects = Get-ComplianceTag
-    $tagObject = $tagObjects | Where-Object { $_.Name -eq $Name }
+    $tagObject = Get-ComplianceTag -Identity $Name -ErrorAction SilentlyContinue
 
     if ($null -eq $tagObject)
     {
@@ -138,7 +143,7 @@ function Set-TargetResource
         $Notes,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ReviewerEmail,
 
         [Parameter()]
@@ -166,6 +171,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of ComplianceTag for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
@@ -281,7 +292,7 @@ function Test-TargetResource
         $Notes,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ReviewerEmail,
 
         [Parameter()]
@@ -347,6 +358,12 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter `
         -ErrorAction SilentlyContinue
@@ -423,13 +440,12 @@ function Get-SCFilePlanProperty
         return $null
     }
     $JSONObject = ConvertFrom-JSON $Metadata
-    $result = @{
-        FilePlanPropertyDepartment  = $JSONObject.Settings["FilePlanPropertyDepartment"].Value
-        FilePlanPropertyCategory    = $JSONObject.Settings["FilePlanPropertyCategory"].Value
-        FilePlanPropertySubcategory = $JSONObject.Settings["FilePlanPropertySubcategory"].Value
-        FilePlanPropertyCitation    = $JSONObject.Settings["FilePlanPropertyCitation"].Value
-        FilePlanPropertyReferenceId = $JSONObject.Settings["FilePlanPropertyReferenceId"].Value
-        FilePlanPropertyAuthority   = $JSONObject.Settings["FilePlanPropertyAuthority"].Value
+
+    $result = @{}
+
+    foreach ($item in $JSONObject.Settings)
+    {
+        $result.Add($item.Key, $item.Value)
     }
 
     return $result

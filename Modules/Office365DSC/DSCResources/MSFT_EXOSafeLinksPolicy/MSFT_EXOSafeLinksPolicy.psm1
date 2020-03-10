@@ -47,6 +47,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SafeLinksPolicy for $Identity"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
@@ -62,7 +68,7 @@ function Get-TargetResource
     {
         Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         $Message = "Error calling {Get-SafeLinksPolicy}"
-        New-Office365DSCLogEntry -Error $_ -Message $Message
+        New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
     }
 
     $SafeLinksPolicy = $SafeLinksPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -76,23 +82,16 @@ function Get-TargetResource
     else
     {
         $result = @{
-            Ensure = 'Present'
-        }
-
-        foreach ($KeyName in ($PSBoundParameters.Keys | Where-Object -FilterScript { $_ -inotmatch 'Ensure' }))
-        {
-            if ($null -ne $SafeLinksPolicy.$KeyName)
-            {
-                $result += @{
-                    $KeyName = $SafeLinksPolicy.$KeyName
-                }
-            }
-            else
-            {
-                $result += @{
-                    $KeyName = $PSBoundParameters[$KeyName]
-                }
-            }
+            Identity                 = $SafeLinksPolicy.Identity
+            AdminDisplayName         = $SafeLinksPolicy.AdminDisplayName
+            DoNotAllowClickThrough   = $SafeLinksPolicy.DoNotAllowClickThrough
+            DoNotRewriteUrls         = $SafeLinksPolicy.DoNotRewriteUrls
+            DoNotTrackUserClicks     = $SafeLinksPolicy.DoNotTrackUserClicks
+            EnableForInternalSenders = $SafeLinksPolicy.EnableForInternalSenders
+            IsEnabled                = $SafeLinksPolicy.IsEnabled
+            ScanUrls                 = $SafeLinksPolicy.ScanUrls
+            Ensure                   = 'Present'
+            GlobalAdminAccount       = $GlobalAdminAccount
         }
 
         Write-Verbose -Message "Found SafeLinksPolicy $($Identity)"
@@ -149,6 +148,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of SafeLinksPolicy for $Identity"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
@@ -258,20 +263,46 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        EXOSafeLinksPolicy " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform ExchangeOnline `
+        -ErrorAction SilentlyContinue
+    $content = ''
+    if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeLinksPolicy)
+    {
+        [array]$SafeLinksPolicies = Get-SafeLinksPolicy
+        $i = 1
+        foreach ($SafeLinksPolicy in $SafeLinksPolicies)
+        {
+            Write-Information "    - [$i/$($SafeLinksPolicies.Length)] $($SafeLinksPolicy.Name)"
+            $params = @{
+                GlobalAdminAccount = $GlobalAdminAccount
+                Identity           = $SafeLinksPolicy.Identity
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        EXOSafeLinksPolicy " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
+            $i++
+        }
+    }
+    else
+    {
+        Write-Information "The current tenant is not registered to allow for Safe Attachment Rules."
+    }
     return $content
 }
 

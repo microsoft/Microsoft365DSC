@@ -1216,6 +1216,7 @@ function Set-EXOHostedContentFilterRule
 function Confirm-ImportedCmdletIsAvailable
 {
     [CmdletBinding()]
+    [OutputType([System.Boolean])]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -1373,8 +1374,11 @@ function Test-Office365DSCParameterState
         [System.String]
         $Source = 'Generic'
     )
-    $VerbosePreference = "SilentlyContinue"
-    $WarningPreference = "SilentlyContinue"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", "$Source")
+    $data.Add("Method", "Test-TargetResource")
+    #endregion
     $returnValue = $true
 
     $DriftedParameters = @{ }
@@ -1383,7 +1387,7 @@ function Test-Office365DSCParameterState
             -and ($DesiredValues.GetType().Name -ne "CimInstance") `
             -and ($DesiredValues.GetType().Name -ne "PSBoundParametersDictionary"))
     {
-        throw ("Property 'DesiredValues' in Test-SPDscParameterState must be either a " + `
+        throw ("Property 'DesiredValues' in Test-Office365DscParameterState must be either a " + `
                 "Hashtable or CimInstance. Type detected was $($DesiredValues.GetType().Name)")
     }
 
@@ -1416,7 +1420,7 @@ function Test-Office365DSCParameterState
                 }
                 else
                 {
-                    $CheckDesiredValue = Test-SPDSCObjectHasProperty -Object $DesiredValues -PropertyName $_
+                    $CheckDesiredValue = Test-Office365DSCObjectHasProperty -Object $DesiredValues -PropertyName $_
                 }
 
                 if ($CheckDesiredValue)
@@ -1445,7 +1449,12 @@ function Test-Office365DSCParameterState
                                 $currentEntry = @{ }
                                 foreach ($prop in $item.CIMInstanceProperties)
                                 {
-                                    $currentEntry.Add($prop.Name, $prop.Value)
+                                    $value = $prop.Value
+                                    if ([System.String]::IsNullOrEmpty($value))
+                                    {
+                                        $value = $null
+                                    }
+                                    $currentEntry.Add($prop.Name, $value)
                                 }
                                 $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
                             }
@@ -1585,12 +1594,66 @@ function Test-Office365DSCParameterState
                                     $returnValue = $false
                                 }
                             }
+                            "Hashtable"
+                            {
+                                Write-Verbose -Message "The current property {$fieldName} is a Hashtable"
+                                $AllDesiredValuesAsArray = @()
+                                foreach ($item in $DesiredValues.$fieldName)
+                                {
+                                    $currentEntry = @{ }
+                                    foreach ($key in $item.Keys)
+                                    {
+                                        $value = $item.$key
+                                        if ([System.String]::IsNullOrEmpty($value))
+                                        {
+                                            $value = $null
+                                        }
+                                        $currentEntry.Add($key, $value)
+                                    }
+                                    $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
+                                }
+
+                                if ($null -ne $DesiredValues.$fieldName -and $null -eq $CurrentValues.$fieldName)
+                                {
+                                    $returnValue = $false
+                                }
+                                else
+                                {
+                                    $AllCurrentValuesAsArray = @()
+                                    foreach ($item in $CurrentValues.$fieldName)
+                                    {
+                                        $currentEntry = @{ }
+                                        foreach ($key in $item.Keys)
+                                        {
+                                            $value = $item.$key
+                                            if ([System.String]::IsNullOrEmpty($value))
+                                            {
+                                                $value = $null
+                                            }
+                                            $currentEntry.Add($key, $value)
+                                        }
+                                        $AllCurrentValuesAsArray += [PSCustomObject]$currentEntry
+                                    }
+                                    $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $AllCurrentValuesAsArray `
+                                    -DesiredValues $AllCurrentValuesAsArray
+                                    if ($null -ne $arrayCompare)
+                                    {
+                                        foreach ($item in $arrayCompare)
+                                        {
+                                            $EventValue = "<CurrentValue>[$($item.PropertyName)]$($item.CurrentValue)</CurrentValue>"
+                                            $EventValue += "<DesiredValue>[$($item.PropertyName)]$($item.DesiredValue)</DesiredValue>"
+                                            $DriftedParameters.Add($fieldName, $EventValue)
+                                        }
+                                        $returnValue = $false
+                                    }
+                                }
+                            }
                             default
                             {
                                 Write-Verbose -Message ("Unable to compare property $fieldName " + `
                                         "as the type ($($desiredType.Name)) is " + `
                                         "not handled by the " + `
-                                        "Test-SPDscParameterState cmdlet")
+                                        "Test-Office365DscParameterState cmdlet")
                                 $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
                                 $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
                                 $DriftedParameters.Add($fieldName, $EventValue)
@@ -1609,10 +1672,21 @@ function Test-Office365DSCParameterState
         $EventMessage += "    <ConfigurationDrift Source=`"$Source`">`r`n"
 
         $EventMessage += "        <ParametersNotInDesiredState>`r`n"
+        $driftedValue = ''
         foreach ($key in $DriftedParameters.Keys)
         {
+            Write-Verbose -Message "Detected Drifted Parameter [$Source]$key"
+            #region Telemetry
+            $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+            $driftedData.Add("Event", "DriftedParameter")
+            $driftedData.Add("Parameter", "[$Source]$key")
+            Add-O365DSCTelemetryEvent -Type "DriftInfo" -Data $driftedData
+            #endregion
             $EventMessage += "            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n"
         }
+        #region Telemetry
+        $data.Add("Event", "ConfigurationDrift")
+        #endregion
         $EventMessage += "        </ParametersNotInDesiredState>`r`n"
         $EventMessage += "    </ConfigurationDrift>`r`n"
         $EventMessage += "    <DesiredValues>`r`n"
@@ -1631,28 +1705,10 @@ function Test-Office365DSCParameterState
 
         Add-O365DSCEvent -Message $EventMessage -EntryType 'Error' -EventID 1 -Source $Source
     }
+    #region Telemetry
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     return $returnValue
-}
-
-function Get-UsersLicenses
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount -Platform MSOnline
-
-    Write-Verbose -Message "Store all users licenses information in Global Variable for future usage."
-
-    #Store information to be able to check later if the users is correctly licensed for features.
-    if ($null -eq $Global:UsersLicenses)
-    {
-        $Global:UsersLicenses = Get-MsolUser -All | Select-Object UserPrincipalName, isLicensed, Licenses
-    }
-    Return $Global:UsersLicenses
 }
 
 <# This is the main Office365DSC.Reverse function that extracts the DSC configuration from an existing
@@ -1674,6 +1730,10 @@ function Export-O365Configuration
         $FileName,
 
         [Parameter()]
+        [System.String]
+        $ConfigurationName,
+
+        [Parameter()]
         [System.String[]]
         $ComponentsToExtract,
 
@@ -1684,12 +1744,31 @@ function Export-O365Configuration
 
         [Parameter()]
         [ValidateRange(1, 100)]
-        $MaxProcesses = 16,
+        $MaxProcesses,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'SilentlyContinue'
+    $WarningPreference = 'SilentlyContinue'
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Event", "Extraction")
+    $data.Add("Quiet", $Quiet)
+    $data.Add("Path", [System.String]::IsNullOrEmpty($Path))
+    $data.Add("FileName", $null -ne [System.String]::IsNullOrEmpty($FileName))
+    $data.Add("ComponentsToExtract", $null -ne $ComponentsToExtract)
+    $data.Add("Workloads", $null -ne $Workloads)
+    $data.Add("MaxProcesses", $null -ne $MaxProcesses)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
+    if ($null -eq $MaxProcesses)
+    {
+        $MaxProcesses = 16
+    }
 
     if (-not $Quiet)
     {
@@ -1703,6 +1782,7 @@ function Export-O365Configuration
                 -Workloads $Workloads `
                 -Path $Path -FileName $FileName `
                 -MaxProcesses $MaxProcesses `
+                -ConfigurationName $ConfigurationName `
                 -Quiet
         }
         elseif ($null -ne $ComponentsToExtract)
@@ -1711,6 +1791,7 @@ function Export-O365Configuration
                 -ComponentsToExtract $ComponentsToExtract `
                 -Path $Path -FileName $FileName `
                 -MaxProcesses $MaxProcesses `
+                -ConfigurationName $ConfigurationName `
                 -Quiet
         }
         else
@@ -1719,6 +1800,7 @@ function Export-O365Configuration
                 -AllComponents `
                 -Path $Path -FileName $FileName `
                 -MaxProcesses $MaxProcesses `
+                -ConfigurationName $ConfigurationName `
                 -Quiet
         }
     }
@@ -1840,8 +1922,8 @@ function Invoke-O365DSCCommand
         $Backoff = 2
     )
 
-    $InformationPreference = 'Continue'
-    $WarningPreference = 'Continue'
+    $InformationPreference = 'SilentlyContinue'
+    $WarningPreference = 'SilentlyContinue'
     $ErrorActionPreference = 'Stop'
     try
     {
@@ -1924,4 +2006,102 @@ function ConvertTo-SPOUserProfilePropertyInstanceString
         $results += $content
     }
     return $results
+}
+
+function Install-O365DSCDevBranch
+{
+    [CmdletBinding()]
+    param()
+    #region Download and Extract Dev branch's ZIP
+    $url         = "https://github.com/microsoft/Office365DSC/archive/Dev.zip"
+    $output      = "$($env:Temp)\dev.zip"
+    $extractPath = $env:Temp + "\O365Dev"
+
+    Invoke-WebRequest -Uri $url -OutFile $output
+
+    Expand-Archive $output -DestinationPath $extractPath -Force
+    #endregion
+
+    #region Install All Dependencies
+    $manifest = Import-PowerShellDataFile "$extractPath\Office365DSC-Dev\Modules\Office365DSC\Office365DSC.psd1"
+    $dependencies = $manifest.RequiredModules
+    foreach ($dependency in $dependencies)
+    {
+        Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force
+        Import-Module $dependency.ModuleName -Force
+    }
+    #endregion
+
+    #region Install O365DSC
+    $defaultPath = 'C:\Program Files\WindowsPowerShell\Modules\Office365DSC\'
+    $currentVersionPath = $defaultPath + $($manifest.ModuleVersion)
+    if (Test-Path $currentVersionPath)
+    {
+        Remove-Item $currentVersionPath -Recurse -Confirm:$false
+    }
+    Copy-Item "$extractPath\Office365DSC-Dev\Modules\Office365DSC" -Destination $currentVersionPath -Recurse -Force
+    #endregion
+}
+
+function Get-AllSPOPackages
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
+
+    $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
+
+    Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
+        -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
+
+    $filesToDownload = @()
+
+    if ($null -ne $tenantAppCatalogUrl)
+    {
+        $spfxFiles = Find-PnPFile -List "AppCatalog" -Match '*.sppkg'
+        $appFiles = Find-PnPFile -List "AppCatalog" -Match '*.app'
+
+        $allFiles = $spfxFiles + $appFiles
+
+        foreach ($file in $allFiles)
+        {
+            $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title}
+        }
+    }
+    return $filesToDownload
+}
+
+function Remove-NullEntriesFromHashtable
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.COllections.HashTable]
+        $Hash
+    )
+
+    $keysToRemove = @()
+    foreach ($key in $Hash.Keys)
+    {
+        if ([System.String]::IsNullOrEmpty($Hash.$key))
+        {
+            $keysToRemove += $key
+        }
+    }
+
+    foreach ($key in $keysToRemove)
+    {
+        $Hash.Remove($key) | Out-Null
+    }
+
+    return $Hash
 }

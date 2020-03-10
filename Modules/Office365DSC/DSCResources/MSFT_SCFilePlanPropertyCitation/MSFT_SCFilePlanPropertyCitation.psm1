@@ -27,6 +27,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SCFilePlanPropertyCitation for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
@@ -85,6 +91,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of SCFilePlanPropertyCitation for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
@@ -101,7 +113,7 @@ function Set-TargetResource
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $Current.Ensure))
     {
-        Set-FilePlanPropertyCitation -Name $Name -CitationUrl $CitationUrl -CitationJurisdiction $CitationJurisdiction
+        Set-FilePlanPropertyCitation -Identity $Name -CitationUrl $CitationUrl -CitationJurisdiction $CitationJurisdiction
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $Current.Ensure))
     {
@@ -167,6 +179,12 @@ function Export-TargetResource
     )
 
     $InformationPreference = "Continue"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
     $Properties = Get-FilePlanPropertyCitation
