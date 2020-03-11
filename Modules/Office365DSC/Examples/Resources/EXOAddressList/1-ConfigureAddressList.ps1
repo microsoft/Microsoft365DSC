@@ -16,10 +16,12 @@ Configuration Example
     {
         EXOAddressList OrgWide
         {
-            Name                                  = "All Users"
-            
-            Ensure                                = "Present"
-            GlobalAdminAccount                    = $credsGlobalAdmin
+            Name                       = "All Users"
+            ConditionalCompany         = "Contoso"
+            ConditionalStateOrProvince = "US"
+            IncludedRecipients         = "AllRecipients"
+            Ensure                     = "Present"
+            GlobalAdminAccount         = $credsGlobalAdmin
         }
     }
 }
