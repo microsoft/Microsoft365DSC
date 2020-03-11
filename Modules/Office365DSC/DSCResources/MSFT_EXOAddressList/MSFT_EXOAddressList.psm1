@@ -105,6 +105,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AddressList for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
@@ -114,7 +120,7 @@ function Get-TargetResource
     $AddressList = $AddressLists | Where-Object -FilterScript { $_.Name -eq $Name }
     if (-not $AddressList)
     {
-        Write-Verbose -Message "AddressList $($Name) does not exist."
+        Write-Verbose -Message "Address List $($Name) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -153,7 +159,7 @@ function Get-TargetResource
             $result.Add("RuleScope", $AddressList.RuleScope)
         }
 
-        Write-Verbose -Message "Found AddressList $($Identity)"
+        Write-Verbose -Message "Found AddressList $($Name)"
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
         return $result
     }
@@ -264,7 +270,13 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting AddressList configuration for $Identity"
+    Write-Verbose -Message "Setting AddressList configuration for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
@@ -272,27 +284,27 @@ function Set-TargetResource
 
     $AddressLists = Get-AddressList
 
-    $AddressList = $AddressLists | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    $AddressList = $AddressLists | Where-Object -FilterScript { $_.Identity -eq $Name }
     $AddressListParams = $PSBoundParameters
     $AddressListParams.Remove('Ensure') | Out-Null
     $AddressListParams.Remove('GlobalAdminAccount') | Out-Null
    
     if (('Present' -eq $Ensure ) -and ($null -eq $AddressList))
     {
-        Write-Verbose -Message "Creating ClientAccessRule $($Identity)."
-        $AddressListParams.Add("Name", $Identity)
+        Write-Verbose -Message "Creating ClientAccessRule $($Name)."
+        $AddressListParams.Add("Name", $Name)
         $AddressListParams.Remove('Identity') | Out-Null
         New-ClientAccessRule @ClientAccessRuleParams
     }
     elseif (('Present' -eq $Ensure ) -and ($Null -ne $AddressList))
     {
-        Write-Verbose -Message "Setting ClientAccessRule $($Identity) with values: $(Convert-O365DscHashtableToString -Hashtable $AddressListParams)"
+        Write-Verbose -Message "Setting ClientAccessRule $($Name) with values: $(Convert-O365DscHashtableToString -Hashtable $AddressListParams)"
         Set-ClientAccessRule @ClientAccessRuleParams -Confirm:$false
     }
     elseif (('Absent' -eq $Ensure ) -and ($null -ne $AddressList))
     {
-        Write-Verbose -Message "Removing ClientAccessRule $($Identity)"
-        Remove-ClientAccessRule -Identity $Identity -Confirm:$false
+        Write-Verbose -Message "Removing ClientAccessRule $($Name)"
+        Remove-ClientAccessRule -Identity $Name -Confirm:$false
     }
 }
 
@@ -402,7 +414,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of AddressLists for $Identity"
+    Write-Verbose -Message "Testing configuration of AddressLists for $Name"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -433,7 +445,12 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = 'Continue'
-
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
