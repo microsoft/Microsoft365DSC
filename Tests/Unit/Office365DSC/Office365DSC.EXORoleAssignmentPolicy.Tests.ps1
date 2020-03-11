@@ -95,10 +95,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-RoleAssignmentPolicy -MockWith {
                 return @{
-                    Name        = "Contoso Role Assignment Policy"
-                    Description = "This is the default Contoso Role Assignment Policy"
-                    IsDefault   = $true
-                    Roles       = "MyPersonalInformation", "MyDistributionGroupMembership"
+                    Name          = "Contoso Role Assignment Policy"
+                    Description   = "This is the default Contoso Role Assignment Policy"
+                    IsDefault     = $true
+                    AssignedRoles = "MyPersonalInformation", "MyDistributionGroupMembership"
                 }
             }
 
@@ -123,10 +123,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-RoleAssignmentPolicy -MockWith {
                 return @{
-                    Name        = "Contoso Role Assignment Policy"
-                    Description = "This is the different Contoso Role Assignment Policy"
-                    IsDefault   = $true
-                    Roles       = "MyPersonalInformation", "MyDistributionGroupMembership"
+                    Name          = "Contoso Role Assignment Policy"
+                    Description   = "This is the different Contoso Role Assignment Policy"
+                    IsDefault     = $true
+                    AssignedRoles = "MyPersonalInformation", "MyDistributionGroupMembership"
                 }
             }
 
@@ -156,10 +156,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             $RoleAssignmentPolicy = @{
-                Name        = "Contoso Role Assignment Policy"
-                Description = "This is the default Contoso Role Assignment Policy"
-                IsDefault   = $true
-                Roles       = "MyPersonalInformation", "MyDistributionGroupMembership"
+                Name          = "Contoso Role Assignment Policy"
+                Description   = "This is the default Contoso Role Assignment Policy"
+                IsDefault     = $true
+                AssignedRoles = "MyPersonalInformation", "MyDistributionGroupMembership"
             }
 
             It "Should Reverse Engineer resource from the Export method when single" {
