@@ -7,13 +7,15 @@ param(
             -Resolve)
 )
 
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+        -ChildPath "..\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "EXOAddressList"
-
+    -DscResource "EXOAddressList" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -21,78 +23,62 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
+        Mock -CommandName Close-SessionsAndReturnError -MockWith {
+
+        }
+
         Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
 
-        Mock -CommandName New-AddressList -MockWith {
+        Mock -CommandName Get-PSSession -MockWith {
 
         }
 
-        Mock -CommandName Set-AddressList -MockWitch {
-
-        }
-
-        Mock -CommandName Remove-AddressList -MockWith {
+        Mock -CommandName Remove-PSSession -MockWith {
 
         }
 
         # Test contexts
-        Context -Name "AddressList doesn't exist but should." -Fixture {
+        Context -Name "Address List should exist. Address List is missing. Test should fail." -Fixture {
             $testParams = @{
-                Identity            = 'All Users'
-                DisplayName         = 'All Users'
-                RecipientFilter     = 'testfilter'
-                Ensure              = 'Present'
-                GlobalAdminAccount  = $GlobalAdminAccount
-                
+                Name                       = 'Contoso Address List'
+                ConditionalCompany         = 'Contoso'
+                ConditionalDepartment      = "HR"
+                ConditionalStateOrProvince = "US"
+                IncludedRecipients         = "AllRecipients"
+                Ensure                     = 'Present'
+                GlobalAdminAccount         = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-AddressList -MockWith {
-                return $null
+                return @{
+                    Name                       = 'Contoso Different Address List'
+                    ConditionalCompany         = 'Contoso'
+                    ConditionalDepartment      = "IT"
+                    ConditionalStateOrProvince = "DE"
+                    IncludedRecipients         = "AllRecipients"
+                }
             }
 
-            It 'Should return Absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should Be 'Absent'
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should Be $false
             }
 
-            It 'Should return False from the Test method' {
-                Test-TargetResouce @testParams | Should Be $false
+            Mock -CommandName Set-AddressList -MockWith {
+                return @{
+                    Name                       = 'Contoso Address List'
+                    ConditionalCompany         = 'Contoso'
+                    ConditionalDepartment      = "HR"
+                    ConditionalStateOrProvince = "US"
+                    IncludedRecipients         = "AllRecipients"
+                    Ensure                     = 'Present'
+                    GlobalAdminAccount         = $GlobalAdminAccount
+                }
             }
 
-            It "Should create the AddressList in the Set method" {
+            It "Should call the Set method" {
                 Set-TargetResource @testParams
-            }
-
-            It "Should return Present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present"
-            }
-        }
-
-        Context -Name "Verified domain doesn't exist in the tenant." -Fixture {
-            $testParams = @{
-                DomainType         = 'Authoritative'
-                Ensure             = 'Absent'
-                MatchSubDomain     = $false
-                OutboundOnly       = $false
-                GlobalAdminAccount = $GlobalAdminAccount
-                Identity           = 'contoso.com'
-            }
-
-            Mock -CommandName Get-AcceptedDomain -MockWith {
-                return @{
-                    DomainType      = 'Authoritative'
-                    Identity        = 'different.tailspin.com'
-                    MatchSubDomains = $false
-                    OutboundOnly    = $false
-                }
-            }
-
-            Mock -CommandName Get-AzureADDomain -MockWith {
-                return @{
-                    Name       = 'contoso.com'
-                    IsVerified = $true
-                }
             }
 
             It "Should return Absent from the Get method" {
@@ -100,30 +86,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Authoritative Accepted Domain should exist.  Domain exists. Test should pass." -Fixture {
+        Context -Name "Address List should exist. Address List exists. Test should pass." -Fixture {
             $testParams = @{
-                DomainType         = 'Authoritative'
-                Ensure             = 'Present'
-                MatchSubDomain     = $false
-                OutboundOnly       = $false
-                GlobalAdminAccount = $GlobalAdminAccount
-                Identity           = 'contoso.com'
+                Name                       = 'Contoso Address List'
+                ConditionalCompany         = 'Contoso'
+                ConditionalDepartment      = "HR"
+                ConditionalStateOrProvince = "US"
+                IncludedRecipients         = "AllRecipients"
+                Ensure                     = 'Present'
+                GlobalAdminAccount         = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-AzureADDomain -MockWith {
+            Mock -CommandName Get-AddressList -MockWith {
                 return @{
-                    Name       = 'contoso.com'
-                    IsVerified = $true
-                }
-
-            }
-
-            Mock -CommandName Get-AcceptedDomain -MockWith {
-                return @{
-                    DomainType      = 'Authoritative'
-                    Identity        = 'contoso.com'
-                    MatchSubDomains = $false
-                    OutboundOnly    = $false
+                    Name                       = 'Contoso Address List'
+                    ConditionalCompany         = 'Contoso'
+                    ConditionalDepartment      = "HR"
+                    ConditionalStateOrProvince = "US"
+                    IncludedRecipients         = "AllRecipients"
                 }
             }
 
@@ -136,28 +116,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Authoritative Accepted Domain should exist.  Domain exists, DomainType and MatchSubDomains mismatch. Test should fail." -Fixture {
+        Context -Name "Address List should exist. Address List exists, ConditionalDepartment mismatch. Test should fail." -Fixture {
             $testParams = @{
-                DomainType         = 'Authoritative'
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
-                Identity           = 'contoso.com'
+                Name                       = 'Contoso Address List'
+                ConditionalCompany         = 'Contoso'
+                ConditionalDepartment      = "HR"
+                ConditionalStateOrProvince = "US"
+                IncludedRecipients         = "AllRecipients"
+                Ensure                     = 'Present'
+                GlobalAdminAccount         = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-AzureADDomain -MockWith {
+            Mock -CommandName Get-AddressList -MockWith {
                 return @{
-                    Name       = 'contoso.com'
-                    IsVerified = $true
-                }
-
-            }
-
-            Mock -CommandName Get-AcceptedDomain -MockWith {
-                return @{
-                    DomainType      = 'InternalRelay'
-                    Identity        = 'contoso.com'
-                    MatchSubDomains = $true
-                    OutboundOnly    = $false
+                    Name                       = 'Contoso Address List'
+                    ConditionalCompany         = 'Contoso'
+                    ConditionalDepartment      = "IT"
+                    ConditionalStateOrProvince = "US"
+                    IncludedRecipients         = "AllRecipients"
                 }
             }
 
@@ -165,16 +141,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-            Mock -CommandName Set-AcceptedDomain -MockWith {
-
-            }
-
-            Mock -CommandName Set-AcceptedDomain -MockWith {
+            Mock -CommandName Set-AddressList -MockWith {
                 return @{
-                    DomainType         = 'Authoritative'
-                    Ensure             = 'Present'
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    Identity           = 'contoso.com'
+                    Name                       = 'Contoso Address List'
+                    ConditionalCompany         = 'Contoso'
+                    ConditionalDepartment      = "HR"
+                    ConditionalStateOrProvince = "US"
+                    IncludedRecipients         = "AllRecipients"
+                    GlobalAdminAccount         = $GlobalAdminAccount
                 }
             }
 
@@ -188,38 +162,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            $acceptedDomain1 = @{
-                DomainType      = 'Authoritative'
-                Identity        = 'different1.tailspin.com'
-                MatchSubDomains = $false
-                OutboundOnly    = $false
-            }
-
-            $acceptedDomain2 = @{
-                DomainType      = 'Authoritative'
-                Identity        = 'different2.tailspin.com'
-                MatchSubDomains = $false
-                OutboundOnly    = $false
+            $AddressList = @{
+                Name                       = 'Contoso Address List'
+                ConditionalCompany         = 'Contoso'
+                ConditionalDepartment      = "HR"
+                ConditionalStateOrProvince = "US"
+                IncludedRecipients         = "AllRecipients"
             }
 
             It "Should Reverse Engineer resource from the Export method when single" {
-                Mock -CommandName Get-AcceptedDomain -MockWith {
-                    return $acceptedDomain1
+                Mock -CommandName Get-AddressList -MockWith {
+                    return $AddressList
                 }
 
                 $exported = Export-TargetResource @testParams
-                ([regex]::Matches($exported, " EXOAcceptedDomain " )).Count | Should Be 1
-                $exported.Contains("different1.tailspin.com") | Should Be $true
-            }
-
-            It "Should Reverse Engineer resource from the Export method when multiple" {
-                Mock -CommandName Get-AcceptedDomain -MockWith {
-                    return @($acceptedDomain1, $acceptedDomain2)
-                }
-
-                $exported = Export-TargetResource @testParams
-                ([regex]::Matches($exported, " EXOAcceptedDomain " )).Count | Should Be 2
-                $exported.Contains("different2.tailspin.com") | Should Be $true
+                ([regex]::Matches($exported, " EXOAddressList " )).Count | Should Be 1
+                $exported.Contains("HR") | Should Be $true
             }
         }
     }
