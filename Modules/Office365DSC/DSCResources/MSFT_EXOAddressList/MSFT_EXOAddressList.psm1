@@ -115,18 +115,52 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-    $AddressLists = Get-AddressList
+    $nullReturn = @{
+        Name                         = $Name
+        ConditionalCompany           = $ConditionalCompany
+        ConditionalCustomAttribute1  = $ConditionalCustomAttribute1
+        ConditionalCustomAttribute10 = $ConditionalCustomAttribute10
+        ConditionalCustomAttribute11 = $ConditionalCustomAttribute11
+        ConditionalCustomAttribute12 = $ConditionalCustomAttribute12
+        ConditionalCustomAttribute13 = $ConditionalCustomAttribute13
+        ConditionalCustomAttribute14 = $ConditionalCustomAttribute14
+        ConditionalCustomAttribute15 = $ConditionalCustomAttribute15
+        ConditionalCustomAttribute2  = $ConditionalCustomAttribute2
+        ConditionalCustomAttribute3  = $ConditionalCustomAttribute3
+        ConditionalCustomAttribute4  = $ConditionalCustomAttribute4
+        ConditionalCustomAttribute5  = $ConditionalCustomAttribute5
+        ConditionalCustomAttribute6  = $ConditionalCustomAttribute6
+        ConditionalCustomAttribute7  = $ConditionalCustomAttribute7
+        ConditionalCustomAttribute8  = $ConditionalCustomAttribute8
+        ConditionalCustomAttribute9  = $ConditionalCustomAttribute9
+        ConditionalDepartment        = $ConditionalDepartment
+        ConditionalStateOrProvince   = $ConditionalStateOrProvince
+        DisplayName                  = $DisplayName
+        IncludedRecipients           = $IncludedRecipients
+        RecipientFilter              = $RecipientFilter
+        Ensure                       = 'Absent'
+        GlobalAdminAccount           = $GlobalAdminAccount
+    }
 
+    $AddressLists = Get-AddressList
     $AddressList = $AddressLists | Where-Object -FilterScript { $_.Name -eq $Name }
-    if (-not $AddressList)
+
+    if ($null -eq $AddressList)
     {
         Write-Verbose -Message "Address List $($Name) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
+        return $nullReturn
     }
     else
     {
+        if ($null -eq $AddressList.IncludedRecipients)
+        {
+            $IncludedRecipients = "".ToString()
+        }
+        else
+        {
+            $IncludedRecipients = $AddressList.IncludedRecipients
+        }
+
         $result = @{
             Name                                 = $Name
             ConditionalCompany                   = $AddressList.ConditionalCompany
@@ -148,15 +182,10 @@ function Get-TargetResource
             ConditionalDepartment                = $AddressList.ConditionalDepartment
             ConditionalStateOrProvince           = $AddressList.ConditionalStateOrProvince
             DisplayName                          = $AddressList.DisplayName
-            IncludedRecipients                   = $AddressList.IncludedRecipients
+            IncludedRecipients                   = $IncludedRecipients
             RecipientFilter                      = $AddressList.RecipientFilter
             Ensure                               = 'Present'
             GlobalAdminAccount                   = $GlobalAdminAccount
-        }
-
-        if (-not [System.String]::IsNullOrEmpty($AddressList.RuleScope))
-        {
-            $result.Add("RuleScope", $AddressList.RuleScope)
         }
 
         Write-Verbose -Message "Found AddressList $($Name)"
@@ -164,7 +193,6 @@ function Get-TargetResource
         return $result
     }
 }
-
 function Set-TargetResource
 {
     [CmdletBinding()]
@@ -270,7 +298,10 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting AddressList configuration for $Name"
+    Write-Verbose -Message "Setting Address List configuration for $Name"
+
+    $currentAddressListConfig = Get-TargetResource @PSBoundParameters
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -281,30 +312,86 @@ function Set-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-
-    $AddressLists = Get-AddressList
-
-    $AddressList = $AddressLists | Where-Object -FilterScript { $_.Identity -eq $Name }
-    $AddressListParams = $PSBoundParameters
-    $AddressListParams.Remove('Ensure') | Out-Null
-    $AddressListParams.Remove('GlobalAdminAccount') | Out-Null
-   
-    if (('Present' -eq $Ensure ) -and ($null -eq $AddressList))
+    if ($RecipientFilter)
     {
-        Write-Verbose -Message "Creating ClientAccessRule $($Name)."
-        $AddressListParams.Add("Name", $Name)
-        $AddressListParams.Remove('Identity') | Out-Null
-        New-ClientAccessRule @ClientAccessRuleParams
+        $NewAddressListParams = @{
+            Name            = $Name
+            RecipientFilter = $RecipientFilter
+            Confirm         = $false
+        }
     }
-    elseif (('Present' -eq $Ensure ) -and ($Null -ne $AddressList))
+    else
     {
-        Write-Verbose -Message "Setting ClientAccessRule $($Name) with values: $(Convert-O365DscHashtableToString -Hashtable $AddressListParams)"
-        Set-ClientAccessRule @ClientAccessRuleParams -Confirm:$false
+        $NewAddressListParams = @{
+            Name                         = $Name
+            ConditionalCompany           = $ConditionalCompany
+            ConditionalCustomAttribute1  = $ConditionalCustomAttribute1
+            ConditionalCustomAttribute10 = $ConditionalCustomAttribute10
+            ConditionalCustomAttribute11 = $ConditionalCustomAttribute11
+            ConditionalCustomAttribute12 = $ConditionalCustomAttribute12
+            ConditionalCustomAttribute13 = $ConditionalCustomAttribute13
+            ConditionalCustomAttribute14 = $ConditionalCustomAttribute14
+            ConditionalCustomAttribute15 = $ConditionalCustomAttribute15
+            ConditionalCustomAttribute2  = $ConditionalCustomAttribute2
+            ConditionalCustomAttribute3  = $ConditionalCustomAttribute3
+            ConditionalCustomAttribute4  = $ConditionalCustomAttribute4
+            ConditionalCustomAttribute5  = $ConditionalCustomAttribute5
+            ConditionalCustomAttribute6  = $ConditionalCustomAttribute6
+            ConditionalCustomAttribute7  = $ConditionalCustomAttribute7
+            ConditionalCustomAttribute8  = $ConditionalCustomAttribute8
+            ConditionalCustomAttribute9  = $ConditionalCustomAttribute9
+            ConditionalDepartment        = $ConditionalDepartment
+            ConditionalStateOrProvince   = $ConditionalStateOrProvince
+            DisplayName                  = $DisplayName
+            IncludedRecipients           = $IncludedRecipients
+            Confirm                      = $false
+        }
     }
-    elseif (('Absent' -eq $Ensure ) -and ($null -ne $AddressList))
+
+    $SetAddressListParams = @{
+        Identity                     = $Name
+        Name                         = $Name
+        ConditionalCompany           = $ConditionalCompany
+        ConditionalCustomAttribute1  = $ConditionalCustomAttribute1
+        ConditionalCustomAttribute10 = $ConditionalCustomAttribute10
+        ConditionalCustomAttribute11 = $ConditionalCustomAttribute11
+        ConditionalCustomAttribute12 = $ConditionalCustomAttribute12
+        ConditionalCustomAttribute13 = $ConditionalCustomAttribute13
+        ConditionalCustomAttribute14 = $ConditionalCustomAttribute14
+        ConditionalCustomAttribute15 = $ConditionalCustomAttribute15
+        ConditionalCustomAttribute2  = $ConditionalCustomAttribute2
+        ConditionalCustomAttribute3  = $ConditionalCustomAttribute3
+        ConditionalCustomAttribute4  = $ConditionalCustomAttribute4
+        ConditionalCustomAttribute5  = $ConditionalCustomAttribute5
+        ConditionalCustomAttribute6  = $ConditionalCustomAttribute6
+        ConditionalCustomAttribute7  = $ConditionalCustomAttribute7
+        ConditionalCustomAttribute8  = $ConditionalCustomAttribute8
+        ConditionalCustomAttribute9  = $ConditionalCustomAttribute9
+        ConditionalDepartment        = $ConditionalDepartment
+        ConditionalStateOrProvince   = $ConditionalStateOrProvince
+        DisplayName                  = $DisplayName
+        IncludedRecipients           = $IncludedRecipients
+        RecipientFilter              = $RecipientFilter
+        Confirm                      = $false
+    }
+
+    #Address List doesn't exist but it should
+    if ($Ensure -eq "Present" -and $currentAddressListConfig.Ensure -eq "Absent")
     {
-        Write-Verbose -Message "Removing ClientAccessRule $($Name)"
-        Remove-ClientAccessRule -Identity $Name -Confirm:$false
+        Write-Verbose -Message "The Address List '$($Name)' does not exist bit it should. Creating Address List."
+        New-AddressList @NewAddressListParams
+    }
+    #Address List exists but shouldn't
+    elseif ($Ensure -eq "Absent" -and $currentAddressListConfig.Ensure -eq "Present")
+    {
+        Write-Verbose -Message "Address List '$($Name)' exists but shouldn't. Removing Address List."
+        Remove-AddressList -Identity $Name -Confirm:$false
+    }
+    elseif ($Ensure -eq "Present" -and $currentAddressListConfig.Ensure -eq "Present")
+    {
+        Write-Verbose -Message "Address List '$($Name)' already exists. Updating settings"
+        Write-Verbose -Message "Setting Address List '$($Name)' with values: $(convert-O365DscHastabelToString -Hashtable $SetAddressListParams)"
+        Set-AddressList @SetAddressListParams
     }
 }
 
@@ -414,7 +501,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of AddressLists for $Name"
+    Write-Verbose -Message "Testing Address List configuration for $Name"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -438,44 +525,45 @@ function Export-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.String])]
-    [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
     $InformationPreference = 'Continue'
+    
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
+    
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
-
+    $dscContent = ""
     $i = 1
-    [array]$policies = Get-Addresslist
+    [array]$addressLists = Get-Addresslist
     $content = ''
 
-    foreach ($policy in $policies)
+    foreach ($addressList in $addressLists)
     {
-        Write-Information "    [$i/$($policies.count)] $($policy.Identity)"
+        Write-Information "    [$i/$($addressLists.Count)] $($addressList.Name)"
         $params = @{
-            Identity           = $policy.Identity
+            Name           = $addressList.Name
             GlobalAdminAccount = $GlobalAdminAccount
         }
         $result = Test-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName 'globaladmin'
-        $content += "      AddressList" + (New-Guid).ToString() + "`r`n"
+        $content += "      EXOAddressList" + (New-Guid).ToString() + "`r`n"
         $content += "      {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "      }`r`n"
+        $dscContent += $content
         $i ++
     }
     return $content
-
 }
 
 Export-ModuleMember -Function *-TargetResource
