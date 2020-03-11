@@ -14,10 +14,11 @@ Configuration Example
 
     node localhost
     {
-        EXOAddressList OrgWide
+        EXOAddressList HR Users
         {
-            Name                       = "All Users"
+            Name                       = "HR Users"
             ConditionalCompany         = "Contoso"
+            ConditionalDepartment      = "HR"
             ConditionalStateOrProvince = "US"
             IncludedRecipients         = "AllRecipients"
             Ensure                     = "Present"
