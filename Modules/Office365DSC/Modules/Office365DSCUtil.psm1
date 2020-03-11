@@ -1999,9 +1999,20 @@ function ConvertTo-SPOUserProfilePropertyInstanceString
     $results = @()
     foreach ($property in $Properties)
     {
+        $value = $property.Value
+        if($value -and !($value -is [string]))
+        {
+            $value = $value.ToString()
+        }
+        elseif(!$value)
+        {
+            $value = ""
+        }
+        $value = $value.Replace("`"", "```"")
+
         $content = "             MSFT_SPOUserProfilePropertyInstance`r`n            {`r`n"
         $content += "                Key   = `"$($property.Key)`"`r`n"
-        $content += "                Value = `"$($property.Value)`"`r`n"
+        $content += "                Value = `"$($value)`"`r`n"
         $content += "            }`r`n"
         $results += $content
     }
