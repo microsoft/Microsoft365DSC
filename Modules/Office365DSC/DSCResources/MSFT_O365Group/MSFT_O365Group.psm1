@@ -369,9 +369,7 @@ function Export-TargetResource
     $content = ''
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform AzureAD
-    $groups = Get-AzureADGroup -All $true | Where-Object -FilterScript {
-        $_.MailNickName -ne "00000000-0000-0000-0000-000000000000"
-    }
+    $groups = Get-AzureADMSGroup -All $true |  where-object {$_.GroupTypes -contains "Unified"}
 
     $i = 1
     $organization = ""
