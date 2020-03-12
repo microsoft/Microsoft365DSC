@@ -31,7 +31,10 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        $RawInputObject
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
@@ -54,17 +57,25 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform AzureAD
 
-    $ADGroup = Get-AzureADGroup | Where-Object -FilterScript {$_.MailNickName -eq $MailNickName}
-    if ($null -eq $ADGroup)
+    if($RawInputObject)
     {
-        $ADGroup = Get-AzureADGroup | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+        $ADGroup = $RawInputObject
+        Write-Verbose -Message "Using cached value of Group {$($DisplayName)}"
+    }
+    else
+    {
+        $ADGroup = Get-AzureADGroup | Where-Object -FilterScript {$_.MailNickName -eq $MailNickName}
         if ($null -eq $ADGroup)
         {
-            Write-Verbose -Message "Office 365 Group {$DisplayName} was not found."
-            return $nullReturn
+            $ADGroup = Get-AzureADGroup | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            if ($null -eq $ADGroup)
+            {
+                Write-Verbose -Message "Office 365 Group {$DisplayName} was not found."
+                return $nullReturn
+            }
         }
+        Write-Verbose -Message "Found Existing Instance of Group {$($ADGroup.DisplayName)}"
     }
-    Write-Verbose -Message "Found Existing Instance of Group {$($ADGroup.DisplayName)}"
 
     try
     {
@@ -381,6 +392,7 @@ function Export-TargetResource
             DisplayName        = $group.DisplayName
             ManagedBy          = "DummyUser"
             MailNickName       = $group.MailNickName
+            RawInputObject     = $group
         }
         Write-Information "    - [$i/$($groups.Length)] $($group.DisplayName)"
         $result = Get-TargetResource @params

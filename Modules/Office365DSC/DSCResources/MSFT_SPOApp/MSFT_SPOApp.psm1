@@ -249,16 +249,6 @@ function Export-TargetResource
             }
             $i++
         }
-
-        Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
-            -CloudCredential $GlobalAdminAccount `
-            -Platform PnP
-        foreach ($file in $filesToDownload)
-        {
-            $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name
-            $appFileName = $appInstanceUrl.Split('/')[$appInstanceUrl.Split('/').Length - 1]
-            Get-PnPFile -Url $appInstanceUrl -Path $env:Temp -Filename $appFileName -AsFile -Force | Out-Null
-        }
     }
     else
     {
