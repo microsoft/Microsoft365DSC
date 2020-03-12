@@ -390,7 +390,7 @@ function Set-TargetResource
     elseif ($Ensure -eq "Present" -and $currentAddressListConfig.Ensure -eq "Present")
     {
         Write-Verbose -Message "Address List '$($Name)' already exists. Updating settings"
-        Write-Verbose -Message "Setting Address List '$($Name)' with values: $(convert-O365DscHastabelToString -Hashtable $SetAddressListParams)"
+        Write-Verbose -Message "Setting Address List '$($Name)' with values: $(Convert-O365DscHashtableToString -Hashtable $SetAddressListParams)"
         Set-AddressList @SetAddressListParams
     }
 }
@@ -550,11 +550,11 @@ function Export-TargetResource
     {
         Write-Information "    [$i/$($addressLists.Count)] $($addressList.Name)"
         $params = @{
-            Name           = $addressList.Name
+            Name               = $addressList.Name
             GlobalAdminAccount = $GlobalAdminAccount
         }
         $result = Test-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName 'globaladmin'
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $content += "      EXOAddressList" + (New-Guid).ToString() + "`r`n"
         $content += "      {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
