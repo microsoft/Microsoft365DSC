@@ -1292,6 +1292,10 @@ function Set-AddressList
         $ConditionalStateOrProvince,
 
         [Parameter()]
+        [System.String[]]
+        $DisplayName,
+
+        [Parameter()]
         [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
         [System.String[]]
         $IncludedRecipients,
@@ -1390,6 +1394,10 @@ function New-AddressList
         $ConditionalStateOrProvince,
 
         [Parameter()]
+        [System.String[]]
+        $DisplayName,
+
+        [Parameter()]
         [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
         [System.String[]]
         $IncludedRecipients,
@@ -1403,5 +1411,3 @@ function New-AddressList
         $Confirm
     )
 }
-
-
