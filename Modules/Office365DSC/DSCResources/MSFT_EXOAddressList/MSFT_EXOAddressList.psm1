@@ -78,7 +78,7 @@ function Get-TargetResource
         $ConditionalDepartment,
 
         [Parameter()]
-        [Sys,tem.String]
+        [System.String]
         $ConditionalStateOrProvince,
 
         [Parameter()]
@@ -272,7 +272,7 @@ function Set-TargetResource
         $ConditionalDepartment,
 
         [Parameter()]
-        [Sys,tem.String]
+        [System.String]
         $ConditionalStateOrProvince,
 
         [Parameter()]
@@ -475,7 +475,7 @@ function Test-TargetResource
         $ConditionalDepartment,
 
         [Parameter()]
-        [Sys,tem.String]
+        [System.String]
         $ConditionalStateOrProvince,
 
         [Parameter()]
