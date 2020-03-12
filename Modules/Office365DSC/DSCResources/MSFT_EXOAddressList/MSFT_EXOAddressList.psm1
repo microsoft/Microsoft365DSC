@@ -541,10 +541,10 @@ function Export-TargetResource
     
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
+
     $dscContent = ""
     $i = 1
     [array]$addressLists = Get-Addresslist
-    $content = ''
 
     foreach ($addressList in $addressLists)
     {
@@ -553,7 +553,7 @@ function Export-TargetResource
             Name               = $addressList.Name
             GlobalAdminAccount = $GlobalAdminAccount
         }
-        $result = Test-TargetResource @params
+        $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $content += "      EXOAddressList" + (New-Guid).ToString() + "`r`n"
         $content += "      {`r`n"
