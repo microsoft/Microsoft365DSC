@@ -64,10 +64,10 @@ function Get-TargetResource
     }
     else
     {
-        $ADGroup = Get-AzureADGroup | Where-Object -FilterScript {$_.MailNickName -eq $MailNickName}
+        $ADGroup = Get-AzureADMSGroup | Where-Object -FilterScript {$_.MailNickName -eq $MailNickName}
         if ($null -eq $ADGroup)
         {
-            $ADGroup = Get-AzureADGroup | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            $ADGroup = Get-AzureADMSGroup | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
             if ($null -eq $ADGroup)
             {
                 Write-Verbose -Message "Office 365 Group {$DisplayName} was not found."
@@ -79,9 +79,9 @@ function Get-TargetResource
 
     try
     {
-        $membersList = Get-AzureADGroupMember -ObjectId $ADGroup.ObjectId
+        $membersList = Get-AzureADGroupMember -ObjectId $ADGroup.Id
         Write-Verbose -Message "Found Members for Group {$($ADGroup.DisplayName)}"
-        $owners = Get-AzureADGroupOwner -ObjectId $ADGroup.ObjectId
+        $owners = Get-AzureADGroupOwner -ObjectId $ADGroup.Id
         Write-Verbose -Message "Found Owners for Group {$($ADGroup.DisplayName)}"
         $ownersUPN = @()
         if ($null -ne $owners)
