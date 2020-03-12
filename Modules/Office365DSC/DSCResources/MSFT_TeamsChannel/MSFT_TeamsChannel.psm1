@@ -30,7 +30,10 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        $RawInputObject
     )
 
     Write-Verbose -Message "Getting configuration of Teams channel $DisplayName"
@@ -41,9 +44,6 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-        -Platform MicrosoftTeams
 
     $nullReturn = @{
         TeamName           = $TeamName
@@ -58,27 +58,37 @@ function Get-TargetResource
 
     try
     {
-        $team = Get-TeamByName $TeamName
-
-        Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
-
-        $channel = Get-TeamChannel -GroupId $team.GroupId `
-            -ErrorAction SilentlyContinue `
-        | Where-Object -FilterScript {
-            ($_.DisplayName -eq $DisplayName)
-        }
-
-        #Current channel doesnt exist and trying to rename throw an error
-        if (($null -eq $channel) -and $CurrentParameters.ContainsKey("NewDisplayName"))
+        if($RawInputObject)
         {
-            Write-Verbose -Message "Cannot rename channel $DisplayName , doesnt exist in current Team"
-            throw "Channel named $DisplayName doesn't exist in current Team"
+            $team = $RawInputObject.Team
+            $channel = $RawInputObject.Channel
         }
-
-        if ($null -eq $channel)
+        else
         {
-            Write-Verbose -Message "Failed to get team channels with ID $($team.GroupId) and display name of $DisplayName"
-            return $nullReturn
+            Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            -Platform MicrosoftTeams
+            $team = Get-TeamByName $TeamName
+
+            Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
+
+            $channel = Get-TeamChannel -GroupId $team.GroupId `
+                -ErrorAction SilentlyContinue `
+            | Where-Object -FilterScript {
+                ($_.DisplayName -eq $DisplayName)
+            }
+
+            #Current channel doesnt exist and trying to rename throw an error
+            if (($null -eq $channel) -and $CurrentParameters.ContainsKey("NewDisplayName"))
+            {
+                Write-Verbose -Message "Cannot rename channel $DisplayName , doesnt exist in current Team"
+                throw "Channel named $DisplayName doesn't exist in current Team"
+            }
+
+            if ($null -eq $channel)
+            {
+                Write-Verbose -Message "Failed to get team channels with ID $($team.GroupId) and display name of $DisplayName"
+                return $nullReturn
+            }
         }
 
         return @{
@@ -280,6 +290,10 @@ function Export-TargetResource
                 TeamName           = $team.DisplayName
                 DisplayName        = $channel.DisplayName
                 GlobalAdminAccount = $GlobalAdminAccount
+                RawInputObject     = @{
+                    Team = $team
+                    Channel = $channel
+                }
             }
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"

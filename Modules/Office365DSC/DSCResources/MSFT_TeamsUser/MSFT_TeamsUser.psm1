@@ -24,58 +24,69 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        $RawInputObject
     )
 
     Write-Verbose -Message "Getting configuration of member $User to Team $TeamName"
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform MicrosoftTeams
-
-    $nullReturn = @{
-        User               = $User
-        Role               = $Role
-        TeamName           = $TeamName
-        Ensure             = "Absent"
-        GlobalAdminAccount = $GlobalAdminAccount
-    }
-
-    Write-Verbose -Message "Checking for existance of Team User $User"
-    $team = Get-TeamByName $TeamName -ErrorAction SilentlyContinue
-    if ($null -eq $team)
+    if ($RawInputObject)
     {
-        return $nullReturn
+        $myUser = $RawInputObject
     }
-
-    Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
-
-    #region Telemetry
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
-    $data.Add("Method", $MyInvocation.MyCommand)
-    #Add-O365DSCTelemetryEvent -Data $data
-    #endregion
-
-    try
+    else
     {
-        Write-Verbose "Retrieving user without a specific Role specified"
-        $allMembers = Get-TeamUser -GroupId $team.GroupId -ErrorAction SilentlyContinue
-    }
-    catch
-    {
-        Write-Warning "The current user doesn't have the rights to access the list of members for Team {$($TeamName)}."
-        Write-Verbose $_
-        return $nullReturn
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+            -Platform MicrosoftTeams
+
+        $nullReturn = @{
+            User               = $User
+            Role               = $Role
+            TeamName           = $TeamName
+            Ensure             = "Absent"
+            GlobalAdminAccount = $GlobalAdminAccount
+        }
+
+        Write-Verbose -Message "Checking for existance of Team User $User"
+        $team = Get-TeamByName $TeamName -ErrorAction SilentlyContinue
+        if ($null -eq $team)
+        {
+            return $nullReturn
+        }
+
+        Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
+
+        #region Telemetry
+        $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+        $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+        $data.Add("Method", $MyInvocation.MyCommand)
+        #Add-O365DSCTelemetryEvent -Data $data
+        #endregion
+
+        try
+        {
+            Write-Verbose "Retrieving user without a specific Role specified"
+            $allMembers = Get-TeamUser -GroupId $team.GroupId -ErrorAction SilentlyContinue
+        }
+        catch
+        {
+            Write-Warning "The current user doesn't have the rights to access the list of members for Team {$($TeamName)}."
+            Write-Verbose $_
+            return $nullReturn
+        }
+
+        if ($null -eq $allMembers)
+        {
+            Write-Verbose -Message "Failed to get Team's users for Team $TeamName"
+            return $nullReturn
+        }
+
+        $myUser = $allMembers | Where-Object -FilterScript { $_.User -eq $User }
+        Write-Verbose -Message "Found team user $($myUser.User) with role:$($myUser.Role)"
     }
 
-    if ($null -eq $allMembers)
-    {
-        Write-Verbose -Message "Failed to get Team's users for Team $TeamName"
-        return $nullReturn
-    }
-
-    $myUser = $allMembers | Where-Object -FilterScript { $_.User -eq $User }
-    Write-Verbose -Message "Found team user $($myUser.User) with role:$($myUser.Role)"
     return @{
         User               = $myUser.User
         Role               = $myUser.Role
@@ -220,7 +231,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference ='Continue'
+    $InformationPreference = 'Continue'
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -310,6 +321,7 @@ function Export-TargetResource
                                     TeamName           = $team.DisplayName
                                     User               = $user.User
                                     GlobalAdminAccount = $params.GlobalAdminAccount
+                                    RawInputObject     = $user
                                 }
                                 $CurrentModulePath = $params.ScriptRoot + "\MSFT_TeamsUser.psm1"
                                 Import-Module $CurrentModulePath -Force | Out-Null
