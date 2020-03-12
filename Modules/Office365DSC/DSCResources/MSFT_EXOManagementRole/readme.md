@@ -2,4 +2,4 @@
 
 ## Description
 
-This resource configures Management Roles in Exchange Online.
+This resource configures RBAC Management Roles in Exchange Online.
