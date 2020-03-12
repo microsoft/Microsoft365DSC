@@ -154,7 +154,7 @@ function Set-TargetResource
         Remove-RoleAssignmentPolicy -Identity $Name -Confirm:$false
     }
     # CASE: Role Assignment Policy exists and it should, but has different values than the desired ones
-    elseif ($Ensure -eq "Present" -and $currentRoleAssignmentPolicyConfig.Ensure -eq "Present" -and $currentRoleAssignmentPolicyConfig.Roles -eq $Roles)
+    elseif ($Ensure -eq "Present" -and $currentRoleAssignmentPolicyConfig.Ensure -eq "Present" -and $null -eq (Compare-Object -ReferenceObject $($currentRoleAssignmentPolicyConfig.Roles) -DifferenceObject $Roles))
     {
         Write-Verbose -Message "Role Assignment Policy '$($Name)' already exists, but needs updating."
         Write-Verbose -Message "Setting Role Assignment Policy $($Name) with values: $(Convert-O365DscHashtableToString -Hashtable $SetRoleAssignmentPolicyParams)"
@@ -162,7 +162,7 @@ function Set-TargetResource
     }
     # CASE: Role Assignment Policy exists and it should, but Roles attribute has different values than the desired ones
     # Set-RoleAssignmentPolicy cannot change Roles attribute. Therefore we have to remove and recreate the policy if Roles attribute should be changed.
-    elseif ($Ensure -eq "Present" -and $currentRoleAssignmentPolicyConfig.Ensure -eq "Present" -and $currentRoleAssignmentPolicyConfig.Roles -ne $Roles)
+    elseif ($Ensure -eq "Present" -and $currentRoleAssignmentPolicyConfig.Ensure -eq "Present" -and $null -ne (Compare-Object -ReferenceObject $($currentRoleAssignmentPolicyConfig.Roles) -DifferenceObject $Roles))
     {
         Write-Verbose -Message "Role Assignment Policy '$($Name)' already exists, but roles attribute needs updating."
         Write-Verbose -Message "Remove Role AssignmentPolicy before recreating because Roles attribute cannot be change with Set cmdlet"
