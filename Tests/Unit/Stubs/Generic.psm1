@@ -871,6 +871,78 @@ function Set-OfflineAddressBook
     )
 }
 
+function add-AvailabilityAddressSpace
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBBasic', 'InternalProxy')]
+        [System.String]
+        $AccessMethod,
+
+        [Parameter()]
+        [System.String]
+        $Credentials,
+
+        [Parameter()]
+        [System.String]
+        $ForestName,
+
+        [Parameter()]
+        [System.String]
+        $TargetAutodiscoverEpr
+    )
+}
+
+function get-AvailabilityAddressSpace
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function remove-AvailabilityAddressSpace
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBBasic', 'InternalProxy')]
+        [System.String]
+        $AccessMethod,
+
+        [Parameter()]
+        [System.String]
+        $Credentials,
+
+        [Parameter()]
+        [System.String]
+        $ForestName,
+
+        [Parameter()]
+        [System.String]
+        $TargetAutodiscoverEpr,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
 function New-OfflineAddressBook
 {
     [CmdletBinding()]
