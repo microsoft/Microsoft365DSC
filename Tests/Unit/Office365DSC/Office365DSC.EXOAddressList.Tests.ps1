@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("globaladmin", $secpasswd)
 
         Mock -CommandName Close-SessionsAndReturnError -MockWith {
 
@@ -44,9 +44,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Name                       = 'Contoso Address List'
                 ConditionalCompany         = 'Contoso'
-                ConditionalDepartment      = "HR"
-                ConditionalStateOrProvince = "US"
-                IncludedRecipients         = "AllRecipients"
+                ConditionalDepartment      = 'HR'
+                ConditionalStateOrProvince = 'US'
+                IncludedRecipients         = 'AllRecipients'
                 Ensure                     = 'Present'
                 GlobalAdminAccount         = $GlobalAdminAccount
             }
@@ -55,9 +55,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     Name                       = 'Contoso Different Address List'
                     ConditionalCompany         = 'Contoso'
-                    ConditionalDepartment      = "IT"
-                    ConditionalStateOrProvince = "DE"
-                    IncludedRecipients         = "AllRecipients"
+                    ConditionalDepartment      = 'IT'
+                    ConditionalStateOrProvince = 'DE'
+                    IncludedRecipients         = 'AllRecipients'
                 }
             }
 
@@ -69,9 +69,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     Name                       = 'Contoso Address List'
                     ConditionalCompany         = 'Contoso'
-                    ConditionalDepartment      = "HR"
-                    ConditionalStateOrProvince = "US"
-                    IncludedRecipients         = "AllRecipients"
+                    ConditionalDepartment      = 'HR'
+                    ConditionalStateOrProvince = 'US'
+                    IncludedRecipients         = 'AllRecipients'
                     Ensure                     = 'Present'
                     GlobalAdminAccount         = $GlobalAdminAccount
                 }
@@ -90,9 +90,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Name                       = 'Contoso Address List'
                 ConditionalCompany         = 'Contoso'
-                ConditionalDepartment      = "HR"
-                ConditionalStateOrProvince = "US"
-                IncludedRecipients         = "AllRecipients"
+                ConditionalDepartment      = 'HR'
+                ConditionalStateOrProvince = 'US'
+                IncludedRecipients         = 'AllRecipients'
                 Ensure                     = 'Present'
                 GlobalAdminAccount         = $GlobalAdminAccount
             }
@@ -101,9 +101,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     Name                       = 'Contoso Address List'
                     ConditionalCompany         = 'Contoso'
-                    ConditionalDepartment      = "HR"
-                    ConditionalStateOrProvince = "US"
-                    IncludedRecipients         = "AllRecipients"
+                    ConditionalDepartment      = 'HR'
+                    ConditionalStateOrProvince = 'US'
+                    IncludedRecipients         = 'AllRecipients'
                 }
             }
 
@@ -120,9 +120,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Name                       = 'Contoso Address List'
                 ConditionalCompany         = 'Contoso'
-                ConditionalDepartment      = "HR"
-                ConditionalStateOrProvince = "US"
-                IncludedRecipients         = "AllRecipients"
+                ConditionalDepartment      = 'HR'
+                ConditionalStateOrProvince = 'US'
+                IncludedRecipients         = 'AllRecipients'
                 Ensure                     = 'Present'
                 GlobalAdminAccount         = $GlobalAdminAccount
             }
@@ -132,8 +132,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name                       = 'Contoso Address List'
                     ConditionalCompany         = 'Contoso'
                     ConditionalDepartment      = "IT"
-                    ConditionalStateOrProvince = "US"
-                    IncludedRecipients         = "AllRecipients"
+                    ConditionalStateOrProvince = 'US'
+                    IncludedRecipients         = 'AllRecipients'
                 }
             }
 
@@ -145,9 +145,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     Name                       = 'Contoso Address List'
                     ConditionalCompany         = 'Contoso'
-                    ConditionalDepartment      = "HR"
-                    ConditionalStateOrProvince = "US"
-                    IncludedRecipients         = "AllRecipients"
+                    ConditionalDepartment      = 'HR'
+                    ConditionalStateOrProvince = 'US'
+                    IncludedRecipients         = 'AllRecipients'
                     GlobalAdminAccount         = $GlobalAdminAccount
                 }
             }
@@ -165,9 +165,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $AddressList = @{
                 Name                       = 'Contoso Address List'
                 ConditionalCompany         = 'Contoso'
-                ConditionalDepartment      = "HR"
-                ConditionalStateOrProvince = "US"
-                IncludedRecipients         = "AllRecipients"
+                ConditionalDepartment      = 'HR'
+                ConditionalStateOrProvince = 'US'
+                IncludedRecipients         = 'AllRecipients'
             }
 
             It "Should Reverse Engineer resource from the Export method when single" {
@@ -177,7 +177,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 $exported = Export-TargetResource @testParams
                 ([regex]::Matches($exported, " EXOAddressList " )).Count | Should Be 1
-                $exported.Contains("HR") | Should Be $true
+                $exported.Contains('HR') | Should Be $true
             }
         }
     }
