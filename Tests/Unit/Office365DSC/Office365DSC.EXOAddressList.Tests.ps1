@@ -177,7 +177,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 $exported = Export-TargetResource @testParams
                 write-host $exported
-                ([regex]::Matches($exported, " EXOAddressList " )).Count | Should Be 1
+                ([regex]::Matches($exported, "EXOAddressList " )).Count | Should Be 1
                 $exported.Contains('HR') | Should Be $true
             }
         }
