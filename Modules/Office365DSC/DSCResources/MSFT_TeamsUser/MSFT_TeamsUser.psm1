@@ -10,6 +10,10 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
+        $TeamMailNickName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
         $User,
 
         [Parameter()]
@@ -45,6 +49,7 @@ function Get-TargetResource
             User               = $User
             Role               = $Role
             TeamName           = $TeamName
+            TeamMailNickName   = $TeamMailNickName
             Ensure             = "Absent"
             GlobalAdminAccount = $GlobalAdminAccount
         }
@@ -88,11 +93,12 @@ function Get-TargetResource
     }
 
     return @{
-        User               = $myUser.User
-        Role               = $myUser.Role
-        TeamName           = $TeamName
-        Ensure             = "Present"
-        GlobalAdminAccount = $GlobalAdminAccount
+        User                  = $myUser.User
+        Role                  = $myUser.Role
+        TeamName              = $TeamName
+        TeamMailNickName      = $TeamMailNickName
+        Ensure                = "Present"
+        GlobalAdminAccount    = $GlobalAdminAccount
     }
 
 }
@@ -319,6 +325,7 @@ function Export-TargetResource
                                 Write-Information "        - [$i/$($users.Length)] $($user.User)"
                                 $getParams = @{
                                     TeamName           = $team.DisplayName
+                                    TeamMailNickName   = $team.MailNickName
                                     User               = $user.User
                                     GlobalAdminAccount = $params.GlobalAdminAccount
                                     RawInputObject     = $user

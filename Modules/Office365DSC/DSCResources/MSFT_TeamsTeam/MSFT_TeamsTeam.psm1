@@ -556,7 +556,7 @@ function Export-TargetResource
     $organization = $GlobalAdminAccount.UserName.Split('@')[1]
     foreach ($team in $teams)
     {
-        Write-Information "    - [$i/$($teams.Length)] $($team.DisplayName)"
+        Write-Information "    - [$i/$($teams.Length)] $($team.DisplayName)o"
         $params = @{
             DisplayName        = $team.DisplayName
             GlobalAdminAccount = $GlobalAdminAccount
@@ -564,7 +564,6 @@ function Export-TargetResource
         }
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $result.Remove("GroupID")
         if ("" -eq $result.Owner)
         {
             $result.Remove("Owner")
