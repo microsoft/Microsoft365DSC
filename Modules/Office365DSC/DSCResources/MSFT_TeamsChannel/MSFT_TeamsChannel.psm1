@@ -13,6 +13,10 @@ function Get-TargetResource
         [System.String]
         $TeamName,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $TeamMailNickName,
+
         [Parameter()]
         [System.String]
         [ValidateLength(0, 50)]
@@ -47,6 +51,7 @@ function Get-TargetResource
 
     $nullReturn = @{
         TeamName           = $TeamName
+        TeamMailNickName   = $TeamMailNickName
         DisplayName        = $DisplayName
         Description        = $Description
         NewDisplayName     = $NewDisplayName
@@ -94,6 +99,7 @@ function Get-TargetResource
         return @{
             DisplayName        = $channel.DisplayName
             TeamName           = $team.DisplayName
+            TeamMailNickName   = $team.MailNickName
             Description        = $channel.Description
             NewDisplayName     = $NewDisplayName
             Ensure             = "Present"
@@ -288,6 +294,7 @@ function Export-TargetResource
             Write-Information "        - [$i/$($channels.Length)] $($channel.DisplayName)"
             $params = @{
                 TeamName           = $team.DisplayName
+                TeamMailNickName   = $team.MailNickName
                 DisplayName        = $channel.DisplayName
                 GlobalAdminAccount = $GlobalAdminAccount
                 RawInputObject     = @{
