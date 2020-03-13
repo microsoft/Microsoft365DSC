@@ -483,14 +483,6 @@ function Show-O365GUI
         $chckSPOSite.Text = "Site Collections"
         $pnlSPO.Controls.Add($chckSPOSite)
 
-        $chckSPOSiteAuditSettings = New-Object System.Windows.Forms.CheckBox
-        $chckSPOSiteAuditSettings.Top = 180
-        $chckSPOSiteAuditSettings.AutoSize = $true;
-        $chckSPOSiteAuditSettings.Name = "chckSPOSiteAuditSettings"
-        $chckSPOSiteAuditSettings.Checked = $true
-        $chckSPOSiteAuditSettings.Text = "Site Audit Settings"
-        $pnlSPO.Controls.Add($chckSPOSiteAuditSettings)
-
         $chckSPOSiteDesign = New-Object System.Windows.Forms.CheckBox
         $chckSPOSiteDesign.Top = 200
         $chckSPOSiteDesign.AutoSize = $true;

@@ -123,7 +123,10 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        $RawInputObject
     )
 
     #region Telemetry
@@ -133,8 +136,11 @@ function Get-TargetResource
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-        -Platform PnP
+    if(!$RawInputObject)
+    {
+        Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+            -Platform PnP
+    }
 
     $nullReturn = @{
         Url                = $Url
@@ -146,13 +152,24 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message "Getting site collection $Url"
-
-        $site = Get-PnPTenantSite -Url $Url -ErrorAction 'SilentlyContinue'
-        if ($null -eq $site)
+        $CurrentHubUrl = $null
+        if($RawInputObject)
         {
-            Write-Verbose -Message "The specified Site Collection {$Url} doesn't exist."
-            return $nullReturn
+            $site = $RawInputObject.Site
+            $hubSites = $RawInputObject.HubSites
+        }
+        else
+        {
+            Write-Verbose -Message "Getting site collection $Url"
+
+            $site = Get-PnPTenantSite -Url $Url -ErrorAction 'SilentlyContinue'
+            if ($null -eq $site)
+            {
+                Write-Verbose -Message "The specified Site Collection {$Url} doesn't exist."
+                return $nullReturn
+            }
+
+            $hubSites = Get-PnPHubSite
         }
 
         $CurrentHubUrl = $null
@@ -160,7 +177,7 @@ function Get-TargetResource
         {
             $hubId = $site.HubSiteId
             Write-Verbose -Message "Site {$Url} is associated with HubSite {$hubId}"
-            $hubSite = Get-PnPHubSite | Where-Object -FilterScript {$_.ID -eq $hubId}
+            $hubSite = $hubSites | Where-Object -FilterScript {$_.ID -eq $hubId}
 
             if ($null -ne $hubSite)
             {
@@ -198,7 +215,7 @@ function Get-TargetResource
             StorageMaximumLevel                         = $site.StorageMaximumLevel
             StorageWarningLevel                         = $site.StorageWarningLevel
             AllowSelfServiceUpgrade                     = $site.AllowSelfServiceUpgrade
-            Owner                                       = $site.Owner
+            Owner                                       = $site.OwnerEmail
             CommentsOnSitePagesDisabled                 = $site.CommentsOnSitePagesDisabled
             DefaultLinkPermission                       = $site.DefaultLinkPermission
             DefaultSharingLinkType                      = $site.DefaultSharingLinkType
@@ -711,8 +728,11 @@ function Export-TargetResource
             $principal = $organization.Split(".")[0]
         }
     }
+
+    [array]$hubSites = Get-PnPHubSite
     foreach ($site in $sites)
     {
+        # must retrieve the site again to get the owner
         $site = Get-PnPTenantSite -Url $site.Url
         Write-Information "    - [$i/$($sites.Length)] $($site.Url)"
         $params = @{
@@ -722,6 +742,10 @@ function Export-TargetResource
             Owner              = $site.Owner
             Title              = $site.Title
             TimeZoneId         = $site.TimeZoneID
+            RawInputObject     =  @{
+                Site = $site
+                HubSites = $hubSites
+            }
         }
         try
         {

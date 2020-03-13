@@ -103,7 +103,10 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        $RawInputObject
     )
 
     Write-Verbose -Message "Getting configuration of Team $DisplayName"
@@ -143,15 +146,23 @@ function Get-TargetResource
     }
 
     Write-Verbose -Message "Checking for existance of Team $DisplayName"
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform MicrosoftTeams
+
+    if(!$RawInputObject)
+    {
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+            -Platform MicrosoftTeams
+    }
 
     $CurrentParameters = $PSBoundParameters
 
     try
     {
+        if($RawInputObject)
+        {
+            $team = $RawInputObject
+        }
         ## will only return 1 instance
-        if ($CurrentParameters.ContainsKey("GroupID"))
+        elseif ($CurrentParameters.ContainsKey("GroupID"))
         {
             $team = Get-Team -GroupId $GroupID
             if ($null -eq $team)
@@ -175,7 +186,7 @@ function Get-TargetResource
             }
         }
 
-        $Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object { $_.Role -eq "owner" }
+        $Owners = Get-TeamUser -GroupId $team.GroupId -Role Owner
         $OwnersArray = @()
         if ($null -ne $Owners)
         {
@@ -494,7 +505,7 @@ function Test-TargetResource
 
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
-    
+
     If (!$PSBoundParameters.ContainsKey('Ensure')) {
         $PSBoundParameters.Add('Ensure',$Ensure)
     }
@@ -545,14 +556,14 @@ function Export-TargetResource
     $organization = $GlobalAdminAccount.UserName.Split('@')[1]
     foreach ($team in $teams)
     {
-        Write-Information "    - [$i/$($teams.Length)] $($team.DisplayName)"
+        Write-Information "    - [$i/$($teams.Length)] $($team.DisplayName)o"
         $params = @{
             DisplayName        = $team.DisplayName
             GlobalAdminAccount = $GlobalAdminAccount
+            RawInputObject     = $team
         }
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $result.Remove("GroupID")
         if ("" -eq $result.Owner)
         {
             $result.Remove("Owner")

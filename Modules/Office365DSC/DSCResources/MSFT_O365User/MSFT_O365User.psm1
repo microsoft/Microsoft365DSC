@@ -100,7 +100,10 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        $RawInputObject
     )
     Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
 
@@ -111,7 +114,10 @@ function Get-TargetResource
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -Platform AzureAD -CloudCredential $GlobalAdminAccount
+    if(!$RawInputObject)
+    {
+        Test-MSCloudLogin -Platform AzureAD -CloudCredential $GlobalAdminAccount
+    }
 
     $nullReturn = @{
         UserPrincipalName  = $null
@@ -127,21 +133,32 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-        $user = Get-AzureADUser -ObjectId $UserPrincipalName -ErrorAction SilentlyContinue
-        if ($null -eq $user)
+        $currentLicenseAssignment = @()
+        if($RawInputObject)
         {
-            Write-Verbose -Message "The specified User doesn't already exist."
-            return $nullReturn
+            $user = $RawInputObject.User
+            $user.AssignedLicenses | ForEach-Object { $currentLicenseAssignment += $RawInputObject.SubscribedSkuPartNumbersById[$_.SkuId] }
+        }
+        else
+        {
+            Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
+            $user = Get-AzureADUser -ObjectId $UserPrincipalName -ErrorAction SilentlyContinue
+            if ($null -eq $user)
+            {
+                Write-Verbose -Message "The specified User doesn't already exist."
+                return $nullReturn
+            }
+
+            Write-Verbose -Message "Found User $($UserPrincipalName)"
+
+            $skus = Get-AzureADUserLicenseDetail -ObjectId $UserPrincipalName
+            foreach ($sku in $skus)
+            {
+                $currentLicenseAssignment += $sku.SkuPartNumber
+            }
+
         }
 
-        Write-Verbose -Message "Found User $($UserPrincipalName)"
-        $currentLicenseAssignment = @()
-        $skus = Get-AzureADUserLicenseDetail -ObjectId $UserPrincipalName
-        foreach ($sku in $skus)
-        {
-            $currentLicenseAssignment += $sku.SkuPartNumber
-        }
 
         if ($user.PasswordPolicies -eq 'NONE')
         {
@@ -575,6 +592,9 @@ function Export-TargetResource
         }
     }
     $users = Get-AzureADUser -All $true
+    $subscribedSkuPartNumbersById = @{}
+    Get-AzureADSubscribedSku | ForEach-Object { $subscribedSkuPartNumbersById[$_.SkuID] = $_.SkuPartNumber }
+
     $content = ''
     $partialContent = ""
     $i = 1
@@ -588,6 +608,10 @@ function Export-TargetResource
                 UserPrincipalName   = $userUPN
                 GlobalAdminAccount  = $GlobalAdminAccount
                 Password            = $GlobalAdminAccount
+                RawInputObject      = @{
+                    User = $user
+                    SubscribedSkuPartNumbersById = $subscribedSkuPartNumbersById
+                }
             }
 
             $result = Get-TargetResource @params

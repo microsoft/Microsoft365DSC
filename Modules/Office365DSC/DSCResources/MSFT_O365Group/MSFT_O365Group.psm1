@@ -31,7 +31,10 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        $RawInputObject
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
@@ -54,23 +57,31 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform AzureAD
 
-    $ADGroup = Get-AzureADGroup | Where-Object -FilterScript {$_.MailNickName -eq $MailNickName}
-    if ($null -eq $ADGroup)
+    if($RawInputObject)
     {
-        $ADGroup = Get-AzureADGroup | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+        $ADGroup = $RawInputObject
+        Write-Verbose -Message "Using cached value of Group {$($DisplayName)}"
+    }
+    else
+    {
+        $ADGroup = Get-AzureADMSGroup | Where-Object -FilterScript {$_.MailNickName -eq $MailNickName}
         if ($null -eq $ADGroup)
         {
-            Write-Verbose -Message "Office 365 Group {$DisplayName} was not found."
-            return $nullReturn
+            $ADGroup = Get-AzureADMSGroup | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            if ($null -eq $ADGroup)
+            {
+                Write-Verbose -Message "Office 365 Group {$DisplayName} was not found."
+                return $nullReturn
+            }
         }
+        Write-Verbose -Message "Found Existing Instance of Group {$($ADGroup.DisplayName)}"
     }
-    Write-Verbose -Message "Found Existing Instance of Group {$($ADGroup.DisplayName)}"
 
     try
     {
-        $membersList = Get-AzureADGroupMember -ObjectId $ADGroup.ObjectId
+        $membersList = Get-AzureADGroupMember -ObjectId $ADGroup.Id
         Write-Verbose -Message "Found Members for Group {$($ADGroup.DisplayName)}"
-        $owners = Get-AzureADGroupOwner -ObjectId $ADGroup.ObjectId
+        $owners = Get-AzureADGroupOwner -ObjectId $ADGroup.Id
         Write-Verbose -Message "Found Owners for Group {$($ADGroup.DisplayName)}"
         $ownersUPN = @()
         if ($null -ne $owners)
@@ -358,9 +369,7 @@ function Export-TargetResource
     $content = ''
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform AzureAD
-    $groups = Get-AzureADGroup -All $true | Where-Object -FilterScript {
-        $_.MailNickName -ne "00000000-0000-0000-0000-000000000000"
-    }
+    $groups = Get-AzureADMSGroup -All $true |  where-object {$_.GroupTypes -contains "Unified"}
 
     $i = 1
     $organization = ""
@@ -381,6 +390,7 @@ function Export-TargetResource
             DisplayName        = $group.DisplayName
             ManagedBy          = "DummyUser"
             MailNickName       = $group.MailNickName
+            RawInputObject     = $group
         }
         Write-Information "    - [$i/$($groups.Length)] $($group.DisplayName)"
         $result = Get-TargetResource @params

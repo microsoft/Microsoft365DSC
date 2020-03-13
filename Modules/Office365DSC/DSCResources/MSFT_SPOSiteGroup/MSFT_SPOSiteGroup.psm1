@@ -20,13 +20,16 @@ function Get-TargetResource
         $PermissionLevels,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        $RawInputObject
     )
 
     Write-Verbose -Message "Getting SPOSiteGroups for {$Url}"
@@ -46,51 +49,58 @@ function Get-TargetResource
         Ensure             = "Absent"
     }
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
 
-    #checking if the site actually exists
-    try
+    if ($RawInputObject)
     {
-        $site = Get-PnPTenantSite $Url
+        $siteGroup = $RawInputObject.SiteGroup
+        $sitePermissions = $RawInputObject.SitePermissions
     }
-    catch
-    {
-        $Message = "The specified site collection doesn't exist."
-        New-Office365DSCLogEntry -Error $_ -Message $Message
-        throw $Message
-        return $nullReturn
-    }
-    try
+    else
     {
         Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-            -Platform PnP `
-            -ConnectionUrl $Url
-        $siteGroup = Get-PnPGroup -Identity $Identity
-    }
-    catch
-    {
-        if ($Error[0].Exception.Message -eq "Group cannot be found.")
+        -Platform PnP
+        #checking if the site actually exists
+        try
         {
-            write-verbose -Message "Site group $($Identity) could not be found on site $($Url)"
-
+            $site = Get-PnPTenantSite $Url
         }
-    }
-    if ($null -eq $siteGroup)
-    {
-        return $nullReturn
-    }
-
-    try
-    {
-        $sitePermissions = Get-PnPGroupPermissions -Identity $Identity -ErrorAction Stop
-    }
-    catch
-    {
-        if ($_.Exception -like '*Access denied*')
+        catch
         {
-            Write-Warning -Message "The specified account does not have access to the permissions list for {$Url}"
+            $Message = "The specified site collection doesn't exist."
+            New-Office365DSCLogEntry -Error $_ -Message $Message
+            throw $Message
+        }
+        try
+        {
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+                -Platform PnP `
+                -ConnectionUrl $Url
+            $siteGroup = Get-PnPGroup -Identity $Identity
+        }
+        catch
+        {
+            if ($Error[0].Exception.Message -eq "Group cannot be found.")
+            {
+                write-verbose -Message "Site group $($Identity) could not be found on site $($Url)"
+
+            }
+        }
+        if ($null -eq $siteGroup)
+        {
             return $nullReturn
+        }
+
+        try
+        {
+            $sitePermissions = Get-PnPGroupPermissions -Identity $Identity -ErrorAction Stop
+        }
+        catch
+        {
+            if ($_.Exception -like '*Access denied*')
+            {
+                Write-Warning -Message "The specified account does not have access to the permissions list for {$Url}"
+                return $nullReturn
+            }
         }
     }
     $permissions = @()
@@ -129,7 +139,7 @@ function Set-TargetResource
         $PermissionLevels,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -147,11 +157,11 @@ function Set-TargetResource
     #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform PnP `
-                      -ErrorAction SilentlyContinue
+        -Platform PnP `
+        -ErrorAction SilentlyContinue
 
     $currentValues = Get-TargetResource @PSBoundParameters
-    if ($Ensure -eq "Present"-and $currentValues.Ensure -eq "Absent")
+    if ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Absent")
     {
         $SiteGroupSettings = @{
             Title = $Identity
@@ -172,7 +182,7 @@ function Set-TargetResource
             if ($entry.SideIndicator -eq "<=")
             {
                 Write-Verbose -Message "Permissionlevels to add: $($entry.InputObject)"
-                $PermissionLevelsToAdd +=$entry.InputObject
+                $PermissionLevelsToAdd += $entry.InputObject
             }
             else
             {
@@ -183,8 +193,8 @@ function Set-TargetResource
         if ($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -ne 0)
         {
             $SiteGroupSettings = @{
-                Identity                 = $Identity
-                Owner                    = $Owner
+                Identity = $Identity
+                Owner    = $Owner
             }
             Set-PnPGroup @SiteGroupSettings
 
@@ -193,8 +203,8 @@ function Set-TargetResource
         elseif ($PermissionLevelsToRemove.Count -eq 0 -and $PermissionLevelsToAdd.Count -ne 0)
         {
             $SiteGroupSettings = @{
-                Identity                 = $Identity
-                Owner                    = $Owner
+                Identity = $Identity
+                Owner    = $Owner
             }
             Set-PnPGroup @SiteGroupSettings
 
@@ -202,15 +212,15 @@ function Set-TargetResource
         }
         elseif ($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -eq 0)
         {
-            if (($Identity -eq $currentValues.Identity)-and ($Owner -eq $currentlValues.Owner))
+            if (($Identity -eq $currentValues.Identity) -and ($Owner -eq $currentlValues.Owner))
             {
                 Write-Verbose -Message "All values are configured as desired"
             }
             else
             {
                 $SiteGroupSettings = @{
-                    Identity                 = $Identity
-                    Owner                    = $Owner
+                    Identity = $Identity
+                    Owner    = $Owner
                 }
                 Set-PnPGroup @SiteGroupSettings
             }
@@ -218,8 +228,8 @@ function Set-TargetResource
         else
         {
             $SiteGroupSettings = @{
-                Identity                 = $Identity
-                Owner                    = $Owner
+                Identity = $Identity
+                Owner    = $Owner
             }
             Set-PnPGroup @SiteGroupSettings
 
@@ -259,7 +269,7 @@ function Test-TargetResource
         $PermissionLevels,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -306,8 +316,8 @@ function Export-TargetResource
 
     $InformationPreference = 'Continue'
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform PnP `
-                      -ErrorAction SilentlyContinue
+        -Platform PnP `
+        -ErrorAction SilentlyContinue
 
     #Loop through all sites
     #for each site loop through all site groups and retrieve parameters
@@ -328,7 +338,7 @@ function Export-TargetResource
         catch
         {
             $message = $Error[0].Exception.Message
-            if($null -ne $message)
+            if ($null -ne $message)
             {
                 Write-Warning -Message $message
             }
@@ -352,6 +362,11 @@ function Export-TargetResource
                 Url                = $site.Url
                 Identity           = $siteGroup.Title
                 GlobalAdminAccount = $GlobalAdminAccount
+                RawInputObject     = @{
+                    Site = $site
+                    SiteGroup = $siteGroup
+                    SitePermissions = $sitePerm
+                }
             }
             try
             {

@@ -23,7 +23,10 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        $RawInputObject
     )
 
     Write-Verbose -Message "Getting configuration of SPOPropertyBag for $Key"
@@ -33,20 +36,32 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     # Add-O365DSCTelemetryEvent -Data $data
     #endregion
-    try
+
+    if($RawInputObject)
     {
-        Write-Verbose -Message "Connecting to PnP from the Get method"
-        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-            -ConnectionUrl $Url `
-            -Platform PnP | Out-Null
-        Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
-        $property = Get-PnPPropertyBag
-        Write-Verbose -Message "Properties obtained correctly"
+        $property = $RawInputObject
     }
-    catch
+    else
     {
-        Write-Verbose "GlobalAdminAccount specified does not have admin access to site {$Url}"
+        try
+        {
+            Write-Verbose -Message "Connecting to PnP from the Get method"
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+                -ConnectionUrl $Url `
+                -Platform PnP | Out-Null
+            Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
+            $property = Get-PnPPropertyBag
+            Write-Verbose -Message "Properties obtained correctly"
+
+            $property = $property | Where-Object -FilterScript { $_.Key -ceq $Key }
+            Write-Verbose "Found existing SPOPropertyBag Key $Key at {$Url}"
+        }
+        catch
+        {
+            Write-Verbose "GlobalAdminAccount specified does not have admin access to site {$Url}"
+        }
     }
+
 
     if ($null -eq $property)
     {
@@ -57,8 +72,6 @@ function Get-TargetResource
     }
     else
     {
-        $property = $property | Where-Object -FilterScript { $_.Key -ceq $Key }
-        Write-Verbose "Found existing SPOPropertyBag Key $Key at {$Url}"
         $result = @{
             Ensure             = 'Present'
             Url                = $Url
@@ -269,6 +282,7 @@ function Export-TargetResource
                                     Key                = $property.Key
                                     Value              = '*'
                                     GlobalAdminAccount = $params.GlobalAdminAccount
+                                    RawInputObject    = $property
                                 }
 
                                 $CurrentModulePath = $params.ScriptRoot + "\MSFT_SPOPropertyBag.psm1"
