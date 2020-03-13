@@ -69,7 +69,6 @@ function Get-TargetResource
             $Message = "The specified site collection doesn't exist."
             New-Office365DSCLogEntry -Error $_ -Message $Message
             throw $Message
-            return $nullReturn
         }
         try
         {
