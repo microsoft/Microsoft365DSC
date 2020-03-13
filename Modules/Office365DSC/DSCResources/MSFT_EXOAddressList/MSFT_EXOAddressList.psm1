@@ -193,6 +193,7 @@ function Get-TargetResource
         return $result
     }
 }
+
 function Set-TargetResource
 {
     [CmdletBinding()]
