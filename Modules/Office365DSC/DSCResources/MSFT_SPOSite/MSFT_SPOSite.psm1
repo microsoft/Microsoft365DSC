@@ -177,7 +177,7 @@ function Get-TargetResource
         {
             $hubId = $site.HubSiteId
             Write-Verbose -Message "Site {$Url} is associated with HubSite {$hubId}"
-            $hubSite = hubSites | Where-Object -FilterScript {$_.ID -eq $hubId}
+            $hubSite = $hubSites | Where-Object -FilterScript {$_.ID -eq $hubId}
 
             if ($null -ne $hubSite)
             {
@@ -215,7 +215,7 @@ function Get-TargetResource
             StorageMaximumLevel                         = $site.StorageMaximumLevel
             StorageWarningLevel                         = $site.StorageWarningLevel
             AllowSelfServiceUpgrade                     = $site.AllowSelfServiceUpgrade
-            Owner                                       = $site.Owner
+            Owner                                       = $site.OwnerEmail
             CommentsOnSitePagesDisabled                 = $site.CommentsOnSitePagesDisabled
             DefaultLinkPermission                       = $site.DefaultLinkPermission
             DefaultSharingLinkType                      = $site.DefaultSharingLinkType

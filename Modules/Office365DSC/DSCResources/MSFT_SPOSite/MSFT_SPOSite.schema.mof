@@ -3,8 +3,8 @@ class MSFT_SPOSite : OMI_BaseResource
 {
     [Key, Description("The URL of the site collection.")] string Url;
     [Required, Description("The title of the site collection.")] string Title;
-    [Required, Description("Specifies the owner of the site.")] string Owner;
     [Required, Description("TimeZone ID of the site collection.")] uint32 TimeZoneId;
+    [Write, Description("Specifies the owner of the site.")] string Owner;
     [Write, Description("Specifies with template of site to create.")] string Template;
     [Write, Description("The URL of the Hub site the site collection needs to get connected to.")] string HubUrl;
     [Write, Description("Disables Microsoft Flow for this site.")] boolean DisableFlows;
