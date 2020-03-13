@@ -282,7 +282,7 @@ function Export-TargetResource
                                     Key                = $property.Key
                                     Value              = '*'
                                     GlobalAdminAccount = $params.GlobalAdminAccount
-                                    $RawInputObject    = $property
+                                    RawInputObject    = $property
                                 }
 
                                 $CurrentModulePath = $params.ScriptRoot + "\MSFT_SPOPropertyBag.psm1"
