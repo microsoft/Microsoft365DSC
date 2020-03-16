@@ -8,77 +8,77 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
-        
+
         [Parameter()]
         [System.String]
         $ConditionalCompany,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute1,
-        
+
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute10,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute11,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute12,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute13,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute14,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute15,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute2,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute3,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute4,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute5,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute6,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute7,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute8,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute9,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalDepartment,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalStateOrProvince,
 
         [Parameter()]
@@ -87,7 +87,7 @@ function Get-TargetResource
 
         [Parameter()]
         [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
-        [System.String]
+        [System.String[]]
         $IncludedRecipients,
 
         [Parameter()]
@@ -203,77 +203,77 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
-        
+
         [Parameter()]
         [System.String]
         $ConditionalCompany,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute1,
-        
+
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute10,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute11,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute12,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute13,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute14,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute15,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute2,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute3,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute4,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute5,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute6,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute7,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute8,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute9,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalDepartment,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalStateOrProvince,
 
         [Parameter()]
@@ -282,7 +282,7 @@ function Set-TargetResource
 
         [Parameter()]
         [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
-        [System.String]
+        [System.String[]]
         $IncludedRecipients,
 
         [Parameter()]
@@ -406,77 +406,77 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
-        
+
         [Parameter()]
         [System.String]
         $ConditionalCompany,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute1,
-        
+
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute10,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute11,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute12,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute13,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute14,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute15,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute2,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute3,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute4,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute5,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute6,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute7,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute8,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCustomAttribute9,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalDepartment,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalStateOrProvince,
 
         [Parameter()]
@@ -485,7 +485,7 @@ function Test-TargetResource
 
         [Parameter()]
         [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
-        [System.String]
+        [System.String[]]
         $IncludedRecipients,
 
         [Parameter()]
