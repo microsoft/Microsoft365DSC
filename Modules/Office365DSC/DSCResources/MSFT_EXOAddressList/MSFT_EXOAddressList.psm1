@@ -86,7 +86,7 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
+        [ValidateSet('', 'AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
         [System.String[]]
         $IncludedRecipients,
 
@@ -281,7 +281,7 @@ function Set-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
+        [ValidateSet('', 'AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
         [System.String[]]
         $IncludedRecipients,
 
@@ -484,7 +484,7 @@ function Test-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
+        [ValidateSet('', 'AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
         [System.String[]]
         $IncludedRecipients,
 
