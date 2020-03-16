@@ -8,10 +8,6 @@ function Get-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Path,
-
         [Parameter()]
         [System.Boolean]
         $Publish = $true,
@@ -59,7 +55,6 @@ function Get-TargetResource
 
         return @{
             Identity  = $app.Title
-            Path      = $Path
             Publish   = $app.Deployed
             Overwrite = $Overwrite
             Ensure    = "Present"
@@ -236,7 +231,6 @@ function Export-TargetResource
                 $params = @{
                     GlobalAdminAccount = $GlobalAdminAccount
                     Identity           = $identity
-                    Path               = ("`$PSScriptRoot\" + $file.Name)
                 }
                 $result = Get-TargetResource @params
                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"

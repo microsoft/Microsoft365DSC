@@ -288,24 +288,6 @@ function Start-O365ConfigurationExtract
     }
     #endregion
 
-    #region Copy Downloaded files back into output folder
-    if (($null -ne $ComponentsToExtract -and
-            $ComponentsToExtract.Contains("chckSPOApp")) -or
-        $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains('SPO')))
-    {
-        $filesToDownload = Get-AllSPOPackages -GlobalAdminAccount $GlobalAdminAccount
-        if ($filesToDownload.Count -gt 0)
-        {
-            foreach ($fileToCopy in $filesToDownload)
-            {
-                $filePath = Join-Path $env:Temp $fileToCopy.Name -Resolve
-                $destPath = Join-Path $OutputDSCPath $fileToCopy.Name
-                Copy-Item -Path $filePath -Destination $destPath
-            }
-        }
-    }
-    #endregion
-
     if (-not [System.String]::IsNullOrEmpty($FileName))
     {
         $outputDSCFile = $OutputDSCPath + $FileName
