@@ -20,8 +20,8 @@ class MSFT_EXOAddressList : OMI_BaseResource
     [Write, Description("The ConditionalCustomAttribute9 parameter specifies a precanned filter that's based on the value of the recipient's CustomAttribute9 property.")] String ConditionalCustomAttribute9[];
     [Write, Description("The ConditionalDepartment parameter specifies a precanned filter that's based on the value of the recipient's Department property.")] String ConditionalDepartment[];
     [Write, Description("The ConditionalStateOrProvince parameter specifies a precanned filter that's based on the value of the recipient's StateOrProvince property.")] String ConditionalStateOrProvince[];
-    [Write, Description("The DisplayName parameter specifies the display name of the group.")] String DisplayName;
-    [Write, Description("The IncludedRecipients parameter specifies a precanned filter that's based on the recipient type."), ValueMap{"","AllRecipients","MailboxUsers","MailContacts","MailGroups","MailUsers","Resources"}, Values{"","AllRecipients","MailboxUsers","MailContacts","MailGroups","MailUsers","Resources"}] String IncludedRecipients[];
+    [Write, Description("The DisplayName parameter specifies the display name of the address list.")] String DisplayName;
+    [Write, Description("The IncludedRecipients parameter specifies a precanned filter that's based on the recipient type."), ValueMap{"AllRecipients","MailboxUsers","MailContacts","MailGroups","MailUsers","Resources"}, Values{"AllRecipients","MailboxUsers","MailContacts","MailGroups","MailUsers","Resources"}] String IncludedRecipients[];
     [Write, Description("The RecipientFilter parameter specifies a custom OPath filter that's based on the value of any available recipient property.")] String RecipientFilter;
     [Write, Description("Specifies if this AddressList should exist."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;

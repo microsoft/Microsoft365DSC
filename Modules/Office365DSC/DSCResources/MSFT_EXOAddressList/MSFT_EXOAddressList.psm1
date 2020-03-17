@@ -3,8 +3,7 @@ function Get-TargetResource
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
-    (        
-
+    (
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
@@ -86,7 +85,7 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet('', 'AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
+        [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
         [System.String[]]
         $IncludedRecipients,
 
@@ -154,7 +153,7 @@ function Get-TargetResource
     {
         if ($null -eq $AddressList.IncludedRecipients)
         {
-            $IncludedRecipients = "".ToString()
+            $IncludedRecipients = $null
         }
         else
         {
@@ -198,8 +197,7 @@ function Set-TargetResource
 {
     [CmdletBinding()]
     param
-    (        
-
+    (
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
@@ -281,7 +279,7 @@ function Set-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet('', 'AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
+        [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
         [System.String[]]
         $IncludedRecipients,
 
@@ -379,7 +377,7 @@ function Set-TargetResource
     #Address List doesn't exist but it should
     if ($Ensure -eq "Present" -and $currentAddressListConfig.Ensure -eq "Absent")
     {
-        Write-Verbose -Message "The Address List '$($Name)' does not exist bit it should. Creating Address List."
+        Write-Verbose -Message "The Address List '$($Name)' does not exist but it should. Creating Address List."
         New-AddressList @NewAddressListParams
     }
     #Address List exists but shouldn't
@@ -401,8 +399,7 @@ function Test-TargetResource
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
-    (        
-
+    (
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
@@ -484,7 +481,7 @@ function Test-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet('', 'AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
+        [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
         [System.String[]]
         $IncludedRecipients,
 
