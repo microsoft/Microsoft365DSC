@@ -281,7 +281,7 @@ function Export-TargetResource
         }
     }
     # Obtain central administration url from a User Principal Name
-    $centralAdminUrl = Get-SPOAdministrationUrl -GlobalAdminAccount $GlobalAdminAccount
+    $centralAdminUrl = Get-SPOAdminUrl -CloudCredential $GlobalAdminAccount
     foreach ($storageEntity in $storageEntities)
     {
         $params = @{

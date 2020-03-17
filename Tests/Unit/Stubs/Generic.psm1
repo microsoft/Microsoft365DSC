@@ -22,7 +22,7 @@ function Remove-PSSession
     )
 }
 
-function Get-SPOAdministrationUrl
+function Get-SPOAdminUrl
 {
     [CmdletBinding()]
     [OutputType([System.String])]

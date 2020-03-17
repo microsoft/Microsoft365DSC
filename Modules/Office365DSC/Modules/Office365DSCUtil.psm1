@@ -1806,45 +1806,6 @@ function Export-O365Configuration
     }
 }
 
-function Get-SPOAdministrationUrl
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory = $false)]
-        [switch]
-        $UseMFA,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    if ($UseMFA)
-    {
-        $UseMFASwitch = @{UseMFA = $true }
-    }
-    else
-    {
-        $UseMFASwitch = @{ }
-    }
-    Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
-    Test-MSCloudLogin -Platform "AzureAD" -o365Credential $GlobalAdminAccount | Out-Null
-    Write-Verbose -Message "Getting SharePoint Online admin URL..."
-    $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
-
-    if ($defaultDomain[0].Name -like '*.onmicrosoft.com*')
-    {
-        $global:tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.com", ""
-    }
-    elseif ($defaultDomain[0].Name -like '*.onmicrosoft.de*')
-    {
-        $global:tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.de", ""
-    }
-    $global:AdminUrl = "https://$global:tenantName-admin.sharepoint.com"
-    Write-Verbose -Message "SharePoint Online admin URL is $global:AdminUrl"
-    return $global:AdminUrl
-}
-
 function Split-ArrayByBatchSize
 {
     [OutputType([System.Object[]])]

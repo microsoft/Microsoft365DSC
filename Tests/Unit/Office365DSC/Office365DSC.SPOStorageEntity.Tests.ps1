@@ -27,7 +27,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Mock -CommandName Get-SPOAdministrationUrl -MockWith {
+        Mock -CommandName Get-SPOAdminUrl -MockWith {
             return 'https://contoso-admin.sharepoint.com'
         }
 

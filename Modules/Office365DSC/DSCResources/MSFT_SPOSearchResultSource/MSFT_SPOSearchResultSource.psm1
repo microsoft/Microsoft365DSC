@@ -434,7 +434,7 @@ function Export-TargetResource
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
-    $centralAdminUrl = Get-SPOAdministrationUrl -GlobalAdminAccount $GlobalAdminAccount
+    $centralAdminUrl = Get-SPOAdminUrl -CloudCredential $GlobalAdminAccount
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
             -Platform PnP -ConnectionUrl $centralAdminUrl
     $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
