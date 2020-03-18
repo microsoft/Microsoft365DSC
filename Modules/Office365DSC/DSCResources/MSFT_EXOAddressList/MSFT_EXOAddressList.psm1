@@ -141,6 +141,10 @@ function Get-TargetResource
         GlobalAdminAccount           = $GlobalAdminAccount
     }
 
+    if ($null -eq (Get-Command 'Get-AddressList' -ErrorAction SilentlyContinue))
+    {
+        return $nullReturn
+    }
     $AddressLists = Get-AddressList
     $AddressList = $AddressLists | Where-Object -FilterScript { $_.Name -eq $Name }
 
@@ -529,17 +533,20 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = 'Continue'
-    
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-    
+
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
-
+    if ($null -eq (Get-Command 'Get-AddressList' -ErrorAction SilentlyContinue))
+    {
+        return ""
+    }
     $dscContent = ""
     $i = 1
     [array]$addressLists = Get-Addresslist
