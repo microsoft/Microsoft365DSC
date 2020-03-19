@@ -24,7 +24,10 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        $RawInputObject
     )
 
     Write-Verbose -Message "Getting Management Role configuration for $Name"
@@ -38,9 +41,15 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-    $AllManagementRoles = Get-ManagementRole
-
-    $ManagementRole = $AllManagementRoles | Where-Object -FilterScript { $_.Name -eq $Name }
+    if($RawInputObject)
+    {
+        $ManagementRole = $RawInputObject
+    }
+    else
+    {
+        $AllManagementRoles = Get-ManagementRole
+        $ManagementRole = $AllManagementRoles | Where-Object -FilterScript { $_.Name -eq $Name }
+    }
 
     if ($null -eq $ManagementRole)
     {
@@ -225,6 +234,7 @@ function Export-TargetResource
         $Params = @{
             Name               = $ManagementRole.Name
             GlobalAdminAccount = $GlobalAdminAccount
+            RawInputObject     = $ManagementRole
         }
         $result = Get-TargetResource @Params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"

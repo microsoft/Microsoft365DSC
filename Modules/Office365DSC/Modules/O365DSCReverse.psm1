@@ -46,6 +46,8 @@ function Start-O365ConfigurationExtract
     $DefaultWarningPreference = $WarningPreference
     $DefaultVerbosePreference = $VerbosePreference
 
+    Reset-AllTeamsCached
+
     # We will set this on our own in app, it is already on SiletntlyContinue by default,
     # but we dont want it here explicitly overriding the variable
     # $VerbosePreference = "SilentlyContinue"

@@ -978,6 +978,136 @@ function Get-TeamByName
     return $team
 }
 
+function Reset-AllTeamsCached
+{
+    [CmdletBinding()]
+    param
+    (
+    )
+
+    $Global:O365TeamsCached = $null
+}
+function Get-AllTeamsCached
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [Switch]
+        $ForceRefresh
+    )
+
+    if($Global:O365TeamsCached -and !$ForceRefresh)
+    {
+        return $Global:O365TeamsCached
+    }
+
+    $allTeams = New-Object Collections.Generic.List[Microsoft.TeamsCmdlets.PowerShell.Custom.Model.Team]
+    $allTeamSettings = New-Object Collections.Generic.List[Microsoft.TeamsCmdlets.PowerShell.Custom.Model.TeamSettings]
+
+    $endpoint = "https://graph.microsoft.com"
+
+    # The Get-Team cmdlet was not really written with throttling in mind
+    # internally, they get the list of teams and then in parallel go to the /teams/{id} endpoint
+    # this is actually the only way to get the team details, but when running in parallel without any limits
+    # throttling is bound to come up and it is NOT handled at all
+    # Get-Team
+    $accessToken = Get-AppIdentityAccessToken $endpoint
+    $httpClient = [Microsoft.TeamsCmdlets.PowerShell.Custom.Utils.HttpUtilities]::GetClient("Bearer $accessToken", "Get-TeamTraceCustom")
+    try
+    {
+        $requestUri = [Uri]::new("$endpoint/v1.0/groups?$filter=groupTypes/any(c:c+eq+'Unified')&`$select=id,resourceProvisioningOptions,displayName,description,visibility,mailnickname,classification")
+        Invoke-WithTransientErrorExponentialRetry -ScriptBlock {
+            $accessToken = Get-AppIdentityAccessToken $endpoint
+            $httpClient.DefaultRequestHeaders.Authorization = [System.Net.Http.Headers.AuthenticationHeaderValue]::Parse("Bearer $accessToken");
+            $allTeams.AddRange([Microsoft.TeamsCmdlets.PowerShell.Custom.Utils.HttpUtilities].GetMethod("GetAll").MakeGenericMethod([Microsoft.TeamsCmdlets.PowerShell.Custom.Model.Team]).Invoke($null, @($httpClient, $requestUri)))
+            Write-Verbose "Retrieved all teams"
+        }
+
+
+        $allTeams = $allTeams | Where-Object {
+            $_.ResourceProvisioningOptions.Contains("Team")
+        }
+
+        $allTeams | ForEach-Object {
+            try
+            {
+                $singleTeamClient = [Microsoft.TeamsCmdlets.PowerShell.Custom.Utils.HttpUtilities]::GetClient("Bearer $accessToken", "Get-TeamTraceCustom")
+                $teamToRetrieve = $_
+                Invoke-WithTransientErrorExponentialRetry -ScriptBlock {
+                    $accessToken = Get-AppIdentityAccessToken $endpoint
+                    $singleTeamClient.DefaultRequestHeaders.Authorization = [System.Net.Http.Headers.AuthenticationHeaderValue]::Parse("Bearer $accessToken")
+                    $groupId= $teamToRetrieve.GroupId
+                    $singleTeamRequestUri = [Uri]::new("$endpoint/v1.0/teams/$groupId")
+                    Write-Verbose "retrieving from $singleTeamRequestUri"
+                    [Type[]]$types = @([System.Net.Http.HttpClient], [Uri])
+                    $team = [Microsoft.TeamsCmdlets.PowerShell.Custom.Utils.HttpUtilities].GetMethod("Get", $types).MakeGenericMethod([Microsoft.TeamsCmdlets.PowerShell.Custom.Model.Team]).Invoke($null, @($singleTeamClient, $singleTeamRequestUri))
+                    $team.DisplayName = $_.DisplayName
+                    $team.Description = $_.Description
+                    $team.Visibility = $_.Visibility
+                    $team.MailNickName = $_.MailNickName
+                    $team.Classification = $_.Classification
+
+                    $allTeamSettings.Add([Microsoft.TeamsCmdlets.PowerShell.Custom.Model.TeamSettings]::new($team))
+                }
+            }
+            finally
+            {
+                $singleTeamClient.Dispose()
+            }
+        }
+    }
+    finally
+    {
+        $httpClient.Dispose()
+    }
+
+    $Global:O365TeamsCached = $allTeamSettings
+    return $Global:O365TeamsCached
+}
+
+
+function Invoke-WithTransientErrorExponentialRetry
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [ScriptBlock]
+        $ScriptBlock
+    )
+
+    if($null -eq $Global:O365DSCBackoffRandomizer)
+    {
+        $Global:O365DSCBackoffRandomizer = [System.Random]::new()
+    }
+
+    $retryCount = 10
+    $backoffPeriodMiliseconds = 500
+    do
+    {
+        try
+        {
+            Write-Verbose "Executing script block, retryCount: $retryCount"
+            Invoke-Command $ScriptBlock
+            break
+        }
+        catch
+        {
+            if($null -eq $_.Exception -or $null -eq $_.Exception.InnerException -or ($_.Exception.InnerException.ErrorCode -ne 429 -and $_.Exception.InnerException.ErrorCode -ne 503) -or $retryCount -eq 0)
+            {
+                throw
+            }
+
+            Write-Verbose "The request has been throttled, will retry, retryCount: $retryCount"
+        }
+        Start-Sleep -Milliseconds $backoffPeriodMiliseconds
+        $retryCount = $retryCount - 1
+        $backoffPeriodMiliseconds = $backoffPeriodMiliseconds * 2 + $Global:O365DSCBackoffRandomizer.Next($backoffPeriodMiliseconds / 10)
+    }
+    while ($retryCount -gt 0)
+}
+
 function Convert-O365DscHashtableToString
 {
     param

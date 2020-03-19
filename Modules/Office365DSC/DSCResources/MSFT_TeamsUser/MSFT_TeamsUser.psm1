@@ -250,7 +250,7 @@ function Export-TargetResource
 
     # Get all Site Collections in tenant;
     Test-MSCloudLogin -Platform MicrosoftTeams -CloudCredential $GlobalAdminAccount
-    [array]$instances = Get-Team
+    [array]$instances = Get-AllTeamsCached
     if ($instances.Length -ge $MaxProcesses)
     {
         [array]$instances = Split-ArrayByParts -Array $instances -Parts $MaxProcesses
@@ -312,7 +312,11 @@ function Export-TargetResource
                     {
                         try
                         {
-                            $users = Get-TeamUser -GroupId $team.GroupId
+                            $users = [System.Collections.ArrayList]:: new()
+                            Invoke-WithTransientErrorExponentialRetry -ScriptBlock {
+                                $users.AddRange([array](Get-TeamUser -GroupId $team.GroupId))
+                            }
+
                             $i = 1
                             $totalCount = $item.Count
                             if ($null -eq $totalCount)
@@ -322,7 +326,7 @@ function Export-TargetResource
                             Write-Information "    > [$j/$totalCount] Team {$($team.DisplayName)}"
                             foreach ($user in $users)
                             {
-                                Write-Information "        - [$i/$($users.Length)] $($user.User)"
+                                Write-Information "        - [$i/$($users.Count)] $($user.User)"
                                 $getParams = @{
                                     TeamName           = $team.DisplayName
                                     TeamMailNickName   = $team.MailNickName

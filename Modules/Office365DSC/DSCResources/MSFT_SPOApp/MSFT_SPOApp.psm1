@@ -36,7 +36,6 @@ function Get-TargetResource
 
     $nullReturn = @{
         Identity  = ""
-        Path      = $null
         Publish   = $Publish
         Overwrite = $Overwrite
         Ensure    = "Absent"
@@ -233,6 +232,11 @@ function Export-TargetResource
                     Identity           = $identity
                 }
                 $result = Get-TargetResource @params
+                if($result.Ensure -eq "Absent")
+                {
+                    continue
+                }
+
                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
                 $content += "        SPOApp " + (New-GUID).ToString() + "`r`n"
                 $content += "        {`r`n"

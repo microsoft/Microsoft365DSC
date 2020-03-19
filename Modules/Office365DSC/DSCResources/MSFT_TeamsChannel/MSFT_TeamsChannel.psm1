@@ -281,17 +281,20 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform MicrosoftTeams
 
-    $teams = Get-Team
+    [array]$teams = Get-AllTeamsCached
     $j = 1
     $content = ''
     foreach ($team in $Teams)
     {
-        $channels = Get-TeamChannel -GroupId $team.GroupId
+        $channels = [System.Collections.ArrayList]:: new()
+        Invoke-WithTransientErrorExponentialRetry -ScriptBlock {
+            $channels.AddRange([array](Get-TeamChannel -GroupId $team.GroupId))
+        }
         $i = 1
         Write-Information "    > [$j/$($Teams.Length)] Team {$($team.DisplayName)}"
         foreach ($channel in $channels)
         {
-            Write-Information "        - [$i/$($channels.Length)] $($channel.DisplayName)"
+            Write-Information "        - [$i/$($channels.Count)] $($channel.DisplayName)"
             $params = @{
                 TeamName           = $team.DisplayName
                 TeamMailNickName   = $team.MailNickName

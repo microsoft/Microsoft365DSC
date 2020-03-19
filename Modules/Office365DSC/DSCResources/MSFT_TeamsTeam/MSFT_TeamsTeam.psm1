@@ -186,7 +186,11 @@ function Get-TargetResource
             }
         }
 
-        $Owners = Get-TeamUser -GroupId $team.GroupId -Role Owner
+        $Owners = [System.Collections.ArrayList]:: new()
+        Invoke-WithTransientErrorExponentialRetry -ScriptBlock {
+            $Owners.AddRange([array](Get-TeamUser -GroupId $team.GroupId -Role Owner))
+        }
+
         $OwnersArray = @()
         if ($null -ne $Owners)
         {
@@ -550,7 +554,7 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform MicrosoftTeams
 
-    $teams = Get-Team
+    $teams = Get-AllTeamsCached
     $i = 1
     $content = ""
     $organization = $GlobalAdminAccount.UserName.Split('@')[1]
