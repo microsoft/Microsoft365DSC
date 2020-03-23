@@ -57,7 +57,7 @@
         },
         @{
             ModuleName      = "SharePointPnPPowerShellOnline"
-            RequiredVersion = "3.18.2002.0"
+            RequiredVersion = "3.19.2003.0"
         },
         @{
             ModuleName      = "Microsoft.Online.SharePoint.PowerShell"
@@ -73,7 +73,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.2"
+            RequiredVersion = "1.0.3"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
