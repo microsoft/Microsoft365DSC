@@ -2,7 +2,11 @@
 
 ## UNRELEASED
 
-* TODO: Replace with changelog
+* ReverseDSC
+  * Change to allow ComponentsToExtract without the 'chck' prefix;
+* Metadata
+  * Updated MSCloudLoginAssistant dependency to 1.0.3;
+  * Updated SharePointPnPPowerShellOnline dependency to 3.19.2003.0;
 
 ## 1.0.3.1723
 

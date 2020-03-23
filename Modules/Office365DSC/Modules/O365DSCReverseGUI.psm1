@@ -1158,7 +1158,7 @@ function Show-O365GUI
                         {
                             if ($checkbox.Checked)
                             {
-                                $SelectedComponents += $checkbox.Name
+                                $SelectedComponents += $checkbox.Name.Replace("chck", "")
                             }
                         }
                     }
