@@ -16,7 +16,6 @@ Configuration Example
         TeamsCallingPolicy CallingPolicy
         {
             Identity                   = 'New Calling Policy'
-            AllowCalling               = $true
             AllowPrivateCalling        = $false
             AllowVoicemail             = 'UserOverride'
             AllowCallGroups            = $true
