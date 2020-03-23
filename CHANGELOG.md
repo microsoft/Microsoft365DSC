@@ -2,9 +2,13 @@
 
 ## UNRELEASED
 
+* TeamsCallingPolicy
+  * Removed the AllowCalling parameter since it is no longer supported;
+  * Fixed an issue with Policies without tags in their name (e.g. Global);
 * ReverseDSC
   * Change to allow ComponentsToExtract without the 'chck' prefix;
 * Metadata
+  * Updated MicrosoftTeams dependency to 1.0.5;
   * Updated MSCloudLoginAssistant dependency to 1.0.3;
   * Updated SharePointPnPPowerShellOnline dependency to 3.19.2003.0;
 

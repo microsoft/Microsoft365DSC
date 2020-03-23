@@ -10,10 +10,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowCalling,
-
-        [Parameter()]
-        [System.Boolean]
         $AllowPrivateCalling,
 
         [Parameter()]
@@ -82,7 +78,6 @@ function Get-TargetResource
     Write-Verbose -Message "Found Teams Calling Policy {$Identity}"
     return @{
         Identity                   = $Identity
-        AllowCalling               = $policy.AllowCalling
         AllowPrivateCalling        = $policy.AllowPrivateCalling
         AllowVoicemail             = $policy.AllowVoicemail
         AllowCallGroups            = $policy.AllowCallGroups
@@ -104,10 +99,6 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCalling,
 
         [Parameter()]
         [System.Boolean]
@@ -199,10 +190,6 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCalling,
 
         [Parameter()]
         [System.Boolean]
