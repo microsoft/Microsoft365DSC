@@ -9,6 +9,11 @@ executed from an agent's Local Configuration Manager (LCM) (machine
 or container) which can communicate back remotely to Office 365 via
 remote API calls (therefore requires internet connectivity)
 
+For information on how to get started, additional documentation or 
+templates, please navigate to the official web site at:
+
+[Office365DSC.com](http://Office365DSC.com)
+
 ## Branches
 
 ### master
