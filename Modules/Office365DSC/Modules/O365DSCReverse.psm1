@@ -160,7 +160,7 @@ function Start-O365ConfigurationExtract
                 }
             }
             if (($null -ne $ComponentsToExtract -and
-                    $ComponentsToExtract -contains $resourceName) -or
+                    ($ComponentsToExtract -contains $resourceName -or $ComponentsToExtract -contains ("chck" + $resourceName))) -or
                 $AllComponents -or ($null -ne $Workloads -and $Workloads -contains $currentWorkload))
             {
                 Import-Module $ResourceModule.FullName | Out-Null
