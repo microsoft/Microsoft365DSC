@@ -349,7 +349,7 @@ function Export-TargetResource
             }
             catch
             {
-                Write-Warning -Message "The specified account does not have access to the permissions list for {$Url}"
+                Write-Warning -Message "The specified account does not have access to the permissions list for {$($siteGroup.Title)}"
                 break
             }
             $params = @{
@@ -360,13 +360,16 @@ function Export-TargetResource
             try
             {
                 $result = Get-TargetResource @params
-                $result = Remove-NullEntriesFromHashtable -Hash $result
-                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                $content += "        SPOSiteGroup " + (New-GUID).ToString() + "`r`n"
-                $content += "        {`r`n"
-                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-                $content += "        }`r`n"
+                if ($result.Ensure -eq 'Present')
+                {
+                    $result = Remove-NullEntriesFromHashtable -Hash $result
+                    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                    $content += "        SPOSiteGroup " + (New-GUID).ToString() + "`r`n"
+                    $content += "        {`r`n"
+                    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+                    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                    $content += "        }`r`n"
+                }
             }
             catch
             {
