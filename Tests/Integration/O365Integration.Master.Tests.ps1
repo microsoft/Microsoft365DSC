@@ -485,63 +485,6 @@ Configuration Master
             Ensure                       = "Present"
         }
 
-        SCSensitivityLabel SCSenLabel
-        {
-            Name               = "Demo Label"
-            Comment            = "Demo label comment"
-            ToolTip            = "Demo tool tip"
-            DisplayName        = "Demo label"
-
-            LocaleSettings     = @(
-                MSFT_SCLabelLocaleSettings
-                {
-                    LocaleKey = "DisplayName"
-                    Settings  = @(
-                        MSFT_SCLabelSetting
-                        {
-                            Key   = "en-us"
-                            Value = "English Display Names"
-                        }
-                        MSFT_SCLabelSetting
-                        {
-                            Key   = "fr-fr"
-                            Value = "Nom da'ffichage francais"
-                        }
-                    )
-                }
-                MSFT_SCLabelLocaleSettings
-                {
-                    LocaleKey = "StopColor"
-                    Settings  = @(
-                        MSFT_SCLabelSetting
-                        {
-                            Key   = "en-us"
-                            Value = "RedGreen"
-                        }
-                        MSFT_SCLabelSetting
-                        {
-                            Key   = "fr-fr"
-                            Value = "Rouge"
-                        }
-                    )
-                }
-            )
-            AdvancedSettings   = @(
-                MSFT_SCLabelSetting
-                {
-                    Key   = "AllowedLevel"
-                    Value = @("Sensitive", "Classified")
-                }
-                MSFT_SCLabelSetting
-                {
-                    Key   = "LabelStatus"
-                    Value = "Enabled"
-                }
-            )
-            GlobalAdminAccount = $GlobalAdmin
-            Ensure             = "Present"
-        }
-
         SCSupervisoryReviewPolicy SRPolicy
         {
             Name               = "MySRPolicy"
@@ -687,11 +630,10 @@ Configuration Master
 
         TeamsUpgradeConfiguration UpgradeConfig
         {
-            DisplayName          = "Alpha Team"
-            AllowAddRemoveApps   = $true
-            AllowChannelMentions = $false
+            DownloadTeams        = $True;
             GlobalAdminAccount   = $GlobalAdmin
-            Ensure               = "Present"
+            IsSingleInstance     = "Yes"
+            SfBMeetingJoinUx     = "NativeLimitedClient"
         }
 
         TeamsMeetingBroadcastPolicy IntegrationBroadcastPolicy
@@ -800,11 +742,11 @@ Configuration Master
 
         TeamsTeam TeamAlpha
         {
-            Identity           = 'Integration TeamsUpgradePolicy'
-            GlobalAdminAccount = $GlobalAdmin
-            Description        = 'Integration Policy Description'
-            NotifySfBUsers     = $true
-            Ensure             = 'Present'
+            DisplayName          = "Alpha Team"
+            AllowAddRemoveApps   = $true
+            AllowChannelMentions = $false
+            GlobalAdminAccount   = $GlobalAdmin
+            Ensure               = "Present"
         }
 
         TeamsChannel ChannelAlpha1
