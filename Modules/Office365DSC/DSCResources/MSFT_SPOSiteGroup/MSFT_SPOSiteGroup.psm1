@@ -76,7 +76,7 @@ function Get-TargetResource
 
         }
     }
-    if ($null -eq $siteGroup)
+    if ($null -eq $siteGroup -or [System.String]::IsNullOrEmpty($siteGroup.Owner))
     {
         return $nullReturn
     }
@@ -89,7 +89,7 @@ function Get-TargetResource
     {
         if ($_.Exception -like '*Access denied*')
         {
-            Write-Warning -Message "The specified account does not have access to the permissions list for {$Url}"
+            Write-Warning -Message "The specified account does not have access to the permissions list"
             return $nullReturn
         }
     }
