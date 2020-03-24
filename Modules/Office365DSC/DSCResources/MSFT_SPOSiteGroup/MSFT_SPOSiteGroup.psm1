@@ -76,7 +76,7 @@ function Get-TargetResource
 
         }
     }
-    if ($null -eq $siteGroup -or [System.String]::IsNullOrEmpty($siteGroup.Owner))
+    if ($null -eq $siteGroup)
     {
         return $nullReturn
     }
@@ -97,6 +97,10 @@ function Get-TargetResource
     foreach ($entry in $sitePermissions.RoleTypeKind)
     {
         $permissions += $entry.ToString()
+    }
+    if ($permissions.Length -eq 0)
+    {
+        return $nullReturn
     }
     return @{
         Url                = $Url
