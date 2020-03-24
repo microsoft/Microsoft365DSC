@@ -470,7 +470,7 @@ function Show-O365GUI
         $chckSPOHomeSite.Name = "chckSPOHomeSite"
         $chckSPOHomeSite.Checked = $true
         $chckSPOHomeSite.Enabled = $true
-        $chckSPOHomeSite.Text = "Home Sites"
+        $chckSPOHomeSite.Text = "Home Site"
         $pnlSPO.Controls.Add($chckSPOHomeSite)
 
         $chckSPOPropertyBag = New-Object System.Windows.Forms.CheckBox
