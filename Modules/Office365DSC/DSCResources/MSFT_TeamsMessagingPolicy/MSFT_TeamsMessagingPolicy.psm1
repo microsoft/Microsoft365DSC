@@ -117,7 +117,11 @@ function Get-TargetResource
         else
         {
             # Tag: gets prefixed to Identity on get need to remove
-            $currentIdentity = $policy.Identity.split(":")[1]
+            $currentPolicy = $policy.Identity
+            if ($currentPolicy.contains(":"))
+            {
+                $currentIdentity = $policy.Identity.split(":")[1]
+            }
             return @{
                 Identity                      = $currentIdentity
                 AllowGiphy                    = $policy.AllowGiphy

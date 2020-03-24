@@ -65,7 +65,7 @@
         },
         @{
             ModuleName      = "MicrosoftTeams"
-            RequiredVersion = "1.0.3"
+            RequiredVersion = "1.0.5"
         },
         @{
             ModuleName      = "AzureAD"
