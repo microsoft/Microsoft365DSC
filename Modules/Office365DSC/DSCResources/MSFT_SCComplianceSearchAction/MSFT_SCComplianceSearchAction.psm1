@@ -4,7 +4,7 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Export', 'Purge', 'Retention')]
         $Action,
@@ -53,9 +53,15 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
     Write-Verbose -Message "Getting configuration of SCComplianceSearchAction for $SearchName - $Action"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $currentAction = Get-CurrentAction -SearchName $SearchName -Action $Action
 
@@ -69,12 +75,12 @@ function Get-TargetResource
     {
         if ('Purge' -ne $Action)
         {
-            $Scenario          = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Scenario"
+            $Scenario = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Scenario"
             $FileTypeExclusion = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "File type exclusions for unindexed"
-            $EnableDedupe      = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Enable dedupe"
-            $IncludeCreds      = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "SAS token"
-            $IncludeSP         = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Include SharePoint versions"
-            $ScopeValue        = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Scope"
+            $EnableDedupe = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Enable dedupe"
+            $IncludeCreds = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "SAS token"
+            $IncludeSP = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Include SharePoint versions"
+            $ScopeValue = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Scope"
 
             $ActionName = "Export"
             if ('RetentionReports' -eq $Scenario)
@@ -96,14 +102,14 @@ function Get-TargetResource
         }
         else
         {
-            $PurgeTP           = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Purge Type"
+            $PurgeTP = Get-ResultProperty -ResultString $currentAction.Results -PropertyName "Purge Type"
             $result = @{
-                Action                              = $currentAction.Action
-                SearchName                          = $currentAction.SearchName
-                PurgeType                           = $PurgeTP
-                RetryOnError                        = $currentAction.Retry
-                GlobalAdminAccount                  = $GlobalAdminAccount
-                Ensure                              = 'Present'
+                Action             = $currentAction.Action
+                SearchName         = $currentAction.SearchName
+                PurgeType          = $PurgeTP
+                RetryOnError       = $currentAction.Retry
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = 'Present'
             }
         }
 
@@ -128,7 +134,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Export', 'Purge', 'Retention')]
         $Action,
@@ -178,9 +184,15 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of SCComplianceSearchAction for $SearchName - $Action"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $CurrentAction = Get-TargetResource @PSBoundParameters
 
@@ -197,7 +209,7 @@ function Set-TargetResource
             $CreationParams.Add("Scope", $ActionScope)
         }
 
-        switch($Action)
+        switch ($Action)
         {
             "Export"
             {
@@ -221,7 +233,42 @@ function Set-TargetResource
         Write-Verbose -Message "Creating new Compliance Search Action calling the New-ComplianceSearchAction cmdlet"
 
         Write-Verbose -Message "Set-TargetResource Creation Parameters: `n $(Convert-O365DscHashtableToString -Hashtable $CreationParams)"
-        New-ComplianceSearchAction @CreationParams
+
+        try
+        {
+            New-ComplianceSearchAction @CreationParams -ErrorAction Stop
+        }
+        catch
+        {
+            if ($_.Exception -like "*Please update the search results to get the most current estimate.*")
+            {
+                try
+                {
+                    Write-Verbose "Starting Compliance Search $SearchName"
+                    Start-ComplianceSearch -Identity $SearchName
+
+                    $loop = 1
+                    do
+                    {
+                        $status = (Get-ComplianceSearch -Identity $SearchName).Status
+                        Write-Verbose -Message "($loop) Waiting for 60 seconds for Compliance Search $SearchName to complete."
+                        Start-Sleep -Seconds 60
+                        $loop++
+                    } while ($status -ne 'Completed' -or $loop -lt 10)
+                    New-ComplianceSearchAction @CreationParams -ErrorAction Stop
+                }
+                catch
+                {
+                    New-ComplianceSearchAction @CreationParams -ErrorAction Stop
+                }
+            }
+            else
+            {
+                New-Office365DSCLogEntry -Error $_ -Message "Could not create a new SCComplianceSearchAction" -Source $MyInvocation.MyCommand.ModuleName
+                Write-Verbose -Message "An error occured creating a new SCComplianceSearchAction"
+                throw $_
+            }
+        }
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
     {
@@ -238,7 +285,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet('Export', 'Purge', 'Retention')]
         $Action,
@@ -296,9 +343,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -317,8 +364,14 @@ function Export-TargetResource
     )
 
     $InformationPreference = "Continue"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -Platform SecurityComplianceCenter `
-                      -CloudCredential $GlobalAdminAccount
+        -CloudCredential $GlobalAdminAccount
 
     $actions = Get-ComplianceSearchAction
 
@@ -407,7 +460,7 @@ function Get-ResultProperty
     )
 
     $start = $ResultString.IndexOf($PropertyName) + $PropertyName.Length + 2
-    $end   = $ResultString.IndexOf(';', $start)
+    $end = $ResultString.IndexOf(';', $start)
 
     $result = $null
     if ($end -gt $start)
@@ -461,7 +514,7 @@ function Get-CurrentAction
 
     foreach ($Case in $Cases)
     {
-        $searches = Get-ComplianceSearch -Case $Case.Name | Where-Object {$_.Name -eq $SearchName}
+        $searches = Get-ComplianceSearch -Case $Case.Name | Where-Object { $_.Name -eq $SearchName }
 
         if ($null -ne $searches)
         {
@@ -472,16 +525,16 @@ function Get-CurrentAction
 
     if ($null -eq $currentAction)
     {
-        $currentAction = Get-ComplianceSearchAction -Details | Where-Object {$_.SearchName -eq $SearchName -and $_.Action -eq $Action}
+        $currentAction = Get-ComplianceSearchAction -Details | Where-Object { $_.SearchName -eq $SearchName -and $_.Action -eq $Action }
     }
 
     if ('Purge' -ne $Action -and $null -ne $currentAction)
     {
-        $currentAction = $currentAction | Where-Object {$_.Results -like "*Scenario: $($Scenario)*"}
+        $currentAction = $currentAction | Where-Object { $_.Results -like "*Scenario: $($Scenario)*" }
     }
     elseif ('Purge' -eq $Action)
     {
-        $currentAction = $currentAction | Where-Object {$_.Action -eq 'Purge'}
+        $currentAction = $currentAction | Where-Object { $_.Action -eq 'Purge' }
     }
 
     return $currentAction

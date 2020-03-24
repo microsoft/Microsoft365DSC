@@ -15,17 +15,24 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("SkypeMeetingsApp","NativeLimitedClient")]
+        [ValidateSet("SkypeMeetingsApp", "NativeLimitedClient")]
         $SfBMeetingJoinUx,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-
     Write-Verbose -Message "Checking the Teams Upgrade Configuration"
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SkypeForBusiness
+        -Platform SkypeForBusiness
 
     $settings = Get-CsTeamsUpgradeConfiguration
     return @{
@@ -52,7 +59,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("SkypeMeetingsApp","NativeLimitedClient")]
+        [ValidateSet("SkypeMeetingsApp", "NativeLimitedClient")]
         $SfBMeetingJoinUx,
 
         [Parameter(Mandatory = $true)]
@@ -62,8 +69,15 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting Teams Upgrade Configuration"
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SkypeForBusiness
+        -Platform SkypeForBusiness
 
     $SetParameters = $PSBoundParameters
     $SetParameters.Remove("IsSingleInstance") | Out-Null
@@ -89,7 +103,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("SkypeMeetingsApp","NativeLimitedClient")]
+        [ValidateSet("SkypeMeetingsApp", "NativeLimitedClient")]
         $SfBMeetingJoinUx,
 
         [Parameter(Mandatory = $true)]
@@ -108,9 +122,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -127,6 +141,12 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $params = @{
         IsSingleInstance   = 'Yes'

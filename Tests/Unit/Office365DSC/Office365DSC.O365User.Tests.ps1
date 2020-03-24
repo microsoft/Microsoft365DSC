@@ -3,16 +3,18 @@ param(
     [Parameter()]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\Stubs\Office365.psm1" `
-                                         -Resolve)
+            -ChildPath "..\Stubs\Office365.psm1" `
+            -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\UnitTestHelper.psm1" `
-                                -Resolve)
+        -ChildPath "..\UnitTestHelper.psm1" `
+        -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                              -DscResource "O365User"
+    -DscResource "O365User" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -23,22 +25,38 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
+
+        Mock -CommandName Set-AzureADUser -MockWith {
+        }
+
+        Mock -CommandName Set-AzureADUserLicense -MockWith {
+        }
+
+        Mock -CommandName Set-AzureADUserPassword -MockWith {
+        }
         # Test contexts
         Context -Name "When the user doesn't already exist" -Fixture {
             $testParams = @{
-                UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
-                DisplayName = "John Smith"
-                FirstName = "John"
-                LastName = "Smith"
-                UsageLocation = "US"
-                LicenseAssignment = @("CONTOSO:ENTERPRISE_PREMIUM")
-                Password = $GlobalAdminAccount
+                UserPrincipalName  = "JohnSmith@contoso.onmicrosoft.com"
+                DisplayName        = "John Smith"
+                FirstName          = "John"
+                LastName           = "Smith"
+                UsageLocation      = "US"
+                LicenseAssignment  = @("ENTERPRISE_PREMIUM")
+                Password           = $GlobalAdminAccount
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName New-MSOLUser -MockWith {
+            Mock -CommandName New-AzureADUser -MockWith {
                 return @{
                     UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
+                }
+            }
+
+            Mock -CommandName Get-AzureADSubscribedSku -MockWith {
+                return @{
+                    SkuPartNumber = "ENTERPRISE_PREMIUM"
+                    SkuID = '12345-12345-12345-12345-12345'
                 }
             }
 
@@ -57,30 +75,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "When the user already exists" -Fixture {
             $testParams = @{
-                UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
-                DisplayName = "John Smith"
-                FirstName = "John"
-                LastName = "Smith"
-                UsageLocation = "US"
-                LicenseAssignment = @("CONTOSO:ENTERPRISE_PREMIUM")
-                Password = $GlobalAdminAccount
-                Ensure = "Present"
+                UserPrincipalName  = "JohnSmith@contoso.onmicrosoft.com"
+                DisplayName        = "John Smith"
+                FirstName          = "John"
+                LastName           = "Smith"
+                UsageLocation      = "US"
+                LicenseAssignment  = @("ENTERPRISE_PREMIUM")
+                Password           = $GlobalAdminAccount
+                Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-MSOLUser -MockWith {
+            Mock -CommandName Get-AzureADUser -MockWith {
                 return @{
-                    UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
-                    DisplayName = "John Smith"
-                    FirstName = "John"
-                    LastName = "Smith"
-                    UsageLocation = "US"
-                    Licenses= @(@{
-                        AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
-                    })
-                    PasswordNeverExpires = $False
-                    Ensure = "Present"
+                    UserPrincipalName    = "JohnSmith@contoso.onmicrosoft.com"
+                    DisplayName          = "John Smith"
+                    GivenName            = "John"
+                    Surname             = "Smith"
+                    UsageLocation        = "US"
+                    PasswordPolicies     = "NONE"
+                    Ensure               = "Present"
                 }
+            }
+
+            Mock -CommandName Get-AzureADUserLicenseDetail -MockWith {
+                return @(@{
+                    SkuPartNumber = 'ENTERPRISE_PREMIUM'
+                })
             }
 
             It "Should return present from the Get method" {
@@ -94,31 +115,34 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "When the user already exists but has a different license assigned" -Fixture {
             $testParams = @{
-                UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
-                DisplayName = "John Smith"
-                FirstName = "John"
-                LastName = "Smith"
-                UsageLocation = "US"
-                LicenseAssignment = @()
-                Password = $GlobalAdminAccount
+                UserPrincipalName    = "JohnSmith@contoso.onmicrosoft.com"
+                DisplayName          = "John Smith"
+                FirstName            = "John"
+                LastName             = "Smith"
+                UsageLocation        = "US"
+                LicenseAssignment    = @()
+                Password             = $GlobalAdminAccount
                 PasswordNeverExpires = $false
-                Ensure = "Present"
-                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure               = "Present"
+                GlobalAdminAccount   = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-MSOLUser -MockWith {
+            Mock -CommandName Get-AzureADUser -MockWith {
                 return @{
-                    UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
-                    DisplayName = "John Smith"
-                    FirstName = "John"
-                    LastName = "Smith"
-                    UsageLocation = "US"
-                    Licenses = @(@{
-                        AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
-                    })
-                    PasswordNeverExpires = $false
-                    Ensure = "Present"
+                    UserPrincipalName    = "JohnSmith@contoso.onmicrosoft.com"
+                    DisplayName          = "John Smith"
+                    GivenName            = "John"
+                    Surname             = "Smith"
+                    UsageLocation        = "US"
+                    PasswordPolicies     = "NONE"
+                    Ensure               = "Present"
                 }
+            }
+
+            Mock -CommandName Get-AzureADUserLicenseDetail -MockWith {
+                return @(@{
+                    SkuPartNumber = 'ENTERPRISE_PREMIUM'
+                })
             }
 
             It "Should return present from the Get method" {
@@ -136,22 +160,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-MSOLUser -MockWith {
+            Mock -CommandName Get-AzureADUser -MockWith {
                 return @{
-                    UserPrincipalName = "JohnSmith@contoso.onmicrosoft.com"
-                    DisplayName = "John Smith"
-                    FirstName = "John"
-                    LastName = "Smith"
-                    UsageLocation = "US"
-                    Licenses = @(@{
-                        AccountSkuID = "CONTOSO:ENTERPRISE_PREMIUM"
-                    })
-                    PasswordNeverExpires = $false
-                    Ensure = "Present"
+                    UserPrincipalName    = "JohnSmith@contoso.onmicrosoft.com"
+                    DisplayName          = "John Smith"
+                    GivenName            = "John"
+                    Surname              = "Smith"
+                    UsageLocation        = "US"
+                    PasswordPolicies     = "NONE"
+                    Ensure               = "Present"
                 }
             }
 

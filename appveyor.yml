@@ -1,4 +1,4 @@
-version: 1.0.0.{build}
+version: 1.0.4.{build}
 
 install:
     - git clone https://github.com/PowerShell/DscResource.Tests
@@ -8,25 +8,26 @@ install:
     - ps: |
         $moduleName = 'Office365DSC'
         $mainModuleFolder = "Modules\$moduleName"
-        Install-Module ReverseDSC -RequiredVersion 2.0.0.0 -Force
+        Install-Module ReverseDSC -RequiredVersion 2.0.0.2 -Force
         Install-Module AzureAD -RequiredVersion 2.0.2.4 -Force
-        Install-Module MSOnline -RequiredVersion 1.1.183.17 -Force
-        Install-Module MicrosoftTeams -RequiredVersion 1.0.3 -Force
-        Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.16.1912.0 -Force
-        Install-Module MSCloudLoginAssistant -RequiredVersion 0.8.1 -Force
+        Install-Module MicrosoftTeams -RequiredVersion 1.0.5 -Force
+        Install-Module MSCloudLoginAssistant -RequiredVersion 1.0.3 -Force
+        Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.19.2003.0 -Force
+        Install-Module Microsoft.PowerApps.Administration.PowerShell -RequiredVersion 2.0.42 -Force
 
         $webClient = new-object System.Net.WebClient
-        $url = "https://github.com/Microsoft/Office365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_9119-1200_x64_en-us.msi?raw=true"
+        $url = "https://github.com/Microsoft/Office365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_19515-12000_x64_en-us.msi?raw=true"
         $path = $PSScriptRoot + "\SharePointOnlineManagementShell.msi"
         $webClient.DownloadFile($url, $path)
         msiexec /i $path /quiet /qn /norestart
 
-        Install-Module Microsoft.Online.SharePoint.PowerShell -RequiredVersion 16.0.19223.12000 -Force
+        Install-Module Microsoft.Online.SharePoint.PowerShell -RequiredVersion 16.0.19515.12000 -Force
         Import-Module Microsoft.Online.SharePoint.PowerShell -Force
         Import-Module SharePointPnpPowerShellOnline -Force
         Import-Module MSCloudLoginAssistant -Force
         Import-Module AzureAD -Force
         Import-Module MicrosoftTeams -Force
+        [System.Environment]::SetEnvironmentVariable('O365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine)
         Import-Module -Name "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
         Invoke-AppveyorInstallTask
 

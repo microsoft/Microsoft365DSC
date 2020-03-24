@@ -6,13 +6,15 @@ param(
             -ChildPath '..\Stubs\Office365.psm1' `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath '..\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'O365AdminAuditLogConfig'
+    -DscResource 'O365AdminAuditLogConfig' -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -131,9 +133,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name 'ReverseDSC Tests' -Fixture {
             $testParams = @{
-                IsSingleInstance                = 'Yes'
-                Ensure                          = 'Present'
-                UnifiedAuditLogIngestionEnabled = 'Enabled'
                 GlobalAdminAccount              = $GlobalAdminAccount
             }
 

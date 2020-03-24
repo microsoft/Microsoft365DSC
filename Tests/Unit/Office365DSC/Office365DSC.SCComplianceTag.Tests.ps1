@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SCComplianceTag"
+    -DscResource "SCComplianceTag" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -58,8 +60,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 RetentionAction    = "Keep"
                 RetentionDuration  = "1025"
                 FilePlanProperty   = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
-                    FilePlanPropertyDepartment = "Legal"
-                } -ClientOnly)
+                        FilePlanPropertyDepartment = "Legal"
+                    } -ClientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 RetentionType      = "ModificationAgeInDays"
                 Ensure             = "Present"
@@ -89,13 +91,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 RetentionAction    = "Keep"
                 RetentionDuration  = "1025"
                 FilePlanProperty   = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
-                    FilePlanPropertyDepartment = "DemoDept"
-                    FilePlanPropertyCitation = "DemoCit"
-                    FilePlanPropertyReferenceId = "DemoRef"
-                    FilePlanPropertyAuthority = "DemoAuth"
-                    FilePlanPropertyCategory = "DemoCat"
-                    FilePlanPropertySubcategory = "DemoSub"
-                } -ClientOnly)
+                        FilePlanPropertyDepartment  = "DemoDept"
+                        FilePlanPropertyCitation    = "DemoCit"
+                        FilePlanPropertyReferenceId = "DemoRef"
+                        FilePlanPropertyAuthority   = "DemoAuth"
+                        FilePlanPropertyCategory    = "DemoCat"
+                        FilePlanPropertySubcategory = "DemoSub"
+                    } -ClientOnly)
                 GlobalAdminAccount = $GlobalAdminAccount
                 RetentionType      = "ModificationAgeInDays"
                 Ensure             = "Present"
@@ -138,8 +140,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Comment            = "This is a test Rule"
                 RetentionAction    = "Keep"
                 FilePlanProperty   = (New-CimInstance -ClassName MSFT_SCFilePlanProperty -Property @{
-                    FilePlanPropertyDepartment = "Legal"
-                } -ClientOnly)
+                        FilePlanPropertyDepartment = "Legal"
+                    } -ClientOnly)
                 RetentionDuration  = "1025"
                 GlobalAdminAccount = $GlobalAdminAccount
                 RetentionType      = "ModificationAgeInDays"
@@ -147,20 +149,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-ComplianceTag -MockWith {
                 return @{
-
+                    Name              = "TestRule"
+                    Comment           = "This is a test Rule"
+                    RetentionAction   = "Keep"
+                    RetentionDuration = "1025"
+                    FilePlanMetadata  = '{"Settings":[
+                        {"Key":"FilePlanPropertyDepartment","Value":"DemoDept"},
+                        {"Key":"FilePlanPropertyCitation","Value":"DemoCit"},
+                        {"Key":"FilePlanPropertyReferenceId","Value":"DemoRef"},
+                        {"Key":"FilePlanPropertyAuthority","Value":"DemoAuth"},
+                        {"Key":"FilePlanPropertyCategory","Value":"DemoCat"},
+                        {"Key":"FilePlanPropertySubcategory","Value":"DemoSub"}]}'
+                    RetentionType     = "ModificationAgeInDays"
                 }
             }
 
-            It 'Should return True from the Test method' {
-                Test-TargetResource @testParams | Should Be $True
+            It 'Should return False from the Test method' {
+                Test-TargetResource @testParams | Should Be $False
             }
 
             It 'Should delete from the Set method' {
                 Set-TargetResource @testParams
+                Assert-MockCalled -CommandName Remove-ComplianceTag -Exactly 1
             }
 
-            It 'Should return Absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
+            It 'Should return Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
             }
         }
 

@@ -56,12 +56,12 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('NoAccess','PartialAccess','FullAccess')]
+        [ValidateSet('NoAccess', 'PartialAccess', 'FullAccess')]
         $ResourceAccountContentAccess,
 
         [Parameter()]
         [System.String[]]
-        $RestrictedSenderList,
+        $RestrictedSenderList = $null,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -70,14 +70,21 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Teams Client"
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SkypeForBusiness
+        -Platform SkypeForBusiness
 
     try
     {
         $config = Get-CsTeamsClientConfiguration
 
-        return @{
+        $result = @{
             Identity                         = $config.Identity
             AllowBox                         = $config.AllowBox
             AllowDropBox                     = $config.AllowDropBox
@@ -94,6 +101,11 @@ function Get-TargetResource
             RestrictedSenderList             = $config.RestrictedSenderList
             GlobalAdminAccount               = $GlobalAdminAccount
         }
+        if ([System.String]::IsNullOrEmpty($RestrictedSenderList))
+        {
+            $result.Remove("RestrictedSenderList") | Out-Null
+        }
+        return $result
     }
     catch
     {
@@ -158,12 +170,12 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('NoAccess','PartialAccess','FullAccess')]
+        [ValidateSet('NoAccess', 'PartialAccess', 'FullAccess')]
         $ResourceAccountContentAccess,
 
         [Parameter()]
         [System.String[]]
-        $RestrictedSenderList,
+        $RestrictedSenderList = $null,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -172,12 +184,23 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Teams Client"
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform SkypeForBusiness
+        -Platform SkypeForBusiness
 
     $SetParams = $PSBoundParameters
     $SetParams.Remove("GlobalAdminAccount")
 
+    if ([System.String]::IsNullOrEmpty($RestrictedSenderList))
+    {
+        $SetParams.Remove("RestrictedSenderList") | Out-Null
+    }
     Set-CsTeamsClientConfiguration @SetParams
 }
 
@@ -239,12 +262,12 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('NoAccess','PartialAccess','FullAccess')]
+        [ValidateSet('NoAccess', 'PartialAccess', 'FullAccess')]
         $ResourceAccountContentAccess,
 
         [Parameter()]
         [System.String[]]
-        $RestrictedSenderList,
+        $RestrictedSenderList = $null,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -260,10 +283,15 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+
+    if ([System.String]::IsNullOrEmpty($RestrictedSenderList))
+    {
+        $ValuesToCheck.Remove("RestrictedSenderList") | Out-Null
+    }
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -280,6 +308,15 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference ='Continue'
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
 
     $params = @{
         Identity           = "Global"

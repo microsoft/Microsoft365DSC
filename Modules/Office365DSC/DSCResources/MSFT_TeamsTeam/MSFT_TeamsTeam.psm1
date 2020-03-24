@@ -108,6 +108,13 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Team $DisplayName"
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     $nullReturn = @{
         DisplayName                       = $DisplayName
         GroupId                           = $GroupID
@@ -137,7 +144,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Checking for existance of Team $DisplayName"
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform MicrosoftTeams
+        -Platform MicrosoftTeams
 
     $CurrentParameters = $PSBoundParameters
 
@@ -168,7 +175,7 @@ function Get-TargetResource
             }
         }
 
-        $Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object {$_.Role -eq "owner"}
+        $Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object { $_.Role -eq "owner" }
         $OwnersArray = @()
         if ($null -ne $Owners)
         {
@@ -322,8 +329,15 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Team $DisplayName"
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform MicrosoftTeams
+        -Platform MicrosoftTeams
 
     $team = Get-TargetResource @PSBoundParameters
 
@@ -480,7 +494,10 @@ function Test-TargetResource
 
     Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
-
+    
+    If (!$PSBoundParameters.ContainsKey('Ensure')) {
+        $PSBoundParameters.Add('Ensure',$Ensure)
+    }
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('GroupID') | Out-Null
@@ -491,9 +508,9 @@ function Test-TargetResource
     }
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -511,8 +528,16 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = 'Continue'
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform MicrosoftTeams
+        -Platform MicrosoftTeams
 
     $teams = Get-Team
     $i = 1

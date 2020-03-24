@@ -71,9 +71,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of OneDrive Settings"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+        -Platform SharePointOnline
 
     $nullReturn = @{
         IsSingleInstance                          = "Yes"
@@ -169,7 +175,7 @@ function Get-TargetResource
     catch
     {
         $Message = "Failed to get Tenant client sync settings"
-        New-Office365DSCLogEntry -Error $_ -Message $Message
+        New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
         return $nullReturn
     }
 }
@@ -246,15 +252,26 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of OneDrive Settings"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+        -Platform SharePointOnline
 
     ## Configure OneDrive settings
     ## Parameters below are remove for the Set-SPOTenant cmdlet
     ## they are used in the Set-SPOTenantSyncClientRestriction cmdlet
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
+
+    if ($CurrentParameters.ContainsKey("Ensure"))
+    {
+        $CurrentParameters.Remove("Ensure")
+    }
 
     if ($CurrentParameters.ContainsKey("BlockMacSync"))
     {
@@ -284,7 +301,7 @@ function Set-TargetResource
     Write-Verbose -Message "Configuring OneDrive settings."
     Set-SPOTenant @CurrentParameters
 
-    $clientSyncParameters =  $PSBoundParameters
+    $clientSyncParameters = $PSBoundParameters
 
     ## Configure Sync Client restrictions
     ## Set-SPOTenantSyncClientRestriction has different parameter sets and they cannot be combined see article:
@@ -400,21 +417,21 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("BlockMacSync", `
-                                                                   "ExcludedFileExtensions", `
-                                                                   "DisableReportProblemDialog", `
-                                                                   "GrooveBlockOption", `
-                                                                   "DomainGuids", `
-                                                                   "OneDriveStorageQuota", `
-                                                                   "OrphanedPersonalSitesRetentionPeriod", `
-                                                                   "OneDriveForGuestsEnabled", `
-                                                                   "ODBAccessRequests", `
-                                                                   "ODBMembersCanShare", `
-                                                                   "NotifyOwnersWhenInvitationsAccepted", `
-                                                                   "NotificationsInOneDriveForBusinessEnabled",
-                                                                   "Ensure")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("BlockMacSync", `
+            "ExcludedFileExtensions", `
+            "DisableReportProblemDialog", `
+            "GrooveBlockOption", `
+            "DomainGuids", `
+            "OneDriveStorageQuota", `
+            "OrphanedPersonalSitesRetentionPeriod", `
+            "OneDriveForGuestsEnabled", `
+            "ODBAccessRequests", `
+            "ODBMembersCanShare", `
+            "NotifyOwnersWhenInvitationsAccepted", `
+            "NotificationsInOneDriveForBusinessEnabled",
+        "Ensure")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -432,10 +449,16 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPReference = 'Continue'
-    Write-Information "Extracting ODSettings..."
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform SharePointOnline `
-                      -ErrorAction SilentlyContinue
+        -Platform SharePointOnline `
+        -ErrorAction SilentlyContinue
     $Params = @{
         IsSingleInstance   = 'Yes'
         GlobalAdminAccount = $GlobalAdminAccount

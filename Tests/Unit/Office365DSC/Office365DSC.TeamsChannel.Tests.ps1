@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "TeamsChannel"
+    -DscResource "TeamsChannel" -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -22,6 +24,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
         Mock -CommandName Test-MSCloudLogin -MockWith {
+
+        }
+
+        Mock -CommandNAme Set-TeamChannel -MockWith {
 
         }
 
@@ -100,7 +106,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure  | Should be "Present"
+                (Get-TargetResource @testParams).Ensure | Should be "Present"
             }
 
             It "Should return true from the Test method" {
@@ -108,12 +114,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Rename existing channel" -Fixture{
+        Context -Name "Rename existing channel" -Fixture {
             $testParams = @{
                 TeamName           = "TestTeam"
                 DisplayName        = "Test Channel"
                 Ensure             = "Present"
-                NewDisplayName = "Test Channel Updated"
+                NewDisplayName     = "Test Channel Updated"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -139,7 +145,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure  | Should be "Present"
+                (Get-TargetResource @testParams).Ensure | Should be "Present"
             }
 
             It "Renames existing channel in the Set method" {
@@ -151,7 +157,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Remove existing channel" -Fixture{
+        Context -Name "Remove existing channel" -Fixture {
             $testParams = @{
                 TeamName           = "TestTeam"
                 DisplayName        = "Test Channel"
@@ -186,7 +192,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return present from the Get method" {
-                (Get-TargetResource @testParams).Ensure  | Should be "Present"
+                (Get-TargetResource @testParams).Ensure | Should be "Present"
             }
 
             It "Remove channel in the Set method" {
@@ -197,8 +203,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                TeamName           = "TestTeam"
-                DisplayName        = "Test Channel"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 

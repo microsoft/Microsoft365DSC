@@ -1,0 +1,15 @@
+[ClassVersion("1.0.0.0"), FriendlyName("TeamsGuestMessagingConfiguration")]
+class MSFT_TeamsGuestMessagingConfiguration : OMI_BaseResource
+{
+    [Key, Description("The only valid input is Global - the tenant wide configuration"), ValueMap{"Global"}, Values{"Global"}] string Identity;
+    [Write, Description("Determines if a user is allowed to edit their own messages.")] Boolean AllowUserEditMessage;
+    [Write, Description("Determines if a user is allowed to delete their own messages.")] Boolean AllowUserDeleteMessage;
+    [Write, Description("Determines if a user is allowed to chat.")] Boolean AllowUserChat;
+    [Write, Description("Determines Giphy content restrictions. Default value is Moderate, other options are Strict and NoRestriction."), ValueMap{"Moderate","Strict","NoRestriction"}, Values{"Moderate","Strict","NoRestriction"}] String GiphyRatingType;
+    [Write, Description("Determines if memes are available for use.")] Boolean AllowMemes;
+    [Write, Description("Determines if stickers are available for use.")] Boolean AllowStickers;
+    [Write, Description("Determines if Giphy are available for use.")] Boolean AllowGiphy;
+    [Write, Description("Determines if Immersive Reader is enabled.")] Boolean AllowImmersiveReader;
+    [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};
+

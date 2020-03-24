@@ -3,15 +3,17 @@ param(
     [Parameter()]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\Stubs\Office365.psm1" `
-                                         -Resolve)
+            -ChildPath "..\Stubs\Office365.psm1" `
+            -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\UnitTestHelper.psm1" `
-                                -Resolve)
+        -ChildPath "..\UnitTestHelper.psm1" `
+        -Resolve)
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                                -DscResource "SPOApp"
+    -DscResource "SPOApp" -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -22,6 +24,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Mock -CommandName Test-MSCloudLogin -MockWith {
 
+        }
+
+        Mock -CommandName Get-PnPTenantAppCatalogUrl -MockWith {
+            return "https://contoso-admin.sharepoint.com"
         }
 
         # Test contexts
@@ -102,9 +108,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Ident              = "MyTestApp"
-                Path               = "C:\Test\MyTestApp.sppkg"
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -Command Get-AllSPOPackages -MockWith {
+                return @(@{
+                    Name  = "TestPkg.sppkg"
+                    Site  = "https://contoso.sharepoint.com/sites/apps"
+                    Title = "Test Pkg"
+                },
+                @{
+                    Name  = "TestApp.app"
+                    Site  = "https://contoso.sharepoint.com/sites/apps"
+                    Title = "Test App"
+                }
+                )
             }
 
             Mock -CommandName Get-PnPApp -MockWith {

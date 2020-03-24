@@ -12,7 +12,7 @@ function Get-TargetResource
         [System.String[]]
         $UserPrincipals,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateSet("View", "None")]
         [System.String]
         $Rights,
@@ -28,9 +28,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesignRights for $SiteDesignTitle"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $nullReturn = @{
         SiteDesignTitle    = $SiteDesignTitle
@@ -51,7 +57,7 @@ function Get-TargetResource
     Write-Verbose -Message "Site Design ID is $($siteDesign.Id)"
 
     $siteDesignRights = Get-PnPSiteDesignRights -Identity $siteDesign.Id -ErrorAction SilentlyContinue | `
-            Where-Object -FilterScript { $_.Rights -eq $Rights }
+        Where-Object -FilterScript { $_.Rights -eq $Rights }
 
     if ($null -eq $siteDesignRights)
     {
@@ -70,7 +76,7 @@ function Get-TargetResource
     return @{
         SiteDesignTitle    = $SiteDesignTitle
         UserPrincipals     = $curUserPrincipals
-        Rights             = $siteDesignRights.Rights.ToString()
+        Rights             = $Rights
         Ensure             = "Present"
         GlobalAdminAccount = $GlobalAdminAccount
     }
@@ -89,7 +95,7 @@ function Set-TargetResource
         [System.String[]]
         $UserPrincipals,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateSet("View", "None")]
         [System.String]
         $Rights,
@@ -105,9 +111,15 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for SPO SiteDesignRights for $SiteDesignTitle"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $cursiteDesign = Get-PnPSiteDesign -Identity $SiteDesignTitle
     if ($null -eq $cursiteDesign)
@@ -180,7 +192,7 @@ function Test-TargetResource
         [System.String[]]
         $UserPrincipals,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateSet("View", "None")]
         [System.String]
         $Rights,
@@ -203,11 +215,11 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("UserPrincipals", `
-                                                                   "Rights", `
-                                                                   "Ensure")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("UserPrincipals", `
+            "Rights", `
+            "Ensure")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -225,9 +237,15 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $siteDesigns = Get-PnPSiteDesign
 

@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SPOSiteDesignRights"
+    -DscResource "SPOSiteDesignRights" -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -36,9 +38,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Grant-PnPSiteDesignRights -MockWith {
                 return @{
-                    UserPrincipals  = $null
-                    Rights          = $null
-                    Identity        = $null
+                    UserPrincipals = $null
+                    Rights         = $null
+                    Identity       = $null
                 }
             }
 
@@ -82,7 +84,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPSiteDesignRights -MockWith {
                 return @{
                     PrincipalName = "i:0#.f|membership|jdoe@dsazure.com"
-                    Rights         = "View"
+                    Rights        = "View"
                 }
             }
 
@@ -106,7 +108,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "Adding new user Site Design rights" -Fixture {
             $testParams = @{
                 SiteDesignTitle    = "Customer List"
-                UserPrincipals     = "jdoe@dsazure.com","dsmay@dsazure.com"
+                UserPrincipals     = "jdoe@dsazure.com", "dsmay@dsazure.com"
                 Rights             = "View"
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
@@ -121,7 +123,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPSiteDesignRights -MockWith {
                 return @{
                     PrincipalName = "i:0#.f|membership|jdoe@dsazure.com"
-                    Rights         = "View"
+                    Rights        = "View"
                 }
             }
 
@@ -164,7 +166,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPSiteDesignRights -MockWith {
                 return @{
                     PrincipalName = "i:0#.f|membership|jdoe@dsazure.com"
-                    Rights         = "View"
+                    Rights        = "View"
                 }
             }
 
@@ -204,7 +206,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPSiteDesignRights -MockWith {
                 return @{
                     PrincipalName = "i:0#.f|membership|john.smith@contoso.com"
-                    Rights         = "View"
+                    Rights        = "View"
                 }
             }
 

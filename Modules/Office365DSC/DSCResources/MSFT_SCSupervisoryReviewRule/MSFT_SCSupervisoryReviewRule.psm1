@@ -5,7 +5,7 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateLength(1,64)]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
 
@@ -18,7 +18,7 @@ function Get-TargetResource
         $Condition,
 
         [Parameter()]
-        [ValidateRange(0,100)]
+        [ValidateRange(0, 100)]
         [System.UInt32]
         $SamplingRate,
 
@@ -33,12 +33,18 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SupervisoryReviewRule for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $RuleObjects = Get-SupervisoryReviewRule
-    $RuleObject = $RuleObjects | Where-Object {$_.Name -eq $Name}
+    $RuleObject = $RuleObjects | Where-Object { $_.Name -eq $Name }
 
     if ($null -eq $RuleObject)
     {
@@ -73,7 +79,7 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateLength(1,64)]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
 
@@ -86,7 +92,7 @@ function Set-TargetResource
         $Condition,
 
         [Parameter()]
-        [ValidateRange(0,100)]
+        [ValidateRange(0, 100)]
         [System.UInt32]
         $SamplingRate,
 
@@ -101,9 +107,15 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of SupervisoryReviewRule for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SecurityComplianceCenter
+        -Platform SecurityComplianceCenter
 
     $CurrentRule = Get-TargetResource @PSBoundParameters
 
@@ -117,13 +129,13 @@ function Set-TargetResource
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
         Set-SupervisoryReviewRule -Identity $CurrentRule.Name `
-                                  -Condition $CurrentRule.Condition `
-                                  -SamplingRate $CurrentRule.SamplingRate
+            -Condition $CurrentRule.Condition `
+            -SamplingRate $CurrentRule.SamplingRate
     }
     elseif ('Absent' -eq $Ensure)
     {
         throw "The SCSupervisoryReviewRule resource doesn't not support deleting Rules. " + `
-              "Instead try removing the associated policy, or modifying the existing rule."
+            "Instead try removing the associated policy, or modifying the existing rule."
     }
 }
 
@@ -134,7 +146,7 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateLength(1,64)]
+        [ValidateLength(1, 64)]
         [System.String]
         $Name,
 
@@ -147,7 +159,7 @@ function Test-TargetResource
         $Condition,
 
         [Parameter()]
-        [ValidateRange(0,100)]
+        [ValidateRange(0, 100)]
         [System.UInt32]
         $SamplingRate,
 
@@ -170,9 +182,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -186,25 +198,63 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateLength(1,64)]
-        [System.String]
-        $Name,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Policy,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        SCSupervisoryReviewRule " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform SecurityComplianceCenter `
+        -ErrorAction SilentlyContinue
+
+    $rules = Get-SupervisoryReviewRule
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
+    if ($GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
+    }
+
+    $totalRules = $rules.Length
+    if ($null -eq $totalRules)
+    {
+        $totalRules = 1
+    }
+    $i = 1
+    $content = ''
+    foreach ($rule in $rules)
+    {
+        Write-Information "    - [$i/$totalRules] $($rule.Name)"
+        $params = @{
+            GlobalAdminAccount = $GlobalAdminAccount
+            Name               = $rule.Name
+            Policy             = $rule.Policy
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content += "        SCSupervisoryReviewRule " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+        if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+                $partialContent.ToLower().Contains($principal.ToLower()))
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+        }
+        $content += $partialContent
+        $content += "        }`r`n"
+        $i++
+    }
     return $content
 }
 

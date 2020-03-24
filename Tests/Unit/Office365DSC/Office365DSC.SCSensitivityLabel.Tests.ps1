@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SCSensitivityLabel"
+    -DscResource "SCSensitivityLabel" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -114,15 +116,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-Label -MockWith {
                 return @{
-                    Name             = "TestLabel"
-                    Comment          = "Updated comment"
-                    ToolTip          = "Test tool tip"
-                    DisplayName      = "Test label"
-                    ParentId         = "MyLabel"
-                    Priority         = "2"
-                    Settings = '{"Key": "LabelStatus",
+                    Name           = "TestLabel"
+                    Comment        = "Updated comment"
+                    ToolTip        = "Test tool tip"
+                    DisplayName    = "Test label"
+                    ParentId       = "MyLabel"
+                    Priority       = "2"
+                    Settings       = '{"Key": "LabelStatus",
                                         "Value": "Enabled"}'
-                    LocaleSettings   = '{"LocaleKey":"DisplayName",
+                    LocaleSettings = '{"LocaleKey":"DisplayName",
                                          "Settings":[
                                          {"Key":"en-us","Value":"English Display Names"}]}'
 
@@ -180,10 +182,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Get-Label  -MockWith {
                 return @{
-                    Name = "TestRule"
-                    Settings = '{"Key": "LabelStatus",
+                    Name           = "TestRule"
+                    Settings       = '{"Key": "LabelStatus",
                                         "Value": "Enabled"}'
-                    LocaleSettings   = '{"LocaleKey":"DisplayName",
+                    LocaleSettings = '{"LocaleKey":"DisplayName",
                                          "Settings":[
                                          {"Key":"en-us","Value":"English Display Names"}]}'
                 }

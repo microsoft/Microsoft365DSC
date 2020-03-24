@@ -5,13 +5,8 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Yes')]
-        [String]
-        $IsSingleInstance,
-
-        [Parameter()]
         [System.String]
-        $Identity = 'Default',
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -44,14 +39,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Testing configuration of HostedOutboundSpamFilterPolicy for $Identity"
-
-    if ('Default' -ne $Identity)
-    {
-        throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Identity value of 'Default'"
-    }
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $HostedOutboundSpamFilterPolicies = Get-HostedOutboundSpamFilterPolicy
 
@@ -67,7 +63,6 @@ function Get-TargetResource
     {
         $result = @{
             Ensure                                    = 'Present'
-            IsSingleInstance                          = 'Yes'
             Identity                                  = $Identity
             AdminDisplayName                          = $HostedOutboundSpamFilterPolicy.AdminDisplayName
             BccSuspiciousOutboundAdditionalRecipients = $HostedOutboundSpamFilterPolicy.BccSuspiciousOutboundAdditionalRecipients
@@ -89,13 +84,8 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Yes')]
-        [String]
-        $IsSingleInstance,
-
-        [Parameter()]
         [System.String]
-        $Identity = 'Default',
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -128,19 +118,19 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Testing configuration of HostedOutboundSpamFilterPolicy for $Identity"
-
-    if ('Default' -ne $Identity)
-    {
-        throw "EXOHostedOutboundSpamFilterPolicy configurations MUST specify Identity value of 'Default'"
-    }
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $HostedOutboundSpamFilterPolicyParams = $PSBoundParameters
     $HostedOutboundSpamFilterPolicyParams.Remove('Ensure') | Out-Null
     $HostedOutboundSpamFilterPolicyParams.Remove('GlobalAdminAccount') | Out-Null
-    $HostedOutboundSpamFilterPolicyParams.Remove('IsSingleInstance') | Out-Null
 
     Write-Verbose -Message "Setting HostedOutboundSpamFilterPolicy $Identity with values: $(Convert-O365DscHashtableToString -Hashtable $HostedOutboundSpamFilterPolicyParams)"
     Set-HostedOutboundSpamFilterPolicy @HostedOutboundSpamFilterPolicyParams
@@ -153,13 +143,8 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Yes')]
-        [String]
-        $IsSingleInstance,
-
-        [Parameter()]
         [System.String]
-        $Identity = 'Default',
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -200,13 +185,12 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
-    $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
     $ValuesToCheck.Remove('Verbose') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -220,22 +204,36 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Yes')]
-        [String]
-        $IsSingleInstance,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $IsSingleInstance = 'Yes'
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        EXOHostedOutboundSpamFilterPolicy " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
-    $content += "        }`r`n"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform ExchangeOnline `
+        -ErrorAction SilentlyContinue
+
+    $HostedOutboundSpamFilterPolicies = Get-HostedOutboundSpamFilterPolicy
+    $content = ''
+    foreach ($HostedOutboundSpamFilterPolicy in $HostedOutboundSpamFilterPolicies)
+    {
+        $params = @{
+            GlobalAdminAccount = $GlobalAdminAccount
+            Identity           = $HostedOutboundSpamFilterPolicy.Identity
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content += "        EXOHostedOutboundSpamFilterPolicy " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
+        $content += "        }`r`n"
+    }
     return $content
 }
 

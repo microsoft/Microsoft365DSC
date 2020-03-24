@@ -48,9 +48,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesign for $Title"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
     $nullReturn = @{
         Title               = $Title
         SiteScriptNames     = $SiteScriptNames
@@ -158,9 +164,15 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for SPO SiteDesign for $Title"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $curSiteDesign = Get-TargetResource @PSBoundParameters
 
@@ -190,10 +202,10 @@ function Set-TargetResource
         if ($null -ne $siteDesign)
         {
             Write-Verbose -Message "Updating current site design $Title"
-            Set-PnPSiteDesign  -Identity $siteDesign.Id  @CurrentParameters
+            Set-PnPSiteDesign -Identity $siteDesign.Id  @CurrentParameters
         }
     }
-    elseif (($Ensure -eq "Absent"  -and $curSiteDesign.Ensure -eq "Present"))
+    elseif (($Ensure -eq "Absent" -and $curSiteDesign.Ensure -eq "Present"))
     {
         $siteDesign = Get-PnPSiteDesign -Identity $Title -ErrorAction SilentlyContinue
         if ($null -ne $siteDesign)
@@ -264,9 +276,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -284,9 +296,15 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
 
     $content = ''
     $i = 1

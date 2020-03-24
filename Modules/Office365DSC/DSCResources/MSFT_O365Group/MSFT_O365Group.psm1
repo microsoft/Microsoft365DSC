@@ -25,7 +25,7 @@ function Get-TargetResource
         $Members,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -35,23 +35,29 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = @{
-        DisplayName = $DisplayName
-        MailNickName = $Name
-        Description = $null
-        ManagedBy = $null
+        DisplayName        = $DisplayName
+        MailNickName       = $Name
+        Description        = $null
+        ManagedBy          = $null
         GlobalAdminAccount = $null
-        Ensure = "Absent"
+        Ensure             = "Absent"
     }
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform AzureAD
+        -Platform AzureAD
 
-    $ADGroup = Get-AzureADGroup -SearchString $MailNickName -ErrorAction SilentlyContinue
+    $ADGroup = Get-AzureADGroup | Where-Object -FilterScript {$_.MailNickName -eq $MailNickName}
     if ($null -eq $ADGroup)
     {
-        $ADGroup = Get-AzureADGroup -SearchString $DisplayName -ErrorAction SilentlyContinue
+        $ADGroup = Get-AzureADGroup | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
         if ($null -eq $ADGroup)
         {
             Write-Verbose -Message "Office 365 Group {$DisplayName} was not found."
@@ -93,13 +99,13 @@ function Get-TargetResource
         }
 
         $returnValue = @{
-            DisplayName = $ADGroup.DisplayName
-            MailNickName = $ADGroup.MailNickName
-            Members = $newMemberList
-            ManagedBy = $ownersUPN
-            Description = $description
+            DisplayName        = $ADGroup.DisplayName
+            MailNickName       = $ADGroup.MailNickName
+            Members            = $newMemberList
+            ManagedBy          = $ownersUPN
+            Description        = $description
             GlobalAdminAccount = $GlobalAdminAccount
-            Ensure = "Present"
+            Ensure             = "Present"
         }
 
         Write-Verbose -Message "Retrieved the following instance of the Group:"
@@ -112,7 +118,7 @@ function Get-TargetResource
     catch
     {
         $Message = "An error occured retrieving info for Group $DisplayName"
-        New-Office365DSCLogEntry -Error $_ -Message $Message
+        New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
     }
     return $nullReturn
 }
@@ -143,7 +149,7 @@ function Set-TargetResource
         $Members,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -153,8 +159,14 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $currentGroup = Get-TargetResource @PSBoundParameters
 
@@ -299,7 +311,7 @@ function Test-TargetResource
         $Members,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -316,8 +328,8 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -331,28 +343,64 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $MailNickName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $ManagedBy,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = "`$Credsglobaladmin"
-    $content = "        O365Group " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    $InformationPreference = 'Continue'
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $content = ''
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform AzureAD
+    $groups = Get-AzureADGroup -All $true | Where-Object -FilterScript {
+        $_.MailNickName -ne "00000000-0000-0000-0000-000000000000"
+    }
+
+    $i = 1
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
+    if ($GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
+    }
+    foreach ($group in $groups)
+    {
+        $params = @{
+            GlobalAdminAccount = $GlobalAdminAccount
+            DisplayName        = $group.DisplayName
+            ManagedBy          = "DummyUser"
+            MailNickName       = $group.MailNickName
+        }
+        Write-Information "    - [$i/$($groups.Length)] $($group.DisplayName)"
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = "`$Credsglobaladmin"
+        $content += "        O365Group " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+        if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+        }
+        if ($partialContent.ToLower().IndexOf($principal.ToLower()) -gt 0)
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$(`$OrganizationName.Split('.')[0])"
+        }
+        $content += $partialContent
+        $content += "        }`r`n"
+        $i++
+    }
     return $content
 }
 

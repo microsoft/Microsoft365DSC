@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                              -DscResource "SCFilePlanPropertyCategory"
+    -DscResource "SCFilePlanPropertyCategory" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -39,9 +41,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "Category doesn't already exist" -Fixture {
             $testParams = @{
-                Name                 = "Demo Category"
-                GlobalAdminAccount   = $GlobalAdminAccount
-                Ensure               = "Present"
+                Name               = "Demo Category"
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = "Present"
             }
 
             Mock -CommandName Get-FilePlanPropertyCategory -MockWith {
@@ -63,9 +65,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Category already exists" -Fixture {
             $testParams = @{
-                Name                 = "Demo Category"
-                GlobalAdminAccount   = $GlobalAdminAccount
-                Ensure               = "Present"
+                Name               = "Demo Category"
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = "Present"
             }
 
             Mock -CommandName Get-FilePlanPropertyCategory -MockWith {
@@ -89,9 +91,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Category should not exist" -Fixture {
             $testParams = @{
-                Name                 = "Demo Category"
-                GlobalAdminAccount   = $GlobalAdminAccount
-                Ensure               = "Absent"
+                Name               = "Demo Category"
+                GlobalAdminAccount = $GlobalAdminAccount
+                Ensure             = "Absent"
             }
 
             Mock -CommandName Get-FilePlanPropertyCategory -MockWith {

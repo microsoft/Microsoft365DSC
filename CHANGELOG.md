@@ -2,6 +2,76 @@
 
 ## UNRELEASED
 
+* TeamsCallingPolicy
+  * Removed the AllowCalling parameter since it is no longer supported;
+  * Fixed an issue with Policies without tags in their name (e.g. Global);
+* ReverseDSC
+  * Change to allow ComponentsToExtract without the 'chck' prefix;
+* Metadata
+  * Updated MicrosoftTeams dependency to 1.0.5;
+  * Updated MSCloudLoginAssistant dependency to 1.0.3;
+  * Updated SharePointPnPPowerShellOnline dependency to 3.19.2003.0;
+
+## 1.0.3.1723
+
+* EXOHostedOutboundSpamFilterPolicy
+  * BREAKING CHANGE: Remove IsSingleInstance and added
+    Identity as key;
+* SPOSite
+  * Refactor to use PnP and expose updated parameters;
+* TeamsGuestMessagingConfiguration
+  * Added value NoRestriction for GiphyRatingValues;
+* Metadata
+  * Removed dependencyon MSOnline;
+  * Updated MSCloudLoginAssistant dependency to 1.0.2;
+  * Updated SharePointPnPPowerShellOnline dependency to 3.18.2002.0;
+  * Updated Microsoft.PowerApps.Administration.PowerShell
+    dependency to 2.0.42;
+
+## 1.0.2.1583
+
+* EXOAcceptedDomain
+  * Fixed an issue where the domains were not properly extracted
+    if multiple domain matches a similar pattern;
+* EXOHostedOutboundSpamFilterPolicy
+  * Fixed an error where the resource was not being extracted via
+    the Graphical User Interface;
+* SCComplianceTag
+  * Fix an issue where FilePlanProperty values returned
+    from Get-TargetResource where always empty;
+* SCDLPComplianceRule
+  * Fixed an issue with multiple SensitiveInformation objects;
+  * Fixed an issue where extraction failed if the name of the
+    Sensitive Information property contained apostrophes;
+* SCFilePlanPropertySubCategory
+  * Fixed an issue where the Sub-Categories were not properly extracted,
+    whenever the parent category is custom;
+* TeamsEmergencyCallingPolicy
+  * Initial Release;
+* TeamsEmergencyCallRoutingPolicy
+  * Initial Release;
+* TeamsGuestCallingConfiguration
+  * Initial Release;
+* TeamsGuestMeetingConfiguration
+  * Initial Release;
+* TeamsGuestMessagingConfiguration
+  * Initial Release;
+* TeamsMeetingBroadcastPolicy
+  * Initial Release;
+* ReverseDSC
+  * Updated Graphical User Interface with new resources;
+  * Streamlined the looping logic to simplify development process
+    for new resources;
+* Metadata
+  * Updated Microsoft.Online.SharePoint.PowerShell to version
+    16.0.19515.12000;
+  * Updated ReverseDSC dependency to version 2.0.0.2;
+  * Updated SharePointPnPPowerShellOnline to version 3.17.2001.2;
+* SPOHomeSite
+  * Initial Release;
+
+## 1.0.1.1395
+
 * EXOOrganizationConfig
   * Initial Release;
 * EXOClientAccessRule
@@ -9,8 +79,12 @@
     returning all values;
 * O365OrgCustomizationSetting
   * Inital Release;
+* PPPowerAppsEnvironment
+  * Initial Release;
 * SCAuditConfigurationSettings
-  * Initial release;
+  * Initial Release;
+* SCComplianceTag
+  * Changed ReviewerEmail to type String array;
 * SCDLPComplianceRule
   * Fixed issue with the extraction of NotifyAllowOverride;
 * SCFilePlanPropertyAuthority
@@ -27,32 +101,43 @@
   * Initial Release;
 * SPOPropertyBag
   * Added multithreading;
+* SPOSiteGroup
+  * Initial Release;
+* SPOSharingSettings
+  * Added ExistingExternalUserSharingOnly as a supported value
+    for SharingCapabilities;
 * SPOTheme
   * Fixed an issue with the Set-TargetResource
     still using SPO management shell cmdlets instead of PnP
 * SPOUserProfileProperty
   * Introduced Multi-Threading
-<<<<<<< HEAD
-* TeamsClientConfiguration
-  * Initial Release;
-* TeamsUpgradeConfiguration
-=======
 * TeamsCallingPolicy
->>>>>>> upstream/dev
   * Initial Release;
 * TeamsUpgradePolicy
+  * Initial Release;
+* TeamsMeetingBroadcastConfiguration
+  * Initial Release;
+* TeamsMeetingConfiguration
+  * Initial Release;
+* TeamsMeetingPolicy
+  * Initial Release;
+* TeamsMessagingPolicy
   * Initial Release;
 * TeamsUpgradeConfiguration
   * Initial Release;
 * TeamsUser
   * Introduced Multi-Threading;
+  * Fixed an issue with User's Principal Name;
 * Metadata
   * Updated MicrosoftTeams dependency to version 1.0.3;
   * Updated MSCloudLoginAssistant dependency to version
-    0.8.1;
+    0.8.2;
   * Updated SharePointPnPPowerShellOnline dependency
     to version 3.16.1912.0;
   * Updated ReverseDSC dependency to version 2.0.0.0;
+* Misc
+  * Added new Telemetry Engine;
+  * Added new Dynamic Stubs Generation feature;
 
 ## 1.0.0.1048
 
@@ -76,7 +161,7 @@
   * Added workload selectors to the GUI interface;
 * Metadata
   * Updated MSCloudLoginAssistant dependency
-    to version 0.7.6;
+    to version 0.8.3;
   * Updated ReverseDSC dependency
     to version 1.9.4.6;
   * Updated Microsoft.Online.SharePoint.PowerShell dependency

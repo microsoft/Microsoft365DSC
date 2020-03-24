@@ -119,9 +119,15 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of AntiPhishPolicy for $Identity"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $AntiPhishPolicies = Get-AntiPhishPolicy
 
@@ -174,7 +180,7 @@ function Get-TargetResource
             TargetedUsersToProtect                = $AntiPhishPolicy.TargetedUsersToProtect
             TreatSoftPassAsAuthenticated          = $AntiPhishPolicy.TreatSoftPassAsAuthenticated
             GlobalAdminAccount                    = $GlobalAdminAccount
-            Ensure = 'Present'
+            Ensure                                = 'Present'
         }
 
         Write-Verbose -Message "Found AntiPhishPolicy $($Identity)"
@@ -303,9 +309,15 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of AntiPhishPolicy for $Identity"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $AntiPhishPolicies = Get-AntiPhishPolicy
 
@@ -464,9 +476,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -484,9 +496,15 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = "Continue"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline `
-                      -ErrorAction SilentlyContinue
+        -Platform ExchangeOnline `
+        -ErrorAction SilentlyContinue
 
     $AntiPhishPolicies = Get-AntiPhishPolicy
     $content = ""

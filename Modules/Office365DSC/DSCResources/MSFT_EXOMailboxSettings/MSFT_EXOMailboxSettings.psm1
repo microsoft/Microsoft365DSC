@@ -27,16 +27,22 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of Office 365 Mailbox Settings for $DisplayName"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = @{
         DisplayName = $DisplayName
-        TimeZone = $null
-        Locale = $null
-        Ensure = "Absent"
+        TimeZone    = $null
+        Locale      = $null
+        Ensure      = "Absent"
     }
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     try
     {
@@ -54,10 +60,10 @@ function Get-TargetResource
     }
 
     $result = @{
-        DisplayName = $DisplayName
-        TimeZone = $mailboxSettings.TimeZone
-        Locale = $mailboxSettings.Language.Name
-        Ensure = "Present"
+        DisplayName        = $DisplayName
+        TimeZone           = $mailboxSettings.TimeZone
+        Locale             = $mailboxSettings.Language.Name
+        Ensure             = "Present"
         GlobalAdminAccount = $GlobalAdminAccount
     }
     Write-Verbose -Message "Found an existing instance of Mailbox '$($DisplayName)'"
@@ -92,8 +98,14 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Mailbox Settings for $DisplayName"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform ExchangeOnline
+        -Platform ExchangeOnline
 
     $currentMailbox = Get-TargetResource @PSBoundParameters
 
@@ -104,7 +116,7 @@ function Set-TargetResource
     }
 
     $AllowedTimeZones = (Get-ChildItem "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Time zones" | `
-        ForEach-Object {Get-ItemProperty $_.PSPath}).PSChildName
+            ForEach-Object { Get-ItemProperty $_.PSPath }).PSChildName
 
     if ($AllowedTimeZones.Contains($TimeZone) -eq $false)
     {
@@ -113,8 +125,8 @@ function Set-TargetResource
 
 
     Set-MailboxRegionalConfiguration -Identity $DisplayName `
-                                     -Language $Locale `
-                                     -TimeZone $TimeZone
+        -Language $Locale `
+        -TimeZone $TimeZone
 }
 
 function Test-TargetResource
@@ -153,12 +165,12 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "DisplayName", `
-                                                                   "TimeZone", `
-                                                                   "Locale")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("Ensure", `
+            "DisplayName", `
+            "TimeZone", `
+            "Locale")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -172,25 +184,48 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
+    $InformationPreference = 'Continue'
 
-    $content = ""
-    if ($result.Ensure -eq "Present")
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform ExchangeOnline
+
+    $mailboxes = Get-Mailbox
+
+    $i = 1
+    $content = ''
+    foreach ($mailbox in $mailboxes)
     {
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $modulePath = $PSScriptRoot + "\MSFT_EXOMailboxSettings.psm1"
-        $content = "        EXOMailboxSettings " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
+        Write-Information "    - [$i/$($mailboxes.Length)] $($mailbox.Name)"
+        $mailboxName = $mailbox.Name
+        if (![System.String]::IsNullOrEmpty($mailboxName))
+        {
+            $params = @{
+                GlobalAdminAccount = $GlobalAdminAccount
+                DisplayName        = $mailboxName
+            }
+            $result = Get-TargetResource @params
+
+            if ($result.Ensure -eq "Present")
+            {
+                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                $modulePath = $PSScriptRoot + "\MSFT_EXOMailboxSettings.psm1"
+                $content += "        EXOMailboxSettings " + (New-GUID).ToString() + "`r`n"
+                $content += "        {`r`n"
+                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $modulePath
+                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                $content += "        }`r`n"
+            }
+        }
+        $i++
     }
     return $content
 }

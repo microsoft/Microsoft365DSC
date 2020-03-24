@@ -8,7 +8,7 @@ function Get-TargetResource
         $Url,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('All','None')]
+        [ValidateSet('All', 'None')]
         [System.String]
         $AuditFlags,
 
@@ -18,6 +18,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting SPOSiteAuditSettings for {$Url}"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     $nullReturn = @{
         Url                = $Url
@@ -28,8 +34,8 @@ function Get-TargetResource
     try
     {
         Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                          -Platform PnP `
-                          -ConnectionUrl $Url -ErrorAction SilentlyContinue
+            -Platform PnP `
+            -ConnectionUrl $Url -ErrorAction SilentlyContinue
         $auditSettings = Get-PnPAuditing -ErrorAction Stop
         $auditFlag = $auditSettings.AuditFlags
         if ($null -eq $auditFlag)
@@ -61,7 +67,7 @@ function Set-TargetResource
         $Url,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('All','None')]
+        [ValidateSet('All', 'None')]
         [System.String]
         $AuditFlags,
 
@@ -72,10 +78,16 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting Audit settings for {$Url}"
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -ConnectionUrl $Url `
-                      -Platform PnP
+        -ConnectionUrl $Url `
+        -Platform PnP
 
     if ($AuditFlags -eq 'All')
     {
@@ -97,7 +109,7 @@ function Test-TargetResource
         $Url,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('All','None')]
+        [ValidateSet('All', 'None')]
         [System.String]
         $AuditFlags,
 
@@ -113,9 +125,9 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("AuditFlags")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("AuditFlags")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -134,6 +146,12 @@ function Export-TargetResource
     )
 
     $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -Platform PnP -CloudCredential $GlobalAdminAccount
 
     $sites = Get-PnPTenantSite

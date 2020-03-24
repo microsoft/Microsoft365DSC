@@ -29,8 +29,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of member $User to Team $TeamName"
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform MicrosoftTeams
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform MicrosoftTeams
 
     $nullReturn = @{
         User               = $User
@@ -48,6 +48,13 @@ function Get-TargetResource
     }
 
     Write-Verbose -Message "Retrieve team GroupId: $($team.GroupId)"
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     try
     {
@@ -109,8 +116,15 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of member $User to Team $TeamName"
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform MicrosoftTeams
+        -Platform MicrosoftTeams
 
     $team = Get-TeamByName $TeamName
 
@@ -181,11 +195,11 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "User", `
-                                                                   "Role")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("Ensure", `
+            "User", `
+            "Role")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -199,20 +213,30 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [ValidateRange(1,100)]
+        [ValidateRange(1, 100)]
         $MaxProcesses,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference ='Continue'
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     $result = ""
 
     # Get all Site Collections in tenant;
-    $instances = Get-Team
+    Test-MSCloudLogin -Platform MicrosoftTeams -CloudCredential $GlobalAdminAccount
+    [array]$instances = Get-Team
     if ($instances.Length -ge $MaxProcesses)
     {
-        $instances = Split-ArrayByParts -Array $instances -Parts $MaxProcesses
+        [array]$instances = Split-ArrayByParts -Array $instances -Parts $MaxProcesses
         $batchSize = $instances[0].Length
     }
     else
@@ -221,13 +245,7 @@ function Export-TargetResource
         $batchSize = 1
     }
 
-    # Define the Path of the Util module. This is due to the fact that inside the Start-Job
-    # the module is not imported and simply doing Import-Module Office365DSC doesn't work.
-    # Therefore, in order to be able to call into Invoke-O365DSCCommand we need to implicitly
-    # load the module.
-    $UtilModulePath = $PSScriptRoot + "\..\..\Modules\Office365DSCUtil.psm1"
-
-    # For each batch of 8 items, start and asynchronous background PowerShell job. Each
+    # For each batch of items, start and asynchronous background PowerShell job. Each
     # job will be given the name of the current resource followed by its ID;
     $i = 1
     foreach ($batch in $instances)
@@ -243,27 +261,24 @@ function Export-TargetResource
                 $ScriptRoot,
 
                 [Parameter(Mandatory = $true)]
-                [System.String]
-                $UtilModulePath,
-
-                [Parameter(Mandatory = $true)]
                 [System.Management.Automation.PSCredential]
                 $GlobalAdminAccount
             )
-            # Implicitly load the Office365DSCUtil.psm1 module in order to be able to call
-            # into the Invoke-O36DSCCommand cmdlet;
-            Import-Module $UtilModulePath -Force
+            $WarningPreference = 'SilentlyContinue'
+
+            Import-Module ($ScriptRoot + "\..\..\Modules\Office365DSCUtil.psm1") -Force | Out-Null
 
             # Invoke the logic that extracts the all the Property Bag values of the current site using the
             # the invokation wrapper that handles throttling;
             $returnValue = ""
             $returnValue += Invoke-O365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
+                $WarningPreference = 'SilentlyContinue'
                 $params = $args[0]
                 $content = ""
                 $j = 1
                 Test-MSCloudLogin -CloudCredential $params.GlobalAdminAccount `
-                                  -Platform MicrosoftTeams
-
+                    -Platform MicrosoftTeams
+                $GlobalAdminAccount = $params.GlobalAdminAccount
                 $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
                 if ($GlobalAdminAccount.UserName.Contains("@"))
                 {
@@ -274,7 +289,6 @@ function Export-TargetResource
                         $principal = $organization.Split(".")[0]
                     }
                 }
-                $InformationPreference = 'Continue'
                 foreach ($item in $params.Instances)
                 {
                     foreach ($team in $item)
@@ -298,17 +312,18 @@ function Export-TargetResource
                                     GlobalAdminAccount = $params.GlobalAdminAccount
                                 }
                                 $CurrentModulePath = $params.ScriptRoot + "\MSFT_TeamsUser.psm1"
-                                Import-Module $CurrentModulePath -Force
+                                Import-Module $CurrentModulePath -Force | Out-Null
+                                Import-Module ($params.ScriptRoot + "\..\..\Modules\O365DSCTelemetryEngine.psm1") -Force | Out-Null
                                 $result = Get-TargetResource @getParams
                                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                                $partialContent = "        TeamsUser " + (New-GUID).ToString() + "`r`n"
-                                $partialContent += "        {`r`n"
+                                $content += "        TeamsUser " + (New-GUID).ToString() + "`r`n"
+                                $content += "        {`r`n"
                                 $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
-                                $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
                                 $partialContent += "        }`r`n"
-                                if ($partialContent.ToLower().Contains($principal.ToLower()))
+                                if ($partialContent.ToLower().Contains($organization.ToLower()))
                                 {
-                                    $partialContent = $partialContent -ireplace [regex]::Escape($principal), "`$OrganizationName"
+                                    $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
                                 }
                                 $content += $partialContent
                                 $i++
@@ -325,10 +340,9 @@ function Export-TargetResource
                 return $content
             }
             return $returnValue
-        } -ArgumentList @($batch, $PSScriptRoot, $UtilModulePath, $GlobalAdminAccount) | Out-Null
+        } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount) | Out-Null
         $i++
     }
-
 
     Write-Information "    Broke extraction process down into {$MaxProcesses} jobs of {$($instances[0].Length)} item(s) each"
     $totalJobs = $MaxProcesses
@@ -337,7 +351,8 @@ function Export-TargetResource
     $elapsedTime = 0
     do
     {
-        $jobs = Get-Job | Where-Object -FilterScript {$_.Name -like '*TeamsUser*'}
+        $InformationPreference = 'SilentlyContinue'
+        $jobs = Get-Job | Where-Object -FilterScript { $_.Name -like '*TeamsUser*' }
         $count = $jobs.Length
         foreach ($job in $jobs)
         {
@@ -355,8 +370,8 @@ function Export-TargetResource
                 break
             }
 
-            $status =  "Completed $jobsCompleted/$totalJobs jobs in $elapsedTime seconds"
-            $percentCompleted = $jobsCompleted/$totalJobs * 100
+            $status = "Completed $jobsCompleted/$totalJobs jobs in $elapsedTime seconds"
+            $percentCompleted = $jobsCompleted / $totalJobs * 100
             Write-Progress -Activity "TeamsUser Extraction" -PercentComplete $percentCompleted -Status $status
         }
         $elapsedTime ++

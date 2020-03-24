@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "SCDLPComplianceRule"
+    -DscResource "SCDLPComplianceRule" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -49,10 +51,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Policy                              = "MyParentPolicy"
                 Comment                             = "";
                 ContentContainsSensitiveInformation = (New-CimInstance -ClassName MSFT_SCDLPSensitiveInformation -Property @{
-                    name                = "rulename"
-                    maxcount            = "10"
-                    mincount            = "0"
-                } -ClientOnly)
+                        name     = "rulename"
+                        maxcount = "10"
+                        mincount = "0"
+                    } -ClientOnly)
                 BlockAccess                         = $False;
                 Name                                = 'TestPolicy'
                 GlobalAdminAccount                  = $GlobalAdminAccount
@@ -81,15 +83,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Policy                              = "MyParentPolicy"
                 Comment                             = "New comment";
                 ContentContainsSensitiveInformation = (New-CimInstance -ClassName MSFT_SCDLPSensitiveInformation -Property @{
-                    maxconfidence = "100";
-                    id = "eefbb00e-8282-433c-8620-8f1da3bffdb2";
-                    minconfidence = "75";
-                    rulePackId = "00000000-0000-0000-0000-000000000000";
-                    classifiertype = "Content";
-                    name = "Argentina National Identity (DNI) Number";
-                    mincount = "1";
-                    maxcount = "9";
-                } -ClientOnly)
+                        maxconfidence  = "100";
+                        id             = "eefbb00e-8282-433c-8620-8f1da3bffdb2";
+                        minconfidence  = "75";
+                        rulePackId     = "00000000-0000-0000-0000-000000000000";
+                        classifiertype = "Content";
+                        name           = "Argentina National Identity (DNI) Number";
+                        mincount       = "1";
+                        maxcount       = "9";
+                    } -ClientOnly)
                 BlockAccess                         = $False;
                 Name                                = 'TestPolicy'
                 GlobalAdminAccount                  = $GlobalAdminAccount
@@ -120,17 +122,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Rule should not exist" -Fixture {
             $testParams = @{
-                Ensure                              = 'Absent'
-                Policy                              = "MyParentPolicy"
-                Comment                             = "";
-                BlockAccess                         = $False;
-                Name                                = 'TestPolicy'
-                GlobalAdminAccount                  = $GlobalAdminAccount
+                Ensure             = 'Absent'
+                Policy             = "MyParentPolicy"
+                Comment            = "";
+                BlockAccess        = $False;
+                Name               = 'TestPolicy'
+                GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-DLPComplianceRule -MockWith {
                 return @{
-                    Name = "TestPolicy"
+                    Name                                = "TestPolicy"
                     ParentPolicyName                    = "MyParentPolicy"
                     ContentContainsSensitiveInformation = @(@{maxconfidence = "100"; id = "eefbb00e-8282-433c-8620-8f1da3bffdb2"; minconfidence = "75"; rulePackId = "00000000-0000-0000-0000-000000000000"; classifiertype = "Content"; name = "Argentina National Identity (DNI) Number"; mincount = "1"; maxcount = "9"; })
                     Comment                             = "";
@@ -158,7 +160,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-DLPComplianceRule -MockWith {
                 return @{
-                    Name = "TestPolicy"
+                    Name                                = "TestPolicy"
                     ParentPolicyName                    = "MyParentPolicy"
                     ContentContainsSensitiveInformation = @(@{maxconfidence = "100"; id = "eefbb00e-8282-433c-8620-8f1da3bffdb2"; minconfidence = "75"; rulePackId = "00000000-0000-0000-0000-000000000000"; classifiertype = "Content"; name = "Argentina National Identity (DNI) Number"; mincount = "1"; maxcount = "9"; })
                     Comment                             = "";

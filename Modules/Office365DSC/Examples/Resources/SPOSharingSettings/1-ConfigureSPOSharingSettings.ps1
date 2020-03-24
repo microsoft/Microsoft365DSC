@@ -16,29 +16,29 @@ Configuration Example
     {
         SPOSharingSettings MyTenant
         {
-            IsSingleInstance                              = "Yes"
-            GlobalAdminAccount                            = $credsGlobalAdmin
-            SharingCapability                             = 'ExternalUserSharingOnly'
-            ShowEveryoneClaim                             = $false
-            ShowAllUsersClaim                             = $false
-            ShowEveryoneExceptExternalUsersClaim          = $true
-            ProvisionSharedWithEveryoneFolder             = $false
-            EnableGuestSignInAcceleration                 = $false
-            BccExternalSharingInvitations                 = $false
-            BccExternalSharingInvitationsList             = ""
-            RequireAnonymousLinksExpireInDays             = 730
-            SharingAllowedDomainList                      = "contoso.com"
-            SharingBlockedDomainList                      = "contoso.com"
-            SharingDomainRestrictionMode                  = "None"
-            DefaultSharingLinkType                        = "AnonymousAccess"
-            PreventExternalUsersFromResharing             = $false
-            ShowPeoplePickerSuggestionsForGuestUsers      = $false
-            FileAnonymousLinkType                         = "Edit"
-            FolderAnonymousLinkType                       = "Edit"
-            NotifyOwnersWhenItemsReshared                 = $true
+            IsSingleInstance                           = "Yes"
+            GlobalAdminAccount                         = $credsGlobalAdmin
+            SharingCapability                          = 'ExternalUserSharingOnly'
+            ShowEveryoneClaim                          = $false
+            ShowAllUsersClaim                          = $false
+            ShowEveryoneExceptExternalUsersClaim       = $true
+            ProvisionSharedWithEveryoneFolder          = $false
+            EnableGuestSignInAcceleration              = $false
+            BccExternalSharingInvitations              = $false
+            BccExternalSharingInvitationsList          = ""
+            RequireAnonymousLinksExpireInDays          = 730
+            SharingAllowedDomainList                   = "contoso.com"
+            SharingBlockedDomainList                   = "contoso.com"
+            SharingDomainRestrictionMode               = "None"
+            DefaultSharingLinkType                     = "AnonymousAccess"
+            PreventExternalUsersFromResharing          = $false
+            ShowPeoplePickerSuggestionsForGuestUsers   = $false
+            FileAnonymousLinkType                      = "Edit"
+            FolderAnonymousLinkType                    = "Edit"
+            NotifyOwnersWhenItemsReshared              = $true
             DefaultLinkPermission                         ="View"
-            RequireAcceptingAccountMatchInvitedAccount    = $false
-            Ensure                                        = "Present"
+            RequireAcceptingAccountMatchInvitedAccount = $false
+            Ensure                                     = "Present"
         }
     }
 }

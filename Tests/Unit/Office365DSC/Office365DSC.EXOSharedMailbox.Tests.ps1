@@ -3,22 +3,24 @@ param(
     [Parameter()]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-                                         -ChildPath "..\Stubs\Office365.psm1" `
-                                         -Resolve)
+            -ChildPath "..\Stubs\Office365.psm1" `
+            -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
-                                -ChildPath "..\UnitTestHelper.psm1" `
-                                -Resolve)
+        -ChildPath "..\UnitTestHelper.psm1" `
+        -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-                                              -DscResource "EXOSharedMailbox"
+    -DscResource "EXOSharedMailbox" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.com", $secpasswd)
 
         Mock -CommandName Test-MSCloudLogin -MockWith {
 
@@ -27,9 +29,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "Mailbox doesn't exist and it should" -Fixture {
             $testParams = @{
-                DisplayName = "Test Shared Mailbox"
+                DisplayName        = "Test Shared Mailbox"
                 PrimarySMTPAddress = "Testh@contoso.onmicrosoft.com"
-                Ensure = "Present"
+                Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -56,18 +58,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Mailbox already exists and it should" -Fixture {
             $testParams = @{
-                DisplayName = "Test Shared Mailbox"
+                DisplayName        = "Test Shared Mailbox"
                 PrimarySMTPAddress = "Test@contoso.onmicrosoft.com"
-                Ensure = "Present"
+                Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-Mailbox -MockWith {
                 return @{
-                    Identity = "Test Shared Mailbox"
+                    Identity             = "Test Shared Mailbox"
                     RecipientTypeDetails = "SharedMailbox"
-                    EmailAddresses = @("smtp:user@contoso.onmicrosoft.com", "SMTP:test@contoso.onmicrosoft.com")
-                    PrimarySMTPAddress = "test@contoso.onmicrosoft.com"
+                    EmailAddresses       = @("smtp:user@contoso.onmicrosoft.com", "SMTP:test@contoso.onmicrosoft.com")
+                    PrimarySMTPAddress   = "test@contoso.onmicrosoft.com"
                 }
             }
 
@@ -76,16 +78,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return True from the Test method" {
-                { Test-TargetResource @testParams } | Should Be $True
+                Test-TargetResource @testParams | Should Be $True
             }
         }
 
         Context -Name "Alias is Contained in the PrimarySMTP Address" -Fixture {
             $testParams = @{
-                DisplayName = "Test Shared Mailbox"
+                DisplayName        = "Test Shared Mailbox"
                 PrimarySMTPAddress = "Test@contoso.onmicrosoft.com"
-                Aliases = @("Test@contoso.onmicrosoft.com")
-                Ensure = "Present"
+                Aliases            = @("Test@contoso.onmicrosoft.com")
+                Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
@@ -96,19 +98,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Mailbox exists but it should not" -Fixture {
             $testParams = @{
-                DisplayName = "Test Shared Mailbox"
+                DisplayName        = "Test Shared Mailbox"
                 PrimarySMTPAddress = "Test@contoso.onmicrosoft.com"
-                Aliases = @("User1@contoso.onmicrosoft.com")
-                Ensure = "Absent"
+                Aliases            = @("User1@contoso.onmicrosoft.com")
+                Ensure             = "Absent"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-Mailbox -MockWith {
                 return @{
-                    Identity = "Test Shared Mailbox"
+                    Identity             = "Test Shared Mailbox"
                     RecipientTypeDetails = "SharedMailbox"
-                    EmailAddresses = @("smtp:user@contoso.onmicrosoft.com", "SMTP:test@contoso.onmicrosoft.com")
-                    PrimarySMTPAddress = "test@contoso.onmicrosoft.com"
+                    EmailAddresses       = @("smtp:user@contoso.onmicrosoft.com", "SMTP:test@contoso.onmicrosoft.com")
+                    PrimarySMTPAddress   = "test@contoso.onmicrosoft.com"
                 }
             }
 
@@ -124,19 +126,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Aliases are specified" -Fixture {
             $testParams = @{
-                DisplayName = "Test Shared Mailbox"
+                DisplayName        = "Test Shared Mailbox"
                 PrimarySMTPAddress = "Test@contoso.onmicrosoft.com"
-                Aliases = @("User1@contoso.onmicrosoft.com")
-                Ensure = "Present"
+                Aliases            = @("User1@contoso.onmicrosoft.com")
+                Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-Mailbox -MockWith {
                 return @{
-                    Identity = "Test Shared Mailbox"
+                    Identity             = "Test Shared Mailbox"
                     RecipientTypeDetails = "SharedMailbox"
-                    EmailAddresses = @("smtp:user@contoso.onmicrosoft.com", "SMTP:test@contoso.onmicrosoft.com")
-                    PrimarySMTPAddress = "test@contoso.onmicrosoft.com"
+                    EmailAddresses       = @("smtp:user@contoso.onmicrosoft.com", "SMTP:test@contoso.onmicrosoft.com")
+                    PrimarySMTPAddress   = "test@contoso.onmicrosoft.com"
                 }
             }
 
@@ -147,14 +149,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                DisplayName = "Test Shared Mailbox"
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-Mailbox -MockWith {
                 return @{
-                    Name = "Test Shared Mailbox"
-                    DisplayName = "Test Shared Mailbox"
+                    Name               = "Test Shared Mailbox"
+                    RecipientTypeDetails = "SharedMailbox"
+                    DisplayName        = "Test Shared Mailbox"
                     PrimarySMTPAddress = "Testh@contoso.onmicrosoft.com"
                 }
             }

@@ -10,10 +10,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllowCalling,
-
-        [Parameter()]
-        [System.Boolean]
         $AllowPrivateCalling,
 
         [Parameter()]
@@ -57,8 +53,16 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting the Teams Calling Policy $($Identity)"
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent  -Data $data
+    #endregion
+
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform SkypeForBusiness
+        -Platform SkypeForBusiness
 
     $policy = Get-CsTeamsCallingPolicy -Identity $Identity -ErrorAction 'SilentlyContinue'
 
@@ -74,7 +78,6 @@ function Get-TargetResource
     Write-Verbose -Message "Found Teams Calling Policy {$Identity}"
     return @{
         Identity                   = $Identity
-        AllowCalling               = $policy.AllowCalling
         AllowPrivateCalling        = $policy.AllowPrivateCalling
         AllowVoicemail             = $policy.AllowVoicemail
         AllowCallGroups            = $policy.AllowCallGroups
@@ -96,10 +99,6 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCalling,
 
         [Parameter()]
         [System.Boolean]
@@ -147,8 +146,15 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting Teams Calling Policy"
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform SkypeForBusiness
+        -Platform SkypeForBusiness
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -184,10 +190,6 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCalling,
 
         [Parameter()]
         [System.Boolean]
@@ -244,9 +246,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -263,9 +265,17 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference ='Continue'
+    $InformationPreference = 'Continue'
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform SkypeForBusiness
+        -Platform SkypeForBusiness
 
     $i = 1
     [array]$policies = Get-CsTeamsCallingPolicy

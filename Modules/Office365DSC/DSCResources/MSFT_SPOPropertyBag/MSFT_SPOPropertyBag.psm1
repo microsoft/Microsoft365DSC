@@ -27,12 +27,18 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SPOPropertyBag for $Key"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     try
     {
         Write-Verbose -Message "Connecting to PnP from the Get method"
         Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                            -ConnectionUrl $Url `
-                            -Platform PnP
+            -ConnectionUrl $Url `
+            -Platform PnP | Out-Null
         Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
         $property = Get-PnPPropertyBag
         Write-Verbose -Message "Properties obtained correctly"
@@ -94,10 +100,16 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of SPOPropertyBag property for $Key at {$Url}"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -ConnectionUrl $Url `
-                      -Platform PnP
+        -ConnectionUrl $Url `
+        -Platform PnP
 
     $currentProperty = Get-TargetResource @PSBoundParameters
 
@@ -152,9 +164,9 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -168,7 +180,7 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [ValidateRange(1,100)]
+        [ValidateRange(1, 100)]
         $MaxProcesses,
 
         [Parameter(Mandatory = $true)]
@@ -176,8 +188,14 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = "Continue"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                      -Platform PnP
+        -Platform PnP
     $result = ""
 
     # Get all Site Collections in tenant;
@@ -192,12 +210,6 @@ function Export-TargetResource
         $MaxProcesses = $instances.Length
         $batchSize = 1
     }
-
-    # Define the Path of the Util module. This is due to the fact that inside the Start-Job
-    # the module is not imported and simply doing Import-Module Office365DSC doesn't work.
-    # Therefore, in order to be able to call into Invoke-O365DSCCommand we need to implicitly
-    # load the module.
-    $UtilModulePath = $PSScriptRoot + "\..\..\Modules\Office365DSCUtil.psm1"
 
     # For each batch of 8 items, start and asynchronous background PowerShell job. Each
     # job will be given the name of the current resource followed by its ID;
@@ -215,22 +227,20 @@ function Export-TargetResource
                 $ScriptRoot,
 
                 [Parameter(Mandatory = $true)]
-                [System.String]
-                $UtilModulePath,
-
-                [Parameter(Mandatory = $true)]
                 [System.Management.Automation.PSCredential]
                 $GlobalAdminAccount
             )
+            $WarningPreference = 'SilentlyContinue'
 
             # Implicitly load the Office365DSCUtil.psm1 module in order to be able to call
             # into the Invoke-O36DSCCommand cmdlet;
-            Import-Module $UtilModulePath -Force
+            Import-Module ($ScriptRoot + "\..\..\Modules\Office365DSCUtil.psm1") -Force | Out-Null
 
             # Invoke the logic that extracts the all the Property Bag values of the current site using the
             # the invokation wrapper that handles throttling;
             $returnValue = ""
             $returnValue += Invoke-O365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
+                $VerbosePreference = 'SilentlyContinue'
                 $params = $args[0]
                 $content = ""
                 foreach ($item in $params.instances)
@@ -241,8 +251,8 @@ function Export-TargetResource
                         try
                         {
                             Test-MSCloudLogin -CloudCredential $params.GlobalAdminAccount `
-                                              -ConnectionUrl $siteUrl `
-                                              -Platform PnP
+                                -ConnectionUrl $siteUrl `
+                                -Platform PnP | Out-Null
                         }
                         catch
                         {
@@ -252,7 +262,7 @@ function Export-TargetResource
                         try
                         {
                             $properties = Get-PnPPropertyBag
-                            foreach($property in $properties)
+                            foreach ($property in $properties)
                             {
                                 $getValues = @{
                                     Url                = $siteUrl
@@ -262,7 +272,8 @@ function Export-TargetResource
                                 }
 
                                 $CurrentModulePath = $params.ScriptRoot + "\MSFT_SPOPropertyBag.psm1"
-                                Import-Module $CurrentModulePath -Force
+                                Import-Module $CurrentModulePath -Force | Out-Null
+                                Import-Module ($params.ScriptRoot + "\..\..\Modules\O365DSCTelemetryEngine.psm1") -Force | Out-Null
                                 $result = Get-TargetResource @getValues
                                 $result.Value = [System.String]$result.Value
                                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
@@ -282,7 +293,7 @@ function Export-TargetResource
                 return $content
             }
             return $returnValue
-        } -ArgumentList @($batch, $PSScriptRoot, $UtilModulePath, $GlobalAdminAccount) | Out-Null
+        } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount) | Out-Null
         $i++
     }
 
@@ -293,31 +304,49 @@ function Export-TargetResource
     $elapsedTime = 0
     do
     {
-        $jobs = Get-Job | Where-Object -FilterScript {$_.Name -like '*SPOPropertyBag*'}
+        $InformationPreference = 'SilentlyContinue'
+        $jobs = Get-Job | Where-Object -FilterScript { $_.Name -like '*SPOPropertyBag*' }
         $count = $jobs.Length
         foreach ($job in $jobs)
         {
             if ($job.JobStateInfo.State -eq "Complete")
             {
                 $result += Receive-Job -name $job.name
-                Remove-Job -name $job.name
+                Remove-Job -name $job.name | Out-Null
                 $jobsCompleted++
             }
             elseif ($job.JobStateInfo.State -eq 'Failed')
             {
-                Remove-Job -name $job.name
+                Remove-Job -name $job.name | Out-Null
                 Write-Warning "{$($job.name)} failed"
                 break
             }
 
-            $status =  "Completed $jobsCompleted/$totalJobs jobs in $elapsedTime seconds"
-            $percentCompleted = $jobsCompleted/$totalJobs * 100
+            $status = "Completed $jobsCompleted/$totalJobs jobs in $elapsedTime seconds"
+            $percentCompleted = $jobsCompleted / $totalJobs * 100
             Write-Progress -Activity "SPOPropertyBag Extraction" -PercentComplete $percentCompleted -Status $status
         }
         $elapsedTime ++
         Start-Sleep -Seconds 1
     } while ($count -ne 0)
     Write-Progress -Activity "SPOPropertyBag Extraction" -PercentComplete 100 -Status "Completed" -Completed
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
+    if ($GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
+    }
+    if ($result.ToLower().Contains($organization.ToLower()) -or `
+             $result.ToLower().Contains($principal.ToLower()))
+    {
+        $result = $result -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
+        $result = $result -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+    }
     return $result
 }
 

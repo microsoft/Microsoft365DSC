@@ -51,12 +51,26 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of Sensitiivity Label for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Write-Verbose -Message "Calling Test-SecurityAndComplianceConnection function:"
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
 
-    $label = Get-Label -Identity $Name -ErrorAction SilentlyContinue
+    try
+    {
+        $label = Get-Label -Identity $Name -ErrorAction SilentlyContinue
+    }
+    catch
+    {
+        Write-Warning "Get-Label is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+    }
+
     if ($null -eq $label)
     {
         Write-Verbose -Message "Sensitiivity label $($Name) does not exist."
@@ -66,10 +80,10 @@ function Get-TargetResource
     }
     else
     {
-        $parentLabel = Get-Label -Identity $label.ParentId -ErrorAction SilentlyContinue
         $parentLabelID = $null
-        if ($null -ne $parentLabel)
+        if ($null -ne $label.ParentId)
         {
+            $parentLabel = Get-Label -Identity $label.ParentId -ErrorAction SilentlyContinue
             $parentLabelID = $parentLabel.Name
         }
         if ($null -ne $label.LocaleSettings)
@@ -152,6 +166,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Sensitiivity label for $Name"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
@@ -194,7 +214,15 @@ function Set-TargetResource
         $CreationParams.Remove("Disabled")
 
         Write-Verbose "Creating new Sensitiivity label $Name calling the New-Label cmdlet."
-        New-Label @CreationParams
+
+        try
+        {
+            New-Label @CreationParams
+        }
+        catch
+        {
+            Write-Warning "New-Label is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+        }
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $label.Ensure))
     {
@@ -216,14 +244,30 @@ function Set-TargetResource
         $SetParams.Remove("GlobalAdminAccount")
         $SetParams.Remove("Ensure")
         $SetParams.Remove("Name")
-        Set-Label @SetParams -Identity $Name
+
+        try
+        {
+            Set-Label @SetParams -Identity $Name
+        }
+        catch
+        {
+            Write-Warning "Set-Label is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+        }
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $label.Ensure))
     {
         # If the label exists and it shouldn't, simply remove it;Need to force deletoion
         Write-Verbose -message "Deleteing Sensitiivity label $Name."
-        Remove-Label -Identity $Name -Confirm:$false
-        Remove-Label -Identity $Name -Confirm:$false -forcedeletion:$true
+
+        try
+        {
+            Remove-Label -Identity $Name -Confirm:$false
+            Remove-Label -Identity $Name -Confirm:$false -forcedeletion:$true
+        }
+        catch
+        {
+            Write-Warning "Remove-Label is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+        }
     }
 }
 function Test-TargetResource
@@ -327,31 +371,55 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
     $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
     Test-MSCloudLogin -Platform 'SecurityComplianceCenter' `
         -CloudCredential $GlobalAdminAccount
 
-    $labels = Get-Label
-
-    $content = ""
-    foreach ($label in $labels)
+    try
     {
-        $params = @{
-            Name               = $label.Name
-            GlobalAdminAccount = $GlobalAdminAccount
+        [array]$labels = Get-Label
+
+        $content = ""
+        $i = 1
+        foreach ($label in $labels)
+        {
+            Write-Information "    -[$i/$($labels.Count)] $($label.Name)"
+            $params = @{
+                Name               = $label.Name
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+
+            if ($null -ne $result.AdvancedSettings)
+            {
+                $result.AdvancedSettings = ConvertTo-AdvancedSettingsString -AdvancedSettings $result.AdvancedSettings
+            }
+
+            if ($null -ne $result.LocaleSettings)
+            {
+                $result.LocaleSettings = ConvertTo-LocaleSettingsString -LocaleSettings $result.LocaleSettings
+            }
+            $content += "        SCSensitivityLabel " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AdvancedSettings"
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "LocaleSettings"
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += $currentDSCBlock
+            $content += "        }`r`n"
+            $i++
         }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $result.AdvancedSettings = ConvertTo-AdvancedSettingString -AdvancedSettings $result.AdvancedSettings
-        $result.LocaleSettings = ConvertTo-LocaleSettingsString -LocaleSettings $result.LocaleSettings
-        $content += "        SCSensitivityLabel " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AdvancedSettings"
-        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "LocaleSettings"
-        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += $currentDSCBlock
-        $content += "        }`r`n"
+    }
+    catch
+    {
+        Write-Warning "Get-Label is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
     }
     return $content
 }
@@ -548,7 +616,7 @@ function Test-LocaleSettings
     return $foundSettings
 }
 
-function ConvertTo-AdvancedSettingString
+function ConvertTo-AdvancedSettingsString
 {
     [CmdletBinding()]
     [OutputType([System.String])]
@@ -558,15 +626,16 @@ function ConvertTo-AdvancedSettingString
         $AdvancedSettings
     )
 
-    $StringContent = "@("
+    $StringContent = "@(`r`n"
     foreach ($advancedSetting in $AdvancedSettings)
     {
-        $StringContent += "             MSFT_SCLabelSetting`r`n            {`r`n"
-        $StringContent += "                 Key = '$($advancedSetting.Key)'`r`n"
-        $StringContent += "                 Value    = '$($advancedSetting.Value)'`r`n"
-        $StringContent += "             }`r`n"
+        $StringContent += "                MSFT_SCLabelSetting`r`n"
+        $StringContent += "                {`r`n"
+        $StringContent += "                    Key   = '$($advancedSetting.Key.Replace("'", "''"))'`r`n"
+        $StringContent += "                    Value = '$($advancedSetting.Value.Replace("'", "''"))'`r`n"
+        $StringContent += "                }`r`n"
     }
-    $StringContent += "            )`r`n"
+    $StringContent += "            )"
     return $StringContent
 }
 
@@ -580,21 +649,25 @@ function ConvertTo-LocaleSettingsString
         $LocaleSettings
     )
 
-    $StringContent = "@("
+    $StringContent = "@(`r`n"
     foreach ($LocaleSetting in $LocaleSettings)
     {
-        $StringContent += "             MSFT_SCLabelLocaleSettings`r`n            {`r`n"
-        $StringContent += "                 LocaleKey = '$($LocaleSetting.LocaleKey)'`r`n"
+        $StringContent += "                MSFT_SCLabelLocaleSettings`r`n"
+        $StringContent += "                {`r`n"
+        $StringContent += "                    LocaleKey = '$($LocaleSetting.LocaleKey.Replace("'", "''"))'`r`n"
+        $StringContent += "                    Settings  = @(`r`n"
         foreach ($Setting in $LocaleSetting.Settings)
         {
-            $StringContent += "             Settings  = @(MSFT_SCLabelSetting`r`n            {`r`n"
-            $StringContent += "                 Key   = '$($Setting.Key)'`r`n"
-            $StringContent += "                 Value = '$($Setting.Value)'`r`n"
-            $StringContent += "              })`r`n"
+            $StringContent += "                        MSFT_SCLabelSetting`r`n"
+            $StringContent += "                        {`r`n"
+            $StringContent += "                            Key   = '$($Setting.Key.Replace("'", "''"))'`r`n"
+            $StringContent += "                            Value = '$($Setting.Value.Replace("'", "''"))'`r`n"
+            $StringContent += "                        }`r`n"
         }
-        $StringContent += "             }`r`n"
+        $StringContent += "                    )`r`n"
+        $StringContent += "                }`r`n"
     }
-    $StringContent += "            )`r`n"
+    $StringContent += "            )"
     return $StringContent
 }
 

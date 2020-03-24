@@ -33,7 +33,7 @@ function Get-TargetResource
         $SiteDesignId,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -43,12 +43,18 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for hub site collection $Url"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform MSOnline
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform AzureAD
 
     $nullReturn = @{
         Url                  = $Url
@@ -65,7 +71,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting hub site collection $Url"
-        $site = Get-SPOSite $Url
+        $site = Get-PnPTenantSite -Url $Url
         if ($null -eq $site)
         {
             Write-Verbose -Message "The specified Site Collection doesn't already exist."
@@ -79,7 +85,7 @@ function Get-TargetResource
         }
         else
         {
-            $hubSite = Get-SPOHubSite -Identity $site
+            $hubSite = Get-PnPHubSite -Identity $Url
 
             $principals = @()
             foreach ($permission in $hubSite.Permissions.PrincipalName)
@@ -88,7 +94,7 @@ function Get-TargetResource
                 if ($result[0].StartsWith("c") -eq $true)
                 {
                     # Group permissions
-                    $group = Get-MsolGroup -ObjectId $result[2]
+                    $group = Get-AzureADGroup -ObjectId $result[2]
 
                     if ($null -eq $group.EmailAddress)
                     {
@@ -171,7 +177,7 @@ function Set-TargetResource
         $SiteDesignId,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -181,33 +187,40 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for hub site collection $Url"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform SharePointOnline
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
 
-    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
-                      -Platform MSOnline
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform AzureAD
 
     try
     {
         Write-Verbose -Message "Setting hub site collection $Url"
-        $site = Get-SPOSite $Url
+        $site = Get-PnPTenantSite $Url
     }
     catch
     {
         $Message = "The specified Site Collection {$Url} for SPOHubSite doesn't already exist."
-        New-Office365DSCLogEntry -Error $_ -Message $Message
+        New-Office365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
         throw $Message
     }
 
     $currentValues = Get-TargetResource @PSBoundParameters
 
-    if($Ensure -eq "Present" -and $currentValues.Ensure -eq "Absent")
+    if ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Absent")
     {
         Write-Verbose -Message "Configuring site collection as Hub Site"
-        Register-SPOHubSite -Site $site -Principals $AllowedToJoin | Out-Null
+        Register-PnPHubSite -Site $site.Url | Out-Null
+
         $params = @{
-            Identity = $site
+            Identity = $site.Url
         }
 
         if ($PSBoundParameters.ContainsKey("Title") -eq $true)
@@ -238,12 +251,12 @@ function Set-TargetResource
         if ($params.Count -ne 1)
         {
             Write-Verbose -Message "Updating Hub Site properties"
-            Set-SPOHubSite @params | Out-Null
+            Set-PnPHubSite @params | Out-Null
         }
 
         if ($PSBoundParameters.ContainsKey("AllowedToJoin") -eq $true)
         {
-            $groups = Get-MsolGroup -All
+            $groups = Get-AzureADGroup
             $regex = "^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
 
             Write-Verbose -Message "Validating AllowedToJoin principals"
@@ -253,8 +266,8 @@ function Set-TargetResource
                 if ($principal -notmatch $regex)
                 {
                     $group = $groups | Where-Object -FilterScript {
-                                           $_.DisplayName -eq $principal
-                                       }
+                        $_.DisplayName -eq $principal
+                    }
 
                     if ($group.Count -ne 1)
                     {
@@ -262,14 +275,14 @@ function Set-TargetResource
                     }
                 }
             }
-            Grant-SPOHubSiteRights -Identity $site -Principals $AllowedToJoin -Rights Join | Out-Null
+            Grant-PnPHubSiteRights -Identity $site.Url -Principals $AllowedToJoin -Rights Join | Out-Null
         }
     }
     elseif ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Present")
     {
         Write-Verbose -Message "Updating Hub Site settings"
         $params = @{
-            Identity = $site
+            Identity = $site.Url
         }
 
         if ($PSBoundParameters.ContainsKey("Title") -eq $true -and
@@ -305,7 +318,7 @@ function Set-TargetResource
         if ($params.Count -ne 1)
         {
             Write-Verbose -Message "Updating Hub Site properties"
-            Set-SPOHubSite @params | Out-Null
+            Set-PnPHubSite @params | Out-Null
         }
 
         if ($PSBoundParameters.ContainsKey("AllowedToJoin") -eq $true)
@@ -321,7 +334,7 @@ function Set-TargetResource
 
             if ($null -ne $differences)
             {
-                $groups = Get-MsolGroup -All
+                $groups = Get-AzureADGroup
                 $regex = "^[a-zA-Z0-9.!£#$%&'^_`{}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
 
                 Write-Verbose -Message "Updating Hub Site permissions"
@@ -336,8 +349,8 @@ function Set-TargetResource
                             if ($principal -notmatch $regex)
                             {
                                 $group = $groups | Where-Object -FilterScript {
-                                                       $_.DisplayName -eq $principal
-                                                   }
+                                    $_.DisplayName -eq $principal
+                                }
 
                                 if ($group.Count -ne 1)
                                 {
@@ -345,12 +358,12 @@ function Set-TargetResource
                                 }
                             }
                         }
-                        Grant-SPOHubSiteRights -Identity $site -Principals $item.InputObject -Rights Join | Out-Null
+                        Grant-PnPHubSiteRights -Identity $site.Url -Principals $item.InputObject -Rights 'Join' | Out-Null
                     }
                     else
                     {
                         # Remove item from principals
-                        Revoke-SPOHubSiteRights -Identity $site -Principals $item.InputObject | Out-Null
+                        Grant-PnPHubSiteRights -Identity $site.Url -Principals $item.InputObject -Rights 'None' | Out-Null
                     }
                 }
             }
@@ -359,7 +372,7 @@ function Set-TargetResource
     else
     {
         # Remove hub site
-        Unregister-SPOHubSite -Identity $site -Force
+        Unregister-PnPHubSite -Site $site.Url
     }
 }
 
@@ -398,7 +411,7 @@ function Test-TargetResource
         $SiteDesignId,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
@@ -415,16 +428,16 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
-                                                  -Source $($MyInvocation.MyCommand.Source) `
-                                                  -DesiredValues $PSBoundParameters `
-                                                  -ValuesToCheck @("Ensure", `
-                                                                   "Url", `
-                                                                   "Title", `
-                                                                   "Description", `
-                                                                   "LogoUrl", `
-                                                                   "RequiresJoinApproval", `
-                                                                   "AllowedToJoin", `
-                                                                   "SiteDesignId")
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck @("Ensure", `
+            "Url", `
+            "Title", `
+            "Description", `
+            "LogoUrl", `
+            "RequiresJoinApproval", `
+            "AllowedToJoin", `
+            "SiteDesignId")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -438,21 +451,60 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $Url,
-
-        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $result = Get-TargetResource @PSBoundParameters
-    $result.GlobalAdminAccount = "`$Credsglobaladmin"
+    $InformationPreference = 'Continue'
 
-    $content = "        SPOHubSite " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform PnP
+
+    $hubSites = Get-PnPHubSite
+
+    $i = 1
+    $content = ''
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
+    if ($GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
+    }
+    foreach ($hub in $hubSites)
+    {
+        Write-Information "    - [$i/$($hubSites.Length)] $($hub.SiteUrl)"
+        $params = @{
+            GlobalAdminAccount = $GlobalAdminAccount
+            Url                = $hub.SiteUrl
+        }
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = "`$Credsglobaladmin"
+
+        $content += "        SPOHubSite " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+        if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+            $partialContent.ToLower().Contains($principal.ToLower()))
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
+            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+        }
+        $content += $partialContent
+        $content += "        }`r`n"
+        $i++
+    }
     return $content
 }
 

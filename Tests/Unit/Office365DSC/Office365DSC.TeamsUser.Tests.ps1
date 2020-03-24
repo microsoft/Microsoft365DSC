@@ -6,12 +6,14 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "TeamsUser"
+    -DscResource "TeamsUser" -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -42,7 +44,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Add-TeamUser -MockWith {
-                return @{User = $null}
+                return @{
+                    User = $null
+                }
             }
 
             Mock -CommandName Get-TeamUser -MockWith {
@@ -118,7 +122,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-           Mock -CommandName Get-TeamByName -MockWith {
+            Mock -CommandName Get-TeamByName -MockWith {
                 return @{
                     DisplayName = "TestTeam"
                     GroupID     = "12345-12345-12345-12345-12345"
@@ -209,13 +213,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
+                MaxProcesses       = 16
             }
 
             Mock -CommandName Get-Team -MockWith {
                 return @(@{
-                    DisplayName = "TestTeam"
-                    GroupID     = "12345-12345-12345-12345-12345"
-                })
+                        DisplayName = "TestTeam"
+                        GroupID     = "12345-12345-12345-12345-12345"
+                    })
             }
 
             Mock -CommandName Get-TeamUser -MockWith {

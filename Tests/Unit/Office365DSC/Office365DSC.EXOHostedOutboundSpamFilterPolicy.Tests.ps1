@@ -6,13 +6,15 @@ param(
             -ChildPath "..\Stubs\Office365.psm1" `
             -Resolve)
 )
-
+$GenericStubPath = (Join-Path -Path $PSScriptRoot `
+    -ChildPath "..\Stubs\Generic.psm1" `
+    -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "EXOHostedOutboundSpamFilterPolicy"
+    -DscResource "EXOHostedOutboundSpamFilterPolicy" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -47,7 +49,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "HostedOutboundSpamFilterPolicy update not required." -Fixture {
             $testParams = @{
-                IsSingleInstance                          = 'Yes'
                 Ensure                                    = 'Present'
                 Identity                                  = 'Default'
                 GlobalAdminAccount                        = $GlobalAdminAccount
@@ -60,10 +61,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-HostedOutboundSpamFilterPolicy -MockWith {
                 return @{
-                    IsSingleInstance                          = 'Yes'
-                    Ensure                                    = 'Present'
                     Identity                                  = 'Default'
-                    GlobalAdminAccount                        = $GlobalAdminAccount
                     AdminDisplayName                          = 'Default Outbound Spam Filter Policy'
                     BccSuspiciousOutboundMail                 = $true
                     BccSuspiciousOutboundAdditionalRecipients = @()
@@ -87,7 +85,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "HostedOutboundSpamFilterPolicy update needed." -Fixture {
             $testParams = @{
-                IsSingleInstance                          = 'Yes'
                 Ensure                                    = 'Present'
                 Identity                                  = 'Default'
                 GlobalAdminAccount                        = $GlobalAdminAccount
@@ -99,10 +96,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Get-HostedOutboundSpamFilterPolicy -MockWith {
                 return @{
-                    IsSingleInstance                          = 'Yes'
-                    Ensure                                    = 'Present'
                     Identity                                  = 'Default'
-                    GlobalAdminAccount                        = $GlobalAdminAccount
                     AdminDisplayName                          = $null
                     BccSuspiciousOutboundMail                 = $false
                     BccSuspiciousOutboundAdditionalRecipients = @()
@@ -122,7 +116,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name 'ReverseDSC Tests' -Fixture {
             $testParams = @{
-                IsSingleInstance   = 'Yes'
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
