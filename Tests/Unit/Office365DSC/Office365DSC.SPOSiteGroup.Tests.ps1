@@ -200,9 +200,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     URL              = "https://contoso.sharepoint.com/sites/TestSite"
                     Title            = "TestSiteGroup"
                     OwnerLogin       = "admin@Office365DSC.onmicrosoft.com"
-                    Users            = @("john.smith@office365dsc.onmicrosoft.com")
                     Roles            = @("Edit", "Read")
                 }
+            }
+
+            Mock -CommandName Get-PnPGroupPermissions -MockWith {
+                return @(@{
+                    RoleTypeKind = 'Edit'
+                },
+                @{
+                    RoleTypeKind = 'Read'
+                }
+                )
             }
 
             Mock -CommandName Set-PnPGroup -MockWith{
