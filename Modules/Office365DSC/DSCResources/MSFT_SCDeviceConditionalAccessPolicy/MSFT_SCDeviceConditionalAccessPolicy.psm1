@@ -50,6 +50,7 @@ function Get-TargetResource
     {
         Write-Verbose "Found existing Device Conditional Access Policy $($Name)"
         $result = @{
+<<<<<<< Updated upstream
             Ensure                          = 'Present'
             Name                            = $PolicyObject.Name
             Comment                         = $PolicyObject.Comment
@@ -64,6 +65,12 @@ function Get-TargetResource
             SharePointLocationException     = $PolicyObject.SharePointLocationException
             TeamsLocation                   = $PolicyObject.TeamsLocation.Name
             TeamsLocationException          = $PolicyObject.TeamsLocationException
+=======
+            Ensure             = 'Present'
+            Name               = $PolicyObject.Name
+            Comment            = $PolicyObject.Comment
+            GlobalAdminAccount = $GlobalAdminAccount
+>>>>>>> Stashed changes
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
@@ -127,6 +134,7 @@ function Set-TargetResource
         $CreationParams.Remove("Name")
         $CreationParams.Add("Identity", $Name)
 
+<<<<<<< Updated upstream
         # SharePoint Location is specified or already existing, we need to determine
         # the delta.
         if ($null -ne $CurrentPolicy.SharePointLocation -or `
@@ -275,6 +283,8 @@ function Set-TargetResource
             }
             $CreationParams.Remove("TeamsLocationException")
         }
+=======
+>>>>>>> Stashed changes
         Write-Verbose "Updating Policy with values: $(Convert-O365DscHashtableToString -Hashtable $CreationParams)"
         Set-DeviceConditionalAccessPolicy @CreationParams
     }
