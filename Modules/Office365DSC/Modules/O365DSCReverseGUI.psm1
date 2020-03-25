@@ -524,6 +524,15 @@ function Show-O365GUI
         $pnlMain.Controls.Add($panelMenu);
         #endregion
 
+        $manifest = Import-PowerShellDataFile ($PSScriptRoot + '\..\Office365DSC.psd1')
+        $version = $manifest.ModuleVersion
+        $lblVersion = New-Object System.Windows.Forms.Label
+        $lblVersion.Text = "v" + $version
+        $lblVersion.Top = $pnlMain.Height - 25
+        $lblVersion.Left = $pnlMain.Width - 70
+        $lblVersion.AutoSize = $true
+        $pnlMain.Controls.Add($lblVersion)
+
         $pnlMain.AutoScroll = $true
         $form.Controls.Add($pnlMain)
         $form.ActiveControl = $txtTenantAdmin
