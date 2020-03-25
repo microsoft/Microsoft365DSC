@@ -795,7 +795,7 @@ function Show-O365GUI
         $pnlTeams = New-Object System.Windows.Forms.Panel
         $pnlTeams.Top = 88 + $topBannerHeight
         $pnlTeams.Left = $ThirdColumnLeft
-        $pnlTeams.Height = 340
+        $pnlTeams.Height = 360
         $pnlTeams.Width = 300
         $pnlTeams.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 
@@ -927,8 +927,16 @@ function Show-O365GUI
         $chckTeamsUpgradeConfiguration.Text = "Upgrade Configuration"
         $pnlTeams.Controls.Add($chckTeamsUpgradeConfiguration)
 
+        $chckTeamsUpgradePolicy = New-Object System.Windows.Forms.CheckBox
+        $chckTeamsUpgradePolicy.Top = 320
+        $chckTeamsUpgradePolicy.AutoSize = $true;
+        $chckTeamsUpgradePolicy.Name = "chckTeamsUpgradePolicy"
+        $chckTeamsUpgradePolicy.Checked = $true
+        $chckTeamsUpgradePolicy.Text = "Users"
+        $pnlTeams.Controls.Add($chckTeamsUpgradePolicy)
+
         $chckTeamsUser = New-Object System.Windows.Forms.CheckBox
-        $chckTeamsUser.Top = 320
+        $chckTeamsUser.Top = 340
         $chckTeamsUser.AutoSize = $true;
         $chckTeamsUser.Name = "chckTeamsUser"
         $chckTeamsUser.Checked = $true
