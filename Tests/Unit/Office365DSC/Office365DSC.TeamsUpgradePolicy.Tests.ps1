@@ -27,19 +27,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Test-MSCloudLogin -MockWith {
         }
 
-        Mock -CommandName Set-CsTeamsUpgradePolicy -MockWith {
-        }
-
-        Mock -CommandName Remove-CsTeamsUpgradePolicy -MockWith {
+        Mock -CommandName Grant-CsTeamsUpgradePolicy -MockWith {
         }
 
         # Test contexts
         Context -Name "When the policy doesn't already exist" -Fixture {
             $testParams = @{
-                Identity           = 'Test Policy'
-                Description        = 'Test Description'
-                NotifySfBUsers     = $false
-                GlobalAdminAccount = $GlobalAdminAccount;
+                Identity               = 'Test Policy'
+                Users                  = @("john.smith@contoso.onmicrosoft.com")
+                MigrateMeetingsToTeams = $false
+                GlobalAdminAccount     = $GlobalAdminAccount;
             }
 
             Mock -CommandName Get-CsTeamsUpgradePolicy -MockWith {
@@ -47,37 +44,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return absent from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be 'Absent'
-            }
-
-            It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $false
-            }
-
-            It "Should create the policy from the Set method" {
-                Set-TargetResource @testParams
-                Assert-MockCalled New-CsTeamsUpgradePolicy -Exactly 1
+                { Get-TargetResource @testParams } | Should throw "No Teams Upgrade Policy with Identity {Test Policy} was found"
             }
         }
 
-        Context -Name "When the policy already exsits and is NOT in the Desired State" -Fixture {
+        Context -Name "When the policy already exists and is NOT in the Desired State" -Fixture {
             $testParams = @{
-                Identity           = 'Test Policy'
-                Description        = 'Test Description'
-                NotifySfBUsers     = $false
-                GlobalAdminAccount = $GlobalAdminAccount;
+                Identity               = 'Test Policy'
+                Users                  = @("john.smith@contoso.onmicrosoft.com")
+                MigrateMeetingsToTeams = $false
+                GlobalAdminAccount     = $GlobalAdminAccount;
             }
 
             Mock -CommandName Get-CsTeamsUpgradePolicy -MockWith {
                 return @{
-                    Identity       = 'Test Policy'
+                    Identity       = 'Islands'
                     Description    = 'This is a configuration drift'
                     NotifySfBUsers = $false
                 }
             }
 
-            It "Should return Present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be 'Present'
+            Mock -CommandName Get-CsOnlineUser -MockWith {
+                return @{
+                    UserPrincipalName  = 'John.Smith@contoso.onmicrosoft.com'
+                    TeamsUpgradePolicy = "Global"
+                }
             }
 
             It "Should return false from the Test method" {
@@ -86,28 +77,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should update the policy from the Set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled Set-CsTeamsUpgradePolicy -Exactly 1
+                Assert-MockCalled Grant-CsTeamsUpgradePolicy -Exactly 1
             }
         }
 
-        Context -Name "When the policy already exsits and is IS in the Desired State" -Fixture {
+        Context -Name "When the policy already exsits and IS in the Desired State" -Fixture {
             $testParams = @{
-                Identity           = 'Test Policy'
-                Description        = 'Test Description'
-                NotifySfBUsers     = $false
-                GlobalAdminAccount = $GlobalAdminAccount;
+                Identity               = 'Islands'
+                Users                  = @("john.smith@contoso.onmicrosoft.com")
+                MigrateMeetingsToTeams = $false
+                GlobalAdminAccount     = $GlobalAdminAccount;
             }
 
             Mock -CommandName Get-CsTeamsUpgradePolicy -MockWith {
                 return @{
-                    Identity       = 'Test Policy'
-                    Description    = 'Test Description'
+                    Identity       = 'Islands'
+                    Description    = 'This is a test policy'
                     NotifySfBUsers = $false
                 }
             }
 
-            It "Should return Present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be 'Present'
+            Mock -CommandName Get-CsOnlineUser -MockWith {
+                return @{
+                    UserPrincipalName  = 'John.Smith@contoso.onmicrosoft.com'
+                    TeamsUpgradePolicy = "Islands"
+                }
             }
 
             It "Should return true from the Test method" {
@@ -115,47 +109,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "When the policy already exsits and should NOT" -Fixture {
+        Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
-                Identity           = 'Test Policy'
-                Description        = 'Test Description'
-                NotifySfBUsers     = $false
-                Ensure             = 'Absent'
-                GlobalAdminAccount = $GlobalAdminAccount;
+                GlobalAdminAccount     = $GlobalAdminAccount;
             }
 
             Mock -CommandName Get-CsTeamsUpgradePolicy -MockWith {
                 return @{
-                    Identity       = 'Test Policy'
+                    Identity       = 'Islands'
                     Description    = 'Test Description'
                     NotifySfBUsers = $false
                 }
             }
 
-            It "Should return Present from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be 'Present'
-            }
-
-            It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $false
-            }
-
-            It "Should delete the policy from the Set method" {
-                Set-TargetResource @testParams
-                Assert-MockCalled Remove-CsTeamsUpgradePolicy -Exactly 1
-            }
-        }
-
-        Context -Name "ReverseDSC Tests" -Fixture {
-            $testParams = @{
-                GlobalAdminAccount = $GlobalAdminAccount
-            }
-
-            Mock -CommandName Get-CsTeamsUpgradePolicy -MockWith {
+            Mock -CommandName Get-CsOnlineUser -MockWith {
                 return @{
-                    Identity       = 'Test Policy'
-                    Description    = 'Test Description'
-                    NotifySfBUsers = $false
+                    UserPrincipalName  = 'John.Smith@contoso.onmicrosoft.com'
+                    TeamsUpgradePolicy = "Islands"
                 }
             }
 

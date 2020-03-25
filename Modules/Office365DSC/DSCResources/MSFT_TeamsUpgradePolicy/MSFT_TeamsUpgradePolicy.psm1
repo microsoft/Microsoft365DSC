@@ -9,17 +9,12 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $Description,
+        [System.String[]]
+        $Users,
 
         [Parameter()]
         [System.Boolean]
-        $NotifySfBUsers,
-
-        [Parameter()]
-        [ValidateSet("Present", "Absent")]
-        [System.String]
-        $Ensure = "Present",
+        $MigrateMeetingsToTeams,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -31,23 +26,24 @@ function Get-TargetResource
                       -Platform SkypeForBusiness
 
     $policy = Get-CsTeamsUpgradePolicy -Identity $Identity -ErrorAction SilentlyContinue
+    [array]$users = Get-CSOnlineUser | Where-Object -Filter {$_.TeamsUpgradePolicy -eq $Identity}
 
     if ($null -eq $policy)
     {
-        Write-Verbose -Message "No Teams Upgrade Policy with Identity {$Identity} was found"
-        return @{
-            Identity           = $Identity
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
+        throw "No Teams Upgrade Policy with Identity {$Identity} was found"
+    }
+
+    [array]$usersList = @()
+    foreach ($user in $users)
+    {
+        $usersList += $user.UserPrincipalName
     }
     Write-Verbose -Message "Found Teams Upgrade Policy with Identity {$Identity}"
     return @{
-        Identity           = $Identity
-        Description        = $policy.Description
-        NotifySfBUsers     = $policy.NotifySfBUsers
-        Ensure             = 'Present'
-        GlobalAdminAccount = $GlobalAdminAccount
+        Identity               = $Identity
+        Users                  = $usersList
+        MigrateMeetingsToTeams = $MigrateMeetingsToTeams
+        GlobalAdminAccount     = $GlobalAdminAccount
     }
 }
 
@@ -61,73 +57,27 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $Description,
+        [System.String[]]
+        $Users,
 
         [Parameter()]
         [System.Boolean]
-        $NotifySfBUsers,
-
-        [Parameter()]
-        [ValidateSet("Present", "Absent")]
-        [System.String]
-        $Ensure = "Present",
+        $MigrateMeetingsToTeams,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting Teams Upgrade Policy {$Identity}"
+    Write-Verbose -Message "Updating Teams Upgrade Policy {$Identity}"
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                       -Platform SkypeForBusiness
 
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    $SetParameters = $PSBoundParameters
-    $SetParameters.Remove("Ensure") | Out-Null
-    $SetParameters.Remove("GlobalAdminAccount") | Out-Null
-    if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
+    foreach ($user in $Users)
     {
-        Write-Verbose -Message "Teams Upgrade Policy {$Identity} doesn't already exist. Creating it from the Set function."
-        try
-        {
-            New-CsTeamsUpgradePolicy @SetParameters
-        }
-        catch
-        {
-            Write-Verbose -Message "An error occured trying to create a new Teams Upgrade Policy with Identity {$Identity}"
-            throw $_
-        }
-    }
-    elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
-    {
-        # Call the Set-CsTeamsUpgradePolicy all the time because if we got here, the Test-TargetResource returned $false,
-        # meaning that a property was different.
-        Write-Verbose "Updating existing instance of Teams Upgrade Policy {$Identity}"
-        try
-        {
-            Set-CsTeamsUpgradePolicy @SetParameters
-        }
-        catch
-        {
-            Write-Verbose -Message "An error occured trying to update the existing Teams Upgrade Policy instance {$Identity}"
-            throw $_
-        }
-    }
-    elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "An existing instance of Teams Upgrade Policy {$Identity} was found. Deleting it from the Set method."
-        try
-        {
-            Remove-CsTeamsUpgradePolicy -Identity $Identity
-        }
-        catch
-        {
-            Write-Verbose -Message "An error occured trying to delete Teams Upgrade Policy {$Identity}"
-            throw $_
-        }
+        Write-Verbose -Message "Granting TeamsUpgradePolicy {$Identity} to User {$user} with MigrateMeetingsToTeams=$MigrateMeetingsToTeams"
+        Grant-CSTeamsUpgradePolicy -PolicyName $Identity -Identity $user -MigrateMeetingsToTeams:$MigrateMeetingsToTeams
     }
 }
 
@@ -142,17 +92,12 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.String]
-        $Description,
+        [System.String[]]
+        $Users,
 
         [Parameter()]
         [System.Boolean]
-        $NotifySfBUsers,
-
-        [Parameter()]
-        [ValidateSet("Present", "Absent")]
-        [System.String]
-        $Ensure = "Present",
+        $MigrateMeetingsToTeams,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -192,14 +137,14 @@ function Export-TargetResource
     $InformationPreference = 'Continue'
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                       -Platform SkypeForBusiness
-    $policies = Get-CsTeamsUpgradePolicy
+    [array]$policies = Get-CsTeamsUpgradePolicy
     $i = 1
     $content = ''
     foreach ($policy in $policies)
     {
-        Write-Information "    -[$i/$($policy.Count)] $Identity"
+        Write-Information "    -[$i/$($policies.Count)] $($policy.Identity.Replace('Tag:', ''))"
         $params = @{
-            Identity           = $policy.Identity
+            Identity           = $policy.Identity.Replace("Tag:", "")
             GlobalAdminAccount = $GlobalAdminAccount
         }
         $result = Get-TargetResource @params
