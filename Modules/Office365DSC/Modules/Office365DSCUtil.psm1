@@ -3,6 +3,11 @@
 $Global:SessionSecurityCompliance = $null
 #endregion
 
+#region Extraction Modes
+$Global:DefaultComponents = @("SPOApp","SPOSiteDesign")
+$Global:FullComponents = @("O365Group","O365User","SPOSiteGroup","SPOSite","SPOUserProfileProperty","SPOPropertyBag","TeamsTeam","TeamsChannel", "TeamsUser")
+#endregion
+
 function Format-EXOParams
 {
     [CmdletBinding()]
@@ -891,6 +896,11 @@ function Export-O365Configuration
         $Workloads,
 
         [Parameter()]
+        [ValidateSet('Lite', 'Default', 'Full')]
+        [System.String]
+        $Mode = 'Default',
+
+        [Parameter()]
         [ValidateRange(1, 100)]
         $MaxProcesses,
 
@@ -937,6 +947,15 @@ function Export-O365Configuration
         {
             Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                 -ComponentsToExtract $ComponentsToExtract `
+                -Path $Path -FileName $FileName `
+                -MaxProcesses $MaxProcesses `
+                -ConfigurationName $ConfigurationName `
+                -Quiet
+        }
+        elseif ($null -ne $Mode)
+        {
+            Start-O365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                -Mode $Mode `
                 -Path $Path -FileName $FileName `
                 -MaxProcesses $MaxProcesses `
                 -ConfigurationName $ConfigurationName `
