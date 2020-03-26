@@ -204,6 +204,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Get-PnPGroupPermissions -MockWith {
+                return @(@{
+                    RoleTypeKind = 'Edit'
+                },
+                @{
+                    RoleTypeKind = 'Read'
+                }
+                )
+            }
+
             Mock -CommandName Set-PnPGroup -MockWith{
             }
 

@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* SPOSiteGroup
+  * Fixed an issue where now, groups with Null owners are not extracted;
 * TeamsCallingPolicy
   * Removed the AllowCalling parameter since it is no longer supported;
   * Fixed an issue with Policies without tags in their name (e.g. Global);
