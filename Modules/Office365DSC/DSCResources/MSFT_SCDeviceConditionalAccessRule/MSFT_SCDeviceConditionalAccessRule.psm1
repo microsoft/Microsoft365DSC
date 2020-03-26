@@ -13,74 +13,207 @@ function Get-TargetResource
         $Policy,
 
         [Parameter()]
-        [ValidateSet("InOrganization", "NotInOrganization", "None")]
-        [System.String[]]
-        $AccessScope,
+        [System.String]
+        $AccountName,
+
+        [Parameter()]
+        [System.String]
+        $AccountUserName,
 
         [Parameter()]
         [System.Boolean]
-        $BlockAccess,
-
-        [Parameter()]
-        [ValidateSet("All", "PerUser")]
-        [System.String]
-        $BlockAccessScope,
-
-        [Parameter()]
-        [System.String]
-        $Comment,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ContentContainsSensitiveInformation,
-
-        [Parameter()]
-        [System.String[]]
-        $ContentPropertyContainsWords,
+        $AllowAppStore,
 
         [Parameter()]
         [System.Boolean]
-        $Disabled,
+        $AllowAssistantWhileLocked,
 
         [Parameter()]
-        [System.String[]]
-        $GenerateAlert,
+        [System.Boolean]
+        $AllowConvenienceLogon,
 
         [Parameter()]
-        [System.String[]]
-        $GenerateIncidentReport,
+        [System.Boolean]
+        $AllowDiagnosticSubmission,
 
         [Parameter()]
-        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title")]
-        [System.String[]]
-        $IncidentReportContent,
+        [System.Boolean]
+        $AllowiCloudBackup,
 
         [Parameter()]
-        [ValidateSet("FalsePositive", "WithoutJustification", "WithJustification")]
-        [System.String[]]
-        $NotifyAllowOverride,
+        [System.Boolean]
+        $AllowiCloudDocSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowiCloudPhotoSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowJailbroken,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPassbookWhileLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowScreenshot,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSimplePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVideoConferencing,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVoiceAssistant,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVoiceDialing,
+
+        [Parameter()]
+        [System.Int64]
+        $AntiVirusSignatureStatus,
+
+        [Parameter()]
+        [System.Int64]
+        $AntiVirusStatus,
+
+        [Parameter()]
+        [ValidateSet("AllowAll", "DontAllow", "Rating9Plus", "Rating12Plus", "Rating17Plus", "")]
+        [System.String]
+        $AppsRating,
+
+        [Parameter()]
+        [ValidateSet("AutomaticCheckForUpdates", "AutomaticDownloadUpdates", "AutomaticUpdatesRequired", "AutomaticUpdatesRequired", "NeverCheckUpdates", "")]
+        [System.String]
+        $AutoUpdateStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $BluetoothEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $CameraEnabled,
 
         [Parameter()]
         [System.String]
-        $NotifyEmailCustomText,
+        $EmailAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableRemovableStorage,
 
         [Parameter()]
         [System.String]
-        $NotifyPolicyTipCustomText,
+        $ExchangeActiveSyncHost,
 
         [Parameter()]
-        [System.String[]]
-        $NotifyUser,
-
-        [Parameter()]
-        [ValidateSet("Low", "Medium", "High", "None")]
+        [ValidateSet("Required", "")]
         [System.String]
-        $ReportSeverityLevel,
+        $FirewallStatus,
 
         [Parameter()]
-        [ValidateSet("Ignore", "RetryThenBlock")]
+        [System.Boolean]
+        $ForceAppStorePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $ForceEncryptedBackup,
+
+        [Parameter()]
+        [System.Int32]
+        $MaxPasswordAttemptsBeforeWipe,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $MaxPasswordGracePeriod,
+
+        [Parameter()]
+        [ValidateSet("AllowAll", "DontAllow", "")]
         [System.String]
-        $RuleErrorAction,
+        $MoviesRating,
+
+        [Parameter()]
+        [System.Int64]
+        $PasswordComplexity,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordHistoryCount,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinComplexChars,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordQuality,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordRequired,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $PasswordTimeout,
+
+        [Parameter()]
+        [System.Boolean]
+        $PhoneMemoryEncrypted,
+
+        [Parameter()]
+        [ValidateSet("au", "ca", "de", "fr", "gb", "ie", "jp", "nz", "us", "")]
+        [System.String]
+        $RegionRatings,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireEmailProfile,
+
+        [Parameter()]
+        [System.Boolean]
+        $SmartScreenEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SystemSecurityTLS,
+
+        [Parameter()]
+        [ValidateSet("AllowAll", "DontAllow", "")]
+        [System.String]
+        $TVShowsRating,
+
+        [Parameter()]
+        [System.Array]
+        $TargetGroups,
+
+        [Parameter()]
+        [ValidateSet("AlwaysNotify", "AlwaysNotify", "NotifyAppChanges", "NotifyAppChangesDoNotDimdesktop", "")]
+        [System.String]
+        $UserAccountControlStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $WLANEnabled,
+
+        [Parameter()]
+        [System.String]
+        $WorkFoldersSyncUrl,  
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -92,7 +225,7 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of DLPCompliancePolicy for $Name"
+    Write-Verbose -Message "Getting configuration of the Device Conditional Acccess Rule for $Name"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -103,82 +236,74 @@ function Get-TargetResource
     Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
 
-    $PolicyRule = Get-DlpComplianceRule -Identity $Name -ErrorAction SilentlyContinue
+    $Rules = Get-DeviceConditionalAccessRule -Policy $Policy -ErrorAction 'SilentlyContinue'
+    $Rule = $Rules | Where-Object { $_.Name -eq $Name }
 
-    if ($null -eq $PolicyRule)
+    if ($null -eq $Rule)
     {
-        Write-Verbose -Message "DLPComplianceRule $($Name) does not exist."
+        Write-Verbose -Message "The Device Conditional Access Rule Policy $($Name) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
     }
     else
     {
-        Write-Verbose "Found existing DLPComplianceRule $($Name)"
-
-        # Cmdlet returns a string, but in order to properly validate valid values, we need to convert
-        # to a String array
-        $ArrayIncidentReportContent = @()
-
-        if ($null -ne $PolicyRule.IncidentReportContent)
-        {
-            $ArrayIncidentReportContent = $PolicyRule.IncidentReportContent.Replace(' ', '').Split(',')
-        }
-
-        if ($null -ne $PolicyRule.NotifyAllowOverride)
-        {
-            $NotifyAllowOverrideValue = $PolicyRule.NotifyAllowOverride.Replace(' ', '').Split(',')
-        }
-
-        [array] $SensitiveInfo = @($PolicyRule.ContentContainsSensitiveInformation[0])
-
-        if ($null -ne $SensitiveInfo.groups)
-        {
-            $groups = $SensitiveInfo.groups
-            $SensitiveInfo = @()
-            foreach ($group in $groups)
-            {
-                foreach ($siEntry in $group.sensitivetypes)
-                {
-                    $SensitiveInfo += [System.Collections.Hashtable]$siEntry
-                }
-            }
-        }
+        Write-Verbose "Found an existing Device Conditional Access Rule $($Name)"
 
         $result = @{
-            Ensure                              = 'Present'
-            Name                                = $PolicyRule.Name
-            Policy                              = $PolicyRule.ParentPolicyName
-            AccessScope                         = $PolicyRule.AccessScope
-            BlockAccess                         = $PolicyRule.BlockAccess
-            BlockAccessScope                    = $PolicyRule.BlockAccessScope
-            Comment                             = $PolicyRule.Comment
-            ContentContainsSensitiveInformation = $SensitiveInfo
-            ContentPropertyContainsWords        = $PolicyRule.ContentPropertyContainsWords
-            Disabled                            = $PolicyRule.Disabled
-            GenerateAlert                       = $PolicyRule.GenerateAlert
-            GenerateIncidentReport              = $PolicyRule.GenerateIncidentReport
-            IncidentReportContent               = $ArrayIncidentReportContent
-            NotifyAllowOverride                 = $NotifyAllowOverrideValue
-            NotifyEmailCustomText               = $PolicyRule.NotifyEmailCustomText
-            NotifyPolicyTipCustomText           = $PolicyRule.NotifyPolicyTipCustomText
-            NotifyUser                          = $PolicyRule.NotifyUser
-            ReportSeverityLevel                 = $PolicyRule.ReportSeverityLevel
-            RuleErrorAction                     = $PolicyRule.RuleErrorAction
-        }
-
-        $paramsToRemove = @()
-        foreach ($paramName in $result.Keys)
-        {
-            if ($null -eq $result[$paramName] -or "" -eq $result[$paramName] -or @() -eq $result[$paramName])
-            {
-                $paramsToRemove += $paramName
-            }
-        }
-
-        foreach ($paramName in $paramsToRemove)
-        {
-            $result.Remove($paramName)
+            Name                          = $Rule.Name
+            Policy                        = $Policy
+            AccountName                   = $Rule.AccountName
+            AccountUserName               = $Rule.AccountUserName
+            AllowAppStore                 = $Rule.AllowAppStore
+            AllowAssistantWhileLocked     = $Rule.AllowAssistantWhileLocked
+            AllowConvenienceLogon         = $Rule.AllowConvenienceLogon
+            AllowDiagnosticSubmission     = $Rule.AllowDiagnosticSubmission
+            AllowiCloudBackup             = $Rule.AllowiCloudBackup
+            AllowiCloudDocSync            = $Rule.AllowiCloudDocSync
+            AllowiCloudPhotoSync          = $Rule.AllowiCloudPhotoSync
+            AllowJailbroken               = $Rule.AllowJailbroken
+            AllowPassbookWhileLocked      = $Rule.AllowPassbookWhileLocked
+            AllowScreenshot               = $Rule.AllowScreenshot
+            AllowSimplePassword           = $Rule.AllowSimplePassword
+            AllowVideoConferencing        = $Rule.AllowVideoConferencing
+            AllowVoiceAssistant           = $Rule.AllowVoiceAssistant
+            AllowVoiceDialing             = $Rule.AllowVoiceDialing
+            AntiVirusSignatureStatus      = $Rule.AntiVirusSignatureStatus
+            AntiVirusStatus               = $Rule.AntiVirusStatus
+            AppsRating                    = $Rule.AppsRating
+            AutoUpdateStatus              = $Rule.AutoUpdateStatus
+            BluetoothEnabled              = $Rule.BluetoothEnabled
+            CameraEnabled                 = $Rule.CameraEnabled
+            DomainController              = $Rule.DomainController
+            EmailAddress                  = $Rule.EmailAddress
+            EnableRemovableStorage        = $Rule.EnableRemovableStorage
+            ExchangeActiveSyncHost        = $Rule.ExchangeActiveSyncHost
+            FirewallStatus                = $Rule.FirewallStatus
+            ForceAppStorePassword         = $Rule.ForceAppStorePassword
+            ForceEncryptedBackup          = $Rule.ForceEncryptedBackup
+            MaxPasswordAttemptsBeforeWipe = $Rule.MaxPasswordAttemptsBeforeWipe
+            MaxPasswordGracePeriod        = $Rule.MaxPasswordGracePeriod
+            MoviesRating                  = $Rule.MoviesRating
+            PasswordComplexity            = $Rule.PasswordComplexity
+            PasswordExpirationDays        = $Rule.PasswordExpirationDays
+            PasswordHistoryCount          = $Rule.PasswordHistoryCount
+            PasswordMinComplexChars       = $Rule.PasswordMinComplexChars
+            PasswordMinimumLength         = $Rule.PasswordMinimumLength
+            PasswordQuality               = $Rule.PasswordQuality
+            PasswordRequired              = $Rule.PasswordRequired
+            PasswordTimeout               = $Rule.PasswordTimeout
+            PhoneMemoryEncrypted          = $Rule.PhoneMemoryEncrypted
+            RegionRatings                 = $Rule.RegionRatings
+            RequireEmailProfile           = $Rule.RequireEmailProfile
+            SmartScreenEnabled            = $Rule.SmartScreenEnabled
+            SystemSecurityTLS             = $Rule.SystemSecurityTLS
+            TVShowsRating                 = $Rule.TVShowsRating
+            UserAccountControlStatus      = $Rule.UserAccountControlStatus
+            WLANEnabled                   = $Rule.WLANEnabled
+            WorkFoldersSyncUrl            = $Rule.WorkFoldersSyncUrl
+            GlobalAdminAccount            = $GlobalAdminAccount
+            Ensure                        = 'Present'
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
@@ -200,74 +325,207 @@ function Set-TargetResource
         $Policy,
 
         [Parameter()]
-        [ValidateSet("InOrganization", "NotInOrganization", "None")]
-        [System.String[]]
-        $AccessScope,
+        [System.String]
+        $AccountName,
+
+        [Parameter()]
+        [System.String]
+        $AccountUserName,
 
         [Parameter()]
         [System.Boolean]
-        $BlockAccess,
-
-        [Parameter()]
-        [ValidateSet("All", "PerUser")]
-        [System.String]
-        $BlockAccessScope,
-
-        [Parameter()]
-        [System.String]
-        $Comment,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ContentContainsSensitiveInformation,
-
-        [Parameter()]
-        [System.String[]]
-        $ContentPropertyContainsWords,
+        $AllowAppStore,
 
         [Parameter()]
         [System.Boolean]
-        $Disabled,
+        $AllowAssistantWhileLocked,
 
         [Parameter()]
-        [System.String[]]
-        $GenerateAlert,
+        [System.Boolean]
+        $AllowConvenienceLogon,
 
         [Parameter()]
-        [System.String[]]
-        $GenerateIncidentReport,
+        [System.Boolean]
+        $AllowDiagnosticSubmission,
 
         [Parameter()]
-        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title")]
-        [System.String[]]
-        $IncidentReportContent,
+        [System.Boolean]
+        $AllowiCloudBackup,
 
         [Parameter()]
-        [ValidateSet("FalsePositive", "WithoutJustification", "WithJustification")]
-        [System.String[]]
-        $NotifyAllowOverride,
+        [System.Boolean]
+        $AllowiCloudDocSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowiCloudPhotoSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowJailbroken,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPassbookWhileLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowScreenshot,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSimplePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVideoConferencing,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVoiceAssistant,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVoiceDialing,
+
+        [Parameter()]
+        [System.Int64]
+        $AntiVirusSignatureStatus,
+
+        [Parameter()]
+        [System.Int64]
+        $AntiVirusStatus,
+
+        [Parameter()]
+        [ValidateSet("AllowAll", "DontAllow", "Rating9Plus", "Rating12Plus", "Rating17Plus", "")]
+        [System.String]
+        $AppsRating,
+
+        [Parameter()]
+        [ValidateSet("AutomaticCheckForUpdates", "AutomaticDownloadUpdates", "AutomaticUpdatesRequired", "AutomaticUpdatesRequired", "NeverCheckUpdates", "")]
+        [System.String]
+        $AutoUpdateStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $BluetoothEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $CameraEnabled,
 
         [Parameter()]
         [System.String]
-        $NotifyEmailCustomText,
+        $EmailAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableRemovableStorage,
 
         [Parameter()]
         [System.String]
-        $NotifyPolicyTipCustomText,
+        $ExchangeActiveSyncHost,
 
         [Parameter()]
-        [System.String[]]
-        $NotifyUser,
-
-        [Parameter()]
-        [ValidateSet("Low", "Medium", "High", "None")]
+        [ValidateSet("Required", "")]
         [System.String]
-        $ReportSeverityLevel,
+        $FirewallStatus,
 
         [Parameter()]
-        [ValidateSet("Ignore", "RetryThenBlock")]
+        [System.Boolean]
+        $ForceAppStorePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $ForceEncryptedBackup,
+
+        [Parameter()]
+        [System.Int32]
+        $MaxPasswordAttemptsBeforeWipe,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $MaxPasswordGracePeriod,
+
+        [Parameter()]
+        [ValidateSet("AllowAll", "DontAllow", "")]
         [System.String]
-        $RuleErrorAction,
+        $MoviesRating,
+
+        [Parameter()]
+        [System.Int64]
+        $PasswordComplexity,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordHistoryCount,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinComplexChars,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordQuality,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordRequired,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $PasswordTimeout,
+
+        [Parameter()]
+        [System.Boolean]
+        $PhoneMemoryEncrypted,
+
+        [Parameter()]
+        [ValidateSet("au", "ca", "de", "fr", "gb", "ie", "jp", "nz", "us", "")]
+        [System.String]
+        $RegionRatings,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireEmailProfile,
+
+        [Parameter()]
+        [System.Boolean]
+        $SmartScreenEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SystemSecurityTLS,
+
+        [Parameter()]
+        [ValidateSet("AllowAll", "DontAllow", "")]
+        [System.String]
+        $TVShowsRating,
+
+        [Parameter()]
+        [System.Array]
+        $TargetGroups,
+
+        [Parameter()]
+        [ValidateSet("AlwaysNotify", "AlwaysNotify", "NotifyAppChanges", "NotifyAppChangesDoNotDimdesktop", "")]
+        [System.String]
+        $UserAccountControlStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $WLANEnabled,
+
+        [Parameter()]
+        [System.String]
+        $WorkFoldersSyncUrl,  
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -279,7 +537,7 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of DLPComplianceRule for $Name"
+    Write-Verbose -Message "Setting the configuration of the Device Conditional Access Rule for $Name"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -294,48 +552,29 @@ function Set-TargetResource
 
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentRule.Ensure))
     {
-        Write-Verbose "Rule {$($CurrentRule.Name)} doesn't exists but need to. Creating Rule."
         $CreationParams = $PSBoundParameters
-        if ($null -ne $CreationParams.ContentContainsSensitiveInformation)
-        {
-            $value = @()
-            foreach ($item in $CreationParams.ContentContainsSensitiveInformation)
-            {
-                $value += Get-SCDLPSensitiveInformation $item
-            }
-            $CreationParams.ContentContainsSensitiveInformation = $value
-        }
-
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
 
-        Write-Verbose -Message "Calling New-DLPComplianceRule with Values: $(Convert-O365DscHashtableToString -Hashtable $CreationParams)"
-        New-DLPComplianceRule @CreationParams
+        Write-Verbose "Creating new Device Conditional Access Rule $Name calling the New-DeviceConditionalAccessRule cmdlet."
+        New-DeviceConditionalAccessRule @CreationParams
     }
+    # If a Device Conditional Access Rule exists and it should. Update it.
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
-        Write-Verbose "Rule {$($CurrentRule.Name)} already exists and needs to. Updating Rule."
-        $UpdateParams = $PSBoundParameters
-
-        $value = @()
-        foreach ($item in $UpdateParams.ContentContainsSensitiveInformation)
-        {
-            $value += Get-SCDLPSensitiveInformation $item
+        $UpdateParams = @{
+            Identity          = $Name
+            Comment           = $Comment
+            Disabled          = $Disabled
+            ContentMatchQuery = $ContentMatchQuery
         }
-        $UpdateParams.ContentContainsSensitiveInformation = Get-SCDLPSensitiveInformation -SensitiveInformation $value
-        $UpdateParams.Remove("GlobalAdminAccount")
-        $UpdateParams.Remove("Ensure")
-        $UpdateParams.Remove("Name")
-        $UpdateParams.Remove("Policy")
-        $UpdateParams.Add("Identity", $Name)
-
-        Write-Verbose "Updating Rule with values: $(Convert-O365DscHashtableToString -Hashtable $UpdateParams)"
-        Set-DLPComplianceRule @UpdateParams
+        Write-Verbose "Updating the Device Conditional Access Rule $Name by calling the Set-DeviceConditionalAccessRule cmdlet."
+        Set-DeviceConditionalAccessRule @UpdateParams
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
+    # If Device Conditional Access Rules exists but it shouldn't. Remove it.
+    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentTag.Ensure))
     {
-        Write-Verbose "Rule {$($CurrentRule.Name)} already exists but shouldn't. Deleting Rule."
-        Remove-DLPComplianceRule -Identity $CurrentRule.Name -Confirm:$false
+        Remove-DeviceConditionalAccessRule -Identity $Name -Confirm:$false
     }
 }
 
@@ -354,74 +593,207 @@ function Test-TargetResource
         $Policy,
 
         [Parameter()]
-        [ValidateSet("InOrganization", "NotInOrganization", "None")]
-        [System.String[]]
-        $AccessScope,
+        [System.String]
+        $AccountName,
+
+        [Parameter()]
+        [System.String]
+        $AccountUserName,
 
         [Parameter()]
         [System.Boolean]
-        $BlockAccess,
-
-        [Parameter()]
-        [ValidateSet("All", "PerUser")]
-        [System.String]
-        $BlockAccessScope,
-
-        [Parameter()]
-        [System.String]
-        $Comment,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ContentContainsSensitiveInformation,
-
-        [Parameter()]
-        [System.String[]]
-        $ContentPropertyContainsWords,
+        $AllowAppStore,
 
         [Parameter()]
         [System.Boolean]
-        $Disabled,
+        $AllowAssistantWhileLocked,
 
         [Parameter()]
-        [System.String[]]
-        $GenerateAlert,
+        [System.Boolean]
+        $AllowConvenienceLogon,
 
         [Parameter()]
-        [System.String[]]
-        $GenerateIncidentReport,
+        [System.Boolean]
+        $AllowDiagnosticSubmission,
 
         [Parameter()]
-        [ValidateSet("All", "Default", "DetectionDetails", "Detections", "DocumentAuthor", "DocumentLastModifier", "MatchedItem", "OriginalContent", "RulesMatched", "Service", "Severity", "Title")]
-        [System.String[]]
-        $IncidentReportContent,
+        [System.Boolean]
+        $AllowiCloudBackup,
 
         [Parameter()]
-        [ValidateSet("FalsePositive", "WithoutJustification", "WithJustification")]
-        [System.String[]]
-        $NotifyAllowOverride,
+        [System.Boolean]
+        $AllowiCloudDocSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowiCloudPhotoSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowJailbroken,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPassbookWhileLocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowScreenshot,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSimplePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVideoConferencing,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVoiceAssistant,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVoiceDialing,
+
+        [Parameter()]
+        [System.Int64]
+        $AntiVirusSignatureStatus,
+
+        [Parameter()]
+        [System.Int64]
+        $AntiVirusStatus,
+
+        [Parameter()]
+        [ValidateSet("AllowAll", "DontAllow", "Rating9Plus", "Rating12Plus", "Rating17Plus", "")]
+        [System.String]
+        $AppsRating,
+
+        [Parameter()]
+        [ValidateSet("AutomaticCheckForUpdates", "AutomaticDownloadUpdates", "AutomaticUpdatesRequired", "AutomaticUpdatesRequired", "NeverCheckUpdates", "")]
+        [System.String]
+        $AutoUpdateStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $BluetoothEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $CameraEnabled,
 
         [Parameter()]
         [System.String]
-        $NotifyEmailCustomText,
+        $EmailAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableRemovableStorage,
 
         [Parameter()]
         [System.String]
-        $NotifyPolicyTipCustomText,
+        $ExchangeActiveSyncHost,
 
         [Parameter()]
-        [System.String[]]
-        $NotifyUser,
-
-        [Parameter()]
-        [ValidateSet("Low", "Medium", "High", "None")]
+        [ValidateSet("Required", "")]
         [System.String]
-        $ReportSeverityLevel,
+        $FirewallStatus,
 
         [Parameter()]
-        [ValidateSet("Ignore", "RetryThenBlock")]
+        [System.Boolean]
+        $ForceAppStorePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $ForceEncryptedBackup,
+
+        [Parameter()]
+        [System.Int32]
+        $MaxPasswordAttemptsBeforeWipe,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $MaxPasswordGracePeriod,
+
+        [Parameter()]
+        [ValidateSet("AllowAll", "DontAllow", "")]
         [System.String]
-        $RuleErrorAction,
+        $MoviesRating,
+
+        [Parameter()]
+        [System.Int64]
+        $PasswordComplexity,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordHistoryCount,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinComplexChars,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLength,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordQuality,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordRequired,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $PasswordTimeout,
+
+        [Parameter()]
+        [System.Boolean]
+        $PhoneMemoryEncrypted,
+
+        [Parameter()]
+        [ValidateSet("au", "ca", "de", "fr", "gb", "ie", "jp", "nz", "us", "")]
+        [System.String]
+        $RegionRatings,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireEmailProfile,
+
+        [Parameter()]
+        [System.Boolean]
+        $SmartScreenEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SystemSecurityTLS,
+
+        [Parameter()]
+        [ValidateSet("AllowAll", "DontAllow", "")]
+        [System.String]
+        $TVShowsRating,
+
+        [Parameter()]
+        [System.Array]
+        $TargetGroups,
+
+        [Parameter()]
+        [ValidateSet("AlwaysNotify", "AlwaysNotify", "NotifyAppChanges", "NotifyAppChangesDoNotDimdesktop", "")]
+        [System.String]
+        $UserAccountControlStatus,
+
+        [Parameter()]
+        [System.Boolean]
+        $WLANEnabled,
+
+        [Parameter()]
+        [System.String]
+        $WorkFoldersSyncUrl,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -433,10 +805,9 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of DLPComplianceRule for $Name"
+    Write-Verbose -Message "Testing configuration of the Device Conditional Access Rule for $Name"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
@@ -445,24 +816,7 @@ function Test-TargetResource
     $TestResult = Test-Office365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @("Name",
-        "Policy",
-        "AccessScope",
-        "BlockAccess",
-        "BlockAccessScope",
-        "Comment",
-        "ContentPropertyContainsWords",
-        "Disabled",
-        "GenerateAlert",
-        "GenerateIncidentReport",
-        "IncidentReportContent",
-        "NotifyAllowOverride",
-        "NotifyEmailCustomText",
-        "NotifyPolicyTipCustomText",
-        "NotifyUser",
-        "ReportSeverityLevel",
-        "RuleErrorAction",
-        "Ensure")
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -480,9 +834,6 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
 
-    Test-MSCloudLogin -Platform SecurityComplianceCenter `
-        -CloudCredential $GlobalAdminAccount
-
     $InformationPreference = "Continue"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -490,145 +841,40 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
-    $rules = Get-DLPComplianceRule | Where-Object { $_.Mode -ne 'PendingDeletion' }
+    Test-MSCloudLogin -O365Credential $GlobalAdminAccount `
+        -Platform SecurityComplianceCenter
+    [array]$Rules = Get-DeviceConditionalAccessRule
 
+    $dscContent = ""
     $i = 1
-    $DSCContent = ""
-    foreach ($rule in $rules)
+    foreach ($Rule in $Rules)
     {
-        Write-Information "    - [$i/$($rules.Length)] $($rule.Name)"
-        $result = Get-TargetResource -Name $rule.Name -Policy $rule.ParentPolicyName -GlobalAdminAccount $GlobalAdminAccount
-
-        $IsCIMArray = $false
-        if ($result.ContentContainsSensitiveInformation.Length -gt 1)
+        Write-Information "    - [$i/$($Rules.Count)] $($Rule.Name)"
+        try
         {
-            $IsCIMArray = $true
-        }
-        $result.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $result.ContentContainsSensitiveInformation
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $DSCContent += "        SCDLPComplianceRule " + (New-GUID).ToString() + "`r`n"
-        $DSCContent += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsCIMArray
+            $policy = Get-DeviceConditionalAccessPolicy -Identity $Rule.Policy -ErrorAction Stop
 
-        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $partialContent += "        }`r`n"
-        $DSCContent += $partialContent
+            $params = @{
+                Name               = $Rule.Name
+                Policy             = $policy.Name
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $dscContent += "        DeviceConditionalAccessRule " + (New-GUID).ToString() + "`r`n"
+            $dscContent += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $partialContent += "        }`r`n"
+            $dscContent += $partialContent
+        }
+        catch
+        {
+            Write-Information "You are not authorized to access the Device Conditional Access Policy {$($Rule.Policy)}"
+        }
         $i++
     }
-
-    return $DSCContent
-}
-
-function ConvertTo-SCDLPSensitiveInformationString
-{
-    [CmdletBinding()]
-    [OutputType([System.String[]])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $InformationArray
-    )
-    $result = @()
-
-    foreach ($SensitiveInformationHash in $InformationArray)
-    {
-        $StringContent = "MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
-        $StringContent += "                name = '$($SensitiveInformationHash.name.Replace("'", "''"))'`r`n"
-
-        if ($null -ne $SensitiveInformationHash.id)
-        {
-            $StringContent += "                id = '$($SensitiveInformationHash.id)'`r`n"
-        }
-
-        if ($null -ne $SensitiveInformationHash.maxconfidence)
-        {
-            $StringContent += "                maxconfidence = '$($SensitiveInformationHash.maxconfidence)'`r`n"
-        }
-
-        if ($null -ne $SensitiveInformationHash.minconfidence)
-        {
-            $StringContent += "                minconfidence = '$($SensitiveInformationHash.minconfidence)'`r`n"
-        }
-
-        if ($null -ne $SensitiveInformationHash.classifiertype)
-        {
-            $StringContent += "                classifiertype = '$($SensitiveInformationHash.classifiertype)'`r`n"
-        }
-
-        if ($null -ne $SensitiveInformationHash.mincount)
-        {
-            $StringContent += "                mincount = '$($SensitiveInformationHash.mincount)'`r`n"
-        }
-
-        if ($null -ne $SensitiveInformationHash.maxcount)
-        {
-            $StringContent += "                maxcount = '$($SensitiveInformationHash.maxcount)'`r`n"
-        }
-
-        $StringContent += "            }`r`n"
-        $result += $StringContent
-    }
-    return $result
-}
-
-function Get-SCDLPSensitiveInformation
-{
-    [CmdletBinding()]
-    [OutputType([System.Object[]])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $SensitiveInformation
-    )
-
-    $returnValue = @()
-
-    foreach ($item in $SensitiveInformation)
-    {
-        $result = @{
-            name = $item.name
-        }
-
-        if ($null -ne $item.id)
-        {
-            $result.Add("id", $item.id)
-        }
-
-        if ($null -ne $item.maxconfidence)
-        {
-            $result.Add("maxconfidence", $item.maxconfidence)
-        }
-
-        if ($null -ne $item.minconfidence)
-        {
-            $result.Add("minconfidence", $item.minconfidence)
-        }
-
-        if ($null -ne $item.rulePackId)
-        {
-            $result.Add("rulePackId", $item.rulePackId)
-        }
-
-        if ($null -ne $item.classifiertype)
-        {
-            $result.Add("classifiertype", $item.classifiertype)
-        }
-
-        if ($null -ne $item.mincount)
-        {
-            $result.Add("mincount", $item.mincount)
-        }
-
-        if ($null -ne $item.maxcount)
-        {
-            $result.Add("maxcount", $item.maxcount)
-        }
-        $returnValue += $result
-    }
-    return $returnValue
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource
