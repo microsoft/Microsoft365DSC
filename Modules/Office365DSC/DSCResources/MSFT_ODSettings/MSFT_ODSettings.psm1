@@ -268,6 +268,11 @@ function Set-TargetResource
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
 
+    if ($CurrentParameters.ContainsKey("Ensure"))
+    {
+        $CurrentParameters.Remove("Ensure")
+    }
+
     if ($CurrentParameters.ContainsKey("BlockMacSync"))
     {
         $CurrentParameters.Remove("BlockMacSync")

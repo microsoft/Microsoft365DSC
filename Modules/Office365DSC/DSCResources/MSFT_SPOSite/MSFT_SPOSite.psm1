@@ -184,6 +184,11 @@ function Get-TargetResource
             $DenyAddAndCustomizePagesValue = $false
         }
 
+        $siteOwnerEmail = $site.OwnerEmail
+        if ([System.String]::IsNullOrEmpty($siteOwnerEmail))
+        {
+            $siteOwnerEmail = $GlobalAdminAccount.UserName
+        }
         return @{
             Url                                         = $Url
             Title                                       = $site.Title
@@ -197,7 +202,7 @@ function Get-TargetResource
             StorageMaximumLevel                         = $site.StorageMaximumLevel
             StorageWarningLevel                         = $site.StorageWarningLevel
             AllowSelfServiceUpgrade                     = $site.AllowSelfServiceUpgrade
-            Owner                                       = $site.OwnerEmail
+            Owner                                       = $siteOwnerEmail
             CommentsOnSitePagesDisabled                 = $site.CommentsOnSitePagesDisabled
             DefaultLinkPermission                       = $site.DefaultLinkPermission
             DefaultSharingLinkType                      = $site.DefaultSharingLinkType
@@ -719,7 +724,7 @@ function Export-TargetResource
             GlobalAdminAccount = $GlobalAdminAccount
             Url                = $site.Url
             Template           = $site.Template
-            Owner              = $site.OwnerEmail
+            Owner              = $GlobalAdminAccount.UserName # Passing in bogus value to bypass null owner error
             Title              = $site.Title
             TimeZoneId         = $site.TimeZoneID
         }
