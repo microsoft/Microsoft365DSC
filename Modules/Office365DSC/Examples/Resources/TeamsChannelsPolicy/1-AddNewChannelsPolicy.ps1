@@ -19,7 +19,7 @@ Configuration Example
             AllowOrgWideTeamCreation    = $True;
             AllowPrivateChannelCreation = $True;
             AllowPrivateTeamDiscovery   = $True;
-            Description                 = 'This is an exmaple';
+            Description                 = 'This is an example';
             Ensure                     = 'Present'
             GlobalAdminAccount         = $credsGlobalAdmin
         }
