@@ -5,6 +5,8 @@
 * TeamsCallingPolicy
   * Removed the AllowCalling parameter since it is no longer supported;
   * Fixed an issue with Policies without tags in their name (e.g. Global);
+* TeamsUpgradePolicy
+  * Initial Release;
 * ReverseDSC
   * Change to allow ComponentsToExtract without the 'chck' prefix;
 * Metadata
@@ -112,8 +114,6 @@
 * SPOUserProfileProperty
   * Introduced Multi-Threading
 * TeamsCallingPolicy
-  * Initial Release;
-* TeamsUpgradePolicy
   * Initial Release;
 * TeamsMeetingBroadcastConfiguration
   * Initial Release;
