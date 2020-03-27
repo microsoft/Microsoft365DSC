@@ -38,6 +38,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # This mock should not return anything. Remove-* are normally void methods without any return types
         }
 
+        Mock -CommandName Set-DeviceConfigurationPolicy -MockWith {
+
+        }
+
         Mock -CommandName New-DeviceConfigurationPolicy -MockWith {
             return @{
                 # This mock can simply return an empty object for the purpose of these tests.
