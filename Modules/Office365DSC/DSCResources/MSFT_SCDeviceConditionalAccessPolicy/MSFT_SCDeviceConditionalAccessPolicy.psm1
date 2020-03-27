@@ -50,27 +50,11 @@ function Get-TargetResource
     {
         Write-Verbose "Found existing Device Conditional Access Policy $($Name)"
         $result = @{
-<<<<<<< Updated upstream
-            Ensure                          = 'Present'
-            Name                            = $PolicyObject.Name
-            Comment                         = $PolicyObject.Comment
-            ExchangeLocation                = $PolicyObject.ExchangeLocation.Name
-            ExchangeSenderMemberOf          = $PolicyObject.ExchangeSenderMemberOf
-            ExchangeSenderMemberOfException = $PolicyObject.ExchangeSenderMemberOfException
-            Mode                            = $PolicyObject.Mode
-            OneDriveLocation                = $PolicyObject.OneDriveLocation.Name
-            OneDriveLocationException       = $PolicyObject.OneDriveLocationException
-            Priority                        = $PolicyObject.Priority
-            SharePointLocation              = $PolicyObject.SharePointLocation.Name
-            SharePointLocationException     = $PolicyObject.SharePointLocationException
-            TeamsLocation                   = $PolicyObject.TeamsLocation.Name
-            TeamsLocationException          = $PolicyObject.TeamsLocationException
-=======
             Ensure             = 'Present'
             Name               = $PolicyObject.Name
             Comment            = $PolicyObject.Comment
+            Enabled            = $PolicyObject.Enabled
             GlobalAdminAccount = $GlobalAdminAccount
->>>>>>> Stashed changes
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
