@@ -1260,7 +1260,7 @@ function Assert-O365DSCTemplate
     param(
         [Parameter(Mandatory=$true)]
         [System.String]
-        $Path
+        $TemplatePath
     )
     $InformationPreference = 'SilentlyContinue'
     $WarningPreference = 'SilentlyContinue'
@@ -1271,14 +1271,51 @@ function Assert-O365DSCTemplate
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
-    if (Test-Path -Path $Path)
+    if ((Test-Path -Path $TemplatePath) -and ($TemplatePath -like '*.o365' -or $TemplatePath -like '*.ps1'))
     {
+        $tokens = $null
+        $errors = $null
+        $ast = [System.Management.Automation.Language.Parser]::ParseFile($TemplatePath, [ref] $tokens, [ref] $errors)
+        $configObject = $ast.FindAll( {$args[0] -is [System.Management.Automation.Language.ConfigurationDefinitionAST]}, $true)
 
+        $configurationName = $configObject.InstanceName.ToString()
+        $configContent = $configObject.Extent.ToString()
+
+        $configDataString = "`$configData = @{ `
+            AllNodes = @( `
+                @{ `
+                    NodeName                    = 'localhost' `
+                    PSDscAllowPlainTextPassword = `$true; `
+                    PSDscAllowDomainUser        = `$true; `
+                } `
+            ) `
+        }"
+        $configContent += "`r`n" + $configDataString + "`r`n"
+        $configContent += "`$compileResults = " + $ConfigurationName + " -ConfigurationData `$ConfigData`r`n"
+        $configContent += "`$testResults = Test-DSCConfiguration -ReferenceConfiguration `$compileResults.FullName`r`n"
+
+        $configContent += "if (`$testResults.IsInDesiredState)`r`n"
+        $configContent += "{`r`n"
+        $configContent += "    Write-Host 'The template was validated against the environment. The tenant is in the Desired State.' -ForeGroundColor Green"
+        $configContent += "}`r`n"
+        $configContent += "else`r`n"
+        $configContent += "{`r`n"
+        $configContent += "    Write-Host 'The environment does not match the template. The following component(s) are not in the Desired State:' -Foreground Red`r`n"
+        $configContent += "    foreach (`$component in `$testResults.ResourcesNotInDesiredState){Write-Host `"    -> `$(`$component.ResourceId)`" -Foreground Red}`r`n"
+        $configContent += "}`r`n"
+
+        $randomName = (New-GUID).ToString() + '.ps1'
+        $tempScriptLocation = Join-Path -Path $env:Temp -ChildPath $randomName
+        $configContent | Out-File $tempScriptLocation
+
+        & $tempScriptLocation
+    }
+    elseif (-not (Test-Path $TemplatePath))
+    {
+        Write-Error "O365DSC Template Path {$TemplatePath} does not exist."
     }
     else
     {
-        $ErrorMessage = "Assert-O365DSCTemplate - Path {$Path} was not found"
-        New-Office365DSCLogEntry -Error $ErrorMessage -Message $ErrorMessage -Source $MyInvocation.MyCommand.ModuleName
-        throw $ErrorMessage
+        Write-Error "You need to specify a path to an Office365DSC Template (*.o365 or *.ps1)"
     }
 }
