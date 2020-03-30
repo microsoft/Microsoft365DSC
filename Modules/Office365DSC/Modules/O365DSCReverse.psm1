@@ -180,7 +180,7 @@ function Start-O365ConfigurationExtract
             {
                 Import-Module $ResourceModule.FullName | Out-Null
 
-                if (-not $ComponentsToSkip.Contains($resourceName))
+                if ($ComponentsToSkip -notcontains $resourceName)
                 {
                     Write-Information "Extracting [$resourceName]..."
                     $MaxProcessesExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("MaxProcesses")
