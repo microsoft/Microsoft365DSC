@@ -2,9 +2,13 @@
 
 ## UNRELEASED
 
+* SPOSiteGroup
+  * Fixed an issue where now, groups with Null owners are not extracted;
 * TeamsCallingPolicy
   * Removed the AllowCalling parameter since it is no longer supported;
   * Fixed an issue with Policies without tags in their name (e.g. Global);
+* TeamsUpgradePolicy
+  * Initial Release;
 * ReverseDSC
   * Change to allow ComponentsToExtract without the 'chck' prefix;
   * Introduction of Extraction Modes and Visual Indicators;
@@ -115,10 +119,6 @@
 * SPOUserProfileProperty
   * Introduced Multi-Threading
 * TeamsCallingPolicy
-  * Initial Release;
-* TeamsChannelsPolicy
-  * Initial Release;
-* TeamsClientConfiguration
   * Initial Release;
 * TeamsMeetingBroadcastConfiguration
   * Initial Release;
