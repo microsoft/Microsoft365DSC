@@ -9,7 +9,7 @@
   * Fixed an issue with Policies without tags in their name (e.g. Global);
 * TeamsUpgradePolicy
   * Initial Release;
-* Office365Util
+* Office365DSCUtil
   * Added the new Assert-O365DSCTemplate cmdlet to assess remote templates;
 * ReverseDSC
   * Change to allow ComponentsToExtract without the 'chck' prefix;
