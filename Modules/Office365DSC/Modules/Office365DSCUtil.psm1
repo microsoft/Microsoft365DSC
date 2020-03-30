@@ -1253,3 +1253,32 @@ function Remove-NullEntriesFromHashtable
 
     return $Hash
 }
+
+function Assert-O365DSCTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Path
+    )
+    $InformationPreference = 'SilentlyContinue'
+    $WarningPreference = 'SilentlyContinue'
+
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Event", "AssertTemplate")
+    Add-O365DSCTelemetryEvent -Data $data
+    #endregion
+
+    if (Test-Path -Path $Path)
+    {
+
+    }
+    else
+    {
+        $ErrorMessage = "Assert-O365DSCTemplate - Path {$Path} was not found"
+        New-Office365DSCLogEntry -Error $ErrorMessage -Message $ErrorMessage -Source $MyInvocation.MyCommand.ModuleName
+        throw $ErrorMessage
+    }
+}
