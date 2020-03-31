@@ -53,7 +53,7 @@ function Get-TargetResource
             Ensure             = 'Present'
             Name               = $PolicyObject.Name
             Comment            = $PolicyObject.Comment
-            Enabled            = $Policy.Enabled
+            Enabled            = $PolicyObject.Enabled
             GlobalAdminAccount = $GlobalAdminAccount
         }
 
