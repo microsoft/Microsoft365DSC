@@ -9,7 +9,7 @@ function Get-TargetResource
         $Name,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCompany,
 
         [Parameter()]
@@ -157,7 +157,7 @@ function Get-TargetResource
     {
         if ($null -eq $AddressList.IncludedRecipients)
         {
-            $IncludedRecipients = $null
+            $IncludedRecipients = @()
         }
         else
         {
@@ -167,21 +167,21 @@ function Get-TargetResource
         $result = @{
             Name                                 = $Name
             ConditionalCompany                   = $AddressList.ConditionalCompany
-            ConditionalCustomeAttribute1         = $AddressList.ConditionalCustomAttribute1
-            ConditionalCustomeAttribute10        = $AddressList.ConditionalCustomAttribute10
-            ConditionalCustomeAttribute11        = $AddressList.ConditionalCustomAttribute11
-            ConditionalCustomeAttribute12        = $AddressList.ConditionalCustomAttribute12
-            ConditionalCustomeAttribute13        = $AddressList.ConditionalCustomAttribute13
-            ConditionalCustomeAttribute14        = $AddressList.ConditionalCustomAttribute14
-            ConditionalCustomeAttribute15        = $AddressList.ConditionalCustomAttribute15
-            ConditionalCustomeAttribute2         = $AddressList.ConditionalCustomAttribute2
-            ConditionalCustomeAttribute3         = $AddressList.ConditionalCustomAttribute3
-            ConditionalCustomeAttribute4         = $AddressList.ConditionalCustomAttribute4
-            ConditionalCustomeAttribute5         = $AddressList.ConditionalCustomAttribute5
-            ConditionalCustomeAttribute6         = $AddressList.ConditionalCustomAttribute6
-            ConditionalCustomeAttribute7         = $AddressList.ConditionalCustomAttribute7
-            ConditionalCustomeAttribute8         = $AddressList.ConditionalCustomAttribute8
-            ConditionalCustomeAttribute9         = $AddressList.ConditionalCustomAttribute9
+            ConditionalCustomAttribute1          = $AddressList.ConditionalCustomAttribute1
+            ConditionalCustomAttribute10         = $AddressList.ConditionalCustomAttribute10
+            ConditionalCustomAttribute11         = $AddressList.ConditionalCustomAttribute11
+            ConditionalCustomAttribute12         = $AddressList.ConditionalCustomAttribute12
+            ConditionalCustomAttribute13         = $AddressList.ConditionalCustomAttribute13
+            ConditionalCustomAttribute14         = $AddressList.ConditionalCustomAttribute14
+            ConditionalCustomAttribute15         = $AddressList.ConditionalCustomAttribute15
+            ConditionalCustomAttribute2          = $AddressList.ConditionalCustomAttribute2
+            ConditionalCustomAttribute3          = $AddressList.ConditionalCustomAttribute3
+            ConditionalCustomAttribute4          = $AddressList.ConditionalCustomAttribute4
+            ConditionalCustomAttribute5          = $AddressList.ConditionalCustomAttribute5
+            ConditionalCustomAttribute6          = $AddressList.ConditionalCustomAttribute6
+            ConditionalCustomAttribute7          = $AddressList.ConditionalCustomAttribute7
+            ConditionalCustomAttribute8          = $AddressList.ConditionalCustomAttribute8
+            ConditionalCustomAttribute9          = $AddressList.ConditionalCustomAttribute9
             ConditionalDepartment                = $AddressList.ConditionalDepartment
             ConditionalStateOrProvince           = $AddressList.ConditionalStateOrProvince
             DisplayName                          = $AddressList.DisplayName
@@ -207,7 +207,7 @@ function Set-TargetResource
         $Name,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCompany,
 
         [Parameter()]
@@ -409,7 +409,7 @@ function Test-TargetResource
         $Name,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ConditionalCompany,
 
         [Parameter()]
