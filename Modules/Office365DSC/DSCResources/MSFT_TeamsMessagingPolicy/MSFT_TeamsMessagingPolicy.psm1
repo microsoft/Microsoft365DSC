@@ -104,7 +104,7 @@ function Get-TargetResource
 
     try
     {
-        $policy = Get-CsTeamsMessagingPolicy -identity $Identity -ErrorAction SilentlyContinue
+        $policy = Get-CsTeamsMessagingPolicy -Identity $Identity -ErrorAction SilentlyContinue
 
         if ($null -eq $policy)
         {
@@ -116,14 +116,14 @@ function Get-TargetResource
         }
         else
         {
-            # Tag: gets prefixed to Identity on get need to remove
+            # Tag: gets prefixed to Identity on Get, need to remove
             $currentPolicy = $policy.Identity
-            if ($currentPolicy.contains(":"))
+            if ($currentPolicy -like "Tag:*")
             {
-                $currentIdentity = $policy.Identity.split(":")[1]
+                $currentPolicy = $currentPolicy.Split(':')[1]
             }
             return @{
-                Identity                      = $currentIdentity
+                Identity                      = $currentPolicy
                 AllowGiphy                    = $policy.AllowGiphy
                 AllowMemes                    = $policy.AllowMemes
                 AllowOwnerDeleteMessage       = $policy.AllowOwnerDeleteMessage

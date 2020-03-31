@@ -9,6 +9,9 @@
 * TeamsCallingPolicy
   * Removed the AllowCalling parameter since it is no longer supported;
   * Fixed an issue with Policies without tags in their name (e.g. Global);
+* TeamsMessagingPolicy
+  * Fixed and issue where the Global policy was always flagged as having
+    a drift;
 * TeamsUpgradePolicy
   * Initial Release;
 * Office365DSCUtil
