@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* SPOPropertyBag
+  * Fixed an issue where false positive drifts were being detected;
 * SPOSiteGroup
   * Fixed an issue where now, groups with Null owners are not extracted;
 * TeamsCallingPolicy
@@ -9,6 +11,8 @@
   * Fixed an issue with Policies without tags in their name (e.g. Global);
 * TeamsUpgradePolicy
   * Initial Release;
+* Office365DSCUtil
+  * Added the new Assert-O365DSCTemplate cmdlet to assess remote templates;
 * ReverseDSC
   * Change to allow ComponentsToExtract without the 'chck' prefix;
   * Introduction of Extraction Modes and Visual Indicators;

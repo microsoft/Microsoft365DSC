@@ -40,7 +40,7 @@ function Get-TargetResource
             -ConnectionUrl $Url `
             -Platform PnP | Out-Null
         Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
-        $property = Get-PnPPropertyBag
+        $property = Get-PnpPropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
         Write-Verbose -Message "Properties obtained correctly"
     }
     catch
@@ -57,7 +57,6 @@ function Get-TargetResource
     }
     else
     {
-        $property = $property | Where-Object -FilterScript { $_.Key -ceq $Key }
         Write-Verbose "Found existing SPOPropertyBag Key $Key at {$Url}"
         $result = @{
             Ensure             = 'Present'
@@ -276,12 +275,15 @@ function Export-TargetResource
                                 Import-Module ($params.ScriptRoot + "\..\..\Modules\O365DSCTelemetryEngine.psm1") -Force | Out-Null
                                 $result = Get-TargetResource @getValues
                                 $result.Value = [System.String]$result.Value
-                                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                                $content += "        SPOPropertyBag " + (New-GUID).ToString() + "`r`n"
-                                $content += "        {`r`n"
-                                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
-                                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-                                $content += "        }`r`n"
+                                if (-not [System.String]::IsNullOrEmpty($result.Value))
+                                {
+                                    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                                    $content += "        SPOPropertyBag " + (New-GUID).ToString() + "`r`n"
+                                    $content += "        {`r`n"
+                                    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
+                                    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                                    $content += "        }`r`n"
+                                }
                             }
                         }
                         catch
