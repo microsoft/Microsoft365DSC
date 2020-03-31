@@ -2,7 +2,7 @@
 class MSFT_EXOAddressList : OMI_BaseResource
 {
     [Key, Description("The Name parameter specifies a unique name for the address list.")] String Name;
-    [Write, Description("The ConditionalCompany parameter specifies a precanned filter that's based on the value of the recipient's Company property.")] String ConditionalCompany;
+    [Write, Description("The ConditionalCompany parameter specifies a precanned filter that's based on the value of the recipient's Company property.")] String ConditionalCompany[];
     [Write, Description("The ConditionalCustomAttribute1 parameter specifies a precanned filter that's based on the value of the recipient's CustomAttribute1 property.")] String ConditionalCustomAttribute1[];
     [Write, Description("The ConditionalCustomAttribute10 parameter specifies a precanned filter that's based on the value of the recipient's CustomAttribute10 property.")] String ConditionalCustomAttribute10[];
     [Write, Description("The ConditionalCustomAttribute11 parameter specifies a precanned filter that's based on the value of the recipient's CustomAttribute11 property.")] String ConditionalCustomAttribute11[];
