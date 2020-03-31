@@ -15,6 +15,9 @@
   * Added the new Assert-O365DSCTemplate cmdlet to assess remote templates;
 * ReverseDSC
   * Change to allow ComponentsToExtract without the 'chck' prefix;
+  * Introduction of Extraction Modes and Visual Indicators;
+  * Major refactoring, having UI dynamic and items displayed by
+    Resources' names;
 * Metadata
   * Updated MicrosoftTeams dependency to 1.0.5;
   * Updated MSCloudLoginAssistant dependency to 1.0.3;

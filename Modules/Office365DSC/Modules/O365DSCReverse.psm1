@@ -38,7 +38,12 @@ function Start-O365ConfigurationExtract
         [Parameter()]
         [ValidateSet('SPO', 'EXO', 'SC', 'OD', 'O365', 'TEAMS', 'PP')]
         [System.String[]]
-        $Workloads
+        $Workloads,
+
+        [Parameter()]
+        [ValidateSet('Lite', 'Default', 'Full')]
+        [System.String]
+        $Mode
     )
 
     $InformationPreference = "Continue"
@@ -55,6 +60,16 @@ function Start-O365ConfigurationExtract
         {
             $principal = $organization.Split(".")[0]
         }
+    }
+
+    $ComponentsToSkip = @()
+    if ($Mode -eq 'Default')
+    {
+        $ComponentsToSkip = $Global:FullComponents
+    }
+    elseif ($Mode -eq 'Lite')
+    {
+        $ComponentsToSkip = $Global:DefaultComponents + $Global:FullComponents
     }
 
     $AzureAutomation = $false
@@ -161,19 +176,22 @@ function Start-O365ConfigurationExtract
             }
             if (($null -ne $ComponentsToExtract -and
                     ($ComponentsToExtract -contains $resourceName -or $ComponentsToExtract -contains ("chck" + $resourceName))) -or
-                $AllComponents -or ($null -ne $Workloads -and $Workloads -contains $currentWorkload))
+                $AllComponents -or ($null -ne $Workloads -and $Workloads -contains $currentWorkload) -or ![System.String]::IsNullOrEmpty($Mode))
             {
                 Import-Module $ResourceModule.FullName | Out-Null
-                Write-Information "Extracting [$resourceName]..."
-                $MaxProcessesExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("MaxProcesses")
 
-                if ($MaxProcessesExists)
+                if ($ComponentsToSkip -notcontains $resourceName)
                 {
-                    $exportString = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount -MaxProcesses $MaxProcesses
-                }
-                else
-                {
-                    $exportString = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+                    Write-Information "Extracting [$resourceName]..."
+                    $MaxProcessesExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("MaxProcesses")
+                    if ($MaxProcessesExists)
+                    {
+                        $exportString = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount -MaxProcesses $MaxProcesses
+                    }
+                    else
+                    {
+                        $exportString = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+                    }
                 }
                 $DSCContent += $exportString
             }
