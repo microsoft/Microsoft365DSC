@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* SPOPropertyBag
+  * Fixed an issue where false positive drifts were being detected;
 * SPOSiteGroup
   * Fixed an issue where now, groups with Null owners are not extracted;
 * TeamsCallingPolicy
