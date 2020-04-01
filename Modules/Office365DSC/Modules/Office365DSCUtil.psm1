@@ -1313,11 +1313,11 @@ function Assert-O365DSCTemplate
         $configContent += "`$compileResults = " + $ConfigurationName + " -ConfigurationData `$ConfigData`r`n"
         $configContent += "`$testResults = Test-DSCConfiguration -ReferenceConfiguration `$compileResults.FullName`r`n"
 
-        $configContent += "if (`$testResults.IsInDesiredState)`r`n"
+        $configContent += "if (`$testResults.InDesiredState)`r`n"
         $configContent += "{`r`n"
         $configContent += "    Write-Host 'The template was validated against the environment. The tenant is in the Desired State.' -ForeGroundColor Green"
         $configContent += "}`r`n"
-        $configContent += "else`r`n"
+        $configContent += "elseif (-not `$testResults.InDesiredState)`r`n"
         $configContent += "{`r`n"
         $configContent += "    Write-Host 'The environment does not match the template. The following component(s) are not in the Desired State:' -Foreground Red`r`n"
         $configContent += "    foreach (`$component in `$testResults.ResourcesNotInDesiredState){Write-Host `"    -> `$(`$component.ResourceId)`" -Foreground Red}`r`n"
