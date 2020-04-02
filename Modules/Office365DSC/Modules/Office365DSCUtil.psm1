@@ -1277,9 +1277,13 @@ function Assert-O365DSCTemplate
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter()]
         [System.String]
-        $TemplatePath
+        $TemplatePath,
+
+        [Parameter()]
+        [System.String]
+        $TemplateName
     )
     $InformationPreference = 'SilentlyContinue'
     $WarningPreference = 'SilentlyContinue'
@@ -1290,6 +1294,24 @@ function Assert-O365DSCTemplate
     Add-O365DSCTelemetryEvent -Data $data
     #endregion
 
+    if (([System.String]::IsNullOrEmpty($TemplatePath) -and [System.String]::IsNullOrEmpty($TemplateName)) -or
+    (-not [System.String]::IsNullOrEmpty($TemplatePath) -and -not [System.String]::IsNullOrEmpty($TemplateName)))
+    {
+        throw "You need to one of either TemplatePath or TemplateName"
+    }
+    if (-not [System.String]::IsNullOrEmpty($TemplateName))
+    {
+        try
+        {
+            $TemplatePath = Join-Path -Path $env:Temp -ChildPath "$TemplateName.o365"
+            $url = "https://office365dsc.blob.core.windows.net/office365dsc/Templates/$TemplateName.o365"
+            Invoke-WebRequest -Uri $url -OutFile $TemplatePath
+        }
+        catch
+        {
+            throw $_
+        }
+    }
     if ((Test-Path -Path $TemplatePath) -and ($TemplatePath -like '*.o365' -or $TemplatePath -like '*.ps1'))
     {
         $tokens = $null
