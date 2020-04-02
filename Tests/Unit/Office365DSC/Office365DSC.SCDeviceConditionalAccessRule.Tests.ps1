@@ -53,7 +53,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Name                  = "TestRule"
                 Policy                = "TestPolicy"
-                Comment               = "This is a test DCA Rule"
                 Disabled              = $false
                 AllowConvenienceLogon = $true
                 AllowJailbroken       = $true
@@ -89,7 +88,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Name                  = "TestRule"
                 Policy                = "TestPolicy"
-                Comment               = "This is a test Rule"
                 Disabled              = $false
                 AllowConvenienceLogon = $true
                 AllowJailbroken       = $true
@@ -104,7 +102,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     Name                  = "TestRule"
                     Policy                = "12345-12345-12345-12345-12345"
-                    Comment               = "Different comment"
                     Disabled              = $true
                     AllowConvenienceLogon = $true
                     AllowJailbroken       = $true
@@ -134,7 +131,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Name                  = "TestRule"
                 Policy                = "TestPolicy"
-                Comment               = "This is a test Rule"
                 Disabled              = $false
                 AllowConvenienceLogon = $true
                 AllowJailbroken       = $true
@@ -150,7 +146,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name                  = "TestRule"
                     Policy                = "12345-12345-12345-12345-12345"
                     # Returns a drift in the comments property because it needs to not be in desired state
-                    Comment               = 'This is a DRIFT'
                     Disabled              = $true
                     AllowConvenienceLogon = $false
                     AllowJailbroken       = $false
@@ -184,7 +179,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Name                  = "TestRule"
                 Policy                = "TestPolicy"
-                Comment               = "This is a test DCA Rule"
                 Disabled              = $false
                 AllowConvenienceLogon = $true
                 AllowJailbroken       = $true
@@ -199,7 +193,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     Name              = "TestRule"
                     Policy            = "12345-12345-12345-12345-12345"
-                    Comment           = "Different comment"
                     Disabled          = $true
                 }
             }
@@ -237,14 +230,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testRule1 = @{
                 Name              = "TestRule1"
                 Policy            = "12345-12345-12345-12345-12345"
-                Comment           = "Different comment"
                 Disabled          = $true
             }
 
             $testRule2 = @{
                 Name              = "TestRule2"
                 Policy            = "12345-12345-12345-12345-12345"
-                Comment           = "Different comment"
                 Disabled          = $true
             }
 
