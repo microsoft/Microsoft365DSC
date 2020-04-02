@@ -40,6 +40,14 @@ Configuration Master
 
     Node Localhost
     {
+        AADGroupsNamingPolicy GroupsNamingPolicy
+        {
+            CustomBlockedWordsList        = @("CEO", "President");
+            GlobalAdminAccount            = $GlobalAdmin;
+            IsSingleInstance              = "Yes";
+            PrefixSuffixNamingRequirement = "[Title]Test[Company][GroupName][Office]Redmond";
+        }
+
         EXOAcceptedDomain O365DSCDomain
         {
             Identity           = $Domain
