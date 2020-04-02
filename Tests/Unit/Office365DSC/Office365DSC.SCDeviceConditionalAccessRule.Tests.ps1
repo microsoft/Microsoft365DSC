@@ -102,10 +102,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-DeviceConditionalAccessRule -MockWith {
                 return @{
-                    Name              = "TestRule"
-                    Policy            = "12345-12345-12345-12345-12345"
-                    Comment           = "Different comment"
-                    Disabled          = $true
+                    Name                  = "TestRule"
+                    Policy                = "12345-12345-12345-12345-12345"
+                    Comment               = "Different comment"
+                    Disabled              = $true
+                    AllowConvenienceLogon = $true
+                    AllowJailbroken       = $true
+                    AllowVoiceAssistant   = $true
+                    BluetoothEnabled      = $true
+                    PasswordMinimumLength = 6
                 }
             }
 
@@ -127,21 +132,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "The Device Conditional Access Rule already exists and it is NOT in the Desired State" -Fixture {
             $testParams = @{
-                Name               = "TestRule"
-                Policy             = "TestPolicy"
-                Comment            = "This is a test Rule"
-                Disabled           = $false
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
+                Name                  = "TestRule"
+                Policy                = "TestPolicy"
+                Comment               = "This is a test Rule"
+                Disabled              = $false
+                AllowConvenienceLogon = $true
+                AllowJailbroken       = $true
+                AllowVoiceAssistant   = $true
+                BluetoothEnabled      = $true
+                PasswordMinimumLength = 6
+                Ensure                = 'Present'
+                GlobalAdminAccount    = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-DeviceConditionalAccessRule -MockWith {
                 return @{
-                    Name              = "TestRule"
-                    Policy            = "12345-12345-12345-12345-12345"
+                    Name                  = "TestRule"
+                    Policy                = "12345-12345-12345-12345-12345"
                     # Returns a drift in the comments property because it needs to not be in desired state
-                    Comment = 'This is a DRIFT'
-                    Disabled          = $true
+                    Comment               = 'This is a DRIFT'
+                    Disabled              = $true
+                    AllowConvenienceLogon = $false
+                    AllowJailbroken       = $false
+                    AllowVoiceAssistant   = $false
+                    BluetoothEnabled      = $false
+                    PasswordMinimumLength = 9
                 }
             }
 
@@ -167,12 +182,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "The Device Conditional Access Rule Exists but it Should NOT" -Fixture {
             $testParams = @{
-                Name               = "TestRule"
-                Policy             = "TestPolicy"
-                Comment            = "This is a test DCA Rule"
-                Disabled           = $false
-                Ensure             = 'Absent'
-                GlobalAdminAccount = $GlobalAdminAccount
+                Name                  = "TestRule"
+                Policy                = "TestPolicy"
+                Comment               = "This is a test DCA Rule"
+                Disabled              = $false
+                AllowConvenienceLogon = $true
+                AllowJailbroken       = $true
+                AllowVoiceAssistant   = $true
+                BluetoothEnabled      = $true
+                PasswordMinimumLength = 6
+                Ensure                = 'Absent'
+                GlobalAdminAccount    = $GlobalAdminAccount
             }
 
             Mock -CommandName Get-DeviceConditionalAccessRule -MockWith {
