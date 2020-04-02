@@ -318,6 +318,17 @@ function Export-TargetResource
     $sites = Get-PnPTenantSite
 
     $i = 1
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the O365DSC part of O365DSC.onmicrosoft.com)
+    if ($GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
+    }
     $content = ""
     foreach ($site in $sites)
     {
@@ -367,7 +378,20 @@ function Export-TargetResource
                     $content += "        SPOSiteGroup " + (New-GUID).ToString() + "`r`n"
                     $content += "        {`r`n"
                     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                    $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                    if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
+                    {
+                        $partialContent = $partialContent -ireplace [regex]::Escape($principal + ".sharepoint.com"), "`$(`$OrganizationName.Split('.')[0]).sharepoint.com"
+                    }
+                    if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+                    {
+                        $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+                    }
+                    if ($partialContent.ToLower().Contains("@" + $principal.ToLower()))
+                    {
+                        $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$OrganizationName.Split('.')[0])"
+                    }
+                    $content += $partialContent
                     $content += "        }`r`n"
                 }
             }
