@@ -32,8 +32,9 @@ function Get-O365StubFiles
 
     $Modules = @(
         @{
-            Platform   = 'AzureAD'
-            ModuleName = 'AzureAD'
+            Platform     = 'AzureAD'
+            ModuleName   = 'AzureADPreview'
+            RandomCmdlet = 'Get-AzureADDirectorySetting'
         },
         @{
             Platform     = 'ExchangeOnline'
@@ -88,6 +89,7 @@ function Get-O365StubFiles
         $i = 1
         foreach ($cmdlet in $cmdlets)
         {
+            Write-Host $cmdlet
             Write-Progress -Activity "Generating Stubs" -Status $cmdlet.Name -PercentComplete (($i/$cmdlets.Length)*100)
             $signature = $null
             $metadata = New-Object -TypeName System.Management.Automation.CommandMetaData -ArgumentList $cmdlet

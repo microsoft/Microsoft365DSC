@@ -1,0 +1,8 @@
+[ClassVersion("1.0.0.0"), FriendlyName("AADGroupsNamingPolicy")]
+class MSFT_AADGroupsNamingPolicy : OMI_BaseResource
+{
+    [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
+    [Write, Description("Prefixes and suffixes to add to the group name.")] String PrefixSuffixNamingRequirement;
+    [Write, Description("Comma delimited list of words that should be blocked from being included in groups' names.")] String CustomBlockedWordsList[];
+    [Required, Description("Credentials of the Azure Active Directory Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};

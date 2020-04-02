@@ -39,6 +39,7 @@ function Show-O365GUI
         $secondColumnLeft = 340
         $thirdColumnLeft = 680
         $fourthColumnLeft = 1020
+        $fifthColumnLeft = 1360
         $topBannerHeight = 70
         #endregion
 
@@ -244,13 +245,47 @@ function Show-O365GUI
         $pnlMain.Controls.Add($chckAllOD)
         #endregion
 
+        #region OneDrive
+        $imgAAD = New-Object System.Windows.Forms.PictureBox
+        $imagePath = $PSScriptRoot + "\..\Dependencies\Images\AzureAD.jpg"
+        $imgAAD.ImageLocation = $imagePath
+        $imgAAD.Left = $fourthColumnLeft
+        $imgAAD.Top = $pnlOD.Height + 180
+        $imgAAD.AutoSize = $true
+        $pnlMain.Controls.Add($imgAAD)
+
+        $pnlAAD = New-Object System.Windows.Forms.Panel
+        $pnlAAD.Top = $pnlOD.Height + 275
+        $pnlAAD.Left = $fourthColumnLeft
+        $pnlAAD.Height = 350
+        $pnlAAD.Width = 300
+        $pnlAAD.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+        $pnlAAD.AutoScroll = $true
+        $pnlAADNextControlPosition = -20
+
+        $chckAllAAD = New-Object System.Windows.Forms.CheckBox
+        $chckAllAAD.Left = $fourthColumnLeft + 280
+        $chckAllAAD.Top = $imgAAD.Top + 35
+        $chckAllAAD.Enabled = $true
+        $chckAllAAD.Checked = $true
+        $chckAllAAD.AutoSize = $true
+        $chckAllAAD.Add_CheckedChanged( { SectionChanged -Control $chckAllAAD -Panel $pnlAAD })
+        $pnlMain.Controls.Add($chckAllAAD)
+        #endregion
+
         $allResources = Get-ChildItem -Path ($PSScriptRoot + "\..\DSCResources\")
 
         foreach ($resource in $allResources)
         {
             $resourceName = $resource.Name.Replace("MSFT_", "")
             $currentControlTop = 0
-            if ($resourceName.StartsWith("EXO"))
+            if ($resourceName.StartsWith("AAD"))
+            {
+                $panel = $pnlAAD
+                $pnlAADNextControlPosition += 20
+                $currentControlTop = $pnlAADNextControlPosition
+            }
+            elseif ($resourceName.StartsWith("EXO"))
             {
                 $panel = $pnlExo
                 $pnlEXONextControlPosition += 20
@@ -318,7 +353,6 @@ function Show-O365GUI
             $ModeIdentifier.Top = $currentControlTop + 1
             $panel.Controls.Add($ModeIdentifier)
             $panel.Controls.Add($chckBox)
-
         }
 
         $pnlMain.Controls.Add($pnlO365)
@@ -328,6 +362,7 @@ function Show-O365GUI
         $pnlMain.Controls.Add($pnlSPO)
         $pnlMain.Controls.Add($pnlSC)
         $pnlMain.Controls.Add($pnlTeams)
+        $pnlMain.Controls.Add($pnlAAD)
 
         #region Top Menu
         $panelMenu = New-Object System.Windows.Forms.Panel

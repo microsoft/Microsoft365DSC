@@ -8,6 +8,26 @@ function Close-SessionsAndReturnError
     )
 
 }
+function Get-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
+function Set-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Id,
+
+        [Parameter(Mandatory=$true)]
+        [PSObject]
+        $DirectorySetting
+    )
+}
 function Get-PSSession
 {
     [CmdletBinding()]
