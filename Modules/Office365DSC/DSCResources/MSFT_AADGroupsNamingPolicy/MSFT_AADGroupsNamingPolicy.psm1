@@ -17,6 +17,11 @@ function Get-TargetResource
         [System.String[]]
         $CustomBlockedWordsList,
 
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
@@ -38,7 +43,9 @@ function Get-TargetResource
     if ($null -eq $Policy)
     {
         New-Office365DSCLogEntry -Error $_ -Message "Couldn't get AzureAD Group Naming Policy" -Source $MyInvocation.MyCommand.ModuleName
-        throw $_
+        $currentValues = $PSBoundParameters
+        $currentValues.Ensure = "Absent"
+        return $currentValues
     }
     else
     {
@@ -47,6 +54,7 @@ function Get-TargetResource
             IsSingleInstance              = 'Yes'
             PrefixSuffixNamingRequirement = $Policy["PrefixSuffixNamingRequirement"]
             CustomBlockedWordsList        = $Policy["CustomBlockedWordsList"].Split(',')
+            Ensure                        = "Present"
             GlobalAdminAccount            = $GlobalAdminAccount
         }
 
@@ -73,6 +81,11 @@ function Set-TargetResource
         [System.String[]]
         $CustomBlockedWordsList,
 
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
@@ -89,10 +102,24 @@ function Set-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform AzureAD
 
-    $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq "Group.Unified"}
-    if ($null -eq $Policy)
+    $currentPolicy = Get-TargetResource @PSBoundParameters
+
+    # Policy should exist but it doesn't
+    if ($Ensure -eq "Present" -and $currentPolicy.Ensure -eq "Absent")
     {
-        New-Office365DSCLogEntry -Error $_ -Message "Couldn't get AzureAD Group Naming Policy" -Source $MyInvocation.MyCommand.ModuleName
+        $values = @()
+        $setting = [Microsoft.Open.MSGraph.Model.SettingValue]::new("EnableMIPLabels", $false)
+        $values += $setting
+        $setting = [Microsoft.Open.MSGraph.Model.SettingValue]::new("EnableMSStandardBlockedWords", $false)
+        $values += $setting
+        $setting = [Microsoft.Open.MSGraph.Model.SettingValue]::new("ClassificationDescriptions", $false)
+        $values += $setting
+        $setting = [Microsoft.Open.MSGraph.Model.SettingValue]::new("CustomBlockedWordsList", $CustomBlockedWordsList)
+        $values += $setting
+        $setting = [Microsoft.Open.MSGraph.Model.SettingValue]::new("PrefixSuffixNamingRequirement", $PrefixSuffixNamingRequirement)
+        $values += $setting
+        $ds = [Microsoft.Open.MSGraph.Model.DirectorySetting]::new("62375ab9-6b52-47ed-826b-58e47e0e304b", $values)
+
     }
     else
     {
@@ -125,6 +152,11 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $CustomBlockedWordsList,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
