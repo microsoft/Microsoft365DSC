@@ -15,6 +15,36 @@ function Get-AzureADDirectorySetting
     )
 }
 
+function Get-AzureADDirectorySettingTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id
+    )
+}
+
+function Remove-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Id
+    )
+}
+
+function New-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [PSCustomObject]
+        $DirectorySetting
+    )
+}
+
 function Set-AzureADDirectorySetting
 {
     [CmdletBinding()]

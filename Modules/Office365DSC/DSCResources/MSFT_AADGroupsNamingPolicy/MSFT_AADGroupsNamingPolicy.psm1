@@ -105,23 +105,17 @@ function Set-TargetResource
     $currentPolicy = Get-TargetResource @PSBoundParameters
 
     # Policy should exist but it doesn't
+    $needToUpdate = $false
     if ($Ensure -eq "Present" -and $currentPolicy.Ensure -eq "Absent")
     {
-        $values = @()
-        $setting = [Microsoft.Open.MSGraph.Model.SettingValue]::new("EnableMIPLabels", $false)
-        $values += $setting
-        $setting = [Microsoft.Open.MSGraph.Model.SettingValue]::new("EnableMSStandardBlockedWords", $false)
-        $values += $setting
-        $setting = [Microsoft.Open.MSGraph.Model.SettingValue]::new("ClassificationDescriptions", $false)
-        $values += $setting
-        $setting = [Microsoft.Open.MSGraph.Model.SettingValue]::new("CustomBlockedWordsList", $CustomBlockedWordsList)
-        $values += $setting
-        $setting = [Microsoft.Open.MSGraph.Model.SettingValue]::new("PrefixSuffixNamingRequirement", $PrefixSuffixNamingRequirement)
-        $values += $setting
-        $ds = [Microsoft.Open.MSGraph.Model.DirectorySetting]::new("62375ab9-6b52-47ed-826b-58e47e0e304b", $values)
-
+        $ds = (Get-AzureADDirectorySettingTemplate -id 62375ab9-6b52-47ed-826b-58e47e0e304b).CreateDirectorySetting()
+        New-AzureADDirectorySetting -DirectorySetting $ds
+        $needToUpdate = $true
     }
-    else
+
+    $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq "Group.Unified"}
+
+    if (($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present') -or $needToUpdate)
     {
         $Policy["PrefixSuffixNamingRequirement"] = $PrefixSuffixNamingRequirement
 
@@ -131,6 +125,11 @@ function Set-TargetResource
         $Policy["CustomBlockedWordsList"] = $blockedWordsValue
 
         Set-AzureADDirectorySetting -Id $Policy.id -DirectorySetting $Policy
+    }
+    elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
+    {    Write-Host "Flag3"
+        $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq "Group.Unified"}
+        Remove-AzureADDirectorySetting -Id $policy.Id
     }
 }
 

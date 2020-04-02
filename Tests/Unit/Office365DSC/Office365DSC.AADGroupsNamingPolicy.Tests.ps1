@@ -42,6 +42,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
+        Mock -CommandName Remove-AzureADDirectorySetting -MockWith {
+
+        }
+
+        Mock -CommandName New-AzureADDirectorySetting -MockWith {
+
+        }
+
+        Mock -CommandName Get-AzureADDirectorySettingTemplate -MockWith {
+            $object = [PSCustomObject]::new()
+            $object | Add-Member -MemberType ScriptMethod -Name "CreateDirectorySetting" -Value {return [PSCustomObject]::new()} -PassThru
+            return $object
+        }
+
+
         Add-Type -PassThru -TypeDefinition @"
             namespace Contoso.Model {
                 public class SettingValue {
@@ -77,11 +92,79 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 "@
 
         # Test contexts
-        Context -Name "Values are already in the desired state" -Fixture {
+        Context -Name "The Policy should exist but it DOES NOT" -Fixture {
+            $Script:calledOnceAlready = $false
             $testParams = @{
                 IsSingleInstance              = "Yes";
                 PrefixSuffixNamingRequirement = "[Title]Bob[Company][GroupName][Office]Nik"
                 CustomBlockedWordsList        = @("CEO", "Test")
+                Ensure                        = "Present"
+                GlobalAdminAccount            = $GlobalAdminAccount;
+            }
+
+            Mock -CommandName Get-AzureADDirectorySetting -MockWith {
+                if (-not $Script:calledOnceAlready)
+                {
+                    $Script:calledOnceAlready = $true
+                    return $null
+                }
+                else
+                {
+                    $setting = New-Object 'Contoso.Model.DirectorySetting'
+                    return $setting
+                }
+            }
+
+            It "Should return Values from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should be 'Absent'
+                Assert-MockCalled -CommandName "Get-AzureADDirectorySetting" -Exactly 1
+            }
+            $Script:calledOnceAlready = $false
+            It 'Should return true from the Test method' {
+                Test-TargetResource @testParams | Should Be $false
+            }
+            $Script:calledOnceAlready = $false
+            It 'Should Create the Policy from the Set method' {
+                Set-TargetResource @testParams
+                Assert-MockCalled -CommandName "New-AzureADDirectorySetting" -Exactly 1
+                Assert-MockCalled -CommandName "Set-AzureADDirectorySetting" -Exactly 1
+            }
+        }
+
+        Context -Name "The Policy exists but it SHOULD NOT" -Fixture {
+            $testParams = @{
+                IsSingleInstance              = "Yes";
+                PrefixSuffixNamingRequirement = "[Title]Bob[Company][GroupName][Office]Nik"
+                CustomBlockedWordsList        = @("CEO", "Test")
+                Ensure                        = "Absent"
+                GlobalAdminAccount            = $GlobalAdminAccount;
+            }
+
+            Mock -CommandName Get-AzureADDirectorySetting -MockWith {
+                $setting = New-Object 'Contoso.Model.DirectorySetting'
+                return $setting
+            }
+
+            It "Should return Values from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should be 'Present'
+                Assert-MockCalled -CommandName "Get-AzureADDirectorySetting" -Exactly 1
+            }
+
+            It 'Should return true from the Test method' {
+                Test-TargetResource @testParams | Should Be $false
+            }
+
+            It 'Should Remove the Policy from the Set method' {
+                Set-TargetResource @testParams
+                Assert-MockCalled -CommandName "Remove-AzureADDirectorySetting" -Exactly 1
+            }
+        }
+        Context -Name "The Policy Exists and Values are already in the desired state" -Fixture {
+            $testParams = @{
+                IsSingleInstance              = "Yes";
+                PrefixSuffixNamingRequirement = "[Title]Bob[Company][GroupName][Office]Nik"
+                CustomBlockedWordsList        = @("CEO", "Test")
+                Ensure                        = "Present"
                 GlobalAdminAccount            = $GlobalAdminAccount;
             }
 
@@ -105,6 +188,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 IsSingleInstance              = "Yes";
                 PrefixSuffixNamingRequirement = "[GroupName]Drift" #Drift
                 CustomBlockedWordsList        = @("CEO", "Test")
+                Ensure                        = "Present"
                 GlobalAdminAccount            = $GlobalAdminAccount;
             }
 
