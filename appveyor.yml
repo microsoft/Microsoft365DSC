@@ -11,7 +11,7 @@ install:
         Install-Module ReverseDSC -RequiredVersion 2.0.0.2 -Force
         Install-Module AzureADPreview -RequiredVersion 2.0.2.89 -Force
         Install-Module MicrosoftTeams -RequiredVersion 1.0.5 -Force
-        Install-Module MSCloudLoginAssistant -RequiredVersion 1.0.4 -Force
+        Install-Module MSCloudLoginAssistant -RequiredVersion 1.0.5 -Force
         Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.19.2003.0 -Force
         Install-Module Microsoft.PowerApps.Administration.PowerShell -RequiredVersion 2.0.56 -Force
 
