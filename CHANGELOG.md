@@ -4,8 +4,11 @@
 
 * SPOPropertyBag
   * Fixed an issue where false positive drifts were being detected;
+* SPOSiteAuditSettings
+  * Generalized the URL not to capture hardcoded dmomains;
 * SPOSiteGroup
   * Fixed an issue where now, groups with Null owners are not extracted;
+  * Generalized the URL not to capture hardcoded dmomains;
 * TeamsCallingPolicy
   * Removed the AllowCalling parameter since it is no longer supported;
   * Fixed an issue with Policies without tags in their name (e.g. Global);

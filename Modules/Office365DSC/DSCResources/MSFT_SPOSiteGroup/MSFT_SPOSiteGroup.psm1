@@ -391,6 +391,10 @@ function Export-TargetResource
                     {
                         $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$OrganizationName.Split('.')[0])"
                     }
+                    if ($partialContent.ToLower().Contains($principal.ToLower() + "-my.sharepoint.com"))
+                    {
+                        $partialContent = $partialContent -ireplace [regex]::Escape($principal + "-my.sharepoint.com"), "`$(`$OrganizationName.Split('.')[0])-my.sharepoint.com"
+                    }
                     $content += $partialContent
                     $content += "        }`r`n"
                 }
