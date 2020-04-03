@@ -127,7 +127,7 @@ function Set-TargetResource
         Set-AzureADDirectorySetting -Id $Policy.id -DirectorySetting $Policy
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
-    {    Write-Host "Flag3"
+    {
         $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq "Group.Unified"}
         Remove-AzureADDirectorySetting -Id $policy.Id
     }
