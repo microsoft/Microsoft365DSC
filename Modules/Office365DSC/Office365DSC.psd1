@@ -73,11 +73,11 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.3"
+            RequiredVersion = "1.0.4"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
-            RequiredVersion = "2.0.42"
+            RequiredVersion = "2.0.56"
         }
     )
 
