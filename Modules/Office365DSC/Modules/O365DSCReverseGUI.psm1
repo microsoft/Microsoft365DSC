@@ -245,7 +245,7 @@ function Show-O365GUI
         $pnlMain.Controls.Add($chckAllOD)
         #endregion
 
-        #region OneDrive
+        #region AzureAD
         $imgAAD = New-Object System.Windows.Forms.PictureBox
         $imagePath = $PSScriptRoot + "\..\Dependencies\Images\AzureAD.jpg"
         $imgAAD.ImageLocation = $imagePath
