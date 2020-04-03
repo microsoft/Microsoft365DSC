@@ -720,12 +720,17 @@ function Export-TargetResource
     {
         $site = Get-PnPTenantSite -Url $site.Url
         Write-Information "    - [$i/$($sites.Length)] $($site.Url)"
+        $siteTitle = "Null"
+        if (-not [System.String]::IsNullOrEmpty($site.Title))
+        {
+            $siteTitle = $site.Title
+        }
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             Url                = $site.Url
             Template           = $site.Template
             Owner              = $GlobalAdminAccount.UserName # Passing in bogus value to bypass null owner error
-            Title              = $site.Title
+            Title              = $siteTitle
             TimeZoneId         = $site.TimeZoneID
         }
         try
