@@ -9,11 +9,11 @@ install:
         $moduleName = 'Office365DSC'
         $mainModuleFolder = "Modules\$moduleName"
         Install-Module ReverseDSC -RequiredVersion 2.0.0.2 -Force
-        Install-Module AzureAD -RequiredVersion 2.0.2.4 -Force
+        Install-Module AzureADPreview -RequiredVersion 2.0.2.89 -Force
         Install-Module MicrosoftTeams -RequiredVersion 1.0.5 -Force
-        Install-Module MSCloudLoginAssistant -RequiredVersion 1.0.3 -Force
+        Install-Module MSCloudLoginAssistant -RequiredVersion 1.0.6 -Force
         Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.19.2003.0 -Force
-        Install-Module Microsoft.PowerApps.Administration.PowerShell -RequiredVersion 2.0.42 -Force
+        Install-Module Microsoft.PowerApps.Administration.PowerShell -RequiredVersion 2.0.56 -Force
 
         $webClient = new-object System.Net.WebClient
         $url = "https://github.com/Microsoft/Office365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_19515-12000_x64_en-us.msi?raw=true"
@@ -25,7 +25,7 @@ install:
         Import-Module Microsoft.Online.SharePoint.PowerShell -Force
         Import-Module SharePointPnpPowerShellOnline -Force
         Import-Module MSCloudLoginAssistant -Force
-        Import-Module AzureAD -Force
+        Import-Module AzureADPreview -Force
         Import-Module MicrosoftTeams -Force
         [System.Environment]::SetEnvironmentVariable('O365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine)
         Import-Module -Name "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"

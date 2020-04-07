@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* AADGroupsNamingPolicy
+  * Initial Release;
 * SPOPropertyBag
   * Fixed an issue where false positive drifts were being detected;
 * SPOSiteAuditSettings
@@ -25,8 +27,9 @@
   * Major refactoring, having UI dynamic and items displayed by
     Resources' names;
 * Metadata
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.56;
   * Updated MicrosoftTeams dependency to 1.0.5;
-  * Updated MSCloudLoginAssistant dependency to 1.0.3;
+  * Updated MSCloudLoginAssistant dependency to 1.0.6;
   * Updated SharePointPnPPowerShellOnline dependency to 3.19.2003.0;
 
 ## 1.0.3.1723

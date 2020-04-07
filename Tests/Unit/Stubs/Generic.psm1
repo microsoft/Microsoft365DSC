@@ -8,6 +8,56 @@ function Close-SessionsAndReturnError
     )
 
 }
+function Get-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
+function Get-AzureADDirectorySettingTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id
+    )
+}
+
+function Remove-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Id
+    )
+}
+
+function New-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [PSCustomObject]
+        $DirectorySetting
+    )
+}
+
+function Set-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Id,
+
+        [Parameter(Mandatory=$true)]
+        [PSObject]
+        $DirectorySetting
+    )
+}
 function Get-PSSession
 {
     [CmdletBinding()]
