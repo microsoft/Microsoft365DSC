@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("AADGroupsNamingPolicy")]
-class MSFT_AADGroupsNamingPolicy : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("AADGroupsSettings")]
+class MSFT_AADGroupsSettings : OMI_BaseResource
 {
     [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write, Description("Prefixes and suffixes to add to the group name.")] String PrefixSuffixNamingRequirement;
