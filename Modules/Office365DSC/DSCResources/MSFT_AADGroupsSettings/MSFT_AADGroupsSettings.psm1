@@ -10,8 +10,8 @@ function Get-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [System.String]
-        $PrefixSuffixNamingRequirement,
+        [System.Boolean]
+        $EnableGroupCreation,
 
         [Parameter()]
         [System.String[]]
