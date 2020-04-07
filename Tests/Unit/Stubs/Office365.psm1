@@ -1,23 +1,15 @@
 ﻿#region AzureAD
-function Get-AzureADApplicationProxyConnectorGroupMembers
+function Add-AzureADAdministrativeUnitMember
 {
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
-    ${Id},
+    ${ObjectId},
 
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
-    ${All},
-
-    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[int]]
-    ${Top},
-
-    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
-    ${Filter})
+    ${RefObjectId})
 
 }
 function Add-AzureADApplicationOwner
@@ -27,6 +19,19 @@ param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${RefObjectId})
+
+}
+function Add-AzureADApplicationPolicy
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
 
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
@@ -98,6 +103,32 @@ param(
     ${RefObjectId})
 
 }
+function Add-AzureADMSApplicationOwner
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${RefObjectId})
+
+}
+function Add-AzureADMSFeatureRolloutPolicyDirectoryObject
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${RefObjectId})
+
+}
 function Add-AzureADMSLifecyclePolicyGroup
 {
     [CmdletBinding()]
@@ -105,6 +136,45 @@ function Add-AzureADMSLifecyclePolicyGroup
         [Parameter()]
         [System.String]
         ${Id}
+    )
+}
+function Add-AzureADMSPrivilegedResource
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${ProviderId}
+    )
+}
+function Add-AzureADMSServicePrincipalDelegatedPermissionClassification
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${ServicePrincipalId}
+    )
+}
+function Add-AzureADScopedRoleMembership
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${ObjectId},
+
+        [Parameter()]
+        [System.String]
+        ${AdministrativeUnitObjectId},
+
+        [Parameter()]
+        [System.String]
+        ${RoleObjectId},
+
+        [Parameter()]
+        [Microsoft.Open.AzureAD.Model.RoleMemberInfo]
+        ${RoleMemberInfo}
     )
 }
 function Add-AzureADServicePrincipalOwner
@@ -120,13 +190,43 @@ param(
     ${RefObjectId})
 
 }
+function Add-AzureADServicePrincipalPolicy
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${RefObjectId})
+
+}
+function Close-AzureADMSPrivilegedRoleAssignmentRequest
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ProviderId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
 function Confirm-AzureADDomain
 {
     [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
-    ${Name})
+    ${Name},
+
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Microsoft.Open.AzureAD.Model.CrossCloudVerificationCodeBody]
+    ${CrossCloudVerificationCode})
 
 }
 function Connect-AzureAD
@@ -194,6 +294,36 @@ function Enable-AzureADDirectoryRole
         [System.String]
         ${RoleTemplateId}
     )
+}
+function Get-AzureADAdministrativeUnit
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId},
+
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[bool]]
+    ${All},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
+
+}
+function Get-AzureADAdministrativeUnitMember
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId})
+
 }
 function Get-AzureADApplication
 {
@@ -285,6 +415,15 @@ param(
     ${ObjectId})
 
 }
+function Get-AzureADApplicationPolicy
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
 function Get-AzureADApplicationProxyApplication
 {
     [CmdletBinding()]
@@ -353,7 +492,7 @@ param(
     ${Filter})
 
 }
-function Get-AzureADApplicationProxyConnectorGroupMember
+function Get-AzureADApplicationProxyConnectorGroupMembers
 {
     [CmdletBinding()]
 param(
@@ -398,6 +537,70 @@ param(
     [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [System.Nullable[int]]
     ${Top})
+
+}
+function Get-AzureADApplicationSignInDetailedSummary
+{
+    [CmdletBinding()]
+param(
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
+
+}
+function Get-AzureADApplicationSignInSummary
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Days},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
+
+}
+function Get-AzureADAuditDirectoryLogs
+{
+    [CmdletBinding()]
+param(
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[bool]]
+    ${All},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
+
+}
+function Get-AzureADAuditSignInLogs
+{
+    [CmdletBinding()]
+param(
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[bool]]
+    ${All},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
 
 }
 function Get-AzureADContact
@@ -617,17 +820,39 @@ function Get-AzureADDirectoryRoleMember
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
-    ${ObjectId},
-
-    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${Filter})
+    ${ObjectId})
 
 }
 function Get-AzureADDirectoryRoleTemplate
 {
     [CmdletBinding()]
 param()
+
+}
+function Get-AzureADDirectorySetting
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[bool]]
+    ${All},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top})
+
+}
+function Get-AzureADDirectorySettingTemplate
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
 
 }
 function Get-AzureADDomain
@@ -674,6 +899,27 @@ function Get-AzureADExtensionProperty
         [System.Nullable`1[System.Boolean]]
         ${IsSyncedFromOnPremises}
     )
+}
+function Get-AzureADExternalDomainFederation
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ExternalDomainName},
+
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[bool]]
+    ${All},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
+
 }
 function Get-AzureADGroup
 {
@@ -751,6 +997,75 @@ param(
     ${Top})
 
 }
+function Get-AzureADMSApplication
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(ParameterSetName='GetVague', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${SearchString},
+
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId},
+
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[bool]]
+    ${All},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
+
+}
+function Get-AzureADMSApplicationExtensionProperty
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId})
+
+}
+function Get-AzureADMSApplicationOwner
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId},
+
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[bool]]
+    ${All},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top})
+
+}
+function Get-AzureADMSApplicationTemplate
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
+function Get-AzureADMSAuthorizationPolicy
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
 function Get-AzureADMSDeletedDirectoryObject
 {
     [CmdletBinding()]
@@ -785,7 +1100,216 @@ param(
     ${Filter})
 
 }
+function Get-AzureADMSFeatureRolloutPolicy
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(ParameterSetName='GetVague', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${SearchString},
+
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
+
+}
 function Get-AzureADMSGroup
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(ParameterSetName='GetVague', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${SearchString},
+
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[bool]]
+    ${All},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Parameter(ParameterSetName='GetById', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Select},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
+
+}
+function Get-AzureADMSGroupLifecyclePolicy
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
+function Get-AzureADMSIdentityProvider
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
+function Get-AzureADMSLifecyclePolicyGroup
+{
+    [CmdletBinding()]
+param(
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
+function Get-AzureADMSPasswordSingleSignOnCredential
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Microsoft.Open.MSGraph.Model.PasswordSSOObjectId]
+    ${PasswordSSOObjectId})
+
+}
+function Get-AzureADMSPermissionGrantPolicy
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
+function Get-AzureADMSPrivilegedResource
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ProviderId},
+
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
+
+}
+function Get-AzureADMSPrivilegedRoleAssignment
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ProviderId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ResourceId},
+
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
+
+}
+function Get-AzureADMSPrivilegedRoleAssignmentRequest
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ProviderId},
+
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
+
+}
+function Get-AzureADMSPrivilegedRoleDefinition
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ProviderId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ResourceId},
+
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
+
+}
+function Get-AzureADMSPrivilegedRoleSetting
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ProviderId},
+
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
+
+}
+function Get-AzureADMSRoleAssignment
 {
     [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
@@ -810,22 +1334,59 @@ param(
     ${Filter})
 
 }
-function Get-AzureADMSGroupLifecyclePolicy
+function Get-AzureADMSRoleDefinition
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(ParameterSetName='GetVague', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${SearchString},
+
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[bool]]
+    ${All},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
+
+}
+function Get-AzureADMSServicePrincipalDelegatedPermissionClassification
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ServicePrincipalId},
+
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
+
+}
+function Get-AzureADMSTrustFrameworkPolicy
 {
     [CmdletBinding(DefaultParameterSetName='GetQuery')]
 param(
     [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
-    ${Id})
+    ${Id},
 
-}
-function Get-AzureADMSLifecyclePolicyGroup
-{
-    [CmdletBinding()]
-param(
-    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Parameter(ParameterSetName='GetById', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
-    ${Id})
+    ${OutputFilePath})
 
 }
 function Get-AzureADOAuth2PermissionGrant
@@ -853,6 +1414,100 @@ function Get-AzureADObjectByObjectId
         [System.Collections.Generic.List`1[System.String]]
         ${Types}
     )
+}
+function Get-AzureADObjectSetting
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${TargetType},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${TargetObjectId},
+
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[bool]]
+    ${All},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top})
+
+}
+function Get-AzureADPolicy
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[bool]]
+    ${All},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top})
+
+}
+function Get-AzureADPolicyAppliedObject
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
+function Get-AzureADPrivilegedRole
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Filter})
+
+}
+function Get-AzureADPrivilegedRoleAssignment
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[bool]]
+    ${All},
+
+    [Parameter(ParameterSetName='GetQuery', ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [System.Nullable[int]]
+    ${Top})
+
+}
+function Get-AzureADScopedRoleMembership
+{
+    [CmdletBinding(DefaultParameterSetName='GetQuery')]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId},
+
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ScopedRoleMembershipId})
+
 }
 function Get-AzureADServiceAppRoleAssignedTo
 {
@@ -1014,6 +1669,15 @@ param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
+
+}
+function Get-AzureADServicePrincipalPolicy
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
 
 }
 function Get-AzureADSubscribedSku
@@ -1259,6 +1923,28 @@ param(
     [bool]
     ${View})
 
+}
+function Get-CrossCloudVerificationCode
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Name})
+
+}
+function New-AzureADAdministrativeUnit
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${Description},
+
+        [Parameter()]
+        [System.String]
+        ${DisplayName}
+    )
 }
 function New-AzureADApplication
 {
@@ -1506,10 +2192,6 @@ param(
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [System.Nullable[bool]]
-    ${IsHttpOnlyCookieEnabled},
-
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
     ${IsTranslateLinksInBodyEnabled},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -1595,6 +2277,15 @@ function New-AzureADDevice
         ${SystemLabels}
     )
 }
+function New-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Microsoft.Open.MSGraph.Model.DirectorySetting]
+    ${DirectorySetting})
+
+}
 function New-AzureADDomain
 {
     [CmdletBinding()]
@@ -1604,12 +2295,29 @@ function New-AzureADDomain
         ${IsDefault},
 
         [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsDefaultForCloudRedirections},
+
+        [Parameter()]
         [System.String]
         ${Name},
 
         [Parameter()]
         [System.Collections.Generic.List`1[System.String]]
         ${SupportedServices}
+    )
+}
+function New-AzureADExternalDomainFederation
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${ExternalDomainName},
+
+        [Parameter()]
+        [Microsoft.Open.AzureAD.Model.DomainFederationSettings]
+        ${FederationSettings}
     )
 }
 function New-AzureADGroup
@@ -1658,37 +2366,186 @@ function New-AzureADGroupAppRoleAssignment
         ${ResourceId}
     )
 }
-function New-AzureADMSGroup
+function New-AzureADMSApplication
 {
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.AddIn]]
+        ${AddIns},
+
+        [Parameter()]
+        [Microsoft.Open.MSGraph.Model.ApiApplication]
+        ${Api},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.AppRole]]
+        ${AppRoles},
+
+        [Parameter()]
         [System.String]
-        ${Description},
+        ${GroupMembershipClaims},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsDeviceOnlyAuthSupported},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsFallbackPublicClient},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${IdentifierUris},
 
         [Parameter()]
         [System.String]
         ${DisplayName},
 
         [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${MailEnabled},
+        [Microsoft.Open.MSGraph.Model.InformationalUrl]
+        ${InformationalUrl},
 
         [Parameter()]
-        [System.String]
-        ${MailNickname},
+        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.KeyCredential]]
+        ${KeyCredentials},
 
         [Parameter()]
-        [System.Nullable`1[System.Boolean]]
-        ${SecurityEnabled},
+        [Microsoft.Open.MSGraph.Model.OptionalClaims]
+        ${OptionalClaims},
 
         [Parameter()]
         [System.Collections.Generic.List`1[System.String]]
-        ${GroupTypes},
+        ${OrgRestrictions},
+
+        [Parameter()]
+        [Microsoft.Open.MSGraph.Model.ParentalControlSettings]
+        ${ParentalControlSettings},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.PasswordCredential]]
+        ${PasswordCredentials},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.PreAuthorizedApplication]]
+        ${PreAuthorizedApplications},
+
+        [Parameter()]
+        [Microsoft.Open.MSGraph.Model.PublicClientApplication]
+        ${PublicClient},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.RequiredResourceAccess]]
+        ${RequiredResourceAccess},
 
         [Parameter()]
         [System.String]
-        ${Visibility}
+        ${SignInAudience},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${Tags},
+
+        [Parameter()]
+        [System.String]
+        ${TokenEncryptionKeyId},
+
+        [Parameter()]
+        [Microsoft.Open.MSGraph.Model.WebApplication]
+        ${Web}
+    )
+}
+function New-AzureADMSApplicationExtensionProperty
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${ObjectId},
+
+        [Parameter()]
+        [System.String]
+        ${Name},
+
+        [Parameter()]
+        [System.String]
+        ${DataType},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${TargetObjects}
+    )
+}
+function New-AzureADMSApplicationKey
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${ObjectId},
+
+        [Parameter()]
+        [Microsoft.Open.MSGraph.Model.KeyCredential]
+        ${KeyCredential},
+
+        [Parameter()]
+        [Microsoft.Open.MSGraph.Model.PasswordCredential]
+        ${PasswordCredential},
+
+        [Parameter()]
+        [System.String]
+        ${Proof}
+    )
+}
+function New-AzureADMSApplicationPassword
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${ObjectId},
+
+        [Parameter()]
+        [Microsoft.Open.MSGraph.Model.PasswordCredential]
+        ${PasswordCredential}
+    )
+}
+function New-AzureADMSFeatureRolloutPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Nullable`1[Microsoft.Open.MSGraph.Model.MsFeatureRolloutPolicy+FeatureEnum]]
+        ${Feature},
+
+        [Parameter()]
+        [System.String]
+        ${DisplayName},
+
+        [Parameter()]
+        [System.String]
+        ${Description},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsEnabled},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsAppliedToOrganization},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.MsDirectoryObject]]
+        ${AppliesTo}
+    )
+}
+function New-AzureADMSGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${LabelId}
     )
 }
 function New-AzureADMSGroupLifecyclePolicy
@@ -1706,6 +2563,27 @@ function New-AzureADMSGroupLifecyclePolicy
         [Parameter()]
         [System.String]
         ${AlternateNotificationEmails}
+    )
+}
+function New-AzureADMSIdentityProvider
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${Type},
+
+        [Parameter()]
+        [System.String]
+        ${Name},
+
+        [Parameter()]
+        [System.String]
+        ${ClientId},
+
+        [Parameter()]
+        [System.String]
+        ${ClientSecret}
     )
 }
 function New-AzureADMSInvitation
@@ -1729,12 +2607,202 @@ function New-AzureADMSInvitation
         ${InviteRedirectUrl},
 
         [Parameter()]
+        [Microsoft.Open.MSGraph.Model.User]
+        ${InvitedUser},
+
+        [Parameter()]
         [Microsoft.Open.MSGraph.Model.InvitedUserMessageInfo]
         ${InvitedUserMessageInfo},
 
         [Parameter()]
         [System.String]
-        ${InvitedUserType}
+        ${InvitedUserType},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${ResetRedemption}
+    )
+}
+function New-AzureADMSPasswordSingleSignOnCredential
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Microsoft.Open.MSGraph.Model.PasswordSSOCredentials]
+    ${PasswordSSOCredential})
+
+}
+function New-AzureADMSPermissionGrantPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${Description},
+
+        [Parameter()]
+        [System.String]
+        ${DisplayName},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.PermissionGrantConditionSet]]
+        ${Excludes},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.PermissionGrantConditionSet]]
+        ${Includes},
+
+        [Parameter()]
+        [System.String]
+        ${Id}
+    )
+}
+function New-AzureADMSRoleAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${RoleDefinitionId},
+
+        [Parameter()]
+        [System.String]
+        ${PrincipalId},
+
+        [Parameter()]
+        [System.String]
+        ${ResourceScope}
+    )
+}
+function New-AzureADMSRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${Description},
+
+        [Parameter()]
+        [System.String]
+        ${DisplayName},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${ResourceScopes},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsEnabled},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.RolePermission]]
+        ${RolePermissions},
+
+        [Parameter()]
+        [System.String]
+        ${TemplateId},
+
+        [Parameter()]
+        [System.String]
+        ${Version}
+    )
+}
+function New-AzureADMSTrustFrameworkPolicy
+{
+    [CmdletBinding(DefaultParameterSetName='Content')]
+param(
+    [Parameter(ParameterSetName='File', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${InputFilePath},
+
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Parameter(ParameterSetName='Content')]
+    [Parameter(ParameterSetName='File')]
+    [string]
+    ${OutputFilePath},
+
+    [Parameter(ParameterSetName='Content', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Content})
+
+}
+function New-AzureADObjectSetting
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${TargetType},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${TargetObjectId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Microsoft.Open.MSGraph.Model.DirectorySetting]
+    ${DirectorySetting})
+
+}
+function New-AzureADPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${AlternativeIdentifier},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${Definition},
+
+        [Parameter()]
+        [System.String]
+        ${DisplayName},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsOrganizationDefault},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.KeyCredential]]
+        ${KeyCredentials},
+
+        [Parameter()]
+        [System.String]
+        ${Type}
+    )
+}
+function New-AzureADPrivilegedRoleAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Nullable`1[System.DateTime]]
+        ${ExpirationDateTime},
+
+        [Parameter()]
+        [System.String]
+        ${Id},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsElevated},
+
+        [Parameter()]
+        [System.String]
+        ${ResultMessage},
+
+        [Parameter()]
+        [System.String]
+        ${RoleId},
+
+        [Parameter()]
+        [System.String]
+        ${UserId}
     )
 }
 function New-AzureADServiceAppRoleAssignment
@@ -1916,6 +2984,10 @@ function New-AzureADUser
 
         [Parameter()]
         [System.String]
+        ${CompanyName},
+
+        [Parameter()]
+        [System.String]
         ${ConsentProvidedForMinor},
 
         [Parameter()]
@@ -2052,6 +3124,37 @@ function New-AzureADUserAppRoleAssignment
         ${ResourceId}
     )
 }
+function Open-AzureADMSPrivilegedRoleAssignmentRequest
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${ProviderId}
+    )
+}
+function Remove-AzureADAdministrativeUnit
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId})
+
+}
+function Remove-AzureADAdministrativeUnitMember
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${MemberId})
+
+}
 function Remove-AzureADApplication
 {
     [CmdletBinding()]
@@ -2111,6 +3214,19 @@ param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${KeyId})
+
+}
+function Remove-AzureADApplicationPolicy
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${PolicyId})
 
 }
 function Remove-AzureADApplicationProxyApplication
@@ -2219,6 +3335,15 @@ param(
     ${MemberId})
 
 }
+function Remove-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
 function Remove-AzureADDomain
 {
     [CmdletBinding()]
@@ -2226,6 +3351,15 @@ param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Name})
+
+}
+function Remove-AzureADExternalDomainFederation
+{
+    [CmdletBinding()]
+param(
+    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ExternalDomainName})
 
 }
 function Remove-AzureADGroup
@@ -2276,6 +3410,71 @@ param(
     ${OwnerId})
 
 }
+function Remove-AzureADMSApplication
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId})
+
+}
+function Remove-AzureADMSApplicationExtensionProperty
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ExtensionPropertyId})
+
+}
+function Remove-AzureADMSApplicationKey
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${ObjectId},
+
+        [Parameter()]
+        [System.String]
+        ${KeyId},
+
+        [Parameter()]
+        [System.String]
+        ${Proof}
+    )
+}
+function Remove-AzureADMSApplicationOwner
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${OwnerId})
+
+}
+function Remove-AzureADMSApplicationPassword
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${ObjectId},
+
+        [Parameter()]
+        [System.String]
+        ${KeyId}
+    )
+}
 function Remove-AzureADMSDeletedDirectoryObject
 {
     [CmdletBinding()]
@@ -2283,6 +3482,28 @@ param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Id})
+
+}
+function Remove-AzureADMSFeatureRolloutPolicy
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
+function Remove-AzureADMSFeatureRolloutPolicyDirectoryObject
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId})
 
 }
 function Remove-AzureADMSGroup
@@ -2303,6 +3524,15 @@ param(
     ${Id})
 
 }
+function Remove-AzureADMSIdentityProvider
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
 function Remove-AzureADMSLifecyclePolicyGroup
 {
     [CmdletBinding()]
@@ -2312,6 +3542,68 @@ function Remove-AzureADMSLifecyclePolicyGroup
         ${Id}
     )
 }
+function Remove-AzureADMSPasswordSingleSignOnCredential
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Microsoft.Open.MSGraph.Model.PasswordSSOObjectId]
+    ${PasswordSSOObjectId})
+
+}
+function Remove-AzureADMSPermissionGrantPolicy
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
+function Remove-AzureADMSRoleAssignment
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
+function Remove-AzureADMSRoleDefinition
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
+function Remove-AzureADMSServicePrincipalDelegatedPermissionClassification
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ServicePrincipalId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
+function Remove-AzureADMSTrustFrameworkPolicy
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
 function Remove-AzureADOAuth2PermissionGrant
 {
     [CmdletBinding()]
@@ -2319,6 +3611,45 @@ param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${ObjectId})
+
+}
+function Remove-AzureADObjectSetting
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${TargetType},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${TargetObjectId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
+function Remove-AzureADPolicy
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id})
+
+}
+function Remove-AzureADScopedRoleMembership
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ScopedRoleMembershipId})
 
 }
 function Remove-AzureADServiceAppRoleAssignment
@@ -2382,6 +3713,19 @@ param(
     ${KeyId})
 
 }
+function Remove-AzureADServicePrincipalPolicy
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${PolicyId})
+
+}
 function Remove-AzureADTrustedCertificateAuthority
 {
     [CmdletBinding()]
@@ -2443,11 +3787,11 @@ param(
 function Reset-AzureADMSLifeCycleGroup
 {
     [CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [string]
-    ${Id})
-
+    param(
+        [Parameter()]
+        [System.String]
+        ${GroupId}
+    )
 }
 function Restore-AzureADDeletedApplication
 {
@@ -2466,7 +3810,7 @@ function Restore-AzureADMSDeletedDirectoryObject
 {
     [CmdletBinding()]
 param(
-    [Parameter(ParameterSetName='GetById', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [string]
     ${Id})
 
@@ -2537,6 +3881,23 @@ param(
     [Microsoft.Open.AzureAD.Model.GroupIdsForMembershipCheck]
     ${GroupIdsForMembershipCheck})
 
+}
+function Set-AzureADAdministrativeUnit
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${ObjectId},
+
+        [Parameter()]
+        [System.String]
+        ${Description},
+
+        [Parameter()]
+        [System.String]
+        ${DisplayName}
+    )
 }
 function Set-AzureADApplication
 {
@@ -2733,10 +4094,6 @@ param(
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
     [System.Nullable[bool]]
-    ${IsHttpOnlyCookieEnabled},
-
-    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
-    [System.Nullable[bool]]
     ${IsTranslateLinksInBodyEnabled},
 
     [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
@@ -2894,6 +4251,19 @@ function Set-AzureADDevice
         ${SystemLabels}
     )
 }
+function Set-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Microsoft.Open.MSGraph.Model.DirectorySetting]
+    ${DirectorySetting})
+
+}
 function Set-AzureADDomain
 {
     [CmdletBinding()]
@@ -2932,7 +4302,113 @@ function Set-AzureADGroup
         ${SecurityEnabled}
     )
 }
-function Set-AzureADMSGroup
+function Set-AzureADMSApplication
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${ObjectId},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.AddIn]]
+        ${AddIns},
+
+        [Parameter()]
+        [Microsoft.Open.MSGraph.Model.ApiApplication]
+        ${Api},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.AppRole]]
+        ${AppRoles},
+
+        [Parameter()]
+        [System.String]
+        ${GroupMembershipClaims},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsDeviceOnlyAuthSupported},
+
+        [Parameter()]
+        [System.Nullable`1[System.Boolean]]
+        ${IsFallbackPublicClient},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${IdentifierUris},
+
+        [Parameter()]
+        [System.String]
+        ${DisplayName},
+
+        [Parameter()]
+        [Microsoft.Open.MSGraph.Model.InformationalUrl]
+        ${InformationalUrl},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.KeyCredential]]
+        ${KeyCredentials},
+
+        [Parameter()]
+        [Microsoft.Open.MSGraph.Model.OptionalClaims]
+        ${OptionalClaims},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${OrgRestrictions},
+
+        [Parameter()]
+        [Microsoft.Open.MSGraph.Model.ParentalControlSettings]
+        ${ParentalControlSettings},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.PasswordCredential]]
+        ${PasswordCredentials},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.PreAuthorizedApplication]]
+        ${PreAuthorizedApplications},
+
+        [Parameter()]
+        [Microsoft.Open.MSGraph.Model.PublicClientApplication]
+        ${PublicClient},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[Microsoft.Open.MSGraph.Model.RequiredResourceAccess]]
+        ${RequiredResourceAccess},
+
+        [Parameter()]
+        [System.String]
+        ${SignInAudience},
+
+        [Parameter()]
+        [System.Collections.Generic.List`1[System.String]]
+        ${Tags},
+
+        [Parameter()]
+        [System.String]
+        ${TokenEncryptionKeyId},
+
+        [Parameter()]
+        [Microsoft.Open.MSGraph.Model.WebApplication]
+        ${Web}
+    )
+}
+function Set-AzureADMSApplicationLogo
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [byte[]]
+    ${Content})
+
+}
+function Set-AzureADMSAuthorizationPolicy
 {
     [CmdletBinding()]
     param(
@@ -2941,7 +4417,150 @@ function Set-AzureADMSGroup
         ${Id}
     )
 }
+function Set-AzureADMSFeatureRolloutPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${Id}
+    )
+}
+function Set-AzureADMSGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${Id},
+
+        [Parameter()]
+        [System.String]
+        ${LabelId}
+    )
+}
 function Set-AzureADMSGroupLifecyclePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${Id}
+    )
+}
+function Set-AzureADMSIdentityProvider
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${Id}
+    )
+}
+function Set-AzureADMSPasswordSingleSignOnCredential
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${ObjectId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Microsoft.Open.MSGraph.Model.PasswordSSOCredentials]
+    ${PasswordSSOCredential})
+
+}
+function Set-AzureADMSPermissionGrantPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${Id}
+    )
+}
+function Set-AzureADMSPrivilegedRoleAssignmentRequest
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${ProviderId},
+
+        [Parameter()]
+        [System.String]
+        ${Id}
+    )
+}
+function Set-AzureADMSPrivilegedRoleSetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${ProviderId},
+
+        [Parameter()]
+        [System.String]
+        ${Id}
+    )
+}
+function Set-AzureADMSRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${Id}
+    )
+}
+function Set-AzureADMSTrustFrameworkPolicy
+{
+    [CmdletBinding(DefaultParameterSetName='Content')]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Parameter(ParameterSetName='Content')]
+    [Parameter(ParameterSetName='File')]
+    [string]
+    ${Id},
+
+    [Parameter(ParameterSetName='File', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${InputFilePath},
+
+    [Parameter(ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Parameter(ParameterSetName='Content')]
+    [Parameter(ParameterSetName='File')]
+    [string]
+    ${OutputFilePath},
+
+    [Parameter(ParameterSetName='Content', Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Content})
+
+}
+function Set-AzureADObjectSetting
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${TargetType},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${TargetObjectId},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${Id},
+
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+    [Microsoft.Open.MSGraph.Model.DirectorySetting]
+    ${DirectorySetting})
+
+}
+function Set-AzureADPolicy
 {
     [CmdletBinding()]
     param(
@@ -3080,6 +4699,10 @@ function Set-AzureADUser
         [Parameter()]
         [System.String]
         ${City},
+
+        [Parameter()]
+        [System.String]
+        ${CompanyName},
 
         [Parameter()]
         [System.String]
@@ -9137,12 +10760,18 @@ function Get-CalendarDiagnosticObjects
 {
 
 param(
+    [System.Object]
+    ${ShouldDecodeEnums},
+
     [Alias('wa')]
     [System.Object]
     ${WarningAction},
 
     [System.Object]
     ${Identity},
+
+    [System.Object]
+    ${ShouldFetchAttendeeCollection},
 
     [Alias('ev')]
     [System.Object]
@@ -9158,9 +10787,6 @@ param(
 
     [System.Object]
     ${Subject},
-
-    [System.Object]
-    ${EndDate},
 
     [Alias('wv')]
     [System.Object]
@@ -9202,6 +10828,10 @@ param(
     [System.Object]
     ${MeetingId},
 
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
     [System.Object]
     ${ItemClass},
 
@@ -9212,9 +10842,8 @@ param(
     [System.Object]
     ${ConfigurationName},
 
-    [Alias('ob')]
     [System.Object]
-    ${OutBuffer},
+    ${EndDate},
 
     [Alias('iv')]
     [System.Object]
@@ -12618,6 +14247,61 @@ param(
 
 }
 function Get-DlpPolicyTemplate
+{
+
+param(
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [System.Object]
+    ${Identity},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [switch]
+    ${AsJob})
+
+}
+function Get-DlpSensitiveInformationTypeConfig
 {
 
 param(
@@ -16827,7 +18511,7 @@ param(
     ${Page},
 
     [System.Object]
-    ${ProbeTag},
+    ${DataSource},
 
     [Alias('vb')]
     [switch]
@@ -16837,12 +18521,16 @@ param(
     [System.Object]
     ${WarningAction},
 
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
     [Alias('db')]
     [switch]
     ${Debug},
 
     [System.Object]
-    ${MessageTraceId},
+    ${EndDate},
 
     [Alias('ov')]
     [System.Object]
@@ -16855,15 +18543,11 @@ param(
     [System.Object]
     ${PageSize},
 
-    [Alias('ob')]
     [System.Object]
-    ${OutBuffer},
+    ${ProbeTag},
 
     [System.Object]
-    ${SenderAddress},
-
-    [System.Object]
-    ${EndDate},
+    ${MessageTraceId},
 
     [System.Object]
     ${Domain},
@@ -16881,15 +18565,18 @@ param(
     [System.Object]
     ${RecipientAddress},
 
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
     [System.Object]
     ${MessageId},
 
     [System.Object]
     ${StartDate},
 
-    [Alias('wv')]
     [System.Object]
-    ${WarningVariable},
+    ${SenderAddress},
 
     [Alias('iv')]
     [System.Object]
@@ -19822,6 +21509,9 @@ param(
     [System.Object]
     ${OutVariable},
 
+    [switch]
+    ${DiagnosticOnly},
+
     [Alias('iv')]
     [System.Object]
     ${InformationVariable},
@@ -21221,6 +22911,58 @@ param(
     [Alias('iv')]
     [System.Object]
     ${InformationVariable},
+
+    [switch]
+    ${AsJob})
+
+}
+function Get-PolicyConfig
+{
+
+param(
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
 
     [switch]
     ${AsJob})
@@ -34947,6 +36689,9 @@ param(
     ${ExceptIfAnyOfRecipientAddressMatchesPatterns},
 
     [System.Object]
+    ${RecipientAddressType},
+
+    [System.Object]
     ${ExceptIfContentCharacterSetContainsWords},
 
     [System.Object]
@@ -44240,6 +45985,9 @@ param(
     [System.Object]
     ${RequestInPolicy},
 
+    [System.Object]
+    ${AutoRSVPConfiguration},
+
     [switch]
     ${IgnoreDefaultScope},
 
@@ -44491,6 +46239,9 @@ param(
     [Alias('wi')]
     [switch]
     ${WhatIf},
+
+    [System.Object]
+    ${MacOutlookEnabled},
 
     [System.Object]
     ${PopSuppressReadReceipt},
@@ -55496,6 +57247,9 @@ param(
     ${ExceptIfAnyOfRecipientAddressMatchesPatterns},
 
     [System.Object]
+    ${RecipientAddressType},
+
+    [System.Object]
     ${ExceptIfContentCharacterSetContainsWords},
 
     [System.Object]
@@ -57918,6 +59672,9 @@ param(
     [Alias('infa')]
     [System.Object]
     ${InformationAction},
+
+    [switch]
+    ${DataGovernance},
 
     [Alias('wv')]
     [System.Object]
@@ -60816,6 +62573,10 @@ param(
     [string]
     ${ClientSideComponentProperties},
 
+    [Parameter(HelpMessage='The Client Side Host Properties of the application customizer. Specify values as a json string : "{''preAllocatedApplicationCustomizerTopHeight'': ''50'', ''preAllocatedApplicationCustomizerBottomHeight'': ''50''}"')]
+    [string]
+    ${ClientSideHostProperties},
+
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
     ${Web},
@@ -60852,6 +62613,10 @@ param(
     [Parameter(HelpMessage='Publishes the page once it is saved. Applicable to libraries set to create major and minor versions.')]
     [switch]
     ${Publish},
+
+    [Parameter(HelpMessage='Type of layout used for the header')]
+    [OfficeDevPnP.Core.Pages.ClientSidePageHeaderLayoutType]
+    ${HeaderLayoutType},
 
     [Parameter(HelpMessage='Sets the message for publishing the page.')]
     [Obsolete('This parameter will be ignored')]
@@ -61136,6 +62901,10 @@ param(
     [string]
     ${ClientSideComponentProperties},
 
+    [Parameter(ParameterSetName='Client Side Component Id', HelpMessage='The Client Side Host Properties of the custom action. Specify values as a json string : "{''preAllocatedApplicationCustomizerTopHeight'': ''50'', ''preAllocatedApplicationCustomizerBottomHeight'': ''50''}"')]
+    [string]
+    ${ClientSideHostProperties},
+
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
     ${Web},
@@ -61293,10 +63062,6 @@ function Add-PnPField
         [Parameter()]
         [System.String]
         ${ClientSideComponentProperties},
-
-        [Parameter()]
-        [Microsoft.SharePoint.Client.AddFieldOptions]
-        ${FieldOptions},
 
         [Parameter()]
         [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
@@ -62350,6 +64115,10 @@ param(
     [switch]
     ${Paged},
 
+    [Parameter(HelpMessage='A valid XML fragment containing one or more Aggregations')]
+    [string]
+    ${Aggregations},
+
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
     ${Web},
@@ -62780,6 +64549,15 @@ param(
     ${Connection})
 
 }
+function Clear-PnPTenantAppCatalogUrl
+{
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
+param(
+    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
+    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+    ${Connection})
+
+}
 function Clear-PnPTenantRecycleBinItem
 {
     [CmdletBinding()]
@@ -63051,6 +64829,7 @@ param(
     [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate as PEM strings', HelpMessage='The Azure environment to use for authentication, the defaults to ''Production'' which is the main Azure environment.')]
     [Parameter(ParameterSetName='App-Only with Azure Active Directory using certificate from certificate store by thumbprint', HelpMessage='The Azure environment to use for authentication, the defaults to ''Production'' which is the main Azure environment.')]
     [Parameter(ParameterSetName='App-Only with Azure Active Directory using X502 certificates', HelpMessage='The Azure environment to use for authentication, the defaults to ''Production'' which is the main Azure environment.')]
+    [Parameter(ParameterSetName='Token', HelpMessage='The Azure environment to use for authentication, the defaults to ''Production'' which is the main Azure environment.')]
     [OfficeDevPnP.Core.AzureEnvironment]
     ${AzureEnvironment},
 
@@ -63307,6 +65086,10 @@ param(
     [switch]
     ${TargetPageFolderOverridesDefaultFolder},
 
+    [Parameter(HelpMessage='Remove empty sections and columns after transformation of the page')]
+    [switch]
+    ${RemoveEmptySectionsAndColumns},
+
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
     [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
     ${TargetConnection},
@@ -63318,6 +65101,14 @@ param(
     [Parameter(HelpMessage='Specifies a user mapping file')]
     [string]
     ${UserMappingFile},
+
+    [Parameter(HelpMessage='Specifies a taxonomy term mapping file')]
+    [string]
+    ${TermMappingFile},
+
+    [Parameter(HelpMessage='Disables term mapping during transformation')]
+    [switch]
+    ${SkipTermStoreMapping},
 
     [Parameter(HelpMessage='Specifies a LDAP connection string e.g. LDAP://OU=Users,DC=Contoso,DC=local')]
     [string]
@@ -63520,9 +65311,9 @@ function Enable-PnPCommSite
 {
     [CmdletBinding()]
 param(
-    [Parameter(HelpMessage='Specifies the full URL of the new site collection. It must be in a valid managed path in the company''s site. For example, for company contoso, valid managed paths are https://contoso.sharepoint.com/sites and https://contoso.sharepoint.com/teams.')]
+    [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='The id (guid) of the design package to apply: 96c933ac-3698-44c7-9f4a-5fd17d71af9e (Topic = default), 6142d2a0-63a5-4ba0-aede-d9fefca2c767 (Showcase) or f6cc5403-0d63-442e-96c0-285923709ffc (Blank)')]
     [string]
-    ${SiteUrl},
+    ${DesignPackageId},
 
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
     [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
@@ -64252,6 +66043,10 @@ param(
     [switch]
     ${Force},
 
+    [Parameter(ParameterSetName='Return as file object', HelpMessage='Retrieve the file contents as a file object.')]
+    [switch]
+    ${AsFileObject},
+
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
     ${Web},
@@ -64601,6 +66396,23 @@ param(
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
     [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
     ${Connection})
+
+}
+function Get-PnPManagementApiAccessToken
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, HelpMessage='The Tenant ID to connect to the Office 365 Management API')]
+    [string]
+    ${TenantId},
+
+    [Parameter(Mandatory=$true, HelpMessage='The App\Client ID of the app which gives you access to the Office 365 Management API')]
+    [string]
+    ${ClientId},
+
+    [Parameter(Mandatory=$true, HelpMessage='The Client Secret of the app which gives you access to the Office 365 Management API')]
+    [string]
+    ${ClientSecret})
 
 }
 function Get-PnPMasterPage
@@ -65153,6 +66965,60 @@ param(
     ${Connection})
 
 }
+function Get-PnPSiteScriptFromList
+{
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Specifies the URL of the list to generate a Site Script from')]
+    [string]
+    ${Url},
+
+    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
+    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+    ${Connection})
+
+}
+function Get-PnPSiteScriptFromWeb
+{
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
+param(
+    [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Specifies the URL of the site to generate a Site Script from')]
+    [string]
+    ${Url},
+
+    [Parameter(HelpMessage='Allows specifying one or more site relative URLs of lists that should be included into the Site Script, i.e. "Shared Documents","List\MyList"')]
+    [string[]]
+    ${Lists},
+
+    [Parameter(ParameterSetName='All components', HelpMessage='If specified will include all supported components into the Site Script')]
+    [switch]
+    ${IncludeAll},
+
+    [Parameter(ParameterSetName='Specific components', HelpMessage='If specified will include the branding of the site into the Site Script')]
+    [switch]
+    ${IncludeBranding},
+
+    [Parameter(ParameterSetName='Specific components', HelpMessage='If specified will include navigation links into the Site Script')]
+    [switch]
+    ${IncludeLinksToExportedItems},
+
+    [Parameter(ParameterSetName='Specific components', HelpMessage='If specified will include the regional settings into the Site Script')]
+    [switch]
+    ${IncludeRegionalSettings},
+
+    [Parameter(ParameterSetName='Specific components', HelpMessage='If specified will include the external sharing configuration into the Site Script')]
+    [switch]
+    ${IncludeSiteExternalSharingCapability},
+
+    [Parameter(ParameterSetName='Specific components', HelpMessage='If specified will include the branding of the site into the Site Script')]
+    [switch]
+    ${IncludeTheme},
+
+    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
+    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+    ${Connection})
+
+}
 function Get-PnPSiteSearchQueryResults
 {
     [CmdletBinding(DefaultParameterSetName='Limit')]
@@ -65557,6 +67423,24 @@ param(
     ${Match})
 
 }
+function Get-PnPUnifiedAuditLog
+{
+    [CmdletBinding()]
+param(
+    [Parameter(HelpMessage='Content type of logs to be retrieved, should be one of the following: AzureActiveDirectory, Exchange, SharePoint, General, DLP.')]
+    [Parameter(ParameterSetName='Logs by date', HelpMessage='Content type of logs to be retreived, should be one of the following: AzureActiveDirectory, Exchange, SharePoint, General, DLP.')]
+    [SharePointPnP.PowerShell.Commands.Enums.AuditContentType]
+    ${ContentType},
+
+    [Parameter(ParameterSetName='Logs by date', HelpMessage='Start time of logs to be retrieved. Start time and end time must both be specified (or both omitted) and must be less than or equal to 24 hours apart, with the start time prior to end time and start time no more than 7 days in the past.')]
+    [datetime]
+    ${StartTime},
+
+    [Parameter(ParameterSetName='Logs by date', HelpMessage='End time of logs to be retrieved. Start time and end time must both be specified (or both omitted) and must be less than or equal to 24 hours apart.')]
+    [datetime]
+    ${EndTime})
+
+}
 function Get-PnPUnifiedGroup
 {
     [CmdletBinding()]
@@ -65875,7 +67759,8 @@ param(
     [string[]]
     ${Principals},
 
-    [Parameter(Mandatory=$true, HelpMessage='Provide Join to give permissions to associate a site with this Hub Site or use None to revoke the permissions for the user(s) specified with the Principals argument')]
+    [Parameter(HelpMessage='Provide Join to give permissions to associate a site with this Hub Site or use None to revoke the permissions for the user(s) specified with the Principals argument')]
+    [Obsolete('Use Revoke-PnPHubSiteRights to revoke rights and Grant-PnPHubSiteRights without the -Rights parameter to grant rights')]
     [Microsoft.Online.SharePoint.TenantAdministration.SPOHubSiteUserRights]
     ${Rights},
 
@@ -67032,6 +68917,31 @@ param(
     [Alias('TermStoreName')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
     ${TermStore},
+
+    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
+    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+    ${Connection})
+
+}
+function New-PnPTermLabel
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The term to add the localized label to')]
+    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TaxonomyItemPipeBind[Microsoft.SharePoint.Client.Taxonomy.Term]]
+    ${Term},
+
+    [Parameter(Mandatory=$true, HelpMessage='The localized name of the term')]
+    [string]
+    ${Name},
+
+    [Parameter(Mandatory=$true, HelpMessage='The locale id to use for the localized term')]
+    [int]
+    ${Lcid},
+
+    [Parameter(HelpMessage='Makes this new label the default label')]
+    [switch]
+    ${IsDefault},
 
     [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
     [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
@@ -68641,6 +70551,24 @@ param(
     ${Connection})
 
 }
+function Revoke-PnPHubSiteRights
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The Hub Site to revoke the permissions on to associate another site with this Hub Site')]
+    [Alias('HubSite')]
+    [SharePointPnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
+    ${Identity},
+
+    [Parameter(Mandatory=$true, HelpMessage='One or more usernames that will be revoked the permission to associate a site with this Hub Site.')]
+    [string[]]
+    ${Principals},
+
+    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
+    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+    ${Connection})
+
+}
 function Revoke-PnPSiteDesignRights
 {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
@@ -69970,9 +71898,13 @@ function Set-PnPRequestAccessEmails
 {
     [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true, HelpMessage='Email address(es) to set the RequestAccessEmails to')]
+    [Parameter(HelpMessage='Email address to send the access requests to')]
     [string[]]
     ${Emails},
+
+    [Parameter(HelpMessage='Enables or disables access to be requested')]
+    [switch]
+    ${Disabled},
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
@@ -70056,7 +71988,7 @@ param(
     [System.Nullable[switch]]
     ${DisableFlows},
 
-    [Parameter(ParameterSetName='Set Properties', HelpMessage='Sets the logo if the site is modern team site. If you want to set the logo for a classic site, use Set-PnPWeb -SiteLogoUrl')]
+    [Parameter(ParameterSetName='Set Properties', HelpMessage='Sets the logo of the site if it concerns a modern team site. Provide a full path to a local image file on your disk which you want to use as the site logo. The logo will be uploaded automatically to SharePoint. If you want to set the logo for a classic site, use Set-PnPWeb -SiteLogoUrl.')]
     [string]
     ${LogoFilePath},
 
@@ -70740,6 +72672,19 @@ Accepts a value of true (enabled) to hide the Download button or false (disabled
     ${Connection})
 
 }
+function Set-PnPTenantAppCatalogUrl
+{
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
+param(
+    [Parameter(Mandatory=$true, HelpMessage='The url of the site to set as the tenant scoped app catalog')]
+    [string]
+    ${Url},
+
+    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
+    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+    ${Connection})
+
+}
 function Set-PnPTenantCdnEnabled
 {
     [CmdletBinding()]
@@ -71046,6 +72991,10 @@ param(
     [Parameter(HelpMessage='An array of fields to use in the view. Notice that specifying this value will remove the existing fields')]
     [string[]]
     ${Fields},
+
+    [Parameter(HelpMessage='A valid XML fragment containing one or more Aggregations')]
+    [string]
+    ${Aggregations},
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
@@ -71694,7 +73643,23 @@ param(
 
     [Parameter(Position=3)]
     [securestring]
-    ${Password})
+    ${Password},
+
+    [Parameter(Position=4)]
+    [string]
+    ${TenantID},
+
+    [Parameter(Position=5)]
+    [string]
+    ${CertificateThumbprint},
+
+    [Parameter(Position=6)]
+    [string]
+    ${ClientSecret},
+
+    [Parameter(Position=7)]
+    [string]
+    ${ApplicationId})
 
 }
 function Clear-AdminPowerAppApisToBypassConsent
@@ -71781,6 +73746,19 @@ param(
     ${FlowName},
 
     [Parameter(ParameterSetName='Flow')]
+    [string]
+    ${ApiVersion})
+
+}
+function Get-AdminDeletedPowerAppsList
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, Position=0, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${EnvironmentName},
+
+    [Parameter(Position=1)]
     [string]
     ${ApiVersion})
 
@@ -72151,6 +74129,19 @@ param(
     ${ApiVersion})
 
 }
+function Get-AdminPowerAppLicenses
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, Position=0)]
+    [string]
+    ${OutputFilePath},
+
+    [Parameter(Position=1)]
+    [string]
+    ${ApiVersion})
+
+}
 function Get-AdminPowerAppRoleAssignment
 {
     [CmdletBinding(DefaultParameterSetName='User')]
@@ -72208,6 +74199,23 @@ param(
     ${ApiVersion})
 
 }
+function Get-AdminRecoverDeletedPowerApp
+{
+    [CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true, Position=0, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${AppName},
+
+    [Parameter(Mandatory=$true, Position=1, ValueFromPipelineByPropertyName=$true)]
+    [string]
+    ${EnvironmentName},
+
+    [Parameter(Position=2)]
+    [string]
+    ${ApiVersion})
+
+}
 function Get-AllowedConsentPlans
 {
     [CmdletBinding()]
@@ -72215,6 +74223,12 @@ param(
     [Parameter(Position=0)]
     [string]
     ${ApiVersion})
+
+}
+function Get-DlpPolicy
+{
+
+param()
 
 }
 function Get-JwtToken
@@ -72414,6 +74428,12 @@ param(
 
     [string]
     ${ApiVersion})
+
+}
+function New-DlpPolicy
+{
+
+param()
 
 }
 function Recover-AdminPowerAppEnvironment
@@ -72726,6 +74746,12 @@ param(
     [Parameter(Position=3)]
     [string]
     ${ApiVersion})
+
+}
+function Remove-DlpPolicy
+{
+
+param()
 
 }
 function Remove-LegacyCDSDatabase
@@ -73105,6 +75131,12 @@ param(
     [Parameter(ParameterSetName='User')]
     [string]
     ${ApiVersion})
+
+}
+function Set-DlpPolicy
+{
+
+param()
 
 }
 function Set-TenantSettings
@@ -74670,55 +76702,52 @@ function Get-ComplianceTagStorage
 {
 
 param(
-    [Alias('ea')]
-    [System.Object]
-    ${ErrorAction},
-
-    [Alias('vb')]
-    [switch]
-    ${Verbose},
-
-    [Alias('ov')]
-    [System.Object]
-    ${OutVariable},
-
-    [Alias('infa')]
-    [System.Object]
-    ${InformationAction},
-
     [Alias('wv')]
     [System.Object]
     ${WarningVariable},
-
-    [Alias('db')]
-    [switch]
-    ${Debug},
-
-    [Alias('pv')]
-    [System.Object]
-    ${PipelineVariable},
-
-    [Alias('ev')]
-    [System.Object]
-    ${ErrorVariable},
-
-    [System.Object]
-    ${Identity},
 
     [Alias('ob')]
     [System.Object]
     ${OutBuffer},
 
-    [Alias('wa')]
-    [System.Object]
-    ${WarningAction},
-
-    [System.Object]
-    ${Organization},
-
     [Alias('iv')]
     [System.Object]
     ${InformationVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [System.Object]
+    ${Identity},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
 
     [switch]
     ${AsJob})
@@ -75822,6 +77851,61 @@ param(
     ${AsJob})
 
 }
+function Get-DlpEdmSchema
+{
+
+param(
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [System.Object]
+    ${Identity},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [switch]
+    ${AsJob})
+
+}
 function Get-DlpKeywordDictionary
 {
 
@@ -76720,6 +78804,180 @@ param(
     ${AsJob})
 
 }
+function Get-InformationBarrierPoliciesApplicationStatus
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [System.Object]
+    ${Identity},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [switch]
+    ${All},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [switch]
+    ${AsJob})
+
+}
+function Get-InformationBarrierPolicy
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [System.Object]
+    ${ExoPolicyId},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [System.Object]
+    ${Identity},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [switch]
+    ${AsJob})
+
+}
+function Get-InformationBarrierRecipientStatus
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [System.Object]
+    ${Identity2},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [System.Object]
+    ${Identity},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [switch]
+    ${AsJob})
+
+}
 function Get-InformationBarrierReportDetails
 {
 
@@ -76881,6 +79139,64 @@ param(
 
     [System.Object]
     ${StartDate},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [switch]
+    ${AsJob})
+
+}
+function Get-InsiderRiskPolicy
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [System.Object]
+    ${Identity},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [switch]
+    ${DistributionDetail},
 
     [Alias('iv')]
     [System.Object]
@@ -77053,6 +79369,131 @@ param(
     [Alias('iv')]
     [System.Object]
     ${InformationVariable},
+
+    [switch]
+    ${AsJob})
+
+}
+function Get-LongTermAuditItems
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [System.Object]
+    ${Workload},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [System.Object]
+    ${EndDate},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [System.Object]
+    ${LtaAddress},
+
+    [System.Object]
+    ${PageOffset},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [System.Object]
+    ${StartDate},
+
+    [System.Object]
+    ${LabelId},
+
+    [switch]
+    ${AsJob})
+
+}
+function Get-LongTermAuditStats
+{
+
+param(
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [System.Object]
+    ${LtaAddress},
+
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
 
     [switch]
     ${AsJob})
@@ -80719,9 +83160,6 @@ param(
     [System.Object]
     ${ErrorVariable},
 
-    [System.Object]
-    ${EndpointDlpLocationException},
-
     [Alias('infa')]
     [System.Object]
     ${InformationAction},
@@ -80747,9 +83185,8 @@ param(
     [System.Object]
     ${ErrorAction},
 
-    [Alias('vb')]
-    [switch]
-    ${Verbose},
+    [System.Object]
+    ${SharePointLocationException},
 
     [System.Object]
     ${ExchangeLocation},
@@ -80763,12 +83200,13 @@ param(
     [System.Object]
     ${TeamsLocationException},
 
-    [System.Object]
-    ${EndpointDlpLocation},
-
     [Alias('ov')]
     [System.Object]
     ${OutVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
 
     [Alias('cf')]
     [switch]
@@ -80776,10 +83214,6 @@ param(
 
     [System.Object]
     ${OneDriveLocation},
-
-    [Alias('iv')]
-    [System.Object]
-    ${InformationVariable},
 
     [System.Object]
     ${ExchangeSenderMemberOf},
@@ -80802,8 +83236,9 @@ param(
     [System.Object]
     ${OutBuffer},
 
+    [Alias('iv')]
     [System.Object]
-    ${SharePointLocationException},
+    ${InformationVariable},
 
     [System.Object]
     ${TeamsLocation},
@@ -80825,6 +83260,9 @@ param(
 
     [System.Object]
     ${ExceptIfRecipientDomainIs},
+
+    [System.Object]
+    ${ExceptIfContentContainsSensitiveInformation},
 
     [System.Object]
     ${ExceptIfDocumentNameMatchesWords},
@@ -80886,10 +83324,6 @@ param(
     [System.Object]
     ${ContentExtensionMatchesWords},
 
-    [Alias('iv')]
-    [System.Object]
-    ${InformationVariable},
-
     [Alias('ov')]
     [System.Object]
     ${OutVariable},
@@ -80903,8 +83337,9 @@ param(
     [System.Object]
     ${AnyOfRecipientAddressContainsWords},
 
-    [System.Object]
-    ${ExceptIfContentContainsSensitiveInformation},
+    [Alias('db')]
+    [switch]
+    ${Debug},
 
     [System.Object]
     ${ExceptIfFromAddressMatchesPatterns},
@@ -80933,9 +83368,9 @@ param(
     [System.Object]
     ${AccessScope},
 
-    [Alias('db')]
-    [switch]
-    ${Debug},
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
 
     [System.Object]
     ${RemoveHeader},
@@ -80967,9 +83402,6 @@ param(
 
     [System.Object]
     ${ExceptIfSentTo},
-
-    [System.Object]
-    ${EndpointDlpRestrictions},
 
     [System.Object]
     ${Policy},
@@ -81056,6 +83488,69 @@ param(
     [Alias('ev')]
     [System.Object]
     ${ErrorVariable},
+
+    [switch]
+    ${AsJob})
+
+}
+function New-DlpEdmSchema
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('cf')]
+    [switch]
+    ${Confirm},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [System.Object]
+    ${FileData},
+
+    [Alias('wi')]
+    [switch]
+    ${WhatIf},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
 
     [switch]
     ${AsJob})
@@ -81889,12 +84384,208 @@ param(
     ${AsJob})
 
 }
-function New-Label
+function New-InformationBarrierPolicy
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [System.Object]
+    ${Name},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [System.Object]
+    ${SegmentsAllowed},
+
+    [System.Object]
+    ${AssignedSegment},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [System.Object]
+    ${SegmentAllowedFilter},
+
+    [System.Object]
+    ${Comment},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [System.Object]
+    ${State},
+
+    [System.Object]
+    ${SegmentsBlocked},
+
+    [Alias('cf')]
+    [switch]
+    ${Confirm},
+
+    [Alias('wi')]
+    [switch]
+    ${WhatIf},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [switch]
+    ${AsJob})
+
+}
+function New-InsiderRiskPolicy
 {
 
 param(
     [System.Object]
+    ${HistoricTimeSpan},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [System.Object]
+    ${SensitivityLabels},
+
+    [System.Object]
+    ${Enabled},
+
+    [Alias('cf')]
+    [switch]
+    ${Confirm},
+
+    [System.Object]
+    ${Name},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [System.Object]
+    ${ExchangeLocation},
+
+    [System.Object]
+    ${PostTerminationActivity},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [System.Object]
     ${Comment},
+
+    [System.Object]
+    ${TeamsSites},
+
+    [System.Object]
+    ${InsiderRiskScenario},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [System.Object]
+    ${DlpPolicy},
+
+    [System.Object]
+    ${FutureTerminationWindow},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [System.Object]
+    ${Indicators},
+
+    [Alias('wi')]
+    [switch]
+    ${WhatIf},
+
+    [System.Object]
+    ${SharepointSites},
+
+    [System.Object]
+    ${TenantSetting},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [System.Object]
+    ${DlpSensitiveTypes},
+
+    [System.Object]
+    ${InScopeTimeSpan},
+
+    [System.Object]
+    ${SchemaVersion},
+
+    [System.Object]
+    ${PastTerminationWindow},
+
+    [switch]
+    ${AsJob})
+
+}
+function New-Label
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
 
     [Alias('pv')]
     [System.Object]
@@ -81909,10 +84600,6 @@ param(
     [System.Object]
     ${DisplayName},
 
-    [Alias('ob')]
-    [System.Object]
-    ${OutBuffer},
-
     [Alias('vb')]
     [switch]
     ${Verbose},
@@ -81923,6 +84610,10 @@ param(
     [Alias('wv')]
     [System.Object]
     ${WarningVariable},
+
+    [Alias('cf')]
+    [switch]
+    ${Confirm},
 
     [Alias('db')]
     [switch]
@@ -81942,19 +84633,19 @@ param(
     [System.Object]
     ${LabelActions},
 
-    [Alias('ev')]
+    [Alias('ob')]
     [System.Object]
-    ${ErrorVariable},
+    ${OutBuffer},
 
     [System.Object]
-    ${Tooltip},
+    ${Comment},
 
     [System.Object]
     ${Identity},
 
-    [Alias('ea')]
+    [Alias('ev')]
     [System.Object]
-    ${ErrorAction},
+    ${ErrorVariable},
 
     [Alias('wa')]
     [System.Object]
@@ -81966,9 +84657,11 @@ param(
     [System.Object]
     ${Settings},
 
-    [Alias('cf')]
-    [switch]
-    ${Confirm},
+    [System.Object]
+    ${Tooltip},
+
+    [System.Object]
+    ${Conditions},
 
     [System.Object]
     ${MigrationId},
@@ -82204,6 +84897,9 @@ param(
     [System.Object]
     ${ErrorVariable},
 
+    [System.Object]
+    ${NotificationCulture},
+
     [Alias('infa')]
     [System.Object]
     ${InformationAction},
@@ -82254,7 +84950,7 @@ param(
     ${InformationVariable},
 
     [System.Object]
-    ${Disabled},
+    ${LogicalOperationName},
 
     [System.Object]
     ${NotifyUserSuppressionExpiryDate},
@@ -82273,7 +84969,7 @@ param(
     ${ThreatType},
 
     [System.Object]
-    ${NotificationCulture},
+    ${Disabled},
 
     [Alias('pv')]
     [System.Object]
@@ -82425,6 +85121,10 @@ param(
     [System.Object]
     ${RetentionDuration},
 
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
     [Alias('vb')]
     [switch]
     ${Verbose},
@@ -82478,9 +85178,8 @@ param(
     [switch]
     ${WhatIf},
 
-    [Alias('wv')]
     [System.Object]
-    ${WarningVariable},
+    ${MachineLearningModelIDs},
 
     [Alias('ev')]
     [System.Object]
@@ -82502,9 +85201,9 @@ param(
     [System.Object]
     ${RetentionDurationDisplayHint},
 
-    [Alias('iv')]
+    [Alias('wv')]
     [System.Object]
-    ${InformationVariable},
+    ${WarningVariable},
 
     [switch]
     ${AsJob})
@@ -84479,6 +87178,69 @@ param(
     ${AsJob})
 
 }
+function Remove-DlpEdmSchema
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('cf')]
+    [switch]
+    ${Confirm},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [System.Object]
+    ${Identity},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [Alias('wi')]
+    [switch]
+    ${WhatIf},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [switch]
+    ${AsJob})
+
+}
 function Remove-DlpKeywordDictionary
 {
 
@@ -85194,6 +87956,135 @@ param(
 
 }
 function Remove-HoldComplianceRule
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('cf')]
+    [switch]
+    ${Confirm},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [System.Object]
+    ${Identity},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [switch]
+    ${ForceDeletion},
+
+    [Alias('wi')]
+    [switch]
+    ${WhatIf},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [switch]
+    ${AsJob})
+
+}
+function Remove-InformationBarrierPolicy
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('cf')]
+    [switch]
+    ${Confirm},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [System.Object]
+    ${Identity},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [Alias('wi')]
+    [switch]
+    ${WhatIf},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [switch]
+    ${AsJob})
+
+}
+function Remove-InsiderRiskPolicy
 {
 
 param(
@@ -87932,9 +90823,6 @@ param(
     ${Identity},
 
     [System.Object]
-    ${RemoveEndpointDlpLocation},
-
-    [System.Object]
     ${RemoveOneDriveLocationException},
 
     [System.Object]
@@ -87983,9 +90871,6 @@ param(
     [switch]
     ${RetryDistribution},
 
-    [System.Object]
-    ${AddEndpointDlpLocation},
-
     [Alias('infa')]
     [System.Object]
     ${InformationAction},
@@ -87999,9 +90884,6 @@ param(
 
     [System.Object]
     ${AddTeamsLocationException},
-
-    [System.Object]
-    ${AddEndpointDlpLocationException},
 
     [Alias('cf')]
     [switch]
@@ -88050,9 +90932,6 @@ param(
 
     [System.Object]
     ${Mode},
-
-    [System.Object]
-    ${RemoveEndpointDlpLocationException},
 
     [switch]
     ${AsJob})
@@ -88268,9 +91147,6 @@ param(
     ${ExceptIfContentExtensionMatchesWords},
 
     [System.Object]
-    ${EndpointDlpRestrictions},
-
-    [System.Object]
     ${FromAddressContainsWords},
 
     [Alias('vb')]
@@ -88296,6 +91172,69 @@ param(
     [Alias('ev')]
     [System.Object]
     ${ErrorVariable},
+
+    [switch]
+    ${AsJob})
+
+}
+function Set-DlpEdmSchema
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('cf')]
+    [switch]
+    ${Confirm},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [System.Object]
+    ${FileData},
+
+    [Alias('wi')]
+    [switch]
+    ${WhatIf},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
 
     [switch]
     ${AsJob})
@@ -89156,6 +92095,193 @@ param(
     ${AsJob})
 
 }
+function Set-InformationBarrierPolicy
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [System.Object]
+    ${SegmentsAllowed},
+
+    [System.Object]
+    ${SegmentAllowedFilter},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [System.Object]
+    ${Identity},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [System.Object]
+    ${State},
+
+    [System.Object]
+    ${SegmentsBlocked},
+
+    [System.Object]
+    ${Comment},
+
+    [switch]
+    ${AsJob})
+
+}
+function Set-InsiderRiskPolicy
+{
+
+param(
+    [System.Object]
+    ${HistoricTimeSpan},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [System.Object]
+    ${SensitivityLabels},
+
+    [System.Object]
+    ${Identity},
+
+    [System.Object]
+    ${Enabled},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [System.Object]
+    ${PostTerminationActivity},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [System.Object]
+    ${Comment},
+
+    [System.Object]
+    ${TeamsSites},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [System.Object]
+    ${DlpPolicy},
+
+    [System.Object]
+    ${FutureTerminationWindow},
+
+    [Alias('cf')]
+    [switch]
+    ${Confirm},
+
+    [System.Object]
+    ${RemoveExchangeLocation},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [System.Object]
+    ${AddExchangeLocation},
+
+    [System.Object]
+    ${Indicators},
+
+    [switch]
+    ${RetryDistribution},
+
+    [Alias('wi')]
+    [switch]
+    ${WhatIf},
+
+    [System.Object]
+    ${SharepointSites},
+
+    [System.Object]
+    ${TenantSetting},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [System.Object]
+    ${DlpSensitiveTypes},
+
+    [System.Object]
+    ${InScopeTimeSpan},
+
+    [System.Object]
+    ${SchemaVersion},
+
+    [System.Object]
+    ${PastTerminationWindow},
+
+    [switch]
+    ${AsJob})
+
+}
 function Set-Label
 {
 
@@ -89495,10 +92621,6 @@ param(
     [System.Object]
     ${ErrorAction},
 
-    [Alias('iv')]
-    [System.Object]
-    ${InformationVariable},
-
     [System.Object]
     ${ProcessingLimitExceededSeverity},
 
@@ -89516,6 +92638,9 @@ param(
     [Alias('infa')]
     [System.Object]
     ${InformationAction},
+
+    [System.Object]
+    ${EnableLabelCoauth},
 
     [Alias('wv')]
     [System.Object]
@@ -89544,14 +92669,14 @@ param(
     ${ErrorVariable},
 
     [System.Object]
-    ${DocumentIsUnsupportedSeverity},
+    ${EndpointDlpGlobalSettingsPsws},
 
     [Alias('wa')]
     [System.Object]
     ${WarningAction},
 
     [System.Object]
-    ${EndpointDlpGlobalSettings},
+    ${DocumentIsUnsupportedSeverity},
 
     [Alias('cf')]
     [switch]
@@ -89567,8 +92692,9 @@ param(
     [switch]
     ${WhatIf},
 
+    [Alias('iv')]
     [System.Object]
-    ${EndpointDlpGlobalSettingsPsws},
+    ${InformationVariable},
 
     [switch]
     ${AsJob})
@@ -90522,7 +93648,133 @@ param(
     ${AsJob})
 
 }
+function Start-InformationBarrierPoliciesApplication
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('cf')]
+    [switch]
+    ${Confirm},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [System.Object]
+    ${Identity},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [Alias('wi')]
+    [switch]
+    ${WhatIf},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [switch]
+    ${AsJob})
+
+}
 function Stop-ComplianceSearch
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('cf')]
+    [switch]
+    ${Confirm},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [System.Object]
+    ${Identity},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [Alias('wi')]
+    [switch]
+    ${WhatIf},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [switch]
+    ${AsJob})
+
+}
+function Stop-InformationBarrierPoliciesApplication
 {
 
 param(
@@ -90640,6 +93892,69 @@ param(
 
     [System.Object]
     ${ClassificationNames},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [switch]
+    ${AsJob})
+
+}
+function Test-InformationBarrierPolicy
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('cf')]
+    [switch]
+    ${Confirm},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [System.Object]
+    ${Identity},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [Alias('wi')]
+    [switch]
+    ${WhatIf},
 
     [Alias('iv')]
     [System.Object]
@@ -102853,6 +106168,70 @@ param(
     ${AsJob})
 
 }
+function Get-CsTeamsTargetingPolicy
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [switch]
+    ${LocalStore},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [System.Object]
+    ${Identity},
+
+    [System.Object]
+    ${Tenant},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [System.Object]
+    ${Filter},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [switch]
+    ${AsJob})
+
+}
 function Get-CsTeamsTranslationRule
 {
 
@@ -112440,6 +115819,9 @@ param(
     [switch]
     ${Verbose},
 
+    [System.Object]
+    ${AppPresetList},
+
     [Alias('ov')]
     [System.Object]
     ${OutVariable},
@@ -112518,6 +115900,9 @@ param(
     ${WarningAction},
 
     [System.Object]
+    ${AllowWebPSTNCalling},
+
+    [System.Object]
     ${Description},
 
     [System.Object]
@@ -112526,9 +115911,9 @@ param(
     [switch]
     ${InMemory},
 
-    [Alias('cf')]
-    [switch]
-    ${Confirm},
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
 
     [Alias('infa')]
     [System.Object]
@@ -112560,10 +115945,14 @@ param(
     ${Verbose},
 
     [System.Object]
-    ${MusicOnHoldEnabledType},
+    ${SafeTransferEnabled},
 
     [System.Object]
     ${BusyOnBusyEnabledType},
+
+    [Alias('cf')]
+    [switch]
+    ${Confirm},
 
     [System.Object]
     ${AllowVoicemail},
@@ -112572,9 +115961,8 @@ param(
     [System.Object]
     ${OutVariable},
 
-    [Alias('pv')]
     [System.Object]
-    ${PipelineVariable},
+    ${MusicOnHoldEnabledType},
 
     [System.Object]
     ${PreventTollBypass},
@@ -112806,6 +116194,10 @@ param(
     [System.Object]
     ${InformationAction},
 
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
     [System.Object]
     ${RequiredDuringCall},
 
@@ -112831,9 +116223,8 @@ param(
     [System.Object]
     ${OutBuffer},
 
-    [Alias('ev')]
     [System.Object]
-    ${ErrorVariable},
+    ${ComplianceRecordingPairedApplications},
 
     [System.Object]
     ${Identity},
@@ -112864,6 +116255,61 @@ param(
     [Alias('ea')]
     [System.Object]
     ${ErrorAction},
+
+    [switch]
+    ${AsJob})
+
+}
+function New-CsTeamsComplianceRecordingPairedApplication
+{
+
+param(
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [System.Object]
+    ${Id},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
 
     [switch]
     ${AsJob})
@@ -113438,9 +116884,15 @@ function New-CsTeamsMeetingPolicy
 {
 
 param(
+    [System.Object]
+    ${IPAudioMode},
+
     [Alias('wa')]
     [System.Object]
     ${WarningAction},
+
+    [System.Object]
+    ${IPVideoMode},
 
     [System.Object]
     ${Description},
@@ -113462,7 +116914,7 @@ param(
     ${AllowIPAudio},
 
     [System.Object]
-    ${AllowPSTNUsersToBypassLobby},
+    ${AllowSharedNotes},
 
     [Alias('ev')]
     [System.Object]
@@ -113492,6 +116944,9 @@ param(
     ${WarningVariable},
 
     [System.Object]
+    ${AllowOrganizersToOverrideLobbySettings},
+
+    [System.Object]
     ${Tenant},
 
     [Alias('ea')]
@@ -113501,21 +116956,27 @@ param(
     [System.Object]
     ${AllowExternalParticipantGiveRequestControl},
 
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
     [System.Object]
     ${MediaBitRateKb},
 
     [System.Object]
     ${AllowAnonymousUsersToStartMeeting},
 
-    [Alias('ob')]
     [System.Object]
-    ${OutBuffer},
+    ${AllowPSTNUsersToBypassLobby},
+
+    [System.Object]
+    ${PreferredMeetingProviderForIslandsMode},
 
     [System.Object]
     ${AllowTranscription},
 
     [System.Object]
-    ${AllowOrganizersToOverrideLobbySettings},
+    ${AllowChannelMeetingScheduling},
 
     [Alias('ov')]
     [System.Object]
@@ -113560,12 +117021,6 @@ param(
     [Alias('wi')]
     [switch]
     ${WhatIf},
-
-    [System.Object]
-    ${AllowChannelMeetingScheduling},
-
-    [System.Object]
-    ${AllowSharedNotes},
 
     [System.Object]
     ${AllowCloudRecording},
@@ -118187,6 +121642,75 @@ param(
 
 }
 function Remove-CsTeamsPinnedApp
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [Alias('wi')]
+    [switch]
+    ${WhatIf},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('cf')]
+    [switch]
+    ${Confirm},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [System.Object]
+    ${Identity},
+
+    [System.Object]
+    ${Tenant},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [switch]
+    ${Force},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [switch]
+    ${AsJob})
+
+}
+function Remove-CsTeamsTargetingPolicy
 {
 
 param(
@@ -124833,6 +128357,9 @@ param(
     [switch]
     ${Verbose},
 
+    [System.Object]
+    ${AppPresetList},
+
     [Alias('ov')]
     [System.Object]
     ${OutVariable},
@@ -124907,6 +128434,9 @@ param(
     ${WarningAction},
 
     [System.Object]
+    ${AllowWebPSTNCalling},
+
+    [System.Object]
     ${Description},
 
     [System.Object]
@@ -124915,9 +128445,9 @@ param(
     [System.Object]
     ${PreventTollBypass},
 
-    [Alias('cf')]
-    [switch]
-    ${Confirm},
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
 
     [System.Object]
     ${Instance},
@@ -124952,10 +128482,14 @@ param(
     ${Verbose},
 
     [System.Object]
-    ${MusicOnHoldEnabledType},
+    ${SafeTransferEnabled},
 
     [System.Object]
     ${BusyOnBusyEnabledType},
+
+    [Alias('cf')]
+    [switch]
+    ${Confirm},
 
     [System.Object]
     ${AllowVoicemail},
@@ -124964,9 +128498,8 @@ param(
     [System.Object]
     ${OutVariable},
 
-    [Alias('pv')]
     [System.Object]
-    ${PipelineVariable},
+    ${MusicOnHoldEnabledType},
 
     [System.Object]
     ${AllowCallForwardingToUser},
@@ -125306,6 +128839,10 @@ param(
     [System.Object]
     ${InformationAction},
 
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
     [System.Object]
     ${RequiredDuringCall},
 
@@ -125332,9 +128869,8 @@ param(
     [System.Object]
     ${OutBuffer},
 
-    [Alias('ev')]
     [System.Object]
-    ${ErrorVariable},
+    ${ComplianceRecordingPairedApplications},
 
     [System.Object]
     ${Identity},
@@ -126414,9 +129950,15 @@ function Set-CsTeamsMeetingPolicy
 {
 
 param(
+    [System.Object]
+    ${IPAudioMode},
+
     [Alias('wa')]
     [System.Object]
     ${WarningAction},
+
+    [System.Object]
+    ${IPVideoMode},
 
     [System.Object]
     ${Description},
@@ -126438,7 +129980,7 @@ param(
     ${AllowIPAudio},
 
     [System.Object]
-    ${AllowPSTNUsersToBypassLobby},
+    ${AllowSharedNotes},
 
     [Alias('ev')]
     [System.Object]
@@ -126468,6 +130010,9 @@ param(
     ${WarningVariable},
 
     [System.Object]
+    ${AllowOrganizersToOverrideLobbySettings},
+
+    [System.Object]
     ${Tenant},
 
     [Alias('ea')]
@@ -126477,21 +130022,27 @@ param(
     [System.Object]
     ${AllowExternalParticipantGiveRequestControl},
 
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
     [System.Object]
     ${MediaBitRateKb},
 
     [System.Object]
     ${AllowAnonymousUsersToStartMeeting},
 
-    [Alias('ob')]
     [System.Object]
-    ${OutBuffer},
+    ${AllowPSTNUsersToBypassLobby},
+
+    [System.Object]
+    ${PreferredMeetingProviderForIslandsMode},
 
     [System.Object]
     ${AllowTranscription},
 
     [System.Object]
-    ${AllowOrganizersToOverrideLobbySettings},
+    ${AllowChannelMeetingScheduling},
 
     [Alias('ov')]
     [System.Object]
@@ -126536,12 +130087,6 @@ param(
     [Alias('wi')]
     [switch]
     ${WhatIf},
-
-    [System.Object]
-    ${AllowChannelMeetingScheduling},
-
-    [System.Object]
-    ${AllowSharedNotes},
 
     [System.Object]
     ${AllowCloudRecording},
@@ -126903,6 +130448,93 @@ param(
 
     [System.Object]
     ${Order},
+
+    [switch]
+    ${Force},
+
+    [System.Object]
+    ${Instance},
+
+    [switch]
+    ${AsJob})
+
+}
+function Set-CsTeamsTargetingPolicy
+{
+
+param(
+    [Alias('ea')]
+    [System.Object]
+    ${ErrorAction},
+
+    [Alias('iv')]
+    [System.Object]
+    ${InformationVariable},
+
+    [System.Object]
+    ${Description},
+
+    [Alias('vb')]
+    [switch]
+    ${Verbose},
+
+    [Alias('ov')]
+    [System.Object]
+    ${OutVariable},
+
+    [System.Object]
+    ${SuggestedPresetTags},
+
+    [Alias('infa')]
+    [System.Object]
+    ${InformationAction},
+
+    [Alias('wv')]
+    [System.Object]
+    ${WarningVariable},
+
+    [System.Object]
+    ${CustomTagsMode},
+
+    [Alias('db')]
+    [switch]
+    ${Debug},
+
+    [Alias('pv')]
+    [System.Object]
+    ${PipelineVariable},
+
+    [Alias('cf')]
+    [switch]
+    ${Confirm},
+
+    [Alias('ob')]
+    [System.Object]
+    ${OutBuffer},
+
+    [Alias('ev')]
+    [System.Object]
+    ${ErrorVariable},
+
+    [System.Object]
+    ${Identity},
+
+    [System.Object]
+    ${TeamOwnersEditWhoCanManageTagsMode},
+
+    [System.Object]
+    ${Tenant},
+
+    [Alias('wa')]
+    [System.Object]
+    ${WarningAction},
+
+    [System.Object]
+    ${ManageTagsPermissionMode},
+
+    [Alias('wi')]
+    [switch]
+    ${WhatIf},
 
     [switch]
     ${Force},
