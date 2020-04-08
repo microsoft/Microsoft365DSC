@@ -140,7 +140,7 @@ function Set-TargetResource
         $creationParams.Remove("Ensure")
 
         $emails = ""
-        foreach($email in $creationParams.AlternateNotificationEmails)
+        foreach ($email in $creationParams.AlternateNotificationEmails)
         {
             $emails += $email + ";"
         }
@@ -159,7 +159,7 @@ function Set-TargetResource
         $updateParams.Remove("Ensure")
 
         $emails = ""
-        foreach($email in $updateParams.AlternateNotificationEmails)
+        foreach ($email in $updateParams.AlternateNotificationEmails)
         {
             $emails += $email + ";"
         }
