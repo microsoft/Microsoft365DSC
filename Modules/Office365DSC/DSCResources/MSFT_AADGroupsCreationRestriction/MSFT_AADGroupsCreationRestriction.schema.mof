@@ -1,5 +1,5 @@
 [ClassVersion("1.0.0.0"), FriendlyName("AADGroupsCreationRestriction")]
-class AADGroupsCreationRestriction : OMI_BaseResource
+class MSFT_AADGroupsCreationRestriction : OMI_BaseResource
 {
     [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write, Description("Name of the AzureAD group to restrict whom can create O365 Groups.")] String GroupName;

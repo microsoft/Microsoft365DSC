@@ -118,7 +118,7 @@ function Set-TargetResource
 
         Set-AzureADDirectorySetting -Id $Policy.id -DirectorySetting $Policy
     }
-    ## Remove O365 GroupNaming restriction blanking out Group ID 
+    ## Remove O365 GroupNaming restriction blanking out Group ID
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         $Policy["EnableGroupCreation"] = $true
