@@ -16,7 +16,7 @@ install:
         Install-Module Microsoft.PowerApps.Administration.PowerShell -RequiredVersion 2.0.56 -Force
 
         $webClient = new-object System.Net.WebClient
-        $url = "https://github.com/Microsoft/Office365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_19515-12000_x64_en-us.msi?raw=true"
+        $url = "https://github.com/Microsoft/Microsoft365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_19515-12000_x64_en-us.msi?raw=true"
         $path = $PSScriptRoot + "\SharePointOnlineManagementShell.msi"
         $webClient.DownloadFile($url, $path)
         msiexec /i $path /quiet /qn /norestart
