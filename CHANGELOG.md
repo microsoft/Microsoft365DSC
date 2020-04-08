@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* AADGroupsSettings
+  * Initial Release;
 * AADGroupsNamingPolicy
   * Initial Release;
 * SPOPropertyBag

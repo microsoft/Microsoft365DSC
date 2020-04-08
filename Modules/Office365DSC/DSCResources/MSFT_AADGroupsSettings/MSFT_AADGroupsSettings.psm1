@@ -14,8 +14,28 @@ function Get-TargetResource
         $EnableGroupCreation,
 
         [Parameter()]
-        [System.String[]]
-        $CustomBlockedWordsList,
+        [System.Boolean]
+        $AllowGuestsToBeGroupOwner,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestsToAccessGroups,
+
+        [Parameter()]
+        [System.String]
+        $GuestUsageGuidelinesUrl,
+
+        [Parameter()]
+        [System.String]
+        $GroupCreationAllowedGroupName,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowToAddGuests,
+
+        [Parameter()]
+        [System.String]
+        $UsageGuidelinesUrl,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -42,20 +62,30 @@ function Get-TargetResource
 
     if ($null -eq $Policy)
     {
-        New-Office365DSCLogEntry -Error $_ -Message "Couldn't get AzureAD Group Naming Policy" -Source $MyInvocation.MyCommand.ModuleName
         $currentValues = $PSBoundParameters
         $currentValues.Ensure = "Absent"
         return $currentValues
     }
     else
     {
-        Write-Verbose "Found existing AzureAD Groups Naming Policy"
+        Write-Verbose -Message "Found existing AzureAD Groups Settings"
+        $AllowedGroupName = $null
+        if (-not [System.String]::IsNullOrEmpty($Policy["GroupCreationAllowedGroupId"]))
+        {
+            $groupObject = Get-AzureADGroup -ObjectId $Policy["GroupCreationAllowedGroupId"]
+            $AllowedGroupName = $groupObject.DisplayName
+        }
         $result = @{
-            IsSingleInstance              = 'Yes'
-            PrefixSuffixNamingRequirement = $Policy["PrefixSuffixNamingRequirement"]
-            CustomBlockedWordsList        = $Policy["CustomBlockedWordsList"].Split(',')
-            Ensure                        = "Present"
-            GlobalAdminAccount            = $GlobalAdminAccount
+            IsSingleInstance               = 'Yes'
+            EnableGroupCreation            = $Policy["EnableGroupCreation"]
+            AllowGuestsToBeGroupOwner      = $Policy["AllowGuestsToBeGroupOwner"]
+            AllowGuestsToAccessGroups      = $Policy["AllowGuestsToAccessGroups"]
+            GuestUsageGuidelinesUrl        = $Policy["GuestUsageGuidelinesUrl"]
+            GroupCreationAllowedGroupName  = $AllowedGroupName
+            AllowToAddGuests               = $Policy["AllowToAddGuests"]
+            UsageGuidelinesUrl             = $Policy["UsageGuidelinesUrl"]
+            Ensure                         = "Present"
+            GlobalAdminAccount             = $GlobalAdminAccount
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-O365DscHashtableToString -Hashtable $result)"
@@ -74,12 +104,32 @@ function Set-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [System.String]
-        $PrefixSuffixNamingRequirement,
+        [System.Boolean]
+        $EnableGroupCreation,
 
         [Parameter()]
-        [System.String[]]
-        $CustomBlockedWordsList,
+        [System.Boolean]
+        $AllowGuestsToBeGroupOwner,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestsToAccessGroups,
+
+        [Parameter()]
+        [System.String]
+        $GuestUsageGuidelinesUrl,
+
+        [Parameter()]
+        [System.String]
+        $GroupCreationAllowedGroupName,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowToAddGuests,
+
+        [Parameter()]
+        [System.String]
+        $UsageGuidelinesUrl,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -91,7 +141,7 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of Device Conditional Access Policy for $Name"
+    Write-Verbose -Message "Setting configuration of Azure AD Groups Settings"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -117,19 +167,26 @@ function Set-TargetResource
 
     if (($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present') -or $needToUpdate)
     {
-        $Policy["PrefixSuffixNamingRequirement"] = $PrefixSuffixNamingRequirement
-
-        [string]$blockedWordsValue = $null
-
-        $blockedWordsValue = $CustomBlockedWordsList -join ","
-        $Policy["CustomBlockedWordsList"] = $blockedWordsValue
+        $groupObject = Get-AzureADGroup -SearchString $GroupCreationAllowedGroupName
+        $groupName = $null
+        if ($null -ne $groupObject)
+        {
+            $groupName = $groupObject.DisplayName
+        }
+        $Policy["EnableGroupCreation"]           = [System.Boolean]$EnableGroupCreation
+        $Policy["AllowGuestsToBeGroupOwner"]     = [System.Boolean]$AllowGuestsToBeGroupOwner
+        $Policy["AllowGuestsToAccessGroups"]     = [System.Boolean]$AllowGuestsToAccessGroups
+        $Policy["GuestUsageGuidelinesUrl"]       = $GuestUsageGuidelinesUrl
+        $Policy["GroupCreationAllowedGroupName"] = $groupName
+        $Policy["AllowToAddGuests"]              = [System.Boolean]$AllowToAddGuests
+        $Policy["UsageGuidelinesUrl"]            = $UsageGuidelinesUrl
 
         Set-AzureADDirectorySetting -Id $Policy.id -DirectorySetting $Policy
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
-        $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq "Group.Unified"}
-        Remove-AzureADDirectorySetting -Id $policy.Id
+        Write-Verbose -Message "An existing Directory Setting entry exists, and we don't allow to have it removed."
+        throw "The AADGroupsSettings resource cannot delete existing Directory Setting entries. Please specify Present."
     }
 }
 
@@ -145,12 +202,32 @@ function Test-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [System.String]
-        $PrefixSuffixNamingRequirement,
+        [System.Boolean]
+        $EnableGroupCreation,
 
         [Parameter()]
-        [System.String[]]
-        $CustomBlockedWordsList,
+        [System.Boolean]
+        $AllowGuestsToBeGroupOwner,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestsToAccessGroups,
+
+        [Parameter()]
+        [System.String]
+        $GuestUsageGuidelinesUrl,
+
+        [Parameter()]
+        [System.String]
+        $GroupCreationAllowedGroupName,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowToAddGuests,
+
+        [Parameter()]
+        [System.String]
+        $UsageGuidelinesUrl,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -162,11 +239,10 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of AzureAD Groups Naming Policy"
+    Write-Verbose -Message "Testing configuration of AzureAD Groups Settings"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
@@ -207,7 +283,7 @@ function Export-TargetResource
     }
     $result = Get-TargetResource @params
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content += "        AADGroupsNamingPolicy " + (New-GUID).ToString() + "`r`n"
+    $content += "        AADGroupsSettings " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"

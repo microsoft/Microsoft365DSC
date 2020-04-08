@@ -48,6 +48,20 @@ Configuration Master
             PrefixSuffixNamingRequirement = "[Title]Test[Company][GroupName][Office]Redmond";
         }
 
+        AADGroupsSettings GeneralGroupsSettings
+        {
+            AllowGuestsToAccessGroups     = $True;
+            AllowGuestsToBeGroupOwner     = $True;
+            AllowToAddGuests              = $True;
+            EnableGroupCreation           = $True;
+            Ensure                        = "Present";
+            GlobalAdminAccount            = $GlobalAdmin;
+            GroupCreationAllowedGroupName = "All Company";
+            GuestUsageGuidelinesUrl       = "";
+            IsSingleInstance              = "Yes";
+            UsageGuidelinesUrl            = "";
+        }
+
         EXOAcceptedDomain O365DSCDomain
         {
             Identity           = $Domain
