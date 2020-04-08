@@ -56,7 +56,7 @@ Configuration Master
             EnableGroupCreation           = $True;
             Ensure                        = "Present";
             GlobalAdminAccount            = $GlobalAdmin;
-            GroupCreationAllowedGroupName = "All Company";
+            GroupCreationAllowedGroupName = "Office365DSC Core Team";
             GuestUsageGuidelinesUrl       = "";
             IsSingleInstance              = "Yes";
             UsageGuidelinesUrl            = "";
