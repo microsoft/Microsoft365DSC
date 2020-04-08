@@ -168,16 +168,16 @@ function Set-TargetResource
     if (($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present') -or $needToUpdate)
     {
         $groupObject = Get-AzureADGroup -SearchString $GroupCreationAllowedGroupName
-        $groupName = $null
+        $groupId = $null
         if ($null -ne $groupObject)
         {
-            $groupName = $groupObject.DisplayName
+            $groupId = $groupObject.ObjectId
         }
         $Policy["EnableGroupCreation"]           = [System.Boolean]$EnableGroupCreation
         $Policy["AllowGuestsToBeGroupOwner"]     = [System.Boolean]$AllowGuestsToBeGroupOwner
         $Policy["AllowGuestsToAccessGroups"]     = [System.Boolean]$AllowGuestsToAccessGroups
         $Policy["GuestUsageGuidelinesUrl"]       = $GuestUsageGuidelinesUrl
-        $Policy["GroupCreationAllowedGroupId"]   = $groupName
+        $Policy["GroupCreationAllowedGroupId"]   = $groupId
         $Policy["AllowToAddGuests"]              = [System.Boolean]$AllowToAddGuests
         $Policy["UsageGuidelinesUrl"]            = $UsageGuidelinesUrl
 
