@@ -132,7 +132,7 @@
     for SharingCapabilities;
 * SPOTheme
   * Fixed an issue with the Set-TargetResource
-    still using SPO management shell cmdlets instead of PnP
+    still using SPO management shell cmdlets instead of PnP;
 * SPOUserProfileProperty
   * Introduced Multi-Threading
 * TeamsCallingPolicy
