@@ -42,7 +42,6 @@ function Get-TargetResource
 
     if ($null -eq $Policy)
     {
-        New-Office365DSCLogEntry -Error $_ -Message "Couldn't get AzureAD Group Naming Policy" -Source $MyInvocation.MyCommand.ModuleName
         $currentValues = $PSBoundParameters
         $currentValues.Ensure = "Absent"
         return $currentValues
@@ -91,7 +90,7 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of Device Conditional Access Policy for $Name"
+    Write-Verbose -Message "Setting configuration of Azure AD Groups Naming Policy"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)

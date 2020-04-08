@@ -2,9 +2,11 @@
 
 ## UNRELEASED
 
+* AADGroupsNamingPolicy
+  * Initial Release;
 * AADGroupsSettings
   * Initial Release;
-* AADGroupsNamingPolicy
+* AADMSGroupLifecyclePolicy
   * Initial Release;
 * SPOPropertyBag
   * Fixed an issue where false positive drifts were being detected;

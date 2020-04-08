@@ -1,9 +1,15 @@
-# Office365DSC
+NOTE
+=============
+The Office365DSC module is in the process of being rebranded to Microsoft365DSC.
+The team is working on a plan to make the transition as smooth as possible.
+-------------
+
+# Microsoft365DSC
 
 ![DSC Resources Flow](https://github.com/microsoft/Office365DSC/blob/master/Modules/Office365DSC/Dependencies/Images/Logo.png?raw=true)
 
 This module allows organizations to automate the deployment,
-configuration, and monitoring of Office 365 Tenants via PowerShell
+configuration, and monitoring of Microsoft 365 Tenants via PowerShell
 Desired State Configuration. The compiled configuration needs to be
 executed from an agent's Local Configuration Manager (LCM) (machine
 or container) which can communicate back remotely to Office 365 via
@@ -46,13 +52,13 @@ Install-Module -Name Office365DSC -Force
 
 ## Telemetry Disclaimer
 
-Office365DSC captures Telemetry data about the names of the resources
+Microsoft365DSC captures Telemetry data about the names of the resources
 in which a configuration drift has been detected, along with the type
 of exceptions being thrown by errors in the various modules. While no
 sensitive data is ever being captured, App Insights which is used for
 the analytics of the Telemetry, does capture information about the city
 where the telemetry entries where captured from by default. Users can
-opt out to prevent telemetry to be sent back to the Office365DSC team
+opt out to prevent telemetry to be sent back to the Microsoft365DSC team
 by running the following command:
 
 ```powershell
