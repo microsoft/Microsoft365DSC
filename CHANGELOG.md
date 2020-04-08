@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* AADMSGroupLifecyclePolicy
+  * Initial Release;
 * AADGroupsNamingPolicy
   * Initial Release;
 * SPOPropertyBag
