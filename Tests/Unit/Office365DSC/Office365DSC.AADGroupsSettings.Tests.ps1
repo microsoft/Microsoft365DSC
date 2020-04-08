@@ -56,60 +56,66 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             return $object
         }
 
-
-        Add-Type -PassThru -TypeDefinition @"
-            namespace Contoso.Model {
-                public class SettingValue {
-                    public string Name {get; set;}
-                    public string Value {get; set;}
-                }
-
-                public class DirectorySetting {
-
-                    public System.Collections.Generic.List<SettingValue> Values {get; set;}
-                    public System.Collections.Generic.List<SettingValue> _values = new System.Collections.Generic.List<SettingValue>();
-                    public string this[string keyName]
-                    {
-                        get {
-                            if (keyName == "UsageGuidelinesUrl")
-                            {
-                                return "https://contoso.com/usage";
-                            }
-                            else if (keyName == "AllowToAddGuests")
-                            {
-                                return "true";
-                            }
-                            else if (keyName == "GroupCreationAllowedGroupId")
-                            {
-                                return "12345-12345-12345-12345-12345";
-                            }
-                            else if (keyName == "GuestUsageGuidelinesUrl")
-                            {
-                                return "https://contoso.com/guestusage";
-                            }
-                            else if (keyName == "AllowGuestsToAccessGroups")
-                            {
-                                return "true";
-                            }
-                            else if (keyName == "AllowGuestsToBeGroupOwner")
-                            {
-                                return "true";
-                            }
-                            else if (keyName == "EnableGroupCreation")
-                            {
-                                return "true";
-                            }
-                            return "";
-                        }
-                        set {}
+        try
+        {
+            [Contoso.Model.DirectorySetting]
+        }
+        catch
+        {
+            Add-Type -PassThru -TypeDefinition @"
+                namespace Contoso.Model {
+                    public class SettingValue {
+                        public string Name {get; set;}
+                        public string Value {get; set;}
                     }
-                    public string DisplayName {get {return "Group.Unified";}}
-                    public string Id {get {return "12345-12345-12345-12345-12345";}}
 
-                    public DirectorySetting (){}
+                    public class DirectorySetting {
+
+                        public System.Collections.Generic.List<SettingValue> Values {get; set;}
+                        public System.Collections.Generic.List<SettingValue> _values = new System.Collections.Generic.List<SettingValue>();
+                        public string this[string keyName]
+                        {
+                            get {
+                                if (keyName == "UsageGuidelinesUrl")
+                                {
+                                    return "https://contoso.com/usage";
+                                }
+                                else if (keyName == "AllowToAddGuests")
+                                {
+                                    return "true";
+                                }
+                                else if (keyName == "GroupCreationAllowedGroupId")
+                                {
+                                    return "12345-12345-12345-12345-12345";
+                                }
+                                else if (keyName == "GuestUsageGuidelinesUrl")
+                                {
+                                    return "https://contoso.com/guestusage";
+                                }
+                                else if (keyName == "AllowGuestsToAccessGroups")
+                                {
+                                    return "true";
+                                }
+                                else if (keyName == "AllowGuestsToBeGroupOwner")
+                                {
+                                    return "true";
+                                }
+                                else if (keyName == "EnableGroupCreation")
+                                {
+                                    return "true";
+                                }
+                                return "";
+                            }
+                            set {}
+                        }
+                        public string DisplayName {get {return "Group.Unified";}}
+                        public string Id {get {return "12345-12345-12345-12345-12345";}}
+
+                        public DirectorySetting (){}
+                    }
                 }
-            }
 "@
+        }
 
         Mock -CommandName "Get-AzureADGroup" -MockWith {
             return @{
