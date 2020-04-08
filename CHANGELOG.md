@@ -1,7 +1,7 @@
 # Change log for Office365Dsc
 
 ## UNRELEASED
-Trigger
+
 * AADGroupsNamingPolicy
   * Initial Release;
 * AADGroupsSettings
