@@ -1,3 +1,9 @@
+NOTE
+=============
+The Office365DSC module is in the process of being rebranded to Microsoft365DSC.
+The team is working on a plan to make the transition as smooth as possible.
+-------------
+
 # Microsoft365DSC
 
 ![DSC Resources Flow](https://github.com/microsoft/Office365DSC/blob/master/Modules/Office365DSC/Dependencies/Images/Logo.png?raw=true)
