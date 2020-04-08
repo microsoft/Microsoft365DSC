@@ -23,9 +23,9 @@ Configuration Example
             Ensure                        = "Present";
             GlobalAdminAccount            = $credsGlobalAdmin;
             GroupCreationAllowedGroupName = "All Company";
-            GuestUsageGuidelinesUrl       = "";
+            GuestUsageGuidelinesUrl       = "https://contoso.com/guestusage";
             IsSingleInstance              = "Yes";
-            UsageGuidelinesUrl            = "";
+            UsageGuidelinesUrl            = "https://contoso.com/usage";
         }
     }
 }
