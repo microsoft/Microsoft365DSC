@@ -144,10 +144,7 @@ function Set-TargetResource
         {
             $emails += $email + ";"
         }
-        if ($emails.EndsWith(';'))
-        {
-            $emails = $emails.SubString(0, $emails.Length-1)
-        }
+        $emails = $emails.TrimEnd(';')
         $creationParams.AlternateNotificationEmails = $emails
         New-AzureADMSGroupLifecyclePolicy @creationParams
     }
@@ -163,10 +160,7 @@ function Set-TargetResource
         {
             $emails += $email + ";"
         }
-        if ($emails.EndsWith(';'))
-        {
-            $emails = $emails.SubString(0, $emails.Length-1)
-        }
+        $emails = $emails.TrimEnd(';')
         $updateParams.AlternateNotificationEmails = $emails
         $updateParams.Add("Id", (Get-AzureADMSGroupLifecyclePolicy).Id)
 
@@ -217,8 +211,6 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of AzureAD Groups Lifecycle Policy"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    Write-Verbose -Message "Current Values: $(Convert-O365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-O365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
