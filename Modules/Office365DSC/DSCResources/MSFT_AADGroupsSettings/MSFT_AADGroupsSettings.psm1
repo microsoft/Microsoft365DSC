@@ -177,7 +177,7 @@ function Set-TargetResource
         $Policy["AllowGuestsToBeGroupOwner"]     = [System.Boolean]$AllowGuestsToBeGroupOwner
         $Policy["AllowGuestsToAccessGroups"]     = [System.Boolean]$AllowGuestsToAccessGroups
         $Policy["GuestUsageGuidelinesUrl"]       = $GuestUsageGuidelinesUrl
-        $Policy["GroupCreationAllowedGroupName"] = $groupName
+        $Policy["GroupCreationAllowedGroupId"]   = $groupName
         $Policy["AllowToAddGuests"]              = [System.Boolean]$AllowToAddGuests
         $Policy["UsageGuidelinesUrl"]            = $UsageGuidelinesUrl
 
