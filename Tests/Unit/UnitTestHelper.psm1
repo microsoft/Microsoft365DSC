@@ -1,4 +1,4 @@
-function New-O365DscUnitTestHelper
+function New-M365DscUnitTestHelper
 {
     [CmdletBinding()]
     param(
@@ -24,9 +24,9 @@ function New-O365DscUnitTestHelper
     )
 
     $repoRoot = Join-Path -Path $PSScriptRoot -ChildPath "..\..\" -Resolve
-    $moduleRoot = Join-Path -Path $repoRoot -ChildPath "Modules\Office365Dsc"
+    $moduleRoot = Join-Path -Path $repoRoot -ChildPath "Modules\Microsoft365Dsc"
 
-    $mainModule = Join-Path -Path $moduleRoot -ChildPath "Office365DSC.psd1"
+    $mainModule = Join-Path -Path $moduleRoot -ChildPath "Microsoft365DSC.psd1"
     Remove-Module -Name "AzureAD" -Force -ErrorAction SilentlyContinue
     Import-Module -Name $mainModule -Global
 

@@ -6,7 +6,7 @@ The team is working on a plan to make the transition as smooth as possible.
 
 # Microsoft365DSC
 
-![DSC Resources Flow](https://github.com/microsoft/Office365DSC/blob/master/Modules/Office365DSC/Dependencies/Images/Logo.png?raw=true)
+![DSC Resources Flow](https://github.com/microsoft/Microsoft365DSC/blob/master/Modules/Microsoft365DSC/Dependencies/Images/Logo.png?raw=true)
 
 This module allows organizations to automate the deployment,
 configuration, and monitoring of Microsoft 365 Tenants via PowerShell
@@ -18,22 +18,22 @@ remote API calls (therefore requires internet connectivity)
 For information on how to get started, additional documentation or 
 templates, please navigate to the official web site at:
 
-[Office365DSC.com](http://Office365DSC.com)
+[Microsoft365DSC.com](http://Microsoft365DSC.com)
 
 ## Branches
 
 ### master
 
-[![Build status](https://ci.appveyor.com/api/projects/status/5a7f2ao7d1mnoqrb/branch/master?svg=true)](https://ci.appveyor.com/project/NikCharlebois/office365dsc/branch/master)
-[![codecov](https://codecov.io/gh/Microsoft/office365dsc/branch/master/graph/badge.svg)](https://codecov.io/gh/Microsoft/office365dsc)
+[![Build status](https://ci.appveyor.com/api/projects/status/5a7f2ao7d1mnoqrb/branch/master?svg=true)](https://ci.appveyor.com/project/NikCharlebois/Microsoft365DSC/branch/master)
+[![codecov](https://codecov.io/gh/Microsoft/Microsoft365DSC/branch/master/graph/badge.svg)](https://codecov.io/gh/Microsoft/Microsoft365DSC)
 
 This is the branch containing the latest release -
 no contributions should be made directly to this branch.
 
 ### dev
 
-[![Build status](https://ci.appveyor.com/api/projects/status/5a7f2ao7d1mnoqrb?svg=true)](https://ci.appveyor.com/project/NikCharlebois/office365dsc)
-[![codecov](https://codecov.io/gh/microsoft/Office365DSC/branch/Dev/graph/badge.svg)](https://codecov.io/gh/microsoft/Office365DSC)
+[![Build status](https://ci.appveyor.com/api/projects/status/5a7f2ao7d1mnoqrb?svg=true)](https://ci.appveyor.com/project/NikCharlebois/Microsoft365DSC)
+[![codecov](https://codecov.io/gh/microsoft/Microsoft365DSC/branch/Dev/graph/badge.svg)](https://codecov.io/gh/microsoft/Microsoft365DSC)
 
 This is the development branch
 to which contributions should be proposed by contributors as pull requests.
@@ -47,7 +47,7 @@ bits of the module from a machine that has internet connectivity,
 simply run the following PowerShell line:
 
 ```powershell
-Install-Module -Name Office365DSC -Force
+Install-Module -Name Microsoft365DSC -Force
 ```
 
 ## Telemetry Disclaimer
@@ -62,5 +62,5 @@ opt out to prevent telemetry to be sent back to the Microsoft365DSC team
 by running the following command:
 
 ```powershell
-Set-O365DSCTelemetryOption -Enabled $False
+Set-M365DSCTelemetryOption -Enabled $False
 ```

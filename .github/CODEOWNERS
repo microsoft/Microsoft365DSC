@@ -4,52 +4,52 @@
 # review when someone opens a pull request.
 *       @nikcharlebois
 
-/Modules/Office365DSC/DSCResources/MSFT_EXOAcceptedDomain/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_EXOAntiPhishPolicy/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_AntiPhishRule/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_EXOAtpPolicyForO365/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_EXOCASMailboxPlan/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_EXOClientAccessRule/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_DkimSigningConfig/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_EXOHostedConnectionFilterPolicy/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_EXOHostedContentFilterPolicy/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_EXOHostedCOntentFilterRule/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_EXOHostedOutboundSpamFilterPolicy/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_EXOMailboxSettings/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_EXOMailTips/ @poiriersimon
-/Modules/Office365DSC/DSCResources/MSFT_EXOSafeAttachmentPolicy/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_EXOSafeAttachmentRule/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_EXOSafeLinksPolicy/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_EXOSafeLinksRule/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_EXOSharedMailbox/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_EXOAcceptedDomain/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_EXOAntiPhishPolicy/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_AntiPhishRule/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_EXOAtpPolicyForO365/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_EXOCASMailboxPlan/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_EXOClientAccessRule/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_DkimSigningConfig/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_EXOHostedConnectionFilterPolicy/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_EXOHostedContentFilterPolicy/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_EXOHostedCOntentFilterRule/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_EXOHostedOutboundSpamFilterPolicy/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_EXOMailboxSettings/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_EXOMailTips/ @poiriersimon
+/Modules/Microsoft365DSC/DSCResources/MSFT_EXOSafeAttachmentPolicy/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_EXOSafeAttachmentRule/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_EXOSafeLinksPolicy/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_EXOSafeLinksRule/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_EXOSharedMailbox/ @nikcharlebois
 
-/Modules/Office365DSC/DSCResources/MSFT_O365AdminAuditLogConfig/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_O365Group/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_O365User/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_O365AdminAuditLogConfig/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_O365Group/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_O365User/ @nikcharlebois
 
-/Modules/Office365DSC/DSCResources/MSFT_ODSettings/ @desmay
+/Modules/Microsoft365DSC/DSCResources/MSFT_ODSettings/ @desmay
 
-/Modules/Office365DSC/DSCResources/MSFT_SCRetentionCompliancePolicy/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_SCRetentionComplianceRule/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_SCSupervisoryReviewPolicy/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_SCSupervisoryReviewRule/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_SCRetentionCompliancePolicy/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_SCRetentionComplianceRule/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_SCSupervisoryReviewPolicy/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_SCSupervisoryReviewRule/ @nikcharlebois
 
-/Modules/Office365DSC/DSCResources/MSFT_SPOAccessControlSettings/ @thorstenloeschmann
-/Modules/Office365DSC/DSCResources/MSFT_SPOApp/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_SPOHubSite/ @ykuijs
-/Modules/Office365DSC/DSCResources/MSFT_SPOSearchManagedProperty/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_SPOSearchResultSource/ @nikcharlebois
-/Modules/Office365DSC/DSCResources/MSFT_SPOSharingSettings/ @thorstenloeschmann
-/Modules/Office365DSC/DSCResources/MSFT_SPOSite/ @thorstenloeschmann
-/Modules/Office365DSC/DSCResources/MSFT_SPOSiteDesign/ @thorstenloeschmann
-/Modules/Office365DSC/DSCResources/MSFT_SPOSiteDesignRights/ @thorstenloeschmann
-/Modules/Office365DSC/DSCResources/MSFT_SPOStorageEntity/ @thorstenloeschmann
-/Modules/Office365DSC/DSCResources/MSFT_SPOTenantSettings/ @thorstenloeschmann
-/Modules/Office365DSC/DSCResources/MSFT_SPOTheme/ @thorstenloeschmann
+/Modules/Microsoft365DSC/DSCResources/MSFT_SPOAccessControlSettings/ @thorstenloeschmann
+/Modules/Microsoft365DSC/DSCResources/MSFT_SPOApp/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_SPOHubSite/ @ykuijs
+/Modules/Microsoft365DSC/DSCResources/MSFT_SPOSearchManagedProperty/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_SPOSearchResultSource/ @nikcharlebois
+/Modules/Microsoft365DSC/DSCResources/MSFT_SPOSharingSettings/ @thorstenloeschmann
+/Modules/Microsoft365DSC/DSCResources/MSFT_SPOSite/ @thorstenloeschmann
+/Modules/Microsoft365DSC/DSCResources/MSFT_SPOSiteDesign/ @thorstenloeschmann
+/Modules/Microsoft365DSC/DSCResources/MSFT_SPOSiteDesignRights/ @thorstenloeschmann
+/Modules/Microsoft365DSC/DSCResources/MSFT_SPOStorageEntity/ @thorstenloeschmann
+/Modules/Microsoft365DSC/DSCResources/MSFT_SPOTenantSettings/ @thorstenloeschmann
+/Modules/Microsoft365DSC/DSCResources/MSFT_SPOTheme/ @thorstenloeschmann
 
 
-/Modules/Office365DSC/DSCResources/MSFT_TeamsTeam/ @desmay
-/Modules/Office365DSC/DSCResources/MSFT_TeamsChannel/ @desmay
-/Modules/Office365DSC/DSCResources/MSFT_TeamsUser/ @desmay
+/Modules/Microsoft365DSC/DSCResources/MSFT_TeamsTeam/ @desmay
+/Modules/Microsoft365DSC/DSCResources/MSFT_TeamsChannel/ @desmay
+/Modules/Microsoft365DSC/DSCResources/MSFT_TeamsUser/ @desmay
 
-/Modules/Office365DSC/Modules/  @nikcharlebois
+/Modules/Microsoft365DSC/Modules/  @nikcharlebois
