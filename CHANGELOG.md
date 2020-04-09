@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* Re-branding to Microsoft365DSC
+  * All components re-branded;
 * AADMSGroupLifecyclePolicy
   * Initial Release;
 * AADGroupsNamingPolicy
