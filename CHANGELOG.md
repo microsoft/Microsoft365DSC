@@ -8,6 +8,10 @@
   * Initial Release;
 * AADGroupsNamingPolicy
   * Initial Release;
+* AADGroupsSettings
+  * Initial Release;
+* AADMSGroupLifecyclePolicy
+  * Initial Release;
 * SPOPropertyBag
   * Fixed an issue where false positive drifts were being detected;
 * SPOSiteAuditSettings
@@ -132,7 +136,7 @@
     for SharingCapabilities;
 * SPOTheme
   * Fixed an issue with the Set-TargetResource
-    still using SPO management shell cmdlets instead of PnP
+    still using SPO management shell cmdlets instead of PnP;
 * SPOUserProfileProperty
   * Introduced Multi-Threading
 * TeamsCallingPolicy
