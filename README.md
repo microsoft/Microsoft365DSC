@@ -16,9 +16,7 @@ or container) which can communicate back remotely to Office 365 via
 remote API calls (therefore requires internet connectivity)
 
 For information on how to get started, additional documentation or 
-templates, please navigate to the official web site at:
-
-[Office365DSC.com](http://Office365DSC.com)
+templates, please navigate to the official web site at [Microsoft65DSC.com](http://Microsoft365DSC.com) and check out the official YouTube channel [Microsoft365DSC](https://www.youtube.com/channel/UCveScabVT6pxzqYgGRu17iw).
 
 ## Branches
 
