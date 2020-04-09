@@ -1357,6 +1357,6 @@ function Assert-M365DSCTemplate
     }
     else
     {
-        Write-Error "You need to specify a path to an Microsoft365DSC Template (*.om65 or *.ps1)"
+        Write-Error "You need to specify a path to an Microsoft365DSC Template (*.m365 or *.ps1)"
     }
 }
