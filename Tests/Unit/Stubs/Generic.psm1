@@ -844,7 +844,7 @@ function Remove-SafeLinksRule
 }
 #endregion
 
-function New-Office365DSCLogEntry
+function New-M365DSCLogEntry
 {
     [CmdletBinding()]
     param
