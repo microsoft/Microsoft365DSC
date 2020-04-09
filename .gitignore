@@ -4,15 +4,15 @@
 .vs
 .psproj
 .sln
-Modules/Office365Dsc/DscResource.Tests
-Modules/Office365Dsc/DscResource.Tests/*
+Modules/Microsoft365DSC/DscResource.Tests
+Modules/Microsoft365DSC/DscResource.Tests/*
 node_modules
 node_modules/*
 markdownissues.txt
 start-unittests.ps1
 TestDSCresource.ps1
-Modules/Office365DSC/DSCResources/MSFT_EXOMalwareFilterPolicy/Set-MalwareFilterPolicy.txt
+Modules/Microsoft365DSC/DSCResources/MSFT_EXOMalwareFilterPolicy/Set-MalwareFilterPolicy.txt
 
 Modules/start-extraction.ps1
-Modules/Office365DSC/DSCResources/MSFT_EXOAvailabilityAddressSpace/Add-AvailabilityAddressSpace-parameterset.txt
+Modules/Microsoft365DSC/DSCResources/MSFT_EXOAvailabilityAddressSpace/Add-AvailabilityAddressSpace-parameterset.txt
 *.log

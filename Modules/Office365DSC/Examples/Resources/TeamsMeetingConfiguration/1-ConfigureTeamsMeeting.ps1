@@ -9,7 +9,7 @@ Configuration Example
         [PSCredential]
         $credsGlobalAdmin
     )
-    Import-DscResource -ModuleName Office365DSC
+    Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
@@ -26,10 +26,10 @@ Configuration Example
             DisableAnonymousJoin        = $False;
             EnableQoS                   = $False;
             GlobalAdminAccount          = $credsglobaladmin;
-            HelpURL                     = "https://github.com/Microsoft/Office365DSC/Help";
+            HelpURL                     = "https://github.com/Microsoft/Microsoft365DSC/Help";
             Identity                    = "Global";
-            LegalURL                    = "https://github.com/Microsoft/Office365DSC/Legal";
-            LogoURL                     = "https://github.com/Microsoft/Office365DSC/Logo.png";
+            LegalURL                    = "https://github.com/Microsoft/Microsoft365DSC/Legal";
+            LogoURL                     = "https://github.com/Microsoft/Microsoft365DSC/Logo.png";
         }
     }
 }

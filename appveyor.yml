@@ -6,7 +6,7 @@ install:
     - npm --silent install
 
     - ps: |
-        $moduleName = 'Office365DSC'
+        $moduleName = 'Microsoft365DSC'
         $mainModuleFolder = "Modules\$moduleName"
         Install-Module ReverseDSC -RequiredVersion 2.0.0.2 -Force
         Install-Module AzureADPreview -RequiredVersion 2.0.2.89 -Force
@@ -27,7 +27,7 @@ install:
         Import-Module MSCloudLoginAssistant -Force
         Import-Module AzureADPreview -Force
         Import-Module MicrosoftTeams -Force
-        [System.Environment]::SetEnvironmentVariable('O365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine)
+        [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine)
         Import-Module -Name "$env:APPVEYOR_BUILD_FOLDER\DscResource.Tests\AppVeyor.psm1"
         Invoke-AppveyorInstallTask
 
