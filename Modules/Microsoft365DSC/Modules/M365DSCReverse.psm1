@@ -36,7 +36,7 @@ function Start-M365DSCConfigurationExtract
         $MaxProcesses = 16,
 
         [Parameter()]
-        [ValidateSet('SPO', 'EXO', 'SC', 'OD', 'O365', 'TEAMS', 'PP')]
+        [ValidateSet('AAD', 'SPO', 'EXO', 'SC', 'OD', 'O365', 'TEAMS', 'PP')]
         [System.String[]]
         $Workloads,
 
@@ -91,7 +91,7 @@ function Start-M365DSCConfigurationExtract
     }
     if ([System.String]::IsNullOrEmpty($ConfigurationName))
     {
-        $ConfigurationName = 'O365TenantConfig'
+        $ConfigurationName = 'M365TenantConfig'
     }
     $DSCContent += "Configuration $ConfigurationName`r`n{`r`n"
     $DSCContent += "    param (`r`n"
@@ -133,6 +133,11 @@ function Start-M365DSCConfigurationExtract
             [array]$currentWorkload = $ResourceName.Substring(0, 2)
             switch ($currentWorkload.ToUpper())
             {
+                'AA'
+                {
+                    $currentWorkload = 'AAD';
+                    break
+                }
                 'EX'
                 {
                     $currentWorkload = 'EXO';
@@ -290,7 +295,7 @@ function Start-M365DSCConfigurationExtract
     }
     else
     {
-        $outputDSCFile = $OutputDSCPath + "Office365TenantConfig.ps1"
+        $outputDSCFile = $OutputDSCPath + "M365TenantConfig.ps1"
     }
     $DSCContent | Out-File $outputDSCFile
 

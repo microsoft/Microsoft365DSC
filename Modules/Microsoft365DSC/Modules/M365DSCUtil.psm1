@@ -891,7 +891,7 @@ function Export-M365DSCConfiguration
         $ComponentsToExtract,
 
         [Parameter()]
-        [ValidateSet('SPO', 'EXO', 'SC', 'OD', 'O365', 'PP', 'TEAMS')]
+        [ValidateSet('AAD', 'SPO', 'EXO', 'SC', 'OD', 'O365', 'PP', 'TEAMS')]
         [System.String[]]
         $Workloads,
 
