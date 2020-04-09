@@ -579,7 +579,7 @@ function Show-M365DSCGUI
         $pnlMain.AutoScroll = $true
         $form.Controls.Add($pnlMain)
         $form.ActiveControl = $txtTenantAdmin
-        $form.Text = "ReverseDSC for Office 365"
+        $form.Text = "Microsoft365DSC - Extract Configuration"
         $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
         $return = $form.ShowDialog()
     }
