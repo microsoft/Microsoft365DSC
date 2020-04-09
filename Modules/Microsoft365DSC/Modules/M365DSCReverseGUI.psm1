@@ -547,7 +547,7 @@ function Show-M365DSCGUI
                     try
                     {
                         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force))
-                        Start-M365ConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                        Start-M365DSCConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                             -ComponentsToExtract $SelectedComponents `
                             -Path $Path
                     }

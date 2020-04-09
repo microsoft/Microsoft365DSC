@@ -6,7 +6,7 @@ The team is working on a plan to make the transition as smooth as possible.
 
 # Microsoft365DSC
 
-![DSC Resources Flow](https://github.com/microsoft/Microsoft365DSC/blob/master/Modules/Microsoft365DSC/Dependencies/Images/Logo.png?raw=true)
+![DSC Resources Flow](/microsoft/Microsoft365DSC/blob/Dev/Modules/Microsoft365DSC/Dependencies/Images/Logo.png?raw=true)
 
 This module allows organizations to automate the deployment,
 configuration, and monitoring of Microsoft 365 Tenants via PowerShell
@@ -15,10 +15,10 @@ executed from an agent's Local Configuration Manager (LCM) (machine
 or container) which can communicate back remotely to Office 365 via
 remote API calls (therefore requires internet connectivity)
 
-For information on how to get started, additional documentation or 
-templates, please navigate to the official web site at 
-[Microsoft65DSC.com](http://Microsoft365DSC.com) and check out the 
-official YouTube channel 
+For information on how to get started, additional documentation or
+templates, please navigate to the official web site at
+[Microsoft65DSC.com](http://Microsoft365DSC.com) and check out the
+official YouTube channel
 [Microsoft365DSC](https://www.youtube.com/channel/UCveScabVT6pxzqYgGRu17iw).
 
 ## Branches
