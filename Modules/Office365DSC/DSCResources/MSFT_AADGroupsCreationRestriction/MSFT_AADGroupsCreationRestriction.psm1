@@ -45,14 +45,20 @@ function Get-TargetResource
     }
     else
     {
-        if ($null -ne $Policy["GroupCreationAllowedGroupId"])
+        Write-Verbose -message "Policy Group is $($Policy["GroupCreationAllowedGroupId"])."
+        if ($null -ne $Policy["GroupCreationAllowedGroupId"] -and $Policy["GroupCreationAllowedGroupId"] -ne '')
         {
-            $creationGroup = Get-AzureADGroup -ObjectId $Policy["GroupCreationAllowedGroupId"]
+            $creationGroup = Get-AzureADMSGroup -Id $Policy["GroupCreationAllowedGroupId"]
         }
+        $currentGroupName = ""
+        if ($null -ne $creationGroup){
+            $currentGroupName = $creationGroup.DisplayName
+        }
+
         Write-Verbose "Found existing AzureAD Groups Creation Policy"
         $result = @{
             IsSingleInstance   = 'Yes'
-            GroupName          = $creationGroup.DisplayName
+            GroupName          = $currentGroupName
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdminAccount
         }
@@ -112,10 +118,10 @@ function Set-TargetResource
 
     if (($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present') -or $needToUpdate)
     {
-        $group = Get-AzureADGroup -Filter  "DisplayName -eq '$($currentPolicy.GroupName)'"
+        Write-Verbose -Message "Setting configuration of AzureAD Groups Creation Policy $GroupName"
+        $group = Get-AzureADMSGroup -Filter  "DisplayName eq '$GroupName'"
         $Policy["EnableGroupCreation"] = $true
-        $Policy["GroupCreationAllowedGroupId"] = $group.ObjectId
-
+        $Policy["GroupCreationAllowedGroupId"] = $group.Id
         Set-AzureADDirectorySetting -Id $Policy.id -DirectorySetting $Policy
     }
     ## Remove O365 GroupNaming restriction blanking out Group ID
