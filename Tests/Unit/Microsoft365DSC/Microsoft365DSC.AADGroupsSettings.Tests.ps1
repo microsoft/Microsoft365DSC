@@ -58,12 +58,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         try
         {
-            [Contoso.Model.DirectorySetting]
-        }
-        catch
-        {
             Add-Type -PassThru -TypeDefinition @"
-                namespace Contoso.Model {
+                namespace Contoso.Model.AADGroupsSettings {
                     public class SettingValue {
                         public string Name {get; set;}
                         public string Value {get; set;}
@@ -116,6 +112,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 "@
         }
+        catch
+        {
+            Write-Verbose -Message "Type already loaded"
+        }
 
         Mock -CommandName "Get-AzureADGroup" -MockWith {
             return @{
@@ -148,7 +148,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
                 else
                 {
-                    $setting = New-Object 'Contoso.Model.DirectorySetting'
+                    $setting = New-Object 'Contoso.Model.AADGroupsSettings.DirectorySetting'
                     return $setting
                 }
             }
@@ -177,7 +177,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
-                $setting = New-Object 'Contoso.Model.DirectorySetting'
+                $setting = New-Object 'Contoso.Model.AADGroupsSettings.DirectorySetting'
                 return $setting
             }
 
@@ -209,7 +209,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
-                $setting = New-Object 'Contoso.Model.DirectorySetting'
+                $setting = New-Object 'Contoso.Model.AADGroupsSettings.DirectorySetting'
                 return $setting
             }
 
@@ -238,7 +238,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
-                $setting = New-Object 'Contoso.Model.DirectorySetting'
+                $setting = New-Object 'Contoso.Model.AADGroupsSettings.DirectorySetting'
                 return $setting
             }
 
@@ -263,7 +263,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
-                $setting = New-Object 'Contoso.Model.DirectorySetting'
+                $setting = New-Object 'Contoso.Model.AADGroupsSettings.DirectorySetting'
                 return $setting
             }
 
