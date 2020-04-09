@@ -10,7 +10,7 @@ Configuration Example
         [PSCredential]
         $credsGlobalAdmin
     )
-    Import-DscResource -ModuleName Office365DSC
+    Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {

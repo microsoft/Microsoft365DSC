@@ -3,7 +3,7 @@ param(
     [Parameter()]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\Stubs\Office365.psm1" `
+            -ChildPath "..\Stubs\Microsoft365.psm1" `
             -Resolve)
 )
 $GenericStubPath = (Join-Path -Path $PSScriptRoot `
@@ -13,7 +13,7 @@ Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
 
-$Global:DscHelper = New-O365DscUnitTestHelper -StubModule $CmdletModule `
+$Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
     -DscResource "AADGroupsSettings" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
