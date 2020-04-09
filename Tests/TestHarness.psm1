@@ -49,7 +49,7 @@ function Invoke-TestHarness
     Import-Module $firstStub -WarningAction SilentlyContinue
 
     $stubPath = Join-Path -Path $repoDir `
-            -ChildPath "\Tests\Unit\Stubs\Office365.psm1"
+            -ChildPath "\Tests\Unit\Stubs\Microsoft365.psm1"
     $testsToRun += @(@{
             'Path'       = (Join-Path -Path $repoDir -ChildPath "\Tests\Unit")
             'Parameters' = @{
