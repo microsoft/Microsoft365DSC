@@ -6,8 +6,6 @@ The team is working on a plan to make the transition as smooth as possible.
 
 # Microsoft365DSC
 
-![Microsoft365DSC](https://github.com/microsoft/Microsoft365DSC/raw/Fixes/Modules/Microsoft365DSC/Dependencies/Images/Logo.png)
-
 This module allows organizations to automate the deployment,
 configuration, and monitoring of Microsoft 365 Tenants via PowerShell
 Desired State Configuration. The compiled configuration needs to be
