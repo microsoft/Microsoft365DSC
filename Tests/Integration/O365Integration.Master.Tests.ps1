@@ -253,6 +253,13 @@ Configuration Master
             DependsOn          = "[O365User]JohnSmith"
         }
 
+        AADGroupsCreationRestriction GroupsCreationrestrictionPolicy
+        {
+            GroupName        = "Office365DSC Core Team";
+            GlobalAdminAccount            = $GlobalAdmin;
+            IsSingleInstance              = "Yes";
+        }
+
         # TODO - Re-assess current issue with PowerApps module
         <#if ($Environment -ne 'GCC')
         {
