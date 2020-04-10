@@ -58,6 +58,29 @@ function Set-AzureADDirectorySetting
         $DirectorySetting
     )
 }
+
+function Set-AzureADMSGroupLifecyclePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${Id},
+
+        [Parameter(Mandatory = $true)]
+        [System.UInt32]
+        $GroupLifetimeInDays,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('All', 'Selected', 'None')]
+        $ManagedGroupTypes,
+
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $AlternateNotificationEmails
+    )
+}
 function Get-PSSession
 {
     [CmdletBinding()]
@@ -821,7 +844,7 @@ function Remove-SafeLinksRule
 }
 #endregion
 
-function New-Office365DSCLogEntry
+function New-M365DSCLogEntry
 {
     [CmdletBinding()]
     param
