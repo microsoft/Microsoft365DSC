@@ -7,7 +7,7 @@ param(
     [Parameter(Mandatory = $true)]
     [string]
     $CmdletModule = (Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\Stubs\Office365.psm1" `
+            -ChildPath "..\Stubs\Microsoft365.psm1" `
             -Resolve)
 )
 
@@ -25,7 +25,7 @@ if ($UnitTestFilePath.EndsWith("Tests.ps1"))
     $unitTestName = "$($unitTest.Name.Split('.')[1])"
 
     $unitTestFilePath = (Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\Modules\Office365DSC\DSCResources\MSFT_$($unitTestName)\MSFT_$($unitTestName).psm1" `
+            -ChildPath "..\Modules\Microsoft365DSC\DSCResources\MSFT_$($unitTestName)\MSFT_$($unitTestName).psm1" `
             -Resolve)
 
     Invoke-Pester -Script $pesterParameters -CodeCoverage $UnitTestFilePath -Verbose

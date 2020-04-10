@@ -1,8 +1,16 @@
-# Change log for Office365Dsc
+# Change log for Microsoft365DSC
 
 ## UNRELEASED
 
+* Re-branding to Microsoft365DSC
+  * All components re-branded;
+* AADMSGroupLifecyclePolicy
+  * Initial Release;
 * AADGroupsNamingPolicy
+  * Initial Release;
+* AADGroupsSettings
+  * Initial Release;
+* AADMSGroupLifecyclePolicy
   * Initial Release;
 * SPOPropertyBag
   * Fixed an issue where false positive drifts were being detected;
@@ -19,8 +27,8 @@
     a drift;
 * TeamsUpgradePolicy
   * Initial Release;
-* Office365DSCUtil
-  * Added the new Assert-O365DSCTemplate cmdlet to assess remote templates;
+* M365DSCUtil
+  * Added the new Assert-M365DSCTemplate cmdlet to assess remote templates;
 * ReverseDSC
   * Change to allow ComponentsToExtract without the 'chck' prefix;
   * Introduction of Extraction Modes and Visual Indicators;
@@ -128,7 +136,7 @@
     for SharingCapabilities;
 * SPOTheme
   * Fixed an issue with the Set-TargetResource
-    still using SPO management shell cmdlets instead of PnP
+    still using SPO management shell cmdlets instead of PnP;
 * SPOUserProfileProperty
   * Introduced Multi-Threading
 * TeamsCallingPolicy
