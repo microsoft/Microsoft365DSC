@@ -58,7 +58,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
 
         Add-Type -PassThru -TypeDefinition @"
-            namespace Contoso.Model {
+            namespace ContosoTest.Model {
                 public class SettingValue {
                     public string Name {get; set;}
                     public string Value {get; set;}
@@ -105,7 +105,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
                 else
                 {
-                    $setting = New-Object 'Contoso.Model.DirectorySetting'
+                    $setting = New-Object 'ContosoTest.Model.DirectorySetting'
                     return $setting
                 }
             }
@@ -135,7 +135,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
-                $setting = New-Object 'Contoso.Model.DirectorySetting'
+                $setting = New-Object 'ContosoTest.Model.DirectorySetting'
                 return $setting
             }
 
@@ -151,13 +151,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The Policy Exists and Values are already in the desired state" -Fixture {
             $testParams = @{
                 IsSingleInstance   = "Yes";
-                
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount;
             }
 
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
-                $setting = New-Object 'Contoso.Model.DirectorySetting'
+                $setting = New-Object 'ContosoTest.Model.DirectorySetting'
                 return $setting
             }
 
@@ -180,7 +179,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
-                $setting = New-Object 'Contoso.Model.DirectorySetting'
+                $setting = New-Object 'ContosoTest.Model.DirectorySetting'
                 return $setting
             }
 
@@ -205,7 +204,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
-                $setting = New-Object 'Contoso.Model.DirectorySetting'
+                $setting = New-Object 'ContosoTest.Model.DirectorySetting'
                 return $setting
             }
 
