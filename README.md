@@ -1,9 +1,3 @@
-NOTE
-=============
-The Office365DSC module is in the process of being rebranded to Microsoft365DSC.
-The team is working on a plan to make the transition as smooth as possible.
--------------
-
 # Microsoft365DSC
 
 This module allows organizations to automate the deployment,
