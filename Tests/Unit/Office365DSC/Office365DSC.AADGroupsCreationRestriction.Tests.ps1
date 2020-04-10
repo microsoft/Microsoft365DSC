@@ -7,8 +7,8 @@ param(
             -Resolve)
 )
 $GenericStubPath = (Join-Path -Path $PSScriptRoot `
-    -ChildPath "..\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "..\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
@@ -42,17 +42,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Mock -CommandName Remove-AzureADDirectorySetting -MockWith {
+        Mock -CommandName New-AzureADDirectorySetting -MockWith {
 
         }
 
-        Mock -CommandName New-AzureADDirectorySetting -MockWith {
+        Mock -CommandName Get-AzureADMSGroup -MockWith {
 
         }
 
         Mock -CommandName Get-AzureADDirectorySettingTemplate -MockWith {
             $object = [PSCustomObject]::new()
-            $object | Add-Member -MemberType ScriptMethod -Name "CreateDirectorySetting" -Value {return [PSCustomObject]::new()} -PassThru
+            $object | Add-Member -MemberType ScriptMethod -Name "CreateDirectorySetting" -Value { return [PSCustomObject]::new() } -PassThru
             return $object
         }
 
@@ -71,13 +71,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     public string this[string keyName]
                     {
                         get {
-                            if (keyName == "CustomBlockedWordsList")
+                            if (keyName == "GroupCreationAllowedGroupId")
                             {
-                                return "CEO,Test";
-                            }
-                            else if (keyName == "PrefixSuffixNamingRequirement")
-                            {
-                                return "[Title]Bob[Company][GroupName][Office]Nik";
+                                return "12345-12345-12345-12345-12345";
                             }
                             return "";
                         }
@@ -95,11 +91,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The Policy should exist but it DOES NOT" -Fixture {
             $Script:calledOnceAlready = $false
             $testParams = @{
-                IsSingleInstance              = "Yes";
-                PrefixSuffixNamingRequirement = "[Title]Bob[Company][GroupName][Office]Nik"
-                CustomBlockedWordsList        = @("CEO", "Test")
-                Ensure                        = "Present"
-                GlobalAdminAccount            = $GlobalAdminAccount;
+                IsSingleInstance   = "Yes";
+                GroupName          = "TestGroup"
+                Ensure             = "Present"
+                GlobalAdminAccount = $GlobalAdminAccount;
             }
 
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
@@ -133,11 +128,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "The Policy exists but it SHOULD NOT" -Fixture {
             $testParams = @{
-                IsSingleInstance              = "Yes";
-                PrefixSuffixNamingRequirement = "[Title]Bob[Company][GroupName][Office]Nik"
-                CustomBlockedWordsList        = @("CEO", "Test")
-                Ensure                        = "Absent"
-                GlobalAdminAccount            = $GlobalAdminAccount;
+                IsSingleInstance   = "Yes";
+                GroupName          = "TestGroup"
+                Ensure             = "Absent"
+                GlobalAdminAccount = $GlobalAdminAccount;
             }
 
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
@@ -153,19 +147,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should Be $false
             }
-
-            It 'Should Remove the Policy from the Set method' {
-                Set-TargetResource @testParams
-                Assert-MockCalled -CommandName "Remove-AzureADDirectorySetting" -Exactly 1
-            }
         }
         Context -Name "The Policy Exists and Values are already in the desired state" -Fixture {
             $testParams = @{
-                IsSingleInstance              = "Yes";
-                PrefixSuffixNamingRequirement = "[Title]Bob[Company][GroupName][Office]Nik"
-                CustomBlockedWordsList        = @("CEO", "Test")
-                Ensure                        = "Present"
-                GlobalAdminAccount            = $GlobalAdminAccount;
+                IsSingleInstance   = "Yes";
+                
+                Ensure             = "Present"
+                GlobalAdminAccount = $GlobalAdminAccount;
             }
 
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
@@ -185,11 +173,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Values are NOT in the desired state" -Fixture {
             $testParams = @{
-                IsSingleInstance              = "Yes";
-                PrefixSuffixNamingRequirement = "[GroupName]Drift" #Drift
-                CustomBlockedWordsList        = @("CEO", "Test")
-                Ensure                        = "Present"
-                GlobalAdminAccount            = $GlobalAdminAccount;
+                IsSingleInstance   = "Yes";
+                GroupName          = "TestGroup1"
+                Ensure             = "Present"
+                GlobalAdminAccount = $GlobalAdminAccount;
             }
 
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
