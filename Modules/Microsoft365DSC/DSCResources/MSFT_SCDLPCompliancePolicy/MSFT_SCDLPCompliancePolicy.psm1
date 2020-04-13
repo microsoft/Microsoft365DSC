@@ -363,7 +363,22 @@ function Set-TargetResource
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
         # If the Policy exists and it shouldn't, simply remove it;
-        Remove-DLPCompliancePolicy -Identity $Name
+        try
+        {
+            $policy = Get-DlpCompliancePolicy -Identity $Name -ErrorAction SilentlyContinue
+            if ($policy.Mode.ToString() -ne 'PendingDeletion')
+            {
+                Remove-DLPCompliancePolicy -Identity $Name
+            }
+            else
+            {
+                Write-Verbose -Message "Policy $Name is already in the process of being deleted."
+            }
+        }
+        catch
+        {
+            New-M365DSCLogEntry  -Error $_ -Message $_ -Source $MyInvocation.MyCommand.ModuleName
+        }
     }
 }
 

@@ -66,7 +66,7 @@ function Get-TargetResource
         Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
             -Platform PnP `
             -ConnectionUrl $Url
-        $siteGroup = Get-PnPGroup -Identity $Identity
+        $siteGroup = Get-PnPGroup -Identity $Identity -ErrorAction Stop
     }
     catch
     {

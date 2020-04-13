@@ -119,7 +119,16 @@ function Set-TargetResource
         {
             $policy = Get-AuditConfigurationPolicy | Where-Object -FilterScript { $_.Workload -eq $CurrentPolicy.Workload }
         }
-        Remove-AuditConfigurationPolicy -Identity $policy.Identity
+
+        try
+        {
+            Remove-AuditConfigurationPolicy -Identity $policy.Identity -ErrorAction Stop
+        }
+        catch
+        {
+            Write-Verbose -Message "Policy for $Workload is already in the process of being deleted."
+            New-M365DSCLogEntry  -Error $_ -Message $_ -Source $MyInvocation.MyCommand.ModuleName
+        }
     }
 }
 
