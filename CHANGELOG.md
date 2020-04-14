@@ -12,6 +12,24 @@
   * Initial Release;
 * AADMSGroupLifecyclePolicy
   * Initial Release;
+* SCAuditConfigurationPolicy
+  * Fix issue with the Remove scenario;
+* SCDLPCompliancePolicy
+  * Fix issue with the Remove scenario;
+* SCFilePropertyAuthority
+  * Fix issue with the Remove scenario;
+* SCFilePlanPropertyCategory
+  * Fix issue with the Remove scenario;
+* SCFilePlanPropertyCitation
+  * Fix issue with the Remove scenario;
+* SCFilePlanPropertyDepartment
+  * Fix issue with the Remove scenario;
+* SCFilePlanPropertyReferenceId
+  * Fix issue with the Remove scenario;
+* SCFilePlanPropertySubCategory
+  * Fix issue with the Remove scenario;
+* SCRetentionCompliancePolicy
+  * Fix issue with Teams Policy in the Get;
 * SPOPropertyBag
   * Fixed an issue where false positive drifts were being detected;
 * SPOSiteAuditSettings
