@@ -16,16 +16,14 @@ Configuration Example
     {
         AADMSGroup MyGroups
         {
-            AllowGuestsToAccessGroups     = $True;
-            AllowGuestsToBeGroupOwner     = $True;
-            AllowToAddGuests              = $True;
-            EnableGroupCreation           = $True;
-            Ensure                        = "Present";
-            GlobalAdminAccount            = $credsGlobalAdmin;
-            GroupCreationAllowedGroupName = "All Company";
-            GuestUsageGuidelinesUrl       = "https://contoso.com/guestusage";
-            IsSingleInstance              = "Yes";
-            UsageGuidelinesUrl            = "https://contoso.com/usage";
+            DisplayName                   = "DSCGroup"
+            Description                   = "Microsoft DSC Group"
+            SecurityEnabled               = $True
+            MailEnabled                   = $False
+            MailNickname                  = "M365DSC"
+            Visibility                    = "Private"
+            GlobalAdminAccount            = $credsGlobalAdmin
+            Ensure                        = "Present"
         }
     }
 }
