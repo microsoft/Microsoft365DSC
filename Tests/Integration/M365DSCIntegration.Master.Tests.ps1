@@ -327,19 +327,6 @@ Configuration Master
             PublicFolderLocation                  = @("All")
         }
 
-        SCComplianceSearchAction DemoSearchActionExport
-        {
-            IncludeSharePointDocumentVersions = $False;
-            Action                            = "Export";
-            SearchName                        = "Integration Compliance Search - EXO";
-            GlobalAdminAccount                = $GlobalAdmin;
-            IncludeCredential                 = $False;
-            RetryOnError                      = $False;
-            ActionScope                       = "IndexedItemsOnly";
-            Ensure                            = "Present";
-            EnableDedupe                      = $False;
-        }
-
         SCComplianceSearchAction DemoSearchActionRetention
         {
             IncludeSharePointDocumentVersions = $False;
