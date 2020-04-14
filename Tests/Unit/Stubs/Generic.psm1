@@ -95,6 +95,98 @@ function Remove-PSSession
     )
 }
 
+function New-AzureADMSGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $GroupTypes,
+
+        [Parameter()]
+        [System.String]
+        $MembershipRule,
+
+        [Parameter()]
+        [ValidateSet('On', 'Paused')]
+        [System.String]
+        $MembershipRuleProcessingState,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MailEnabled,
+
+        [Parameter()]
+        [System.String]
+        $MailNickname,
+
+        [Parameter()]
+        [ValidateSet('Public', 'Private', 'HiddenMembership')]
+        [System.String]
+        $Visibility
+    )
+}
+
+function Set-AzureADMSGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ID,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $GroupTypes,
+
+        [Parameter()]
+        [System.String]
+        $MembershipRule,
+
+        [Parameter()]
+        [ValidateSet('On', 'Paused')]
+        [System.String]
+        $MembershipRuleProcessingState,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MailEnabled,
+
+        [Parameter()]
+        [System.String]
+        $MailNickname,
+
+        [Parameter()]
+        [ValidateSet('Public', 'Private', 'HiddenMembership')]
+        [System.String]
+        $Visibility
+    )
+}
+
 function Get-SPOAdministrationUrl
 {
     [CmdletBinding()]

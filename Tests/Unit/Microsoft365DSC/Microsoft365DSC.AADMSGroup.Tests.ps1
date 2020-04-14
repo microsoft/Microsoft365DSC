@@ -65,7 +65,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-AzureADMSGroup -MockWith {
                 return $null
             }
-
             It "Should return Values from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should be 'Absent'
                 Assert-MockCalled -CommandName "Get-AzureADMSGroup" -Exactly 1
@@ -183,7 +182,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should call the Set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName "Get-AzureADMSGroup" -Exactly 1
                 Assert-MockCalled -CommandName 'Set-AzureADMSGroup' -Exactly 1
             }
         }
