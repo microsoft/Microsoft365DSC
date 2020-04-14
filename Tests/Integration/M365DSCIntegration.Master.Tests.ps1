@@ -70,7 +70,7 @@ Configuration Master
             MailEnabled                   = $False
             MailNickname                  = "M365DSC"
             Visibility                    = "Private"
-            GlobalAdminAccount            = $credsGlobalAdmin
+            GlobalAdminAccount            = $GlobalAdmin;
             Ensure                        = "Present"
         }
 
