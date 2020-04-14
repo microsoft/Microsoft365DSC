@@ -491,6 +491,7 @@ Configuration Master
         {
             Name               = "MyRCPolicy"
             Comment            = "Test Policy"
+            ExchangeLocation   = @()
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }

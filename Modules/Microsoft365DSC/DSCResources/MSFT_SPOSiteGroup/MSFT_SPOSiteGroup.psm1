@@ -98,15 +98,11 @@ function Get-TargetResource
     {
         $permissions += $entry.ToString()
     }
-    if ($permissions.Length -eq 0)
-    {
-        return $nullReturn
-    }
     return @{
         Url                = $Url
         Identity           = $siteGroup.Title
         Owner              = $siteGroup.Owner.LoginName
-        PermissionLevels   = $permissions
+        PermissionLevels   = [array]$permissions
         GlobalAdminAccount = $GlobalAdminAccount
         Ensure             = "Present"
     }
