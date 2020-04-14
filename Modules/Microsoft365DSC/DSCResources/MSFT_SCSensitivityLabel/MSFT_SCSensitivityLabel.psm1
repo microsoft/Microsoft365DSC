@@ -257,7 +257,7 @@ function Set-TargetResource
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $label.Ensure))
     {
         # If the label exists and it shouldn't, simply remove it;Need to force deletoion
-        Write-Verbose -message "Deleteing Sensitiivity label $Name."
+        Write-Verbose -message "Deleting Sensitiivity label $Name."
 
         try
         {

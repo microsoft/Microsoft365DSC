@@ -99,7 +99,22 @@ function Set-TargetResource
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $Current.Ensure))
     {
-        Remove-FilePlanPropertyAuthority -Identity $Name -Confirm:$false
+        try
+        {
+            $property = Get-FilePlanPropertyAuthority | Where-Object -FilterScript { $_.DisplayName -eq $Name }
+            if (-not $property.Mode.ToString() -eq 'PendingDeletion')
+            {
+                Remove-FilePlanPropertyAuthority -Identity $Name -Confirm:$false -ErrorAction Stop
+            }
+            else
+            {
+                Write-Verbose -Message "Property $Name is already in the process of being deleted."
+            }
+        }
+        catch
+        {
+            New-M365DSCLogEntry  -Error $_ -Message $_ -Source $MyInvocation.MyCommand.ModuleName
+        }
     }
 }
 
