@@ -62,6 +62,18 @@ Configuration Master
             UsageGuidelinesUrl            = "";
         }
 
+        AADMSGroup AzureADMSGroup
+        {
+            DisplayName                   = "DSCGroup"
+            Description                   = "Microsoft DSC Group"
+            SecurityEnabled               = $True
+            MailEnabled                   = $False
+            MailNickname                  = "M365DSC"
+            Visibility                    = "Private"
+            GlobalAdminAccount            = $credsGlobalAdmin
+            Ensure                        = "Present"
+        }
+
         EXOAcceptedDomain O365DSCDomain
         {
             Identity           = $Domain
