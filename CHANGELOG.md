@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## 1.0.4.39
+
 * Re-branding to Microsoft365DSC
   * All components re-branded;
 * AADMSGroupLifecyclePolicy
