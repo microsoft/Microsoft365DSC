@@ -1,0 +1,9 @@
+[ClassVersion("1.0.0.0"), FriendlyName("EXOManagementRole")]
+class MSFT_EXOManagementRole : OMI_BaseResource
+{
+    [Key, Description("The Name parameter specifies the name of the role. The maximum length of the name is 64 characters.")] String Name;
+    [Write, Description("The Parent parameter specifies the identity of the role to copy.")] String Parent;
+    [Write, Description("The Description parameter specifies the description that's displayed when the management role is viewed using the Get-ManagementRole cmdlet.")] String Description;
+    [Write, Description("Specify if the Management Role should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+};

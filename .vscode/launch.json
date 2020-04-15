@@ -7,7 +7,7 @@
             "name": "Run current unit test",
             "script": "${file}",
             "args": [
-                "${workspaceRoot}/Tests/Unit/Stubs/Office365.psm1"
+                "${workspaceRoot}/Tests/Unit/Stubs/Microsoft365.psm1"
             ],
             "cwd": "${file}",
             "createTemporaryIntegratedConsole": true
@@ -19,7 +19,7 @@
             "script": "${workspaceRoot}/.vscode/GetTestCoverage.ps1",
             "args": [
                 "${file}",
-                "${workspaceRoot}/Tests/Unit/Stubs/Office365.psm1"
+                "${workspaceRoot}/Tests/Unit/Stubs/Microsoft365.psm1"
             ],
             "createTemporaryIntegratedConsole": true
         }

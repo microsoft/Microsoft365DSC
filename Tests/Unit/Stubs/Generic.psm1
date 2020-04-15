@@ -8,6 +8,79 @@ function Close-SessionsAndReturnError
     )
 
 }
+function Get-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
+function Get-AzureADDirectorySettingTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id
+    )
+}
+
+function Remove-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Id
+    )
+}
+
+function New-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [PSCustomObject]
+        $DirectorySetting
+    )
+}
+
+function Set-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Id,
+
+        [Parameter(Mandatory=$true)]
+        [PSObject]
+        $DirectorySetting
+    )
+}
+
+function Set-AzureADMSGroupLifecyclePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${Id},
+
+        [Parameter(Mandatory = $true)]
+        [System.UInt32]
+        $GroupLifetimeInDays,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('All', 'Selected', 'None')]
+        $ManagedGroupTypes,
+
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $AlternateNotificationEmails
+    )
+}
 function Get-PSSession
 {
     [CmdletBinding()]
@@ -771,7 +844,7 @@ function Remove-SafeLinksRule
 }
 #endregion
 
-function New-Office365DSCLogEntry
+function New-M365DSCLogEntry
 {
     [CmdletBinding()]
     param
@@ -864,6 +937,78 @@ function Set-OfflineAddressBook
         [Parameter()]
         [System.Boolean]
         $IsDefault,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function add-AvailabilityAddressSpace
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBBasic', 'InternalProxy')]
+        [System.String]
+        $AccessMethod,
+
+        [Parameter()]
+        [System.String]
+        $Credentials,
+
+        [Parameter()]
+        [System.String]
+        $ForestName,
+
+        [Parameter()]
+        [System.String]
+        $TargetAutodiscoverEpr
+    )
+}
+
+function get-AvailabilityAddressSpace
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function remove-AvailabilityAddressSpace
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBBasic', 'InternalProxy')]
+        [System.String]
+        $AccessMethod,
+
+        [Parameter()]
+        [System.String]
+        $Credentials,
+
+        [Parameter()]
+        [System.String]
+        $ForestName,
+
+        [Parameter()]
+        [System.String]
+        $TargetAutodiscoverEpr,
 
         [Parameter()]
         [System.Boolean]
@@ -1178,6 +1323,224 @@ function New-GlobalAddressList
         [Parameter()]
         [System.String[]]
         $ConditionalStateOrProvince,
+
+        [Parameter()]
+        [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
+        [System.String[]]
+        $IncludedRecipients,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+# EXOAddressList cmdlets
+function Get-AddressList
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+
+    )
+}
+
+function Set-AddressList
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [ValidateLength(1, 64)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCompany,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute1,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute10,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute11,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute12,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute13,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute14,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute15,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute2,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute3,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute4,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute5,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute6,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute7,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute8,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute9,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalDepartment,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalStateOrProvince,
+
+        [Parameter()]
+        [System.String[]]
+        $DisplayName,
+
+        [Parameter()]
+        [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
+        [System.String[]]
+        $IncludedRecipients,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function New-AddressList
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [ValidateLength(1, 64)]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCompany,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute1,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute10,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute11,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute12,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute13,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute14,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute15,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute2,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute3,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute4,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute5,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute6,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute7,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute8,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalCustomAttribute9,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalDepartment,
+
+        [Parameter()]
+        [System.String[]]
+        $ConditionalStateOrProvince,
+
+        [Parameter()]
+        [System.String[]]
+        $DisplayName,
 
         [Parameter()]
         [ValidateSet('AllRecipients', 'MailboxUsers', 'MailContacts', 'MailGroups', 'MailUsers', 'Resources')]
