@@ -29,7 +29,7 @@ function Start-M365DSCConfigurationExtract
 
         [Parameter()]
         [System.String]
-        $ConfigurationName = 'O365TenantConfig',
+        $ConfigurationName = 'M365TenantConfig',
 
         [Parameter()]
         [ValidateRange(1, 100)]
