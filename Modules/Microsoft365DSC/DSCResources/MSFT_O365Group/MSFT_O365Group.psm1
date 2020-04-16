@@ -282,6 +282,22 @@ function Set-TargetResource
             }
         }
     }
+    elseif($Ensure -eq "Absent")
+    {
+        try 
+        {
+            $existingO365Group = Get-UnifiedGroup -Identity $currentGroup.MailNickName
+        }
+        catch 
+        {
+            Write-Error -Message "Could not find group $($currrentGroup.MailNickName)"
+        }
+        if($existingO365Group.DisplayName.Count -eq 1)
+        {
+            Write-Verbose -Message "Removing O365Group $($existingO365Group.Name)"
+            Remove-UnifiedGroup -Identity $existingO365Group.Name -confirm:$false -Force
+        }
+    }
 }
 
 function Test-TargetResource
