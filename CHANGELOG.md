@@ -1,16 +1,64 @@
-# Change log for Office365Dsc
+# Change log for Microsoft365DSC
 
 ## UNRELEASED
 
+## 1.0.4.39
+
+* Re-branding to Microsoft365DSC
+  * All components re-branded;
+* AADMSGroupLifecyclePolicy
+  * Initial Release;
+* AADGroupsNamingPolicy
+  * Initial Release;
+* AADGroupsSettings
+  * Initial Release;
+* AADMSGroupLifecyclePolicy
+  * Initial Release;
+* SCAuditConfigurationPolicy
+  * Fix issue with the Remove scenario;
+* SCDLPCompliancePolicy
+  * Fix issue with the Remove scenario;
+* SCFilePropertyAuthority
+  * Fix issue with the Remove scenario;
+* SCFilePlanPropertyCategory
+  * Fix issue with the Remove scenario;
+* SCFilePlanPropertyCitation
+  * Fix issue with the Remove scenario;
+* SCFilePlanPropertyDepartment
+  * Fix issue with the Remove scenario;
+* SCFilePlanPropertyReferenceId
+  * Fix issue with the Remove scenario;
+* SCFilePlanPropertySubCategory
+  * Fix issue with the Remove scenario;
+* SCRetentionCompliancePolicy
+  * Fix issue with Teams Policy in the Get;
+* SPOPropertyBag
+  * Fixed an issue where false positive drifts were being detected;
+* SPOSiteAuditSettings
+  * Generalized the URL not to capture hardcoded dmomains;
+* SPOSiteGroup
+  * Fixed an issue where now, groups with Null owners are not extracted;
+  * Generalized the URL not to capture hardcoded dmomains;
 * TeamsCallingPolicy
   * Removed the AllowCalling parameter since it is no longer supported;
   * Fixed an issue with Policies without tags in their name (e.g. Global);
+* TeamsMessagingPolicy
+  * Fixed and issue where the Global policy was always flagged as having
+    a drift;
+* TeamsUpgradePolicy
+  * Initial Release;
+* M365DSCUtil
+  * Added the new Assert-M365DSCTemplate cmdlet to assess remote templates;
 * ReverseDSC
   * Change to allow ComponentsToExtract without the 'chck' prefix;
+  * Introduction of Extraction Modes and Visual Indicators;
+  * Major refactoring, having UI dynamic and items displayed by
+    Resources' names;
 * Metadata
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.56;
   * Updated MicrosoftTeams dependency to 1.0.5;
-  * Updated MSCloudLoginAssistant dependency to 1.0.3;
-  * Updated SharePointPnPPowerShellOnline dependency to 3.19.2003.0;
+  * Updated MSCloudLoginAssistant dependency to 1.0.6;
+  * Updated SharePointPnPPowerShellOnline dependency to 3.20.2004.0;
 
 ## 1.0.3.1723
 
@@ -108,14 +156,10 @@
     for SharingCapabilities;
 * SPOTheme
   * Fixed an issue with the Set-TargetResource
-    still using SPO management shell cmdlets instead of PnP
+    still using SPO management shell cmdlets instead of PnP;
 * SPOUserProfileProperty
   * Introduced Multi-Threading
 * TeamsCallingPolicy
-  * Initial Release;
-* TeamsChannelsPolicy
-  * Initial Release;
-* TeamsClientConfiguration
   * Initial Release;
 * TeamsMeetingBroadcastConfiguration
   * Initial Release;

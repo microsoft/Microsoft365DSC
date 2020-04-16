@@ -1,7 +1,7 @@
 {
-  "name": "office365dsc",
+  "name": "Microsoft365DSC",
   "version": "1.0.0.0",
-  "description": "The Office365Dsc PowerShell module provides DSC resources that can be used to deploy, configure and manage Office 365 tenants",
+  "description": "The Microsoft365DSC PowerShell module provides DSC resources that can be used to deploy, configure and manage Microsoft 365 tenants",
   "main": "gulpfile.js",
   "dependencies": {
     "gulp": "^3.9.1",
@@ -16,12 +16,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Microsoft/Office365DSC.git"
+    "url": "git+https://github.com/Microsoft/Microsoft365DSC.git"
   },
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/Office365DSC/issues"
+    "url": "https://github.com/Microsoft/Microsoft365DSC/issues"
   },
-  "homepage": "https://github.com/Microsoft/Office365DSC#readme"
+  "homepage": "https://github.com/Microsoft/Microsoft365DSC#readme"
 }

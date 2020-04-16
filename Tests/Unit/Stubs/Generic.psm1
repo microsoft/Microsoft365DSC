@@ -8,6 +8,79 @@ function Close-SessionsAndReturnError
     )
 
 }
+function Get-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
+function Get-AzureADDirectorySettingTemplate
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id
+    )
+}
+
+function Remove-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Id
+    )
+}
+
+function New-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [PSCustomObject]
+        $DirectorySetting
+    )
+}
+
+function Set-AzureADDirectorySetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $Id,
+
+        [Parameter(Mandatory=$true)]
+        [PSObject]
+        $DirectorySetting
+    )
+}
+
+function Set-AzureADMSGroupLifecyclePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        ${Id},
+
+        [Parameter(Mandatory = $true)]
+        [System.UInt32]
+        $GroupLifetimeInDays,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('All', 'Selected', 'None')]
+        $ManagedGroupTypes,
+
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $AlternateNotificationEmails
+    )
+}
 function Get-PSSession
 {
     [CmdletBinding()]
@@ -771,7 +844,7 @@ function Remove-SafeLinksRule
 }
 #endregion
 
-function New-Office365DSCLogEntry
+function New-M365DSCLogEntry
 {
     [CmdletBinding()]
     param
