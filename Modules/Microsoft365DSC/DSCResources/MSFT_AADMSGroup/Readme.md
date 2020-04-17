@@ -2,4 +2,4 @@
 
 ## Description
 
-This resource configures an Azure Active Directory Groups.
+This resource configures an Azure Active Directory Group.

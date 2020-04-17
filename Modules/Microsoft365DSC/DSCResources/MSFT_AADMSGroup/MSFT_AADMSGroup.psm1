@@ -13,7 +13,7 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $GroupTypes,
 
         [Parameter()]
@@ -107,7 +107,7 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $GroupTypes,
 
         [Parameter()]
@@ -193,7 +193,7 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $GroupTypes,
 
         [Parameter()]

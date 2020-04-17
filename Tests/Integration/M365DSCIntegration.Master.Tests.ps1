@@ -64,12 +64,13 @@ Configuration Master
 
         AADMSGroup AzureADMSGroup
         {
-            DisplayName                   = "DSCGroup"
+            DisplayName                   = "DSCCoreGroup"
             Description                   = "Microsoft DSC Group"
             SecurityEnabled               = $True
             MailEnabled                   = $False
-            MailNickname                  = "M365DSC"
+            MailNickname                  = "M365DSCCoreGroup"
             Visibility                    = "Private"
+            GroupTypes                    = @("Unified")
             GlobalAdminAccount            = $GlobalAdmin;
             Ensure                        = "Present"
         }

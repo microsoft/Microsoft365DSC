@@ -20,6 +20,7 @@ Configuration Example
             Description                   = "Microsoft DSC Group"
             SecurityEnabled               = $True
             MailEnabled                   = $False
+            GroupTypes                    = @("Unified")
             MailNickname                  = "M365DSC"
             Visibility                    = "Private"
             GlobalAdminAccount            = $credsGlobalAdmin
