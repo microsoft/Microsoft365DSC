@@ -286,16 +286,21 @@ function Set-TargetResource
     {
         try 
         {
-            $existingO365Group = Get-UnifiedGroup -Identity $currentGroup.MailNickName
+            [array]$existingO365Group = Get-UnifiedGroup -Identity $currentGroup.MailNickName
         }
         catch 
         {
             Write-Error -Message "Could not find group $($currrentGroup.MailNickName)"
         }
-        if($existingO365Group.DisplayName.Count -eq 1)
+        if($existingO365Group.Length -eq 1)
         {
             Write-Verbose -Message "Removing O365Group $($existingO365Group.Name)"
             Remove-UnifiedGroup -Identity $existingO365Group.Name -confirm:$false -Force
+        }
+        else
+        {
+            Write-Verbose -Message "There was more than one group identified with the name $($currentGroup.MailNickName)."
+            Write-Verbose -Message "No action taken. Please remove the group manually."
         }
     }
 }
