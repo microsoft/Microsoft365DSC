@@ -599,7 +599,7 @@ Configuration Master
         {
             Url                                         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
             Identity                                    = "TestSiteGroup"
-            PermissionLevels                            = @("Editor", "Reader")
+            PermissionLevels                            = @("Edit", "Read")
             Ensure                                      = "Present"
             GlobalAdminAccount                          = $GlobalAdmin
         }
