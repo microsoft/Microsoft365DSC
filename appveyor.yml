@@ -8,12 +8,12 @@ install:
     - ps: |
         $moduleName = 'Microsoft365DSC'
         $mainModuleFolder = "Modules\$moduleName"
-        Install-Module ReverseDSC -RequiredVersion 2.0.0.2 -Force
-        Install-Module AzureADPreview -RequiredVersion 2.0.2.89 -Force
-        Install-Module MicrosoftTeams -RequiredVersion 1.0.5 -Force
-        Install-Module MSCloudLoginAssistant -RequiredVersion 1.0.6 -Force
-        Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.20.2004.0 -Force
-        Install-Module Microsoft.PowerApps.Administration.PowerShell -RequiredVersion 2.0.56 -Force
+        Install-Module ReverseDSC -RequiredVersion 2.0.0.2 -Force -SkipPublisherCheck
+        Install-Module AzureADPreview -RequiredVersion 2.0.2.89 -Force -SkipPublisherCheck
+        Install-Module MicrosoftTeams -RequiredVersion 1.0.5 -Force -SkipPublisherCheck
+        Install-Module MSCloudLoginAssistant -RequiredVersion 1.0.6 -Force -SkipPublisherCheck
+        Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.20.2004.0 -Force -SkipPublisherCheck
+        Install-Module Microsoft.PowerApps.Administration.PowerShell -RequiredVersion 2.0.57 -Force -SkipPublisherCheck
 
         $webClient = new-object System.Net.WebClient
         $url = "https://github.com/Microsoft/Microsoft365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_19515-12000_x64_en-us.msi?raw=true"
