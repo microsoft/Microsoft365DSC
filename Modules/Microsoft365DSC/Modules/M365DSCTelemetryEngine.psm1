@@ -54,9 +54,9 @@ function Add-M365DSCTelemetryEvent
             {
                 $Data.Add("ProjectName", $ProjectName)
             }
-            $manifest = Import-PowerShellDataFile '..\Microsoft365DSC.psd1'
-            $ModuleVersion = $manifest.ModuleVersion
-            $Data.Add("Version", $ModuleVersion)
+
+            $version = (Get-Module 'Microsoft365DSC').Version
+            $Data.Add("Version", $version)
             $TelemetryClient.TrackEvent($Type, $Data, $Metrics)
             $TelemetryClient.Flush()
         }
