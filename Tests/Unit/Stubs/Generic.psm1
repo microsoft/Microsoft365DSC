@@ -95,6 +95,24 @@ function Remove-PSSession
     )
 }
 
+function Get-AzureADMSGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Id
+    )
+}
+
 function New-AzureADMSGroup
 {
     [CmdletBinding()]
@@ -108,7 +126,7 @@ function New-AzureADMSGroup
         $Description,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $GroupTypes,
 
         [Parameter()]
@@ -156,7 +174,7 @@ function Set-AzureADMSGroup
         $Description,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $GroupTypes,
 
         [Parameter()]

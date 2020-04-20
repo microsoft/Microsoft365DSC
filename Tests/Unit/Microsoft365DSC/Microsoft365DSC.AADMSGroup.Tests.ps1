@@ -57,6 +57,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 SecurityEnabled               = $True
                 MailEnabled                   = $False
                 MailNickname                  = "M365DSC"
+                GroupTypes                     = @("Unified")
                 Visibility                    = "Private"
                 Ensure                        = "Present"
                 GlobalAdminAccount            = $GlobalAdminAccount;
@@ -85,6 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 SecurityEnabled               = $True
                 MailEnabled                   = $False
                 MailNickname                  = "M365DSC"
+                GroupTypes         = @("Unified")
                 Visibility                    = "Private"
                 Ensure                        = "Absent"
                 GlobalAdminAccount            = $GlobalAdminAccount;
@@ -116,6 +118,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 SecurityEnabled               = $True
                 MailEnabled                   = $False
                 MailNickname                  = "M365DSC"
+                GroupTypes                    = @("Unified")
                 Visibility                    = "Private"
                 Ensure                        = "Present"
                 GlobalAdminAccount            = $GlobalAdminAccount;
@@ -128,7 +131,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SecurityEnabled               = $True
                     MailEnabled                   = $False
                     MailNickname                  = "M365DSC"
+                    GroupTypes                    = @("Unified")
                     Visibility                    = "Private"
+                    Ensure                        = "Present"
                 }
             }
 
@@ -149,6 +154,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 SecurityEnabled               = $True
                 MailEnabled                   = $False
                 MailNickname                  = "M365DSC"
+                GroupTypes                    = @("Unified")
                 Visibility                    = "Private"
                 Ensure                        = "Present"
                 GlobalAdminAccount            = $GlobalAdminAccount;
@@ -159,6 +165,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                   = "DSCGroup"
                     Description                   = "Microsoft DSC" #Drift
                     SecurityEnabled               = $True
+                    GroupTypes                    = @("Unified")
                     MailEnabled                   = $False
                     MailNickname                  = "M365DSC"
                     Visibility                    = "Private"
@@ -194,6 +201,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-AzureADMSGroup -MockWith {
                 return @{
                     DisplayName = "Test Team"
+                    ID = "12345-12345-12345-12345"
+   #                 GroupTypes         = @("Unified")
                 }
             }
 

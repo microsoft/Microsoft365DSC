@@ -77,7 +77,7 @@ function Get-TargetResource
         $result = @{
             DisplayName                   = $Group.DisplayName
             Description                   = $Group.Description
-            GroupTypes                    = $Group.$GroupTypes
+            GroupTypes                    = $Group.GroupTypes
             MembershipRule                = $Group.MembershipRule
             MembershipRuleProcessingState = $Group.MembershipRuleProcessingState
             SecurityEnabled               = $Group.SecurityEnabled
@@ -283,9 +283,8 @@ function Export-TargetResource
         $content += "        AADMSGroup " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $partialContent += "        }`r`n"
-        $content += $partialContent
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
         $i++
     }
     return $content
