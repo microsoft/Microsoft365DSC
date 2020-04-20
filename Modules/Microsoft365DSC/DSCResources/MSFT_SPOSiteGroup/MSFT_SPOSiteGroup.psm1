@@ -94,7 +94,7 @@ function Get-TargetResource
         }
     }
     $permissions = @()
-    foreach ($entry in $sitePermissions.RoleTypeKind)
+    foreach ($entry in $sitePermissions.Name)
     {
         $permissions += $entry.ToString()
     }
