@@ -151,6 +151,7 @@ function Set-TargetResource
                       -ErrorAction SilentlyContinue
 
     $currentValues = Get-TargetResource @PSBoundParameters
+    $IsNew = $false
     if ($Ensure -eq "Present"-and $currentValues.Ensure -eq "Absent")
     {
         $SiteGroupSettings = @{
@@ -159,8 +160,9 @@ function Set-TargetResource
         }
         Write-Verbose -Message "Site group $Identity does not exist, creating it."
         New-PnPGroup @SiteGroupSettings
+        $IsNew = $true
     }
-    elseif ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Present")
+    if (($Ensure -eq "Present" -and $currentValues.Ensure -eq "Present") -or $IsNew)
     {
         $RefferenceObjectRoles = $PermissionLevels
         $DifferenceObjectRoles = $currentValues.PermissionLevels
