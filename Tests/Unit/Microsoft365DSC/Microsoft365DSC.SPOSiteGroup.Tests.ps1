@@ -104,7 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPGroupPermissions -MockWith {
                 return @{
-                    RoleTypeKind = 'Contribute'
+                    Name = 'Contribute'
                 }
             }
 
@@ -152,10 +152,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPGroupPermissions -MockWith {
                 return @(@{
-                    RoleTypeKind = 'Edit'
+                    Name = 'Edit'
                 },
                 @{
-                    RoleTypeKind = 'Read'
+                    Name = 'Read'
                 }
                 )
             }
@@ -206,10 +206,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPGroupPermissions -MockWith {
                 return @(@{
-                    RoleTypeKind = 'Edit'
+                    Name = 'Edit'
                 },
                 @{
-                    RoleTypeKind = 'Read'
+                    Name = 'Read'
                 }
                 )
             }

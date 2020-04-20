@@ -166,7 +166,12 @@ function Set-TargetResource
     {
         $RefferenceObjectRoles = $PermissionLevels
         $DifferenceObjectRoles = $currentValues.PermissionLevels
-        $compareOutput = Compare-Object -ReferenceObject $RefferenceObjectRoles -DifferenceObject $DifferenceObjectRoles
+        $compareOutput = $null
+        if ($null -ne $DifferenceObjectRoles)
+        {
+            $compareOutput = Compare-Object -ReferenceObject $RefferenceObjectRoles -DifferenceObject $DifferenceObjectRoles
+        }
+
         $PermissionLevelsToAdd = @()
         $PermissionLevelsToRemove = @()
         foreach ($entry in $compareOutput)
