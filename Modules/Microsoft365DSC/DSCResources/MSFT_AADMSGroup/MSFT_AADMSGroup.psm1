@@ -269,6 +269,9 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+    -Platform AzureAD
+
     $groups = Get-AzureADMSGroup
     $i = 1
     $content = ''
