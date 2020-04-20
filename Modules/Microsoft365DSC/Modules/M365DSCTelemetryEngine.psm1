@@ -111,7 +111,7 @@ function Get-M365DSCTelemetryOption
     try
     {
         return @{
-            Enabled = [System.Environment]::GetEnvironmentVariable('<365DSCTelemetryEnabled', `
+            Enabled = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryEnabled', `
                 [System.EnvironmentVariableTarget]::Machine)
             InstrumentationKey = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryInstrumentationKey', `
                 [System.EnvironmentVariableTarget]::Machine)
