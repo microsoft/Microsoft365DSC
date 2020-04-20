@@ -77,7 +77,7 @@ function Get-TargetResource
         $result = @{
             DisplayName                   = $Group.DisplayName
             Description                   = $Group.Description
-            GroupTypes                    = $Group.GroupTypes
+            GroupTypes                    = [System.String[]]$Group.GroupTypes
             MembershipRule                = $Group.MembershipRule
             MembershipRuleProcessingState = $Group.MembershipRuleProcessingState
             SecurityEnabled               = $Group.SecurityEnabled
