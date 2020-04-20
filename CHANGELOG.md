@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+* Metadata
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.57;
+
 ## 1.0.4.39
 
 * Re-branding to Microsoft365DSC
