@@ -66,7 +66,7 @@ function Get-TargetResource
         Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
             -Platform PnP `
             -ConnectionUrl $Url
-        $siteGroup = Get-PnPGroup -Identity $Identity
+        $siteGroup = Get-PnPGroup -Identity $Identity -ErrorAction Stop
     }
     catch
     {
@@ -94,19 +94,15 @@ function Get-TargetResource
         }
     }
     $permissions = @()
-    foreach ($entry in $sitePermissions.RoleTypeKind)
+    foreach ($entry in $sitePermissions.Name)
     {
         $permissions += $entry.ToString()
-    }
-    if ($permissions.Length -eq 0)
-    {
-        return $nullReturn
     }
     return @{
         Url                = $Url
         Identity           = $siteGroup.Title
         Owner              = $siteGroup.Owner.LoginName
-        PermissionLevels   = $permissions
+        PermissionLevels   = [array]$permissions
         GlobalAdminAccount = $GlobalAdminAccount
         Ensure             = "Present"
     }
@@ -155,6 +151,7 @@ function Set-TargetResource
                       -ErrorAction SilentlyContinue
 
     $currentValues = Get-TargetResource @PSBoundParameters
+    $IsNew = $false
     if ($Ensure -eq "Present"-and $currentValues.Ensure -eq "Absent")
     {
         $SiteGroupSettings = @{
@@ -163,12 +160,18 @@ function Set-TargetResource
         }
         Write-Verbose -Message "Site group $Identity does not exist, creating it."
         New-PnPGroup @SiteGroupSettings
+        $IsNew = $true
     }
-    elseif ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Present")
+    if (($Ensure -eq "Present" -and $currentValues.Ensure -eq "Present") -or $IsNew)
     {
         $RefferenceObjectRoles = $PermissionLevels
         $DifferenceObjectRoles = $currentValues.PermissionLevels
-        $compareOutput = Compare-Object -ReferenceObject $RefferenceObjectRoles -DifferenceObject $DifferenceObjectRoles
+        $compareOutput = $null
+        if ($null -ne $DifferenceObjectRoles)
+        {
+            $compareOutput = Compare-Object -ReferenceObject $RefferenceObjectRoles -DifferenceObject $DifferenceObjectRoles
+        }
+
         $PermissionLevelsToAdd = @()
         $PermissionLevelsToRemove = @()
         foreach ($entry in $compareOutput)
@@ -186,6 +189,7 @@ function Set-TargetResource
         }
         if ($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -ne 0)
         {
+            Write-Verbose -Message "Need to remove Permissions $PermissionLevelsToRemove"
             $SiteGroupSettings = @{
                 Identity                 = $Identity
                 Owner                    = $Owner
@@ -196,12 +200,15 @@ function Set-TargetResource
         }
         elseif ($PermissionLevelsToRemove.Count -eq 0 -and $PermissionLevelsToAdd.Count -ne 0)
         {
+            Write-Verbose -Message "Need to add Permissions $PermissionLevelsToAdd"
             $SiteGroupSettings = @{
                 Identity                 = $Identity
                 Owner                    = $Owner
             }
+            Write-Verbose -Message "Setting PnP Group with Identity {$Identity} and Owner {$Owner}"
             Set-PnPGroup @SiteGroupSettings
 
+            Write-Verbose -Message "Setting PnP Group Permissions Identity {$Identity} AddRole {$PermissionLevelsToAdd}"
             Set-PnPGroupPermissions -Identity $Identity -AddRole $PermissionLevelsToAdd
         }
         elseif ($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -eq 0)
@@ -212,6 +219,7 @@ function Set-TargetResource
             }
             else
             {
+                Write-Verbose -Message "Updating Group"
                 $SiteGroupSettings = @{
                     Identity                 = $Identity
                     Owner                    = $Owner
@@ -221,6 +229,7 @@ function Set-TargetResource
         }
         else
         {
+            Write-Verbose -Message "Updating Group Permissions Add {$PermissionLevelsToAdd} Remove {$PermissionLevelsToRemove}"
             $SiteGroupSettings = @{
                 Identity                 = $Identity
                 Owner                    = $Owner
@@ -233,6 +242,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq "Absent" -and $currentValues.Ensure -eq "Present")
     {
+        Write-Verbose -Message "Removing Group $Identity"
         $SiteGroupSettings = @{
             Identity = $Identity
         }

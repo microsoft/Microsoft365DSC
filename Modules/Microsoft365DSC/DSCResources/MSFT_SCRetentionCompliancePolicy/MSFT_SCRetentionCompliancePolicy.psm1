@@ -117,28 +117,44 @@ function Get-TargetResource
     else
     {
         Write-Verbose "Found existing RetentionCompliancePolicy $($Name)"
-        $result = @{
-            Ensure                        = 'Present'
-            Name                          = $PolicyObject.Name
-            Comment                       = $PolicyObject.Comment
-            DynamicScopeLocation          = $PolicyObject.DynamicScopeLocation
-            Enabled                       = $PolicyObject.Enabled
-            ExchangeLocation              = $PolicyObject.ExchangeLocation
-            ExchangeLocationException     = $PolicyObject.ExchangeLocationException
-            ModernGroupLocation           = $PolicyObject.ModernGroupLocation
-            ModernGroupLocationException  = $PolicyObject.ModernGroupLocationException
-            OneDriveLocation              = $PolicyObject.OneDriveLocation
-            OneDriveLocationException     = $PolicyObject.OneDriveLocationException
-            PublicFolderLocation          = $PolicyObject.PublicFolderLocation
-            RestrictiveRetention          = $PolicyObject.RestrictiveRetention
-            SharePointLocation            = $PolicyObject.SharePointLocation
-            SharePointLocationException   = $PolicyObject.SharePointLocationException
-            SkypeLocation                 = $PolicyObject.SkypeLocation
-            SkypeLocationException        = $PolicyObject.SkypeLocationException
-            TeamsChannelLocation          = $PolicyObject.TeamsChannelLocation
-            TeamsChannelLocationException = $PolicyObject.TeamsChannelLocationException
-            TeamsChatLocation             = $PolicyObject.TeamsChatLocation
-            TeamsChatLocationException    = $PolicyObject.TeamsChatLocationException
+
+        if ($PolicyObject.TeamsPolicy)
+        {
+            $result = @{
+                Ensure                        = 'Present'
+                Name                          = $PolicyObject.Name
+                Comment                       = $PolicyObject.Comment
+                Enabled                       = $PolicyObject.Enabled
+                RestrictiveRetention          = $PolicyObject.RestrictiveRetention
+                TeamsChannelLocation          = [array]$PolicyObject.TeamsChannelLocation
+                TeamsChannelLocationException = $PolicyObject.TeamsChannelLocationException
+                TeamsChatLocation             = [array]$PolicyObject.TeamsChatLocation
+                TeamsChatLocationException    = $PolicyObject.TeamsChatLocationException
+                GlobalAdminAccount            = $GlobalAdminAccount
+            }
+        }
+        else
+        {
+            $result = @{
+                Ensure                        = 'Present'
+                Name                          = $PolicyObject.Name
+                Comment                       = $PolicyObject.Comment
+                DynamicScopeLocation          = [array]$PolicyObject.DynamicScopeLocation
+                Enabled                       = $PolicyObject.Enabled
+                ExchangeLocation              = [array]$PolicyObject.ExchangeLocation
+                ExchangeLocationException     = [array]$PolicyObject.ExchangeLocationException
+                ModernGroupLocation           = [array]$PolicyObject.ModernGroupLocation
+                ModernGroupLocationException  = [array]$PolicyObject.ModernGroupLocationException
+                OneDriveLocation              = [array]$PolicyObject.OneDriveLocation
+                OneDriveLocationException     = [array]$PolicyObject.OneDriveLocationException
+                PublicFolderLocation          = [array]$PolicyObject.PublicFolderLocation
+                RestrictiveRetention          = $PolicyObject.RestrictiveRetention
+                SharePointLocation            = [array]$PolicyObject.SharePointLocation
+                SharePointLocationException   = $PolicyObject.SharePointLocationException
+                SkypeLocation                 = [array]$PolicyObject.SkypeLocation
+                SkypeLocationException        = $PolicyObject.SkypeLocationException
+                GlobalAdminAccount            = $GlobalAdminAccount
+            }
         }
 
         Write-Verbose -Message "Found RetentionCompliancePolicy $($Name)"
@@ -231,7 +247,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $TeamsChatLocationException ,
+        $TeamsChatLocationException,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -242,6 +258,13 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    if ($null -eq $SharePointLocation -and $null -eq $ExchangeLocation -and $null -eq $OneDriveLocation -and `
+        $null -eq $SkypeLocation -and $null -eq $PublicFolderLocation -and $null -eq $ModernGroupLocation -and `
+        $null -eq $TeamsChannelLocation -and $null -eq $TeamsChatLocation -and $Ensure -eq 'Present')
+    {
+        throw "You need to specify at least one Location for this Policy."
+    }
 
     Write-Verbose -Message "Setting configuration of RetentionCompliancePolicy for $Name"
     #region Telemetry
@@ -256,15 +279,9 @@ function Set-TargetResource
 
     $CurrentPolicy = Get-TargetResource @PSBoundParameters
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
+    if ($null -eq $TeamsChannelLocation -and $null -eq $TeamsChatLocation)
     {
-        $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("GlobalAdminAccount")
-        $CreationParams.Remove("Ensure")
-        New-RetentionCompliancePolicy @CreationParams
-    }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
-    {
+        Write-Verbose -Message "Policy $Name is not a Teams Policy"
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
@@ -279,7 +296,7 @@ function Set-TargetResource
         # Exchange Location is specified or already existing, we need to determine
         # the delta.
         if ($null -ne $CurrentPolicy.ExchangeLocation -or `
-                $null -ne $ExchangeLocation)
+        $null -ne $ExchangeLocation)
         {
             $ToBeRemoved = $CurrentPolicy.ExchangeLocation | `
                 Where-Object { $ExchangeLocation -NotContains $_ }
@@ -507,7 +524,28 @@ function Set-TargetResource
             }
             $CreationParams.Remove("SkypeLocationException")
         }
-
+    }
+    else
+    {
+        Write-Verbose -Message "Policy $Name is a Teams Policy"
+        $CreationParams = @{
+            Identity                      = $Name
+            Comment                       = $Comment
+            Enabled                       = $Enabled
+            RestrictiveRetention          = $RestrictiveRetention
+            TeamsChannelLocation          = $TeamsChannelLocation
+            TeamsChannelLocationException = $TeamsChannelLocationException
+            TeamsChatLocation             = $TeamsChatLocation
+            TeamsChatLocationException    = $TeamsChatLocationException
+        }
+    }
+    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
+    {
+        Write-Verbose -Message "Creating new Retention Compliance Policy $Name"
+        New-RetentionCompliancePolicy @CreationParams
+    }
+    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
+    {
         Write-Verbose "Updating Policy with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         Set-RetentionCompliancePolicy @CreationParams
     }
@@ -644,6 +682,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
