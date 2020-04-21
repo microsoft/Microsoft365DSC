@@ -567,8 +567,7 @@ function Show-M365DSCGUI
         $pnlMain.Controls.Add($panelMenu);
         #endregion
 
-        $manifest = Import-PowerShellDataFile ($PSScriptRoot + '\..\Microsoft365DSC.psd1')
-        $version = $manifest.ModuleVersion
+        $version = (Get-Module 'Microsoft365DSC').Version
         $lblVersion = New-Object System.Windows.Forms.Label
         $lblVersion.Text = "v" + $version
         $lblVersion.Top = $pnlMain.Height - 25
