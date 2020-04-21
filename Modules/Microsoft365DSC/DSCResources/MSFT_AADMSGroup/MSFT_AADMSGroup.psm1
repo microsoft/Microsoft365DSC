@@ -6,15 +6,41 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Name,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
-        $CitationUrl,
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $GroupTypes,
 
         [Parameter()]
         [System.String]
-        $CitationJurisdiction,
+        $MembershipRule,
+
+        [Parameter()]
+        [ValidateSet('On', 'Paused')]
+        [System.String]
+        $MembershipRuleProcessingState,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MailEnabled,
+
+        [Parameter()]
+        [System.String]
+        $MailNickname,
+
+        [Parameter()]
+        [ValidateSet('Public', 'Private', 'HiddenMembership')]
+        [System.String]
+        $Visibility,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -26,7 +52,7 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of SCFilePlanPropertyCitation for $Name"
+    Write-Verbose -Message "Getting configuration of AzureAD Group"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -35,27 +61,31 @@ function Get-TargetResource
     #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+        -Platform AzureAD
 
-    $property = Get-FilePlanPropertyCitation | Where-Object -FilterScript { $_.Name -eq $Name }
+    $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'"
 
-    if ($null -eq $property)
+    if ($null -eq $Group)
     {
-        Write-Verbose -Message "SCFilePlanPropertyCitation $($Name) does not exist."
-        $result = $PSBoundParameters
-        $result.Ensure = 'Absent'
-        return $result
+        $currentValues = $PSBoundParameters
+        $currentValues.Ensure = "Absent"
+        return $currentValues
     }
     else
     {
-        Write-Verbose "Found existing SCFilePlanPropertyCitation $($Name)"
-
+        Write-Verbose -Message "Found existing AzureAD Group"
         $result = @{
-            Name                 = $property.Name
-            CitationUrl          = $property.CitationUrl
-            CitationJurisdiction = $property.CitationJurisdiction
-            GlobalAdminAccount   = $GlobalAdminAccount
-            Ensure               = 'Present'
+            DisplayName                   = $Group.DisplayName
+            Description                   = $Group.Description
+            GroupTypes                    = [System.String[]]$Group.GroupTypes
+            MembershipRule                = $Group.MembershipRule
+            MembershipRuleProcessingState = $Group.MembershipRuleProcessingState
+            SecurityEnabled               = $Group.SecurityEnabled
+            MailEnabled                   = $Group.MailEnabled
+            MailNickname                  = $Group.MailNickname
+            Visibility                    = $Group.Visibility
+            Ensure                        = "Present"
+            GlobalAdminAccount            = $GlobalAdminAccount
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -70,15 +100,41 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Name,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
-        $CitationUrl,
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $GroupTypes,
 
         [Parameter()]
         [System.String]
-        $CitationJurisdiction,
+        $MembershipRule,
+
+        [Parameter()]
+        [ValidateSet('On', 'Paused')]
+        [System.String]
+        $MembershipRuleProcessingState,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MailEnabled,
+
+        [Parameter()]
+        [System.String]
+        $MailNickname,
+
+        [Parameter()]
+        [ValidateSet('Public', 'Private', 'HiddenMembership')]
+        [System.String]
+        $Visibility,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -90,7 +146,7 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of SCFilePlanPropertyCitation for $Name"
+    Write-Verbose -Message "Setting configuration of Azure AD Groups"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -99,40 +155,26 @@ function Set-TargetResource
     #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+        -Platform AzureAD
 
-    $Current = Get-TargetResource @PSBoundParameters
+    $currentGroup = Get-TargetResource @PSBoundParameters
+    $currentParameters = $PSBoundParameters
+    $currentParameters.Remove("GlobalAdminAccount")
+    $currentParameters.Remove("Ensure")
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $Current.Ensure))
+    if ($Ensure -eq 'Present' -and $currentGroup.Ensure -eq 'Present')
     {
-        $CreationParams = $PSBoundParameters
-        $CreationParams.Remove("GlobalAdminAccount") | Out-Null
-        $CreationParams.Remove("Ensure") | Out-Null
-
-        New-FilePlanPropertyCitation @CreationParams
+        $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'"
+        Set-AzureADMSGroup @currentParameters -id $Group.ID
     }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $Current.Ensure))
+    elseif ($Ensure -eq 'Present' -and $currentGroup.Ensure -eq 'Absent')
     {
-        Set-FilePlanPropertyCitation -Identity $Name -CitationUrl $CitationUrl -CitationJurisdiction $CitationJurisdiction
+        New-AzureADMSGroup @currentParameters
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $Current.Ensure))
+    elseif ($Ensure -eq 'Absent' -and $currentGroup.Ensure -eq 'Present')
     {
-        try
-        {
-            $property = Get-FilePlanPropertyCitation | Where-Object -FilterScript { $_.Name -eq $Name }
-            if ($property.Mode.ToString() -ne 'PendingDeletion')
-            {
-                Remove-FilePlanPropertyCitation -Identity $Name -Confirm:$false -ErrorAction Stop
-            }
-            else
-            {
-                Write-Verbose -Message "Property $Name is already in the process of being deleted."
-            }
-        }
-        catch
-        {
-            New-M365DSCLogEntry  -Error $_ -Message $_ -Source $MyInvocation.MyCommand.ModuleName
-        }
+        $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'"
+        Remove-AzureADMSGroup -Id $Group.ID
     }
 }
 
@@ -144,15 +186,41 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Name,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
-        $CitationUrl,
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $GroupTypes,
 
         [Parameter()]
         [System.String]
-        $CitationJurisdiction,
+        $MembershipRule,
+
+        [Parameter()]
+        [ValidateSet('On', 'Paused')]
+        [System.String]
+        $MembershipRuleProcessingState,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MailEnabled,
+
+        [Parameter()]
+        [System.String]
+        $MailNickname,
+
+        [Parameter()]
+        [ValidateSet('Public', 'Private', 'HiddenMembership')]
+        [System.String]
+        $Visibility,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -164,9 +232,10 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of SCFilePlanPropertyCitation for $Name"
+    Write-Verbose -Message "Testing configuration of AzureAD Groups"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
@@ -192,30 +261,29 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-
-    $InformationPreference = "Continue"
+    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
-    $Properties = Get-FilePlanPropertyCitation
 
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+    -Platform AzureAD
+
+    $groups = Get-AzureADMSGroup
     $i = 1
-    $content = ""
-    foreach ($Property in $Properties)
+    $content = ''
+    foreach ($group in $groups)
     {
-        Write-Information "    - [$i/$($Properties.Length)] $($Property.Name)"
         $params = @{
-            Name               = $Property.Name
             GlobalAdminAccount = $GlobalAdminAccount
+            DisplayName        = $group.DisplayName
         }
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        SCFilePlanPropertyCitation " + (New-GUID).ToString() + "`r`n"
+        $content += "        AADMSGroup " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"

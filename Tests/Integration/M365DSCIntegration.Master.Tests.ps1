@@ -62,6 +62,19 @@ Configuration Master
             UsageGuidelinesUrl            = "";
         }
 
+        AADMSGroup AzureADMSGroup
+        {
+            DisplayName                   = "DSCCoreGroup"
+            Description                   = "Microsoft DSC Group"
+            SecurityEnabled               = $True
+            MailEnabled                   = $False
+            MailNickname                  = "M365DSCCoreGroup"
+            Visibility                    = "Private"
+            GroupTypes                    = @("Unified")
+            GlobalAdminAccount            = $GlobalAdmin;
+            Ensure                        = "Present"
+        }
+
         EXOAcceptedDomain O365DSCDomain
         {
             Identity           = $Domain
@@ -327,19 +340,6 @@ Configuration Master
             PublicFolderLocation                  = @("All")
         }
 
-        SCComplianceSearchAction DemoSearchActionExport
-        {
-            IncludeSharePointDocumentVersions = $False;
-            Action                            = "Export";
-            SearchName                        = "Integration Compliance Search - EXO";
-            GlobalAdminAccount                = $GlobalAdmin;
-            IncludeCredential                 = $False;
-            RetryOnError                      = $False;
-            ActionScope                       = "IndexedItemsOnly";
-            Ensure                            = "Present";
-            EnableDedupe                      = $False;
-        }
-
         SCComplianceSearchAction DemoSearchActionRetention
         {
             IncludeSharePointDocumentVersions = $False;
@@ -491,6 +491,7 @@ Configuration Master
         {
             Name               = "MyRCPolicy"
             Comment            = "Test Policy"
+            ExchangeLocation   = @()
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdmin
         }
@@ -611,7 +612,7 @@ Configuration Master
         {
             Url                                         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern"
             Identity                                    = "TestSiteGroup"
-            PermissionLevels                            = @("Editor", "Reader")
+            PermissionLevels                            = @("Edit", "Read")
             Ensure                                      = "Present"
             GlobalAdminAccount                          = $GlobalAdmin
         }
