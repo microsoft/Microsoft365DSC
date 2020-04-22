@@ -205,7 +205,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
    #                 GroupTypes         = @("Unified")
                 }
             }
-
             It "Should Reverse Engineer resource from the Export method" {
                 Export-TargetResource @testParams
             }
