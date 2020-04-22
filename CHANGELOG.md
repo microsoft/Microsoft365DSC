@@ -4,6 +4,7 @@
 
 * Metadata
   * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.57;
+  * Updated MicrosoftTeams to 1.0.6;
   * Updated MSCloudLoginAssistant to 1.0.8;
 
 ## 1.0.4.39
