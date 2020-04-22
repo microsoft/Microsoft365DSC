@@ -55,7 +55,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DisplayName                   = "DSCGroup"
                 Description                   = "Microsoft DSC Group"
                 SecurityEnabled               = $True
-                MailEnabled                   = $False
+                MailEnabled                   = $True
                 MailNickname                  = "M365DSC"
                 GroupTypes                     = @("Unified")
                 Visibility                    = "Private"
@@ -84,7 +84,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DisplayName                   = "DSCGroup"
                 Description                   = "Microsoft DSC Group"
                 SecurityEnabled               = $True
-                MailEnabled                   = $False
+                MailEnabled                   = $True
                 MailNickname                  = "M365DSC"
                 GroupTypes         = @("Unified")
                 Visibility                    = "Private"
@@ -116,7 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DisplayName                   = "DSCGroup"
                 Description                   = "Microsoft DSC Group"
                 SecurityEnabled               = $True
-                MailEnabled                   = $False
+                MailEnabled                   = $True
                 MailNickname                  = "M365DSC"
                 GroupTypes                    = @("Unified")
                 Visibility                    = "Private"
@@ -129,7 +129,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                   = "DSCGroup"
                     Description                   = "Microsoft DSC Group"
                     SecurityEnabled               = $True
-                    MailEnabled                   = $False
+                    MailEnabled                   = $True
                     MailNickname                  = "M365DSC"
                     GroupTypes                    = @("Unified")
                     Visibility                    = "Private"
@@ -152,7 +152,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 DisplayName                   = "DSCGroup"
                 Description                   = "Microsoft DSC Group"
                 SecurityEnabled               = $True
-                MailEnabled                   = $False
+                MailEnabled                   = $True
                 MailNickname                  = "M365DSC"
                 GroupTypes                    = @("Unified")
                 Visibility                    = "Private"
@@ -166,7 +166,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                   = "Microsoft DSC" #Drift
                     SecurityEnabled               = $True
                     GroupTypes                    = @("Unified")
-                    MailEnabled                   = $False
+                    MailEnabled                   = $True
                     MailNickname                  = "M365DSC"
                     Visibility                    = "Private"
                 }
