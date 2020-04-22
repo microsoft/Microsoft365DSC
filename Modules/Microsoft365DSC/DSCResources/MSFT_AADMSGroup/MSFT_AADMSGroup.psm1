@@ -287,6 +287,10 @@ function Export-TargetResource
         {
             $result.Remove('MembershipRuleProcessingState') | Out-Null
         }
+        if ($null -eq $result.Visibility)
+        {
+            $result.Remove('Visibility') | Out-Null
+        }
         $content += "        AADMSGroup " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
