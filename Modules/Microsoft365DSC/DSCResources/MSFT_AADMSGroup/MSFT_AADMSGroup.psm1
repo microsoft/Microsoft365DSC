@@ -74,6 +74,7 @@ function Get-TargetResource
     else
     {
         Write-Verbose -Message "Found existing AzureAD Group"
+
         $result = @{
             DisplayName                   = $Group.DisplayName
             Description                   = $Group.Description
@@ -87,7 +88,6 @@ function Get-TargetResource
             Ensure                        = "Present"
             GlobalAdminAccount            = $GlobalAdminAccount
         }
-
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
@@ -283,6 +283,10 @@ function Export-TargetResource
         }
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        if ($null -eq $result.MembershipRuleProcessingState)
+        {
+            $result.Remove('MembershipRuleProcessingState') | Out-Null
+        }
         $content += "        AADMSGroup " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
