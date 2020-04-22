@@ -121,7 +121,7 @@ function Get-TargetResource
 
         $GrooveOption = $null
 
-        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $false) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $false))
+        if (($tenantRestrictions.OptOutOfGrooveBlock -eq $true) -and ($tenantRestrictions.OptOutOfGrooveSoftBlock -eq $false))
         {
             $GrooveOption = "SoftOptIn"
         }
