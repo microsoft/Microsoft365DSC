@@ -67,9 +67,10 @@ Configuration Master
             DisplayName                   = "DSCCoreGroup"
             Description                   = "Microsoft DSC Group"
             SecurityEnabled               = $True
-            MailEnabled                   = $False
+            MailEnabled                   = $True
             MailNickname                  = "M365DSCCoreGroup"
             Visibility                    = "Private"
+            GroupTypes                    = @("Unified");
             GlobalAdminAccount            = $GlobalAdmin;
             Ensure                        = "Present"
         }
