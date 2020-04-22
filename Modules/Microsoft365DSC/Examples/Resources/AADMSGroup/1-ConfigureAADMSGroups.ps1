@@ -19,7 +19,7 @@ Configuration Example
             DisplayName                   = "DSCGroup"
             Description                   = "Microsoft DSC Group"
             SecurityEnabled               = $True
-            MailEnabled                   = $False
+            MailEnabled                   = $True
             GroupTypes                    = @("Unified")
             MailNickname                  = "M365DSC"
             Visibility                    = "Private"

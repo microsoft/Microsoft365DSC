@@ -70,7 +70,6 @@ Configuration Master
             MailEnabled                   = $False
             MailNickname                  = "M365DSCCoreGroup"
             Visibility                    = "Private"
-            GroupTypes                    = @("Unified")
             GlobalAdminAccount            = $GlobalAdmin;
             Ensure                        = "Present"
         }

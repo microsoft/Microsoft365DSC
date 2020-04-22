@@ -162,6 +162,12 @@ function Set-TargetResource
     $currentParameters.Remove("GlobalAdminAccount")
     $currentParameters.Remove("Ensure")
 
+    if ($Ensure -eq 'Present' -and $GroupTypes.Contains("Unified") -and $MailEnabled -eq $false)
+    {
+        Write-Verbose -Message "Cannot set mailenabled to false if GroupTypes is set to Unified when creating group."
+        throw "Cannot set mailenabled to false if GroupTypes is set to Unified when creating a group."
+    }
+
     if ($Ensure -eq 'Present' -and $currentGroup.Ensure -eq 'Present')
     {
         $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'"
@@ -270,7 +276,7 @@ function Export-TargetResource
     #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-    -Platform AzureAD
+        -Platform AzureAD
 
     $groups = Get-AzureADMSGroup
     $i = 1
