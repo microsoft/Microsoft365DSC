@@ -7,7 +7,7 @@ function Start-M365DSCConfigurationExtract
         [Switch]
         $Quiet,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
 
@@ -43,7 +43,23 @@ function Start-M365DSCConfigurationExtract
         [Parameter()]
         [ValidateSet('Lite', 'Default', 'Full')]
         [System.String]
-        $Mode
+        $Mode,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.string]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     $InformationPreference = "Continue"
@@ -52,7 +68,7 @@ function Start-M365DSCConfigurationExtract
 
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    if ($GlobalAdminAccount.UserName.Contains("@"))
+    if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
     {
         $organization = $GlobalAdminAccount.UserName.Split("@")[1]
 
@@ -189,14 +205,38 @@ function Start-M365DSCConfigurationExtract
                 {
                     Write-Information "Extracting [$resourceName]..."
                     $MaxProcessesExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("MaxProcesses")
+                    $AppSecretExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("ApplicationSecret")
+                    $CertThumbprintExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificateThumbprint")
+                    $TenantIdExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("TenantId")
+                    $AppIdExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("ApplicationId")
+
+                    $parameters = @{}
+                    if ($nulll -ne $GlobalAdminAccount)
+                    {
+                        $parameters.Add("GlobalAdminAccount", $GlobalAdminAccount)
+                    }
                     if ($MaxProcessesExists)
                     {
-                        $exportString = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount -MaxProcesses $MaxProcesses
+                        $parameters.Add("MaxProcesses", $MaxProcesses)
                     }
-                    else
+                    if ($AppSecretExists)
                     {
-                        $exportString = Export-TargetResource -GlobalAdminAccount $GlobalAdminAccount
+                        $parameters.Add("AppplicationSecret", $ApplicationSecret)
                     }
+                    if ($CertThumbprintExists)
+                    {
+                        $parameters.Add("CertificateThumbprint", $CertificateThumbprint)
+                    }
+                    if ($TenantIdExists)
+                    {
+                        $parameters.Add("TenantId", $TenantId)
+                    }
+                    if ($AppIdExists)
+                    {
+                        $parameters.Add("ApplicationId", $ApplicationId)
+                    }
+
+                    $exportString =Export-TargetResource @parameters
                 }
                 $DSCContent += $exportString
             }
