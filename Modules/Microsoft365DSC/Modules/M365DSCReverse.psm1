@@ -127,7 +127,7 @@ function Start-M365DSCConfigurationExtract
     }
     $DSCContent += "Configuration $ConfigurationName`r`n{`r`n"
 
-    if ($ConfigurationMode -eq 'Credential')
+    if ($ConnectionMode -eq 'Credential')
     {
         $DSCContent += "    param (`r`n"
         $DSCContent += "        [parameter()]`r`n"
