@@ -159,7 +159,9 @@ function Get-TargetResource
     Write-Verbose -Message "Checking for existence of Team $DisplayName"
 
     $ConnectionMode = $null
-    if ($null -ne $ApplicationId -and $null -ne $TenantId -and $null -ne $CertificateThumbprint)
+    if (-not [String]::IsNullOrEmpty($ApplicationId) -and `
+        -not [String]::IsNullOrEmpty($TenantId) -and `
+        -not [String]::IsNullOrEmpty($CertificateThumbprint))
     {
         Write-Verbose -Message "Connecting to Microsoft Teams using ApplicationId {$ApplicationId}"
         Test-MSCloudLogin -Platform MicrosoftTeams -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
@@ -651,7 +653,9 @@ function Export-TargetResource
     #endregion
 
     $ConnectionMode = $null
-    if ($null -ne $ApplicationId -and $null -ne $TenantId -and $null -ne $CertificateThumbprint)
+    if (-not [String]::IsNullOrEmpty($ApplicationId) -and `
+        -not [String]::IsNullOrEmpty($TenantId) -and `
+        -not [String]::IsNullOrEmpty($CertificateThumbprint))
     {
         Write-Verbose -Message "Connecting to Microsoft Teams using ApplicationId {$ApplicationId}"
         Test-MSCloudLogin -Platform MicrosoftTeams -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint

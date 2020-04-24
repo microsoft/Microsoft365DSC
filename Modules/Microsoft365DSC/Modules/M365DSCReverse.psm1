@@ -68,14 +68,27 @@ function Start-M365DSCConfigurationExtract
 
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
+    $ConnectionMode = $null
+    if (-not [String]::IsNullOrEmpty($ApplicationId) -and `
+        -not [String]::IsNullOrEmpty($TenantId) -and `
+        -not [String]::IsNullOrEmpty($CertificateThumbprint))
     {
-        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
-
-        if ($organization.IndexOf(".") -gt 0)
+        $ConnectionMode = 'ServicePrincipal'
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
+            -TenantId $TenantId `
+            -CertificateThumbprint $CertificateThumbprint
+    }
+    else
+    {
+        $ConnectionMode = 'Credential'
+        if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
         {
-            $principal = $organization.Split(".")[0]
+            $organization = $GlobalAdminAccount.UserName.Split("@")[1]
         }
+    }
+    if ($organization.IndexOf(".") -gt 0)
+    {
+        $principal = $organization.Split(".")[0]
     }
 
     $ComponentsToSkip = @()
@@ -90,11 +103,14 @@ function Start-M365DSCConfigurationExtract
 
     $AzureAutomation = $false
 
-    $DSCContent = "param (`r`n"
-    $DSCContent += "    [parameter()]`r`n"
-    $DSCContent += "    [System.Management.Automation.PSCredential]`r`n"
-    $DSCContent += "    `$GlobalAdminAccount`r`n"
-    $DSCContent += ")`r`n`r`n"
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $DSCContent = "param (`r`n"
+        $DSCContent += "    [parameter()]`r`n"
+        $DSCContent += "    [System.Management.Automation.PSCredential]`r`n"
+        $DSCContent += "    `$GlobalAdminAccount`r`n"
+        $DSCContent += ")`r`n`r`n"
+    }
 
     if (-not [System.String]::IsNullOrEmpty($FileName))
     {
@@ -110,21 +126,33 @@ function Start-M365DSCConfigurationExtract
         $ConfigurationName = 'M365TenantConfig'
     }
     $DSCContent += "Configuration $ConfigurationName`r`n{`r`n"
-    $DSCContent += "    param (`r`n"
-    $DSCContent += "        [parameter()]`r`n"
-    $DSCContent += "        [System.Management.Automation.PSCredential]`r`n"
-    $DSCContent += "        `$GlobalAdminAccount`r`n"
-    $DSCContent += "    )`r`n`r`n"
+
+    if ($ConfigurationMode -eq 'Credential')
+    {
+        $DSCContent += "    param (`r`n"
+        $DSCContent += "        [parameter()]`r`n"
+        $DSCContent += "        [System.Management.Automation.PSCredential]`r`n"
+        $DSCContent += "        `$GlobalAdminAccount`r`n"
+        $DSCContent += "    )`r`n`r`n"
+        $DSCContent += "    if (`$null -eq `$GlobalAdminAccount)`r`n"
+        $DSCContent += "    {`r`n"
+        $DSCContent += "        <# Credentials #>`r`n"
+        $DSCContent += "    }`r`n"
+        $DSCContent += "    else`r`n"
+        $DSCContent += "    {`r`n"
+        $DSCContent += "        `$Credsglobaladmin = `$GlobalAdminAccount`r`n"
+        $DSCContent += "    }`r`n`r`n"
+        $DSCContent += "    `$OrganizationName = `$Credsglobaladmin.UserName.Split('@')[1]`r`n"
+    }
+    else
+    {
+        $DSCContent += "    `$OrganizationName = `$ConfigurationData.NonNodeData.OrganizationName`r`n"
+        Add-ConfigurationDataEntry -Node "NonNodeData" `
+            -Key "OrganizationName" `
+            -Value $organization `
+            -Description "Tenant's default verified domain name"
+    }
     $DSCContent += "    Import-DscResource -ModuleName Microsoft365DSC`r`n`r`n"
-    $DSCContent += "    if (`$null -eq `$GlobalAdminAccount)`r`n"
-    $DSCContent += "    {`r`n"
-    $DSCContent += "        <# Credentials #>`r`n"
-    $DSCContent += "    }`r`n"
-    $DSCContent += "    else`r`n"
-    $DSCContent += "    {`r`n"
-    $DSCContent += "        `$Credsglobaladmin = `$GlobalAdminAccount`r`n"
-    $DSCContent += "    }`r`n`r`n"
-    $DSCContent += "    `$OrganizationName = `$Credsglobaladmin.UserName.Split('@')[1]`r`n"
     $DSCContent += "    Node localhost`r`n"
     $DSCContent += "    {`r`n"
 
@@ -133,8 +161,11 @@ function Start-M365DSCConfigurationExtract
         -Value "0" `
         -Description "Default Value Used to Ensure a Configuration Data File is Generated"
 
-    # Add the GlobalAdminAccount to the Credentials List
-    Save-Credentials -UserName "globaladmin"
+    if ($ConnectionMode -eq 'Credential')
+    {
+        # Add the GlobalAdminAccount to the Credentials List
+        Save-Credentials -UserName "globaladmin"
+    }
 
     $ResourcesPath = Join-Path -Path $PSScriptRoot `
         -ChildPath "..\DSCResources\" `
@@ -251,28 +282,35 @@ function Start-M365DSCConfigurationExtract
     $DSCContent += "    }`r`n"
     $DSCContent += "}`r`n"
 
-    #region Add the Prompt for Required Credentials at the top of the Configuration
-    $credsContent = ""
-    foreach ($credential in $Global:CredsRepo)
+    if ($ConnectionMode -eq 'Credential')
     {
-        if (!$credential.ToLower().StartsWith("builtin"))
+        #region Add the Prompt for Required Credentials at the top of the Configuration
+        $credsContent = ""
+        foreach ($credential in $Global:CredsRepo)
         {
-            if (!$AzureAutomation)
+            if (!$credential.ToLower().StartsWith("builtin"))
             {
-                $credsContent += "        " + (Resolve-Credentials $credential) + " = Get-Credential -Message `"Global Admin credentials`""
-            }
-            else
-            {
-                $resolvedName = (Resolve-Credentials $credential)
-                $credsContent += "    " + $resolvedName + " = Get-AutomationPSCredential -Name " + ($resolvedName.Replace("$", "")) + "`r`n"
+                if (!$AzureAutomation)
+                {
+                    $credsContent += "        " + (Resolve-Credentials $credential) + " = Get-Credential -Message `"Global Admin credentials`""
+                }
+                else
+                {
+                    $resolvedName = (Resolve-Credentials $credential)
+                    $credsContent += "    " + $resolvedName + " = Get-AutomationPSCredential -Name " + ($resolvedName.Replace("$", "")) + "`r`n"
+                }
             }
         }
+        $credsContent += "`r`n"
+        $startPosition = $DSCContent.IndexOf("<# Credentials #>") + 19
+        $DSCContent = $DSCContent.Insert($startPosition, $credsContent)
+        $DSCContent += "$ConfigurationName -ConfigurationData .\ConfigurationData.psd1 -GlobalAdminAccount `$GlobalAdminAccount"
+        #endregion
     }
-    $credsContent += "`r`n"
-    $startPosition = $DSCContent.IndexOf("<# Credentials #>") + 19
-    $DSCContent = $DSCContent.Insert($startPosition, $credsContent)
-    $DSCContent += "$ConfigurationName -ConfigurationData .\ConfigurationData.psd1 -GlobalAdminAccount `$GlobalAdminAccount"
-    #endregion
+    else
+    {
+        $DSCContent += "$ConfigurationName -ConfigurationData .\ConfigurationData.psd1"
+    }
 
     $shouldOpenOutputDirectory = !$Quiet
     #region Prompt the user for a location to save the extract and generate the files
