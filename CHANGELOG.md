@@ -2,6 +2,16 @@
 
 ## UNRELEASED
 
+* AADGroupsNamingPolicy
+  * Added support for AzureAD Application Authentication;
+* AADGroupsSettings
+  * Added support for AzureAD Application Authentication;
+  * Fixed issue where properties were returned as string instead
+    of boolean;
+* AADMSGroup
+  * Initial Release;
+* AADMSGroupLifecyclePolicy
+  * Added support for AzureAD Application Authentication;
 * TeamsChannel
   * Added support for AzureAD Application Authentication;
 * TeamsTeam

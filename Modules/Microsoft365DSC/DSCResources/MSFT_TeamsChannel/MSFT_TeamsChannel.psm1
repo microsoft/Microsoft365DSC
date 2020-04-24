@@ -195,6 +195,9 @@ function Set-TargetResource
     $CurrentParameters.Remove("TeamName")
     $CurrentParameters.Add("GroupId", $team.GroupId)
     $CurrentParameters.Remove("GlobalAdminAccount")
+    $CurrentParameters.Remove("ApplicationId")
+    $CurrentParameters.Remove("TenantId")
+    $CurrentParameters.Remove("CertificateThumbprint")
     $CurrentParameters.Remove("Ensure")
 
     if ($Ensure -eq "Present")
@@ -374,7 +377,17 @@ function Export-TargetResource
                 }
             }
             $result = Get-TargetResource @params
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            if ($ConnectionMode -eq 'Credential')
+            {
+                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                $result.Remove("ApplicationId")
+                $result.Remove("TenantId")
+                $result.Remove("CertificateThumbprint")
+            }
+            else
+            {
+                $result.Remove("GlobalAdminAccount")
+            }
             $content += "        TeamsChannel " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

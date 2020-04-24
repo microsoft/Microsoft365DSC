@@ -22,9 +22,21 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Groups Naming Policy"
@@ -35,8 +47,22 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform AzureAD
+    $ConnectionMode = $null
+    if (-not [String]::IsNullOrEmpty($ApplicationId) -and `
+        -not [String]::IsNullOrEmpty($TenantId) -and `
+        -not [String]::IsNullOrEmpty($CertificateThumbprint))
+    {
+        Write-Verbose -Message "Connecting to AzureAD using ApplicationId {$ApplicationId}"
+        Test-MSCloudLogin -Platform AzureAD -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
+        $ConnectionMode = "ServicePrincipal"
+    }
+    else
+    {
+        Write-Verbose -Message "Connecting to AzureAD using Credentials"
+        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+            -Platform AzureAD
+        $ConnectionMode = "Credential"
+    }
 
     $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq "Group.Unified"}
 
@@ -55,6 +81,9 @@ function Get-TargetResource
             CustomBlockedWordsList        = $Policy["CustomBlockedWordsList"].Split(',')
             Ensure                        = "Present"
             GlobalAdminAccount            = $GlobalAdminAccount
+            ApplicationId                 = $ApplicationId
+            TenantId                      = $TenantId
+            CertificateThumbprint         = $CertificateThumbprint
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -85,9 +114,21 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of Azure AD Groups Naming Policy"
@@ -97,9 +138,6 @@ function Set-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform AzureAD
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
 
@@ -156,16 +194,27 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration of AzureAD Groups Naming Policy"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
@@ -187,9 +236,21 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $InformationPreference = 'Continue'
     #region Telemetry
@@ -200,16 +261,52 @@ function Export-TargetResource
     #endregion
 
     $content = ''
-    $params = @{
-        GlobalAdminAccount = $GlobalAdminAccount
-        IsSingleInstance   = 'Yes'
+    $ConnectionMode = $null
+    if (-not [String]::IsNullOrEmpty($ApplicationId) -and `
+        -not [String]::IsNullOrEmpty($TenantId) -and `
+        -not [String]::IsNullOrEmpty($CertificateThumbprint))
+    {
+        $params = @{
+            ApplicationId          = $ApplicationId
+            TenantId               = $TenantId
+            CertificateThumbprint  = $CertificateThumbprint
+            IsSingleInstance       = 'Yes'
+        }
+        $ConnectionMode = "ServicePrincipal"
     }
+    else
+    {
+        $params = @{
+            GlobalAdminAccount = $GlobalAdminAccount
+            IsSingleInstance   = 'Yes'
+        }
+        $ConnectionMode = "Credential"
+    }
+
     $result = Get-TargetResource @params
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $result.Remove("ApplicationId")
+        $result.Remove("TenantId")
+        $result.Remove("CertificateThumbprint")
+    }
+    else
+    {
+        $result.Remove("GlobalAdminAccount")
+    }
     $content += "        AADGroupsNamingPolicy " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    }
+    else
+    {
+        $content += $currentDSCBlock
+    }
     $content += "        }`r`n"
 
     return $content

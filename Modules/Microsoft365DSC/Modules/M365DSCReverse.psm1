@@ -267,7 +267,7 @@ function Start-M365DSCConfigurationExtract
                         $parameters.Add("ApplicationId", $ApplicationId)
                     }
 
-                    $exportString =Export-TargetResource @parameters
+                    $exportString = Export-TargetResource @parameters
                 }
                 $DSCContent += $exportString
             }
