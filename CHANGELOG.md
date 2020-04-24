@@ -2,8 +2,12 @@
 
 ## UNRELEASED
 
+* TeamsChannel
+  * Added support for AzureAD Application Authentication;
 * TeamsTeam
-  * Added support for AzureAD Appication Authentication;
+  * Added support for AzureAD Application Authentication;
+* TeamsUser
+  * Added support for AzureAD Application Authentication;
 * Metadata
   * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.57;
   * Updated MicrosoftTeams to 1.0.6;
