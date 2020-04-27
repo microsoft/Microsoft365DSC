@@ -237,6 +237,22 @@ function Test-MSCloudLogin
         $CloudCredential,
 
         [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
         [Switch]
         $UseModernAuth
     )

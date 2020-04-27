@@ -75,7 +75,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The Team already exists" -Fixture {
+        Context -Name "The Team already exists - Credential" -Fixture {
             $testParams = @{
                 DisplayName        = "TestTeam"
                 Ensure             = "Present"
@@ -108,6 +108,93 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should return true from the Test method" {
                 Test-TargetResource @testParams | Should Be $true
+            }
+        }
+
+        Context -Name "The Team already exists and is in the Desired State - ServicePrincipal" -Fixture {
+            $testParams = @{
+                DisplayName           = "TestTeam"
+                Ensure                = "Present"
+                Visibility            = "Private"
+                Owner                 = @("owner@contoso.com")
+                ApplicationId         = "12345-12345-12345"
+                TenantId              = "12345-12345-12345"
+                CertificateThumbprint = "123451234512345"
+            }
+
+            Mock -Command Get-TeamUser -MockWith {
+                return @(
+                    @{
+                        User = "owner@contoso.com"
+                        Role = "owner"
+                    }
+                )
+            }
+
+            Mock -CommandName Get-Team -MockWith {
+                return @(@{
+                    DisplayName = "TestTeam"
+                    GroupID     = "1234-1234-1234-1234"
+                    Visibility  = "Private"
+                    Archived    = $false
+                })
+            }
+
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $true
+            }
+        }
+
+        Context -Name "The Team already exists and is NOT in the Desired State - ServicePrincipal" -Fixture {
+            $testParams = @{
+                DisplayName           = "TestTeam"
+                Ensure                = "Present"
+                Visibility            = "Public" #Drift
+                Owner                 = @("owner@contoso.com")
+                ApplicationId         = "12345-12345-12345"
+                TenantId              = "12345-12345-12345"
+                CertificateThumbprint = "123451234512345"
+            }
+
+            Mock -Command Get-TeamUser -MockWith {
+                return @(
+                    @{
+                        User = "owner@contoso.com"
+                        Role = "owner"
+                    }
+                )
+            }
+
+            Mock -CommandName Set-Team -MockWith {
+                return @{
+                    DisplayName = "Test Team"
+                }
+            }
+
+            Mock -CommandName Get-Team -MockWith {
+                return @(@{
+                    DisplayName = "TestTeam"
+                    GroupID     = "1234-1234-1234-1234"
+                    Visibility  = "Private"
+                    Archived    = $false
+                })
+            }
+
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
+            }
+
+            It "Should update the values in the Set method" {
+                Set-TargetResource @testParams
+                Assert-MockCalled -CommandName 'Set-Team' -Exactly 1
             }
         }
 
