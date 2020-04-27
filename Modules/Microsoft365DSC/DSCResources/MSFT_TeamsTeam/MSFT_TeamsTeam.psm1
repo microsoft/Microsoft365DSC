@@ -166,12 +166,14 @@ function Get-TargetResource
         Write-Verbose -Message "Connecting to Microsoft Teams using ApplicationId {$ApplicationId}"
         Test-MSCloudLogin -Platform MicrosoftTeams -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
         $ConnectionMode = "ServicePrincipal"
+        Write-Verbose -Message "Connected"
     }
     else
     {
         Write-Verbose -Message "Connecting to Microsoft Teams using Credentials"
         Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
             -Platform MicrosoftTeams
+        Write-Verbose -Message "Connected"
         $ConnectionMode = "Credential"
     }
 
@@ -182,6 +184,7 @@ function Get-TargetResource
         ## will only return 1 instance
         if ($CurrentParameters.ContainsKey("GroupID"))
         {
+            Write-Verbose -Message "GroupID was specified"
             $team = Get-Team -GroupId $GroupID
             if ($null -eq $team)
             {
@@ -191,6 +194,7 @@ function Get-TargetResource
         }
         else
         {
+            Write-Verbose -Message "GroupID was NOT specified"
             ## Can retreive multiple Teams since displayname is not unique
             $team = Get-Team -DisplayName $DisplayName
             if ($null -eq $team)
@@ -204,22 +208,15 @@ function Get-TargetResource
             }
         }
 
-        $Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object { $_.Role -eq "owner" }
-        $OwnersArray = @()
-        if ($null -ne $Owners)
-        {
-            foreach ($owner in $Owners.User)
-            {
-                $OwnersArray += $owner[0].ToString()
-            }
-        }
+        Write-Verbose -Message "Getting Team {$DisplayName} Owners"
+        [array]$Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object { $_.Role -eq "owner" }
         Write-Verbose -Message "Found Team $($team.DisplayName)."
 
         $result = @{
             DisplayName                       = $team.DisplayName
             GroupID                           = $team.GroupId
             Description                       = $team.Description
-            Owner                             = $OwnersArray
+            Owner                             = $Owners[0].User.ToString()
             MailNickName                      = $team.MailNickName
             Visibility                        = $team.Visibility
             AllowAddRemoveApps                = $team.AllowAddRemoveApps
@@ -416,6 +413,16 @@ function Set-TargetResource
         {
             $CurrentParameters.Add("GroupID", $team.GroupID)
         }
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $CurrentParameters.Remove("GlobalAdminAccount")
+        }
+        else
+        {
+            $CurrentParameters.Remove("ApplicationId")
+            $CurrentParameters.Remove("TenantId")
+            $CurrentParameters.Remove("CertificateThumbprint")
+        }
         Set-Team @CurrentParameters
         Write-Verbose -Message "Updating team $DisplayName"
     }
@@ -429,7 +436,7 @@ function Set-TargetResource
         Write-Verbose -Message "Creating team $DisplayName"
         if ($null -ne $Owner)
         {
-            $CurrentParameters.Owner = [array]$Owner[0]
+            $CurrentParameters.Owner = ([array]$Owner[0]).ToString()
         }
 
         if ($ConnectionMode -eq "ServicePrincipal")
@@ -464,6 +471,7 @@ function Set-TargetResource
         }
         else
         {
+            $CurrentParameters.Remove("GlobalAdminAccount")
             New-Team @CurrentParameters
         }
     }

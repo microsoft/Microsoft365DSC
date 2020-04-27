@@ -79,7 +79,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 DisplayName        = "TestTeam"
                 Ensure             = "Present"
-                GroupID            = "1234-1234-1234-1234"
+                Visibility         = "Private"
                 Owner              = @("owner@contoso.com")
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -94,12 +94,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-Team -MockWith {
-                return @{
+                return @(@{
                     DisplayName = "TestTeam"
                     GroupID     = "1234-1234-1234-1234"
                     Visibility  = "Private"
                     Archived    = $false
-                }
+                })
             }
 
             It "Should return present from the Get method" {
