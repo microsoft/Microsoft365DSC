@@ -389,7 +389,9 @@ function Set-TargetResource
     #endregion
 
     $ConnectionMode = $null
-    if ($null -ne $ApplicationId -and $null -ne $TenantId -and $null -ne $CertificateThumbprint)
+    if (-not [String]::IsNullOrEmpty($ApplicationId) -and `
+                    -not [String]::IsNullOrEmpty($TenantId) -and `
+                    -not [String]::IsNullOrEmpty($CertificateThumbprint))
     {
         $ConnectionMode = "ServicePrincipal"
     }
