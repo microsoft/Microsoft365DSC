@@ -52,22 +52,7 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = $null
-    if (-not [String]::IsNullOrEmpty($ApplicationId) -and `
-        -not [String]::IsNullOrEmpty($TenantId) -and `
-        -not [String]::IsNullOrEmpty($CertificateThumbprint))
-    {
-        Write-Verbose -Message "Connecting to AzureAD using ApplicationId {$ApplicationId}"
-        Test-MSCloudLogin -Platform AzureAD -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
-        $ConnectionMode = "ServicePrincipal"
-    }
-    else
-    {
-        Write-Verbose -Message "Connecting to AzureAD using Credentials"
-        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-            -Platform AzureAD
-        $ConnectionMode = "Credential"
-    }
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
 
     try
     {
@@ -157,22 +142,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = $null
-    if (-not [String]::IsNullOrEmpty($ApplicationId) -and `
-        -not [String]::IsNullOrEmpty($TenantId) -and `
-        -not [String]::IsNullOrEmpty($CertificateThumbprint))
-    {
-        Write-Verbose -Message "Connecting to AzureAD using ApplicationId {$ApplicationId}"
-        Test-MSCloudLogin -Platform AzureAD -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
-        $ConnectionMode = "ServicePrincipal"
-    }
-    else
-    {
-        Write-Verbose -Message "Connecting to AzureAD using Credentials"
-        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-            -Platform AzureAD
-        $ConnectionMode = "Credential"
-    }
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
 
     try
     {
@@ -332,23 +302,14 @@ function Export-TargetResource
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
 
-    $ConnectionMode = $null
-    if (-not [String]::IsNullOrEmpty($ApplicationId) -and `
-        -not [String]::IsNullOrEmpty($TenantId) -and `
-        -not [String]::IsNullOrEmpty($CertificateThumbprint))
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+    if ($ConnectionMode -eq 'ServicePrincipal')
     {
-        Write-Verbose -Message "Connecting to AzureAD using ApplicationId {$ApplicationId}"
-        Test-MSCloudLogin -Platform AzureAD -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
-        $ConnectionMode = "ServicePrincipal"
         $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
             -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
     }
     else
     {
-        Write-Verbose -Message "Connecting to AzureAD using Credentials"
-        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-            -Platform AzureAD
-        $ConnectionMode = "Credential"
         if ($GlobalAdminAccount.UserName.Contains("@"))
         {
             $organization = $GlobalAdminAccount.UserName.Split("@")[1]

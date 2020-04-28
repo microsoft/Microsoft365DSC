@@ -140,6 +140,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 UsageGuidelinesUrl            = "https://contoso.com/usage";
             }
 
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
+
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
                 if (-not $Script:calledOnceAlready)
                 {
@@ -176,6 +180,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount            = $GlobalAdminAccount;
             }
 
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
+
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
                 $setting = New-Object 'Contoso.Model.AADGroupsSettings.DirectorySetting'
                 return $setting
@@ -208,6 +216,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 UsageGuidelinesUrl            = "https://contoso.com/usage";
             }
 
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
+
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
                 $setting = New-Object 'Contoso.Model.AADGroupsSettings.DirectorySetting'
                 return $setting
@@ -235,6 +247,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GuestUsageGuidelinesUrl       = "https://contoso.com/guestusage";
                 IsSingleInstance              = "Yes";
                 UsageGuidelinesUrl            = "https://contoso.com/usage";
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
@@ -265,6 +281,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
                 $setting = New-Object 'Contoso.Model.AADGroupsSettings.DirectorySetting'
                 return $setting
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             It "Should Reverse Engineer resource from the Export method" {

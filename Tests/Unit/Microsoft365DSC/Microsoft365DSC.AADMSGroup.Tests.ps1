@@ -63,6 +63,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount            = $GlobalAdminAccount;
             }
 
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
+
             Mock -CommandName Get-AzureADMSGroup -MockWith {
                 return $null
             }
@@ -90,6 +94,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Visibility                    = "Private"
                 Ensure                        = "Absent"
                 GlobalAdminAccount            = $GlobalAdminAccount;
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Get-AzureADMSGroup -MockWith {
@@ -122,6 +130,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Visibility                    = "Private"
                 Ensure                        = "Present"
                 GlobalAdminAccount            = $GlobalAdminAccount;
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Get-AzureADMSGroup -MockWith {
@@ -160,6 +172,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount            = $GlobalAdminAccount;
             }
 
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
+
             Mock -CommandName Get-AzureADMSGroup -MockWith {
                 return @{
                     DisplayName                   = "DSCGroup"
@@ -196,6 +212,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Get-AzureADMSGroup -MockWith {

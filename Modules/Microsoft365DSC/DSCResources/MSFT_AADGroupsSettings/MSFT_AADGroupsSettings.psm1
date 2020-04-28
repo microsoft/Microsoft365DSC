@@ -67,22 +67,7 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = $null
-    if (-not [String]::IsNullOrEmpty($ApplicationId) -and `
-        -not [String]::IsNullOrEmpty($TenantId) -and `
-        -not [String]::IsNullOrEmpty($CertificateThumbprint))
-    {
-        Write-Verbose -Message "Connecting to AzureAD using ApplicationId {$ApplicationId}"
-        Test-MSCloudLogin -Platform AzureAD -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
-        $ConnectionMode = "ServicePrincipal"
-    }
-    else
-    {
-        Write-Verbose -Message "Connecting to AzureAD using Credentials"
-        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-            -Platform AzureAD
-        $ConnectionMode = "Credential"
-    }
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
 
     $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq "Group.Unified"}
 
@@ -337,10 +322,8 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = $null
-    if (-not [String]::IsNullOrEmpty($ApplicationId) -and `
-        -not [String]::IsNullOrEmpty($TenantId) -and `
-        -not [String]::IsNullOrEmpty($CertificateThumbprint))
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+    if ($ConnectionMode -eq 'ServicePrincipal')
     {
         $params = @{
             ApplicationId         = $ApplicationId
@@ -348,7 +331,6 @@ function Export-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             IsSingleInstance      = 'Yes'
         }
-        $ConnectionMode = "ServicePrincipal"
     }
     else
     {
@@ -356,7 +338,6 @@ function Export-TargetResource
             GlobalAdminAccount = $GlobalAdminAccount
             IsSingleInstance   = 'Yes'
         }
-        $ConnectionMode = "Credential"
     }
     $content = ''
     $result = Get-TargetResource @params

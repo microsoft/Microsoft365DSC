@@ -61,6 +61,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 ManagedGroupTypes           = "Selected";
             }
 
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
+
             Mock -CommandName Get-AzureADMSGroupLifecyclePolicy -MockWith {
                 return $null
             }
@@ -90,6 +94,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GroupLifetimeInDays         = 99;
                 IsSingleInstance            = "Yes";
                 ManagedGroupTypes           = "Selected";
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Get-AzureADMSGroupLifecyclePolicy -MockWith {
@@ -128,6 +136,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 ManagedGroupTypes           = "Selected";
             }
 
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
+
             Mock -CommandName Get-AzureADMSGroupLifecyclePolicy -MockWith {
                 return @{
                     AlternateNotificationEmails = @("john.smith@contoso.com", 'bob.houle@contoso.com');
@@ -155,6 +167,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GroupLifetimeInDays         = 77; #Drift
                 IsSingleInstance            = "Yes";
                 ManagedGroupTypes           = "Selected";
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Get-AzureADMSGroupLifecyclePolicy -MockWith {
@@ -186,6 +202,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Get-AzureADMSGroupLifecyclePolicy -MockWith {

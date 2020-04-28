@@ -216,6 +216,23 @@ function Get-SPOAdministrationUrl
     )
 }
 
+function New-M365DSCConnection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("Azure", "AzureAD", "SharePointOnline", "ExchangeOnline", `
+                "SecurityComplianceCenter", "MSOnline", "PnP", "PowerPlatforms", `
+                "MicrosoftTeams", "SkypeForBusiness")]
+        [System.String]
+        $Platform,
+
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $InboundParameters
+    )
+}
+
 function Test-MSCloudLogin
 {
     [CmdletBinding()]
