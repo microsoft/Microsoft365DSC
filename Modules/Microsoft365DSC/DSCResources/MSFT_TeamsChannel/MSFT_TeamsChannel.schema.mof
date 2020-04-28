@@ -9,6 +9,6 @@ class MSFT_TeamsChannel : OMI_BaseResource
     [Write, Description("Credentials of the Teams Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
-    [Write, Description("Thumbprint of the Azure Active Directory application to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
 };
 

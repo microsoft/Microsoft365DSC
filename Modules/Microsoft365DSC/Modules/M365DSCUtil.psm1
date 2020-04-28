@@ -1028,6 +1028,72 @@ function Get-M365DSCTenantDomain
     return $defaultDomain.Name
 }
 
+function New-M365DSCConnection
+{
+    param(
+        [Parameter(Mandatory=$true)]
+        [ValidateSet("Azure", "AzureAD", "ExchangeOnline", `
+            "SecurityComplianceCenter", "PnP", "PowerPlatforms", `
+            "MicrosoftTeams", "SkypeForBusiness")]
+        [System.String]
+        $Platform,
+
+        [Parameter(Mandatory=$true)]
+        [System.Collections.Hashtable]
+        $InboundParameters
+    )
+
+    switch ($Platform)
+    {
+        {$_ -eq 'AzureAD' -or $_ -eq 'MicrosoftTeams'}
+        {
+            # Case both authentication methods are attempted
+            if ($null -ne $InboundParameters.GlobalAdminAccount -and `
+                (-not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -or `
+                -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -or `
+                -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint)))
+            {
+                Write-Verbose -Message 'Both Authentication methods are attempted'
+                throw "You can't specify both the GlobalAdminAccount and one of {ApplicationID, TenantId, CertificateThumbprint}"
+            }
+            # Case no authentication method is specified
+            elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
+                [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+                [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+                [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+            {
+                Write-Verbose -Message "No Authentication method was provided"
+                throw "You must specify either the GlobalAdminAccount or ApplicationId, TenantId and CertificateThumbprint parameters."
+            }
+            # Case only GlobalAdminAccount is specified
+            elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
+                [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+                [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+                [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+            {
+                Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
+                Test-MSCloudLogin -Platform $Platform `
+                    -CloudCredential $InboundParameters.GlobalAdminAccount
+                return 'Credential'
+            }
+            # Case only the ServicePrincipal parameters are specified
+            elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
+                -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+                -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+                -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+            {
+                Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
+                Test-MSCloudLogin -Platform $Platform `
+                    -ApplicationId $InboundParameters.ApplicationId `
+                    -TenantId $InboundParameters.TenantId `
+                    -CertificateThumbprint $InboundParameters.CertificateThumbprint
+                return 'ServicePrincipal'
+            }
+        }
+    }
+    throw 'Unexpected error getting the Authentication Method'
+}
+
 function Get-SPOAdministrationUrl
 {
     [CmdletBinding()]

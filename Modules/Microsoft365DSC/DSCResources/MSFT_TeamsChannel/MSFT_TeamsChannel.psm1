@@ -54,22 +54,7 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = $null
-    if (-not [String]::IsNullOrEmpty($ApplicationId) -and `
-        -not [String]::IsNullOrEmpty($TenantId) -and `
-        -not [String]::IsNullOrEmpty($CertificateThumbprint))
-    {
-        Write-Verbose -Message "Connecting to Microsoft Teams using ApplicationId {$ApplicationId}"
-        Test-MSCloudLogin -Platform MicrosoftTeams -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
-        $ConnectionMode = "ServicePrincipal"
-    }
-    else
-    {
-        Write-Verbose -Message "Connecting to Microsoft Teams using Credentials"
-        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-            -Platform MicrosoftTeams
-        $ConnectionMode = "Credential"
-    }
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
     $nullReturn = @{
         TeamName           = $TeamName
@@ -327,24 +312,7 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = $null
-    if (-not [String]::IsNullOrEmpty($ApplicationId) -and `
-        -not [String]::IsNullOrEmpty($TenantId) -and `
-        -not [String]::IsNullOrEmpty($CertificateThumbprint))
-    {
-        Write-Verbose -Message "Connecting to Microsoft Teams using ApplicationId {$ApplicationId}"
-        Test-MSCloudLogin -Platform MicrosoftTeams -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
-        $ConnectionMode = "ServicePrincipal"
-        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
-    }
-    else
-    {
-        Write-Verbose -Message "Connecting to Microsoft Teams using Credentials"
-        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-            -Platform MicrosoftTeams
-        $ConnectionMode = "Credential"
-        $organization = $GlobalAdminAccount.UserName.Split('@')[1]
-    }
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
     $teams = Get-Team
     $j = 1
