@@ -47,12 +47,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return $null
             }
 
-            It "Should return False for the Ensure property from the Get method" {
-                (Get-TargetResource @testParams).Ensure | Should Be 'Absent'
-            }
-
             It "Should return false from the Test method" {
                 Test-TargetResource @testParams | Should Be $false
+            }
+
+            It "Should return False for the Ensure property from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be 'Absent'
             }
 
             It "Create the dial plan Set method" {
@@ -69,7 +69,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 NormalizationRules = @(New-CimInstance -ClassName MSFT_TeamsVoiceNormalizationRule -Property @{
                     Pattern = '^00(\d+)$'
                     Description = 'None'
-                    Identity = 'TestNotExistingWrong'
+                    Identity = 'TestNotExisting'
+                    Translation = '+$1'
+                    Priority = 0
+                    IsInternalExtension = $False
+                } -ClientOnly;
+                New-CimInstance -ClassName MSFT_TeamsVoiceNormalizationRule -Property @{
+                    Pattern = '^00(\d+)$'
+                    Description = 'None'
+                    Identity = 'TestNotExisting2'
                     Translation = '+$1'
                     Priority = 0
                     IsInternalExtension = $False
@@ -91,13 +99,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
             }
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
+            }
 
             It "Should return True for the Ensure property from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be 'Present'
-            }
-
-            It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $false
             }
 
             It "Updates in the Set method" {
@@ -114,7 +121,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 NormalizationRules = @(New-CimInstance -ClassName MSFT_TeamsVoiceNormalizationRule -Property @{
                     Pattern = '^00(\d+)$'
                     Description = 'None'
-                    Identity = 'Test'
+                    Identity = 'TestNotExisting'
+                    Translation = '+$1'
+                    Priority = 0
+                    IsInternalExtension = $False
+                } -ClientOnly;
+                New-CimInstance -ClassName MSFT_TeamsVoiceNormalizationRule -Property @{
+                    Pattern = '^00(\d+)$'
+                    Description = 'None'
+                    Identity = 'TestNotExisting2'
                     Translation = '+$1'
                     Priority = 0
                     IsInternalExtension = $False
@@ -129,7 +144,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     NormalizationRules = @(@{
                         Pattern = '^00(\d+)$'
                         Description = 'None'
-                        Name = 'Test'
+                        Name = 'TestNotExisting'
+                        Translation = '+$1'
+                        Priority = 0
+                        IsInternalExtension = $False
+                    },
+                    @{
+                        Pattern = '^00(\d+)$'
+                        Description = 'None'
+                        Name = 'TestNotExisting2'
                         Translation = '+$1'
                         Priority = 0
                         IsInternalExtension = $False
@@ -137,13 +160,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                 }
             }
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $true
+            }
 
             It "Should return True for the Ensure property from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be 'Present'
-            }
-
-            It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should Be $true
             }
         }
 
@@ -166,18 +188,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Translation = '+$1'
                         Priority = 0
                         IsInternalExtension = $False
+                    },
+                    @{
+                        Pattern = '^00(\d+)$'
+                        Description = 'None'
+                        Name = 'TestNotExisting2'
+                        Translation = '+$1'
+                        Priority = 0
+                        IsInternalExtension = $False
                     }
                     )
                 }
+            }
+
+            It "Should return false from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
             }
 
             It "Should return True for the Ensure property from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should Be 'Present'
             }
 
-            It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $false
-            }
 
             It "Remove the dial plan in the Set method" {
                 Set-TargetResource @testParams
