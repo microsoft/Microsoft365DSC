@@ -257,10 +257,13 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $differences = Get-M365DSCNormalizationRulesDifference -Current $CurrentValues -Desired $PSBoundParameters
-    if ($null -ne $differences)
+    if ($null -ne $NormalizationRules)
     {
-        return $false
+        $differences = Get-M365DSCNormalizationRulesDifference -Current $CurrentValues -Desired $PSBoundParameters
+        if ($null -ne $differences)
+        {
+            return $false
+        }
     }
 
     $ValuesToCheck = $PSBoundParameters
