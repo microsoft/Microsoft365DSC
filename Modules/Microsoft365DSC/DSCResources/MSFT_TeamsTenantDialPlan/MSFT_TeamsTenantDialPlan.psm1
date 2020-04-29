@@ -268,7 +268,7 @@ function Test-TargetResource
     }
 
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
-    $ValuesToCheck.Remove("NormalizationRules")
+    $ValuesToCheck.Remove("NormalizationRules") | Out-Null
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -276,7 +276,6 @@ function Test-TargetResource
         -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
-
     return $TestResult
 }
 
