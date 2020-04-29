@@ -69,15 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 NormalizationRules = @(New-CimInstance -ClassName MSFT_TeamsVoiceNormalizationRule -Property @{
                     Pattern = '^00(\d+)$'
                     Description = 'None'
-                    Identity = 'TestNotExisting'
-                    Translation = '+$1'
-                    Priority = 0
-                    IsInternalExtension = $False
-                } -ClientOnly;
-                New-CimInstance -ClassName MSFT_TeamsVoiceNormalizationRule -Property @{
-                    Pattern = '^00(\d+)$'
-                    Description = 'None'
-                    Identity = 'TestNotExisting2'
+                    Identity = 'TestNotExistingWrong'
                     Translation = '+$1'
                     Priority = 0
                     IsInternalExtension = $False
@@ -122,15 +114,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 NormalizationRules = @(New-CimInstance -ClassName MSFT_TeamsVoiceNormalizationRule -Property @{
                     Pattern = '^00(\d+)$'
                     Description = 'None'
-                    Identity = 'TestNotExisting'
-                    Translation = '+$1'
-                    Priority = 0
-                    IsInternalExtension = $False
-                } -ClientOnly;
-                New-CimInstance -ClassName MSFT_TeamsVoiceNormalizationRule -Property @{
-                    Pattern = '^00(\d+)$'
-                    Description = 'None'
-                    Identity = 'TestNotExisting2'
+                    Identity = 'Test'
                     Translation = '+$1'
                     Priority = 0
                     IsInternalExtension = $False
@@ -145,15 +129,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     NormalizationRules = @(@{
                         Pattern = '^00(\d+)$'
                         Description = 'None'
-                        Name = 'TestNotExisting'
-                        Translation = '+$1'
-                        Priority = 0
-                        IsInternalExtension = $False
-                    },
-                    @{
-                        Pattern = '^00(\d+)$'
-                        Description = 'None'
-                        Name = 'TestNotExisting2'
+                        Name = 'Test'
                         Translation = '+$1'
                         Priority = 0
                         IsInternalExtension = $False
@@ -187,14 +163,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Pattern = '^00(\d+)$'
                         Description = 'None'
                         Name = 'TestNotExisting'
-                        Translation = '+$1'
-                        Priority = 0
-                        IsInternalExtension = $False
-                    },
-                    @{
-                        Pattern = '^00(\d+)$'
-                        Description = 'None'
-                        Name = 'TestNotExisting2'
                         Translation = '+$1'
                         Priority = 0
                         IsInternalExtension = $False
