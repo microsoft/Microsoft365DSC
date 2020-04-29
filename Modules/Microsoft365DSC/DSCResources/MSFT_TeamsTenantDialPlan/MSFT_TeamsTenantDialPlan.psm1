@@ -257,16 +257,16 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+    $ValuesToCheck = $PSBoundParameters
     if ($null -ne $NormalizationRules)
     {
-        $differences = Get-M365DSCNormalizationRulesDifference -Current $CurrentValues -Desired $PSBoundParameters
+        $differences = Get-M365DSCNormalizationRulesDifference -Current $CurrentValues -Desired $ValuesToCheck
         if ($null -ne $differences)
         {
             return $false
         }
     }
 
-    $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove("NormalizationRules")
 
