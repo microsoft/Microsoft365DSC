@@ -48,7 +48,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $false
+                [boolean] $result = Test-TargetResource @testParams
+                $result | Should be $false
             }
 
             It "Should return False for the Ensure property from the Get method" {
@@ -100,7 +101,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
             It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $false
+                [boolean] $result = Test-TargetResource @testParams
+                $result | Should be $false
             }
 
             It "Should return True for the Ensure property from the Get method" {
@@ -161,7 +163,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
             It "Should return true from the Test method" {
-                Test-TargetResource @testParams | Should Be $true
+                [boolean] $result = Test-TargetResource @testParams
+                $result | Should be $true
             }
 
             It "Should return True for the Ensure property from the Get method" {
@@ -202,7 +205,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It "Should return false from the Test method" {
-                Test-TargetResource @testParams | Should Be $false
+                [boolean] $result = Test-TargetResource @testParams
+                $result | Should be $false
             }
 
             It "Should return True for the Ensure property from the Get method" {
