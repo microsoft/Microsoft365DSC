@@ -65,7 +65,7 @@
         },
         @{
             ModuleName      = "MicrosoftTeams"
-            RequiredVersion = "1.0.5"
+            RequiredVersion = "1.0.6"
         },
         @{
             ModuleName      = "AzureADPreview"
@@ -73,7 +73,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.8"
+            RequiredVersion = "1.0.10"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"

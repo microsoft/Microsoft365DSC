@@ -166,7 +166,7 @@ function Export-TargetResource
     $content = ''
     foreach ($policy in $policies)
     {
-        Write-Information "    -[$i/$($policies.Count)] $($policy.Identity.Replace('Tag:', ''))"
+        Write-Information "    [$i/$($policies.Count)] $($policy.Identity.Replace('Tag:', ''))"
         $params = @{
             Identity           = $policy.Identity.Replace("Tag:", "")
             GlobalAdminAccount = $GlobalAdminAccount

@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* TeamsTenantDialPlan
+  * Initial Release;
 * Metadata
   * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.57;
   * Updated MSCloudLoginAssistant to 1.0.8;
