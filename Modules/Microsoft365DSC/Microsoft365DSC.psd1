@@ -65,7 +65,7 @@
         },
         @{
             ModuleName      = "MicrosoftTeams"
-            RequiredVersion = "1.0.5"
+            RequiredVersion = "1.0.6"
         },
         @{
             ModuleName      = "AzureADPreview"
@@ -73,7 +73,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.8"
+            RequiredVersion = "1.0.11"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
@@ -100,7 +100,8 @@
         'modules\M365DSCReverse.psm1',
         'modules\M365DSCLogEngine.psm1',
         'modules\M365DSCTelemetryEngine.psm1',
-        'modules\M365DSCStubsUtility.psm1'
+        'modules\M365DSCStubsUtility.psm1',
+        'modules\M365DSCGraphController.psm1'
     )
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
