@@ -75,7 +75,7 @@ function Get-TargetResource
                 Description           = $config.Description
                 NormalizationRules    = $rules
                 ExternalAccessPrefix  = $config.ExternalAccessPrefix
-                OptimizeDeviceDialing = $config.OptimizeDeviceCalling
+                OptimizeDeviceDialing = $config.OptimizeDeviceDialing
                 SimpleName            = $config.SimpleName
                 GlobalAdminAccount    = $GlobalAdminAccount
                 Ensure                = 'Present'
