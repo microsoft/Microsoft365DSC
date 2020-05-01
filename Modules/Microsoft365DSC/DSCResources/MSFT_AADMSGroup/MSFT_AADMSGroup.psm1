@@ -10,6 +10,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
         $Description,
 
         [Parameter()]
@@ -74,7 +78,21 @@ function Get-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
 
-    $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'"
+    if ($PSBoundParameters.ContainsKey("Id"))
+    {
+        Write-Verbose -Message "GroupID was specified"
+        $Group = Get-AzureADMSGroup -id $Id
+    }
+    else
+    {
+        Write-Verbose -Message "Id was NOT specified"
+        ## Can retreive multiple AAD Groups since displayname is not unique
+        $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'"
+        if ($Group.Length -gt 1)
+        {
+            throw "Duplicate AzureAD Groups named $DisplayName exist in tenant"
+        }
+    }
 
     if ($null -eq $Group)
     {
@@ -88,6 +106,7 @@ function Get-TargetResource
 
         $result = @{
             DisplayName                   = $Group.DisplayName
+            Id                            = $Group.Id
             Description                   = $Group.Description
             GroupTypes                    = [System.String[]]$Group.GroupTypes
             MembershipRule                = $Group.MembershipRule
@@ -115,6 +134,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
 
         [Parameter()]
         [System.String]
@@ -196,17 +219,16 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentGroup.Ensure -eq 'Present')
     {
-        $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'"
-        Set-AzureADMSGroup @currentParameters -id $Group.ID
+        Set-AzureADMSGroup @currentParameters
     }
     elseif ($Ensure -eq 'Present' -and $currentGroup.Ensure -eq 'Absent')
     {
+        $currentParameters.Remove("Id")
         New-AzureADMSGroup @currentParameters
     }
     elseif ($Ensure -eq 'Absent' -and $currentGroup.Ensure -eq 'Present')
     {
-        $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'"
-        Remove-AzureADMSGroup -Id $Group.ID
+        Remove-AzureADMSGroup -Id $currentGroup.ID
     }
 }
 
@@ -219,6 +241,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
 
         [Parameter()]
         [System.String]
@@ -337,6 +363,7 @@ function Export-TargetResource
             $params = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 DisplayName        = $group.DisplayName
+                Id                 = $group.Id
             }
         }
         else
@@ -346,6 +373,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 DisplayName           = $group.DisplayName
+                Id                    = $group.Id
             }
         }
         $result = Get-TargetResource @params
