@@ -27,9 +27,21 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Groups Lifecycle Policy"
@@ -40,8 +52,7 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform AzureAD
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
 
     try
     {
@@ -68,6 +79,9 @@ function Get-TargetResource
             AlternateNotificationEmails = $Policy.AlternateNotificationEmails.Split(';')
             Ensure                      = "Present"
             GlobalAdminAccount          = $GlobalAdminAccount
+            ApplicationId               = $ApplicationId
+            TenantId                    = $TenantId
+            CertificateThumbprint       = $CertificateThumbprint
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -103,9 +117,21 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of Azure AD Groups Lifecycle Policy"
@@ -116,8 +142,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform AzureAD
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
 
     try
     {
@@ -137,6 +162,9 @@ function Set-TargetResource
         $creationParams = $PSBoundParameters
         $creationParams.Remove("IsSingleInstance")
         $creationParams.Remove("GlobalAdminAccount")
+        $creationParams.Remove("ApplicationId")
+        $creationParams.Remove("TenantId")
+        $creationParams.Remove("CertificateThumbprint")
         $creationParams.Remove("Ensure")
 
         $emails = ""
@@ -153,6 +181,9 @@ function Set-TargetResource
         $updateParams = $PSBoundParameters
         $updateParams.Remove("IsSingleInstance")
         $updateParams.Remove("GlobalAdminAccount")
+        $updateParams.Remove("ApplicationId")
+        $updateParams.Remove("TenantId")
+        $updateParams.Remove("CertificateThumbprint")
         $updateParams.Remove("Ensure")
 
         $emails = ""
@@ -203,9 +234,21 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration of AzureAD Groups Lifecycle Policy"
@@ -232,9 +275,21 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $InformationPreference = 'Continue'
     #region Telemetry
@@ -244,6 +299,27 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+    if ($ConnectionMode -eq 'ServicePrincipal')
+    {
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
+            -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
+    }
+    else
+    {
+        if ($GlobalAdminAccount.UserName.Contains("@"))
+        {
+            $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+        }
+    }
+    if ($organization.IndexOf(".") -gt 0)
+    {
+        $principal = $organization.Split(".")[0]
+    }
+
     try
     {
         $Policy = Get-AzureADMSGroupLifecyclePolicy -ErrorAction SilentlyContinue
@@ -252,31 +328,50 @@ function Export-TargetResource
     {
         return ""
     }
-    $content = ''
-    $organization = ""
-    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    if ($GlobalAdminAccount.UserName.Contains("@"))
-    {
-        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
 
-        if ($organization.IndexOf(".") -gt 0)
-        {
-            $principal = $organization.Split(".")[0]
+    $content = ''
+
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $params = @{
+            GlobalAdminAccount          = $GlobalAdminAccount
+            IsSingleInstance            = 'Yes'
+            GroupLifetimeInDays         = 1
+            ManagedGroupTypes           = 'All'
+            AlternateNotificationEmails = 'empty@contoso.com'
         }
     }
-    $params = @{
-        GlobalAdminAccount   = $GlobalAdminAccount
-        IsSingleInstance     = 'Yes'
-        GroupLifetimeInDays = 1
-        ManagedGroupTypes = 'All'
-        AlternateNotificationEmails = 'empty@contoso.com'
+    else
+    {
+        $params = @{
+            ApplicationId               = $ApplicationId
+            TenantId                    = $TenantId
+            CertificateThumbprint       = $CertificateThumbprint
+            IsSingleInstance            = 'Yes'
+            GroupLifetimeInDays         = 1
+            ManagedGroupTypes           = 'All'
+            AlternateNotificationEmails = 'empty@contoso.com'
+        }
     }
     $result = Get-TargetResource @params
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $result.Remove("ApplicationId")
+        $result.Remove("TenantId")
+        $result.Remove("CertificateThumbprint")
+    }
+    else
+    {
+        $result.Remove("GlobalAdminAccount")
+    }
     $content += "        AADMSGroupLifecyclePolicy " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+    }
 
     if ($partialContent.ToLower().Contains("@" + $principal.ToLower()))
     {

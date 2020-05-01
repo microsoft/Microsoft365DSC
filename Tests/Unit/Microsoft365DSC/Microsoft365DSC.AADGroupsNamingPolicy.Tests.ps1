@@ -102,6 +102,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount            = $GlobalAdminAccount;
             }
 
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
+
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
                 if (-not $Script:calledOnceAlready)
                 {
@@ -140,6 +144,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount            = $GlobalAdminAccount;
             }
 
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
+
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
                 $setting = New-Object 'Contoso.Model.DirectorySetting'
                 return $setting
@@ -168,6 +176,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount            = $GlobalAdminAccount;
             }
 
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
+
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
                 $setting = New-Object 'Contoso.Model.DirectorySetting'
                 return $setting
@@ -190,6 +202,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 CustomBlockedWordsList        = @("CEO", "Test")
                 Ensure                        = "Present"
                 GlobalAdminAccount            = $GlobalAdminAccount;
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
@@ -215,6 +231,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Get-AzureADDirectorySetting -MockWith {
