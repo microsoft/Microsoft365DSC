@@ -73,7 +73,19 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.10"
+            RequiredVersion = "1.0.12"
+        },
+        @{
+            ModuleName      = "ExchangeOnlineManagement"
+            RequiredVersion = "0.4578.0"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.Authentication"
+            RequiredVersion = "0.2.0"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.Identity.ConditionalAccess"
+            RequiredVersion = "0.2.1"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
