@@ -73,10 +73,18 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.11"
+            RequiredVersion = "1.0.12"
         },
         @{
-            ModuleName      = "Microsoft.Graph"
+            ModuleName      = "ExchangeOnlineManagement"
+            RequiredVersion = "0.4578.0"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.Authentication"
+            RequiredVersion = "0.2.0"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.Identity.ConditionalAccess"
             RequiredVersion = "0.2.1"
         },
         @{

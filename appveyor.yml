@@ -11,9 +11,12 @@ install:
         Install-Module ReverseDSC -RequiredVersion 2.0.0.2 -Force -SkipPublisherCheck
         Install-Module AzureADPreview -RequiredVersion 2.0.2.89 -Force -SkipPublisherCheck
         Install-Module MicrosoftTeams -RequiredVersion 1.0.6 -Force -SkipPublisherCheck
-        Install-Module MSCloudLoginAssistant -RequiredVersion 1.0.10 -Force -SkipPublisherCheck
+        Install-Module MSCloudLoginAssistant -RequiredVersion 1.0.12 -Force -SkipPublisherCheck
         Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.20.2004.0 -Force -SkipPublisherCheck
         Install-Module Microsoft.PowerApps.Administration.PowerShell -RequiredVersion 2.0.57 -Force -SkipPublisherCheck
+        Install-Module ExchangeOnlineManagement -RequiredVersion 0.4578.0 -Force -SkipPublisherCheck
+        Install-Module Microsoft.Graph.Authentication -RequiredVersion 0.2.0 -Force -SkipPublisherCheck
+        Install-Module Microsoft.Graph.Identity.ConditionalAccess -RequiredVersion 0.2.1 -Force -SkipPublisherCheck
 
         $webClient = new-object System.Net.WebClient
         $url = "https://github.com/Microsoft/Microsoft365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_19515-12000_x64_en-us.msi?raw=true"
