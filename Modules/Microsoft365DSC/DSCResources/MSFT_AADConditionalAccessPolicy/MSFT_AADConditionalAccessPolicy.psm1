@@ -39,11 +39,10 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Obtaining the Access Token for the Microsoft Graph"
-    $MSGraphAccessToken = Get-MSCloudLoginAADToken -GlobalAdminAccount $GlobalAdminAccount
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform MicrosoftGraph
 
-    $RequestURL = "https://graph.microsoft.com/beta/conditionalAccess/policies?filter=displayName eq '$DisplayName'"
-    $Policy = Get-M365DSCDataFromGraph -AccessToken $MSGraphAccessToken -Uri $RequestUrl
+    $Policy =  Get-MGConditionalAccessPolicy -Filter "displayName -eq '$DisplayName'"
 
     if ($null -eq $Policy)
     {
@@ -204,12 +203,10 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+        -Platform MicrosoftGraph
 
-    Write-Verbose -Message "Obtaining the Access Token for the Microsoft Graph"
-    $MSGraphAccessToken = Get-MSCloudLoginAADToken -GlobalAdminAccount $GlobalAdminAccount
-
-    $RequestURL = "https://graph.microsoft.com/beta/conditionalAccess/policies"
-    [array]$Policies = Get-M365DSCDataFromGraph -AccessToken $MSGraphAccessToken -Uri $RequestUrl
+    [array]$Policies = Get-MGConditionalAccessPolicy
 
     $content = ''
     $i = 1
