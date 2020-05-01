@@ -840,6 +840,24 @@ Configuration Master
             Ensure                        = "Present"
         }
 
+        TeamsTenantDialPlan TestTenantDialPlan
+        {
+            Description           = 'This is a demo dial plan';
+            Ensure                = "Present";
+            GlobalAdminAccount    = $GlobalAdmin;
+            Identity              = "DemoPlan";
+            NormalizationRules    = MSFT_TeamsVoiceNormalizationRule{
+                Pattern = '^00(\d+)$'
+                Description = 'LB International Dialing Rule'
+                Identity = 'LB Intl Dialing'
+                Translation = '+$1'
+                Priority = 0
+                IsInternalExtension = $False
+            };
+            OptimizeDeviceDialing = $true;
+            SimpleName            = "DemoPlan";
+        }
+
         if ($Environment -ne 'GCC')
         {
             SCSensitivityLabel SCSenLabel
