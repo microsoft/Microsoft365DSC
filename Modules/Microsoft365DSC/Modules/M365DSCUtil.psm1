@@ -509,6 +509,7 @@ function Compare-PSCustomObjectArrays
 function Test-Microsoft365DSCParameterState
 {
     [CmdletBinding()]
+    [OutputType([System.Boolean])]
     param
     (
         [Parameter(Mandatory = $true, Position = 1)]

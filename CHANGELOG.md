@@ -16,6 +16,8 @@
   * Added support for AzureAD Application Authentication;
 * TeamsTeam
   * Added support for AzureAD Application Authentication;
+* TeamsTenantDialPlan
+  * Initial Release;
 * TeamsUser
   * Added support for AzureAD Application Authentication;
 * Metadata
