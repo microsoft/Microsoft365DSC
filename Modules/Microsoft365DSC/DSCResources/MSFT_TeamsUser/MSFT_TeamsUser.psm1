@@ -22,15 +22,26 @@ function Get-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of member $User to Team $TeamName"
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform MicrosoftTeams
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
     $nullReturn = @{
         User               = $User
@@ -77,11 +88,14 @@ function Get-TargetResource
     $myUser = $allMembers | Where-Object -FilterScript { $_.User -eq $User }
     Write-Verbose -Message "Found team user $($myUser.User) with role:$($myUser.Role)"
     return @{
-        User               = $myUser.User
-        Role               = $myUser.Role
-        TeamName           = $TeamName
-        Ensure             = "Present"
-        GlobalAdminAccount = $GlobalAdminAccount
+        User                  = $myUser.User
+        Role                  = $myUser.Role
+        TeamName              = $TeamName
+        Ensure                = "Present"
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificateThumbprint = $CertificateThumbprint
     }
 
 }
@@ -109,9 +123,21 @@ function Set-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of member $User to Team $TeamName"
@@ -123,8 +149,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform MicrosoftTeams
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
     $team = Get-TeamByName $TeamName
 
@@ -134,6 +159,9 @@ function Set-TargetResource
     $CurrentParameters.Remove("TeamName")
     $CurrentParameters.Add("GroupId", $team.GroupId)
     $CurrentParameters.Remove("GlobalAdminAccount")
+    $CurrentParameters.Remove("ApplicationId")
+    $CurrentParameters.Remove("TenantId")
+    $CurrentParameters.Remove("CertificateThumbprint")
     $CurrentParameters.Remove("Ensure")
 
     if ($Ensure -eq "Present")
@@ -177,9 +205,21 @@ function Test-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration of member $User to Team $TeamName"
@@ -216,9 +256,21 @@ function Export-TargetResource
         [ValidateRange(1, 100)]
         $MaxProcesses,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $InformationPreference ='Continue'
 
@@ -231,8 +283,15 @@ function Export-TargetResource
 
     $result = ""
 
-    # Get all Site Collections in tenant;
-    Test-MSCloudLogin -Platform MicrosoftTeams -CloudCredential $GlobalAdminAccount
+    $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
+    if ($ConnectionMode -eq 'ServicePrincipal')
+    {
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
+    }
+    else
+    {
+        $organization = $GlobalAdminAccount.UserName.Split('@')[1]
+    }
     [array]$instances = Get-Team
     if ($instances.Length -ge $MaxProcesses)
     {
@@ -260,9 +319,25 @@ function Export-TargetResource
                 [System.String]
                 $ScriptRoot,
 
-                [Parameter(Mandatory = $true)]
+                [Parameter()]
                 [System.Management.Automation.PSCredential]
-                $GlobalAdminAccount
+                $GlobalAdminAccount,
+
+                [Parameter()]
+                [System.String]
+                $ApplicationId,
+
+                [Parameter()]
+                [System.String]
+                $TenantId,
+
+                [Parameter()]
+                [System.String]
+                $CertificateThumbprint,
+
+                [Parameter()]
+                [System.String]
+                $OrganizationName
             )
             $WarningPreference = 'SilentlyContinue'
 
@@ -276,18 +351,12 @@ function Export-TargetResource
                 $params = $args[0]
                 $content = ""
                 $j = 1
-                Test-MSCloudLogin -CloudCredential $params.GlobalAdminAccount `
-                    -Platform MicrosoftTeams
-                $GlobalAdminAccount = $params.GlobalAdminAccount
-                $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-                if ($GlobalAdminAccount.UserName.Contains("@"))
-                {
-                    $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+                $ConnectionMode = New-M365DSCConnection -Platform 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
-                    if ($organization.IndexOf(".") -gt 0)
-                    {
-                        $principal = $organization.Split(".")[0]
-                    }
+                $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
+                if ($params.OrganizationName.IndexOf(".") -gt 0)
+                {
+                    $principal = $params.OrganizationName.Split(".")[0]
                 }
                 foreach ($item in $params.Instances)
                 {
@@ -306,24 +375,55 @@ function Export-TargetResource
                             foreach ($user in $users)
                             {
                                 Write-Information "        - [$i/$($users.Length)] $($user.User)"
-                                $getParams = @{
-                                    TeamName           = $team.DisplayName
-                                    User               = $user.User
-                                    GlobalAdminAccount = $params.GlobalAdminAccount
+
+                                if ($ConnectionMode -eq 'Credential')
+                                {
+                                    $getParams = @{
+                                        TeamName           = $team.DisplayName
+                                        User               = $user.User
+                                        GlobalAdminAccount = $params.GlobalAdminAccount
+                                    }
+                                }
+                                else
+                                {
+                                    $getParams = @{
+                                        TeamName              = $team.DisplayName
+                                        User                  = $user.User
+                                        ApplicationId         = $ApplicationId
+                                        TenantId              = $TenantId
+                                        CertificateThumbprint = $CertificateThumbprint
+                                    }
                                 }
                                 $CurrentModulePath = $params.ScriptRoot + "\MSFT_TeamsUser.psm1"
                                 Import-Module $CurrentModulePath -Force | Out-Null
                                 Import-Module ($params.ScriptRoot + "\..\..\Modules\M365DSCTelemetryEngine.psm1") -Force | Out-Null
                                 $result = Get-TargetResource @getParams
-                                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                                if ($ConnectionMode -eq 'Credential')
+                                {
+                                    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                                    $result.Remove("ApplicationId")
+                                    $result.Remove("TenantId")
+                                    $result.Remove("CertificateThumbprint")
+                                }
+                                else
+                                {
+                                    $result.Remove("GlobalAdminAccount")
+                                }
                                 $content += "        TeamsUser " + (New-GUID).ToString() + "`r`n"
                                 $content += "        {`r`n"
                                 $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
-                                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-                                $partialContent += "        }`r`n"
-                                if ($partialContent.ToLower().Contains($organization.ToLower()))
+                                if ($ConnectionMode -eq 'Credential')
                                 {
-                                    $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
+                                    $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                                }
+                                else
+                                {
+                                    $partialContent = $currentDSCBlock
+                                }
+                                $partialContent += "        }`r`n"
+                                if ($partialContent.ToLower().Contains($params.OrganizationName.ToLower()))
+                                {
+                                    $partialContent = $partialContent -ireplace [regex]::Escape($params.OrganizationName), "`$OrganizationName"
                                 }
                                 $content += $partialContent
                                 $i++
@@ -340,7 +440,7 @@ function Export-TargetResource
                 return $content
             }
             return $returnValue
-        } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount) | Out-Null
+        } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $CertificateThumbprint, $organization) | Out-Null
         $i++
     }
 

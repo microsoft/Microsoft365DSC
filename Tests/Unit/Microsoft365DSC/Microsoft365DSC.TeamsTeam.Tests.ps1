@@ -54,6 +54,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount                = $GlobalAdminAccount
             }
 
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
+
             Mock -CommandName Get-Team -MockWith {
                 return $null
             }
@@ -75,11 +79,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The Team already exists" -Fixture {
+        Context -Name "The Team already exists - Credential" -Fixture {
             $testParams = @{
                 DisplayName        = "TestTeam"
                 Ensure             = "Present"
-                GroupID            = "1234-1234-1234-1234"
+                Visibility         = "Private"
                 Owner              = @("owner@contoso.com")
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -94,12 +98,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-Team -MockWith {
-                return @{
+                return @(@{
                     DisplayName = "TestTeam"
                     GroupID     = "1234-1234-1234-1234"
                     Visibility  = "Private"
                     Archived    = $false
-                }
+                })
             }
 
             It "Should return present from the Get method" {
@@ -111,6 +115,101 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name "The Team already exists and is in the Desired State - ServicePrincipal" -Fixture {
+            $testParams = @{
+                DisplayName           = "TestTeam"
+                Ensure                = "Present"
+                Visibility            = "Private"
+                Owner                 = @("owner@contoso.com")
+                ApplicationId         = "12345-12345-12345"
+                TenantId              = "12345-12345-12345"
+                CertificateThumbprint = "123451234512345"
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "ServicePrincipal"
+            }
+
+            Mock -Command Get-TeamUser -MockWith {
+                return @(
+                    @{
+                        User = "owner@contoso.com"
+                        Role = "owner"
+                    }
+                )
+            }
+
+            Mock -CommandName Get-Team -MockWith {
+                return @(@{
+                    DisplayName = "TestTeam"
+                    GroupID     = "1234-1234-1234-1234"
+                    Visibility  = "Private"
+                    Archived    = $false
+                })
+            }
+
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $true
+            }
+        }
+
+        Context -Name "The Team already exists and is NOT in the Desired State - ServicePrincipal" -Fixture {
+            $testParams = @{
+                DisplayName           = "TestTeam"
+                Ensure                = "Present"
+                Visibility            = "Public" #Drift
+                Owner                 = @("owner@contoso.com")
+                ApplicationId         = "12345-12345-12345"
+                TenantId              = "12345-12345-12345"
+                CertificateThumbprint = "123451234512345"
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "ServicePrincipal"
+            }
+
+            Mock -Command Get-TeamUser -MockWith {
+                return @(
+                    @{
+                        User = "owner@contoso.com"
+                        Role = "owner"
+                    }
+                )
+            }
+
+            Mock -CommandName Set-Team -MockWith {
+                return @{
+                    DisplayName = "Test Team"
+                }
+            }
+
+            Mock -CommandName Get-Team -MockWith {
+                return @(@{
+                    DisplayName = "TestTeam"
+                    GroupID     = "1234-1234-1234-1234"
+                    Visibility  = "Private"
+                    Archived    = $false
+                })
+            }
+
+            It "Should return present from the Get method" {
+                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+            }
+
+            It "Should return true from the Test method" {
+                Test-TargetResource @testParams | Should Be $false
+            }
+
+            It "Should update the values in the Set method" {
+                Set-TargetResource @testParams
+                Assert-MockCalled -CommandName 'Set-Team' -Exactly 1
+            }
+        }
+
         Context -Name "Update existing team access type" -Fixture {
             $testParams = @{
                 DisplayName        = "Test Team"
@@ -119,6 +218,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Visibility         = "Private"
                 Owner              = @("owner@contoso.com")
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Set-Team -MockWith {
@@ -167,6 +270,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
+
             Mock -Command Get-TeamUser -MockWith {
                 return @(
                     @{
@@ -209,6 +316,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
+
             Mock -CommandName Remove-Team -MockWith {
                 return $null
             }
@@ -245,6 +356,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Get-Team -MockWith {

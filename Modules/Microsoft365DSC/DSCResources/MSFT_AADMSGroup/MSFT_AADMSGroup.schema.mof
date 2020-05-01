@@ -11,5 +11,8 @@ class MSFT_AADMSGroup : OMI_BaseResource
     [Write, Description("Specifies a mail nickname for the group. If MailEnabled is $False you must still specify a mail nickname.")] String MailNickname;
     [Write, Description("This parameter determines the visibility of the group's content and members list."), ValueMap{"Public","Private","HiddenMembership"}, Values{"Public","Private","HiddenMembership"}] String Visibility;
     [Write, Description("Specify if the Azure AD Group should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Required, Description("Credentials of the Azure Active Directory Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Write, Description("Credentials of the Azure Active Directory Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
 };

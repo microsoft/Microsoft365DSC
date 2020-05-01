@@ -2,11 +2,28 @@
 
 ## UNRELEASED
 
+* AADGroupsNamingPolicy
+  * Added support for AzureAD Application Authentication;
+* AADGroupsSettings
+  * Added support for AzureAD Application Authentication;
+  * Fixed issue where properties were returned as string instead
+    of boolean;
+* AADMSGroup
+  * Initial Release;
+* AADMSGroupLifecyclePolicy
+  * Added support for AzureAD Application Authentication;
+* TeamsChannel
+  * Added support for AzureAD Application Authentication;
+* TeamsTeam
+  * Added support for AzureAD Application Authentication;
 * TeamsTenantDialPlan
   * Initial Release;
+* TeamsUser
+  * Added support for AzureAD Application Authentication;
 * Metadata
   * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.57;
-  * Updated MSCloudLoginAssistant to 1.0.8;
+  * Updated MicrosoftTeams to 1.0.6;
+  * Updated MSCloudLoginAssistant to 1.0.10;
 
 ## 1.0.4.39
 

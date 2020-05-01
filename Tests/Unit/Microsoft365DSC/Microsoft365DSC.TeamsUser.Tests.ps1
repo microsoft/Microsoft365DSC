@@ -35,6 +35,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
 
             Mock -CommandName Get-TeamByName -MockWith {
                 return @{
@@ -75,6 +78,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
+
             Mock -CommandName Get-TeamUser -MockWith {
                 return @{
                     GroupID = "12345-12345-12345-12345-12345"
@@ -112,6 +119,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Role               = "Owner"
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Get-TeamUser -MockWith {
@@ -153,6 +164,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
+
             Mock -CommandName Get-TeamByName -MockWith {
                 return @{
                     DisplayName = "TestTeam"
@@ -180,6 +195,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Role               = "Member"
                 Ensure             = "Absent"
                 GlobalAdminAccount = $GlobalAdminAccount
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Get-TeamUser -MockWith {
@@ -214,6 +233,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 MaxProcesses       = 16
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Get-Team -MockWith {
