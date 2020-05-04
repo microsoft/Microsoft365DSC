@@ -122,6 +122,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The Group Exists and Values are already in the desired state" -Fixture {
             $testParams = @{
                 DisplayName                   = "DSCGroup"
+                ID                            = "12345-12345-12345-12345"
                 Description                   = "Microsoft DSC Group"
                 SecurityEnabled               = $True
                 MailEnabled                   = $True
@@ -139,6 +140,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-AzureADMSGroup -MockWith {
                 return @{
                     DisplayName                   = "DSCGroup"
+                    ID                            = "12345-12345-12345-12345"
                     Description                   = "Microsoft DSC Group"
                     SecurityEnabled               = $True
                     MailEnabled                   = $True
