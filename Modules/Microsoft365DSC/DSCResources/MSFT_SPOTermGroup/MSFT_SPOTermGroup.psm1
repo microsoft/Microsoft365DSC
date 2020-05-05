@@ -93,7 +93,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present')
     {
         $AddParameters = @{
-            Identity    = $Identity
+            Name        = $Identity
             Description = $Description
         }
         try
