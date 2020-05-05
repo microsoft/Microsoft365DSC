@@ -28,6 +28,8 @@
   * Introduced dependency on the Microsoft.Graph.Authentication module;
   * Introduced dependency on the Microsoft.Graph.Identity.ConditionalAccess
     module;
+* SPOTermGroup
+  * Initial Release;
 
 ## 1.0.4.39
 
