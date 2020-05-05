@@ -29,7 +29,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "The term group doesn't exist" -Fixture {
             $testParams = @{
-                Name               = "TestGroup"
+                Identity           = "TestGroup"
                 Description        = "Description of TestGroup"
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Absent"
@@ -59,7 +59,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "The term group already exists" -Fixture {
             $testParams = @{
-                Name               = "TestGroup"
+                Identity           = "TestGroup"
                 Description        = "Description of TestGroup"
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Present"
@@ -68,7 +68,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPTermGroup -MockWith {
                 return @{
                     Name           = "TestGroup"
-                    Description    = "Description of TestGroup"
                 }
             }
 
@@ -87,7 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "Testing term group removal" -Fixture {
             $testParams = @{
-                Name               = "TestGroup"
+                Identity           = "TestGroup"
                 Description        = "Description of TestGroup"
                 GlobalAdminAccount = $GlobalAdminAccount
                 Ensure             = "Present"
@@ -96,7 +95,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PnPTermGroup -MockWith {
                 return @{
                     Name           = "TestGroup"
-                    Description    = "Description of TestGroup"
                 }
             }
 
@@ -116,7 +114,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PnPTermGroup -MockWith {
                 return @{
-                    Name                = "TestGroup"
+                    Identity            = "TestGroup"
                     Description         = "Description of TestGroup"
                     GlobalAdminAccount  = $GlobalAdminAccount
                     Ensure              = "Present"

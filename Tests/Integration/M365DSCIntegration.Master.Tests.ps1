@@ -635,7 +635,7 @@ Configuration Master
 
         SPOTermGroup TestTermGroup
         {
-            Name                = 'TestTermGroup'
+            Identity            = 'TestTermGroup'
             Description         = 'This is the test Term Group'
             Ensure              = 'Present'
             GlobalAdminAccount  = $GlobalAdmin

@@ -6,7 +6,7 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Name,
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -22,7 +22,7 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting information for SPO Term Group $Name"
+    Write-Verbose -Message "Getting information for SPO Term Group $Identity"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -34,14 +34,14 @@ function Get-TargetResource
                       -Platform PnP
 
     $nullReturn = @{
-        Name               = $Name
+        Identity           = $Identity
         Description        = $null
         Ensure             = 'Absent'
         GlobalAdminAccount = $GlobalAdminAccount
     }
 
-    Write-Verbose -Message "Getting term group $Name"
-    $termGroup = Get-PnPTermGroup -Identity $Name -ErrorAction SilentlyContinue
+    Write-Verbose -Message "Getting term group $Identity"
+    $termGroup = Get-PnPTermGroup -Identity $Identity -ErrorAction SilentlyContinue
     if ($null -eq $termGroup)
     {
         Write-Verbose -Message "The specified term group doesn't exist."
@@ -49,7 +49,7 @@ function Get-TargetResource
     }
 
     return @{
-        Name               = $termGroup.Name
+        Identity           = $termGroup.Name
         Description        = $termGroup.Description
         Ensure             = 'Present'
     }
@@ -62,7 +62,7 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Name,
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -78,7 +78,7 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration for SPO Term Group $Name"
+    Write-Verbose -Message "Setting configuration for SPO Term Group $Identity"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add('Resource', $MyInvocation.MyCommand.ModuleName)
@@ -93,34 +93,34 @@ function Set-TargetResource
     if ($Ensure -eq 'Present')
     {
         $AddParameters = @{
-            Identity   = $Name
+            Identity    = $Identity
             Description = $Description
         }
         try
         {
-            $existingTermGroup = Get-PnPTermGroup -Identity $Name -ErrorAction SilentlyContinue
+            $existingTermGroup = Get-PnPTermGroup -Identity $Identity -ErrorAction SilentlyContinue
         }
         catch
         {
-            Write-Verbose -Message "The Term Group $($Name) does not yet exist."
+            Write-Verbose -Message "The Term Group $($Identity) does not yet exist."
         }
 
         if ($null -eq $existingTermGroup)
         {
-            Write-Verbose -Message "The Term Group {$Name} doesn't already exist. Creating it."
+            Write-Verbose -Message "The Term Group {$Identity} doesn't already exist. Creating it."
             New-PnPTermGroup @AddParameters
         }
     }
     elseif ($Ensure -eq 'Absent' -and $currentTermGroup.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Term Group $($Name)"
+        Write-Verbose -Message "Removing the Term Group $($Identity)"
         try
         {
-            Remove-PnPTermGroup -GroupName $Name -Force
+            Remove-PnPTermGroup -GroupName $Identity -Force
         }
         catch
         {
-            $Message = "The the Term Group $($Name) does not exist and for that cannot be removed."
+            $Message = "The the Term Group $($Identity) does not exist and for that cannot be removed."
             New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
             Write-Error $Message
         }
@@ -135,7 +135,7 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Name,
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -151,7 +151,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration for the term group $Name"
+    Write-Verbose -Message "Testing configuration for the term group $Identity"
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
@@ -198,7 +198,7 @@ function Export-TargetResource
     foreach ($termGroup in $termGroups)
     {
         $params = @{
-            Name               = $termGroup.Name
+            Identity           = $termGroup.Name
             GlobalAdminAccount = $GlobalAdminAccount
         }
         $result = Get-TargetResource @params

@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("SPOTermGroup")]
 class MSFT_SPOTermGroup : OMI_BaseResource
 {
-    [Key, Description("The name of the group for term sets.")] String Name;
+    [Key, Description("The name of the group for term sets.")] String Identity;
     [Write, Description("The description of the group for term sets.")] String Description;
     [Write, Description("To add a new group or remove a group in term sets"), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;

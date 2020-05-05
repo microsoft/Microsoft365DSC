@@ -17,7 +17,7 @@ Configuration Example
         SPOTermGroup AddSPOTermGroup
         {
             GlobalAdminAccount = $credsGlobalAdmin
-            Name               = 'TermGroup1'
+            Identity           = 'TermGroup1'
             Description        = 'This is the termGroup1'
             Ensure             = 'Present'
         }

@@ -17,7 +17,7 @@ Configuration Example
         SPOTermGroup RemoveSPOTermGroup
         {
             GlobalAdminAccount = $credsGlobalAdmin
-            Name               = 'TermGroupDeleted'
+            Identity           = 'TermGroupDeleted'
             Description        = 'This is the TermGroupDeleted'
             Ensure             = 'Absent'
         }
