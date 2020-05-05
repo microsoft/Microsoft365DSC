@@ -633,6 +633,14 @@ Configuration Master
             )
         }
 
+        SPOTermGroup TestTermGroup
+        {
+            Name                = 'TestTermGroup'
+            Description         = 'This is the test Term Group'
+            Ensure              = 'Present'
+            GlobalAdminAccount  = $GlobalAdmin
+        }
+
         # TODO - Investigate this for GCC
         <#if ($Environment -ne 'GCC')
         {
