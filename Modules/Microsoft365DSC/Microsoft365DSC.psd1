@@ -117,7 +117,8 @@
         'modules\M365DSCReverse.psm1',
         'modules\M365DSCLogEngine.psm1',
         'modules\M365DSCTelemetryEngine.psm1',
-        'modules\M365DSCStubsUtility.psm1'
+        'modules\M365DSCStubsUtility.psm1',
+        'modules\M365DSCReport.psm1'
     )
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
@@ -126,6 +127,7 @@
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport   = @('Export-M365DSCConfiguration',
                           'Assert-M365DSCTemplate',
+                          'New-M365DSCReportFromConfiguration',
                           'Test-M365DSCAgent')
 
     # Variables to export from this module
