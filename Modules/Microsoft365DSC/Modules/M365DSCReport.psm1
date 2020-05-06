@@ -218,7 +218,7 @@ function New-M365DSCReportFromConfiguration
     }
 }
 
-ffunction Compare-M365DSCConfigurations
+function Compare-M365DSCConfigurations
 {
     [CmdletBinding()]
     [OutputType([System.Array])]
@@ -241,6 +241,7 @@ ffunction Compare-M365DSCConfigurations
     foreach ($sourceResource in $Source)
     {
         $key = Get-M365DSCResourceKey -Resource $sourceResource
+
         Write-Progress -Activity "Scanning Source...$i/$($Source.Count)]" -PercentComplete ($i/($Source.Count)*100)
         $destinationResource = $Destination | Where-Object -FilterScript {$_.ResourceName -eq $sourceResource.ResourceName -and $_.$key -eq $sourceResource.$key}
 
@@ -361,7 +362,6 @@ ffunction Compare-M365DSCConfigurations
         }
         $i++
     }
-
     Write-Progress -Activity "Scanning Destination..." -Completed
 
     return $Delta
