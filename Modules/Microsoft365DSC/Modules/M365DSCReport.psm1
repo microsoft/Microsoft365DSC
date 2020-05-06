@@ -405,7 +405,7 @@ function Get-M365DSCResourceKey
     {
         return "CDNType"
     }
-    elseif ($Resource.Contains("Action") -and $Resource.ResourceName -eq 'SCComplianceSeachAction')
+    elseif ($Resource.Contains("Action") -and $Resource.ResourceName -eq 'SCComplianceSearchAction')
     {
         return "Action"
     }
