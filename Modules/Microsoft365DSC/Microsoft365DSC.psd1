@@ -125,8 +125,9 @@
     #FunctionsToExport = @()
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport   = @('Export-M365DSCConfiguration',
-                          'Assert-M365DSCTemplate',
+    CmdletsToExport   = @('Assert-M365DSCTemplate',
+                          'Compare-M365DSCConfigurations',
+                          'Export-M365DSCConfiguration',
                           'New-M365DSCReportFromConfiguration',
                           'Test-M365DSCAgent')
 

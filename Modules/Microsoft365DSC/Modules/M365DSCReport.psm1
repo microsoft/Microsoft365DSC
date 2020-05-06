@@ -127,7 +127,6 @@ function New-M365DSCConfigurationToExcel
     $row = 2
 
     $parsedContent = ConvertTo-DSCObject -Path $ConfigurationPath
-    $csvContent = "Component Name,Property,Value`n"
     foreach ($resource in $parsedContent)
     {
         $beginRow = $row
@@ -154,7 +153,10 @@ function New-M365DSCConfigurationToExcel
 
                     $report.Cells.Item($row,3).HorizontalAlignment = -4131
                 }
-                catch{}
+                catch
+                {
+                    Write-Verbose -Message $_
+                }
 
                 if ($property -in @("Identity", "Name", "IsSingleInstance"))
                 {
@@ -213,5 +215,188 @@ function New-M365DSCReportFromConfiguration
         "HTML" {
             New-M365DSCConfigurationToHTML -ConfigurationPath $ConfigurationPath -OutputPath $OutputPath
         }
+    }
+}
+
+function Compare-M365DSCConfigurations
+{
+    [CmdletBinding()]
+    [OutputType([System.Array])]
+    param (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Source,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Destination
+	)
+
+    [Array] $Delta = @()
+    [Array] $Source  = ConvertTo-DSCObject -Path $Source
+    [Array] $Destination  = ConvertTo-DSCObject -Path $Destination
+
+    # Loop through all items in the source array
+    $i = 1
+    foreach ($sourceResource in $Source)
+    {
+        $key = Get-M365DSCResourceKey -Resource $sourceResource
+        Write-Progress -Activity "Scanning Source...$i/$($Source.Count)]" -PercentComplete ($i/($Source.Count)*100)
+        $destinationResource = $Destination | Where-Object -FilterScript {$_.ResourceName -eq $sourceResource.ResourceName -and $_.$key -eq $sourceResource.$key}
+
+        if ($null -eq $destinationResource)
+        {
+            $drift = @{
+                ResourceName       = $sourceResource.ResourceName
+                Key                = $key
+                KeyValue           = $sourceResource.$key
+                Properties         = @(@{
+                    ParameterName      = 'Ensure'
+                    ValueInSource      = 'Present'
+                    ValueInDestination = 'Absent'
+                })
+            }
+            $Delta += $drift
+        }
+        else
+        {
+            # The resource instance exists in both the source and the destination. Compare each property;
+            foreach ($propertyName in $sourceResource.Keys)
+            {
+                if ($sourceResource.$propertyName -ne $destinationResource.$propertyName)
+                {
+                    if ($null -eq $drift)
+                    {
+                        $drift = @{
+                            ResourceName       = $sourceResource.ResourceName
+                            Key                = $key
+                            KeyValue           = $sourceResource.$key
+                            Properties = @(@{
+                                ParameterName      = $propertyName
+                                ValueInSource      = $sourceResource.$propertyName
+                                ValueInDestination = $destinationResource.$propertyName
+                            })
+                        }
+                    }
+                    else
+                    {
+                        $drift.Properties += @{
+                                ParameterName      = $propertyName
+                                ValueInSource      = $sourceResource.$propertyName
+                                ValueInDestination = $destinationResource.$propertyName
+                        }
+                    }
+                }
+            }
+
+            # Do the scan the other way around because there's a chance that the property, if null, wasn't part of the source
+            # object. By scanning against the destination we will catch properties that are not null on the source but not null in destination;
+            foreach ($propertyName in $destinationResource.Keys)
+            {
+                if (-not $sourceResource.Contains($propertyName))
+                {
+                    if ($null -eq $drift)
+                    {
+                        $drift = @{
+                            ResourceName       = $sourceResource.ResourceName
+                            Key                = $key
+                            KeyValue           = $sourceResource.$key
+                            Properties         = @(@{
+                                ParameterName      = $propertyName
+                                ValueInSource      = $null
+                                ValueInDestination = $destinationResource.$propertyName
+                            })
+                        }
+                    }
+                    else
+                    {
+                        $drift.Properties += @{
+                                ParameterName      = $propertyName
+                                ValueInSource      = $null
+                                ValueInDestination = $destinationResource.$propertyName
+                        }
+                    }
+                }
+            }
+
+            $Delta += $drift
+            $drift = $null
+        }
+        $i++
+    }
+    Write-Progress -Activity "Scanning Source..." -Completed
+
+     # Loop through all items in the destination array
+    $i = 1
+    foreach ($destinationResource in $Destination)
+    {
+        $key = Get-M365DSCResourceKey -Resource $destinationResource
+        Write-Progress -Activity "Scanning Destination...[$i/$($Destination.Count)]" -PercentComplete ($i/($Destination.Count)*100)
+        $sourceResource = $Source | Where-Object -FilterScript {$_.ResourceName -eq $destinationResource.ResourceName -and $_.$key -eq $destinationResource.$key}
+
+        if ($null -eq $sourceResource)
+        {
+            $drift = @{
+                ResourceName       = $destinationResource.ResourceName
+                Key                = $key
+                KeyValue           = $destinationResource.$key
+                Properties         = @(@{
+                    ParameterName      = 'Ensure'
+                    ValueInSource      = 'Absent'
+                    ValueInDestination = 'Present'
+                })
+            }
+            $Delta += $drift
+            $drift = $null
+        }
+        $i++
+    }
+
+    Write-Progress -Activity "Scanning Destination..." -Completed
+
+    return $Delta
+}
+
+function Get-M365DSCResourceKey
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Resource
+    )
+
+    if ($Resource.Contains("IsSingleInstance"))
+    {
+        return "IsSingleInstance"
+    }
+    elseif ($Resource.Contains("DisplayName"))
+    {
+        return "DisplayName"
+    }
+    elseif ($Resource.Contains("Identity"))
+    {
+        return "Identity"
+    }
+    elseif ($Resource.Contains("Name"))
+    {
+        return "Name"
+    }
+    elseif ($Resource.Contains("Url"))
+    {
+        return "Url"
+    }
+    elseif ($Resource.Contains("Organization"))
+    {
+        return "Organization"
+    }
+    elseif ($Resource.Contains("CDNType"))
+    {
+        return "CDNType"
+    }
+    elseif ($Resource.Contains("SearchName"))
+    {
+        return "SearchName"
     }
 }
