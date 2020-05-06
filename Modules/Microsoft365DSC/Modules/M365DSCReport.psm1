@@ -218,7 +218,7 @@ function New-M365DSCReportFromConfiguration
     }
 }
 
-function Compare-M365DSCConfigurations
+ffunction Compare-M365DSCConfigurations
 {
     [CmdletBinding()]
     [OutputType([System.Array])]
@@ -256,34 +256,41 @@ function Compare-M365DSCConfigurations
                     ValueInDestination = 'Absent'
                 })
             }
-            $Delta += $drift
+            $Delta += ,$drift
+            $drift = $null
         }
         else
         {
             # The resource instance exists in both the source and the destination. Compare each property;
             foreach ($propertyName in $sourceResource.Keys)
             {
-                if ($sourceResource.$propertyName -ne $destinationResource.$propertyName)
+                if ([System.String]::IsNullOrEmpty($sourceResource.$propertyName) -and `
+                     -not [System.String]::IsNullOrEmpty($destinationResource.$propertyName))
                 {
-                    if ($null -eq $drift)
+                    # Needs to be a separate nested if statement otherwise the ReferenceObject an be null and it will error out;
+                    if($null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
+                                                 -DifferenceObject ($destinationResource.$propertyName)))
                     {
-                        $drift = @{
-                            ResourceName       = $sourceResource.ResourceName
-                            Key                = $key
-                            KeyValue           = $sourceResource.$key
-                            Properties = @(@{
-                                ParameterName      = $propertyName
-                                ValueInSource      = $sourceResource.$propertyName
-                                ValueInDestination = $destinationResource.$propertyName
-                            })
+                        if ($null -eq $drift)
+                        {
+                            $drift = @{
+                                ResourceName       = $sourceResource.ResourceName
+                                Key                = $key
+                                KeyValue           = $sourceResource.$key
+                                Properties = @(@{
+                                    ParameterName      = $propertyName
+                                    ValueInSource      = $sourceResource.$propertyName
+                                    ValueInDestination = $destinationResource.$propertyName
+                                })
+                            }
                         }
-                    }
-                    else
-                    {
-                        $drift.Properties += @{
-                                ParameterName      = $propertyName
-                                ValueInSource      = $sourceResource.$propertyName
-                                ValueInDestination = $destinationResource.$propertyName
+                        else
+                        {
+                            $drift.Properties += @{
+                                    ParameterName      = $propertyName
+                                    ValueInSource      = $sourceResource.$propertyName
+                                    ValueInDestination = $destinationResource.$propertyName
+                            }
                         }
                     }
                 }
@@ -319,8 +326,11 @@ function Compare-M365DSCConfigurations
                 }
             }
 
-            $Delta += $drift
-            $drift = $null
+            if ($null -ne $drift)
+            {
+                $Delta += ,$drift
+                $drift = $null
+            }
         }
         $i++
     }
@@ -346,7 +356,7 @@ function Compare-M365DSCConfigurations
                     ValueInDestination = 'Present'
                 })
             }
-            $Delta += $drift
+            $Delta += ,$drift
             $drift = $null
         }
         $i++
@@ -395,8 +405,8 @@ function Get-M365DSCResourceKey
     {
         return "CDNType"
     }
-    elseif ($Resource.Contains("SearchName"))
+    elseif ($Resource.Contains("Action") -and $Resource.ResourceName -eq 'SCComplianceSeachAction')
     {
-        return "SearchName"
+        return "Action"
     }
 }
