@@ -107,6 +107,7 @@
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
     NestedModules     = @(
+        'modules\M365DSCAgent.psm1',
         'modules\M365DSCUtil.psm1',
         'modules\M365DSCReverseGUI.psm1',
         'modules\M365DSCReverse.psm1',
@@ -120,7 +121,8 @@
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport   = @('Export-M365DSCConfiguration',
-                          'Assert-M365DSCTemplate')
+                          'Assert-M365DSCTemplate',
+                          'Test-M365DSCAgent')
 
     # Variables to export from this module
     # VariablesToExport = @()
