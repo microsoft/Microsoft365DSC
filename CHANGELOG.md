@@ -20,6 +20,9 @@
   * Initial Release;
 * TeamsUser
   * Added support for AzureAD Application Authentication;
+* Modules
+  * Added M365DSCAgent;
+  * Added M365DSCReport;
 * Metadata
   * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.57;
   * Updated MicrosoftTeams to 1.0.6;
@@ -28,6 +31,7 @@
   * Introduced dependency on the Microsoft.Graph.Authentication module;
   * Introduced dependency on the Microsoft.Graph.Identity.ConditionalAccess
     module;
+  * Introduced dependency on the DSCParser module;
 
 ## 1.0.4.39
 
