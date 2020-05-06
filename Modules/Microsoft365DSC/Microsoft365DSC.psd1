@@ -80,16 +80,12 @@
             RequiredVersion = "0.4578.0"
         },
         @{
-            ModuleName      = "Microsoft.Graph.Authentication"
-            RequiredVersion = "0.2.0"
-        },
-        @{
-            ModuleName      = "Microsoft.Graph.Identity.ConditionalAccess"
-            RequiredVersion = "0.2.1"
-        },
-        @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
             RequiredVersion = "2.0.57"
+        },
+        @{
+            ModuleName      = "DSCParser"
+            RequiredVersion = "1.1.0.0"
         }
     )
 
