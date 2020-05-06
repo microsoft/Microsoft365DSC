@@ -17,6 +17,7 @@ install:
         Install-Module ExchangeOnlineManagement -RequiredVersion 0.4578.0 -Force -SkipPublisherCheck
         Install-Module Microsoft.Graph.Authentication -RequiredVersion 0.2.0 -Force -SkipPublisherCheck
         Install-Module Microsoft.Graph.Identity.ConditionalAccess -RequiredVersion 0.2.1 -Force -SkipPublisherCheck
+        Install-Module DSCParser -RequiredVersion 1.1.0.0 -Force -SkipPublisherCheck
 
         $webClient = new-object System.Net.WebClient
         $url = "https://github.com/Microsoft/Microsoft365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_19515-12000_x64_en-us.msi?raw=true"
