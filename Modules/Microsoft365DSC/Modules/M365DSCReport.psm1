@@ -1,5 +1,3 @@
-Import-Module C:\GitHub\DSCParser\Modules\DSCParser.psm1 -Force
-
 function New-M365DSCConfigurationToHTML
 {
     [CmdletBinding()]
