@@ -90,6 +90,10 @@
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
             RequiredVersion = "2.0.57"
+        },
+        @{
+            ModuleName      = "DSCParser"
+            RequiredVersion = "1.1.0.0"
         }
     )
 
@@ -107,21 +111,25 @@
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
     NestedModules     = @(
+        'modules\M365DSCAgent.psm1',
         'modules\M365DSCUtil.psm1',
         'modules\M365DSCReverseGUI.psm1',
         'modules\M365DSCReverse.psm1',
         'modules\M365DSCLogEngine.psm1',
         'modules\M365DSCTelemetryEngine.psm1',
         'modules\M365DSCStubsUtility.psm1',
-        'modules\M365DSCGraphController.psm1'
+        'modules\M365DSCReport.psm1'
     )
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     #FunctionsToExport = @()
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport   = @('Export-M365DSCConfiguration',
-                          'Assert-M365DSCTemplate')
+    CmdletsToExport   = @('Assert-M365DSCTemplate',
+                          'Compare-M365DSCConfigurations',
+                          'Export-M365DSCConfiguration',
+                          'New-M365DSCReportFromConfiguration',
+                          'Test-M365DSCAgent')
 
     # Variables to export from this module
     # VariablesToExport = @()
