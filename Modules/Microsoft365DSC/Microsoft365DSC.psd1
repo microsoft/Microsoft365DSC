@@ -81,11 +81,11 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Authentication"
-            RequiredVersion = "0.2.0"
+            RequiredVersion = "0.5.1"
         },
         @{
             ModuleName      = "Microsoft.Graph.Identity.ConditionalAccess"
-            RequiredVersion = "0.2.1"
+            RequiredVersion = "0.5.1"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
@@ -128,6 +128,7 @@
     CmdletsToExport   = @('Assert-M365DSCTemplate',
                           'Compare-M365DSCConfigurations',
                           'Export-M365DSCConfiguration',
+                          'New-M365DSCDeltaReport',
                           'New-M365DSCReportFromConfiguration',
                           'Test-M365DSCAgent')
 

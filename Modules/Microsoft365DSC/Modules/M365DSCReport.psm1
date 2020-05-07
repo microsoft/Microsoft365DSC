@@ -408,3 +408,135 @@ function Get-M365DSCResourceKey
         return "Action"
     }
 }
+
+function New-M365DSCDeltaReport
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Source,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Destination,
+
+        [Parameter(Mandatory=$true)]
+        [System.String]
+        $OutputPath
+    )
+
+    Write-Verbose -Message 'Obtaining Delta between the source and destination configurations'
+    $Delta = Compare-M365DSCConfigurations -Source $Source -Destination $Destination
+
+    $reportSB = [System.Text.StringBuilder]::new()
+    [void]$reportSB.AppendLine("<html><head><title>Microsoft365DSC - Delta Report</title></head><body>")
+    [void]$reportSB.AppendLine("<div style='width:100%;text-align:center;'>")
+    [void]$reportSB.AppendLine("<img src='http://Microsoft365DSC.com/Images/Promo.png' alt='Microsoft365DSC Slogan' />")
+    [void]$ReportSB.AppendLine("</div>")
+    [void]$reportSB.AppendLine("<h1>Delta Report</h1>")
+    [void]$reportSB.AppendLine("<p><strong>Comparing </strong>$Source <strong>to</strong> $Destination</p>")
+
+    $resourcesMissingInSource = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -eq 'Ensure' -and `
+                                    $_.Properties.ValueInSource -eq 'Absent'}
+    $resourcesMissingInDestination = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -eq 'Ensure' -and `
+                                    $_.Properties.ValueInDestination -eq 'Absent'}
+    $resourcesInDrift = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -ne 'Ensure'}
+
+    [void]$reportSB.AppendLine("<h2>Table of Contents</h2>")
+    [void]$reportSB.AppendLine("<ul>")
+    if ($resourcesMissingInSource.Count -gt 0)
+    {
+        [void]$reportSB.AppendLine("<li><a href='#Source'>Resources Missing in the Source</a></li>")
+    }
+    if ($resourcesMissingInDestination.Count -gt 0)
+    {
+        [void]$reportSB.AppendLine("<li><a href='#Destination'>Resources Missing in the Destination</a></li>")
+    }
+    if ($resourcesInDrift.Count -gt 0)
+    {
+        [void]$reportSB.AppendLine("<li><a href='#Drift'>Resources Configured Differently</a></li>")
+    }
+    [void]$reportSB.AppendLine("</ul>")
+
+    if ($resourcesMissingInSource.Count -gt 0)
+    {
+        [void]$reportSB.AppendLine("<br /><hr /><br />")
+        [void]$reportSB.AppendLine("<a id='Source'></a><h2>Resources that are Missing in the Source</h2>")
+        foreach ($resource in $resourcesMissingInSource)
+        {
+            [void]$reportSB.AppendLine("<table width='100%' cellspacing='0' cellpadding='5'>")
+            [void]$reportSB.AppendLine("<tr>")
+            [void]$reportSB.Append("<th style='width:15%;text-align:center;vertical-align:middle;border-left:1px solid black;")
+            [void]$reportSB.Append("border-top:1px solid black;border-bottom:1px solid black;'>")
+            $iconPath = Get-IconPath -ResourceName $resource.ResourceName
+            [void]$reportSB.AppendLine("<img src='$iconPath' />")
+            [void]$reportSB.AppendLine("</th>");
+            [void]$reportSB.AppendLine("<th style='border:1px solid black;text-align:center;'>")
+            [void]$reportSB.AppendLine("<h3>$($resource.ResourceName) - $($resource.Key) = $($resource.KeyValue)</h3>")
+            [void]$reportSB.AppendLine("</th>")
+            [void]$reportSB.AppendLine("</tr>")
+            [void]$reportSB.AppendLine("</table>")
+        }
+    }
+
+    if ($resourcesMissingInDestination.Count -gt 0)
+    {
+        [void]$reportSB.AppendLine("<br /><hr /><br />")
+        [void]$reportSB.AppendLine("<a id='Destination'></a><h2>Resources that are Missing in the Destination</h2>")
+        foreach ($resource in $resourcesMissingInDestination)
+        {
+            [void]$reportSB.AppendLine("<table width='100%' cellspacing='0' cellpadding='5'>")
+            [void]$reportSB.AppendLine("<tr>")
+            [void]$reportSB.Append("<th style='width:15%;text-align:center;vertical-align:middle;border-left:1px solid black;")
+            [void]$reportSB.Append("border-top:1px solid black;border-bottom:1px solid black;'>")
+            $iconPath = Get-IconPath -ResourceName $resource.ResourceName
+            [void]$reportSB.AppendLine("<img src='$iconPath' />")
+            [void]$reportSB.AppendLine("</th>");
+            [void]$reportSB.AppendLine("<th style='border:1px solid black;text-align:center;'>")
+            [void]$reportSB.AppendLine("<h3>$($resource.ResourceName) - $($resource.Key) = $($resource.KeyValue)</h3>")
+            [void]$reportSB.AppendLine("</th>")
+            [void]$reportSB.AppendLine("</tr>")
+            [void]$reportSB.AppendLine("</table>")
+        }
+    }
+
+    if ($resourcesInDrift.Count -gt 0)
+    {
+        [void]$reportSB.AppendLine("<br /><hr /><br />")
+        [void]$reportSB.AppendLine("<a id='Drift'></a><h2>Resources that are Configured Differently</h2>")
+        foreach ($resource in $resourcesInDrift)
+        {
+            [void]$reportSB.AppendLine("<table width='100%' cellspacing='0' cellpadding='5'>")
+            [void]$reportSB.Append("<tr><th colspan='3' style='border:1px solid black;text-align:center;vertical-align:middle;'>")
+            [void]$reportSB.AppendLine("<h3>$($resource.ResourceName) - $($resource.Key) = $($resource.KeyValue)</h3>")
+            [void]$reportSB.AppendLine("</th></tr>")
+            [void]$reportSB.AppendLine("<tr><td style='width:15%;text-align:center;vertical-align:middle;border-left:1px solid black;")
+            [void]$reportSB.AppendLine("border-right:1px solid black;border-bottom:1px solid black;' rowspan='3'>")
+            $iconPath = Get-IconPath -ResourceName $resource.ResourceName
+            [void]$reportSB.AppendLine("<img src='$iconPath' />")
+            [void]$reportSB.AppendLine("</td>");
+            [void]$reportSB.AppendLine("<td style='border-right:1px solid black;border-Bottom:1px solid black;text-align:right;'>")
+            [void]$reportSB.AppendLine("<strong>Property:</strong></td>")
+            [void]$reportSB.AppendLine("<td style='border-right:1px solid black;border-Bottom:1px solid black;'>")
+            [void]$reportSB.AppendLine("$($resource.Properties.ParameterName)</td>")
+            [void]$reportSB.AppendLine("</tr>")
+            [void]$reportSB.AppendLine("<tr>")
+            [void]$reportSB.AppendLine("<td style='border-right:1px solid black;border-Bottom:1px solid black;text-align:right;'>")
+            [void]$reportSB.AppendLine("<strong>Value in Source:</strong></td>")
+            [void]$reportSB.AppendLine("<td style='border-right:1px solid black;border-Bottom:1px solid black;'>")
+            [void]$reportSB.AppendLine("$($resource.Properties.ValueInSource)</td>")
+            [void]$reportSB.AppendLine("</tr>")
+            [void]$reportSB.AppendLine("<tr>")
+            [void]$reportSB.AppendLine("<td style='border-right:1px solid black;border-Bottom:1px solid black;text-align:right;'>")
+            [void]$reportSB.AppendLine("<strong>Value in Destination:</strong></td>")
+            [void]$reportSB.AppendLine("<td style='border-right:1px solid black;border-Bottom:1px solid black;'>")
+            [void]$reportSB.AppendLine("$($resource.Properties.ValueInDestination)</td>")
+            [void]$reportSB.AppendLine("</tr>")
+            [void]$reportSB.AppendLine("</table>")
+        }
+    }
+    [void]$reportSB.AppendLine("</body></html>")
+    $reportSB.ToString() | Out-File $OutputPath
+    Invoke-Item $OutputPath
+}
