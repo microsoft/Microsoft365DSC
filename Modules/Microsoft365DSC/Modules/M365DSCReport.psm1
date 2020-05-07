@@ -437,25 +437,28 @@ function New-M365DSCDeltaReport
     [void]$reportSB.AppendLine("<h1>Delta Report</h1>")
     [void]$reportSB.AppendLine("<p><strong>Comparing </strong>$Source <strong>to</strong> $Destination</p>")
 
-    $resourcesMissingInSource = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -eq 'Ensure' -and `
+    [array]$resourcesMissingInSource = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -eq 'Ensure' -and `
                                     $_.Properties.ValueInSource -eq 'Absent'}
-    $resourcesMissingInDestination = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -eq 'Ensure' -and `
+                                    [array]$resourcesMissingInDestination = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -eq 'Ensure' -and `
                                     $_.Properties.ValueInDestination -eq 'Absent'}
-    $resourcesInDrift = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -ne 'Ensure'}
+    [array]$resourcesInDrift = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -ne 'Ensure'}
 
     [void]$reportSB.AppendLine("<h2>Table of Contents</h2>")
     [void]$reportSB.AppendLine("<ul>")
     if ($resourcesMissingInSource.Count -gt 0)
     {
-        [void]$reportSB.AppendLine("<li><a href='#Source'>Resources Missing in the Source</a></li>")
+        [void]$reportSB.AppendLine("<li><a href='#Source'>Resources Missing in the Source</a>")
+        [void]$reportSB.AppendLine(" <strong>(</strong>$($resourcesMissingInSource.Count)<strong>)</strong></li>")
     }
     if ($resourcesMissingInDestination.Count -gt 0)
     {
-        [void]$reportSB.AppendLine("<li><a href='#Destination'>Resources Missing in the Destination</a></li>")
+        [void]$reportSB.AppendLine("<li><a href='#Destination'>Resources Missing in the Destination</a>")
+        [void]$reportSB.AppendLine(" <strong>(</strong>$($resourcesMissingInDestination.Count)<strong>)</strong></li>")
     }
     if ($resourcesInDrift.Count -gt 0)
     {
-        [void]$reportSB.AppendLine("<li><a href='#Drift'>Resources Configured Differently</a></li>")
+        [void]$reportSB.AppendLine("<li><a href='#Drift'>Resources Configured Differently</a>")
+        [void]$reportSB.AppendLine(" <strong>(</strong>$($resourcesInDrift.Count)<strong>)</strong></li>")
     }
     [void]$reportSB.AppendLine("</ul>")
 
