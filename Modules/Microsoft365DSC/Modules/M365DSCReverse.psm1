@@ -270,6 +270,7 @@ function Start-M365DSCConfigurationExtract
                     $exportString = Export-TargetResource @parameters
                 }
                 $DSCContent += $exportString
+                $exportString = $null
             }
         }
         catch
