@@ -265,33 +265,31 @@ function Compare-M365DSCConfigurations
             # The resource instance exists in both the source and the destination. Compare each property;
             foreach ($propertyName in $sourceResource.Keys)
             {
-                if ([System.String]::IsNullOrEmpty($sourceResource.$propertyName) -and `
-                     -not [System.String]::IsNullOrEmpty($destinationResource.$propertyName))
+                # Needs to be a separate nested if statement otherwise the ReferenceObject an be null and it will error out;
+                if((-not [System.String]::IsNullOrEmpty($sourceResource.$propertyName) -and `
+                     -not [System.String]::IsNullOrEmpty($destinationResource.$propertyName)) -and `
+                     $null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
+                                             -DifferenceObject ($destinationResource.$propertyName)))
                 {
-                    # Needs to be a separate nested if statement otherwise the ReferenceObject an be null and it will error out;
-                    if($null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
-                                                 -DifferenceObject ($destinationResource.$propertyName)))
+                    if ($null -eq $drift)
                     {
-                        if ($null -eq $drift)
-                        {
-                            $drift = @{
-                                ResourceName       = $sourceResource.ResourceName
-                                Key                = $key
-                                KeyValue           = $sourceResource.$key
-                                Properties = @(@{
-                                    ParameterName      = $propertyName
-                                    ValueInSource      = $sourceResource.$propertyName
-                                    ValueInDestination = $destinationResource.$propertyName
-                                })
-                            }
+                        $drift = @{
+                            ResourceName       = $sourceResource.ResourceName
+                            Key                = $key
+                            KeyValue           = $sourceResource.$key
+                            Properties = @(@{
+                                ParameterName      = $propertyName
+                                ValueInSource      = $sourceResource.$propertyName
+                                ValueInDestination = $destinationResource.$propertyName
+                            })
                         }
-                        else
-                        {
-                            $drift.Properties += @{
-                                    ParameterName      = $propertyName
-                                    ValueInSource      = $sourceResource.$propertyName
-                                    ValueInDestination = $destinationResource.$propertyName
-                            }
+                    }
+                    else
+                    {
+                        $drift.Properties += @{
+                                ParameterName      = $propertyName
+                                ValueInSource      = $sourceResource.$propertyName
+                                ValueInDestination = $destinationResource.$propertyName
                         }
                     }
                 }

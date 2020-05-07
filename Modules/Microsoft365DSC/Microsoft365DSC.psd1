@@ -93,7 +93,7 @@
         },
         @{
             ModuleName      = "DSCParser"
-            RequiredVersion = "1.1.0.0"
+            RequiredVersion = "1.1.0.1"
         }
     )
 
