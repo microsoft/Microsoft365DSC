@@ -207,6 +207,13 @@ function New-M365DSCReportFromConfiguration
         $OutputPath
     )
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Event", "Report")
+    $data.Add("Type", $Type)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
     switch ($Type)
     {
         "Excel" {
@@ -229,8 +236,21 @@ function Compare-M365DSCConfigurations
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Destination
-	)
+        $Destination,
+
+        [Parameter()]
+        [System.Boolean]
+        $CaptureTelemetry = $true
+    )
+
+    if ($CaptureTelemetry)
+    {
+        #region Telemetry
+        $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+        $data.Add("Event", "Compare")
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+    }
 
     [Array] $Delta = @()
     [Array] $Source  = ConvertTo-DSCObject -Path $Source
@@ -426,8 +446,14 @@ function New-M365DSCDeltaReport
         $OutputPath
     )
 
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Event", "DeltaReport")
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
     Write-Verbose -Message 'Obtaining Delta between the source and destination configurations'
-    $Delta = Compare-M365DSCConfigurations -Source $Source -Destination $Destination
+    $Delta = Compare-M365DSCConfigurations -Source $Source -Destination $Destination -CaptureTelemetry $false
 
     $reportSB = [System.Text.StringBuilder]::new()
     [void]$reportSB.AppendLine("<html><head><title>Microsoft365DSC - Delta Report</title></head><body>")
