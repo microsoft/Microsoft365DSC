@@ -364,21 +364,22 @@ function Compare-M365DSCConfigurations
     $i = 1
     foreach ($destinationResource in $Destination)
     {
-        $key = Get-M365DSCResourceKey -Resource $destinationResource
+        [System.Collections.HashTable]$currentDestinationResource = ([array]$destinationResource)[0]
+        $key = Get-M365DSCResourceKey -Resource $currentDestinationResource
         Write-Progress -Activity "Scanning Destination...[$i/$($Destination.Count)]" -PercentComplete ($i/($Destination.Count)*100)
-        $sourceResource = $Source | Where-Object -FilterScript {$_.ResourceName -eq $destinationResource.ResourceName -and $_.($key[0]) -eq $destinationResource.($key[0])}
+        $sourceResource = $Source | Where-Object -FilterScript {$_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[0]) -eq $currentDestinationResource.($key[0])}
 
         # Filter on the second key
         if ($key.Count -gt 1)
         {
-            [array]$sourceResource = $sourceResource | Where-Object -FilterScript {$_.ResourceName -eq $destinationResource.ResourceName -and $_.($key[1]) -eq $destinationResource.($key[1])}
+            [array]$sourceResource = $sourceResource | Where-Object -FilterScript {$_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[1]) -eq $currentDestinationResource.($key[1])}
         }
         if ($null -eq $sourceResource)
         {
             $drift = @{
-                ResourceName       = $destinationResource.ResourceName
+                ResourceName       = $currentDestinationResource.ResourceName
                 Key                = $key[0]
-                KeyValue           = $destinationResource.$key[0]
+                KeyValue           = $currentDestinationResource.($key[0])
                 Properties         = @(@{
                     ParameterName      = 'Ensure'
                     ValueInSource      = 'Absent'
