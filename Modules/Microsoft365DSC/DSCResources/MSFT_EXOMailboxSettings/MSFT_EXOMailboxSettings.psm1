@@ -198,13 +198,13 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-    $mailboxes = Get-Mailbox
+    $mailboxes = Get-Mailbox -ResultSize 'Unlimited'
 
     $i = 1
     $content = ''
     foreach ($mailbox in $mailboxes)
     {
-        Write-Information "    - [$i/$($mailboxes.Length)] $($mailbox.Name)"
+        Write-Information "    [$i/$($mailboxes.Length)] $($mailbox.Name)"
         $mailboxName = $mailbox.Name
         if (![System.String]::IsNullOrEmpty($mailboxName))
         {

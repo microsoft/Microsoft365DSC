@@ -284,7 +284,7 @@ function Export-TargetResource
         $i = 1
         foreach ($SafeLinksPolicy in $SafeLinksPolicies)
         {
-            Write-Information "    - [$i/$($SafeLinksPolicies.Length)] $($SafeLinksPolicy.Name)"
+            Write-Information "    [$i/$($SafeLinksPolicies.Length)] $($SafeLinksPolicy.Name)"
             $params = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 Identity           = $SafeLinksPolicy.Identity

@@ -580,7 +580,7 @@ function Export-TargetResource
     $i = 1
     foreach ($user in $users)
     {
-        Write-Information "    - [$i/$($users.Length)] $($user.UserPrincipalName)"
+        Write-Information "    [$i/$($users.Length)] $($user.UserPrincipalName)"
         $userUPN = $user.UserPrincipalName
         if (-not [System.String]::IsNullOrEmpty($userUPN))
         {

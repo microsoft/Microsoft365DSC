@@ -496,7 +496,7 @@ function Export-TargetResource
     $DSCContent = ""
     foreach ($rule in $rules)
     {
-        Write-Information "    - [$i/$($rules.Length)] $($rule.Name)"
+        Write-Information "    [$i/$($rules.Length)] $($rule.Name)"
         $result = Get-TargetResource -Name $rule.Name -Policy $rule.ParentPolicyName -GlobalAdminAccount $GlobalAdminAccount
 
         $IsCIMArray = $false

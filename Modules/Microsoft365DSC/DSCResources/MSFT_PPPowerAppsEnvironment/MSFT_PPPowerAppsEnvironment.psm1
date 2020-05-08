@@ -215,7 +215,7 @@ function Export-TargetResource
 
     foreach ($environment in $environments)
     {
-        Write-Information "    -[$i/$($environments.Count)] $($environment.DisplayName)"
+        Write-Information "    [$i/$($environments.Count)] $($environment.DisplayName)"
         if ($environment.EnvironmentType -ne 'Default')
         {
             $params = @{

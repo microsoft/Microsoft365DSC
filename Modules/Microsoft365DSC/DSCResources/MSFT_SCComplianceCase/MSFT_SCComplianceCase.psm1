@@ -226,7 +226,7 @@ function Export-TargetResource
     $i = 1
     foreach ($Case in $Cases)
     {
-        Write-Information "    - eDiscovery: [$i/$($Cases.Count)] $($Case.Name)"
+        Write-Information "    eDiscovery: [$i/$($Cases.Count)] $($Case.Name)"
         $params = @{
             Name               = $Case.Name
             GlobalAdminAccount = $GlobalAdminAccount
@@ -247,7 +247,7 @@ function Export-TargetResource
     $i = 1
     foreach ($Case in $Cases)
     {
-        Write-Information "    - GDPR: [$i/$($Cases.Count)] $($Case.Name)"
+        Write-Information "    GDPR: [$i/$($Cases.Count)] $($Case.Name)"
         $params = @{
             Name               = $Case.Name
             GlobalAdminAccount = $GlobalAdminAccount

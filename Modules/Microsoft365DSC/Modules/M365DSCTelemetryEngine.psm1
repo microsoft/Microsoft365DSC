@@ -55,8 +55,11 @@ function Add-M365DSCTelemetryEvent
                 $Data.Add("ProjectName", $ProjectName)
             }
 
-            $version = (Get-Module 'Microsoft365DSC').Version
-            $Data.Add("Version", $version)
+            if (-not $Data.Contains("M365DSCVersion"))
+            {
+                $version = (Get-Module 'Microsoft365DSC').Version
+                $Data.Add("M365DSCVersion", $version)
+            }
             $TelemetryClient.TrackEvent($Type, $Data, $Metrics)
             $TelemetryClient.Flush()
         }

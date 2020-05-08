@@ -272,7 +272,7 @@ function Export-TargetResource
     }
     foreach ($mailbox in $mailboxes)
     {
-        Write-Information "    - [$i/$total] $($mailbox.Name)"
+        Write-Information "    [$i/$total] $($mailbox.Name)"
         $mailboxName = $mailbox.Name
         if ($mailboxName)
         {

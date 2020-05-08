@@ -284,11 +284,11 @@ function Set-TargetResource
     }
     elseif($Ensure -eq "Absent")
     {
-        try 
+        try
         {
             [array]$existingO365Group = Get-UnifiedGroup -Identity $currentGroup.MailNickName
         }
-        catch 
+        catch
         {
             Write-Error -Message "Could not find group $($currrentGroup.MailNickName)"
         }
@@ -403,7 +403,7 @@ function Export-TargetResource
             ManagedBy          = "DummyUser"
             MailNickName       = $group.MailNickName
         }
-        Write-Information "    - [$i/$($groups.Length)] $($group.DisplayName)"
+        Write-Information "    [$i/$($groups.Length)] $($group.DisplayName)"
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = "`$Credsglobaladmin"
         $content += "        O365Group " + (New-GUID).ToString() + "`r`n"

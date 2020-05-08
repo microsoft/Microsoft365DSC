@@ -308,7 +308,7 @@ function Export-TargetResource
     foreach ($policy in $policies)
     {
         $rules = Get-RetentionComplianceRule -Policy $policy.Name
-        Write-Information "    - Policy [$j/$($policiesLength)] $($policy.Name)"
+        Write-Information "    Policy [$j/$($policiesLength)] $($policy.Name)"
         $i = 1
         $rulesLength = $rules.Length
         if ($null -eq $rulesLength)
@@ -317,7 +317,7 @@ function Export-TargetResource
         }
         foreach ($rule in $rules)
         {
-            Write-Information "        - [$i/$($rulesLength)] $($rule.Name)"
+            Write-Information "        [$i/$($rulesLength)] $($rule.Name)"
             $params = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 Name               = $rule.Name
