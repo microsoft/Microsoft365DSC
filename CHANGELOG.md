@@ -26,7 +26,7 @@
 * Metadata
   * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.57;
   * Updated MicrosoftTeams to 1.0.6;
-  * Updated MSCloudLoginAssistant to 1.0.13;
+  * Updated MSCloudLoginAssistant to 1.0.14;
   * Introduced dependency on the EXchangeOnlineManagement module;
   * Introduced dependency on the Microsoft.Graph.Authentication module;
   * Introduced dependency on the Microsoft.Graph.Identity.ConditionalAccess
