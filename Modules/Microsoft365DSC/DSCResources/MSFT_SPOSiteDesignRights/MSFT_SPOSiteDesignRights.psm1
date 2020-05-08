@@ -253,7 +253,7 @@ function Export-TargetResource
     $i = 1
     foreach ($siteDesign in $siteDesigns)
     {
-        Write-Information "    - [$i/$($siteDesigns.Length)] $($siteDesign.Title)"
+        Write-Information "    [$i/$($siteDesigns.Length)] $($siteDesign.Title)"
         $params = @{
             SiteDesignTitle    = $siteDesign.Title
             Rights             = "View"

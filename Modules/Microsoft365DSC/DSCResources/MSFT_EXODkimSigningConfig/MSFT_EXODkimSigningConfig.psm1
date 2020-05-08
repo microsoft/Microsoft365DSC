@@ -280,7 +280,7 @@ function Export-TargetResource
         }
         foreach ($DkimSigningConfig in $DkimSigningConfigs)
         {
-            Write-Verbose -Message "    - [$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)}"
+            Write-Verbose -Message "    [$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)}"
             $params = @{
                 Identity           = $DkimSigningConfig.Identity
                 GlobalAdminAccount = $GlobalAdminAccount

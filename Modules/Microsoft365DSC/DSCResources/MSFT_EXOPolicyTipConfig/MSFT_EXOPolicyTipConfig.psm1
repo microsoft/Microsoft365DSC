@@ -33,6 +33,14 @@ function Get-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
+    $command = Get-Command Get-PolicyTipConfig -ErrorAction SilentlyContinue
+    if ($null -eq $command)
+    {
+        New-M365DSCLogEntry -Error $_ -Message "Get-PolicyTipConfig is not available in the tenant" `
+            -Source $MyInvocation.MyCommand.ModuleName
+        throw "EXOPolicyTipConfig is not supported in the current tenant."
+    }
+
     $AllPolicyTips = Get-PolicyTipConfig
 
     $PolicyTipConfig = $AllPolicyTips | Where-Object -FilterScript { $_.Name -eq $Name }
@@ -200,27 +208,31 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-    [array]$AllPolicyTips = Get-PolicyTipConfig
-
     $dscContent = ""
-    $i = 1
-    foreach ($PolicyTipConfig in $AllPolicyTips)
+    $command = Get-Command Get-PolicyTipConfig -ErrorAction SilentlyContinue
+    if ($null -ne $command)
     {
-        Write-Information "    [$i/$($AllPolicyTips.Count)] $($PolicyTipConfig.Name)"
+        [array]$AllPolicyTips = Get-PolicyTipConfig
 
-        $Params = @{
-            Name               = $PolicyTipConfig.Name
-            GlobalAdminAccount = $GlobalAdminAccount
+        $i = 1
+        foreach ($PolicyTipConfig in $AllPolicyTips)
+        {
+            Write-Information "    [$i/$($AllPolicyTips.Count)] $($PolicyTipConfig.Name)"
+
+            $Params = @{
+                Name               = $PolicyTipConfig.Name
+                GlobalAdminAccount = $GlobalAdminAccount
+            }
+            $result = Get-TargetResource @Params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content = "        EXOPolicyTipConfig " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
+            $dscContent += $content
+            $i++
         }
-        $result = Get-TargetResource @Params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content = "        EXOPolicyTipConfig " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
-        $dscContent += $content
-        $i++
     }
     return $dscContent
 }

@@ -50,8 +50,6 @@ function Get-TargetResource
         New-M365DSCLogEntry -Error $_ -Message "Couldn't get AvailabilityAddressSpaces" -Source $MyInvocation.MyCommand.ModuleName
     }
 
-
-
     $AvailabilityAddressSpace = $AvailabilityAddressSpaces | Where-Object -FilterScript { $_.Identity -eq $Identity }
     if ($null -eq $AvailabilityAddressSpace)
     {

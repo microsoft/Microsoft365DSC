@@ -266,29 +266,32 @@ function Export-TargetResource
 
     $result = Get-TargetResource @params
 
-    if ($ConnectionMode -eq 'Credential')
+    if ($result.Ensure -eq 'Present')
     {
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $result.Remove("ApplicationId")
-        $result.Remove("TenantId")
-        $result.Remove("CertificateThumbprint")
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $result.Remove("ApplicationId") | Out-Null
+            $result.Remove("TenantId") | Out-Null
+            $result.Remove("CertificateThumbprint") | Out-Null
+        }
+        else
+        {
+            $result.Remove("GlobalAdminAccount") | Out-Null
+        }
+        $content += "        AADGroupsNamingPolicy " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        }
+        else
+        {
+            $content += $currentDSCBlock
+        }
+        $content += "        }`r`n"
     }
-    else
-    {
-        $result.Remove("GlobalAdminAccount")
-    }
-    $content += "        AADGroupsNamingPolicy " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    if ($ConnectionMode -eq 'Credential')
-    {
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    }
-    else
-    {
-        $content += $currentDSCBlock
-    }
-    $content += "        }`r`n"
 
     return $content
 }

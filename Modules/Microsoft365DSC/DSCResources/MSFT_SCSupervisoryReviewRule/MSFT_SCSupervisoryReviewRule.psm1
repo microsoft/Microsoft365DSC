@@ -234,7 +234,7 @@ function Export-TargetResource
     $content = ''
     foreach ($rule in $rules)
     {
-        Write-Information "    - [$i/$totalRules] $($rule.Name)"
+        Write-Information "    [$i/$totalRules] $($rule.Name)"
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             Name               = $rule.Name

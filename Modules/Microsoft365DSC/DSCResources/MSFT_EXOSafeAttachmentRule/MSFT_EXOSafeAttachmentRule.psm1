@@ -333,7 +333,7 @@ function Export-TargetResource
         $i = 1
         foreach ($SafeAttachmentRule in $SafeAttachmentRules)
         {
-            Write-Information "    - [$i/$($SafeAttachmentRules.Length)] $($SafeAttachmentRule.Identity)"
+            Write-Information "    [$i/$($SafeAttachmentRules.Length)] $($SafeAttachmentRule.Identity)"
             $params = @{
                 Identity             = $SafeAttachmentRule.Identity
                 SafeAttachmentPolicy = $SafeAttachmentRule.SafeAttachmentPolicy

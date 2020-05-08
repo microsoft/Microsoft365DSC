@@ -253,16 +253,16 @@ function Compare-M365DSCConfigurations
     }
 
     [Array] $Delta = @()
-    [Array] $Source  = ConvertTo-DSCObject -Path $Source
-    [Array] $Destination  = ConvertTo-DSCObject -Path $Destination
+    [Array] $SourceObject  = ConvertTo-DSCObject -Path $Source
+    [Array] $DestinationObject  = ConvertTo-DSCObject -Path $Destination
 
     # Loop through all items in the source array
     $i = 1
-    foreach ($sourceResource in $Source)
+    foreach ($sourceResource in $SourceObject)
     {
         [array]$key = Get-M365DSCResourceKey -Resource $sourceResource
-        Write-Progress -Activity "Scanning Source...$i/$($Source.Count)]" -PercentComplete ($i/($Source.Count)*100)
-        [array]$destinationResource = $Destination | Where-Object -FilterScript {$_.ResourceName -eq $sourceResource.ResourceName -and $_.($key[0]) -eq $sourceResource.($key[0])}
+        Write-Progress -Activity "Scanning Source $Source...[$i/$($SourceObject.Count)]" -PercentComplete ($i/($SourceObject.Count)*100)
+        [array]$destinationResource = $DestinationObject | Where-Object -FilterScript {$_.ResourceName -eq $sourceResource.ResourceName -and $_.($key[0]) -eq $sourceResource.($key[0])}
 
         # Filter on the second key
         if ($key.Count -gt 1)
@@ -362,12 +362,12 @@ function Compare-M365DSCConfigurations
 
      # Loop through all items in the destination array
     $i = 1
-    foreach ($destinationResource in $Destination)
+    foreach ($destinationResource in $DestinationObject)
     {
         [System.Collections.HashTable]$currentDestinationResource = ([array]$destinationResource)[0]
         $key = Get-M365DSCResourceKey -Resource $currentDestinationResource
-        Write-Progress -Activity "Scanning Destination...[$i/$($Destination.Count)]" -PercentComplete ($i/($Destination.Count)*100)
-        $sourceResource = $Source | Where-Object -FilterScript {$_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[0]) -eq $currentDestinationResource.($key[0])}
+        Write-Progress -Activity "Scanning Destination $Destination...[$i/$($DestinationObject.Count)]" -PercentComplete ($i/($DestinationObject.Count)*100)
+        $sourceResource = $SourceObject | Where-Object -FilterScript {$_.ResourceName -eq $currentDestinationResource.ResourceName -and $_.($key[0]) -eq $currentDestinationResource.($key[0])}
 
         # Filter on the second key
         if ($key.Count -gt 1)
@@ -399,7 +399,7 @@ function Compare-M365DSCConfigurations
 function Get-M365DSCResourceKey
 {
     [CmdletBinding()]
-    [OutputType([System.String[]])]
+    [OutputType([System.Object[]])]
     param(
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]

@@ -230,7 +230,7 @@ function Export-TargetResource
     $i = 1
     foreach ($Rule in $Rules)
     {
-        Write-Information "    - [$i/$($Rules.Count)] $($Rule.Name)"
+        Write-Information "    [$i/$($Rules.Count)] $($Rule.Name)"
         try
         {
             $policy = Get-CaseHoldPolicy -Identity $Rule.Policy -ErrorAction Stop

@@ -483,7 +483,7 @@ function Export-TargetResource
     }
     foreach ($hub in $hubSites)
     {
-        Write-Information "    - [$i/$($hubSites.Length)] $($hub.SiteUrl)"
+        Write-Information "    [$i/$($hubSites.Length)] $($hub.SiteUrl)"
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             Url                = $hub.SiteUrl

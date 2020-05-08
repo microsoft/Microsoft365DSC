@@ -464,6 +464,11 @@ function Export-TargetResource
         GlobalAdminAccount = $GlobalAdminAccount
     }
     $result = Get-TargetResource @Params
+
+    if ([System.String]::IsNullOrEmpty($result.GrooveBlockOption))
+    {
+        $result.Remove("GrooveBlockOption") | Out-Null
+    }
     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     $content = "        ODSettings " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

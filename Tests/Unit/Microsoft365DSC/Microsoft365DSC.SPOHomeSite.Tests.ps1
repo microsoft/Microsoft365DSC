@@ -85,7 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-PnPHomeSite -MockWith {
-                return "https://contoso.sharepoint.com/sites/homesite"
+                return "https://contoso.sharepoint.com/sites/wrong"
             }
 
             Mock -CommandName Get-PnPTenantSite -MockWith {

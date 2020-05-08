@@ -208,7 +208,7 @@ function Export-TargetResource
     $content = ""
     foreach ($Property in $Properties)
     {
-        Write-Information "    - [$i/$($Properties.Length)] $($Property.Name)"
+        Write-Information "    [$i/$($Properties.Length)] $($Property.Name)"
         $params = @{
             Name               = $Property.Name
             GlobalAdminAccount = $GlobalAdminAccount
