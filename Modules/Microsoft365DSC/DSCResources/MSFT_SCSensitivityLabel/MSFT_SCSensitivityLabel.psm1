@@ -389,7 +389,7 @@ function Export-TargetResource
         $i = 1
         foreach ($label in $labels)
         {
-            Write-Information "    -[$i/$($labels.Count)] $($label.Name)"
+            Write-Information "    [$i/$($labels.Count)] $($label.Name)"
             $params = @{
                 Name               = $label.Name
                 GlobalAdminAccount = $GlobalAdminAccount

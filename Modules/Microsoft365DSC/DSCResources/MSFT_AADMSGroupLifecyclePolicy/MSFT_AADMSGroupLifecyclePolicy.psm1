@@ -354,31 +354,34 @@ function Export-TargetResource
         }
     }
     $result = Get-TargetResource @params
-    if ($ConnectionMode -eq 'Credential')
+    if ($result.Ensure -eq 'Present')
     {
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $result.Remove("ApplicationId")
-        $result.Remove("TenantId")
-        $result.Remove("CertificateThumbprint")
-    }
-    else
-    {
-        $result.Remove("GlobalAdminAccount")
-    }
-    $content += "        AADMSGroupLifecyclePolicy " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    if ($ConnectionMode -eq 'Credential')
-    {
-        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
-    }
+       if ($ConnectionMode -eq 'Credential')
+        {
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $result.Remove("ApplicationId") | Out-Null
+            $result.Remove("TenantId") | Out-Null
+            $result.Remove("CertificateThumbprint") | Out-Null
+        }
+        else
+        {
+            $result.Remove("GlobalAdminAccount") | Out-Null
+        }
+        $content += "        AADMSGroupLifecyclePolicy " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+        }
 
-    if ($partialContent.ToLower().Contains("@" + $principal.ToLower()))
-    {
-        $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$OrganizationName.Split('.')[0])"
+        if ($partialContent.ToLower().Contains("@" + $principal.ToLower()))
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$OrganizationName.Split('.')[0])"
+        }
+        $content += $partialContent
+        $content += "        }`r`n"
     }
-    $content += $partialContent
-    $content += "        }`r`n"
 
     return $content
 }

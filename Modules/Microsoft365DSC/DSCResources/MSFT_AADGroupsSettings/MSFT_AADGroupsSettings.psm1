@@ -344,13 +344,13 @@ function Export-TargetResource
     if ($ConnectionMode -eq 'Credential')
     {
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $result.Remove("ApplicationId")
-        $result.Remove("TenantId")
-        $result.Remove("CertificateThumbprint")
+        $result.Remove("ApplicationId") | Out-Null
+        $result.Remove("TenantId") | Out-Null
+        $result.Remove("CertificateThumbprint") | Out-Null
     }
     else
     {
-        $result.Remove("GlobalAdminAccount")
+        $result.Remove("GlobalAdminAccount") | Out-Null
     }
     $content += "        AADGroupsSettings " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

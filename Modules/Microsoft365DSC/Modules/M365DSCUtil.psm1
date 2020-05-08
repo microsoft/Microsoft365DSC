@@ -906,6 +906,10 @@ function Export-M365DSCConfiguration
         $MaxProcesses,
 
         [Parameter()]
+        [System.Boolean]
+        $GenerateInfo = $false,
+
+        [Parameter()]
         [System.String]
         $ApplicationId,
 
@@ -962,6 +966,7 @@ function Export-M365DSCConfiguration
                 -TenantId $TenantId `
                 -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
+                -GenerateInfo $GenerateInfo `
                 -Quiet
         }
         elseif ($null -ne $ComponentsToExtract)
@@ -975,6 +980,7 @@ function Export-M365DSCConfiguration
                 -TenantId $TenantId `
                 -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
+                -GenerateInfo $GenerateInfo `
                 -Quiet
         }
         elseif ($null -ne $Mode)
@@ -988,6 +994,7 @@ function Export-M365DSCConfiguration
                 -TenantId $TenantId `
                 -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
+                -GenerateInfo $GenerateInfo `
                 -Quiet
         }
         else
@@ -1001,6 +1008,7 @@ function Export-M365DSCConfiguration
                 -TenantId $TenantId `
                 -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
+                -GenerateInfo $GenerateInfo `
                 -Quiet
         }
     }

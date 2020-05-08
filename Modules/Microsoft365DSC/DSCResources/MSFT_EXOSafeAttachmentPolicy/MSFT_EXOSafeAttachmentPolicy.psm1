@@ -264,7 +264,7 @@ function Export-TargetResource
         $i = 1
         foreach ($SafeAttachmentPolicy in $SafeAttachmentPolicies)
         {
-            Write-Information "    - [$i/$($SafeAttachmentPolicies.Length)] $($SafeAttachmentPolicy.Identity)"
+            Write-Information "    [$i/$($SafeAttachmentPolicies.Length)] $($SafeAttachmentPolicy.Identity)"
             $params = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 Identity           = $SafeAttachmentPolicy.Identity

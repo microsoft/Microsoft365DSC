@@ -503,7 +503,7 @@ function Export-TargetResource
     $content = ''
     foreach ($policy in $policies)
     {
-        Write-Information "    - [$i/$($totalPolicies)] $($policy.Name)"
+        Write-Information "    [$i/$($totalPolicies)] $($policy.Name)"
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             Name               = $policy.Name

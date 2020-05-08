@@ -655,7 +655,7 @@ function Export-TargetResource
     $content = ""
     foreach ($team in $teams)
     {
-        Write-Information "    - [$i/$($teams.Length)] $($team.DisplayName)"
+        Write-Information "    [$i/$($teams.Length)] $($team.DisplayName)"
         $params = @{
             DisplayName           = $team.DisplayName
             GlobalAdminAccount    = $GlobalAdminAccount

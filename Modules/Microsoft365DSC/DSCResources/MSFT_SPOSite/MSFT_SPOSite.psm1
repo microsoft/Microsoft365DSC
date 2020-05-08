@@ -719,7 +719,7 @@ function Export-TargetResource
     foreach ($site in $sites)
     {
         $site = Get-PnPTenantSite -Url $site.Url
-        Write-Information "    - [$i/$($sites.Length)] $($site.Url)"
+        Write-Information "    [$i/$($sites.Length)] $($site.Url)"
         $siteTitle = "Null"
         if (-not [System.String]::IsNullOrEmpty($site.Title))
         {

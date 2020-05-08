@@ -216,12 +216,11 @@ function Export-TargetResource
         $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
         $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
 
-        $partialContent = ""
         $content = ''
         $i = 1
         foreach ($file in $filesToDownload)
         {
-            Write-Information "    - [$i/$($filesToDownload.Length)] $($file.Name)"
+            Write-Information "    [$i/$($filesToDownload.Length)] $($file.Name)"
 
             $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
             $app = Get-PnpApp -Identity $identity -ErrorAction SilentlyContinue

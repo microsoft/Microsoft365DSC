@@ -325,7 +325,7 @@ function Export-TargetResource
         $i = 1
         foreach ($SafeLinksRule in $SafeLinksRules)
         {
-            Write-Information "    - [$i/$($SafeLinksRules.Length)] $($SafeLinksRule.Identity)"
+            Write-Information "    [$i/$($SafeLinksRules.Length)] $($SafeLinksRule.Identity)"
             $params = @{
                 Identity           = $SafeLinksRule.Identity
                 SafeLinksPolicy    = $SafeLinksRule.SafeLinksPolicy

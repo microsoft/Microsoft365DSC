@@ -52,28 +52,12 @@
     # Modules that must be imported into the global environment prior to importing this module
     RequiredModules   = @(
         @{
-            ModuleName      = "ReverseDSC"
-            RequiredVersion = "2.0.0.2"
-        },
-        @{
-            ModuleName      = "SharePointPnPPowerShellOnline"
-            RequiredVersion = "3.20.2004.0"
-        },
-        @{
-            ModuleName      = "Microsoft.Online.SharePoint.PowerShell"
-            RequiredVersion = "16.0.19515.12000"
-        },
-        @{
-            ModuleName      = "MicrosoftTeams"
-            RequiredVersion = "1.0.6"
-        },
-        @{
             ModuleName      = "AzureADPreview"
             RequiredVersion = "2.0.2.89"
         },
         @{
-            ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.12"
+            ModuleName      = "DSCParser"
+            RequiredVersion = "1.1.0.3"
         },
         @{
             ModuleName      = "ExchangeOnlineManagement"
@@ -88,12 +72,28 @@
             RequiredVersion = "0.5.1"
         },
         @{
+            ModuleName      = "Microsoft.Online.SharePoint.PowerShell"
+            RequiredVersion = "16.0.19515.12000"
+        },
+        @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
             RequiredVersion = "2.0.57"
         },
         @{
-            ModuleName      = "DSCParser"
-            RequiredVersion = "1.1.0.2"
+            ModuleName      = "MicrosoftTeams"
+            RequiredVersion = "1.0.6"
+        },
+        @{
+            ModuleName      = "MSCloudLoginAssistant"
+            RequiredVersion = "1.0.14"
+        },
+        @{
+            ModuleName      = "ReverseDSC"
+            RequiredVersion = "2.0.0.2"
+        },
+        @{
+            ModuleName      = "SharePointPnPPowerShellOnline"
+            RequiredVersion = "3.20.2004.0"
         }
     )
 

@@ -353,11 +353,12 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
 
-    $groups = Get-AzureADMSGroup
+    [array] $groups = Get-AzureADMSGroup
     $i = 1
     $content = ''
     foreach ($group in $groups)
     {
+        Write-Information -MessageData "    [$i/$($groups.Count)] $($group.DisplayName)"
         if ($ConnectionMode -eq 'Credential')
         {
             $params = @{
@@ -380,13 +381,13 @@ function Export-TargetResource
         if ($ConnectionMode -eq 'Credential')
         {
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $result.Remove("ApplicationId")
-            $result.Remove("TenantId")
-            $result.Remove("CertificateThumbprint")
+            $result.Remove("ApplicationId") | Out-Null
+            $result.Remove("TenantId") | Out-Null
+            $result.Remove("CertificateThumbprint") | Out-Null
         }
         else
         {
-            $result.Remove("GlobalAdminAccount")
+            $result.Remove("GlobalAdminAccount") | Out-Null
         }
 
         if ($null -eq $result.MembershipRuleProcessingState)

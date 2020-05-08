@@ -378,7 +378,7 @@ function Export-TargetResource
     $content = ''
     foreach ($tag in $tags)
     {
-        Write-Information "    - [$i/$($totalTags)] $($tag.Name)"
+        Write-Information "    [$i/$($totalTags)] $($tag.Name)"
         $Params = @{
             Name               = $tag.Name
             GlobalAdminAccount = $GlobalAdminAccount

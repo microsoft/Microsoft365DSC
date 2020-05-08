@@ -47,7 +47,7 @@ function Get-TargetResource
         {
             $result = @{
                 IsSingleInstance   = $IsSingleInstance
-                $Url               = $homeSiteUrl
+                Url                = $homeSiteUrl
                 Ensure             = "Present"
                 GlobalAdminAccount = $GlobalAdminAccount
             }

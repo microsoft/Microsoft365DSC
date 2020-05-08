@@ -445,7 +445,7 @@ function Export-TargetResource
     foreach ($source in $sources)
     {
         $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
-        Write-Information "    - [$i/$($sourcesLength)] $($source.Name)"
+        Write-Information "    [$i/$($sourcesLength)] $($source.Name)"
 
         $params = @{
             Name               = $source.Name
