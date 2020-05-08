@@ -373,9 +373,12 @@ function Export-TargetResource
     Test-MSCloudLogin -Platform SecurityComplianceCenter `
         -CloudCredential $GlobalAdminAccount
 
-    $actions = Get-ComplianceSearchAction
+    [array]$actions = Get-ComplianceSearchAction
 
-    Write-Information "    Tenant Wide Actions:"
+    if ($actions.Count -gt 0)
+    {
+        Write-Information -MessageData "    Tenant Wide Actions:"
+    }
     $i = 1
     $content = ""
     foreach ($action in $actions)
