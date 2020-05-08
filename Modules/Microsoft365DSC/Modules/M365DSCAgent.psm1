@@ -6,6 +6,11 @@ function Test-M365DSCAgent
 
     )
     $InformationPreference = 'Continue'
+    #region Telemetry
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Event", "TestAgent")
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
     [array]$Recommendations = @()
     [array]$Issues = @()
