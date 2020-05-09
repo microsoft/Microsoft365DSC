@@ -53,7 +53,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Name                  = "TestRule"
                 Policy                = "TestPolicy"
-                Disabled              = $false
                 AllowConvenienceLogon = $true
                 AllowJailbroken       = $true
                 AllowVoiceAssistant   = $true
@@ -88,7 +87,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Name                  = "TestRule"
                 Policy                = "TestPolicy"
-                Disabled              = $false
                 AllowConvenienceLogon = $true
                 AllowJailbroken       = $true
                 AllowVoiceAssistant   = $true
@@ -102,7 +100,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     Name                  = "TestRule"
                     Policy                = "12345-12345-12345-12345-12345"
-                    Disabled              = $true
                     AllowConvenienceLogon = $true
                     AllowJailbroken       = $true
                     AllowVoiceAssistant   = $true
@@ -131,7 +128,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Name                  = "TestRule"
                 Policy                = "TestPolicy"
-                Disabled              = $false
                 AllowConvenienceLogon = $true
                 AllowJailbroken       = $true
                 AllowVoiceAssistant   = $true
@@ -146,7 +142,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name                  = "TestRule"
                     Policy                = "12345-12345-12345-12345-12345"
                     # Returns a drift in the comments property because it needs to not be in desired state
-                    Disabled              = $true
                     AllowConvenienceLogon = $false
                     AllowJailbroken       = $false
                     AllowVoiceAssistant   = $false
@@ -179,7 +174,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $testParams = @{
                 Name                  = "TestRule"
                 Policy                = "TestPolicy"
-                Disabled              = $false
                 AllowConvenienceLogon = $true
                 AllowJailbroken       = $true
                 AllowVoiceAssistant   = $true
