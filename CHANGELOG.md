@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-## UNRELEASED
+## 1.0.5.127
 
 * AADGroupsNamingPolicy
   * Added support for AzureAD Application Authentication;
