@@ -5,7 +5,7 @@ $Global:SessionSecurityCompliance = $null
 
 #region Extraction Modes
 $Global:DefaultComponents = @("SPOApp","SPOSiteDesign")
-$Global:FullComponents = @("EXOMailboxSettings","O365Group","O365User","SPOSiteGroup","SPOSite","SPOUserProfileProperty","SPOPropertyBag","TeamsTeam","TeamsChannel", "TeamsUser")
+$Global:FullComponents = @("EXOMailboxSettings","EXOManagementRole","O365Group","O365User","SPOSiteGroup","SPOSite","SPOUserProfileProperty","SPOPropertyBag","TeamsTeam","TeamsChannel", "TeamsUser")
 #endregion
 
 function Format-EXOParams
@@ -196,27 +196,6 @@ function New-EXOAntiPhishPolicy
     }
 }
 
-function New-EXOAntiPhishRule
-{
-    param (
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AntiPhishRuleParams
-    )
-    try
-    {
-        $VerbosePreference = 'Continue'
-        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'New')
-        Write-Verbose -Message "Creating New AntiPhishRule $($BuiltParams.Name) with values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)"
-        New-AntiPhishRule @BuiltParams -Confirm:$false
-        $VerbosePreference = 'SilentlyContinue'
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
-}
-
 function New-EXOHostedContentFilterRule
 {
     param (
@@ -273,35 +252,6 @@ function New-EXOSafeLinksRule
         Write-Verbose -Message "Creating New SafeLinksRule $($BuiltParams.Name) with values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)"
         New-SafeLinksRule @BuiltParams -Confirm:$false
         $VerbosePreference = 'SilentlyContinue'
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
-}
-
-function Set-EXOAntiPhishRule
-{
-    param (
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AntiPhishRuleParams
-    )
-    try
-    {
-        $VerbosePreference = 'Continue'
-        $BuiltParams = (Format-EXOParams -InputEXOParams $AntiPhishRuleParams -Operation 'Set' )
-        if ($BuiltParams.keys -gt 1)
-        {
-            Write-Verbose -Message "Setting AntiPhishRule $($BuiltParams.Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)"
-            Set-AntiPhishRule @BuiltParams -Confirm:$false
-            $VerbosePreference = 'SilentlyContinue'
-        }
-        else
-        {
-            Write-Verbose -Message "No more values to Set on AntiPhishRule $($BuiltParams.Identity) using supplied values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)"
-            $VerbosePreference = 'SilentlyContinue'
-        }
     }
     catch
     {
@@ -959,6 +909,7 @@ function Export-M365DSCConfiguration
         {
             Start-M365DSCConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                 -Workloads $Workloads `
+                -Mode $Mode `
                 -Path $Path -FileName $FileName `
                 -MaxProcesses $MaxProcesses `
                 -ConfigurationName $ConfigurationName `
@@ -987,20 +938,6 @@ function Export-M365DSCConfiguration
         {
             Start-M365DSCConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                 -Mode $Mode `
-                -Path $Path -FileName $FileName `
-                -MaxProcesses $MaxProcesses `
-                -ConfigurationName $ConfigurationName `
-                -ApplicationId $ApplicationId `
-                -TenantId $TenantId `
-                -ApplicationSecret $ApplicationSecret `
-                -CertificateThumbprint $CertificateThumbprint `
-                -GenerateInfo $GenerateInfo `
-                -Quiet
-        }
-        else
-        {
-            Start-M365DSCConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
-                -AllComponents `
                 -Path $Path -FileName $FileName `
                 -MaxProcesses $MaxProcesses `
                 -ConfigurationName $ConfigurationName `
