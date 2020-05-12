@@ -204,33 +204,34 @@ function Set-TargetResource
     Write-Verbose -Message "Global ExchangeOnlineSession status:"
     Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
 
-    $HostedContentFilterRules = Get-HostedContentFilterRule
-    $HostedContentFilterRule = $HostedContentFilterRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    $CurrentValues = Get-TargetResource $PSBoundParameters
 
-    if (('Present' -eq $Ensure ) -and (-not $HostedContentFilterRule))
+    if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
-        New-EXOHostedContentFilterRule -HostedContentFilterRuleParams $PSBoundParameters
-    }
-
-    if (('Present' -eq $Ensure ) -and ($HostedContentFilterRule))
-    {
-        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $HostedContentFilterRule.State))
+        $CreationParams = $PSBoundParameters
+        $CreationParams.Remove("Ensure") | Out-Null
+        $CreationParams.Remove("GlobalAdminAccount") | Out-Null
+        if ($Enabled -and ('Disabled' -eq $CurrentValues.State))
         {
             # New-HostedContentFilterRule has the Enabled parameter, Set-HostedContentFilterRule does not.
             # There doesn't appear to be any way to change the Enabled state of a rule once created.
-            Write-Verbose -Message "Removing HostedContentFilterRule $($Identity) in order to change Enabled state."
+            Write-Verbose -Message "Removing HostedContentFilterRule {$Identity} in order to change Enabled state."
             Remove-HostedContentFilterRule -Identity $Identity -Confirm:$false
-            New-EXOHostedContentFilterRule -HostedContentFilterRuleParams $PSBoundParameters
         }
-        else
-        {
-            Set-EXOHostedContentFilterRule -HostedContentFilterRuleParams $PSBoundParameters
-        }
+        Write-Verbose -Message "Creating new HostedContentFilterRule {$Identity}"
+        New-HostedContentFilterRule @CreationParams
     }
-
-    if (('Absent' -eq $Ensure ) -and ($HostedContentFilterRule))
+    elseif ($Ensure -eq 'Present' -and $CurrentValues -eq 'Present')
     {
-        Write-Verbose -Message "Removing HostedContentFilterRule $($Identity) "
+        $UpdateParams = $PSBoundParameters
+        $UpdateParams.Remove("Ensure") | Out-Null
+        $UpdateParams.Remove("GlobalAdminAccount") | Out-Null
+        Write-Verbose -Message "Updating HostedContentFilterRule {$Identity}"
+        Set-HostedContentFilterRule @UpdateParams
+    }
+    elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing existing HostedContentFilterRule {$Identity}."
         Remove-HostedContentFilterRule -Identity $Identity -Confirm:$false
     }
 }
