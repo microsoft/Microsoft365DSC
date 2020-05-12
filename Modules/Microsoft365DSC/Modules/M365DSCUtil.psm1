@@ -196,27 +196,6 @@ function New-EXOAntiPhishPolicy
     }
 }
 
-function New-EXOHostedContentFilterRule
-{
-    param (
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $HostedContentFilterRuleParams
-    )
-    try
-    {
-        $VerbosePreference = 'Continue'
-        $BuiltParams = (Format-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'New' )
-        Write-Verbose -Message "Creating New HostedContentFilterRule $($BuiltParams.Name) with values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)"
-        New-HostedContentFilterRule @BuiltParams -Confirm:$false
-        $VerbosePreference = 'SilentlyContinue'
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
-}
-
 function New-EXOSafeAttachmentRule
 {
     param (
@@ -279,34 +258,6 @@ function Set-EXOAntiPhishPolicy
         else
         {
             Write-Verbose -Message "No more values to Set on AntiPhishPolicy $($BuiltParams.Identity) using supplied values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)"
-            $VerbosePreference = 'SilentlyContinue'
-        }
-    }
-    catch
-    {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
-    }
-}
-function Set-EXOHostedContentFilterRule
-{
-    param (
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $HostedContentFilterRuleParams
-    )
-    try
-    {
-        $VerbosePreference = 'Continue'
-        $BuiltParams = (Format-EXOParams -InputEXOParams $HostedContentFilterRuleParams -Operation 'Set' )
-        if ($BuiltParams.keys -gt 1)
-        {
-            Write-Verbose -Message "Setting HostedContentFilterRule $($BuiltParams.Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)"
-            Set-HostedContentFilterRule @BuiltParams -Confirm:$false
-            $VerbosePreference = 'SilentlyContinue'
-        }
-        else
-        {
-            Write-Verbose -Message "No more values to Set on HostedContentFilterRule $($BuiltParams.Identity) using supplied values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)"
             $VerbosePreference = 'SilentlyContinue'
         }
     }
