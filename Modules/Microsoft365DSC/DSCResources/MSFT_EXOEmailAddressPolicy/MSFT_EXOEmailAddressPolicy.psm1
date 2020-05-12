@@ -148,7 +148,6 @@ function Set-TargetResource
         Priority                          = $Priority
         EnabledEmailAddressTemplates      = $EnabledEmailAddressTemplates
         EnabledPrimarySMTPAddressTemplate = $EnabledPrimarySMTPAddressTemplate
-        ManagedByFilter                   = $ManagedByFilter
         Confirm                           = $false
     }
 
