@@ -27,14 +27,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $EnableAuthenticationSafetyTip = $true,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableAuthenticationSoftPassSafetyTip = $false,
-
-        [Parameter()]
-        [System.Boolean]
         $EnableMailboxIntelligence = $true,
 
         [Parameter()]
@@ -108,10 +100,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $TargetedUsersToProtect = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $TreatSoftPassAsAuthenticated = $true,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -159,8 +147,6 @@ function Get-TargetResource
             AuthenticationFailAction              = $AntiPhishPolicy.AuthenticationFailAction
             Enabled                               = $AntiPhishPolicy.Enabled
             EnableAntispoofEnforcement            = $AntiPhishPolicy.EnableAntispoofEnforcement
-            EnableAuthenticationSafetyTip         = $AntiPhishPolicy.EnableAuthenticationSafetyTip
-            EnableAuthenticationSoftPassSafetyTip = $AntiPhishPolicy.EnableAuthenticationSoftPassSafetyTip
             EnableMailboxIntelligence             = $AntiPhishPolicy.EnableMailboxIntelligence
             EnableOrganizationDomainsProtection   = $AntiPhishPolicy.EnableOrganizationDomainsProtection
             EnableSimilarDomainsSafetyTips        = $AntiPhishPolicy.EnableSimilarDomainsSafetyTips
@@ -178,7 +164,6 @@ function Get-TargetResource
             TargetedUserActionRecipients          = $AntiPhishPolicy.TargetedUserActionRecipients
             TargetedUserProtectionAction          = $TargetedUserProtectionActionValue
             TargetedUsersToProtect                = $AntiPhishPolicy.TargetedUsersToProtect
-            TreatSoftPassAsAuthenticated          = $AntiPhishPolicy.TreatSoftPassAsAuthenticated
             GlobalAdminAccount                    = $GlobalAdminAccount
             Ensure                                = 'Present'
         }
@@ -214,14 +199,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableAntispoofEnforcement = $true,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableAuthenticationSafetyTip = $true,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableAuthenticationSoftPassSafetyTip = $false,
 
         [Parameter()]
         [System.Boolean]
@@ -298,10 +275,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $TargetedUsersToProtect = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $TreatSoftPassAsAuthenticated = $true,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -374,14 +347,6 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $EnableAuthenticationSafetyTip = $true,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableAuthenticationSoftPassSafetyTip = $false,
-
-        [Parameter()]
-        [System.Boolean]
         $EnableMailboxIntelligence = $true,
 
         [Parameter()]
@@ -455,10 +420,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $TargetedUsersToProtect = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $TreatSoftPassAsAuthenticated = $true,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
