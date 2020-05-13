@@ -69,19 +69,16 @@ function Get-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-    Write-Verbose -Message "Global ExchangeOnlineSession status:"
-    Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
-
     try
     {
         $HostedContentFilterRules = Get-HostedContentFilterRule
     }
     catch
     {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         $Message = "Error calling {Get-HostedContentFilterRule}"
         New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
     }
+
     $HostedContentFilterRule = $HostedContentFilterRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
     if (-not $HostedContentFilterRule)
     {
@@ -201,10 +198,8 @@ function Set-TargetResource
         throw "Error attempting to create EXOHostedContentFilterRule {$Identity}. The specified HostedContentFilterPolicy " + `
             "{$HostedContentFilterPolicy} doesn't exist. Make sure you either create it first or specify a valid policy."
     }
-    Write-Verbose -Message "Global ExchangeOnlineSession status:"
-    Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
 
-    $CurrentValues = Get-TargetResource $PSBoundParameters
+    $CurrentValues = Get-TargetResource @PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
@@ -337,11 +332,13 @@ function Export-TargetResource
         -Platform ExchangeOnline `
         -ErrorAction SilentlyContinue
 
-    $HostedContentFilterRules = Get-HostedContentFilterRule
+    [array] $HostedContentFilterRules = Get-HostedContentFilterRule
     $content = ''
 
+    $i = 1
     foreach ($HostedContentFilterRule in $HostedContentFilterRules)
     {
+        Write-Information -MessageData "    [$i/$($HostedContentFilterRules.Count)] $($HostedContentFilterRule.Identity)"
         $params = @{
             GlobalAdminAccount        = $GlobalAdminAccount
             Identity                  = $HostedContentFilterRule.Identity
@@ -354,6 +351,7 @@ function Export-TargetResource
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
+        $i++
     }
     return $content
 }

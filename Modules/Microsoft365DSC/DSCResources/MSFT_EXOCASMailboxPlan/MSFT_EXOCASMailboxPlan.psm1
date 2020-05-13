@@ -47,7 +47,15 @@ function Get-TargetResource
 
     $CASMailboxPlans = Get-CASMailboxPlan
 
-    $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -like ($Identity + '-*') }
+    if ($Identity.Contains('-'))
+    {
+        $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    }
+    else
+    {
+        $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -like ($Identity + '-*') }
+    }
+
     if ($null -eq $CASMailboxPlan)
     {
         Write-Verbose -Message "CASMailboxPlan $($Identity) does not exist."
