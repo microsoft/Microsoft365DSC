@@ -13,7 +13,7 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.Array]
+        [System.String[]]
         $OnlinePstnUsages,
 
         [Parameter()]
@@ -73,7 +73,7 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.Array]
+        [System.String[]]
         $OnlinePstnUsages,
 
         [Parameter()]
@@ -85,6 +85,19 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
+
+    $ExistingUsages = Get-CsOnlinePstnUsage | Select-Object -ExpandProperty Usage
+    $NotFoundUsageList = @()
+    foreach ($Usage in $ExistingUsages){
+        if (!($OnlinePstnUsages -match $Usage)){
+            $NotFoundUsageList += $Usage
+        }
+    }
+
+    if ($NotFoundUsageList){
+        $NotFoundUsages = $NotFoundUsageList -join ","
+        Throw "Please create the PSTN Usage(s) ($NotFoundUsages) using `"TeamsPstnUsage`" and rerun this cmdlet."
+    }
 
     Write-Verbose -Message "Setting Voice Routing Policy"
 
@@ -138,7 +151,7 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.Array]
+        [System.String[]]
         $OnlinePstnUsages,
 
         [Parameter()]
@@ -206,7 +219,7 @@ function Export-TargetResource
         }
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        VoiceRoutingPolicy " + (New-GUID).ToString() + "`r`n"
+        $content += "        TeamsVoiceRoutingPolicy " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
