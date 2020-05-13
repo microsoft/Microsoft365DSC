@@ -86,17 +86,21 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    $ExistingUsages = Get-CsOnlinePstnUsage | Select-Object -ExpandProperty Usage
-    $NotFoundUsageList = @()
-    foreach ($Usage in $ExistingUsages){
-        if (!($OnlinePstnUsages -match $Usage)){
-            $NotFoundUsageList += $Usage
+    # Validate that the selected PSTN usages exist in the environment
+    $existingUsages = Get-CsOnlinePstnUsage | Select-Object -ExpandProperty Usage
+    $notFoundUsageList = @()
+    foreach ($usage in $existingUsages)
+    {
+        if (!($OnlinePstnUsages -match $usage))
+        {
+            $notFoundUsageList += $usage
         }
     }
-
-    if ($NotFoundUsageList){
-        $NotFoundUsages = $NotFoundUsageList -join ","
-        Throw "Please create the PSTN Usage(s) ($NotFoundUsages) using `"TeamsPstnUsage`" and rerun this cmdlet."
+    
+    if ($notFoundUsageList)
+    {
+        $notFoundUsages = $notFoundUsageList -join ","
+        throw "Please create the PSTN Usage(s) ($notFoundUsages) using `"TeamsPstnUsage`" and rerun this cmdlet."
     }
 
     Write-Verbose -Message "Setting Voice Routing Policy"
@@ -124,8 +128,10 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
-        # If we get here, it's because the Test-TargetResource detected a drift, therefore we always call
-        # into the Set-CsOnlineVoiceRoutingPolicy cmdlet.
+        <#
+            If we get here, it's because the Test-TargetResource detected a drift, therefore we always call
+            into the Set-CsOnlineVoiceRoutingPolicy cmdlet.
+        #>
         Write-Verbose -Message "Updating settings for Voice Routing Policy {$Identity}"
         Set-CsOnlineVoiceRoutingPolicy @SetParameters
     }
