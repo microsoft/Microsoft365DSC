@@ -1,6 +1,11 @@
 # Change log for Microsoft365DSC
 
-## 1.0.5.127
+## UNRELEASED
+
+* Metadata
+  * Updated MSCloudLoginAssistant to 1.0.15;
+
+## 1.0.5.128
 
 * AADGroupsNamingPolicy
   * Added support for AzureAD Application Authentication;
