@@ -2,6 +2,10 @@
 
 ## UNRELEASED
 
+* Modules
+  * M365DSCUtil - Fixed an issue in Test-Microsoft365DSCParameterState where
+    the same array of object was always being compared;
+
 * Metadata
   * Updated MSCloudLoginAssistant to 1.0.15;
   * Updated SharePointPnPPowerShellOnline to 3.21.2005.1;
