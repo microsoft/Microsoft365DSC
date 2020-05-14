@@ -1,13 +1,3 @@
-function Close-SessionsAndReturnError
-{
-    [CmdletBinding()]
-    param (
-        [Parameter()]
-        [String]
-        $ExceptionMessage
-    )
-
-}
 function Get-AzureADDirectorySetting
 {
     [CmdletBinding()]

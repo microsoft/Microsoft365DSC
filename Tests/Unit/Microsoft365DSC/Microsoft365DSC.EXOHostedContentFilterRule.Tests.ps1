@@ -22,19 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Close-SessionsAndReturnError -MockWith {
-
-        }
-
         Mock -CommandName Test-MSCloudLogin -MockWith {
-
-        }
-
-        Mock -CommandName Get-PSSession -MockWith {
-
-        }
-
-        Mock -CommandName Remove-PSSession -MockWith {
 
         }
 
@@ -56,18 +44,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Mock -CommandName New-EXOHostedContentFilterRule -MockWith {
-            return @{
-
-            }
-        }
-
-        Mock -CommandName Set-EXOHostedContentFilterRule -MockWith {
-            return @{
-
-            }
-        }
-
         # Test contexts
         Context -Name "HostedContentFilterRule creation." -Fixture {
             $testParams = @{
@@ -80,6 +56,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-HostedContentFilterRule -MockWith {
                 return @{
                     Identity = 'SomeOtherPolicy'
+                }
+            }
+
+            Mock -CommandName Get-HostedContentFilterPolicy -MockWith {
+                return @{
+                    Identity = 'TestPolicy'
                 }
             }
 
@@ -124,6 +106,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Get-HostedContentFilterPolicy -MockWith {
+                return @{
+                    Identity = 'TestPolicy'
+                }
+            }
+
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should Be $true
             }
@@ -162,6 +150,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Get-HostedContentFilterPolicy -MockWith {
+                return @{
+                    Identity = 'TestPolicy'
+                }
+            }
+
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should Be $false
             }
@@ -182,6 +176,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-HostedContentFilterRule -MockWith {
                 return @{
                     Identity = 'TestRule'
+                }
+            }
+
+            Mock -CommandName Get-HostedContentFilterPolicy -MockWith {
+                return @{
+                    Identity = 'TestPolicy'
                 }
             }
 
@@ -206,6 +206,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-HostedContentFilterRule -MockWith {
                 return @{
                     Identity = 'TestRule'
+                }
+            }
+
+            Mock -CommandName Get-HostedContentFilterPolicy -MockWith {
+                return @{
+                    Identity = 'TestPolicy'
                 }
             }
         }

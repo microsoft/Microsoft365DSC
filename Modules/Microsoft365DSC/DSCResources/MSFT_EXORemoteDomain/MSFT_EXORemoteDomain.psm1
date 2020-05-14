@@ -84,7 +84,7 @@ function Get-TargetResource
         $RequiredCharsetCoverage,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $TargetDeliveryDomain,
 
         [Parameter()]
@@ -269,7 +269,7 @@ function Set-TargetResource
         $RequiredCharsetCoverage,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $TargetDeliveryDomain,
 
         [Parameter()]
@@ -435,7 +435,7 @@ function Test-TargetResource
         $RequiredCharsetCoverage,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $TargetDeliveryDomain,
 
         [Parameter()]

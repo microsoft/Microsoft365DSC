@@ -50,7 +50,7 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting configuration of Sensitiivity Label for $Name"
+    Write-Verbose -Message "Getting configuration of Sensitivity Label for $Name"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -73,7 +73,7 @@ function Get-TargetResource
 
     if ($null -eq $label)
     {
-        Write-Verbose -Message "Sensitiivity label $($Name) does not exist."
+        Write-Verbose -Message "Sensitivity label $($Name) does not exist."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
         return $result
@@ -94,7 +94,7 @@ function Get-TargetResource
         {
             $advancedSettingsValue = Convert-StringToAdvancedSettings -AdvancedSettings $label.Settings
         }
-        Write-Verbose "Found existing Sensitiivity Label $($Name)"
+        Write-Verbose "Found existing Sensitivity Label $($Name)"
         $result = @{
             Name               = $label.Name
             Comment            = $label.Comment
@@ -165,7 +165,7 @@ function Set-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Setting configuration of Sensitiivity label for $Name"
+    Write-Verbose -Message "Setting configuration of Sensitivity label for $Name"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -213,7 +213,7 @@ function Set-TargetResource
         $CreationParams.Remove("Priority")
         $CreationParams.Remove("Disabled")
 
-        Write-Verbose "Creating new Sensitiivity label $Name calling the New-Label cmdlet."
+        Write-Verbose "Creating new Sensitivity label $Name calling the New-Label cmdlet."
 
         try
         {
@@ -257,7 +257,7 @@ function Set-TargetResource
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $label.Ensure))
     {
         # If the label exists and it shouldn't, simply remove it;Need to force deletoion
-        Write-Verbose -message "Deleting Sensitiivity label $Name."
+        Write-Verbose -message "Deleting Sensitivity label $Name."
 
         try
         {
@@ -322,7 +322,7 @@ function Test-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of Sensitiivity label for $Name"
+    Write-Verbose -Message "Testing configuration of Sensitivity label for $Name"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"

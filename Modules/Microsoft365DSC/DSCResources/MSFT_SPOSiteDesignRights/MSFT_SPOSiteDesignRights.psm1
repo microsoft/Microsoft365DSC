@@ -247,13 +247,19 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PnP
 
-    $siteDesigns = Get-PnPSiteDesign
+    $organization = ""
+    if ($GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+    }
+
+    [array]$siteDesigns = Get-PnPSiteDesign
 
     $content = ""
     $i = 1
     foreach ($siteDesign in $siteDesigns)
     {
-        Write-Information "    [$i/$($siteDesigns.Length)] $($siteDesign.Title)"
+        Write-Information "    [$i/$($siteDesigns.Count)] $($siteDesign.Title)"
         $params = @{
             SiteDesignTitle    = $siteDesign.Title
             Rights             = "View"
@@ -267,7 +273,12 @@ function Export-TargetResource
             $content += "        SPOSiteDesignRights " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+            }
+            $content += $partialContent
             $content += "        }`r`n"
         }
 

@@ -198,34 +198,55 @@ function Set-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-    $AntiPhishRules = Get-AntiPhishRule
-
-    $AntiPhishRule = $AntiPhishRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
-
-    if (('Present' -eq $Ensure) -and (-not $AntiPhishRule))
+    # Make sure that the associated Policy exists;
+    $AssociatedPolicy = Get-AntiPhishPolicy -Identity $AntiPhishPolicy -ErrorAction 'SilentlyContinue'
+    if ($null -eq $AssociatedPolicy)
     {
-        New-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
+        throw "Error attempting to create EXOAntiPhishRule {$Identity}. The specified AntiPhishPolicy {$AntiPhishPolicy} " + `
+            "doesn't exist. Make sure you either create it first or specify a valid policy."
     }
 
-    if (('Present' -eq $Ensure) -and ($AntiPhishRule))
-    {
-        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $AntiPhishRule.State))
-        {
-            # New-AntiPhishRule has the Enabled parameter, Set-AntiPhishRule does not.
-            # There doesn't appear to be any way to change the Enabled state of a rule once created.
-            Write-Verbose -Message "Removing AntiPhishRule $($Identity) in order to change Enabled state."
-            Remove-AntiPhishRule -Identity $Identity -Confirm:$false
-            New-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
-        }
-        else
-        {
-            Set-EXOAntiPhishRule -AntiPhishRuleParams $PSBoundParameters
-        }
-    }
+    $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    if (('Absent' -eq $Ensure) -and ($AntiPhishRule))
+    if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Removing AntiPhishRule $($Identity) "
+        $CreationParams = $PSBoundParameters
+        $CreationParams.Remove("Ensure") | Out-Null
+        $CreationParams.Remove("GlobalAdminAccount") | Out-Null
+
+        # New-AntiPhishRule has the Enabled parameter, Set-AntiPhishRule does not.
+        # There doesn't appear to be any way to change the Enabled state of a rule once created.
+        if ($CurrentValues.State -eq 'Disabled')
+        {
+            Write-Verbose -Message "AntiPhishRule {$Identity} already exists but is disabled, we need to delete it first. Deleting Rule"
+            Remove-AntiphishRule -Identity $Identity -Confirm:$false
+        }
+
+        Write-Verbose -Message "Creating AntiPhishRule {$Identity}"
+        New-AntiPhishRule @CreationParams
+    }
+    elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
+    {
+        $UpdateParams = $PSBoundParameters
+        $UpdateParams.Remove("Ensure") | Out-Null
+        $UpdateParams.Remove("GlobalAdminAccount") | Out-Null
+        $UpdateParams.Remove("Enabled") | Out-Null
+
+        # Check to see if the specified policy already has the rule assigned;
+        $existingRule = Get-AntiPhishRule | Where-Object -FilterScript {$_.AntiPhishPolicy -eq $AntiPhishPolicy}
+
+        if ($null -ne $existingRule)
+        {
+            # The rule is already assigned to the policy, do try to update the AntiPhishPolicy parameter;
+            $UpdateParams.Remove("AntiPhishPolicy") | Out-Null
+        }
+
+        Write-Verbose -Message "Updating AntiPhishRule {$Identity}."
+        Set-AntiPhishRule @UpdateParams
+    }
+    if ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing AntiPhishRule [$Identity]"
         Remove-AntiPhishRule -Identity $Identity -Confirm:$false
     }
 }

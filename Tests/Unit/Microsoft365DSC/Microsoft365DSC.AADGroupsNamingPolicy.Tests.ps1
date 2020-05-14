@@ -22,9 +22,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Close-SessionsAndReturnError -MockWith {
-
-        }
 
         Mock -CommandName Test-MSCloudLogin -MockWith {
 
