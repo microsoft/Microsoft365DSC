@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+## UNRELEASED
+
+* Modules
+  * M365DSCUtil - Fixed an issue in Test-Microsoft365DSCParameterState where
+    the same array of object was always being compared;
+
 ## 1.0.5.127
 
 * AADGroupsNamingPolicy

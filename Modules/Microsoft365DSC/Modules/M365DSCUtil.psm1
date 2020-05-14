@@ -789,7 +789,7 @@ function Test-Microsoft365DSCParameterState
                                         $AllCurrentValuesAsArray += [PSCustomObject]$currentEntry
                                     }
                                     $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $AllCurrentValuesAsArray `
-                                    -DesiredValues $AllCurrentValuesAsArray
+                                    -DesiredValues $AllDesiredValuesAsArray
                                     if ($null -ne $arrayCompare)
                                     {
                                         foreach ($item in $arrayCompare)
