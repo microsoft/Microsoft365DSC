@@ -69,19 +69,16 @@ function Get-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-    Write-Verbose -Message "Global ExchangeOnlineSession status:"
-    Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
-
     try
     {
         $HostedContentFilterRules = Get-HostedContentFilterRule
     }
     catch
     {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         $Message = "Error calling {Get-HostedContentFilterRule}"
         New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
     }
+
     $HostedContentFilterRule = $HostedContentFilterRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
     if (-not $HostedContentFilterRule)
     {
@@ -194,36 +191,42 @@ function Set-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-    Write-Verbose -Message "Global ExchangeOnlineSession status:"
-    Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
-
-    $HostedContentFilterRules = Get-HostedContentFilterRule
-    $HostedContentFilterRule = $HostedContentFilterRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
-
-    if (('Present' -eq $Ensure ) -and (-not $HostedContentFilterRule))
+    # Make sure that the associated Policy exists;
+    $AssociatedPolicy = Get-HostedContentFilterPolicy -Identity $HostedContentFilterPolicy -ErrorAction 'SilentlyContinue'
+    if ($null -eq $AssociatedPolicy)
     {
-        New-EXOHostedContentFilterRule -HostedContentFilterRuleParams $PSBoundParameters
+        throw "Error attempting to create EXOHostedContentFilterRule {$Identity}. The specified HostedContentFilterPolicy " + `
+            "{$HostedContentFilterPolicy} doesn't exist. Make sure you either create it first or specify a valid policy."
     }
 
-    if (('Present' -eq $Ensure ) -and ($HostedContentFilterRule))
+    $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
-        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $HostedContentFilterRule.State))
+        $CreationParams = $PSBoundParameters
+        $CreationParams.Remove("Ensure") | Out-Null
+        $CreationParams.Remove("GlobalAdminAccount") | Out-Null
+        if ($Enabled -and ('Disabled' -eq $CurrentValues.State))
         {
             # New-HostedContentFilterRule has the Enabled parameter, Set-HostedContentFilterRule does not.
             # There doesn't appear to be any way to change the Enabled state of a rule once created.
-            Write-Verbose -Message "Removing HostedContentFilterRule $($Identity) in order to change Enabled state."
+            Write-Verbose -Message "Removing HostedContentFilterRule {$Identity} in order to change Enabled state."
             Remove-HostedContentFilterRule -Identity $Identity -Confirm:$false
-            New-EXOHostedContentFilterRule -HostedContentFilterRuleParams $PSBoundParameters
         }
-        else
-        {
-            Set-EXOHostedContentFilterRule -HostedContentFilterRuleParams $PSBoundParameters
-        }
+        Write-Verbose -Message "Creating new HostedContentFilterRule {$Identity}"
+        New-HostedContentFilterRule @CreationParams
     }
-
-    if (('Absent' -eq $Ensure ) -and ($HostedContentFilterRule))
+    elseif ($Ensure -eq 'Present' -and $CurrentValues -eq 'Present')
     {
-        Write-Verbose -Message "Removing HostedContentFilterRule $($Identity) "
+        $UpdateParams = $PSBoundParameters
+        $UpdateParams.Remove("Ensure") | Out-Null
+        $UpdateParams.Remove("GlobalAdminAccount") | Out-Null
+        Write-Verbose -Message "Updating HostedContentFilterRule {$Identity}"
+        Set-HostedContentFilterRule @UpdateParams
+    }
+    elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing existing HostedContentFilterRule {$Identity}."
         Remove-HostedContentFilterRule -Identity $Identity -Confirm:$false
     }
 }
@@ -329,11 +332,13 @@ function Export-TargetResource
         -Platform ExchangeOnline `
         -ErrorAction SilentlyContinue
 
-    $HostedContentFilterRules = Get-HostedContentFilterRule
+    [array] $HostedContentFilterRules = Get-HostedContentFilterRule
     $content = ''
 
+    $i = 1
     foreach ($HostedContentFilterRule in $HostedContentFilterRules)
     {
+        Write-Information -MessageData "    [$i/$($HostedContentFilterRules.Count)] $($HostedContentFilterRule.Identity)"
         $params = @{
             GlobalAdminAccount        = $GlobalAdminAccount
             Identity                  = $HostedContentFilterRule.Identity
@@ -346,6 +351,7 @@ function Export-TargetResource
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
+        $i++
     }
     return $content
 }

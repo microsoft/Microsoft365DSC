@@ -492,18 +492,25 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter `
         -ErrorAction SilentlyContinue
-    $policies = Get-DLPCompliancePolicy | Where-Object -FilterScript { $_.Mode -ne 'PendingDeletion' }
+    [array] $policies = Get-DLPCompliancePolicy | Where-Object -FilterScript { $_.Mode -ne 'PendingDeletion' }
 
-    $totalPolicies = $policies.Length
-    if ($null -eq $totalPolicies)
+    $organization = ""
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
+    if ($GlobalAdminAccount.UserName.Contains("@"))
     {
-        $totalPolicies = 1
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+
+        if ($organization.IndexOf(".") -gt 0)
+        {
+            $principal = $organization.Split(".")[0]
+        }
     }
+
     $i = 1
     $content = ''
     foreach ($policy in $policies)
     {
-        Write-Information "    [$i/$($totalPolicies)] $($policy.Name)"
+        Write-Information "    [$i/$($policies.Count)] $($policy.Name)"
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             Name               = $policy.Name
@@ -513,7 +520,12 @@ function Export-TargetResource
         $content += "        SCDLPCompliancePolicy " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        if ($partialContent.ToLower().IndexOf($principal.ToLower()) -gt 0)
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape($principal.ToLower() + '.sharepoint.'), "`$(`$OrganizationName.Split('.')[0] + '.sharepoint.')"
+        }
+        $content += $partialContent
         $content += "        }`r`n"
         $i++
     }

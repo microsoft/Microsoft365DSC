@@ -311,9 +311,14 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
+
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
-
+    $organization = ""
+    if ($GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+    }
     [array]$cases = Get-ComplianceCase
 
     $dscContent = ""
@@ -338,6 +343,10 @@ function Export-TargetResource
             $dscContent += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+            }
             $partialContent += "        }`r`n"
             $dscContent += $partialContent
             $j++

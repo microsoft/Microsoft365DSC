@@ -243,6 +243,12 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
+    $organization = ""
+    if ($GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+    }
+
     [array]$AllAcceptedDomains = Get-AcceptedDomain
 
     $dscContent = ""
@@ -257,10 +263,17 @@ function Export-TargetResource
         }
         $result = Get-TargetResource @Params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+
         $content = "        EXOAcceptedDomain " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+        {
+            $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
+            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+        }
+        $content += $partialContent
         $content += "        }`r`n"
         $dscContent += $content
         $i++

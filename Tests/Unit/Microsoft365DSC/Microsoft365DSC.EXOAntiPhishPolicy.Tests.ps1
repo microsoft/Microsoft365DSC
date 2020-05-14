@@ -22,10 +22,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Close-SessionsAndReturnError -MockWith {
-
-        }
-
         Mock -CommandName Test-MSCloudLogin -MockWith {
 
         }
@@ -99,8 +95,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 AdminDisplayName                      = 'DSC Test Policy'
                 Enabled                               = $true
                 EnableAntispoofEnforcement            = $true
-                EnableAuthenticationSafetyTip         = $true
-                EnableAuthenticationSoftPassSafetyTip = $false
                 EnableMailboxIntelligence             = $true
                 EnableOrganizationDomainsProtection   = $false
                 EnableSimilarDomainsSafetyTips        = $false
@@ -109,7 +103,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 EnableTargetedUserProtection          = $false
                 EnableUnusualCharactersSafetyTips     = $false
                 MakeDefault                           = $false
-                TreatSoftPassAsAuthenticated          = $true
                 AuthenticationFailAction              = 'Quarantine'
                 TargetedDomainProtectionAction        = 'BccMessage'
                 TargetedDomainActionRecipients        = @('test@contoso.com', 'test@fabrikam.com')
@@ -162,8 +155,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 AdminDisplayName                      = 'DSC Test Policy'
                 Enabled                               = $true
                 EnableAntispoofEnforcement            = $true
-                EnableAuthenticationSafetyTip         = $true
-                EnableAuthenticationSoftPassSafetyTip = $false
                 EnableMailboxIntelligence             = $true
                 EnableOrganizationDomainsProtection   = $false
                 EnableSimilarDomainsSafetyTips        = $false
@@ -172,7 +163,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 EnableTargetedUserProtection          = $false
                 EnableUnusualCharactersSafetyTips     = $false
                 MakeDefault                           = $false
-                TreatSoftPassAsAuthenticated          = $true
                 AuthenticationFailAction              = 'Quarantine'
                 TargetedDomainProtectionAction        = 'BccMessage'
                 TargetedDomainActionRecipients        = @('test@contoso.com', 'test@fabrikam.com')
@@ -189,8 +179,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AdminDisplayName                      = 'DSC Test Policy'
                     Enabled                               = $false
                     EnableAntispoofEnforcement            = $false
-                    EnableAuthenticationSafetyTip         = $false
-                    EnableAuthenticationSoftPassSafetyTip = $false
                     EnableMailboxIntelligence             = $false
                     EnableOrganizationDomainsProtection   = $true
                     EnableSimilarDomainsSafetyTips        = $true
@@ -199,7 +187,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     EnableTargetedUserProtection          = $true
                     EnableUnusualCharactersSafetyTips     = $true
                     MakeDefault                           = $true
-                    TreatSoftPassAsAuthenticated          = $false
                     AuthenticationFailAction              = 'MoveToJmf'
                     TargetedDomainProtectionAction        = 'NoAction'
                     TargetedDomainActionRecipients        = @()

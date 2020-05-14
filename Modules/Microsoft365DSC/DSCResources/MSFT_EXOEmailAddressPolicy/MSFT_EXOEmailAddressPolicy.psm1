@@ -148,7 +148,6 @@ function Set-TargetResource
         Priority                          = $Priority
         EnabledEmailAddressTemplates      = $EnabledEmailAddressTemplates
         EnabledPrimarySMTPAddressTemplate = $EnabledPrimarySMTPAddressTemplate
-        ManagedByFilter                   = $ManagedByFilter
         Confirm                           = $false
     }
 
@@ -178,9 +177,16 @@ function Set-TargetResource
     # CASE: Email Address Policy exists and it should, but has different values than the desired ones
     elseif ($Ensure -eq "Present" -and $currentEmailAddressPolicyConfig.Ensure -eq "Present")
     {
-        Write-Verbose -Message "Email Address Policy '$($Name)' already exists, but needs updating."
-        Write-Verbose -Message "Setting Email Address Policy $($Name) with values: $(Convert-M365DscHashtableToString -Hashtable $SetEmailAddressPolicyParams)"
-        Set-EmailAddressPolicy @SetEmailAddressPolicyParams
+        if ($Identity -ne 'Default Policy')
+        {
+            Write-Verbose -Message "Email Address Policy '$($Name)' already exists, but needs updating."
+            Write-Verbose -Message "Setting Email Address Policy $($Name) with values: $(Convert-M365DscHashtableToString -Hashtable $SetEmailAddressPolicyParams)"
+            Set-EmailAddressPolicy @SetEmailAddressPolicyParams
+        }
+        else
+        {
+            Write-Verbose -Message "Cannot update the Default Email Address Policy."
+        }
     }
 }
 
