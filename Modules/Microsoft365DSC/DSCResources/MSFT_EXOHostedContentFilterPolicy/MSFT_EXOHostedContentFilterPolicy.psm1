@@ -188,7 +188,7 @@ function Get-TargetResource
         $PhishSpamAction = 'MoveToJmf',
 
         [Parameter()]
-        [ValidateRange(1, 15)]
+        [ValidateRange(1, 30)]
         [uint32]
         $QuarantineRetentionPeriod = 15,
 
@@ -503,7 +503,7 @@ function Set-TargetResource
         $PhishSpamAction = 'MoveToJmf',
 
         [Parameter()]
-        [ValidateRange(1, 15)]
+        [ValidateRange(1, 30)]
         [uint32]
         $QuarantineRetentionPeriod = 15,
 
@@ -780,7 +780,7 @@ function Test-TargetResource
         $PhishSpamAction = 'MoveToJmf',
 
         [Parameter()]
-        [ValidateRange(1, 15)]
+        [ValidateRange(1, 30)]
         [uint32]
         $QuarantineRetentionPeriod = 15,
 
@@ -878,6 +878,12 @@ function Export-TargetResource
         }
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+
+        if ([System.String]::IsNullOrEmpty($result.EndUserSpamNotificationCustomFromAddress))
+        {
+            $result.Remove("EndUserSpamNotificationCustomFromAddress") | Out-Null
+        }
+
         $content += "        EXOHostedContentFilterPolicy " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

@@ -47,7 +47,15 @@ function Get-TargetResource
 
     $CASMailboxPlans = Get-CASMailboxPlan
 
-    $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    if ($Identity.Contains('-'))
+    {
+        $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    }
+    else
+    {
+        $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -like ($Identity + '-*') }
+    }
+
     if ($null -eq $CASMailboxPlan)
     {
         Write-Verbose -Message "CASMailboxPlan $($Identity) does not exist."
@@ -209,25 +217,29 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
+    $InformationPreference = 'Continue'
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
-    $CASMailboxPlans = Get-CASMailboxPlan
+    [array]$CASMailboxPlans = Get-CASMailboxPlan
 
     $content = ""
+    $i = 1
     foreach ($CASMailboxPlan in $CASMailboxPlans)
     {
+        Write-Information -MessageData "    [$i/$($CASMailboxPlans.Count)] $($CASMailboxPlan.Identity.Split('-')[0])"
         $params = @{
             Identity           = $CASMailboxPlan.Identity
             GlobalAdminAccount = $GlobalAdminAccount
         }
         $result = Get-TargetResource @params
+        $result.Identity = $result.Identity.Split('-')[0]
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $content += "        EXOCASMailboxPlan " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
         $content += "        }`r`n"
+        $i++
     }
     return $content
 }

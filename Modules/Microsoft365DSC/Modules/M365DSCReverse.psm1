@@ -233,8 +233,9 @@ function Start-M365DSCConfigurationExtract
                 }
             }
             if (($null -ne $ComponentsToExtract -and
-                    ($ComponentsToExtract -contains $resourceName -or $ComponentsToExtract -contains ("chck" + $resourceName))) -or
-                $AllComponents -or ($null -ne $Workloads -and $Workloads -contains $currentWorkload) -or ![System.String]::IsNullOrEmpty($Mode))
+                ($ComponentsToExtract -contains $resourceName -or $ComponentsToExtract -contains ("chck" + $resourceName))) -or
+                $AllComponents -or ($null -ne $Workloads -and $Workloads -contains $currentWorkload) -or `
+                ($null -eq $ComponentsToExtract -and $null -eq $Workloads))
             {
                 Import-Module $ResourceModule.FullName | Out-Null
 
