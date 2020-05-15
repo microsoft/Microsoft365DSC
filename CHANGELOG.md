@@ -2,12 +2,17 @@
 
 ## UNRELEASED
 
+* EXOEmailAddressPolicy
+  * Converted hardcoded tenant name into variables;
+* TeamsTenantDialPlan
+  * Fixed an issue extraction plans without any normalization rules;
 * Modules
   * M365DSCUtil - Fixed an issue in Test-Microsoft365DSCParameterState where
     the same array of object was always being compared;
 
 * Metadata
-  * Updated MSCloudLoginAssistant to 1.0.15;
+  * Updated MSCloudLoginAssistant to 1.0.16;
+  * Updated ReverseDSC to 2.0.0.3;
   * Updated SharePointPnPPowerShellOnline to 3.21.2005.1;
 
 ## 1.0.5.128

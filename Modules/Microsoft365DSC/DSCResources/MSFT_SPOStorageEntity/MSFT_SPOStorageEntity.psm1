@@ -290,7 +290,7 @@ function Export-TargetResource
             SiteUrl            = $centralAdminUrl
         }
 
-        Write-Information "    [$i/$($storageEntities.Length)] {$($storageEntity.Key)}"
+        Write-Information "    [$i/$($storageEntities.Length)] $($storageEntity.Key)"
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $content += "        SPOStorageEntity " + (New-Guid).ToString() + "`r`n"
