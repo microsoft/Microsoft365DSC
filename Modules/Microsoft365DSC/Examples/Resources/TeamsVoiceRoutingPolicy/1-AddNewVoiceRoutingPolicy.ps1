@@ -16,7 +16,7 @@ Configuration Example
         TeamsVoiceRoutingPolicy VoiceRoutingPolicy
         {
             Identity           = 'NewVoiceRoutingPolicy'
-            OnlinePstnUsages   = 'Long Distance','Local','Internal'
+            OnlinePstnUsages   = @('Long Distance','Local','Internal')
             Description        = 'This is a sample Voice Routing Policy'
             Ensure             = 'Present'
             GlobalAdminAccount = $credsGlobalAdmin

@@ -26,7 +26,7 @@ function Get-TargetResource
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting the Voice Routing Policy $($Identity)"
+    Write-Verbose -Message "Getting the Voice Routing Policy {$Identity}"
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -89,21 +89,21 @@ function Set-TargetResource
     # Validate that the selected PSTN usages exist in the environment
     $existingUsages = Get-CsOnlinePstnUsage | Select-Object -ExpandProperty Usage
     $notFoundUsageList = @()
-    foreach ($usage in $existingUsages)
+    foreach ($usage in $OnlinePstnUsages)
     {
-        if (!($OnlinePstnUsages -match $usage))
+        if ( -not ($existingUsages -match $usage))
         {
             $notFoundUsageList += $usage
         }
     }
-    
+
     if ($notFoundUsageList)
     {
         $notFoundUsages = $notFoundUsageList -join ","
-        throw "Please create the PSTN Usage(s) ($notFoundUsages) using `"TeamsPstnUsage`" and rerun this cmdlet."
+        throw "Please create the PSTN Usage(s) ($notFoundUsages) using `"TeamsPstnUsage`""
     }
 
-    Write-Verbose -Message "Setting Voice Routing Policy"
+    Write-Verbose -Message "Setting Voice Routing Policy {$Identity}"
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
