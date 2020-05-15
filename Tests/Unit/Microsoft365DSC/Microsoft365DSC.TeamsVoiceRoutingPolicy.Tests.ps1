@@ -36,11 +36,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Remove-CsOnlineVoiceRoutingPolicy -MockWith {
         }
 
+        Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
+            return New-Object PSObject -Property @{
+                Identity               = 'Global'
+                Usage                  = @('Local', 'Long Distance')
+            }
+        }
+
         # Test contexts
         Context -Name "When the policy doesn't already exist" -Fixture {
             $testParams = @{
                 Identity               = 'Test Policy'
-                OnlinePstnUsages       = @("Local", "Long Distance")
+                OnlinePstnUsages       = @('Local', 'Long Distance')
                 Description            = 'My Test Policy'
                 Ensure                 = 'Present'
                 GlobalAdminAccount     = $GlobalAdminAccount;
@@ -60,14 +67,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should create the policy from the Set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName 'New-CsOnlineVoiceRoutingPolicy' -Exactly 1
+                Assert-MockCalled -CommandName "New-CsOnlineVoiceRoutingPolicy" -Exactly 1
             }
         }
 
         Context -Name "When the policy already exists and is NOT in the Desired State" -Fixture {
             $testParams = @{
                 Identity               = 'Test Policy'
-                OnlinePstnUsages       = @("Local", "Long Distance")
+                OnlinePstnUsages       = @('Local', 'Long Distance')
                 Description            = 'My Test Policy'
                 Ensure                 = 'Present'
                 GlobalAdminAccount     = $GlobalAdminAccount;
@@ -76,7 +83,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-CsOnlineVoiceRoutingPolicy -MockWith {
                 return @{
                     Identity               = 'Test Policy'
-                    OnlinePstnUsages       = @("Local") #Drift
+                    OnlinePstnUsages       = @('Local') #Drift
                     Description            = 'My Test Policy'
                 }
             }
@@ -94,7 +101,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the policy already exists and IS in the Desired State" -Fixture {
             $testParams = @{
                 Identity               = 'Test Policy'
-                OnlinePstnUsages       = @("Local", "Long Distance")
+                OnlinePstnUsages       = @('Local', 'Long Distance')
                 Description            = 'My Test Policy'
                 Ensure                 = 'Present'
                 GlobalAdminAccount     = $GlobalAdminAccount;
@@ -103,7 +110,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-CsOnlineVoiceRoutingPolicy -MockWith {
                 return @{
                     Identity               = 'Test Policy'
-                    OnlinePstnUsages       = @("Local", "Long Distance")
+                    OnlinePstnUsages       = @('Local', 'Long Distance')
                     Description            = 'My Test Policy'
                 }
             }
@@ -123,7 +130,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-CsOnlineVoiceRoutingPolicy -MockWith {
                 return @{
                     Identity               = 'Test Policy'
-                    OnlinePstnUsages       = @("Local")
+                    OnlinePstnUsages       = @('Local')
                     Description            = 'My Test Policy'
                 }
             }
@@ -150,7 +157,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-CsOnlineVoiceRoutingPolicy -MockWith {
                 return @{
                     Identity               = 'Test Policy'
-                    OnlinePstnUsages       = @("Local")
+                    OnlinePstnUsages       = @('Local')
                     Description            = 'My Test Policy'
                 }
             }
