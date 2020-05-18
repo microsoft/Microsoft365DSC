@@ -1,0 +1,10 @@
+[ClassVersion("1.0.0.0"), FriendlyName("SPOOrgAssetsLibrary")]
+class MSFT_SPOOrgAssetsLibrary : OMI_BaseResource
+{
+    [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'"), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
+    [Write, Description("Indicates the absolute URL of the library to be designated as a central location for organization assets.")] String LibraryUrl;
+    [Write, Description("Specifies the CDN type. The valid values are public or private."), ValueMap{"Public","Private"}, Values{"Public","Private"}] String CdnType;
+    [Write, Description("Indicates the absolute URL of the library to be designated as a central location for organization Indicates the URL of the background image used when the library is publicly displayed. If no thumbnail URL is indicated, the card will have a gray background.")] String ThumbnailUrl;
+    [Write, Description("Specify if the SPO Org Assets library should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the Azure Active Directory Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};
