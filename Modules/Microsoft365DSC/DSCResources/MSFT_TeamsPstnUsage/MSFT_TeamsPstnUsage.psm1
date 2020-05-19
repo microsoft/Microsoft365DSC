@@ -10,46 +10,54 @@ function Get-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $Usage,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Getting Global PSTN Usages"
+    Write-Verbose -Message 'Getting Global PSTN Usage(s)'
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
-    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add('Resource', $MyInvocation.MyCommand.ModuleName)
+    $data.Add('Method', $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent  -Data $data
     #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform SkypeForBusiness
 
-    $usages = (Get-CsOnlinePstnUsage).Usage
+    $deployedUsages = Get-CsOnlinePstnUsage | Select-Object -ExpandProperty Usage
+
+    if ($deployedUsages -match $Usage)
+    {
+        $foundUsage = $Usage
+    }
+    else
+    {
+        $foundUsage = $null
+    }
 
     if ($null -eq $usages)
     {
-        Write-Verbose -Message "Could not find any PSTN usages"
+        Write-Verbose -Message "Could not find PSTN usage {$Usage}"
         return @{
-            Identity           = $Identity
+            Usage              = $Usage
             Ensure             = 'Absent'
             GlobalAdminAccount = $GlobalAdminAccount
         }
     }
-    Write-Verbose -Message "Found PSTN usages"
+    Write-Verbose -Message "Found PSTN usage {$Usage}"
     return @{
-        Identity           = $Identity
-        Usages             = $usages
+        Usage              = $Usage
         Ensure             = 'Present'
         GlobalAdminAccount = $GlobalAdminAccount
     }
@@ -66,42 +74,25 @@ function Set-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $Usage,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    # Validate that the selected PSTN usages exist in the environment
-    $existingUsages = Get-CsOnlinePstnUsage | Select-Object -ExpandProperty Usage
-    $notFoundUsageList = @()
-    foreach ($usage in $existingUsages)
-    {
-        if (!($OnlinePstnUsages -match $usage))
-        {
-            $notFoundUsageList += $usage
-        }
-    }
-    
-    if ($notFoundUsageList)
-    {
-        $notFoundUsages = $notFoundUsageList -join ","
-        throw "Please create the PSTN Usage(s) ($notFoundUsages) using `"TeamsPstnUsage`" and rerun this cmdlet."
-    }
-
-    Write-Verbose -Message "Setting Voice Routing Policy"
+    Write-Verbose -Message 'Setting PSTN Usage'
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
-    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add('Resource', $MyInvocation.MyCommand.ModuleName)
+    $data.Add('Method', $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -111,27 +102,18 @@ function Set-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     $SetParameters = $PSBoundParameters
-    $SetParameters.Remove("Ensure") | Out-Null
-    $SetParameters.Remove("GlobalAdminAccount") | Out-Null
+    $SetParameters.Remove('Ensure') | Out-Null
+    $SetParameters.Remove('GlobalAdminAccount') | Out-Null
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating a new Voice Routing Policy {$Identity}"
-        New-CsOnlineVoiceRoutingPolicy @SetParameters
-    }
-    elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
-    {
-        <#
-            If we get here, it's because the Test-TargetResource detected a drift, therefore we always call
-            into the Set-CsOnlineVoiceRoutingPolicy cmdlet.
-        #>
-        Write-Verbose -Message "Updating settings for Voice Routing Policy {$Identity}"
-        Set-CsOnlineVoiceRoutingPolicy @SetParameters
+        Write-Verbose -Message "Creating a new PSTN usage {$Usage}"
+        Set-CsOnlinePstnUsage -Usage @{ add = $Usage }
     }
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing existing Voice Routing Policy {$Identity}"
-        Remove-CsOnlineVoiceRoutingPolicy -Identity $Identity -Confirm:$false
+        Write-Verbose -Message "Removing existing PSTN usage {$Usage}"
+        Set-CsOnlinePstnUsage -Usage @{ remove = $Usage }
     }
 }
 
@@ -147,20 +129,20 @@ function Test-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $Usage,
 
         [Parameter()]
-        [ValidateSet("Present", "Absent")]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = "Present",
+        $Ensure = 'Present',
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
 
-    Write-Verbose -Message "Testing configuration of Voice Routing Policy {$Identity}"
+    Write-Verbose -Message "Testing configuration of PSTN Usage {$Usage}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -194,8 +176,8 @@ function Export-TargetResource
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
-    $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add('Resource', $MyInvocation.MyCommand.ModuleName)
+    $data.Add('Method', $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -203,22 +185,22 @@ function Export-TargetResource
         -Platform SkypeForBusiness
 
     $i = 1
-    [array]$policies = Get-CsOnlineVoiceRoutingPolicy
+    [array]$usages = Get-CsOnlinePstnUsage | Select-Object -ExpandProperty Usage
     $content = ''
-    foreach ($policy in $policies)
+    foreach ($usage in $usages)
     {
-        Write-Information "    [$i/$($policies.Count)] $($policy.Identity)"
+        Write-Information "    [$i/$($usages.Count)] $($usage.Identity)"
         $params = @{
-            Identity           = $policy.Identity
+            Usage              = $usage
             Ensure             = 'Present'
             GlobalAdminAccount = $GlobalAdminAccount
         }
         $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        TeamsVoiceRoutingPolicy " + (New-GUID).ToString() + "`r`n"
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName 'globaladmin'
+        $content += "        TeamsPstnUsage " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
         $content += "        }`r`n"
         $i++
     }

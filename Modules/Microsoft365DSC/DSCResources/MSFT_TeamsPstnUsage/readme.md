@@ -1,4 +1,4 @@
 
-# TeamsVoiceRoutingPolicy
+# TeamsPstnUsage
 
-This resource configures a Teams Voice Routing Policy.
+This resource configures a Teams PSTN Usage.
