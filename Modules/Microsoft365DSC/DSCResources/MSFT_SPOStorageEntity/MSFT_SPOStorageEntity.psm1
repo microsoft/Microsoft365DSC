@@ -265,7 +265,7 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PnP
 
-    $storageEntities = Get-PnPStorageEntity
+    $storageEntities = Get-PnPStorageEntity -ErrorAction SilentlyContinue
 
     $i = 1
     $content = ''
