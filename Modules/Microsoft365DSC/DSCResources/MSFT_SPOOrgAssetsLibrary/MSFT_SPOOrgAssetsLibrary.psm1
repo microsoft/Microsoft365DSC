@@ -20,7 +20,7 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('Public', 'Private')]
         [System.String]
-        $CdnType,
+        $CdnType = 'Public',
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -73,12 +73,16 @@ function Get-TargetResource
     else
     {
         Write-Verbose -Message "Found existing SharePoint Org Site Assets"
-        Get-SPOAdministrationUrl -GlobalAdminAccount $GlobalAdminAccount | out-null
+        Get-SPOAdministrationUrl -GlobalAdminAccount $GlobalAdminAccount | Out-Null
+
+        if($null -ne $orgAssets.OrgAssetsLibraries.ThumbnailUrl.DecodedUrl){
+            $thumbnailUrl = "https://$global:tenantName.sharepoint.com/$($orgAssets.OrgAssetsLibraries.LibraryUrl.decodedurl.Substring(0,$orgAssets.OrgAssetsLibraries.LibraryUrl.decodedurl.LastIndexOf("/")))/$($orgAssets.OrgAssetsLibraries.ThumbnailUrl.decodedurl)"
+        }
 
         $result = @{
             IsSingleInstance   = $IsSingleInstance
             LibraryUrl         = "https://$global:tenantName.sharepoint.com/$($orgAssets.OrgAssetsLibraries.libraryurl.DecodedUrl)"
-            ThumbnailUrl       = "https://$global:tenantName.sharepoint.com/$($orgAssets.OrgAssetsLibraries.ThumbnailUrl.DecodedUrl)"
+            ThumbnailUrl       = $thumbnailUrl
             CdnType            = $cdn
             Ensure             = "Present"
             GlobalAdminAccount = $GlobalAdminAccount
@@ -109,7 +113,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('Public', 'Private')]
         [System.String]
-        $CdnType,
+        $CdnType = 'Public',
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -136,8 +140,15 @@ function Set-TargetResource
     $currentParameters.Remove("Ensure")
     $currentParameters.Remove("GlobalAdminAccount")
 
+    if ($null -eq $currentOrgSiteAsset.CdnType)
+    {
+        throw "Tenant CDN must be confirgured before setting Site Organization Library"
+    }
+
+
     if ($Ensure -eq 'Present' -and $currentOrgSiteAsset.Ensure -eq 'Present')
     {
+        ## No set so remove / add
         Remove-PNPOrgAssetsLibrary -libraryUrl $currentOrgSiteAsset.LibraryUrl
         Add-PnPOrgAssetsLibrary @currentParameters
     }
@@ -173,7 +184,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('Public', 'Private')]
         [System.String]
-        $CdnType,
+        $CdnType = 'Public',
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]

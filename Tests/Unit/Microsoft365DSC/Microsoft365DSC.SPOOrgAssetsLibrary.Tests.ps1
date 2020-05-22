@@ -7,8 +7,8 @@ param(
             -Resolve)
 )
 $GenericStubPath = (Join-Path -Path $PSScriptRoot `
-    -ChildPath "..\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "..\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $PSScriptRoot `
         -ChildPath "..\UnitTestHelper.psm1" `
         -Resolve)
@@ -29,12 +29,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Get-PSSession -MockWith {
 
         }
-
         Mock -CommandName Remove-PSSession -MockWith {
-
-        }
-
-        Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
 
         }
 
@@ -45,6 +40,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Mock -CommandName Add-PnPOrgAssetsLibrary -MockWith {
 
         }
+
+        Mock -CommandName Get-SPOAdministrationUrl -MockWith {
+            return 'https://contoso-admin.sharepoint.com'
+        }
+
         # Test contexts
         Context -Name "The site sssets srg library should exist but it DOES NOT" -Fixture {
             $testParams = @{
@@ -53,6 +53,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 CdnType            = "Public"
                 GlobalAdminAccount = $GlobalAdminAccount;
                 Ensure             = "Present"
+            }
+
+            Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
+                return { cdn = "Public" }
             }
 
             Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
@@ -80,8 +84,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Absent"
             }
 
+            Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
+                return { cdn = "Public" }
+            }
+
             Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
-                return @{LibraryUrl = "https://contoso.sharepoint.com/sites/GuestSharing/Branding"}
+                return @{LibraryUrl = "https://contoso.sharepoint.com/sites/GuestSharing/Branding" }
             }
 
             It "Should return Values from the Get method" {
@@ -89,7 +97,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Assert-MockCalled -CommandName "Get-PNPOrgAssetsLibrary" -Exactly 1
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should Be $false
             }
 
@@ -107,12 +115,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Present"
             }
 
+            Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
+                return { cdn = "Public" }
+            }
+
+
             Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
                 return @{
-                LibraryUrl         = "https://contoso.sharepoint.com/sites/GuestSharing/Branding"
-                CdnType            = "Public"
-                GlobalAdminAccount = $GlobalAdminAccount;
-                Ensure             = "Present"
+                    OrgAssetsLibraries = @{
+                        LibraryUrl = @{
+                            decodedurl = "sites/GuestSharing/Branding"
+                        }
+                    }
+                    CdnType            = "Public"
                 }
             }
 
@@ -145,6 +160,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
+                return { cdn = "Public" }
+            }
+
             It "Should return Values from the Get method" {
                 Get-TargetResource @testParams
                 Assert-MockCalled -CommandName "Get-PNPOrgAssetsLibrary" -Exactly 1
@@ -169,10 +188,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credential"
             }
 
+            Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
+                return { cdn = "Private" }
+            }
+
             Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
                 return @{
-                    LibraryUrl         = "https://contoso.sharepoint.com/sites/GuestSharing/Branding"
-                    CdnType            = "Private"
+                    LibraryUrl = "https://contoso.sharepoint.com/sites/GuestSharing/Branding"
+                    CdnType    = "Private"
                 }
             }
             It "Should Reverse Engineer resource from the Export method" {
