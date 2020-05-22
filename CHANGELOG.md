@@ -11,7 +11,9 @@
     the same array of object was always being compared;
 
 * Metadata
-  * Updated MSCloudLoginAssistant to 1.0.16;
+  * Updated MSCloudLoginAssistant to 1.0.17;
+  * Updated Microsoft.PowerApps.Administration.PowerShell
+    to 2.0.63;
   * Updated ReverseDSC to 2.0.0.3;
   * Updated SharePointPnPPowerShellOnline to 3.21.2005.1;
 
