@@ -49,7 +49,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The site sssets srg library should exist but it DOES NOT" -Fixture {
             $testParams = @{
                 IsSingleInstance   = "Yes"
-                LibraryUrl         = "https://contoso.sharepoint.com/sites/GuestSharing/Branding"
+                LibraryUrl         = "https://contoso.sharepoint.com/sites/m365dsc/Branding"
                 CdnType            = "Public"
                 GlobalAdminAccount = $GlobalAdminAccount;
                 Ensure             = "Present"
@@ -78,7 +78,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The site sssets srg library exists but it SHOULD NOT" -Fixture {
             $testParams = @{
                 IsSingleInstance   = "Yes"
-                LibraryUrl         = "https://contoso.sharepoint.com/sites/GuestSharing/Branding"
+                LibraryUrl         = "https://contoso.sharepoint.com/sites/m365dsc/Branding"
                 CdnType            = "Public"
                 GlobalAdminAccount = $GlobalAdminAccount;
                 Ensure             = "Absent"
@@ -89,7 +89,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
-                return @{LibraryUrl = "https://contoso.sharepoint.com/sites/GuestSharing/Branding" }
+                return @{LibraryUrl = "https://contoso.sharepoint.com/sites/m365dsc/Branding" }
             }
 
             It "Should return Values from the Get method" {
@@ -109,7 +109,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The site sssets org library Exists and Values are already in the desired state" -Fixture {
             $testParams = @{
                 IsSingleInstance   = "Yes"
-                LibraryUrl         = "https://contoso.sharepoint.com/sites/GuestSharing/Branding"
+                LibraryUrl         = "https://contoso.sharepoint.com/sites/m365dsc/Branding"
                 CdnType            = "Public"
                 GlobalAdminAccount = $GlobalAdminAccount;
                 Ensure             = "Present"
@@ -124,7 +124,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     OrgAssetsLibraries = @{
                         LibraryUrl = @{
-                            decodedurl = "sites/GuestSharing/Branding"
+                            decodedurl = "sites/m365dsc/Branding"
                         }
                     }
                     CdnType            = "Public"
@@ -144,7 +144,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The site sssets org library exists and values are NOT in the desired state" -Fixture {
             $testParams = @{
                 IsSingleInstance   = "Yes"
-                LibraryUrl         = "https://contoso.sharepoint.com/sites/GuestSharing/Branding"
+                LibraryUrl         = "https://contoso.sharepoint.com/sites/m365dsc/Branding"
                 CdnType            = "Public"
                 GlobalAdminAccount = $GlobalAdminAccount;
                 Ensure             = "Present"
@@ -153,7 +153,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
                 return @{
                     IsSingleInstance   = "Yes"
-                    LibraryUrl         = "https://contoso.sharepoint.com/sites/GuestSharing/Branding"
+                    OrgAssetsLibraries = @{
+                        LibraryUrl = @{
+                            decodedurl = "sites/m365dsc/Branding"
+                        }
+                    }
                     CdnType            = "Private"
                     GlobalAdminAccount = $GlobalAdminAccount;
                     Ensure             = "Present"
@@ -194,7 +198,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
                 return @{
-                    LibraryUrl = "https://contoso.sharepoint.com/sites/GuestSharing/Branding"
+                    LibraryUrl = "https://contoso.sharepoint.com/sites/m365dsc/Branding"
                     CdnType    = "Private"
                 }
             }
