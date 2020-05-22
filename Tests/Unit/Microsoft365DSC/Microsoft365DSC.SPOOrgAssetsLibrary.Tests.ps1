@@ -20,7 +20,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.com", $secpasswd)
+        $global:tenantName = $GlobalAdminAccount.UserName.Split('@')[1].Split('.')[0]
 
         Mock -CommandName Test-MSCloudLogin -MockWith {
 
@@ -56,7 +57,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
-                return { cdn = "Public" }
+                return @{ Value = "true" }
             }
 
             Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
@@ -85,7 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
-                return { cdn = "Public" }
+                return @{ Value = "true" }
             }
 
             Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
@@ -115,10 +116,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Ensure             = "Present"
             }
 
-            Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
-                return { cdn = "Public" }
-            }
 
+            Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
+                return @{ Value = "true" }
+            }
 
             Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
                 return @{
@@ -155,17 +156,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance   = "Yes"
                     OrgAssetsLibraries = @{
                         LibraryUrl = @{
-                            decodedurl = "sites/m365dsc/Branding"
+                            decodedurl = "sites/m365dsc/Missing"
                         }
                     }
-                    CdnType            = "Private"
+                    CdnType            = "Public"
                     GlobalAdminAccount = $GlobalAdminAccount;
                     Ensure             = "Present"
                 }
             }
 
             Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
-                return { cdn = "Public" }
+                return @{ Value = "True" }
             }
 
             It "Should return Values from the Get method" {
@@ -193,7 +194,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
-                return { cdn = "Private" }
+                return @{ Value = "true" }
             }
 
             Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {

@@ -54,14 +54,20 @@ function Get-TargetResource
     }
 
     $cdn = $null
-    if ((Get-PnPTenantCdnEnabled -cdnType $CdnType) -and $CdnType -eq 'Public')
+    if ($CdnType -eq 'Public')
     {
-        $cdn = "Public"
+        if (Get-PnPTenantCdnEnabled -cdnType $CdnType)
+        {
+            $cdn = "Public"
+        }
     }
 
-    if ((Get-PnPTenantCdnEnabled -cdnType $CdnType) -and $CdnType -eq 'Private')
+    if ($CdnType -eq 'Private')
     {
-        $cdn = "Private"
+        if (Get-PnPTenantCdnEnabled -cdnType $CdnType)
+        {
+            $cdn = "Private"
+        }
     }
 
     if ($null -eq $orgAssets)
@@ -75,7 +81,8 @@ function Get-TargetResource
         Write-Verbose -Message "Found existing SharePoint Org Site Assets"
         Get-SPOAdministrationUrl -GlobalAdminAccount $GlobalAdminAccount | Out-Null
 
-        if($null -ne $orgAssets.OrgAssetsLibraries.ThumbnailUrl.DecodedUrl){
+        if ($null -ne $orgAssets.OrgAssetsLibraries.ThumbnailUrl.DecodedUrl)
+        {
             $thumbnailUrl = "https://$global:tenantName.sharepoint.com/$($orgAssets.OrgAssetsLibraries.LibraryUrl.decodedurl.Substring(0,$orgAssets.OrgAssetsLibraries.LibraryUrl.decodedurl.LastIndexOf("/")))/$($orgAssets.OrgAssetsLibraries.ThumbnailUrl.decodedurl)"
         }
 
@@ -140,9 +147,27 @@ function Set-TargetResource
     $currentParameters.Remove("Ensure")
     $currentParameters.Remove("GlobalAdminAccount")
 
-    if ($null -eq $currentOrgSiteAsset.CdnType)
+    $cdn = $null
+    if ($CdnType -eq 'Public')
     {
-        throw "Tenant CDN must be confirgured before setting Site Organization Library"
+        if (Get-PnPTenantCdnEnabled -cdnType $CdnType)
+        {
+            $cdn = "Public"
+        }
+    }
+
+    if ($CdnType -eq 'Private')
+    {
+        if (Get-PnPTenantCdnEnabled -cdnType $CdnType)
+        {
+            $cdn = "Private"
+        }
+    }
+
+
+    if ($null -eq $cdn)
+    {
+        throw "Tenant $CdnType CDN must be confirgured before setting site organization Library"
     }
 
 
