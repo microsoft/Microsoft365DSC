@@ -26,7 +26,7 @@ jobs:
        foreach ($dependency in $dependencies)
        {
            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -SkipPublisherCheck
-           Import-Module $dependency.ModuleName -Force
+           Import-Module $dependency.ModuleName -Force -ErrorAction 'SilentlyContinue'
        }
     - name: Install Microsoft365DSC
       run: |
