@@ -19,13 +19,14 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install Dependencies
       run: |
+       $VerbosePreference = 'Continue'
        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
 
        $manifest = Import-PowerShellDataFile "./Modules/Microsoft365DSC/Microsoft365DSC.psd1"
        $dependencies = $manifest.RequiredModules
        foreach ($dependency in $dependencies)
        {
-           Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -SkipPublisherCheck
+           Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -SkipPublisherCheck -AllowClobber
            try
            {
                Import-Module $dependency.ModuleName -Force
