@@ -20,7 +20,8 @@ jobs:
     - name: Install Dependencies
       run: |
        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
-       $manifest = Import-PowerShellDataFile $(build.artifactstagingdirectory)\BuildFiles\Modules\Microsoft365DSC\Microsoft365DSC.psd1
+       ls
+       $manifest = Import-PowerShellDataFile $GITHUB_WORKSPACE\Modules\Microsoft365DSC\Microsoft365DSC.psd1
        $dependencies = $manifest.RequiredModules
        foreach ($dependency in $dependencies)
        {
