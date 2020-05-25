@@ -70,7 +70,7 @@
 * SCFilePlanPropertyReferenceId
   * Fix issue with the Remove scenario;
 * SCFilePlanPropertySubCategory
-  * Fix issue with the Remove scenario;
+  * Fix issue with the Remove scenario
 * SCRetentionCompliancePolicy
   * Fix issue with Teams Policy in the Get;
 * SPOPropertyBag
