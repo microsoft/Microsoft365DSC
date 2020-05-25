@@ -18,6 +18,9 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
     - name: Install Dependencies
+      env:
+        PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }} 
+        PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }} 
       run: |
        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
        ls
@@ -26,7 +29,14 @@ jobs:
        foreach ($dependency in $dependencies)
        {
            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -SkipPublisherCheck
-           Import-Module $dependency.ModuleName -Force -ErrorAction 'SilentlyContinue'
+           try
+           {
+               Import-Module $dependency.ModuleName -Force
+           }
+           catch
+           {
+               Write-Verbose -Message $_
+           }
        }
     - name: Install Microsoft365DSC
       run: |
