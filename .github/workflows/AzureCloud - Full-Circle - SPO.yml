@@ -21,7 +21,7 @@ jobs:
       run: |
        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
        ls
-       $manifest = Import-PowerShellDataFile $GITHUB_WORKSPACE\Modules\Microsoft365DSC\Microsoft365DSC.psd1
+       $manifest = Import-PowerShellDataFile ".Modules/Microsoft365DSC/Microsoft365DSC.psd1"
        $dependencies = $manifest.RequiredModules
        foreach ($dependency in $dependencies)
        {
@@ -32,6 +32,6 @@ jobs:
       run: |
         winrm quickconfig -force
         ls
-        $source = "$(build.artifactstagingdirectory)\BuildFiles\Modules\Microsoft365DSC\"
+        $source = "./Modules/Microsoft365DSC/"
         $destination = "C:\Program Files\WindowsPowerShell\Modules"
         Copy-Item -Path $source -Recurse -Destination $destination -Container
