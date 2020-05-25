@@ -17,6 +17,13 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
+    - name : Install SPO Management Shell
+      run: |
+        $webClient = new-object System.Net.WebClient
+        $url = "https://github.com/Microsoft/Microsoft365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_19515-12000_x64_en-us.msi?raw=true"
+        $path = $PSScriptRoot + "\SharePointOnlineManagementShell.msi"
+        $webClient.DownloadFile($url, $path)
+        msiexec /i $path /quiet /qn /norestart
     - name: Install Dependencies
       run: |
        $VerbosePreference = 'Continue'
