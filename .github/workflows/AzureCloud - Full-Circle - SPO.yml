@@ -1,0 +1,36 @@
+# This is a basic workflow to help you get started with Actions
+
+name: AzureCloud - Full-Circle - SPO
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on: [push]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+    - name: Install Dependencies
+      run: |
+       [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+       $manifest = Import-PowerShellDataFile $(build.artifactstagingdirectory)\BuildFiles\Modules\Microsoft365DSC\Microsoft365DSC.psd1
+       $dependencies = $manifest.RequiredModules
+       foreach ($dependency in $dependencies)
+       {
+           Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -SkipPublisherCheck
+           Import-Module $dependency.ModuleName -Force
+       }
+    - name: Install Microsoft365DSC
+      run: |
+        winrm quickconfig -force
+        ls
+        $source = "$(build.artifactstagingdirectory)\BuildFiles\Modules\Microsoft365DSC\"
+        $destination = "C:\Program Files\WindowsPowerShell\Modules"
+        Copy-Item -Path $source -Recurse -Destination $destination -Container
