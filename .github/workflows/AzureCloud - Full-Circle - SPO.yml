@@ -49,7 +49,14 @@ jobs:
         $source = "./Modules/Microsoft365DSC/"
         $destination = "C:\Program Files\WindowsPowerShell\Modules"
         Copy-Item -Path $source -Recurse -Destination $destination -Container
-        Import-Module Microsoft365DSC -Verbose -Force -Global  -DisableNameChecking
+        try
+        {
+            Import-Module Microsoft365DSC -Verbose -Force -Global  -DisableNameChecking -ErrorAction Stop
+        }
+        catch
+        {
+            Import-Module "./Modules/Microsoft365DSC/Microsoft365DSC.psd1" -Force
+        }
     - name: Run ReverseDSC     
       env:
         PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }} 
