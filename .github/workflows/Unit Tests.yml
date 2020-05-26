@@ -45,5 +45,5 @@ jobs:
         $results = Invoke-TestHarness; 
         if ($results.FailedCount -gt 0)
         {
-            throw "Unit Test Failed"
+            throw "{$($results.FailedCount)} Unit Test(s) Failed"
         }
