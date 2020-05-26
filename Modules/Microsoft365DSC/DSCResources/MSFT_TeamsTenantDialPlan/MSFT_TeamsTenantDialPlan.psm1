@@ -69,7 +69,11 @@ function Get-TargetResource
         else
         {
             Write-Verbose -Message "Found existing Dial Plan {$Identity}"
-            $rules = Get-M365DSCNormalizationRules -Rules $config.NormalizationRules
+            $rules = @()
+            if ($config.NormalizationRules.Count -gt 0)
+            {
+                $rules = Get-M365DSCNormalizationRules -Rules $config.NormalizationRules
+            }
             $result = @{
                 Identity              = $Identity.Replace("Tag", "")
                 Description           = $config.Description
@@ -306,7 +310,7 @@ function Export-TargetResource
     $i = 1
     foreach ($plan in $tenantDialPlans)
     {
-        Write-Information "    [$i/$($tenantDialPlans.Length)] $($plan.Identity)"
+        Write-Information -MessageData "    [$i/$($tenantDialPlans.Count)] $($plan.Identity)"
         $params = @{
             Identity            = $plan.Identity
             GlobalAdminAccount  = $GlobalAdminAccount
@@ -314,7 +318,7 @@ function Export-TargetResource
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
 
-        if ($null -ne $result.NormalizationRules)
+        if ($result.NormalizationRules.Count -gt 0)
         {
             $result.NormalizationRules = Get-M365DSCNormalizationRulesAsString $result.NormalizationRules
         }

@@ -68,7 +68,7 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Warning "Get-Label is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+        throw $_
     }
 
     if ($null -eq $label)
@@ -409,8 +409,14 @@ function Export-TargetResource
             $content += "        SCSensitivityLabel " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AdvancedSettings"
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "LocaleSettings"
+            if ($null -ne $result.AdvancedSettings)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AdvancedSettings"
+            }
+            if ($null -ne $result.LocaleSettings)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "LocaleSettings"
+            }
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $content += $currentDSCBlock
             $content += "        }`r`n"
