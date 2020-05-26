@@ -1,4 +1,4 @@
-name: AzureCloud - Full-Circle - SPO
+name: AzureUSGovernment - Integration
 on: [pull_request]
 
 jobs:
@@ -37,15 +37,26 @@ jobs:
         $source = "./Modules/Microsoft365DSC/"
         $destination = "C:\Program Files\WindowsPowerShell\Modules"
         Copy-Item -Path $source -Recurse -Destination $destination -Container
-    - name: Run ReverseDSC   
+    - name: Run Integration Tests  
       shell : powershell  
       env:
-        PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }} 
-        PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }} 
+        GCC_USERNAME: ${{ secrets.GCC_USERNAME }}
+        GCC_PASSWORD: ${{ secrets.GCC_PASSWORD }}
+        GCC_DOMAIN: ${{ secrets.GCC_DOMAIN }}
       run: |
        Set-ExecutionPolicy Unrestricted -Force
        Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
        $GlobalAdminPassword = ConvertTo-SecureString $env:PUBLIC_PASSWORD -AsPlainText -Force
-       $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($env:PUBLIC_USERNAME, $GlobalAdminPassword)
        Set-M365DSCTelemetryOption -Enabled $false
-       Export-M365DSCConfiguration -Quiet -GlobalAdminAccount $GlobalAdminAccount -Path "." -FileName 'ExtractedSPO.ps1' -Workload 'SPO' -Verbose
+       & ./Tests/Integration/M365DSCIntegration.Master.Tests.ps1 -GlobalAdminUser $env:GCC_USERNAME -GlobalAdminPassword $env:GCC_PASSWORD -Domain $env:GCC_DOMAIN
+    - name: Validate Configuration
+      shell: powershell
+      run: |
+       $config = Test-DSCConfiguration -Detailed -Verbose
+
+       if (!$config.InDesiredState)
+       {
+           Write-Host $config
+           Write-Host $config.ResourcesNotInDesiredState.InstanceName
+           throw "Could not validate that the Tenant is in the Desired State"
+       }  

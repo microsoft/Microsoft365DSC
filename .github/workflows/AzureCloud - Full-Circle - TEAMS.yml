@@ -1,4 +1,4 @@
-name: AzureCloud - Full-Circle - SPO
+name: AzureCloud - Full-Circle - TEAMS
 on: [pull_request]
 
 jobs:
@@ -48,4 +48,4 @@ jobs:
        $GlobalAdminPassword = ConvertTo-SecureString $env:PUBLIC_PASSWORD -AsPlainText -Force
        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($env:PUBLIC_USERNAME, $GlobalAdminPassword)
        Set-M365DSCTelemetryOption -Enabled $false
-       Export-M365DSCConfiguration -Quiet -GlobalAdminAccount $GlobalAdminAccount -Path "." -FileName 'ExtractedSPO.ps1' -Workload 'SPO' -Verbose
+       Export-M365DSCConfiguration -Quiet -GlobalAdminAccount $GlobalAdminAccount -Path "." -FileName 'ExtractedSPO.ps1' -Workload 'TEAMS' -Verbose
