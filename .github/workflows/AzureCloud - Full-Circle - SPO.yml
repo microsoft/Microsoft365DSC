@@ -17,14 +17,6 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-    - name : Install SPO Management Shell
-      shell : powershell
-      run: |
-        $webClient = new-object System.Net.WebClient
-        $url = "https://github.com/Microsoft/Microsoft365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_19515-12000_x64_en-us.msi?raw=true"
-        $path = $PSScriptRoot + "\SharePointOnlineManagementShell.msi"
-        $webClient.DownloadFile($url, $path)
-        msiexec /i $path /quiet /qn /norestart
     - name: Install Dependencies
       shell : powershell
       run: |
@@ -57,7 +49,6 @@ jobs:
         PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }} 
         PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }} 
       run: |
-       $VerbosePreference = 'Continue'
        Set-ExecutionPolicy Unrestricted -Force
        Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
        $GlobalAdminPassword = ConvertTo-SecureString $env:PUBLIC_PASSWORD -AsPlainText -Force
