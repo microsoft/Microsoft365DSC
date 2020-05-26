@@ -1,5 +1,5 @@
 name: AzureCloud - Full-Circle - TEAMS
-on: [pull_request]
+on: [push]
 
 jobs:
   # This workflow contains a single job called "build"
