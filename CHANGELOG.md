@@ -2,6 +2,10 @@
 
 ## UNRELEASED
 
+* Modules
+  * M365DSCUtil - Fixed an issue in Test-Microsoft365DSCParameterState where
+    the same array of object was always being compared;
+
 * Metadata
   * Updated MSCloudLoginAssistant to 1.0.15;
   * Updated SharePointPnPPowerShellOnline to 3.21.2005.1;
@@ -66,7 +70,7 @@
 * SCFilePlanPropertyReferenceId
   * Fix issue with the Remove scenario;
 * SCFilePlanPropertySubCategory
-  * Fix issue with the Remove scenario;
+  * Fix issue with the Remove scenario
 * SCRetentionCompliancePolicy
   * Fix issue with Teams Policy in the Get;
 * SPOPropertyBag
