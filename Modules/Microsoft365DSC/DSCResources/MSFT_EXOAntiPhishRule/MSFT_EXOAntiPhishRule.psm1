@@ -213,6 +213,8 @@ function Set-TargetResource
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove("Ensure") | Out-Null
         $CreationParams.Remove("GlobalAdminAccount") | Out-Null
+        $CreationParams.Add("Name", $Identity) | Out-Null
+        $CreationParams.Remove("Identity") | Out-Null
 
         # New-AntiPhishRule has the Enabled parameter, Set-AntiPhishRule does not.
         # There doesn't appear to be any way to change the Enabled state of a rule once created.
