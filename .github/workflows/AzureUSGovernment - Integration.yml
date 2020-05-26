@@ -44,8 +44,9 @@ jobs:
     - name: Run Integration Tests  
       shell : powershell  
       env:
-        PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }} 
-        PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }} 
+        GCC_USERNAME: ${{ secrets.GCC_USERNAME }}
+        GCC_PASSWORD: ${{ secrets.GCC_PASSWORD }}
+        GCC_DOMAIN: ${{ secrets.GCC_DOMAIN }}
       run: |
        Set-ExecutionPolicy Unrestricted -Force
        Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
