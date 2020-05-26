@@ -1,5 +1,9 @@
 name: Unit Tests
-on:  [push]
+on:  
+  pull_request:
+    branches:
+      - dev
+      - master
 
 jobs:
   # This workflow contains a single job called "build"
