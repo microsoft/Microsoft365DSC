@@ -18,6 +18,7 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
     - name : Install SPO Management Shell
+      shell : powershell
       run: |
         $webClient = new-object System.Net.WebClient
         $url = "https://github.com/Microsoft/Microsoft365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_19515-12000_x64_en-us.msi?raw=true"
@@ -25,6 +26,7 @@ jobs:
         $webClient.DownloadFile($url, $path)
         msiexec /i $path /quiet /qn /norestart
     - name: Install Dependencies
+      shell : powershell
       run: |
        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
 
@@ -43,12 +45,14 @@ jobs:
            }
        }
     - name: Install Microsoft365DSC
+      shell : powershell
       run: |
         winrm quickconfig -force
         $source = "./Modules/Microsoft365DSC/"
         $destination = "C:\Program Files\WindowsPowerShell\Modules"
         Copy-Item -Path $source -Recurse -Destination $destination -Container
-    - name: Run ReverseDSC     
+    - name: Run ReverseDSC   
+      shell : powershell  
       env:
         PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }} 
         PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }} 
