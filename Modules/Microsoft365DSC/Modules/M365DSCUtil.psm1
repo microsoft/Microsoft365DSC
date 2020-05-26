@@ -1032,6 +1032,45 @@ function Get-SPOAdministrationUrl
     return $global:AdminUrl
 }
 
+function Get-M365TenantName
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $false)]
+        [switch]
+        $UseMFA,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+    if ($UseMFA)
+    {
+        $UseMFASwitch = @{UseMFA = $true }
+    }
+    else
+    {
+        $UseMFASwitch = @{ }
+    }
+    Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
+    Test-MSCloudLogin -Platform "AzureAD" -CloudCredential $GlobalAdminAccount | Out-Null
+    Write-Verbose -Message "Getting SharePoint Online admin URL..."
+    $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
+
+    if ($defaultDomain[0].Name -like '*.onmicrosoft.com*')
+    {
+        $tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.com", ""
+    }
+    elseif ($defaultDomain[0].Name -like '*.onmicrosoft.de*')
+    {
+        $tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.de", ""
+    }
+
+    Write-Verbose -Message "M365 tenant name is $tenantName"
+    return $tenantName
+}
+
 function Split-ArrayByBatchSize
 {
     [OutputType([System.Object[]])]

@@ -5,11 +5,6 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Yes")]
-        [String]
-        $IsSingleInstance,
-
-        [Parameter()]
         [System.String]
         $LibraryUrl,
 
@@ -79,16 +74,15 @@ function Get-TargetResource
     else
     {
         Write-Verbose -Message "Found existing SharePoint Org Site Assets"
-        Get-SPOAdministrationUrl -GlobalAdminAccount $GlobalAdminAccount | Out-Null
+        $tenantName = Get-M365TenantName -GlobalAdminAccount $GlobalAdminAccount
 
         if ($null -ne $orgAssets.OrgAssetsLibraries.ThumbnailUrl.DecodedUrl)
         {
-            $thumbnailUrl = "https://$global:tenantName.sharepoint.com/$($orgAssets.OrgAssetsLibraries.LibraryUrl.decodedurl.Substring(0,$orgAssets.OrgAssetsLibraries.LibraryUrl.decodedurl.LastIndexOf("/")))/$($orgAssets.OrgAssetsLibraries.ThumbnailUrl.decodedurl)"
+            $thumbnailUrl = "https://$tenantName.sharepoint.com/$($orgAssets.OrgAssetsLibraries.LibraryUrl.decodedurl.Substring(0,$orgAssets.OrgAssetsLibraries.LibraryUrl.decodedurl.LastIndexOf("/")))/$($orgAssets.OrgAssetsLibraries.ThumbnailUrl.decodedurl)"
         }
 
         $result = @{
-            IsSingleInstance   = $IsSingleInstance
-            LibraryUrl         = "https://$global:tenantName.sharepoint.com/$($orgAssets.OrgAssetsLibraries.libraryurl.DecodedUrl)"
+            LibraryUrl         = "https://$tenantName.sharepoint.com/$($orgAssets.OrgAssetsLibraries.libraryurl.DecodedUrl)"
             ThumbnailUrl       = $thumbnailUrl
             CdnType            = $cdn
             Ensure             = "Present"
@@ -105,11 +99,6 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Yes")]
-        [String]
-        $IsSingleInstance,
-
-        [Parameter()]
         [System.String]
         $LibraryUrl,
 
@@ -167,7 +156,7 @@ function Set-TargetResource
 
     if ($null -eq $cdn)
     {
-        throw "Tenant $CdnType CDN must be confirgured before setting site organization Library"
+        throw "Tenant $CdnType CDN must be configured before setting site organization Library"
     }
 
 
@@ -193,12 +182,8 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $true)]
-        [ValidateSet("Yes")]
-        [String]
-        $IsSingleInstance,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $LibraryUrl,
 
@@ -230,7 +215,6 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
-    $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -263,17 +247,23 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PnP
 
-    $Params = @{
-        IsSingleInstance   = 'Yes'
-        GlobalAdminAccount = $GlobalAdminAccount
+    $orgAssets = Get-PnPOrgAssetsLibrary
+    $tenantName = Get-M365TenantName -GlobalAdminAccount $GlobalAdminAccount
+
+    if ($null -ne $orgAssets)
+    {
+        $Params = @{
+            GlobalAdminAccount = $GlobalAdminAccount
+            LibraryUrl         = "https://$tenantName.sharepoint.com/$($orgAssets.OrgAssetsLibraries.libraryurl.DecodedUrl)"
+        }
+        $result = Get-TargetResource @Params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content = "        SPOOrgAssetsLibrary " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
     }
-    $result = Get-TargetResource @Params
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        SPOOrgAssetsLibrary " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
     return $content
 }
 

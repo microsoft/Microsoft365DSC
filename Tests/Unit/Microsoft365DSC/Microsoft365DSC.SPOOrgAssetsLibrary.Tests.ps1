@@ -42,14 +42,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         }
 
-        Mock -CommandName Get-SPOAdministrationUrl -MockWith {
-            return 'https://contoso-admin.sharepoint.com'
+        Mock -CommandName Get-M365TenantName -MockWith {
+            return 'contoso'
         }
 
         # Test contexts
         Context -Name "The site sssets srg library should exist but it DOES NOT" -Fixture {
             $testParams = @{
-                IsSingleInstance   = "Yes"
                 LibraryUrl         = "https://contoso.sharepoint.com/sites/m365dsc/Branding"
                 CdnType            = "Public"
                 GlobalAdminAccount = $GlobalAdminAccount;
@@ -78,7 +77,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "The site sssets srg library exists but it SHOULD NOT" -Fixture {
             $testParams = @{
-                IsSingleInstance   = "Yes"
                 LibraryUrl         = "https://contoso.sharepoint.com/sites/m365dsc/Branding"
                 CdnType            = "Public"
                 GlobalAdminAccount = $GlobalAdminAccount;
@@ -109,13 +107,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
         Context -Name "The site sssets org library Exists and Values are already in the desired state" -Fixture {
             $testParams = @{
-                IsSingleInstance   = "Yes"
                 LibraryUrl         = "https://contoso.sharepoint.com/sites/m365dsc/Branding"
                 CdnType            = "Public"
                 GlobalAdminAccount = $GlobalAdminAccount;
                 Ensure             = "Present"
             }
 
+            Mock -CommandName Get-M365TenantName -MockWith {
+                return 'contoso'
+            }
 
             Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
                 return @{ Value = "true" }
@@ -144,7 +144,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "The site sssets org library exists and values are NOT in the desired state" -Fixture {
             $testParams = @{
-                IsSingleInstance   = "Yes"
                 LibraryUrl         = "https://contoso.sharepoint.com/sites/m365dsc/Branding"
                 CdnType            = "Public"
                 GlobalAdminAccount = $GlobalAdminAccount;
@@ -153,7 +152,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
                 return @{
-                    IsSingleInstance   = "Yes"
                     OrgAssetsLibraries = @{
                         LibraryUrl = @{
                             decodedurl = "sites/m365dsc/Missing"
@@ -191,6 +189,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credential"
+            }
+
+            Mock -CommandName Get-M365TenantName -MockWith {
+                return 'contoso'
             }
 
             Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {

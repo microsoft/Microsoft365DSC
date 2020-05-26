@@ -195,38 +195,6 @@ function Set-AzureADMSGroup
     )
 }
 
-function Get-PnPOrgAssetsLibrary{
-    [CmdletBinding()]
-    param(
-      )
-}
-
-function Add-PnPOrgAssetsLibrary{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $LibraryUrl,
-
-        [Parameter()]
-        [System.String]
-        $ThumbnailUrl,
-
-        [Parameter()]
-        [ValidateSet('Public', 'Private')]
-        [System.String]
-        $CdnType = 'Public'
-    )
-}
-
-function Remove-PnPOrgAssetsLibrary{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $LibraryUrl
-    )
-}
 
 function Get-SPOAdministrationUrl
 {
