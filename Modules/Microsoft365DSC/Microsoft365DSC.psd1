@@ -84,8 +84,8 @@
             RequiredVersion = "1.0.6"
         },
         @{
-            ModuleName      = "MSCloudLoginAssistantPreview"
-            RequiredVersion = "1.0.18.2"
+            ModuleName      = "MSCloudLoginAssistant"
+            RequiredVersion = "1.0.17"
         },
         @{
             ModuleName      = "ReverseDSC"
