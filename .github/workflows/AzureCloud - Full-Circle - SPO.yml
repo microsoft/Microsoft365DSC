@@ -26,7 +26,6 @@ jobs:
         msiexec /i $path /quiet /qn /norestart
     - name: Install Dependencies
       run: |
-       $VerbosePreference = 'Continue'
        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
 
        $manifest = Import-PowerShellDataFile "./Modules/Microsoft365DSC/Microsoft365DSC.psd1"
@@ -49,14 +48,6 @@ jobs:
         $source = "./Modules/Microsoft365DSC/"
         $destination = "C:\Program Files\WindowsPowerShell\Modules"
         Copy-Item -Path $source -Recurse -Destination $destination -Container
-        try
-        {
-            Import-Module Microsoft365DSC -Verbose -Force -Global  -DisableNameChecking -ErrorAction Stop
-        }
-        catch
-        {
-            Import-Module "./Modules/Microsoft365DSC/Microsoft365DSC.psd1" -Force
-        }
     - name: Run ReverseDSC     
       env:
         PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }} 
