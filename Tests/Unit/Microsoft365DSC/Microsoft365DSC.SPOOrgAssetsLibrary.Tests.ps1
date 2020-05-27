@@ -87,8 +87,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{ Value = "true" }
             }
 
-            Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
-                return @{LibraryUrl = "https://contoso.sharepoint.com/sites/m365dsc/Branding" }
+            return @{
+                OrgAssetsLibraries = @{
+                    LibraryUrl = @{
+                        decodedurl = "sites/m365dsc/Branding"
+                    }
+                }
+                CdnType            = "Public"
             }
 
             It "Should return Values from the Get method" {

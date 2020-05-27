@@ -76,20 +76,31 @@ function Get-TargetResource
         Write-Verbose -Message "Found existing SharePoint Org Site Assets"
         $tenantName = Get-M365TenantName -GlobalAdminAccount $GlobalAdminAccount
 
-        if ($null -ne $orgAssets.OrgAssetsLibraries.ThumbnailUrl.DecodedUrl)
+        foreach ($orgAsset in $orgAssets.OrgAssetsLibraries)
         {
-            $thumbnailUrl = "https://$tenantName.sharepoint.com/$($orgAssets.OrgAssetsLibraries.LibraryUrl.decodedurl.Substring(0,$orgAssets.OrgAssetsLibraries.LibraryUrl.decodedurl.LastIndexOf("/")))/$($orgAssets.OrgAssetsLibraries.ThumbnailUrl.decodedurl)"
-        }
+            $orgLibraryUrl = "https://$tenantName.sharepoint.com/$($orgAsset.libraryurl.DecodedUrl)"
 
-        $result = @{
-            LibraryUrl         = "https://$tenantName.sharepoint.com/$($orgAssets.OrgAssetsLibraries.libraryurl.DecodedUrl)"
-            ThumbnailUrl       = $thumbnailUrl
-            CdnType            = $cdn
-            Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdminAccount
+            if ($orgLibraryUrl -eq $LibraryUrl)
+            {
+                if ($null -ne $orgAsset.ThumbnailUrl.DecodedUrl)
+                {
+                    $thumbnailUrl = "https://$tenantName.sharepoint.com/$($orgAsset.LibraryUrl.decodedurl.Substring(0,$orgAsset.LibraryUrl.decodedurl.LastIndexOf("/")))/$($orgAsset.ThumbnailUrl.decodedurl)"
+                }
+
+                $result = @{
+                    LibraryUrl         = $orgLibraryUrl
+                    ThumbnailUrl       = $thumbnailUrl
+                    CdnType            = $cdn
+                    Ensure             = "Present"
+                    GlobalAdminAccount = $GlobalAdminAccount
+                }
+                Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+                return $result
+            }
         }
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
+        $currentValues = $PSBoundParameters
+        $currentValues.Ensure = "Absent"
+        return $currentValues
     }
 }
 
@@ -132,7 +143,6 @@ function Set-TargetResource
 
     $currentOrgSiteAsset = Get-TargetResource @PSBoundParameters
     $currentParameters = $PSBoundParameters
-    $currentParameters.Remove("IsSingleInstance")
     $currentParameters.Remove("Ensure")
     $currentParameters.Remove("GlobalAdminAccount")
 
@@ -249,20 +259,24 @@ function Export-TargetResource
 
     $orgAssets = Get-PnPOrgAssetsLibrary
     $tenantName = Get-M365TenantName -GlobalAdminAccount $GlobalAdminAccount
+    $content = ''
 
     if ($null -ne $orgAssets)
     {
-        $Params = @{
-            GlobalAdminAccount = $GlobalAdminAccount
-            LibraryUrl         = "https://$tenantName.sharepoint.com/$($orgAssets.OrgAssetsLibraries.libraryurl.DecodedUrl)"
+        foreach ($orgAssetLib in $orgAssets.OrgAssetsLibraries)
+        {
+            $Params = @{
+                GlobalAdminAccount = $GlobalAdminAccount
+                LibraryUrl         = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
+            }
+            $result = Get-TargetResource @Params
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $content += "        SPOOrgAssetsLibrary " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $content += "        }`r`n"
         }
-        $result = Get-TargetResource @Params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content = "        SPOOrgAssetsLibrary " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
     }
     return $content
 }
