@@ -73,7 +73,6 @@ function Get-TargetResource
     }
     else
     {
-        Write-Verbose -Message "Found existing SharePoint Org Site Assets"
         $tenantName = Get-M365TenantName -GlobalAdminAccount $GlobalAdminAccount
 
         foreach ($orgAsset in $orgAssets.OrgAssetsLibraries)
@@ -82,14 +81,15 @@ function Get-TargetResource
 
             if ($orgLibraryUrl -eq $LibraryUrl)
             {
+                Write-Verbose -Message "Found existing SharePoint Org Site Assets for $LibraryUrl"
                 if ($null -ne $orgAsset.ThumbnailUrl.DecodedUrl)
                 {
-                    $thumbnailUrl = "https://$tenantName.sharepoint.com/$($orgAsset.LibraryUrl.decodedurl.Substring(0,$orgAsset.LibraryUrl.decodedurl.LastIndexOf("/")))/$($orgAsset.ThumbnailUrl.decodedurl)"
+                    $orgthumbnailUrl = "https://$tenantName.sharepoint.com/$($orgAsset.LibraryUrl.decodedurl.Substring(0,$orgAsset.LibraryUrl.decodedurl.LastIndexOf("/")))/$($orgAsset.ThumbnailUrl.decodedurl)"
                 }
 
                 $result = @{
                     LibraryUrl         = $orgLibraryUrl
-                    ThumbnailUrl       = $thumbnailUrl
+                    ThumbnailUrl       = $orgthumbnailUrl
                     CdnType            = $cdn
                     Ensure             = "Present"
                     GlobalAdminAccount = $GlobalAdminAccount
@@ -174,6 +174,8 @@ function Set-TargetResource
     {
         ## No set so remove / add
         Remove-PNPOrgAssetsLibrary -libraryUrl $currentOrgSiteAsset.LibraryUrl
+        ### add slight delay fails if you immediately try to add 
+        Start-Sleep -Seconds 30
         Add-PnPOrgAssetsLibrary @currentParameters
     }
     elseif ($Ensure -eq 'Present' -and $currentOrgSiteAsset.Ensure -eq 'Absent')
