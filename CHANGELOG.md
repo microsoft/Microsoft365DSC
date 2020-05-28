@@ -15,7 +15,7 @@
   * Updated Microsoft.PowerApps.Administration.PowerShell
     to 2.0.63;
   * Updated ReverseDSC to 2.0.0.3;
-  * Updated SharePointPnPPowerShellOnline to 3.21.2005.1;
+  * Updated SharePointPnPPowerShellOnline to 3.21.2005.2;
 
 ## 1.0.5.128
 
