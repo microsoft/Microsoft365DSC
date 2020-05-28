@@ -633,6 +633,15 @@ Configuration Master
             )
         }
 
+        SPOOrgAssetsLibrary OrgAssets
+        {
+            IsSingleInstance   = "Yes"
+            LibraryUrl         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern/Shared Documents"
+            CdnType            = "Public"
+            GlobalAdminAccount = $GlobalAdmin;
+            Ensure             = "Present"
+        }
+
         # TODO - Investigate this for GCC
         <#if ($Environment -ne 'GCC')
         {
