@@ -8,16 +8,15 @@ install:
     - ps: |
         $moduleName = 'Microsoft365DSC'
         $mainModuleFolder = "Modules\$moduleName"
-        Install-Module ReverseDSC -RequiredVersion 2.0.0.3 -Force -SkipPublisherCheck
-        Install-Module AzureADPreview -RequiredVersion 2.0.2.89 -Force -SkipPublisherCheck
-        Install-Module MicrosoftTeams -RequiredVersion 1.0.6 -Force -SkipPublisherCheck
-        Install-Module MSCloudLoginAssistant -RequiredVersion 1.0.17 -Force -SkipPublisherCheck -AllowClobber
-        Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.21.2005.1 -Force -SkipPublisherCheck
-        Install-Module Microsoft.PowerApps.Administration.PowerShell -RequiredVersion 2.0.63 -Force -SkipPublisherCheck
+        Install-Module AzureADPreview -RequiredVersion 2.0.2.102 -Force -SkipPublisherCheck
         Install-Module ExchangeOnlineManagement -RequiredVersion 0.4578.0 -Force -SkipPublisherCheck
-        Install-Module Microsoft.Graph.Authentication -RequiredVersion 0.5.1 -Force -SkipPublisherCheck
+        Install-Module DSCParser -RequiredVersion 1.1.0.3 -Force -SkipPublisherCheckInstall-Module Microsoft.Graph.Authentication -RequiredVersion 0.5.1 -Force -SkipPublisherCheck
         Install-Module Microsoft.Graph.Identity.ConditionalAccess -RequiredVersion 0.5.1 -Force -SkipPublisherCheck
-        Install-Module DSCParser -RequiredVersion 1.1.0.3 -Force -SkipPublisherCheck
+        Install-Module Microsoft.PowerApps.Administration.PowerShell -RequiredVersion 2.0.64 -Force -SkipPublisherCheck
+        Install-Module MicrosoftTeams -RequiredVersion 1.0.6 -Force -SkipPublisherCheck
+        Install-Module MSCloudLoginAssistant -RequiredVersion 1.0.18 -Force -SkipPublisherCheck -AllowClobber
+        Install-Module ReverseDSC -RequiredVersion 2.0.0.3 -Force -SkipPublisherCheck
+        Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.21.2005.2 -Force -SkipPublisherCheck
 
         $webClient = new-object System.Net.WebClient
         $url = "https://github.com/Microsoft/Microsoft365DSC/blob/Dev/Tests/Dependencies/SharePointOnlineManagementShell_19515-12000_x64_en-us.msi?raw=true"
