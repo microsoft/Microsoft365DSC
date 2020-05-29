@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* Microsoft365Dsc
+  * Improved event log function
 * EXOEmailAddressPolicy
   * Converted hardcoded tenant name into variables;
 * TeamsTenantDialPlan
