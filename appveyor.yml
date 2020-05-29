@@ -10,7 +10,8 @@ install:
         $mainModuleFolder = "Modules\$moduleName"
         Install-Module AzureADPreview -RequiredVersion 2.0.2.102 -Force -SkipPublisherCheck
         Install-Module ExchangeOnlineManagement -RequiredVersion 0.4578.0 -Force -SkipPublisherCheck
-        Install-Module DSCParser -RequiredVersion 1.1.0.3 -Force -SkipPublisherCheckInstall-Module Microsoft.Graph.Authentication -RequiredVersion 0.5.1 -Force -SkipPublisherCheck
+        Install-Module DSCParser -RequiredVersion 1.1.0.3 -Force -SkipPublisherCheck
+        Install-Module Microsoft.Graph.Authentication -RequiredVersion 0.5.1 -Force -SkipPublisherCheck
         Install-Module Microsoft.Graph.Identity.ConditionalAccess -RequiredVersion 0.5.1 -Force -SkipPublisherCheck
         Install-Module Microsoft.PowerApps.Administration.PowerShell -RequiredVersion 2.0.64 -Force -SkipPublisherCheck
         Install-Module MicrosoftTeams -RequiredVersion 1.0.6 -Force -SkipPublisherCheck
