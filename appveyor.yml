@@ -14,7 +14,7 @@ install:
         Install-Module Microsoft.Graph.Identity.ConditionalAccess -RequiredVersion 0.5.1 -Force -SkipPublisherCheck
         Install-Module Microsoft.PowerApps.Administration.PowerShell -RequiredVersion 2.0.64 -Force -SkipPublisherCheck
         Install-Module MicrosoftTeams -RequiredVersion 1.0.6 -Force -SkipPublisherCheck
-        Install-Module MSCloudLoginAssistant -RequiredVersion 1.0.18 -Force -SkipPublisherCheck -AllowClobber
+        Install-Module MSCloudLoginAssistant -RequiredVersion 1.0.20 -Force -SkipPublisherCheck -AllowClobber
         Install-Module ReverseDSC -RequiredVersion 2.0.0.3 -Force -SkipPublisherCheck
         Install-Module SharePointPnPPowerShellOnline -RequiredVersion 3.21.2005.2 -Force -SkipPublisherCheck
 
