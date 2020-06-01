@@ -14,7 +14,7 @@
 
 * Metadata
   * Updated AzureADPreview to 2.0.2.102;
-  * Updated MSCloudLoginAssistant to 1.0.20;
+  * Updated MSCloudLoginAssistant to 1.0.21;
   * Updated Microsoft.PowerApps.Administration.PowerShell
     to 2.0.64;
   * Updated ReverseDSC to 2.0.0.3;
