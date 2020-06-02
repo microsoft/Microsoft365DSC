@@ -220,6 +220,58 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name "Connector Source is AdminUI" -Fixture {
+            $testParams = @{
+                Ensure                        = 'Present'
+                GlobalAdminAccount            = $GlobalAdminAccount
+                Identity                      = 'TestOutboundConnector'
+                CloudServicesMailEnabled      = $false
+                Comment                       = 'Test outbound connector'
+                Enabled                       = $true
+                ConnectorSource               = 'Default'
+                ConnectorType                 = 'Partner'
+                IsTransportRuleScoped         = $false
+                RecipientDomains              = @('fabrikam.com', 'contoso.com')
+                RouteAllMessagesViaOnPremises = $false
+                SmartHosts                    = @('mail.contoso.com')
+                TestMode                      = $false
+                TlsDomain                     = '*.contoso.com'
+                TlsSettings                   = 'EncryptionOnly'
+                UseMxRecord                   = $false
+                ValidationRecipients          = @('test@contoso.com')
+            }
+
+
+            Mock -CommandName Get-OutboundConnector -MockWith {
+                return @{
+                    Ensure                        = 'Present'
+                    Identity                      = 'TestOutboundConnector'
+                    CloudServicesMailEnabled      = $false
+                    Comment                       = 'Test outbound connector'
+                    Enabled                       = $true
+                    ConnectorSource               = 'AdminUI'
+                    ConnectorType                 = 'Partner'
+                    IsTransportRuleScoped         = $false
+                    RecipientDomains              = @('fabrikam.com', 'contoso.com')
+                    RouteAllMessagesViaOnPremises = $false
+                    SmartHosts                    = @('mail.contoso.com')
+                    TestMode                      = $false
+                    TlsDomain                     = '*.contoso.com'
+                    TlsSettings                   = 'EncryptionOnly'
+                    UseMxRecord                   = $false
+                    ValidationRecipients          = @('test@contoso.com')
+                }
+            }
+
+            It 'Should return true from the Test method' {
+                Test-TargetResource @testParams | Should Be $true
+            }
+
+            It 'Should return Default as the source from the Get method' {
+                (Get-TargetResource @testParams).ConnectorSource | Should Be 'Default'
+            }
+        }
+
         Context -Name "ReverseDSC Tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
