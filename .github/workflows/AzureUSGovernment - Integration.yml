@@ -50,7 +50,7 @@ jobs:
        & ./Tests/Integration/M365DSCIntegration.Master.Tests.ps1 `
        -GlobalAdminUser $env:GCC_USERNAME `
        -GlobalAdminPassword $env:GCC_PASSWORD `
-       -Domain $env:GCC_DOMAIN`
+       -Domain $env:GCC_DOMAIN `
        -Environment 'GCC'
     - name: Validate Configuration
       shell: powershell
