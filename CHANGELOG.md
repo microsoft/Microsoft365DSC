@@ -6,6 +6,8 @@
   * Improved event log function
 * EXOEmailAddressPolicy
   * Converted hardcoded tenant name into variables;
+* EXOHostedContentFilterPolicy
+  * Added 'NoAction' as a valid input for property BulkSpamAction;
 * EXOOutboundConnector
   * Fixed an issue where if the connector was created with a source
     of 'AdminUI', we now convert it to 'Default' in the Get function;
