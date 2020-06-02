@@ -11,7 +11,6 @@
 * Modules
   * M365DSCUtil - Fixed an issue in Test-Microsoft365DSCParameterState where
     the same array of object was always being compared;
-
 * Metadata
   * Updated AzureADPreview to 2.0.2.102;
   * Updated MSCloudLoginAssistant to 1.0.22;
@@ -19,6 +18,9 @@
     to 2.0.64;
   * Updated ReverseDSC to 2.0.0.3;
   * Updated SharePointPnPPowerShellOnline to 3.21.2005.2;
+* Misc
+  * Azure DevOPS Pipelines and AppVeyor Tests converted to GitHub
+    Actions;
 
 ## 1.0.5.128
 
