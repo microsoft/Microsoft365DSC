@@ -19,7 +19,6 @@ jobs:
             -MainModulePath 'Modules\Microsoft365DSC' `
             -ResourceModuleName 'Microsoft365DSC'
     - uses: actions/upload-artifact@v2
-    - name: Upload Wiki Content
       with:
-        name: WikiContent
+        name: Upload Wiki Content
         path: D:\a\GitHubActionsTest\GitHubActionsTest\Microsoft365DSC_1.0.0_wikicontent.zip
