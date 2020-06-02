@@ -20,7 +20,7 @@
   * Updated SharePointPnPPowerShellOnline to 3.21.2005.2;
 * Misc
   * Azure DevOPS Pipelines and AppVeyor Tests converted to GitHub
-    actions;
+    Actions;
 
 ## 1.0.5.128
 
