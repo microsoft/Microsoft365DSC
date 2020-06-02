@@ -756,7 +756,6 @@ function Test-Microsoft365DSCParameterState
             }
             $EventMessage += "        <Param Name =`"$key`">$Value</Param>`r`n"
         }
-        $EventMessage += "    }"
         $EventMessage += "    </DesiredValues>`r`n"
         $EventMessage += "</M365DSCEvent>"
 

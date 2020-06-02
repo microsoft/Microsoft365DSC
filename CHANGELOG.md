@@ -9,8 +9,11 @@
 * TeamsTenantDialPlan
   * Fixed an issue extraction plans without any normalization rules;
 * Modules
-  * M365DSCUtil - Fixed an issue in Test-Microsoft365DSCParameterState where
-    the same array of object was always being compared;
+  * M365DSCUtil:
+    * Fixed an issue in Test-Microsoft365DSCParameterState where
+      the same array of object was always being compared;
+    * Issue 612 - Fixed an extra '}' in the event log output;
+
 * Metadata
   * Updated AzureADPreview to 2.0.2.102;
   * Updated MSCloudLoginAssistant to 1.0.22;
