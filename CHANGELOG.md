@@ -6,6 +6,8 @@
   * Improved event log function
 * EXOEmailAddressPolicy
   * Converted hardcoded tenant name into variables;
+* EXOHostedContentFilterPolicy
+  * Added 'NoAction' as a valid input for property BulkSpamAction;
 * TeamsTenantDialPlan
   * Fixed an issue extraction plans without any normalization rules;
 * Modules
