@@ -47,7 +47,11 @@ jobs:
        Set-ExecutionPolicy Unrestricted -Force
        Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
        Set-M365DSCTelemetryOption -Enabled $false
-       & ./Tests/Integration/M365DSCIntegration.Master.Tests.ps1 -GlobalAdminUser $env:GCC_USERNAME -GlobalAdminPassword $env:GCC_PASSWORD -Domain $env:GCC_DOMAIN
+       & ./Tests/Integration/M365DSCIntegration.Master.Tests.ps1 `
+       -GlobalAdminUser $env:GCC_USERNAME `
+       -GlobalAdminPassword $env:GCC_PASSWORD `
+       -Domain $env:GCC_DOMAIN`
+       -Environment 'GCC'
     - name: Validate Configuration
       shell: powershell
       run: |
