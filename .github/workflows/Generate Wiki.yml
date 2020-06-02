@@ -21,4 +21,4 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: Upload Wiki Content
-        path: D:\a\GitHubActionsTest\GitHubActionsTest\Microsoft365DSC_1.0.0_wikicontent.zip
+        path: D:\a\Microsoft365DSC\Microsoft365DSC\Microsoft365DSC_1.0.0_wikicontent.zip
