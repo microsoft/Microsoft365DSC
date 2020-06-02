@@ -6,6 +6,9 @@
   * Improved event log function
 * EXOEmailAddressPolicy
   * Converted hardcoded tenant name into variables;
+* EXOOutboundConnector
+  * Fixed an issue where if the connector was created with a source
+    of 'AdminUI', we now convert it to 'Default' in the Get function;
 * TeamsTenantDialPlan
   * Fixed an issue extraction plans without any normalization rules;
 * Modules
