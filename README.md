@@ -26,7 +26,26 @@ no contributions should be made directly to this branch.
 ### dev
 
 [![Build status](https://ci.appveyor.com/api/projects/status/5a7f2ao7d1mnoqrb?svg=true)](https://ci.appveyor.com/project/NikCharlebois/Microsoft365DSC)
+
 [![codecov](https://codecov.io/gh/microsoft/Microsoft365DSC/branch/Dev/graph/badge.svg)](https://codecov.io/gh/microsoft/Microsoft365DSC)
+
+![AzureCloud - Integration](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Integration/badge.svg)
+
+![AzureUSGovernment - Integration](https://github.com/microsoft/Microsoft365DSC/workflows/AzureUSGovernment%20-%20Integration/badge.svg)
+
+![AzureCloud - Full-Circle - EXO](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20EXO/badge.svg)
+
+![AzureCloud - Full-Circle - O365](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20O365/badge.svg)
+
+![AzureCloud - Full-Circle - OD](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20OD/badge.svg)
+
+![AzureCloud - Full-Circle - PP](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20PP/badge.svg)
+
+![AzureCloud - Full-Circle - SC](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20SC/badge.svg)
+
+![AzureCloud - Full-Circle - SPO](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20SPO/badge.svg)
+
+![AzureCloud - Full-Circle - TEAMS](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20TEAMS/badge.svg)
 
 This is the development branch
 to which contributions should be proposed by contributors as pull requests.
