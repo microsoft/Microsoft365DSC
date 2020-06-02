@@ -29,10 +29,6 @@ no contributions should be made directly to this branch.
 
 [![codecov](https://codecov.io/gh/microsoft/Microsoft365DSC/branch/Dev/graph/badge.svg)](https://codecov.io/gh/microsoft/Microsoft365DSC)
 
-![AzureCloud - Integration](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Integration/badge.svg)
-
-![AzureUSGovernment - Integration](https://github.com/microsoft/Microsoft365DSC/workflows/AzureUSGovernment%20-%20Integration/badge.svg)
-
 ![AzureCloud - Full-Circle - EXO](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20EXO/badge.svg)
 
 ![AzureCloud - Full-Circle - O365](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20O365/badge.svg)
@@ -46,6 +42,14 @@ no contributions should be made directly to this branch.
 ![AzureCloud - Full-Circle - SPO](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20SPO/badge.svg)
 
 ![AzureCloud - Full-Circle - TEAMS](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Full-Circle%20-%20TEAMS/badge.svg)
+
+![AzureCloud - Integration](https://github.com/microsoft/Microsoft365DSC/workflows/AzureCloud%20-%20Integration/badge.svg)
+
+![AzureUSGovernment - Integration](https://github.com/microsoft/Microsoft365DSC/workflows/AzureUSGovernment%20-%20Integration/badge.svg)
+
+![Generate Wiki Content](https://github.com/microsoft/Microsoft365DSC/workflows/Generate%20Wiki%20Content/badge.svg)
+
+![Unit Tests](https://github.com/microsoft/Microsoft365DSC/workflows/Unit%20Tests/badge.svg)
 
 This is the development branch
 to which contributions should be proposed by contributors as pull requests.
