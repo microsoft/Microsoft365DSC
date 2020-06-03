@@ -3,6 +3,6 @@ class MSFT_SPOTenantCdnEnabled : OMI_BaseResource
 {
     [Key, Description("Specifies the CDN type. The valid values are public or private."), ValueMap{"Public","Private"}, Values{"Public","Private"}] String CdnType;
     [Write, Description("Specify to enable or disable tenant CDN.")] Boolean Enable;
-    [Write, Description("Get-PNPTenantCdnEnabled always returns an value, only support value is Present"), ValueMap{"Present"}, Values{"Present"}] String Ensure;
+    [Write, Description("Get-PNPTenantCdnEnabled always returns a value, only support value is Present"), ValueMap{"Present"}, Values{"Present"}] String Ensure;
     [Write, Description("Credentials of the SharePoint Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
 };
