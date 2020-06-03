@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-## UNRELEASED
+## 1.20.0603.1
 
 * Microsoft365Dsc
   * Improved event log function
