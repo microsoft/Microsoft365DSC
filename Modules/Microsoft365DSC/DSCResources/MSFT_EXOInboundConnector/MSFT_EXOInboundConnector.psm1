@@ -89,12 +89,17 @@ function Get-TargetResource
     }
     else
     {
+        $ConnectorSourceValue = $InboundConnector.ConnectorSource
+        if ($ConnectorSourceValue -eq 'AdminUI')
+        {
+            $ConnectorSourceValue = 'Default'
+        }
         $result = @{
             Identity                     = $Identity
             AssociatedAcceptedDomains    = $InboundConnector.AssociatedAcceptedDomains
             CloudServicesMailEnabled     = $InboundConnector.CloudServicesMailEnabled
             Comment                      = $InboundConnector.Comment
-            ConnectorSource              = $InboundConnector.ConnectorSource
+            ConnectorSource              = $InboundConnector.ConnectorSourceValue
             ConnectorType                = $InboundConnector.ConnectorType
             Enabled                      = $InboundConnector.Enabled
             RequireTls                   = $InboundConnector.RequireTls
