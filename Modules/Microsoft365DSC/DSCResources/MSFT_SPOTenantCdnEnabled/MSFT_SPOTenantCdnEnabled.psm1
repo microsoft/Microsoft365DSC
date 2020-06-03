@@ -14,7 +14,7 @@ function Get-TargetResource
         $Enable,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -44,22 +44,14 @@ function Get-TargetResource
         Write-Verbose -Message $_
     }
 
-    if ($null -eq $cdnEnabled)
-    {
-        $currentValues = $PSBoundParameters
-        $currentValues.Ensure = "Absent"
-        return $currentValues
+    $result = @{
+        CdnType            = $CdnType
+        Enable             = $cdnEnabled.Value
+        Ensure             = $Ensure
+        GlobalAdminAccount = $GlobalAdminAccount
     }
-    else
-    {
-        $result = @{
-            CdnType            = $CdnType
-            Enable             = $cdnEnabled.Value
-            Ensure             = "Present"
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
-        return $result
-    }
+    return $result
+
 }
 
 function Set-TargetResource
@@ -99,17 +91,9 @@ function Set-TargetResource
     $currentParameters = $PSBoundParameters
     $currentParameters.Remove("Ensure")
     $currentParameters.Remove("GlobalAdminAccount")
-
-    if ($Ensure -eq 'Absent' -and $currentOrgSiteAsset.Ensure -eq 'Present')
-    {
-        # There is no remove just disable it
-        Set-PnPTenantCdnEnabled -CdnType $CdnType -Enable $false
-    }
-    else
-    {
         #No add only a set
-        Set-PnPTenantCdnEnabled @currentParameters
-    }
+    Set-PnPTenantCdnEnabled @currentParameters
+
 }
 
 function Test-TargetResource
@@ -188,7 +172,7 @@ function Export-TargetResource
             CdnType            = $cType
         }
         $result = Get-TargetResource @Params
-        if ($result.Ensure -eq "Present")
+        if ($result.Enable -eq $True)
         {
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
             $content += "        SPOTenantCdn " + (New-GUID).ToString() + "`r`n"

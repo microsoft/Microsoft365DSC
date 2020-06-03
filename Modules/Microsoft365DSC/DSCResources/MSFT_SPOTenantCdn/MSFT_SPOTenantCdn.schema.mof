@@ -1,8 +1,0 @@
-[ClassVersion("1.0.0.0"), FriendlyName("SPOTenantCdn")]
-class MSFT_SPOTenantCdn : OMI_BaseResource
-{
-    [Key, Description("Specifies the CDN type. The valid values are public or private."), ValueMap{"Public","Private"}, Values{"Public","Private"}] String CdnType;
-    [Write, Description("Specify to enable or disable Cdn.")] Boolen Enable;
-    [Write, Description("Specify if the SPO Org Assets library should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Write, Description("Credentials of the SharePoint Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
-};

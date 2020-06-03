@@ -1,4 +1,4 @@
-# SPOTenantCdn
+# SPOTenantCdnEnabled
 
 ## Description
 
