@@ -99,7 +99,7 @@ function Get-TargetResource
             AssociatedAcceptedDomains    = $InboundConnector.AssociatedAcceptedDomains
             CloudServicesMailEnabled     = $InboundConnector.CloudServicesMailEnabled
             Comment                      = $InboundConnector.Comment
-            ConnectorSource              = $InboundConnector.ConnectorSourceValue
+            ConnectorSource              = $ConnectorSourceValue
             ConnectorType                = $InboundConnector.ConnectorType
             Enabled                      = $InboundConnector.Enabled
             RequireTls                   = $InboundConnector.RequireTls
