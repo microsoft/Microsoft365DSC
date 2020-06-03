@@ -8,6 +8,9 @@
   * Converted hardcoded tenant name into variables;
 * EXOHostedContentFilterPolicy
   * Added 'NoAction' as a valid input for property BulkSpamAction;
+* EXOInboundConnector
+  * Fixed an issue where if the connector was created with a source
+    of 'AdminUI', we now convert it to 'Default' in the Get function;
 * EXOOutboundConnector
   * Fixed an issue where if the connector was created with a source
     of 'AdminUI', we now convert it to 'Default' in the Get function;
