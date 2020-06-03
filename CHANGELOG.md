@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+## UNRELEASED
+
+* Metadata
+  * Updated ExchangeOnline module version to 1.0.1;
+
 ## 1.20.0603.1
 
 * Microsoft365Dsc

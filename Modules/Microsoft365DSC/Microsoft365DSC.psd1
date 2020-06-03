@@ -61,7 +61,7 @@
         },
         @{
             ModuleName      = "ExchangeOnlineManagement"
-            RequiredVersion = "0.4578.0"
+            RequiredVersion = "1.0.1"
         },
         @{
             ModuleName      = "Microsoft.Graph.Authentication"
@@ -130,7 +130,8 @@
                           'Export-M365DSCConfiguration',
                           'New-M365DSCDeltaReport',
                           'New-M365DSCReportFromConfiguration',
-                          'Test-M365DSCAgent')
+                          'Test-M365DSCAgent',
+                          'Test-M365DSCDependenciesForNewVersions')
 
     # Variables to export from this module
     # VariablesToExport = @()
