@@ -130,7 +130,8 @@
                           'Export-M365DSCConfiguration',
                           'New-M365DSCDeltaReport',
                           'New-M365DSCReportFromConfiguration',
-                          'Test-M365DSCAgent')
+                          'Test-M365DSCAgent',
+                          'Test-M365DSCDependenciesForNewVersions')
 
     # Variables to export from this module
     # VariablesToExport = @()

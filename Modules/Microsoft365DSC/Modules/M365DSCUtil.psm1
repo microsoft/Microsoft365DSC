@@ -1418,3 +1418,33 @@ function Assert-M365DSCTemplate
         Write-Error "You need to specify a path to an Microsoft365DSC Template (*.m365 or *.ps1)"
     }
 }
+
+function Test-M365DSCDependenciesForNewVersions
+{
+    [CmdletBinding()]
+    $InformationPreference = 'Continue'
+    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+    $manifest = Import-PowerShellDataFile "$currentPath/Microsoft365DSC.psd1"
+    $dependencies = $manifest.RequiredModules
+    $i = 1
+    foreach ($dependency in $dependencies)
+    {
+        Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i/$dependencies.Count * 100)
+        try
+        {
+            $moduleInGallery = Find-Module $dependency.ModuleName
+            [array]$moduleInstalled = Get-Module $dependency.ModuleName -ListAvailable | select Version
+            $modules = $moduleInstalled | Sort-Object Version -Descending
+            $moduleInstalled = $modules[0]
+            if ([Version]($moduleInGallery.Version) -gt [Version]($moduleInstalled[0].Version))
+            {
+                Write-Information -MessageData "New version of {$($dependency.ModuleName)} is available"
+            }
+        }
+        catch
+        {
+            Write-Information -MessageData "New version of {$($dependency.ModuleName)} is available"
+        }
+        $i++
+    }
+}
