@@ -44,7 +44,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
 
         # Test contexts
-          Context -Name "he tenant CDN Exists and Values are already in the not desired state" -Fixture {
+          Context -Name "The tenant CDN Exists and Values are already in the not desired state" -Fixture {
             $testParams = @{
                 Enable             = $false
                 CdnType            = "Public"
