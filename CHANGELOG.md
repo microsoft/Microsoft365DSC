@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+*AADApplication
+  * Initial Release;
+
 * Modules
   * M365DSCUtil - Fixed an issue in Test-Microsoft365DSCParameterState where
     the same array of object was always being compared;
