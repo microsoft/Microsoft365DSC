@@ -1448,3 +1448,53 @@ function Test-M365DSCDependenciesForNewVersions
         $i++
     }
 }
+
+function Set-M365DSCAgentCertificateConfiguration
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param()
+
+    $existingCertificate = Get-ChildItem -Path Cert:\LocalMachine\My | `
+        Where-Object {$_.Subject -match "M365DSCEncryptionCert"}
+    if ($null -eq $existingCertificate)
+    {
+        Write-Verbose -Message "No existing M365DSC certificate found. Creating one."
+        $certificateFilePath = "$env:Temp\M365DSC.cer"
+        $cert = New-SelfSignedCertificate -Type DocumentEncryptionCertLegacyCsp `
+            -DnsName 'Microsoft365DSC' `
+            -Subject 'M365DSCEncryptionCert' `
+            -HashAlgorithm SHA256
+        $cert | Export-Certificate -FilePath $certificateFilePath -Force
+        Import-Certificate –FilePath $certificateFilePath `
+            –CertStoreLocation 'Cert:\LocalMachine\My' -Confirm:$false
+        $existingCertificate = Get-ChildItem -Path Cert:\LocalMachine\My | `
+            Where-Object {$_.Subject -match "M365DSCEncryptionCert"}
+    }
+    else
+    {
+        Write-Verbose -Message "An existing M365DSc certificate was found. Re-using it."
+    }
+    $thumbprint = $existingCertificate.Thumbprint
+    Write-Verbose -Message "Using M365DSCEncryptionCert with thumbprint {$thumbprint}"
+
+    $configOutputFile = $env:Temp + "\M365DSCAgentLCMConfig.ps1"
+    $LCMConfigContent = @"
+    [DSCLocalConfigurationManager()]
+    Configuration M365AgentConfig
+    {
+        Node Localhost
+        {
+            Settings
+            {
+                CertificateID = '$thumbprint'
+            }
+        }
+    }
+    M365AgentConfig | Out-Null
+    Set-DSCLocalConfigurationManager M365AgentConfig
+"@
+    $LCMConfigContent | Out-File $configOutputFile
+    & $configOutputFile
+    return $thumbprint
+}
