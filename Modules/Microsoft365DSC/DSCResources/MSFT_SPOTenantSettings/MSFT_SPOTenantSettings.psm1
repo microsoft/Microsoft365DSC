@@ -267,11 +267,12 @@ function Set-TargetResource
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("GlobalAdminAccount")
     $CurrentParameters.Remove("IsSingleInstance")
+    $CurrentParameters.Remove("Ensure")
 
     if ($PublicCdnEnabled -eq $false)
     {
         Write-Verbose -Message "The use of the public CDN is not enabled, for that the PublicCdnAllowedFileTypes parameter can not be configured and will be removed"
-        $CurrentParameters.Remove("PublicCdnAllowedFileTypes")
+        $CurrentParameters.Remove("PublicCdnAllowedFileTypes") | Out-Null
     }
     $tenant = Set-PnPTenant @CurrentParameters
 }
