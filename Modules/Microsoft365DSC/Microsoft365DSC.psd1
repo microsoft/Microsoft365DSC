@@ -89,7 +89,7 @@
         },
         @{
             ModuleName      = "ReverseDSC"
-            RequiredVersion = "2.0.0.3"
+            RequiredVersion = "2.0.0.4"
         },
         @{
             ModuleName      = "SharePointPnPPowerShellOnline"
@@ -130,6 +130,7 @@
                           'Export-M365DSCConfiguration',
                           'New-M365DSCDeltaReport',
                           'New-M365DSCReportFromConfiguration',
+                          'Set-M365DSCAgentCertificateConfiguration',
                           'Test-M365DSCAgent',
                           'Test-M365DSCDependenciesForNewVersions')
 
