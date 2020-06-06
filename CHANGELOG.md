@@ -2,16 +2,43 @@
 
 ## UNRELEASED
 
-*AADApplication
+* Metadata
+  * Updated ExchangeOnline module version to 1.0.1;
+* AADApplication
   * Initial Release;
 
+## 1.20.0603.1
+
+* Microsoft365Dsc
+  * Improved event log function
+* EXOEmailAddressPolicy
+  * Converted hardcoded tenant name into variables;
+* EXOHostedContentFilterPolicy
+  * Added 'NoAction' as a valid input for property BulkSpamAction;
+* EXOInboundConnector
+  * Fixed an issue where if the connector was created with a source
+    of 'AdminUI', we now convert it to 'Default' in the Get function;
+* EXOOutboundConnector
+  * Fixed an issue where if the connector was created with a source
+    of 'AdminUI', we now convert it to 'Default' in the Get function;
+* TeamsTenantDialPlan
+  * Fixed an issue extraction plans without any normalization rules;
 * Modules
-  * M365DSCUtil - Fixed an issue in Test-Microsoft365DSCParameterState where
-    the same array of object was always being compared;
+  * M365DSCUtil:
+    * Fixed an issue in Test-Microsoft365DSCParameterState where
+      the same array of object was always being compared;
+    * Issue 612 - Fixed an extra '}' in the event log output;
 
 * Metadata
-  * Updated MSCloudLoginAssistant to 1.0.15;
-  * Updated SharePointPnPPowerShellOnline to 3.21.2005.1;
+  * Updated AzureADPreview to 2.0.2.102;
+  * Updated MSCloudLoginAssistant to 1.0.23;
+  * Updated Microsoft.PowerApps.Administration.PowerShell
+    to 2.0.64;
+  * Updated ReverseDSC to 2.0.0.3;
+  * Updated SharePointPnPPowerShellOnline to 3.21.2005.2;
+* Misc
+  * Azure DevOPS Pipelines and AppVeyor Tests converted to GitHub
+    Actions;
 
 ## 1.0.5.128
 
