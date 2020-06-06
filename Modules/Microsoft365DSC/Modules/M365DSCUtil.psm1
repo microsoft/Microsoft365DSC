@@ -1464,10 +1464,11 @@ function Set-M365DSCAgentCertificateConfiguration
         $cert = New-SelfSignedCertificate -Type DocumentEncryptionCertLegacyCsp `
             -DnsName 'Microsoft365DSC' `
             -Subject 'M365DSCEncryptionCert' `
-            -HashAlgorithm SHA256
-        $cert | Export-Certificate -FilePath $certificateFilePath -Force
-        Import-Certificate –FilePath $certificateFilePath `
-            –CertStoreLocation 'Cert:\LocalMachine\My' -Confirm:$false
+            -HashAlgorithm SHA256 `
+            -NotAfter (Get-Date).AddYears(10)
+        $cert | Export-Certificate -FilePath $certificateFilePath -Force | Out-Null
+        Import-Certificate -FilePath $certificateFilePath `
+            -CertStoreLocation 'Cert:\LocalMachine\My' -Confirm:$false | Out-Null
         $existingCertificate = Get-ChildItem -Path Cert:\LocalMachine\My | `
             Where-Object {$_.Subject -match "M365DSCEncryptionCert"}
     }
@@ -1496,5 +1497,7 @@ function Set-M365DSCAgentCertificateConfiguration
 "@
     $LCMConfigContent | Out-File $configOutputFile
     & $configOutputFile
+    Remove-Item -Path $configOutputFile -Confirm:$false
+    Remove-Item -Path "./M365AgentConfig" -Recurse -Confirm:$false
     return $thumbprint
 }
