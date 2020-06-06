@@ -391,51 +391,82 @@ function Export-TargetResource
 
     $content = ''
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
-    if ($ConnectionMode -eq 'ServicePrincipal')
-    {
-        $params = @{
-            ApplicationId          = $ApplicationId
-            TenantId               = $TenantId
-            CertificateThumbprint  = $CertificateThumbprint
-        }
-    }
-    else
-    {
-        $params = @{
-            GlobalAdminAccount = $GlobalAdminAccount
-            IsSingleInstance   = 'Yes'
-        }
-    }
+    $i = 1
 
-    $result = Get-TargetResource @params
-
-    if ($result.Ensure -eq 'Present')
+    $AADApplications = Get-AzureADApplication
+    foreach($AADApp in $AADApplications)
     {
+        Write-Information -MessageData "    [$i/$($AADApplications.Count)] $($AADApp.DisplayName)"
         if ($ConnectionMode -eq 'Credential')
         {
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $result.Remove("ApplicationId") | Out-Null
-            $result.Remove("TenantId") | Out-Null
-            $result.Remove("CertificateThumbprint") | Out-Null
+            $params = @{
+                GlobalAdminAccount            = $GlobalAdminAccount
+                DisplayName                   = $AADApp.DisplayName
+                AvailableToOtherTenants       = $AADApp.AvailableToOtherTenants
+                GroupMembershipClaims         = $AADApp.GroupMembershipClaims
+                Homepage                      = $AADApp.Homepage
+                IdentifierUris                = $AADApp.IdentifierUris
+                KnownClientApplications       = $AADApp.KnownClientApplications
+                LogoutURL                     = $AADApp.LogoutURL
+                Oauth2AllowImplicitFlow       = $AADApp.Oauth2AllowImplicitFlow
+                Oauth2AllowUrlPathMatching    = $AADApp.Oauth2AllowUrlPathMatching
+                Oauth2RequirePostResponse     = $AADApp.Oauth2RequirePostResponse
+                PublicClient                  = $AADApp.PublicClient
+                ReplyURLs                     = $AADApp.ReplyURLs
+                SamlMetadataUrl               = $AADApp.SamlMetadataUrl
+            }
         }
         else
         {
-            $result.Remove("GlobalAdminAccount") | Out-Null
+            $params = @{
+                ApplicationId                 = $ApplicationId
+                TenantId                      = $TenantId
+                CertificateThumbprint         = $CertificateThumbprint
+                DisplayName                   = $AADApp.DisplayName
+                AvailableToOtherTenants       = $AADApp.AvailableToOtherTenants
+                GroupMembershipClaims         = $AADApp.GroupMembershipClaims
+                Homepage                      = $AADApp.Homepage
+                IdentifierUris                = $AADApp.IdentifierUris
+                KnownClientApplications       = $AADApp.KnownClientApplications
+                LogoutURL                     = $AADApp.LogoutURL
+                Oauth2AllowImplicitFlow       = $AADApp.Oauth2AllowImplicitFlow
+                Oauth2AllowUrlPathMatching    = $AADApp.Oauth2AllowUrlPathMatching
+                Oauth2RequirePostResponse     = $AADApp.Oauth2RequirePostResponse
+                PublicClient                  = $AADApp.PublicClient
+                ReplyURLs                     = $AADApp.ReplyURLs
+                SamlMetadataUrl               = $AADApp.SamlMetadataUrl
+            }
         }
-        $content += "        AADApplication " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        }
-        else
-        {
-            $content += $currentDSCBlock
-        }
-        $content += "        }`r`n"
-    }
+        $result = Get-TargetResource @params
 
+        if ($result.Ensure -eq 'Present')
+        {
+            if ($ConnectionMode -eq 'Credential')
+            {
+                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                $result.Remove("ApplicationId") | Out-Null
+                $result.Remove("TenantId") | Out-Null
+                $result.Remove("CertificateThumbprint") | Out-Null
+            }
+            else
+            {
+                $result.Remove("GlobalAdminAccount") | Out-Null
+            }
+            $content += "        AADApplication " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            if ($ConnectionMode -eq 'Credential')
+            {
+                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            }
+            else
+            {
+                $content += $currentDSCBlock
+            }
+            $content += "        }`r`n"
+            $i++
+        }
+    }
     return $content
 }
 

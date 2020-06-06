@@ -132,22 +132,40 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-AzureADApplication -MockWith {
-                return @{
-                    DisplayName                   = "App1"
-                    ObjectID                      = "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
-                    AvailableToOtherTenants       = $false
-                    GroupMembershipClaims         = "0"
-                    Homepage                      = "https://app.contoso.com"
-                    IdentifierUris                = "https://app.contoso.com"
-                    KnownClientApplications       = ""
-                    LogoutURL                     = "https://app.contoso.com/logout"
-                    Oauth2AllowImplicitFlow       = $false
-                    Oauth2AllowUrlPathMatching    = $false
-                    Oauth2RequirePostResponse     = $false
-                    PublicClient                  = $false
-                    ReplyURLs                     = "https://app.contoso.com"
-                    SamlMetadataUrl               = ""
-                }
+                $AADApp = New-Object PSCustomObject
+                $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value "App1"
+                $AADApp | Add-Member -MemberType NoteProperty -Name ObjectID -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
+                $AADApp | Add-Member -MemberType NoteProperty -Name AvailableToOtherTenants -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name GroupMembershipClaims -Value 0
+                $AADApp | Add-Member -MemberType NoteProperty -Name Homepage -Value "https://app.contoso.com"
+                $AADApp | Add-Member -MemberType NoteProperty -Name IdentifierUris -Value "https://app.contoso.com"
+                $AADApp | Add-Member -MemberType NoteProperty -Name KnownClientApplications -Value ""
+                $AADApp | Add-Member -MemberType NoteProperty -Name LogoutURL -Value "https://app.contoso.com/logout"
+                $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2AllowImplicitFlow -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2AllowUrlPathMatching -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2RequirePostResponse -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name PublicClient -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name ReplyURLs -Value "https://app.contoso.com"
+                $AADApp | Add-Member -MemberType NoteProperty -Name SamlMetadataUrl -Value ""
+                return $AADApp
+                
+               # $AADApp = @{
+               #     DisplayName                   = "App1"
+               #     ObjectID                      = "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
+               #     AvailableToOtherTenants       = $false
+               #     GroupMembershipClaims         = "0"
+               #     Homepage                      = "https://app.contoso.com"
+               #     IdentifierUris                = "https://app.contoso.com"
+               #     KnownClientApplications       = ""
+               #     LogoutURL                     = "https://app.contoso.com/logout"
+               #     Oauth2AllowImplicitFlow       = $false
+               #     Oauth2AllowUrlPathMatching    = $false
+               #     Oauth2RequirePostResponse     = $false
+               #     PublicClient                  = $false
+               #     ReplyURLs                     = "https://app.contoso.com"
+               #     SamlMetadataUrl               = ""
+               # }
+               # return $AADApp 
             }
 
             It "Should return values from the get method" {
@@ -155,7 +173,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Assert-MockCalled -CommandName "Get-AzureADApplication" -Exactly 1
             }
 
-            It 'Should return false from the Test method' {
+            It 'Should return false from the test method' {
                 Test-TargetResource @testParams | Should Be $false
             }
 
@@ -188,29 +206,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-AzureADApplication -MockWith {
-                return @{
-                    DisplayName                   = "App1"
-                    AvailableToOtherTenants       = $false
-                    GroupMembershipClaims         = "0"
-                    Homepage                      = "https://app.contoso.com"
-                    IdentifierUris                = "https://app.contoso.com"
-                    KnownClientApplications       = ""
-                    LogoutURL                     = "https://app.contoso.com/logout"
-                    Oauth2AllowImplicitFlow       = $false
-                    Oauth2AllowUrlPathMatching    = $false
-                    Oauth2RequirePostResponse     = $false
-                    PublicClient                  = $false
-                    ReplyURLs                     = "https://app.contoso.com"
-                    SamlMetadataUrl               = ""
-                }
+                $AADApp = New-Object PSCustomObject
+                $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value "App1"
+                $AADApp | Add-Member -MemberType NoteProperty -Name ObjectID -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
+                $AADApp | Add-Member -MemberType NoteProperty -Name AvailableToOtherTenants -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name GroupMembershipClaims -Value 0
+                $AADApp | Add-Member -MemberType NoteProperty -Name Homepage -Value "https://app.contoso.com"
+                $AADApp | Add-Member -MemberType NoteProperty -Name IdentifierUris -Value "https://app.contoso.com"
+                $AADApp | Add-Member -MemberType NoteProperty -Name KnownClientApplications -Value ""
+                $AADApp | Add-Member -MemberType NoteProperty -Name LogoutURL -Value "https://app.contoso.com/logout"
+                $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2AllowImplicitFlow -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2AllowUrlPathMatching -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2RequirePostResponse -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name PublicClient -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name ReplyURLs -Value "https://app.contoso.com"
+                $AADApp | Add-Member -MemberType NoteProperty -Name SamlMetadataUrl -Value ""
+                return $AADApp
             }
 
-            It "Should return Values from the Get method" {
+            It "Should return Values from the get method" {
                 Get-TargetResource @testParams
                 Assert-MockCalled -CommandName "Get-AzureADApplication" -Exactly 1
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return true from the test method' {
                 Test-TargetResource @testParams | Should Be $true
             }
         }
@@ -239,41 +258,40 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-AzureADApplication -MockWith {
-                return @{
-                    DisplayName                   = "App1"
-                    AvailableToOtherTenants       = $false
-                    GroupMembershipClaims         = "0"
-                    Homepage                      = "https://app.contoso.com"
-                    IdentifierUris                = "https://app.contoso.com"
-                    KnownClientApplications       = ""
-                    LogoutURL                     = "https://app.contoso.com/logout"
-                    Oauth2AllowImplicitFlow       = $false
-                    Oauth2AllowUrlPathMatching    = $false
-                    Oauth2RequirePostResponse     = $false
-                    PublicClient                  = $false
-                    ReplyURLs                     = "https://app.contoso.com"
-                    SamlMetadataUrl               = ""
-                    Ensure                        = "Present"
-                    GlobalAdminAccount            = $GlobalAdmin
-                }
+                $AADApp = New-Object PSCustomObject
+                $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value "App1"
+                $AADApp | Add-Member -MemberType NoteProperty -Name ObjectID -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
+                $AADApp | Add-Member -MemberType NoteProperty -Name AvailableToOtherTenants -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name GroupMembershipClaims -Value 0
+                $AADApp | Add-Member -MemberType NoteProperty -Name Homepage -Value "https://app.contoso.com"
+                $AADApp | Add-Member -MemberType NoteProperty -Name IdentifierUris -Value "https://app.contoso.com"
+                $AADApp | Add-Member -MemberType NoteProperty -Name KnownClientApplications -Value ""
+                $AADApp | Add-Member -MemberType NoteProperty -Name LogoutURL -Value "https://app.contoso.com/logout"
+                $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2AllowImplicitFlow -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2AllowUrlPathMatching -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2RequirePostResponse -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name PublicClient -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name ReplyURLs -Value "https://app.contoso.com"
+                $AADApp | Add-Member -MemberType NoteProperty -Name SamlMetadataUrl -Value ""
+                return $AADApp
             }
 
-            It "Should return Values from the Get method" {
+            It "Should return values from the get method" {
                 Get-TargetResource @testParams
                 Assert-MockCalled -CommandName "Get-AzureADApplication" -Exactly 1
             }
 
-            It 'Should return false from the Test method' {
+            It 'Should return false from the test method' {
                 Test-TargetResource @testParams | Should Be $false
             }
 
-            It "Should call the Set method" {
+            It "Should call the set method" {
                 Set-TargetResource @testParams
                 Assert-MockCalled -CommandName 'Set-AzureADApplication' -Exactly 1
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name "ReverseDSC tests" -Fixture {
             $testParams = @{
                 GlobalAdminAccount = $GlobalAdminAccount
             }
@@ -283,26 +301,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-AzureADApplication -MockWith {
-                return @{
-                    DisplayName                   = "App1"
-                    AvailableToOtherTenants       = $false
-                    GroupMembershipClaims         = "0"
-                    Homepage                      = "https://app.contoso.com"
-                    IdentifierUris                = "https://app.contoso.com"
-                    KnownClientApplications       = ""
-                    LogoutURL                     = "https://app.contoso.com/logout"
-                    Oauth2AllowImplicitFlow       = $false
-                    Oauth2AllowUrlPathMatching    = $false
-                    Oauth2RequirePostResponse     = $false
-                    PublicClient                  = $false
-                    ReplyURLs                     = "https://app.contoso.com"
-                    SamlMetadataUrl               = ""
-                    Ensure                        = "Present"
-                    GlobalAdminAccount            = $GlobalAdmin
-                }
+                $AADApp = New-Object PSCustomObject
+                $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value "App1"
+                $AADApp | Add-Member -MemberType NoteProperty -Name ObjectID -Value "5dcb2237-c61b-4258-9c85-eae2aaeba9d6"
+                $AADApp | Add-Member -MemberType NoteProperty -Name AvailableToOtherTenants -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name GroupMembershipClaims -Value 0
+                $AADApp | Add-Member -MemberType NoteProperty -Name Homepage -Value "https://app.contoso.com"
+                $AADApp | Add-Member -MemberType NoteProperty -Name IdentifierUris -Value "https://app.contoso.com"
+                $AADApp | Add-Member -MemberType NoteProperty -Name KnownClientApplications -Value ""
+                $AADApp | Add-Member -MemberType NoteProperty -Name LogoutURL -Value "https://app.contoso.com/logout"
+                $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2AllowImplicitFlow -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2AllowUrlPathMatching -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2RequirePostResponse -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name PublicClient -Value $false
+                $AADApp | Add-Member -MemberType NoteProperty -Name ReplyURLs -Value "https://app.contoso.com"
+                $AADApp | Add-Member -MemberType NoteProperty -Name SamlMetadataUrl -Value ""
+                return $AADApp
             }
 
-            It "Should Reverse Engineer resource from the Export method" {
+            It "Should reverse engineer resource from the export method" {
                 Export-TargetResource @testParams
             }
         }
