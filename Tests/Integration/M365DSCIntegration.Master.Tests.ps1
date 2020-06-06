@@ -652,6 +652,22 @@ Configuration Master
             )
         }
 
+        SPOTenantCdnEnabled CDN
+        {
+            Enable             = $True
+            CdnType            = "Public"
+            GlobalAdminAccount = $GlobalAdmin;
+            Ensure             = "Present"
+        }
+
+        SPOOrgAssetsLibrary OrgAssets
+        {
+            LibraryUrl         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/Modern/Shared Documents"
+            CdnType            = "Public"
+            GlobalAdminAccount = $GlobalAdmin;
+            Ensure             = "Present"
+        }
+
         # TODO - Investigate this for GCC
         <#if ($Environment -ne 'GCC')
         {

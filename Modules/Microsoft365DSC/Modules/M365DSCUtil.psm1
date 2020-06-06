@@ -5,9 +5,9 @@ $Global:SessionSecurityCompliance = $null
 
 #region Extraction Modes
 $Global:DefaultComponents = @("SPOApp","SPOSiteDesign")
-$Global:FullComponents = @("EXOMailboxSettings","EXOManagementRole","O365Group","O365User","SPOSiteAuditSettings", `
-                           "SPOSiteGroup","SPOSite","SPOUserProfileProperty","SPOPropertyBag","TeamsTeam","TeamsChannel", `
-                           "TeamsUser")
+$Global:FullComponents = @("AADMSGroup", "EXOMailboxSettings","EXOManagementRole","O365Group","O365User","PPPowerAppsEnvironment", `
+    "SPOSiteAuditSettings","SPOSiteGroup","SPOSite","SPOUserProfileProperty","SPOPropertyBag","TeamsTeam","TeamsChannel", `
+     "TeamsUser")
 #endregion
 
 function Format-EXOParams
@@ -756,7 +756,6 @@ function Test-Microsoft365DSCParameterState
             }
             $EventMessage += "        <Param Name =`"$key`">$Value</Param>`r`n"
         }
-        $EventMessage += "    }"
         $EventMessage += "    </DesiredValues>`r`n"
         $EventMessage += "</M365DSCEvent>"
 
@@ -1030,6 +1029,45 @@ function Get-SPOAdministrationUrl
     $global:AdminUrl = "https://$global:tenantName-admin.sharepoint.com"
     Write-Verbose -Message "SharePoint Online admin URL is $global:AdminUrl"
     return $global:AdminUrl
+}
+
+function Get-M365TenantName
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $false)]
+        [switch]
+        $UseMFA,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+    if ($UseMFA)
+    {
+        $UseMFASwitch = @{UseMFA = $true }
+    }
+    else
+    {
+        $UseMFASwitch = @{ }
+    }
+    Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
+    Test-MSCloudLogin -Platform "AzureAD" -CloudCredential $GlobalAdminAccount | Out-Null
+    Write-Verbose -Message "Getting SharePoint Online admin URL..."
+    $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
+
+    if ($defaultDomain[0].Name -like '*.onmicrosoft.com*')
+    {
+        $tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.com", ""
+    }
+    elseif ($defaultDomain[0].Name -like '*.onmicrosoft.de*')
+    {
+        $tenantName = $defaultDomain[0].Name -replace ".onmicrosoft.de", ""
+    }
+
+    Write-Verbose -Message "M365 tenant name is $tenantName"
+    return $tenantName
 }
 
 function Split-ArrayByBatchSize
@@ -1378,5 +1416,35 @@ function Assert-M365DSCTemplate
     else
     {
         Write-Error "You need to specify a path to an Microsoft365DSC Template (*.m365 or *.ps1)"
+    }
+}
+
+function Test-M365DSCDependenciesForNewVersions
+{
+    [CmdletBinding()]
+    $InformationPreference = 'Continue'
+    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+    $manifest = Import-PowerShellDataFile "$currentPath/Microsoft365DSC.psd1"
+    $dependencies = $manifest.RequiredModules
+    $i = 1
+    foreach ($dependency in $dependencies)
+    {
+        Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i/$dependencies.Count * 100)
+        try
+        {
+            $moduleInGallery = Find-Module $dependency.ModuleName
+            [array]$moduleInstalled = Get-Module $dependency.ModuleName -ListAvailable | select Version
+            $modules = $moduleInstalled | Sort-Object Version -Descending
+            $moduleInstalled = $modules[0]
+            if ([Version]($moduleInGallery.Version) -gt [Version]($moduleInstalled[0].Version))
+            {
+                Write-Information -MessageData "New version of {$($dependency.ModuleName)} is available"
+            }
+        }
+        catch
+        {
+            Write-Information -MessageData "New version of {$($dependency.ModuleName)} is available"
+        }
+        $i++
     }
 }
