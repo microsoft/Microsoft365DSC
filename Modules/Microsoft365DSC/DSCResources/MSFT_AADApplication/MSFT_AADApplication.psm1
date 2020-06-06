@@ -216,11 +216,11 @@ function Set-TargetResource
 
     $currentAADApp = Get-TargetResource @PSBoundParameters
     $currentParameters = $PSBoundParameters
-    $currentParameters.Remove("ApplicationId")
-    $currentParameters.Remove("TenantId")
-    $currentParameters.Remove("CertificateThumbprint")
-    $currentParameters.Remove("GlobalAdminAccount")
-    $currentParameters.Remove("Ensure")
+    $currentParameters.Remove("ApplicationId")  | Out-Null
+    $currentParameters.Remove("TenantId")  | Out-Null
+    $currentParameters.Remove("CertificateThumbprint")  | Out-Null
+    $currentParameters.Remove("GlobalAdminAccount")  | Out-Null
+    $currentParameters.Remove("Ensure")  | Out-Null
 
     if($null -ne $KnownClientApplications)
     {
@@ -239,7 +239,7 @@ function Set-TargetResource
                 Write-Verbose -Message "Could not find an existing app with the app ID $($KnownClientApplication)"
             }
         }
-        $currentParameters.Remove("KnownClientApplications")
+        $currentParameters.Remove("KnownClientApplications") | Out-Null
         $currentParameters.Add("KnownClientApplications", $testedKnownClientApplications)
     }
 
@@ -402,18 +402,6 @@ function Export-TargetResource
             $params = @{
                 GlobalAdminAccount            = $GlobalAdminAccount
                 DisplayName                   = $AADApp.DisplayName
-                AvailableToOtherTenants       = $AADApp.AvailableToOtherTenants
-                GroupMembershipClaims         = $AADApp.GroupMembershipClaims
-                Homepage                      = $AADApp.Homepage
-                IdentifierUris                = $AADApp.IdentifierUris
-                KnownClientApplications       = $AADApp.KnownClientApplications
-                LogoutURL                     = $AADApp.LogoutURL
-                Oauth2AllowImplicitFlow       = $AADApp.Oauth2AllowImplicitFlow
-                Oauth2AllowUrlPathMatching    = $AADApp.Oauth2AllowUrlPathMatching
-                Oauth2RequirePostResponse     = $AADApp.Oauth2RequirePostResponse
-                PublicClient                  = $AADApp.PublicClient
-                ReplyURLs                     = $AADApp.ReplyURLs
-                SamlMetadataUrl               = $AADApp.SamlMetadataUrl
             }
         }
         else
@@ -423,18 +411,6 @@ function Export-TargetResource
                 TenantId                      = $TenantId
                 CertificateThumbprint         = $CertificateThumbprint
                 DisplayName                   = $AADApp.DisplayName
-                AvailableToOtherTenants       = $AADApp.AvailableToOtherTenants
-                GroupMembershipClaims         = $AADApp.GroupMembershipClaims
-                Homepage                      = $AADApp.Homepage
-                IdentifierUris                = $AADApp.IdentifierUris
-                KnownClientApplications       = $AADApp.KnownClientApplications
-                LogoutURL                     = $AADApp.LogoutURL
-                Oauth2AllowImplicitFlow       = $AADApp.Oauth2AllowImplicitFlow
-                Oauth2AllowUrlPathMatching    = $AADApp.Oauth2AllowUrlPathMatching
-                Oauth2RequirePostResponse     = $AADApp.Oauth2RequirePostResponse
-                PublicClient                  = $AADApp.PublicClient
-                ReplyURLs                     = $AADApp.ReplyURLs
-                SamlMetadataUrl               = $AADApp.SamlMetadataUrl
             }
         }
         $result = Get-TargetResource @params
