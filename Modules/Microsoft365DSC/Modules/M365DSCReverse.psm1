@@ -394,6 +394,27 @@ function Start-M365DSCConfigurationExtract
 
     if (!$AzureAutomation)
     {
+        $LCMConfig = Get-DscLocalConfigurationManager
+        if ($null -ne $LCMConfig.CertificateID)
+        {
+            try
+            {
+                # Export the certificate assigned to the LCM
+                $certPath = $OutputDSCPath + "M365DSC.cer"
+                Export-Certificate -FilePath $certPath `
+                    -Cert "cert:\LocalMachine\my\$($LCMConfig.CertificateID)" `
+                    -Type CERT `
+                    -NoClobber | Out-Null
+                Add-ConfigurationDataEntry -Node "localhost" `
+                    -Key "CertificateFile" `
+                    -Value "M365DSC.cer" `
+                    -Description "Path of the certificate used to encrypt credentials in the file."
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
+        }
         $outputConfigurationData = $OutputDSCPath + "ConfigurationData.psd1"
         New-ConfigurationDataDocument -Path $outputConfigurationData
     }

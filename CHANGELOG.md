@@ -4,6 +4,7 @@
 
 * Metadata
   * Updated ExchangeOnline module version to 1.0.1;
+  * Updated ReverseDSC module version to 2.0.0.4;
 
 ## 1.20.0603.1
 
