@@ -4,8 +4,6 @@
 
 * Metadata
   * Updated ExchangeOnline module version to 1.0.1;
-* AADApplication
-  * Initial Release;
 
 ## 1.20.0603.1
 
