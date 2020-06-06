@@ -77,7 +77,7 @@
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
-            RequiredVersion = "2.0.64"
+            RequiredVersion = "2.0.65"
         },
         @{
             ModuleName      = "MicrosoftTeams"
