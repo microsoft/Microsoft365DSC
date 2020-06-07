@@ -40,6 +40,25 @@ Configuration Master
 
     Node Localhost
     {
+        AADApplication DSCApp1
+        {
+            DisplayName                   = "App1"
+            AvailableToOtherTenants       = $false
+            GroupMembershipClaims         = "0"
+            Homepage                      = "https://app.contoso.com"
+            IdentifierUris                = "https://app.contoso.com"
+            KnownClientApplications       = ""
+            LogoutURL                     = "https://app.contoso.com/logout"
+            Oauth2AllowImplicitFlow       = $false
+            Oauth2AllowUrlPathMatching    = $false
+            Oauth2RequirePostResponse     = $false
+            PublicClient                  = $false
+            ReplyURLs                     = "https://app.contoso.com"
+            SamlMetadataUrl               = ""
+            Ensure                        = "Present"
+            GlobalAdminAccount            = $GlobalAdmin
+        }
+
         AADGroupsNamingPolicy GroupsNamingPolicy
         {
             CustomBlockedWordsList        = @("CEO", "President");
