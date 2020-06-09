@@ -72,12 +72,8 @@
             RequiredVersion = "0.5.1"
         },
         @{
-            ModuleName      = "Microsoft.Online.SharePoint.PowerShell"
-            RequiredVersion = "16.0.19515.12000"
-        },
-        @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
-            RequiredVersion = "2.0.64"
+            RequiredVersion = "2.0.65"
         },
         @{
             ModuleName      = "MicrosoftTeams"
@@ -93,7 +89,7 @@
         },
         @{
             ModuleName      = "SharePointPnPPowerShellOnline"
-            RequiredVersion = "3.21.2005.2"
+            RequiredVersion = "3.22.2006.0"
         }
     )
 

@@ -79,7 +79,7 @@ function Get-TargetResource
     #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SharePointOnline
+        -Platform PnP
 
     $nullReturn = @{
         IsSingleInstance                          = "Yes"
@@ -101,7 +101,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting OneDrive quota size for tenant"
-        $tenant = Get-SPOTenant
+        $tenant = Get-PnPTenant
 
         if ($null -eq $tenant)
         {
@@ -111,7 +111,7 @@ function Get-TargetResource
 
         Write-Verbose -Message "Getting OneDrive quota size for tenant $($tenant.OneDriveStorageQuota)"
         Write-Verbose -Message "Getting tenant client sync setting"
-        $tenantRestrictions = Get-SPOTenantSyncClientRestriction
+        $tenantRestrictions = Get-PnPTenantSyncClientRestriction
 
         if ($null -eq $tenantRestrictions)
         {
@@ -260,7 +260,7 @@ function Set-TargetResource
     #endregion
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SharePointOnline
+        -Platform PnP
 
     ## Configure OneDrive settings
     ## Parameters below are remove for the Set-SPOTenant cmdlet
@@ -299,7 +299,7 @@ function Set-TargetResource
     }
 
     Write-Verbose -Message "Configuring OneDrive settings."
-    Set-SPOTenant @CurrentParameters
+    Set-PnPTenant @CurrentParameters
 
     $clientSyncParameters = $PSBoundParameters
 
@@ -309,11 +309,11 @@ function Set-TargetResource
 
     if ($clientSyncParameters.ContainsKey("BlockMacSync") -and $clientSyncParameters.ContainsKey("DomainGuids"))
     {
-        Set-SPOTenantSyncClientRestriction -BlockMacSync:$BlockMacSync -DomainGuids $DomainGuids -Enable
+        Set-PnPTenantSyncClientRestriction -BlockMacSync:$BlockMacSync -DomainGuids $DomainGuids -Enable
     }
     elseif ($clientSyncParameters.ContainsKey("DomainGuids") -and ($clientSyncParameters.ContainsKey("BlockMacSync") -eq $false))
     {
-        Set-SPOTenantSyncClientRestriction -DomainGuids $DomainGuids -Enable
+        Set-PnPTenantSyncClientRestriction -DomainGuids $DomainGuids -Enable
     }
 
     if ($clientSyncParameters.ContainsKey("ExcludedFileExtensions"))
@@ -324,16 +324,16 @@ function Set-TargetResource
             $BlockedFileTypes += $fileTypes + ';'
         }
 
-        Set-SPOTenantSyncClientRestriction -ExcludedFileExtensions $BlockedFileTypes
+        Set-PnPTenantSyncClientRestriction -ExcludedFileExtensions $BlockedFileTypes
     }
     if ($clientSyncParameters.ContainsKey("DisableReportProblemDialog"))
     {
-        Set-SPOTenantSyncClientRestriction -DisableReportProblemDialog $DisableReportProblemDialog
+        Set-PnPTenantSyncClientRestriction -DisableReportProblemDialog $DisableReportProblemDialog
     }
 
     if ($clientSyncParameters.ContainsKey("GrooveBlockOption"))
     {
-        Set-SPOTenantSyncClientRestriction -GrooveBlockOption $GrooveBlockOption
+        Set-PnPTenantSyncClientRestriction -GrooveBlockOption $GrooveBlockOption
     }
 }
 
@@ -457,7 +457,7 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SharePointOnline `
+        -Platform PnP `
         -ErrorAction SilentlyContinue
     $Params = @{
         IsSingleInstance   = 'Yes'

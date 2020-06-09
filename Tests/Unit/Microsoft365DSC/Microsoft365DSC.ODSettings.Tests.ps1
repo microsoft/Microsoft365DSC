@@ -20,7 +20,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
-        $secpasswd = ConvertTo-SecureString "Pass@word1)" -AsPlainText -Force
+        $secpasswd = ConvertTo-SecureString "Pass@word1" -AsPlainText -Force
         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
         Mock -CommandName Test-MSCloudLogin -MockWith {
@@ -34,11 +34,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount   = $GlobalAdminAccount
             }
 
-            Mock -CommandName Set-SPOTenant -MockWith {
+            Mock -CommandName Set-PnPTenant -MockWith {
                 return @{OneDriveStorageQuota = $null }
             }
 
-            Mock -CommandName Get-SPOTenant -MockWith {
+            Mock -CommandName Get-PnPTenant -MockWith {
                 return $null
             }
 
@@ -70,13 +70,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount                        = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-SPOTenant -MockWith {
+            Mock -CommandName Get-PnPTenant -MockWith {
                 return @{
                     OneDriveStorageQuota = "1024"
                 }
             }
 
-            Mock -CommandName Get-SPOTenantSyncClientRestriction -MockWith {
+            Mock -CommandName Get-PnPTenantSyncClientRestriction -MockWith {
                 return @{
                     OptOutOfGrooveBlock        = $false
                     OptOutOfGrooveSoftBlock    = $false
@@ -106,7 +106,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 GlobalAdminAccount = $GlobalAdminAccount
             }
 
-            Mock -CommandName Get-SPOTenant -MockWith {
+            Mock -CommandName Get-PnPTenant -MockWith {
                 return @{
                     OneDriveStorageQuota = "1024"
                 }
