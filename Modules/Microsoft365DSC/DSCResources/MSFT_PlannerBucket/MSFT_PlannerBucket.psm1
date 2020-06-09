@@ -14,6 +14,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $BucketId,
+
+        [Parameter()]
+        [System.String]
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
@@ -38,12 +42,24 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
-        -InboundParameters $PSBoundParameters
+    Connect-Graph -Scopes "Group.ReadWrite.All" | Out-Null
 
-    $bucket = Get-MGPlannerPlanBucket -PlannerPlanId $PlanId | Where-Object -FilterScript {$_.Name -eq $Name}
+    if (-not [System.String]::IsNullOrEmpty($BucketId))
+    {
+        $bucket = Get-MGPlannerPlanBucket -PlannerPlanId $PlanId | Where-Object -FilterScript {$_.Id -eq $BucketId}
+    }
+    else
+    {
+        [Array]$bucket = Get-MGPlannerPlanBucket -PlannerPlanId $PlanId | Where-Object -FilterScript {$_.Name -eq $Name}
 
-    if ($null -eq $bucket)
+        if ($bucket.Length -gt 1)
+        {
+            throw "Multiple Buckets with Name {$Name} were found for Plan with ID {$PlanID}." + `
+                " Please use the BucketId property to identify the exact bucket."
+        }
+    }
+
+    if ($null -eq $bucket[0])
     {
         $results = @{
             Name                  = $Name
@@ -59,6 +75,7 @@ function Get-TargetResource
     $results = @{
         Name                  = $Name
         PlanId                = $PlanId
+        BucketId              = $bucket[0].Id
         Ensure                = "Present"
         ApplicationId         = $ApplicationId
         TenantID              = $TenantId
@@ -80,6 +97,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $PlanId,
+
+        [Parameter()]
+        [System.String]
+        $BucketId,
 
         [Parameter()]
         [System.String]
@@ -109,6 +130,21 @@ function Set-TargetResource
 
     Connect-Graph -Scopes "Group.ReadWrite.All" | Out-Null
 
+    # If the BucketID is null, assume we are creating a new one no matter what;
+    if ($null -eq $BucketId)
+    {
+        $results = @{
+            Name                  = $Name
+            PlanId                = $PlanId
+            BucketId              = $BucketId
+            Ensure                = "Absent"
+            ApplicationId         = "ApplicationId"
+            TenantId              = "TenantId"
+            CertificateThumbprint = $CertificateThumbprint
+        }
+        return $results
+    }
+
     $SetParams = $PSBoundParameters
     $currentValues = Get-TargetResource @PSBoundParameters
     $SetParams.Remove("ApplicationId") | Out-Null
@@ -116,22 +152,21 @@ function Set-TargetResource
     $SetParams.Remove("CertificateThumbprint") | Out-Null
     $SetParams.Remove("Ensure") | Out-Null
 
-    if ($Ensure -eq 'Present' -and $currentValues[1].Ensure -eq 'Absent')
+    if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Planner Plan {$Title} doesn't already exist. Creating it."
-        New-MGPlannerPlan -Owner $OwnerGroup -Title $Title | Out-Null
+        Write-Verbose -Message "Planner Bucket {$Name} doesn't already exist. Creating it."
+        New-MGPlannerBucket -Name $Name -PlanId $PlanId | Out-Null
     }
-    elseif ($Ensure -eq 'Present' -and $currentValues[1].Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Planner Plan {$Title} already exists, but is not in the " + `
+        Write-Verbose -Message "Planner Bucket {$Bucket} already exists, but is not in the " + `
             "Desired State. Updating it."
-        $plan = Get-MGGroupPlanner -GroupId $group.ObjectId | Where-Object -FilterScript {$_.Title -eq $Title}
-        $SetParams.Add("PlannerPlanId", $plan.Id)
+        $currentBucket = Get-MgPlannerPlanBucket -PlannerPlanId $PlanId | Where-Object -FilterScript {$_.Id -eq $BucketId}
         Update-MGPlannerPlan @SetParams
     }
-    elseif ($Ensure -eq 'Absent' -and $currentValues[1].Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Planner Plan {$Title} exists, but is should not. " + `
+        Write-Verbose -Message "Planner Bucket {$Name} exists, but is should not. " + `
             "Removing it."
         # TODO - Implement when available in the MSGraph PowerShell SDK
     }
@@ -150,6 +185,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $PlanId,
+
+        [Parameter()]
+        [System.String]
+        $BucketId,
 
         [Parameter()]
         [System.String]
@@ -242,6 +281,7 @@ function Export-TargetResource
                     $params = @{
                         Name                  = $bucket.Name
                         PlanId                = $plan.Id
+                        BucketId              = $Bucket.Id
                         ApplicationId         = $ApplicationId
                         TenantId              = $TenantId
                         CertificateThumbprint = $CertificateThumbprint
