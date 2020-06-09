@@ -67132,6 +67132,16 @@ param(
     ${Connection})
 
 }
+
+function Get-PnPTenantSyncClientRestriction
+{
+    [CmdletBinding()]
+param(
+    [Parameter(HelpMessage='Optional connection to be used by the cmdlet. Retrieve the value for this parameter by either specifying -ReturnConnection on Connect-PnPOnline or by executing Get-PnPConnection.')]
+    [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
+    ${Connection})
+
+}
 function Get-PnPTenantAppCatalogUrl
 {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]

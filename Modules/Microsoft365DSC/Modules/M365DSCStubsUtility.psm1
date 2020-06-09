@@ -84,7 +84,7 @@ function Get-M365StubFiles
             Test-MSCloudLogin -Platform $Module.Platform -CloudCredential $GlobalAdminAccount
         }
 
-        $cmdlets = Get-Command | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
+        $cmdlets = Get-Command -CmdType 'Cmdlet' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
         $StubContent = ''
         $i = 1
         foreach ($cmdlet in $cmdlets)
