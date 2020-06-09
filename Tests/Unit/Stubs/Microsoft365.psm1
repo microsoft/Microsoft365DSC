@@ -62285,8 +62285,7 @@ param(
 
     [Parameter(Mandatory=$true, HelpMessage='The hubsite to connect the site to')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${HubSite},
-)
+    ${HubSite})
 
 }
 function Disconnect-PnPHubSite
@@ -62295,8 +62294,7 @@ function Disconnect-PnPHubSite
 param(
     [Parameter(Mandatory=$true, HelpMessage='The site to disconnect from its hubsite')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${Site},
-)
+    ${Site})
 
 }
 function Ensure-PnPFolder
@@ -62326,8 +62324,7 @@ param(
 
     [Parameter(HelpMessage='Delay in seconds. Defaults to 1.')]
     [int]
-    ${RetryWait},
-)
+    ${RetryWait})
 
 }
 function Invoke-PnPSearchQuery
@@ -62433,8 +62430,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Load-PnPProvisioningTemplate
@@ -62492,8 +62488,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPApp
@@ -62523,8 +62518,7 @@ param(
 
     [Parameter(HelpMessage='Specifies the timeout in seconds. Defaults to 200.')]
     [int]
-    ${Timeout},
-)
+    ${Timeout})
 
 }
 function Add-PnPApplicationCustomizer
@@ -62561,8 +62555,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPClientSidePage
@@ -62604,8 +62597,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPClientSidePageSection
@@ -62630,8 +62622,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPClientSideText
@@ -62663,8 +62654,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPClientSideWebPart
@@ -62714,8 +62704,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPContentType
@@ -62744,8 +62733,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPContentTypeToDocumentSet
@@ -62762,8 +62750,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPContentTypeToList
@@ -62784,8 +62771,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPCustomAction
@@ -62865,8 +62851,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPDataRowsToProvisioningTemplate
@@ -62903,8 +62888,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPDocumentSet
@@ -62925,8 +62909,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPEventReceiver
@@ -62965,8 +62948,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPField
@@ -63032,8 +63014,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPFieldToContentType
@@ -63058,8 +63039,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPFile
@@ -63123,8 +63103,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPFileToProvisioningTemplate
@@ -63165,8 +63144,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPFolder
@@ -63183,8 +63161,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPHtmlPublishingPageLayout
@@ -63213,8 +63190,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPHubSiteAssociation
@@ -63227,8 +63203,7 @@ param(
 
     [Parameter(Mandatory=$true, HelpMessage='The hubsite to connect the site to')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${HubSite},
-)
+    ${HubSite})
 
 }
 function Add-PnPIndexedProperty
@@ -63245,8 +63220,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPJavaScriptBlock
@@ -63277,8 +63251,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPJavaScriptLink
@@ -63309,8 +63282,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPListFoldersToProvisioningTemplate
@@ -63339,8 +63311,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPListItem
@@ -63369,8 +63340,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPMasterPage
@@ -63403,8 +63373,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPNavigationNode
@@ -63442,8 +63411,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPOffice365GroupToSite
@@ -63484,8 +63452,7 @@ param(
 
     [Parameter(HelpMessage='The array UPN values of the group''s owners.')]
     [string[]]
-    ${Owners},
-)
+    ${Owners})
 
 }
 function Add-PnPOrgAssetsLibrary
@@ -63502,8 +63469,7 @@ param(
 
     [Parameter(HelpMessage='Indicates what type of Office 365 CDN source the document library will be added to')]
     [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
-    ${CdnType},
-)
+    ${CdnType})
 
 }
 function Add-PnPOrgNewsSite
@@ -63512,8 +63478,7 @@ function Add-PnPOrgNewsSite
 param(
     [Parameter(Mandatory=$true, HelpMessage='The url of the site to be marked as one of organization''s news sites')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${OrgNewsSiteUrl},
-)
+    ${OrgNewsSiteUrl})
 
 }
 function Add-PnPProvisioningTemplate
@@ -63547,8 +63512,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPPublishingPage
@@ -63579,8 +63543,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPPublishingPageLayout
@@ -63609,8 +63572,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPRoleDefinition
@@ -63635,8 +63597,7 @@ param(
 
     [Parameter(HelpMessage='Optional description for the new permission level.')]
     [string]
-    ${Description},
-)
+    ${Description})
 
 }
 function Add-PnPSiteClassification
@@ -63654,8 +63615,7 @@ function Add-PnPSiteCollectionAdmin
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Specifies owner(s) to add as site collection administrators. They will be added as additional site collection administrators to the site in the current context. Existing administrators will stay. Can be both users and groups.')]
     [System.Collections.Generic.List[SharePointPnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]]
-    ${Owners},
-)
+    ${Owners})
 
 }
 function Add-PnPSiteCollectionAppCatalog
@@ -63664,8 +63624,7 @@ function Add-PnPSiteCollectionAppCatalog
 param(
     [Parameter(Mandatory=$true, HelpMessage='Url of the site to add the app catalog to.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${Site},
-)
+    ${Site})
 
 }
 function Add-PnPSiteDesign
@@ -63698,8 +63657,7 @@ param(
 
     [Parameter(Mandatory=$true, HelpMessage='Specifies the type of site to which this design applies')]
     [SharePointPnP.PowerShell.Commands.Enums.SiteWebTemplate]
-    ${WebTemplate},
-)
+    ${WebTemplate})
 
 }
 function Add-PnPSiteDesignTask
@@ -63716,8 +63674,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPSiteScript
@@ -63734,8 +63691,7 @@ param(
 
     [Parameter(Mandatory=$true, HelpMessage='A JSON string containing the site script')]
     [string]
-    ${Content},
-)
+    ${Content})
 
 }
 function Add-PnPStoredCredential
@@ -63810,8 +63766,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPTeamsTeam
@@ -63832,8 +63787,7 @@ Relative-Relative path depends on the OriginScope. If the originScope is Tenant,
 
     [Parameter(Mandatory=$true, HelpMessage='Specifies the CDN type. The valid values are: public or private.')]
     [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
-    ${CdnType},
-)
+    ${CdnType})
 
 }
 function Add-PnPTenantSequence
@@ -63893,8 +63847,7 @@ param(
 
     [Parameter(Mandatory=$true, HelpMessage='If the theme is inverted or not')]
     [bool]
-    ${IsInverted},
-)
+    ${IsInverted})
 
 }
 function Add-PnPUserToGroup
@@ -63924,8 +63877,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPView
@@ -63974,8 +63926,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPWebhookSubscription
@@ -64000,8 +63951,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPWebPartToWebPartPage
@@ -64031,8 +63981,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPWebPartToWikiPage
@@ -64066,8 +64015,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPWikiPage
@@ -64089,8 +64037,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPWorkflowDefinition
@@ -64107,8 +64054,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Add-PnPWorkflowSubscription
@@ -64152,8 +64098,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Apply-PnPProvisioningTemplate
@@ -64218,8 +64163,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Apply-PnPTenantTemplate
@@ -64283,8 +64227,7 @@ param(
 
     [Parameter(HelpMessage='Specify a JSON configuration file to configure the extraction progress.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ApplyConfigurationPipeBind]
-    ${Configuration},
-)
+    ${Configuration})
 
 }
 function Approve-PnPTenantServicePrincipalPermissionRequest
@@ -64297,8 +64240,7 @@ param(
 
     [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Clear-PnPDefaultColumnValues
@@ -64319,8 +64261,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Clear-PnPListItemAsRecord
@@ -64337,8 +64278,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Clear-PnPRecycleBinItem
@@ -64359,8 +64299,7 @@ param(
 
     [Parameter(HelpMessage='If provided, no confirmation will be asked to permanently delete the recycle bin item')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Clear-PnPTenantAppCatalogUrl
@@ -64383,8 +64322,7 @@ param(
 
     [Parameter(HelpMessage='If provided, no confirmation will be asked to permanently delete the site collection from the tenant recycle bin')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Connect-PnPOnline
@@ -64924,8 +64862,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Copy-PnPFile
@@ -64960,8 +64897,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Copy-PnPItemProxy
@@ -65018,8 +64954,7 @@ param(
 
     [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Disable-PnPFeature
@@ -65040,8 +64975,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Disable-PnPInPlaceRecordsManagementForSite
@@ -65065,8 +64999,7 @@ function Disable-PnPResponsiveUI
 param(
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Disable-PnPSiteClassification
@@ -65081,8 +65014,7 @@ function Disable-PnPTenantServicePrincipal
 param(
     [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Disconnect-PnPOnline
@@ -65100,8 +65032,7 @@ function Enable-PnPCommSite
 param(
     [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='The id (guid) of the design package to apply: 96c933ac-3698-44c7-9f4a-5fd17d71af9e (Topic = default), 6142d2a0-63a5-4ba0-aede-d9fefca2c767 (Showcase) or f6cc5403-0d63-442e-96c0-285923709ffc (Blank)')]
     [string]
-    ${DesignPackageId},
-)
+    ${DesignPackageId})
 
 }
 function Enable-PnPFeature
@@ -65126,8 +65057,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Enable-PnPInPlaceRecordsManagementForSite
@@ -65155,8 +65085,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Enable-PnPSiteClassification
@@ -65181,8 +65110,7 @@ function Enable-PnPTenantServicePrincipal
 param(
     [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Export-PnPClientSidePage
@@ -65211,8 +65139,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Export-PnPClientSidePageMapping
@@ -65253,8 +65180,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Export-PnPListToProvisioningTemplate
@@ -65283,8 +65209,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Export-PnPTaxonomy
@@ -65321,8 +65246,7 @@ param(
 
     [Parameter(HelpMessage='Defaults to Unicode')]
     [SharePointPnP.PowerShell.Commands.Enums.Encoding]
-    ${Encoding},
-)
+    ${Encoding})
 
 }
 function Export-PnPTermGroupToXml
@@ -65347,8 +65271,7 @@ param(
 
     [Parameter(HelpMessage='Overwrites the output file if it exists.')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Find-PnPFile
@@ -65371,8 +65294,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPAccessToken
@@ -65402,8 +65324,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPApp
@@ -65416,8 +65337,7 @@ param(
 
     [Parameter(HelpMessage='Defines which app catalog to use. Defaults to Tenant')]
     [OfficeDevPnP.Core.Enums.AppCatalogScope]
-    ${Scope},
-)
+    ${Scope})
 
 }
 function Get-PnPAppAuthAccessToken
@@ -65480,8 +65400,7 @@ function Get-PnPAuthenticationRealm
 param(
     [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='Specifies the URL of the site')]
     [string]
-    ${Url},
-)
+    ${Url})
 
 }
 function Get-PnPAvailableClientSideComponents
@@ -65498,8 +65417,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPAzureCertificate
@@ -65529,8 +65447,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPClientSidePage
@@ -65543,8 +65460,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPConnection
@@ -65571,8 +65487,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPContentTypePublishingHubUrl
@@ -65618,8 +65533,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPDeletedUnifiedGroup
@@ -65770,8 +65684,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPFolder
@@ -65822,8 +65735,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPGroup
@@ -65853,8 +65765,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPGroupPermissions
@@ -65868,8 +65779,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPHealthScore
@@ -65893,8 +65803,7 @@ function Get-PnPHomePage
 param(
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPHomeSite
@@ -65909,8 +65818,7 @@ function Get-PnPHubSite
 param(
     [Parameter(Position=0, ValueFromPipeline=$true)]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
-    ${Identity},
-)
+    ${Identity})
 
 }
 function Get-PnPHubSiteChild
@@ -65919,8 +65827,7 @@ function Get-PnPHubSiteChild
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='The URL of the hubsite for which to receive the sites refering to it')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
-    ${Identity},
-)
+    ${Identity})
 
 }
 function Get-PnPIndexedPropertyKeys
@@ -65933,8 +65840,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPInPlaceRecordsManagement
@@ -65943,8 +65849,7 @@ function Get-PnPInPlaceRecordsManagement
 param(
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPJavaScriptLink
@@ -65966,8 +65871,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPLabel
@@ -65980,8 +65884,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPList
@@ -66011,8 +65914,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPListItem
@@ -66053,8 +65955,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPListRecordDeclaration
@@ -66067,8 +65968,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPManagementApiAccessToken
@@ -66094,8 +65994,7 @@ function Get-PnPMasterPage
 param(
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPNavigationNode
@@ -66116,8 +66015,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPOrgAssetsLibrary
@@ -66148,8 +66046,7 @@ param(
 
     [Parameter(Mandatory=$true, Position=1, HelpMessage='The properties to load. If one property is specified its value will be returned to the output.')]
     [string[]]
-    ${Property},
-)
+    ${Property})
 
 }
 function Get-PnPPropertyBag
@@ -66166,8 +66063,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPProvisioningTemplate
@@ -66302,8 +66198,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPPublishingImageRendition
@@ -66316,8 +66211,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPRecycleBinItem
@@ -66343,7 +66237,7 @@ function Get-PnPRequestAccessEmails
 param(
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+    ${Web}
 )
 
 }
@@ -66353,7 +66247,7 @@ function Get-PnPRoleDefinition
 param(
     [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='The name of a role definition to retrieve.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.RoleDefinitionPipeBind]
-    ${Identity},
+    ${Identity}
 )
 
 }
@@ -66375,7 +66269,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+    ${Web}
 )
 
 }
@@ -66413,7 +66307,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+    ${Web}
 )
 
 }
@@ -66423,7 +66317,7 @@ function Get-PnPSearchSettings
 param(
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+    ${Web}
 )
 
 }
@@ -66448,7 +66342,7 @@ function Get-PnPSiteClosure
 param(
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+    ${Web}
 )
 
 }
@@ -66458,7 +66352,7 @@ function Get-PnPSiteCollectionAdmin
 param(
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+    ${Web}
 )
 
 }
@@ -66474,7 +66368,7 @@ function Get-PnPSiteDesign
 param(
     [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='If specified will retrieve the specified site design')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
-    ${Identity},
+    ${Identity}
 )
 
 }
@@ -66484,7 +66378,7 @@ function Get-PnPSiteDesignRights
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The ID of the Site Design to receive the rights for')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
-    ${Identity},
+    ${Identity}
 )
 
 }
@@ -66502,7 +66396,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+    ${Web}
 )
 
 }
@@ -66512,7 +66406,7 @@ function Get-PnPSiteDesignRunStatus
 param(
     [Parameter(Mandatory=$true, HelpMessage='The site design run for the desired set of script action details.')]
     [Microsoft.Online.SharePoint.TenantAdministration.TenantSiteDesignRun]
-    ${Run},
+    ${Run}
 )
 
 }
@@ -66530,7 +66424,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+    ${Web}
 )
 
 }
@@ -66548,7 +66442,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+    ${Web}
 )
 
 }
@@ -66562,7 +66456,7 @@ param(
 
     [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='If specified will retrieve the site scripts for this design')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
-    ${SiteDesign},
+    ${SiteDesign}
 )
 
 }
@@ -66572,7 +66466,7 @@ function Get-PnPSiteScriptFromList
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Specifies the URL of the list to generate a Site Script from')]
     [string]
-    ${Url},
+    ${Url}
 )
 
 }
@@ -66610,7 +66504,7 @@ param(
 
     [Parameter(ParameterSetName='Specific components', HelpMessage='If specified will include the branding of the site into the Site Script')]
     [switch]
-    ${IncludeTheme},
+    ${IncludeTheme}
 )
 
 }
@@ -66637,7 +66531,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+    ${Web}
 )
 
 }
@@ -66651,7 +66545,7 @@ param(
 
     [Parameter(HelpMessage='Defines the scope of the storage entity. Defaults to Tenant.')]
     [SharePointPnP.PowerShell.Commands.Enums.StorageEntityScope]
-    ${Scope},
+    ${Scope}
 )
 
 }
@@ -66692,7 +66586,7 @@ param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The path, delimited by | of the taxonomy item to retrieve, alike GROUPLABEL|TERMSETLABEL|TERMLABEL')]
     [Alias('Term')]
     [string]
-    ${TermPath},
+    ${TermPath}
 )
 
 }
@@ -66702,7 +66596,7 @@ function Get-PnPTaxonomySession
 param(
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
+    ${Web}
 )
 
 }
@@ -66731,7 +66625,7 @@ function Get-PnPTenantCdnEnabled
 param(
     [Parameter(Mandatory=$true, HelpMessage='The type of cdn to retrieve the origins from')]
     [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
-    ${CdnType},
+    ${CdnType}
 )
 
 }
@@ -66741,8 +66635,7 @@ function Get-PnPTenantCdnOrigin
 param(
     [Parameter(Mandatory=$true, HelpMessage='The type of cdn to retrieve the origins from')]
     [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
-    ${CdnType},
-)
+    ${CdnType})
 
 }
 function Get-PnPTenantCdnPolicies
@@ -66751,8 +66644,7 @@ function Get-PnPTenantCdnPolicies
 param(
     [Parameter(Mandatory=$true, HelpMessage='The type of cdn to retrieve the policies from')]
     [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
-    ${CdnType},
-)
+    ${CdnType})
 
 }
 function Get-PnPTenantId
@@ -66846,8 +66738,7 @@ param(
 
     [Parameter(HelpMessage='Specifies the script block of the server-side filter to apply. See https://technet.microsoft.com/en-us/library/fp161380.aspx')]
     [string]
-    ${Filter},
-)
+    ${Filter})
 
 }
 function Get-PnPTenantTemplate
@@ -66874,8 +66765,7 @@ param(
     [Parameter(ParameterSetName='Extract a template to a file', HelpMessage='Specify a JSON configuration file to configure the extraction progress.')]
     [Parameter(ParameterSetName='Extract a template as an object', HelpMessage='Specify a JSON configuration file to configure the extraction progress.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ExtractConfigurationPipeBind]
-    ${Configuration},
-)
+    ${Configuration})
 
 }
 function Get-PnPTenantTheme
@@ -66884,8 +66774,7 @@ function Get-PnPTenantTheme
 param(
     [Parameter(Position=0, ValueFromPipeline=$true, HelpMessage='The name of the theme to retrieve')]
     [string]
-    ${Name},
-)
+    ${Name})
 
 }
 function Get-PnPTerm
@@ -66961,8 +66850,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPTimeZoneId
@@ -67037,8 +66925,7 @@ param(
 
     [Parameter(ValueFromPipeline=$true, HelpMessage='Include error log details')]
     [switch]
-    ${IncludeErrorDetails},
-)
+    ${IncludeErrorDetails})
 
 }
 function Get-PnPUser
@@ -67055,8 +66942,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPUserProfileProperty
@@ -67065,8 +66951,7 @@ function Get-PnPUserProfileProperty
 param(
     [Parameter(Mandatory=$true, Position=0, HelpMessage='The account of the user, formatted either as a login name, or as a claims identity, e.g. i:0#.f|membership|user@domain.com')]
     [string[]]
-    ${Account},
-)
+    ${Account})
 
 }
 function Get-PnPView
@@ -67113,8 +66998,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPWebPart
@@ -67132,8 +67016,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPWebPartProperty
@@ -67155,8 +67038,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPWebPartXml
@@ -67174,8 +67056,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPWebTemplates
@@ -67188,8 +67069,7 @@ param(
 
     [Parameter(HelpMessage='The version of SharePoint')]
     [int]
-    ${CompatibilityLevel},
-)
+    ${CompatibilityLevel})
 
 }
 function Get-PnPWikiPageContent
@@ -67203,8 +67083,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPWorkflowDefinition
@@ -67221,8 +67100,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPWorkflowInstance
@@ -67239,8 +67117,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Get-PnPWorkflowSubscription
@@ -67257,8 +67134,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Grant-PnPHubSiteRights
@@ -67277,8 +67153,7 @@ param(
     [Parameter(HelpMessage='Provide Join to give permissions to associate a site with this Hub Site or use None to revoke the permissions for the user(s) specified with the Principals argument')]
     [Obsolete('Use Revoke-PnPHubSiteRights to revoke rights and Grant-PnPHubSiteRights without the -Rights parameter to grant rights')]
     [Microsoft.Online.SharePoint.TenantAdministration.SPOHubSiteUserRights]
-    ${Rights},
-)
+    ${Rights})
 
 }
 function Grant-PnPSiteDesignRights
@@ -67295,8 +67170,7 @@ param(
 
     [Parameter(HelpMessage='The rights to set. Defaults to ''View''')]
     [Microsoft.Online.SharePoint.TenantAdministration.TenantSiteDesignPrincipalRights]
-    ${Rights},
-)
+    ${Rights})
 
 }
 function Grant-PnPTenantServicePrincipalPermission
@@ -67309,8 +67183,7 @@ param(
 
     [Parameter(Mandatory=$true, HelpMessage='The resource to grant the permission for')]
     [string]
-    ${Resource},
-)
+    ${Resource})
 
 }
 function Import-PnPAppPackage
@@ -67335,8 +67208,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Import-PnPTaxonomy
@@ -67364,8 +67236,7 @@ param(
 
     [Parameter(HelpMessage='If specified, terms that exist in the termset, but are not in the imported data, will be removed.')]
     [switch]
-    ${SynchronizeDeletions},
-)
+    ${SynchronizeDeletions})
 
 }
 function Import-PnPTermGroupFromXml
@@ -67378,8 +67249,7 @@ param(
 
     [Parameter(ParameterSetName='File', HelpMessage='The XML File to import the data from')]
     [string]
-    ${Path},
-)
+    ${Path})
 
 }
 function Import-PnPTermSet
@@ -67416,8 +67286,7 @@ param(
 
     [Parameter(HelpMessage='Term store to import into; if not specified the default term store is used.')]
     [string]
-    ${TermStoreName},
-)
+    ${TermStoreName})
 
 }
 function Install-PnPApp
@@ -67434,8 +67303,7 @@ param(
 
     [Parameter(HelpMessage='If specified the execution will pause until the app has been installed in the site.')]
     [switch]
-    ${Wait},
-)
+    ${Wait})
 
 }
 function Install-PnPSolution
@@ -67456,8 +67324,7 @@ param(
 
     [Parameter(HelpMessage='Optional minor version of the solution, defaults to 0')]
     [int]
-    ${MinorVersion},
-)
+    ${MinorVersion})
 
 }
 function Invoke-PnPQuery
@@ -67470,8 +67337,7 @@ param(
 
     [Parameter(HelpMessage='Delay in seconds. Defaults to 1.')]
     [int]
-    ${RetryWait},
-)
+    ${RetryWait})
 
 }
 function Invoke-PnPSiteDesign
@@ -67488,8 +67354,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Invoke-PnPSPRestMethod
@@ -67510,8 +67375,7 @@ param(
 
     [Parameter(HelpMessage='The content type of the object to send. Defaults to ''application/json''')]
     [string]
-    ${ContentType},
-)
+    ${ContentType})
 
 }
 function Invoke-PnPWebAction
@@ -67592,8 +67456,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Measure-PnPList
@@ -67639,8 +67502,7 @@ param(
 
     [Parameter(HelpMessage='Response time measurement mode. RoundTrip - measures full request round trip. SPRequestDuration - measures server processing time only, based on SPRequestDuration HTTP header. Latency - difference between RoundTrip and SPRequestDuration')]
     [SharePointPnP.PowerShell.Commands.Diagnostic.MeasureResponseTimeMode]
-    ${Mode},
-)
+    ${Mode})
 
 }
 function Measure-PnPWeb
@@ -67657,8 +67519,7 @@ param(
 
     [Parameter(HelpMessage='Include hidden lists in statistics calculation')]
     [switch]
-    ${IncludeHiddenList},
-)
+    ${IncludeHiddenList})
 
 }
 function Move-PnPClientSideComponent
@@ -67692,8 +67553,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Move-PnPFile
@@ -67722,8 +67582,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Move-PnPFolder
@@ -67740,8 +67599,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Move-PnPItemProxy
@@ -67803,8 +67661,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Move-PnPRecycleBinItem
@@ -67817,8 +67674,7 @@ param(
 
     [Parameter(HelpMessage='If provided, no confirmation will be asked to move the first stage recycle bin items to the second stage')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function New-PnPAzureCertificate
@@ -67939,8 +67795,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function New-PnPList
@@ -67982,8 +67837,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function New-PnPPersonalSite
@@ -67992,8 +67846,7 @@ function New-PnPPersonalSite
 param(
     [Parameter(Mandatory=$true, Position=0, HelpMessage='The UserPrincipalName (UPN) of the users')]
     [string[]]
-    ${Email},
-)
+    ${Email})
 
 }
 function New-PnPProvisioningTemplate
@@ -68048,8 +67901,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function New-PnPSite
@@ -68268,8 +68120,7 @@ param(
 
     [Parameter(HelpMessage='Do not ask for confirmation.')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function New-PnPTenantTemplate
@@ -68328,8 +68179,7 @@ param(
     [Parameter(HelpMessage='Term store to check; if not specified the default term store is used.')]
     [Alias('TermStoreName')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
-    ${TermStore},
-)
+    ${TermStore})
 
 }
 function New-PnPTermGroup
@@ -68353,8 +68203,7 @@ param(
     [Parameter(HelpMessage='Term store to add the group to; if not specified the default term store is used.')]
     [Alias('TermStoreName')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
-    ${TermStore},
-)
+    ${TermStore})
 
 }
 function New-PnPTermLabel
@@ -68375,8 +68224,7 @@ param(
 
     [Parameter(HelpMessage='Makes this new label the default label')]
     [switch]
-    ${IsDefault},
-)
+    ${IsDefault})
 
 }
 function New-PnPTermSet
@@ -68429,8 +68277,7 @@ param(
     [Parameter(HelpMessage='Term store to check; if not specified the default term store is used.')]
     [Alias('TermStoreName')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.GenericObjectNameIdPipeBind[Microsoft.SharePoint.Client.Taxonomy.TermStore]]
-    ${TermStore},
-)
+    ${TermStore})
 
 }
 function New-PnPUnifiedGroup
@@ -68496,8 +68343,7 @@ param(
 
     [Parameter(Position=4, HelpMessage='The type of profile identifier (Email/CloudId/PrincipalName). Defaults to Email.')]
     [Microsoft.Online.SharePoint.TenantManagement.ImportProfilePropertiesUserIdType]
-    ${IdType},
-)
+    ${IdType})
 
 }
 function New-PnPUser
@@ -68511,8 +68357,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function New-PnPWeb
@@ -68549,8 +68394,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Publish-PnPApp
@@ -68566,8 +68410,7 @@ param(
 
     [Parameter(HelpMessage='Defines which app catalog to use. Defaults to Tenant')]
     [OfficeDevPnP.Core.Enums.AppCatalogScope]
-    ${Scope},
-)
+    ${Scope})
 
 }
 function Read-PnPProvisioningTemplate
@@ -68606,8 +68449,7 @@ function Register-PnPHubSite
 param(
     [Parameter(Mandatory=$true, HelpMessage='The site to register as a hubsite')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${Site},
-)
+    ${Site})
 
 }
 function Remove-PnPAlert
@@ -68628,8 +68470,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPApp
@@ -68642,8 +68483,7 @@ param(
 
     [Parameter(HelpMessage='Defines which app catalog to use. Defaults to Tenant')]
     [OfficeDevPnP.Core.Enums.AppCatalogScope]
-    ${Scope},
-)
+    ${Scope})
 
 }
 function Remove-PnPApplicationCustomizer
@@ -68668,8 +68508,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPClientSideComponent
@@ -68690,8 +68529,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPClientSidePage
@@ -68708,8 +68546,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPContentType
@@ -68726,8 +68563,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPContentTypeFromDocumentSet
@@ -68744,8 +68580,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPContentTypeFromList
@@ -68762,8 +68597,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPCustomAction
@@ -68784,8 +68618,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPDeletedUnifiedGroup
@@ -68815,8 +68648,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPField
@@ -68837,8 +68669,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPFieldFromContentType
@@ -68859,8 +68690,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPFile
@@ -68883,8 +68713,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPFileFromProvisioningTemplate
@@ -68924,8 +68753,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPGroup
@@ -68942,8 +68770,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPHomeSite
@@ -68952,8 +68779,7 @@ function Remove-PnPHomeSite
 param(
     [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Remove-PnPHubSiteAssociation
@@ -68962,8 +68788,7 @@ function Remove-PnPHubSiteAssociation
 param(
     [Parameter(Mandatory=$true, HelpMessage='The site to disconnect from its hubsite')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${Site},
-)
+    ${Site})
 
 }
 function Remove-PnPIndexedProperty
@@ -68980,8 +68805,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPJavaScriptLink
@@ -69007,8 +68831,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPList
@@ -69029,8 +68852,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPListItem
@@ -69054,8 +68876,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPNavigationNode
@@ -69091,8 +68912,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPOrgAssetsLibrary
@@ -69109,8 +68929,7 @@ param(
 
     [Parameter(HelpMessage='Indicates what type of Office 365 CDN source the document library that will no longer be flagged as an organizational asset was of')]
     [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
-    ${CdnType},
-)
+    ${CdnType})
 
 }
 function Remove-PnPOrgNewsSite
@@ -69119,8 +68938,7 @@ function Remove-PnPOrgNewsSite
 param(
     [Parameter(Mandatory=$true, HelpMessage='The site to be removed from list of organization''s news sites')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${OrgNewsSiteUrl},
-)
+    ${OrgNewsSiteUrl})
 
 }
 function Remove-PnPPropertyBagValue
@@ -69140,8 +68958,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPPublishingImageRendition
@@ -69158,8 +68975,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPRoleDefinition
@@ -69172,8 +68988,7 @@ param(
 
     [Parameter(HelpMessage='Do not ask for confirmation to delete the role definition')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Remove-PnPSearchConfiguration
@@ -69193,8 +69008,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPSiteClassification
@@ -69216,8 +69030,7 @@ function Remove-PnPSiteCollectionAdmin
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage='Specifies owner(s) to remove as site collection administrators. Can be both users and groups.')]
     [System.Collections.Generic.List[SharePointPnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]]
-    ${Owners},
-)
+    ${Owners})
 
 }
 function Remove-PnPSiteCollectionAppCatalog
@@ -69226,8 +69039,7 @@ function Remove-PnPSiteCollectionAppCatalog
 param(
     [Parameter(Mandatory=$true, HelpMessage='Url of the site to remove the app catalog from.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${Site},
-)
+    ${Site})
 
 }
 function Remove-PnPSiteDesign
@@ -69240,8 +69052,7 @@ param(
 
     [Parameter(HelpMessage='If specified you will not be asked to confirm removing the specified Site Design')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Remove-PnPSiteDesignTask
@@ -69254,8 +69065,7 @@ param(
 
     [Parameter(HelpMessage='If specified you will not be asked to confirm removing the specified Site Design')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Remove-PnPSiteScript
@@ -69268,8 +69078,7 @@ param(
 
     [Parameter(HelpMessage='If specified you will not be asked to confirm removing the specified Site Script')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Remove-PnPStorageEntity
@@ -69282,8 +69091,7 @@ param(
 
     [Parameter(HelpMessage='Defines the scope of the storage entity. Defaults to Tenant.')]
     [SharePointPnP.PowerShell.Commands.Enums.StorageEntityScope]
-    ${Scope},
-)
+    ${Scope})
 
 }
 function Remove-PnPStoredCredential
@@ -69309,8 +69117,7 @@ param(
     ${TermPath},
 
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Remove-PnPTenantCdnOrigin
@@ -69323,8 +69130,7 @@ param(
 
     [Parameter(Mandatory=$true, HelpMessage='The cdn type to remove the origin from.')]
     [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
-    ${CdnType},
-)
+    ${CdnType})
 
 }
 function Remove-PnPTenantSite
@@ -69352,8 +69158,7 @@ param(
 
     [Parameter(HelpMessage='Do not ask for confirmation.')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Remove-PnPTenantTheme
@@ -69363,8 +69168,7 @@ param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='The name of the theme to retrieve')]
     [Alias('Name')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.ThemePipeBind]
-    ${Identity},
-)
+    ${Identity})
 
 }
 function Remove-PnPTermGroup
@@ -69380,8 +69184,7 @@ param(
     ${TermStoreName},
 
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Remove-PnPUnifiedGroup
@@ -69411,8 +69214,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPUserFromGroup
@@ -69431,8 +69233,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPView
@@ -69453,8 +69254,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPWeb
@@ -69475,8 +69275,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPWebhookSubscription
@@ -69497,8 +69296,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPWebPart
@@ -69521,8 +69319,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPWikiPage
@@ -69540,8 +69337,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPWorkflowDefinition
@@ -69554,8 +69350,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Remove-PnPWorkflowSubscription
@@ -69568,8 +69363,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Rename-PnPFile
@@ -69598,8 +69392,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Rename-PnPFolder
@@ -69616,8 +69409,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Request-PnPAccessToken
@@ -69663,8 +69455,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Request-PnPReIndexWeb
@@ -69673,8 +69464,7 @@ function Request-PnPReIndexWeb
 param(
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Reset-PnPFileVersion
@@ -69695,8 +69485,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Reset-PnPLabel
@@ -69713,8 +69502,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Resolve-PnPFolder
@@ -69757,8 +69545,7 @@ param(
 
     [Parameter(HelpMessage='If provided, no confirmation will be asked to restore the recycle bin item')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Restore-PnPTenantRecycleBinItem
@@ -69775,8 +69562,7 @@ param(
 
     [Parameter(HelpMessage='If provided, no confirmation will be asked to restore the site collection from the tenant recycle bin')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Resume-PnPWorkflowInstance
@@ -69789,8 +69575,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Revoke-PnPHubSiteRights
@@ -69804,8 +69589,7 @@ param(
 
     [Parameter(Mandatory=$true, HelpMessage='One or more usernames that will be revoked the permission to associate a site with this Hub Site.')]
     [string[]]
-    ${Principals},
-)
+    ${Principals})
 
 }
 function Revoke-PnPSiteDesignRights
@@ -69818,8 +69602,7 @@ param(
 
     [Parameter(Mandatory=$true, HelpMessage='One or more principals to revoke.')]
     [string[]]
-    ${Principals},
-)
+    ${Principals})
 
 }
 function Revoke-PnPTenantServicePrincipalPermission
@@ -69832,8 +69615,7 @@ param(
 
     [Parameter(HelpMessage='Specifying the Force parameter will skip the confirmation question.')]
     [switch]
-    ${Force},
-)
+    ${Force})
 
 }
 function Save-PnPClientSidePageConversionLog
@@ -69842,8 +69624,7 @@ function Save-PnPClientSidePageConversionLog
 param(
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Save-PnPProvisioningTemplate
@@ -69918,8 +69699,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPApplicationCustomizer
@@ -69956,8 +69736,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPAppSideLoading
@@ -69970,8 +69749,7 @@ param(
 
     [Parameter(ParameterSetName='Off', Mandatory=$true)]
     [switch]
-    ${Off},
-)
+    ${Off})
 
 }
 function Set-PnPAuditing
@@ -70022,8 +69800,7 @@ param(
 
     [Parameter(ParameterSetName='Specific flags', HelpMessage='Audit editing users and permissions')]
     [switch]
-    ${EditUsersPermissions},
-)
+    ${EditUsersPermissions})
 
 }
 function Set-PnPAvailablePageLayouts
@@ -70044,8 +69821,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPClientSidePage
@@ -70115,8 +69891,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPClientSideWebPart
@@ -70141,8 +69916,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPContext
@@ -70176,8 +69950,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPDefaultContentTypeToList
@@ -70194,8 +69967,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPDefaultPageLayout
@@ -70212,8 +69984,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPDocumentSetField
@@ -70246,8 +70017,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPField
@@ -70272,8 +70042,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPFileCheckedIn
@@ -70298,8 +70067,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPFileCheckedOut
@@ -70312,8 +70080,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPFolderPermission
@@ -70361,8 +70128,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPGroup
@@ -70419,8 +70185,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPGroupPermissions
@@ -70446,8 +70211,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPHideDefaultThemes
@@ -70456,8 +70220,7 @@ function Set-PnPHideDefaultThemes
 param(
     [Parameter(Mandatory=$true, HelpMessage='Defines if the default themes should be visible or hidden')]
     [bool]
-    ${HideDefaultThemes},
-)
+    ${HideDefaultThemes})
 
 }
 function Set-PnPHomePage
@@ -70471,8 +70234,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPHomeSite
@@ -70481,8 +70243,7 @@ function Set-PnPHomeSite
 param(
     [Parameter(Mandatory=$true, HelpMessage='The url of the site to set as the home site')]
     [string]
-    ${Url},
-)
+    ${Url})
 
 }
 function Set-PnPHubSite
@@ -70514,8 +70275,7 @@ param(
     ${HideNameInNavigation},
 
     [switch]
-    ${RequiresJoinApproval},
-)
+    ${RequiresJoinApproval})
 
 }
 function Set-PnPIndexedProperties
@@ -70528,8 +70288,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPInPlaceRecordsManagement
@@ -70552,8 +70311,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPLabel
@@ -70582,8 +70340,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPList
@@ -70664,8 +70421,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPListInformationRightsManagement
@@ -70749,8 +70505,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPListItem
@@ -70783,8 +70538,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPListItemAsRecord
@@ -70805,8 +70559,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPListItemPermission
@@ -70854,8 +70607,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPListPermission
@@ -70884,8 +70636,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPListRecordDeclaration
@@ -70906,8 +70657,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPMasterPage
@@ -70934,8 +70684,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPMinimalDownloadStrategy
@@ -70956,8 +70705,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPPropertyBagValue
@@ -70985,8 +70733,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPProvisioningTemplateMetadata
@@ -71015,8 +70762,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPRequestAccessEmails
@@ -71033,8 +70779,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPSearchConfiguration
@@ -71054,8 +70799,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPSearchSettings
@@ -71084,8 +70828,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPSite
@@ -71190,8 +70933,7 @@ param(
 
     [Parameter(ParameterSetName='Set Lock State', HelpMessage='Wait for the operation to complete')]
     [switch]
-    ${Wait},
-)
+    ${Wait})
 
 }
 function Set-PnPSiteClosure
@@ -71204,8 +70946,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPSiteDesign
@@ -71246,8 +70987,7 @@ param(
 
     [Parameter(HelpMessage='Specifies the version of the design')]
     [int]
-    ${Version},
-)
+    ${Version})
 
 }
 function Set-PnPSitePolicy
@@ -71260,8 +71000,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPSiteScript
@@ -71286,8 +71025,7 @@ param(
 
     [Parameter(HelpMessage='Specifies the version of the site script')]
     [int]
-    ${Version},
-)
+    ${Version})
 
 }
 function Set-PnPStorageEntity
@@ -71314,8 +71052,7 @@ param(
 
     [Parameter(HelpMessage='Defines the scope of the storage entity. Defaults to Tenant.')]
     [SharePointPnP.PowerShell.Commands.Enums.StorageEntityScope]
-    ${Scope},
-)
+    ${Scope})
 
 }
 function Set-PnPTaxonomyFieldValue
@@ -71344,8 +71081,7 @@ param(
 
     [Parameter(ParameterSetName='ITEMS', HelpMessage='Allows you to specify terms with key value pairs that can be referred to in the template by means of the {id:label} token. See examples on how to use this parameter.')]
     [hashtable]
-    ${Terms},
-)
+    ${Terms})
 
 }
 function Set-PnPTenant
@@ -71760,8 +71496,7 @@ Accepts a value of true (enabled) to hide the Download button or false (disabled
 
     [Parameter(HelpMessage='Guids of out of the box modern web part id''s to hide')]
     [guid[]]
-    ${DisabledWebPartIds},
-)
+    ${DisabledWebPartIds})
 
 }
 function Set-PnPTenantAppCatalogUrl
@@ -71770,8 +71505,7 @@ function Set-PnPTenantAppCatalogUrl
 param(
     [Parameter(Mandatory=$true, HelpMessage='The url of the site to set as the tenant scoped app catalog')]
     [string]
-    ${Url},
-)
+    ${Url})
 
 }
 function Set-PnPTenantCdnEnabled
@@ -71787,8 +71521,7 @@ param(
 
     [Parameter(Mandatory=$true, HelpMessage='The type of cdn to enable or disable')]
     [SharePointPnP.PowerShell.Commands.Enums.CdnType]
-    ${CdnType},
-)
+    ${CdnType})
 
 }
 function Set-PnPTenantCdnPolicy
@@ -71805,8 +71538,7 @@ param(
 
     [Parameter(Mandatory=$true, HelpMessage='The value of the policy to set')]
     [string]
-    ${PolicyValue},
-)
+    ${PolicyValue})
 
 }
 function Set-PnPTenantSite
@@ -71907,8 +71639,7 @@ param(
 
     [Parameter(HelpMessage='Wait for the operation to complete')]
     [switch]
-    ${Wait},
-)
+    ${Wait})
 
 }
 function Set-PnPTheme
@@ -71942,8 +71673,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPTraceLog
@@ -72042,8 +71772,7 @@ param(
     [AllowEmptyString()]
     [AllowNull()]
     [string[]]
-    ${Values},
-)
+    ${Values})
 
 }
 function Set-PnPView
@@ -72072,8 +71801,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPWeb
@@ -72107,8 +71835,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPWebhookSubscription
@@ -72133,8 +71860,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPWebPartProperty
@@ -72160,8 +71886,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPWebPermission
@@ -72200,8 +71925,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPWebTheme
@@ -72218,8 +71942,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Set-PnPWikiPageContent
@@ -72242,8 +71965,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Start-PnPWorkflowInstance
@@ -72260,8 +71982,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Stop-PnPWorkflowInstance
@@ -72278,8 +71999,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Submit-PnPSearchQuery
@@ -72385,8 +72105,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Sync-PnPAppToTeams
@@ -72395,8 +72114,7 @@ function Sync-PnPAppToTeams
 param(
     [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, HelpMessage='Specifies the Id of the Addin Instance')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
-    ${Identity},
-)
+    ${Identity})
 
 }
 function Test-PnPListItemIsRecord
@@ -72413,8 +72131,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Test-PnPOffice365GroupAliasIsUsed
@@ -72423,8 +72140,7 @@ function Test-PnPOffice365GroupAliasIsUsed
 param(
     [Parameter(Mandatory=$true, HelpMessage='Specifies the alias of the group. Cannot contain spaces.')]
     [string]
-    ${Alias},
-)
+    ${Alias})
 
 }
 function Test-PnPTenantTemplate
@@ -72433,8 +72149,7 @@ function Test-PnPTenantTemplate
 param(
     [Parameter(Mandatory=$true, HelpMessage='The in-memory template to test')]
     [OfficeDevPnP.Core.Framework.Provisioning.Model.ProvisioningHierarchy]
-    ${Template},
-)
+    ${Template})
 
 }
 function Uninstall-PnPApp
@@ -72447,8 +72162,7 @@ param(
 
     [Parameter(HelpMessage='Defines which app catalog to use. Defaults to Tenant')]
     [OfficeDevPnP.Core.Enums.AppCatalogScope]
-    ${Scope},
-)
+    ${Scope})
 
 }
 function Uninstall-PnPAppInstance
@@ -72465,8 +72179,7 @@ param(
 
     [Parameter(HelpMessage='This parameter allows you to optionally apply the cmdlet action to a subweb within the current web. In most situations this parameter is not required and you can connect to the subweb using Connect-PnPOnline instead. Specify the GUID, server relative url (i.e. /sites/team1) or web instance of the web to apply the command to. Omit this parameter to use the current web.')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-    ${Web},
-)
+    ${Web})
 
 }
 function Uninstall-PnPSolution
@@ -72487,8 +72200,7 @@ param(
 
     [Parameter(HelpMessage='Optional minor version of the solution, defaults to 0')]
     [int]
-    ${MinorVersion},
-)
+    ${MinorVersion})
 
 }
 function Unpublish-PnPApp
@@ -72501,8 +72213,7 @@ param(
 
     [Parameter(HelpMessage='Defines which app catalog to use. Defaults to Tenant')]
     [OfficeDevPnP.Core.Enums.AppCatalogScope]
-    ${Scope},
-)
+    ${Scope})
 
 }
 function Unregister-PnPHubSite
@@ -72511,8 +72222,7 @@ function Unregister-PnPHubSite
 param(
     [Parameter(Mandatory=$true, HelpMessage='The site to unregister as a hubsite')]
     [SharePointPnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
-    ${Site},
-)
+    ${Site})
 
 }
 function Update-PnPApp
@@ -72525,8 +72235,7 @@ param(
 
     [Parameter(HelpMessage='Defines which app catalog to use. Defaults to Tenant')]
     [OfficeDevPnP.Core.Enums.AppCatalogScope]
-    ${Scope},
-)
+    ${Scope})
 
 }
 function Update-PnPSiteClassification
