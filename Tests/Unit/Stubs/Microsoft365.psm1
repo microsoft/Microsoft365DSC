@@ -65748,11 +65748,7 @@ function Get-PnPGroup
 
         [Parameter()]
         [SharePointPnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
-        ${Web},
-
-        [Parameter()]
-        [SharePointPnP.PowerShell.Commands.Base.SPOnlineConnection]
-        ${Connection}
+        ${Web}
     )
 }
 function Get-PnPGroupMembers
