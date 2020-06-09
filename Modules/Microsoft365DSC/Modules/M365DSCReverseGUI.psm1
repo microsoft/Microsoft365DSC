@@ -351,13 +351,6 @@ function Show-M365DSCGUI
             $chckBox.Checked = $checked
             $chckBox.Top = $currentControlTop
 
-            # TODO: Remove once OneDrive is no longer an issue;
-            if ($resourceName -eq 'ODSettings')
-            {
-                $chckBox.Checked = $false;
-                $chckBox.Enabled = $false
-            }
-
             $ModeIdentifier.Top = $currentControlTop + 1
             $panel.Controls.Add($ModeIdentifier)
             $panel.Controls.Add($chckBox)
