@@ -932,7 +932,7 @@ function New-M365DSCConnection
         [Parameter(Mandatory=$true)]
         [ValidateSet("Azure", "AzureAD", "ExchangeOnline", `
             "SecurityComplianceCenter", "PnP", "PowerPlatforms", `
-            "MicrosoftTeams", "SkypeForBusiness")]
+            "MicrosoftTeams", "SkypeForBusiness", "MicrosoftGraph")]
         [System.String]
         $Platform,
 
@@ -943,7 +943,7 @@ function New-M365DSCConnection
 
     switch ($Platform)
     {
-        {$_ -eq 'AzureAD' -or $_ -eq 'MicrosoftTeams'}
+        {$_ -eq 'AzureAD' -or $_ -eq 'MicrosoftTeams' -or $_ -eq 'MicrosoftGraph'}
         {
             # Case both authentication methods are attempted
             if ($null -ne $InboundParameters.GlobalAdminAccount -and `
