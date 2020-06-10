@@ -6,11 +6,6 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Yes')]
-        $IsSingleInstance,
-
-        [Parameter()]
-        [System.String]
         $Usage,
 
         [Parameter()]
@@ -46,7 +41,7 @@ function Get-TargetResource
         $foundUsage = $null
     }
 
-    if ($null -eq $usages)
+    if ($null -eq $foundUsage)
     {
         Write-Verbose -Message "Could not find PSTN usage {$Usage}"
         return @{
@@ -69,11 +64,6 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet('Yes')]
-        $IsSingleInstance,
-
-        [Parameter()]
         [System.String]
         $Usage,
 
@@ -124,11 +114,6 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet('Yes')]
-        $IsSingleInstance,
-
-        [Parameter()]
         [System.String]
         $Usage,
 
@@ -189,7 +174,7 @@ function Export-TargetResource
     $content = ''
     foreach ($usage in $usages)
     {
-        Write-Information "    [$i/$($usages.Count)] $($usage.Identity)"
+        Write-Information "    [$i/$($usages.Count)] $usage"
         $params = @{
             Usage              = $usage
             Ensure             = 'Present'

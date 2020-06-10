@@ -33,16 +33,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "When the policy doesn't already exist" -Fixture {
             $testParams = @{
-                IsSingleInstance    = 'Yes'
                 Usage               = 'Local'
                 Ensure              = 'Present'
                 GlobalAdminAccount  = $GlobalAdminAccount;
             }
 
             Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
-                return @{
-                    Identity    = 'Global'
-                    Usage       = @()
+                return New-Object PSObject -Property @{
+                    Identity               = 'Global'
+                    Usage                  = @()
                 }
             }
 
@@ -56,53 +55,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It "Should create the policy from the Set method" {
                 Set-TargetResource @testParams
-                Assert-MockCalled -CommandName 'New-CsOnlinePstnUsage' -Exactly 1
+                Assert-MockCalled -CommandName 'Set-CsOnlinePstnUsage' -Exactly 1
             }
         }
 
-        <#
-
-            # Usages can only be added or removed, not modified, so this section should not be needed.
-            Context -Name "When the policy already exists and is NOT in the Desired State" -Fixture {
-                $testParams = @{
-                    Identity               = 'Test Policy'
-                    OnlinePstnUsages       = @("Local", "Long Distance")
-                    Description            = 'My Test Policy'
-                    Ensure                 = 'Present'
-                    GlobalAdminAccount     = $GlobalAdminAccount;
-                }
-
-                Mock -CommandName Get-CsOnlineVoiceRoutingPolicy -MockWith {
-                    return @{
-                        Identity               = 'Test Policy'
-                        OnlinePstnUsages       = @("Local") #Drift
-                        Description            = 'My Test Policy'
-                    }
-                }
-
-                It "Should return false from the Test method" {
-                    Test-TargetResource @testParams | Should Be $false
-                }
-
-                It "Should update the policy from the Set method" {
-                    Set-TargetResource @testParams
-                    Assert-MockCalled Set-CsOnlineVoiceRoutingPolicy -Exactly 1
-                }
-            }
-        #>
-
         Context -Name 'When the policy already exists and IS in the Desired State' -Fixture {
             $testParams = @{
-                IsSingleInstance    = 'Yes'
                 Usage               = 'Local'
                 Ensure              = 'Present'
                 GlobalAdminAccount  = $GlobalAdminAccount;
             }
 
             Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
-                return @{
-                    Identity    = 'Global'
-                    Usage       = @('Local')
+                return New-Object PSObject -Property @{
+                    Identity               = 'Global'
+                    Usage                  = @('Local')
                 }
             }
 
@@ -113,16 +80,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name 'When the policy already exists but it SHOULD NOT' -Fixture {
             $testParams = @{
-                IsSingleInstance       = 'Yes'
                 Usage                  = 'Local'
                 Ensure                 = 'Absent'
                 GlobalAdminAccount     = $GlobalAdminAccount;
             }
 
             Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
-                return @{
-                    Identity    = 'Global'
-                    Usage       = @('Local')
+                return New-Object PSObject -Property @{
+                    Identity               = 'Global'
+                    Usage                  = @('Local')
                 }
             }
 
@@ -146,9 +112,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
-                return @{
-                    Identity    = 'Global'
-                    Usage       = @('Local')
+                return New-Object PSObject -Property @{
+                    Identity               = 'Global'
+                    Usage                  = @('Local')
                 }
             }
 
