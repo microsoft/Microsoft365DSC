@@ -46,7 +46,7 @@ function Get-TargetResource
 
     if (-not [System.String]::IsNullOrEmpty($BucketId))
     {
-        $bucket = Get-MGPlannerPlanBucket -PlannerPlanId $PlanId | Where-Object -FilterScript {$_.Id -eq $BucketId}
+        [Array]$bucket = Get-MGPlannerPlanBucket -PlannerPlanId $PlanId | Where-Object -FilterScript {$_.Id -eq $BucketId}
     }
     else
     {
@@ -59,7 +59,7 @@ function Get-TargetResource
         }
     }
 
-    if ($null -eq $bucket[0])
+    if ($null -eq $bucket)
     {
         $results = @{
             Name                  = $Name

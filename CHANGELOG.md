@@ -2,6 +2,12 @@
 
 ## UNRELEASED
 
+* PlannerBucket
+  * Initial Release;
+* PlannerPlan
+  * Initial Release;
+* PlannerTask
+  * Initial Release;
 * Metadata
   * Updated ExchangeOnline module version to 1.0.1;
   * Updated Microsoft.PowerApps.Administration.PowerShell

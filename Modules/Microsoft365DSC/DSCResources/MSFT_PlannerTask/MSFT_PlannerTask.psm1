@@ -13,8 +13,16 @@ function Get-TargetResource
         $Title,
 
         [Parameter()]
+        [System.String[]]
+        $AssignedUsers,
+
+        [Parameter()]
         [System.String]
-        $Description,
+        $Notes,
+
+        [Parameter()]
+        [System.String]
+        $Bucket,
 
         [Parameter()]
         [System.String]
@@ -26,7 +34,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CompletedDateTime,
+        $DueDateTime,
 
         [Parameter()]
         [ValidateRange(0, 100)]
@@ -43,17 +51,13 @@ function Get-TargetResource
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
 
         [Parameter()]
         [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $ApplicationId
     )
     Write-Verbose -Message "Getting configuration of Planner Task {$Title}"
 
@@ -69,8 +73,7 @@ function Get-TargetResource
         Title                 = $Title
         Ensure                = "Absent"
         ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificateThumbprint = $CertificateThumbprint
+        GlobalAdminAccount    = $GlobalAdminAccount
     }
 
     # If no TaskId were passed, automatically assume that this is a new task;
@@ -79,28 +82,76 @@ function Get-TargetResource
         return $nullReturn
     }
 
-    Connect-Graph -Scopes "Group.ReadWrite.All" | Out-Null
+    $PlannerModulePath = Join-Path -Path $PSScriptRoot `
+        -ChildPath "../../Modules/GraphHelpers/Planner.psm1"
+    $usingScriptBody = "using module $PlannerModulePath"
+    $usingScript = [ScriptBlock]::Create($usingScriptBody)
+    . $usingScript
+    $task = [PlannerTaskObject]::new()
+    Write-Verbose -Message "Populating task {$taskId} from the Get method"
+    $task.PopulateById($GlobalAdminAccount, $TaskId)
 
-    $task = Get-MGPlannerTask -PlannerTaskId $TaskId -ErrorAction 'SilentlyContinue'
     if ($null -eq $task)
     {
         return $nullReturn
     }
     else
     {
+        $BucketValue = $null
+        if ($null -ne $task.BucketId)
+        {
+            # If the current task has a bucket id but the bucket property was not passed,
+            # Simply return the Id of the bucket associated with the Task.
+            $associatedBucket = Get-MGPlannerPlanBucket -PlannerPlanId $PlanId `
+                    -ErrorAction 'SilentlyContinue' | Where-Object -FilterScript {$_.Id -eq $Bucket -or $_.Name -eq $Bucket}
+            if ([System.String]::IsNullOrEmpty($Bucket) -or $null -eq $associatedBucket)
+            {
+                $BucketValue = $task.BucketId
+            }
+            else
+            {
+                $BucketValue = $Bucket
+            }
+        }
+
+        $NotesValue = $task.Notes
+
+        #region Task Assignment
+        Test-MSCloudLogin -Platform AzureAD -CloudCredential $GlobalAdminAccount
+        $assignedValues = @()
+        foreach ($assignee in $task.Assignments)
+        {
+            $user = Get-AzureADUser -ObjectId $assignee
+            $assignedValues += $user.UserPrincipalName
+        }
+        #endregion
+
+        $StartDateTimeValue = $null
+        if ($null -ne $task.StartDateTime)
+        {
+            $StartDateTimeValue = $task.StartDateTime
+        }
+        $DueDateTimeValue = $null
+        if ($null -ne $task.DueDateTime)
+        {
+            $DueDateTimeValue = $task.DueDateTime
+        }
         $results = @{
             PlanId                = $PlanId
             Title                 = $Title
+            AssignedUsers         = $assignedValues
             TaskId                = $task.Id
-            Priority              = $Priority
+            Bucket                = $BucketValue
+            Priority              = $task.Priority
             PercentComplete       = $task.PercentComplete
-            StartDateTime         = $task.StartDateTime
-            CompletedDateTime     = $task.CompletedDateTime
+            StartDateTime         = $StartDateTimeValue
+            DueDateTime           = $DueDateTimeValue
+            Notes                 = $NotesValue
             Ensure                = "Present"
             ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
+            GlobalAdminAccount    = $GlobalAdminAccount
         }
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $results)"
         return $results
     }
 }
@@ -119,8 +170,16 @@ function Set-TargetResource
         $Title,
 
         [Parameter()]
+        [System.String[]]
+        $AssignedUsers,
+
+        [Parameter()]
         [System.String]
-        $Description,
+        $Notes,
+
+        [Parameter()]
+        [System.String]
+        $Bucket,
 
         [Parameter()]
         [System.String]
@@ -132,7 +191,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CompletedDateTime,
+        $DueDateTime,
 
         [Parameter()]
         [ValidateRange(0, 100)]
@@ -149,17 +208,13 @@ function Set-TargetResource
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
 
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
 
         [Parameter()]
         [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $ApplicationId
     )
     Write-Verbose -Message "Setting configuration of Planner Task {$Title}"
 
@@ -172,30 +227,70 @@ function Set-TargetResource
 
     Connect-Graph -Scopes "Group.ReadWrite.All" | Out-Null
 
-    $SetParams = $PSBoundParameters
     $currentValues = Get-TargetResource @PSBoundParameters
-    $SetParams.Remove("ApplicationId") | Out-Null
-    $SetParams.Remove("TenantId") | Out-Null
-    $SetParams.Remove("CertificateThumbprint") | Out-Null
-    $SetParams.Remove("Ensure") | Out-Null
 
+    $PlannerModulePath = Join-Path -Path $PSScriptRoot `
+        -ChildPath "../../Modules/GraphHelpers/Planner.psm1"
+    $usingScriptBody = "using module $PlannerModulePath"
+    $usingScript = [ScriptBlock]::Create($usingScriptBody)
+    . $usingScript
+    $task = [PlannerTaskObject]::new()
+
+    if (-not [System.String]::IsNullOrEmpty($TaskId))
+    {
+        Write-Verbose -Message "Populating Task {$TaskId} from the Set method"
+        $task.PopulateById($GlobalAdminAccount, $TaskId)
+    }
+
+    #region BucketId
+    if (-not [System.String]::IsNullOrEmpty($Bucket))
+    {
+        $associatedBucket = Get-MGPlannerPlanBucket -PlannerPlanId $PlanId `
+                    -ErrorAction 'SilentlyContinue' | Where-Object -FilterScript {$_.Id -eq $Bucket -or $_.Name -eq $Bucket}
+        $task.BucketId = $associatedBucket.Id
+    }
+    #endregion
+
+    $task.Title         = $Title
+    $task.PlanId        = $PlanId
+    $task.StartDateTime = $StartDateTime
+    $task.DueDateTime   = $DueDateTime
+    $task.Priority      = $Priority
+    $task.Notes         = $Notes
+
+    #region Assignments
+    if ($AssignedUsers.Length -gt 0)
+    {
+        Test-MSCloudLogin -Platform AzureAD -CloudCredential $GlobalAdminAccount
+        $AssignmentsValue = @()
+        foreach ($userName in $AssignedUsers)
+        {
+            $user = Get-AzureADUser -SearchString $userName
+            if ($null -ne $user)
+            {
+                $AssignmentsValue += $user.ObjectId
+            }
+        }
+        $task.Assignments = $AssignmentsValue
+    }
+    #endregion
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Planner Task {$Title} doesn't already exist. Creating it."
-        $SetParams.Remove("TaskId") | Out-Null
-        New-MGPlannerTask @SetParams | Out-Null
+        $task.Create($GlobalAdminAccount)
     }
     elseif ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Planner Task {$Title} already exists, but is not in the " + `
-            "Desired State. Updating it."
-        Update-MGPlannerPlan @SetParams
+        Write-Verbose -Message "Planner Task {$Title} already exists, but is not in the `
+            Desired State. Updating it."
+        $task.Update($GlobalAdminAccount)
+        #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Planner Task {$Title} exists, but is should not. " + `
-            "Removing it."
-        # TODO - Implement when available in the MSGraph PowerShell SDK
+        Write-Verbose -Message "Planner Task {$Title} exists, but is should not. `
+            Removing it."
+        $task.Delete($GlobalAdminAccount, $TaskId)
     }
 }
 
@@ -214,8 +309,16 @@ function Test-TargetResource
         $Title,
 
         [Parameter()]
+        [System.String[]]
+        $AssignedUsers,
+
+        [Parameter()]
         [System.String]
-        $Description,
+        $Notes,
+
+        [Parameter()]
+        [System.String]
+        $Bucket,
 
         [Parameter()]
         [System.String]
@@ -227,7 +330,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CompletedDateTime,
+        $DueDateTime,
 
         [Parameter()]
         [ValidateRange(0, 100)]
@@ -243,6 +346,10 @@ function Test-TargetResource
         [System.String]
         [ValidateSet("Present", "Absent")]
         $Ensure = 'Present',
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
 
         [Parameter()]
         [System.String]
@@ -266,10 +373,22 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+
+    # If the Task is currently assigned to a bucket and the Bucket property is null,
+    # assume that we are trying to remove the given task from the bucket and therefore
+    # treat this as a drift.
+    if ([System.String]::IsNullOrEmpty($Bucket) -and `
+        -not [System.String]::IsNullOrEmpty($CurrentValues.Bucket))
+    {
+        $TestResult = $false
+    }
+    else
+    {
+        $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -283,16 +402,12 @@ function Export-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [System.String]
-        $ApplicationId,
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
-        $TenantId,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CertificateThumbprint
+        $ApplicationId
     )
     $InformationPreference = 'Continue'
 
@@ -334,15 +449,24 @@ function Export-TargetResource
                         PlanId                = $plan.Id
                         Title                 = $task.Title
                         ApplicationId         = $ApplicationId
-                        TenantId              = $TenantId
-                        CertificateThumbprint = $CertificateThumbprint
+                        GlobalAdminAccount    = $GlobalAdminAccount
                     }
 
                     $result = Get-TargetResource @params
+
+                    if ([System.String]::IsNullOrEmpty($result.ApplicationId))
+                    {
+                        $result.Remove("ApplicationId") | Out-Null
+                    }
+                    if ($result.AssignedUsers.Count -eq 0)
+                    {
+                        $result.Remove("AssignedUsers") | Out-Null
+                    }
+                    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
                     $content += "        PlannerTask " + (New-GUID).ToString() + "`r`n"
                     $content += "        {`r`n"
                     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                    $content += $currentDSCBlock
+                    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
                     $content += "        }`r`n"
                     $k++
                 }
@@ -352,6 +476,7 @@ function Export-TargetResource
         }
         catch
         {
+            $VerbosePreference = 'Continue'
             Write-Verbose -Message $_
         }
     }

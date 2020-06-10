@@ -45,8 +45,8 @@ function Get-TargetResource
     $AllGroups = Get-AzureADGroup -ObjectId $OwnerGroup -ErrorAction 'SilentlyContinue'
     if ($AllGroups -eq $null)
     {
-        Write-Verbose -Message "Could not get Azure AD Group {$OwnerGroup} by ID." + `
-            " Trying by Name."
+        Write-Verbose -Message "Could not get Azure AD Group {$OwnerGroup} by ID. `
+             Trying by Name."
         [Array]$AllGroups = Get-AzureADGroup -SearchString $OwnerGroup
     }
     else
@@ -68,7 +68,6 @@ function Get-TargetResource
     $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
 
     $plan = $null
-    $OwnerGroupValue
     foreach ($group in $AllGroups)
     {
         try
@@ -174,20 +173,28 @@ function Set-TargetResource
     $SetParams.Remove("CertificateThumbprint") | Out-Null
     $SetParams.Remove("Ensure") | Out-Null
 
-    if ($Ensure -eq 'Present' -and $currentValues[1].Ensure -eq 'Absent')
+    if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Planner Plan {$Title} doesn't already exist. Creating it."
         New-MGPlannerPlan -Owner $OwnerGroup -Title $Title | Out-Null
     }
-    elseif ($Ensure -eq 'Present' -and $currentValues[1].Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Planner Plan {$Title} already exists, but is not in the " + `
-            "Desired State. Updating it."
-        $plan = Get-MGGroupPlanner -GroupId $group.ObjectId | Where-Object -FilterScript {$_.Title -eq $Title}
+        Write-Verbose -Message "Planner Plan {$Title} already exists, but is not in the `
+            Desired State. Updating it."
+        [Array]$AllGroups = Get-AzureADGroup -ObjectId $OwnerGroup -ErrorAction 'SilentlyContinue'
+        Write-Verbose -Message $AllGroups[0]
+        if ($AllGroups -eq $null)
+        {
+            [Array]$AllGroups = Get-AzureADGroup -SearchString $OwnerGroup
+        }
+        $plan = Get-MGGroupPlannerPlan -GroupId $AllGroups[0].ObjectId | Where-Object -FilterScript {$_.Title -eq $Title}
         $SetParams.Add("PlannerPlanId", $plan.Id)
+        $SetParams.Add("Owner", $AllGroups[0].ObjectId)
+        $SetParams.Remove("OwnerGroup") | Out-Null
         Update-MGPlannerPlan @SetParams
     }
-    elseif ($Ensure -eq 'Absent' -and $currentValues[1].Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Planner Plan {$Title} exists, but is should not. " + `
             "Removing it."
@@ -236,7 +243,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues[1] `
+    $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
@@ -264,8 +271,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
