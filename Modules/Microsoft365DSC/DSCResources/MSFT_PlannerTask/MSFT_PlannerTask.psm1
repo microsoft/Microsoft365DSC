@@ -42,6 +42,10 @@ function Get-TargetResource
         $Categories,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Attachments,
+
+        [Parameter()]
         [ValidateRange(0, 100)]
         [System.Uint32]
         $PercentComplete,
@@ -88,7 +92,7 @@ function Get-TargetResource
     }
 
     $PlannerModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "../../Modules/GraphHelpers/Planner.psm1"
+        -ChildPath "../../Modules/GraphHelpers/PlannerTask.psm1"
     $usingScriptBody = "using module $PlannerModulePath"
     $usingScript = [ScriptBlock]::Create($usingScriptBody)
     . $usingScript
@@ -122,12 +126,23 @@ function Get-TargetResource
         $NotesValue = $task.Notes
 
         #region Task Assignment
-        Test-MSCloudLogin -Platform AzureAD -CloudCredential $GlobalAdminAccount
-        $assignedValues = @()
-        foreach ($assignee in $task.Assignments)
+        if ($task.Assignments.Length -gt 0)
         {
-            $user = Get-AzureADUser -ObjectId $assignee
-            $assignedValues += $user.UserPrincipalName
+            Test-MSCloudLogin -Platform AzureAD -CloudCredential $GlobalAdminAccount
+            $assignedValues = @()
+            foreach ($assignee in $task.Assignments)
+            {
+                $user = Get-AzureADUser -ObjectId $assignee
+                $assignedValues += $user.UserPrincipalName
+            }
+        }
+        #endregion
+
+        #region Task Categories
+        $categoryValues = @()
+        foreach ($category in $task.Categories)
+        {
+            $categoryValues += $category
         }
         #endregion
 
@@ -145,7 +160,9 @@ function Get-TargetResource
             PlanId                = $PlanId
             Title                 = $Title
             AssignedUsers         = $assignedValues
-            TaskId                = $task.Id
+            TaskId                = $task.TaskId
+            Categories            = $categoryValues
+            Attachments           = $task.Attachments
             Bucket                = $BucketValue
             Priority              = $task.Priority
             PercentComplete       = $task.PercentComplete
@@ -204,6 +221,10 @@ function Set-TargetResource
         $Categories,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Attachments,
+
+        [Parameter()]
         [ValidateRange(0, 100)]
         [System.Uint32]
         $PercentComplete,
@@ -240,7 +261,7 @@ function Set-TargetResource
     $currentValues = Get-TargetResource @PSBoundParameters
 
     $PlannerModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "../../Modules/GraphHelpers/Planner.psm1"
+        -ChildPath "../../Modules/GraphHelpers/PlannerTask.psm1"
     $usingScriptBody = "using module $PlannerModulePath"
     $usingScript = [ScriptBlock]::Create($usingScriptBody)
     . $usingScript
@@ -358,6 +379,10 @@ function Test-TargetResource
         [ValidateSet("Pink", "Red", "Yellow", "Green", "Blue", "Purple")]
         [System.String[]]
         $Categories,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Attachments,
 
         [Parameter()]
         [ValidateRange(0, 100)]
@@ -490,10 +515,23 @@ function Export-TargetResource
                         $result.Remove("AssignedUsers") | Out-Null
                     }
                     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                    if ($result.Attachments.Length -gt 0)
+                    {
+                        $result.Attachments = Convert-M365DSCPlannerTaskAssignmentToCIMArray `
+                            -Attachments $result.Attachments
+                    }
                     $content += "        PlannerTask " + (New-GUID).ToString() + "`r`n"
                     $content += "        {`r`n"
                     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                        -ParameterName "GlobalAdminAccount"
+                    if ($results.Attachments.Length -gt 0)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                            -ParameterName "Attachments" `
+                            -IsCIMArray
+                    }
+                    $content += $currentDSCBlock
                     $content += "        }`r`n"
                     $k++
                 }
@@ -508,6 +546,34 @@ function Export-TargetResource
         }
     }
     return $content
+}
+
+function Convert-M365DSCPlannerTaskAssignmentToCIMArray
+{
+    [CmdletBinding()]
+    [OutputType([System.String[]])]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.HashTable[]]
+        $Attachments
+    )
+
+    $i = 1
+    $result = @()
+    foreach ($attachment in $Attachments)
+    {
+        $sb = [System.Text.StringBuilder]::new()
+        $sb.AppendLine("MSFT_PlannerTaskAttachment") | Out-Null
+        $sb.AppendLine("{") | Out-Null
+        $sb.AppendLine("    Uri   = $($attachment.Uri)") | Out-Null
+        $sb.AppendLine("    Alias = $($attachment.Alias)") | Out-Null
+        $sb.AppendLine("    Type  = $($attachment.Type)") | Out-Null
+        $sb.AppendLine("}") | Out-Null
+        $value = $sb.ToString()
+        $result += $value
+        $i++
+    }
+    return $result
 }
 
 Export-ModuleMember -Function *-TargetResource

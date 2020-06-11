@@ -1,3 +1,9 @@
+[ClassVersion("1.0.0")]
+class MSFT_PlannerTaskAttachment
+{
+    [Write, Description("Alias of for the attachment.")] String Alias;
+    [Write, Description("Uri of the link to the attachment.")] String Uri;
+};
 [ClassVersion("1.0.0.0"), FriendlyName("PlannerTask")]
 class MSFT_PlannerTask : OMI_BaseResource
 {
@@ -5,6 +11,7 @@ class MSFT_PlannerTask : OMI_BaseResource
     [Key, Description("The Title of the Planner Task.")] string Title;
     [Write, Description("List of categories assigned to the task."), ValueMap{"Pink", "Red", "Yellow", "Green", "Blue", "Purple"}, Values{"Pink", "Red", "Yellow", "Green", "Blue", "Purple"}] string Categories[];
     [Write, Description("List of users assigned to the tasks (ex: @('john.smith@contoso.com', 'bob.houle@contoso.com')).")] string AssignedUsers[];
+    [Write, Description("List of links to attachments assigned to the task."), EmbeddedInstance("MSFT_PlannerTaskAttachment")] string Attachments[];
     [Write, Description("Description of the Task.")] string Notes;
     [Write, Description("The name of Id of the bucket that contains the task.")] string Bucket;
     [Write, Description("Id of the Task, if known.")] string TaskId;

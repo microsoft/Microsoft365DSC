@@ -115,7 +115,6 @@
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
     NestedModules     = @(
-        'modules\GraphHelpers\Planner.psm1',
         'modules\M365DSCAgent.psm1',
         'modules\M365DSCUtil.psm1',
         'modules\M365DSCReverseGUI.psm1',

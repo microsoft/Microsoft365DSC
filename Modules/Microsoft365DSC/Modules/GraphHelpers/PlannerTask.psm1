@@ -7,6 +7,7 @@ class PlannerTaskObject
     [string]$BucketId
     [string]$ETag
     [string[]]$Assignments
+    [System.Collections.Hashtable[]]$Attachments
     [string]$StartDateTime
     [string]$DueDateTime
     [string[]]$Categories
@@ -54,20 +55,43 @@ class PlannerTaskObject
             -Method Get
 
         #region Assignments
-        $allAssignments = $taskResponse.assignments | gm | Where-Object -FilterScript{$_.MemberType -eq 'NoteProperty'}
         $assignmentsValue = @()
-        foreach ($assignment in $allAssignments)
+        if ($null -ne $taskResponse.assignments)
         {
-            $assignmentsValue += $assignment.Name
+            $allAssignments = $taskResponse.assignments | gm | Where-Object -FilterScript{$_.MemberType -eq 'NoteProperty'}
+            foreach ($assignment in $allAssignments)
+            {
+                $assignmentsValue += $assignment.Name
+            }
+        }
+        #endregion
+
+        #region Attachments
+        $attachmentsValue = @()
+        if ($null -ne $taskDetailsResponse.references)
+        {
+            $allAttachments = $taskDetailsResponse.references | gm | Where-Object -FilterScript{$_.MemberType -eq 'NoteProperty'}
+            foreach ($attachment in $allAttachments)
+            {
+                $hashEntry = @{
+                    Uri   = $attachment.Name
+                    Alias = $taskDetailsResponse.references.($attachment.Name).alias
+                    Type  = $taskDetailsResponse.references.($attachment.Name).type
+                }
+                $attachmentsValue += $hashEntry
+            }
         }
         #endregion
 
         #region Categories
-        $allCategories = $taskResponse.appliedCategories | gm | Where-Object -FilterScript{$_.MemberType -eq 'NoteProperty'}
         $categoriesValue = @()
-        foreach ($category in $allCategories)
+        if ($null -ne $taskResponse.appliedCategories)
         {
-            $categoriesValue += $this.GetTaskColorNameByCategory($category.Name)
+            $allCategories = $taskResponse.appliedCategories | gm | Where-Object -FilterScript{$_.MemberType -eq 'NoteProperty'}
+            foreach ($category in $allCategories)
+            {
+                $categoriesValue += $this.GetTaskColorNameByCategory($category.Name)
+            }
         }
         #endregion
         $this.Etag              = $taskResponse.'@odata.etag'
@@ -81,6 +105,7 @@ class PlannerTaskObject
         $this.Priority          = $taskResponse.priority
         $this.Notes             = $taskDetailsResponse.description
         $this.Assignments       = $assignmentsValue
+        $this.Attachments       = $attachmentsValue
         $this.Categories        = $categoriesValue
     }
     [string]ConvertToJSONTask()
@@ -137,7 +162,8 @@ class PlannerTaskObject
                 {
                     $sb.Append(",") | Out-Null
                 }
-                $sb.Append("`"$category`":true") | Out-Null
+                $categoryName = $this.GetTaskCategoryNameByColor($category)
+                $sb.Append("`"$categoryName`":true") | Out-Null
                 $id++
             }
             $sb.Append("}") | Out-Null
@@ -151,6 +177,26 @@ class PlannerTaskObject
         $sb = [System.Text.StringBuilder]::New()
         $sb.Append("{") | Out-Null
         $sb.Append("`"description`":`"$($this.Notes)`"") | Out-Null
+
+        if ($this.Attachments.Length -gt 0)
+        {
+            $sb.Append(",`"references`": {") | Out-Null
+            $i = 1
+            foreach ($attachment in $this.Attachments)
+            {
+                if ($i -gt 1)
+                {
+                    $sb.Append(",") | Out-Null
+                }
+                $sb.Append("`"$($attachment.Uri)`": {") | Out-Null
+                $sb.Append("`"@odata.type`": `"#microsoft.graph.plannerExternalReference`",") | Out-Null
+                $sb.Append("`"alias`":`"$($attachment.Alias)`",") | Out-Null
+                $sb.Append("`"type`":`"$($attachment.Type)`"") | Out-Null
+                $sb.Append("}") | Out-Null
+                $i++
+            }
+            $sb.Append("}") | Out-Null
+        }
         $sb.Append("}") | Out-Null
         return $sb.ToString()
     }
