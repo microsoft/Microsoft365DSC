@@ -8,12 +8,14 @@ class PlannerTaskObject
     [string]$ETag
     [string[]]$Assignments
     [System.Collections.Hashtable[]]$Attachments
+    [System.Collections.Hashtable[]]$Checklist
     [string]$StartDateTime
     [string]$DueDateTime
     [string[]]$Categories
     [string]$CompletedDateTime
     [int]$PercentComplete
     [int]$Priority
+    [string]$ConversationThreadId
     [string]$OrderHint
 
     [string]GetTaskCategoryNameByColor([string]$ColorName)
@@ -94,19 +96,37 @@ class PlannerTaskObject
             }
         }
         #endregion
-        $this.Etag              = $taskResponse.'@odata.etag'
-        $this.Title             = $taskResponse.Title
-        $this.StartDateTime     = $taskResponse.startDateTime
-        $this.DueDateTime       = $taskResponse.dueDateTime
-        $this.CompletedDateTime = $taskResponse.completedDateTime
-        $this.PlanId            = $taskResponse.planId
-        $this.TaskId            = $taskResponse.id
-        $this.BucketId          = $taskResponse.bucketId
-        $this.Priority          = $taskResponse.priority
-        $this.Notes             = $taskDetailsResponse.description
-        $this.Assignments       = $assignmentsValue
-        $this.Attachments       = $attachmentsValue
-        $this.Categories        = $categoriesValue
+
+        #region Checklist
+        $checklistValue = @()
+        if ($null -ne $taskDetailsResponse.checklist)
+        {
+            $allCheckListItems = $taskDetailsResponse.checklist | gm | Where-Object -FilterScript{$_.MemberType -eq 'NoteProperty'}
+            foreach ($checkListItem in $allCheckListItems)
+            {
+                $hashEntry = @{
+                    Title     = $taskDetailsResponse.checklist.($checkListItem.Name).title
+                    Completed = [bool]$taskDetailsResponse.checklist.($checkListItem.Name).isChecked
+                }
+                $checklistValue += $hashEntry
+            }
+        }
+        #endregion
+        $this.Etag                 = $taskResponse.'@odata.etag'
+        $this.Title                = $taskResponse.title
+        $this.StartDateTime        = $taskResponse.startDateTime
+        $this.ConversationThreadId = $taskResponse.conversationThreadId
+        $this.DueDateTime          = $taskResponse.dueDateTime
+        $this.CompletedDateTime    = $taskResponse.completedDateTime
+        $this.PlanId               = $taskResponse.planId
+        $this.TaskId               = $taskResponse.id
+        $this.BucketId             = $taskResponse.bucketId
+        $this.Priority             = $taskResponse.priority
+        $this.Notes                = $taskDetailsResponse.description
+        $this.Assignments          = $assignmentsValue
+        $this.Attachments          = $attachmentsValue
+        $this.Categories           = $categoriesValue
+        $this.Checklist            = $checklistValue
     }
     [string]ConvertToJSONTask()
     {
@@ -120,7 +140,7 @@ class PlannerTaskObject
         }
         if (-not [System.String]::IsNullOrEmpty($this.Priority))
         {
-            $sb.Append(",`"priority`":`"$($this.Priority)`"") | Out-Null
+            $sb.Append(",`"priority`": $($this.Priority.ToString())") | Out-Null
         }
         if (-not [System.String]::IsNullOrEmpty($this.StartDateTime))
         {
@@ -129,6 +149,10 @@ class PlannerTaskObject
         if (-not [System.String]::IsNullOrEmpty($this.DueDateTime))
         {
             $sb.Append(",`"dueDateTime`":`"$($this.DueDateTime)`"") | Out-Null
+        }
+        if (-not [System.String]::IsNullOrEmpty($this.ConversationThreadId))
+        {
+            $sb.Append(",`"conversationThreadId`":`"$($this.ConversationThreadId)`"") | Out-Null
         }
         if ($this.Assignments.Length -gt 0)
         {
@@ -197,6 +221,26 @@ class PlannerTaskObject
             }
             $sb.Append("}") | Out-Null
         }
+
+        if ($this.Checklist.Length -gt 0)
+        {
+            $sb.Append(",`"checklist`": {") | Out-Null
+            $i = 1
+            foreach ($checkListItem in $this.Checklist)
+            {
+                if ($i -gt 1)
+                {
+                    $sb.Append(",") | Out-Null
+                }
+                $sb.Append("`"$((New-Guid).ToString())`": {") | Out-Null
+                $sb.Append("`"@odata.type`": `"#microsoft.graph.plannerChecklistItem`",") | Out-Null
+                $sb.Append("`"title`":`"$($checkListItem.Title)`",") | Out-Null
+                $sb.Append("`"isChecked`": $($checkListItem.Completed.ToString().Replace('`$', '').ToLower())") | Out-Null
+                $sb.Append("}") | Out-Null
+                $i++
+            }
+            $sb.Append("}") | Out-Null
+        }
         $sb.Append("}") | Out-Null
         return $sb.ToString()
     }
@@ -216,7 +260,7 @@ class PlannerTaskObject
 
     [void]Update([System.Management.Automation.PSCredential]$GlobalAdminAccount)
     {
-        $uri = "https://graph.microsoft.com/v1.0/planner/tasks/$($this.TaskId)"
+        $uri = "https://graph.microsoft.com/beta/planner/tasks/$($this.TaskId)"
         $body = $this.ConvertToJSONTask()
         $Headers = @{}
         $Headers.Add("If-Match", $this.ETag)

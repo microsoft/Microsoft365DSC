@@ -46,6 +46,10 @@ function Get-TargetResource
         $Attachments,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Checklist,
+
+        [Parameter()]
         [ValidateRange(0, 100)]
         [System.Uint32]
         $PercentComplete,
@@ -54,6 +58,10 @@ function Get-TargetResource
         [ValidateRange(0, 10)]
         [System.UInt32]
         $Priority,
+
+        [Parameter()]
+        [System.String]
+        $ConversationThreadId,
 
         [Parameter()]
         [System.String]
@@ -163,8 +171,10 @@ function Get-TargetResource
             TaskId                = $task.TaskId
             Categories            = $categoryValues
             Attachments           = $task.Attachments
+            Checklist             = $task.Checklist
             Bucket                = $BucketValue
             Priority              = $task.Priority
+            ConversationThreadId  = $task.ConversationThreadId
             PercentComplete       = $task.PercentComplete
             StartDateTime         = $StartDateTimeValue
             DueDateTime           = $DueDateTimeValue
@@ -225,6 +235,10 @@ function Set-TargetResource
         $Attachments,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Checklist,
+
+        [Parameter()]
         [ValidateRange(0, 100)]
         [System.Uint32]
         $PercentComplete,
@@ -233,6 +247,10 @@ function Set-TargetResource
         [ValidateRange(0, 10)]
         [System.UInt32]
         $Priority,
+
+        [Parameter()]
+        [System.String]
+        $ConversationThreadId,
 
         [Parameter()]
         [System.String]
@@ -282,12 +300,13 @@ function Set-TargetResource
     }
     #endregion
 
-    $task.Title         = $Title
-    $task.PlanId        = $PlanId
-    $task.StartDateTime = $StartDateTime
-    $task.DueDateTime   = $DueDateTime
-    $task.Priority      = $Priority
-    $task.Notes         = $Notes
+    $task.Title                = $Title
+    $task.PlanId               = $PlanId
+    $task.StartDateTime        = $StartDateTime
+    $task.DueDateTime          = $DueDateTime
+    $task.Priority             = $Priority
+    $task.Notes                = $Notes
+    $task.ConversationThreadId = $ConversationThreadId
 
     #region Assignments
     if ($AssignedUsers.Length -gt 0)
@@ -306,17 +325,51 @@ function Set-TargetResource
     }
     #endregion
 
+    #region Attachments
+    if ($Attachments.Length -gt 0)
+    {
+        $attachmentsArray = @()
+        foreach ($attachment in $Attachments)
+        {
+            $attachmentsValue = @{
+                Uri   = $attachment.Uri
+                Alias = $attachment.Alias
+                Type  = $attachment.Type
+            }
+            $attachmentsArray +=$AttachmentsValue
+        }
+        $task.Attachments = $attachmentsArray
+    }
+    #endregion
+
     #region Categories
     if ($Categories.Length -gt 0)
     {
         $CategoriesValue = @()
         foreach ($category in $Categories)
         {
-            $CategoriesValue += $task.GetTaskCategoryNameByColor($category)
+            $CategoriesValue += $category
         }
         $task.Categories = $CategoriesValue
     }
     #endregion
+
+    #region Checklist
+    if ($Checklist.Length -gt 0)
+    {
+        $checklistArray = @()
+        foreach ($checkListItem in $Checklist)
+        {
+            $checklistItemValue = @{
+                Title     = $checkListItem.Title
+                Completed = $checkListItem.Completed
+            }
+            $checklistArray +=$checklistItemValue
+        }
+        $task.Checklist = $checklistArray
+    }
+    #endregion
+
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Planner Task {$Title} doesn't already exist. Creating it."
@@ -385,6 +438,10 @@ function Test-TargetResource
         $Attachments,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Checklist,
+
+        [Parameter()]
         [ValidateRange(0, 100)]
         [System.Uint32]
         $PercentComplete,
@@ -393,6 +450,10 @@ function Test-TargetResource
         [ValidateRange(0, 10)]
         [System.UInt32]
         $Priority,
+
+        [Parameter()]
+        [System.String]
+        $ConversationThreadId,
 
         [Parameter()]
         [System.String]
@@ -423,8 +484,7 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
     # If the Task is currently assigned to a bucket and the Bucket property is null,
     # assume that we are trying to remove the given task from the bucket and therefore
@@ -436,6 +496,12 @@ function Test-TargetResource
     }
     else
     {
+        $ValuesToCheck.Remove("Checklist") | Out-Null
+        if (-not (Test-M365DSCPlannerTaskCheckListValues -CurrentValues $CurrentValues `
+            -DesiredValues $PSBoundParameters))
+        {
+            return $false
+        }
         $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
             -DesiredValues $PSBoundParameters `
@@ -517,19 +583,44 @@ function Export-TargetResource
                     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
                     if ($result.Attachments.Length -gt 0)
                     {
-                        $result.Attachments = Convert-M365DSCPlannerTaskAssignmentToCIMArray `
-                            -Attachments $result.Attachments
+                        $result.Attachments = [Array](Convert-M365DSCPlannerTaskAssignmentToCIMArray `
+                            -Attachments $result.Attachments)
                     }
+                    else
+                    {
+                        $result.Remove("Attachments") | Out-Null
+                    }
+
+                    if ($result.Checklist.Length -gt 0)
+                    {
+                        $result.Checklist = [Array](Convert-M365DSCPlannerTaskChecklistToCIMArray `
+                            -Checklist $result.Checklist)
+                    }
+                    else
+                    {
+                        $result.Remove("Checklist") | Out-Null
+                    }
+
+                    # Fix Notes which can have multiple lines
+                    $result.Notes = $result.Notes.Replace('"', '``"')
+                    $result.Notes = $result.Notes.Replace("&", "``&")
+
                     $content += "        PlannerTask " + (New-GUID).ToString() + "`r`n"
                     $content += "        {`r`n"
                     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
                     $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
                         -ParameterName "GlobalAdminAccount"
-                    if ($results.Attachments.Length -gt 0)
+                    if ($result.Attachments.Length -gt 0)
                     {
                         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
                             -ParameterName "Attachments" `
-                            -IsCIMArray
+                            -IsCIMArray $true
+                    }
+                    if ($result.Checklist.Length -gt 0)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                            -ParameterName "Checklist" `
+                            -IsCIMArray $true
                     }
                     $content += $currentDSCBlock
                     $content += "        }`r`n"
@@ -548,6 +639,46 @@ function Export-TargetResource
     return $content
 }
 
+function Test-M365DSCPlannerTaskCheckListValues
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.HashTable[]]
+        $CurrentValues,
+
+        [Parameter(Mandatory = $true)]
+        [System.Collections.HashTable[]]
+        $DesiredValues
+    )
+
+    # Check in CurrentValues for item that don't exist or are different in
+    # the DesiredValues;
+    foreach ($checklistItem in $CurrentValues)
+    {
+        $equivalentItemInDesired = $DesiredValues | Where-Object -FilterScript {$_.Title -eq $checklistItem.Title}
+        if ($null -eq $equivalentItemInDesired -or `
+            $checklistItem.Completed -ne $equivalentItemInDesired.Completed)
+        {
+            return $false
+        }
+    }
+
+    # Do the opposite, check in DesiredValue for item that don't exist or are different in
+    # the CurrentValues;
+    foreach ($checklistItem in $DesiredValues)
+    {
+        $equivalentItemInCurrent = $CurrentValues | Where-Object -FilterScript {$_.Title -eq $checklistItem.Title}
+        if ($null -eq $equivalentItemInCurrent -or `
+            $checklistItem.Completed -ne $equivalentItemInCurrent.Completed)
+        {
+            return $false
+        }
+    }
+    return $true
+}
+
 function Convert-M365DSCPlannerTaskAssignmentToCIMArray
 {
     [CmdletBinding()]
@@ -558,20 +689,37 @@ function Convert-M365DSCPlannerTaskAssignmentToCIMArray
         $Attachments
     )
 
-    $i = 1
     $result = @()
     foreach ($attachment in $Attachments)
     {
-        $sb = [System.Text.StringBuilder]::new()
-        $sb.AppendLine("MSFT_PlannerTaskAttachment") | Out-Null
-        $sb.AppendLine("{") | Out-Null
-        $sb.AppendLine("    Uri   = $($attachment.Uri)") | Out-Null
-        $sb.AppendLine("    Alias = $($attachment.Alias)") | Out-Null
-        $sb.AppendLine("    Type  = $($attachment.Type)") | Out-Null
-        $sb.AppendLine("}") | Out-Null
-        $value = $sb.ToString()
-        $result += $value
-        $i++
+        $stringContent = "MSFT_PlannerTaskAttachment`r`n            {`r`n"
+        $stringContent += "                Uri = '$($attachment.Uri)'`r`n"
+        $stringContent += "                Alias = '$($attachment.Alias.Replace("'", "''"))'`r`n"
+        $stringContent += "                Type = '$($attachment.Type)'`r`n"
+        $StringContent += "            }`r`n"
+        $result += $stringContent
+    }
+    return $result
+}
+
+function Convert-M365DSCPlannerTaskChecklistToCIMArray
+{
+    [CmdletBinding()]
+    [OutputType([System.String[]])]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.HashTable[]]
+        $Checklist
+    )
+
+    $result = @()
+    foreach ($checklistItem in $Checklist)
+    {
+        $stringContent = "MSFT_PlannerTaskChecklistItem`r`n            {`r`n"
+        $stringContent += "                Title = '$($checklistItem.Title.Replace("'", "''"))'`r`n"
+        $stringContent += "                Completed = `$$($checklistItem.Completed.ToString())`r`n"
+        $StringContent += "            }`r`n"
+        $result += $stringContent
     }
     return $result
 }
