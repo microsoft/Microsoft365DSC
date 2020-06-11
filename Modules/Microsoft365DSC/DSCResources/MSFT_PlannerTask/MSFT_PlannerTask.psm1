@@ -37,6 +37,11 @@ function Get-TargetResource
         $DueDateTime,
 
         [Parameter()]
+        [ValidateSet("Pink", "Red", "Yellow", "Green", "Blue", "Purple")]
+        [System.String[]]
+        $Categories,
+
+        [Parameter()]
         [ValidateRange(0, 100)]
         [System.Uint32]
         $PercentComplete,
@@ -194,6 +199,11 @@ function Set-TargetResource
         $DueDateTime,
 
         [Parameter()]
+        [ValidateSet("Pink", "Red", "Yellow", "Green", "Blue", "Purple")]
+        [System.String[]]
+        $Categories,
+
+        [Parameter()]
         [ValidateRange(0, 100)]
         [System.Uint32]
         $PercentComplete,
@@ -274,6 +284,18 @@ function Set-TargetResource
         $task.Assignments = $AssignmentsValue
     }
     #endregion
+
+    #region Categories
+    if ($Categories.Length -gt 0)
+    {
+        $CategoriesValue = @()
+        foreach ($category in $Categories)
+        {
+            $CategoriesValue += $task.GetTaskCategoryNameByColor($category)
+        }
+        $task.Categories = $CategoriesValue
+    }
+    #endregion
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Planner Task {$Title} doesn't already exist. Creating it."
@@ -331,6 +353,11 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $DueDateTime,
+
+        [Parameter()]
+        [ValidateSet("Pink", "Red", "Yellow", "Green", "Blue", "Purple")]
+        [System.String[]]
+        $Categories,
 
         [Parameter()]
         [ValidateRange(0, 100)]

@@ -9,10 +9,39 @@ class PlannerTaskObject
     [string[]]$Assignments
     [string]$StartDateTime
     [string]$DueDateTime
+    [string[]]$Categories
     [string]$CompletedDateTime
     [int]$PercentComplete
     [int]$Priority
     [string]$OrderHint
+
+    [string]GetTaskCategoryNameByColor([string]$ColorName)
+    {
+        switch($ColorName)
+        {
+            "Pink"{return "category1"}
+            "Red"{return "category2"}
+            "Yellow"{return "category3"}
+            "Green"{return "category4"}
+            "Blue"{return "category5"}
+            "Purple"{return "category6"}
+        }
+        return $null
+    }
+
+    [string]GetTaskColorNameByCategory([string]$CategoryName)
+    {
+        switch($CategoryName)
+        {
+            "category1"{return "Pink"}
+            "category2"{return "Red"}
+            "category3"{return "Yellow"}
+            "category4"{return "Green"}
+            "category5"{return "Blue"}
+            "category6"{return "Purple"}
+        }
+        return $null
+    }
 
     [void]PopulateById([System.Management.Automation.PSCredential]$GlobalAdminAccount, [string]$TaskId)
     {
@@ -32,6 +61,15 @@ class PlannerTaskObject
             $assignmentsValue += $assignment.Name
         }
         #endregion
+
+        #region Categories
+        $allCategories = $taskResponse.appliedCategories | gm | Where-Object -FilterScript{$_.MemberType -eq 'NoteProperty'}
+        $categoriesValue = @()
+        foreach ($category in $allCategories)
+        {
+            $categoriesValue += $this.GetTaskColorNameByCategory($category.Name)
+        }
+        #endregion
         $this.Etag              = $taskResponse.'@odata.etag'
         $this.Title             = $taskResponse.Title
         $this.StartDateTime     = $taskResponse.startDateTime
@@ -43,6 +81,7 @@ class PlannerTaskObject
         $this.Priority          = $taskResponse.priority
         $this.Notes             = $taskDetailsResponse.description
         $this.Assignments       = $assignmentsValue
+        $this.Categories        = $categoriesValue
     }
     [string]ConvertToJSONTask()
     {
@@ -84,6 +123,21 @@ class PlannerTaskObject
                     $sb.Append(",`"orderHint`": `" !`"")
                 }
                 $sb.Append("}") | Out-Null
+                $id++
+            }
+            $sb.Append("}") | Out-Null
+        }
+        if ($this.Categories.Length -gt 0)
+        {
+            $sb.Append(",`"appliedCategories`": {") | Out-Null
+            $id = 1
+            foreach ($category in $this.Categories)
+            {
+                if ($id -gt 1)
+                {
+                    $sb.Append(",") | Out-Null
+                }
+                $sb.Append("`"$category`":true") | Out-Null
                 $id++
             }
             $sb.Append("}") | Out-Null
