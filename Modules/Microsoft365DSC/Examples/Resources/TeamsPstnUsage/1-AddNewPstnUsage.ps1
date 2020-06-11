@@ -15,7 +15,6 @@ Configuration Example
     {
         TeamsPstnUsage PstnUsage
         {
-            IsSingleInstance   = 'Yes'
             Usage              = 'Long Distance'
             Ensure             = 'Present'
             GlobalAdminAccount = $credsGlobalAdmin
