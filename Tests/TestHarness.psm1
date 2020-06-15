@@ -50,39 +50,39 @@ function Invoke-TestHarness
 
     $stubPath = Join-Path -Path $repoDir `
             -ChildPath "\Tests\Unit\Stubs\Microsoft365.psm1"
-    $testsToRun += @(@{
+    <#$testsToRun += @(@{
             'Path'       = (Join-Path -Path $repoDir -ChildPath "\Tests\Unit")
             'Parameters' = @{
                 'CmdletModule' = $stubPath
             }
-        })
+        })#>
 
     # DSC Common Tests
-    if ($PSBoundParameters.ContainsKey('DscTestsPath') -eq $true)
-    {
-        $getChildItemParameters = @{
-            Path    = $DscTestsPath
-            Recurse = $true
-            Filter  = '*.Tests.ps1'
-        }
-
-        # Get all tests '*.Tests.ps1'.
-        $commonTestFiles = Get-ChildItem @getChildItemParameters
-
-        # Remove DscResource.Tests unit tests.
-        $commonTestFiles = $commonTestFiles | Where-Object -FilterScript {
-            $_.FullName -notmatch 'DSCResource.Tests\\Tests'
-        }
-
-        $testsToRun += @( $commonTestFiles.FullName )
+    $getChildItemParameters = @{
+        Path    = (Join-Path -Path $repoDir -ChildPath "\Tests\Unit")
+        Recurse = $true
+        Filter  = '*.Tests.ps1'
     }
+
+    # Get all tests '*.Tests.ps1'.
+    $commonTestFiles = Get-ChildItem @getChildItemParameters
+
+    # Remove DscResource.Tests unit tests.
+    $commonTestFiles = $commonTestFiles | Where-Object -FilterScript {
+        $_.FullName -notmatch 'DSCResource.Tests\\Tests'
+    }
+
+    $testsToRun += @( $commonTestFiles.FullName )
 
     if ($IgnoreCodeCoverage.IsPresent -eq $false)
     {
         $testResultSettings.Add('CodeCoverage', $testCoverageFiles)
     }
 
-    $results = Invoke-Pester -Script $testsToRun -PassThru @testResultSettings
+    foreach ($testToRun in $testsToRun)
+    {
+        $results += Invoke-Pester -Path $testToRun -PassThru @testResultSettings
+    }
 
     return $results
 }
