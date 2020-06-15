@@ -1,8 +1,8 @@
 [CmdletBinding()]
 param(
 )
-$M365DSCTestFolder = Join-Path -Path (Get-Module 'Microsoft365DSC' -ListAvailable).ModuleBase `
-                        -ChildPath "..\..\Tests\Unit" `
+$M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
+                        -ChildPath "..\..\Unit" `
                         -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
             -ChildPath "\Stubs\Microsoft365.psm1" `

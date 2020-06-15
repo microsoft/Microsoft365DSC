@@ -1,8 +1,8 @@
 [CmdletBinding()]
 param(
 )
-$M365DSCTestFolder = Join-Path -Path (Get-Module 'Microsoft365DSC' -ListAvailable).ModuleBase `
-                        -ChildPath "..\..\Tests\Unit" `
+$M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
+                        -ChildPath "..\..\Unit" `
                         -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
             -ChildPath "\Stubs\Microsoft365.psm1" `
@@ -161,7 +161,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It 'Should return false from the Test method' {            
+            It 'Should return false from the Test method' {
 
                 Mock -CommandName Get-Label -MockWith {
                     return @{
@@ -172,7 +172,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should delete from the Set method' {            
+            It 'Should delete from the Set method' {
                 Mock -CommandName Get-Label -MockWith {
                     $null
                 }

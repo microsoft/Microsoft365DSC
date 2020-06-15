@@ -1,8 +1,8 @@
 [CmdletBinding()]
 param(
 )
-$M365DSCTestFolder = Join-Path -Path (Get-Module 'Microsoft365DSC' -ListAvailable).ModuleBase `
-                        -ChildPath "..\..\Tests\Unit" `
+$M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
+                        -ChildPath "..\..\Unit" `
                         -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
             -ChildPath "\Stubs\Microsoft365.psm1" `
@@ -103,14 +103,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
                     return "Credential"
-                }                
+                }
             }
 
             It "Should return Values from the Get method" {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
                 Should -Invoke -CommandName "Get-AzureADDirectorySetting" -Exactly 1
             }
-                       
+
 
             BeforeEach {
                 Mock -CommandName Get-AzureADDirectorySetting -MockWith {
@@ -129,7 +129,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return false from the Test method' {
                 $Script:calledOnceAlready = $false
                 Test-TargetResource @testParams | Should -Be $false
-            }            
+            }
 
             BeforeEach {
                 Mock -CommandName Get-AzureADDirectorySetting -MockWith {
@@ -145,7 +145,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
             }
-            It 'Should Create the Policy from the Set method' {            
+            It 'Should Create the Policy from the Set method' {
                 $Script:calledOnceAlready = $false
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName "New-AzureADDirectorySetting" -Exactly 1
