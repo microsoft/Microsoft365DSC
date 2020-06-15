@@ -46,13 +46,15 @@ class PlannerTaskObject
         return $null
     }
 
-    [void]PopulateById([System.Management.Automation.PSCredential]$GlobalAdminAccount, [string]$TaskId)
+    [void]PopulateById([System.Management.Automation.PSCredential]$GlobalAdminAccount, [String]$ApplicationId, [string]$TaskId)
     {
         $uri = "https://graph.microsoft.com/beta/planner/tasks/$TaskId"
         $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+            -ApplicationId $ApplicationId `
             -Uri $uri `
             -Method Get
         $taskDetailsResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+            -ApplicationId $ApplicationId `
             -Uri ($uri + "/details") `
             -Method Get
 
@@ -245,11 +247,12 @@ class PlannerTaskObject
         return $sb.ToString()
     }
 
-    [void]Create([System.Management.Automation.PSCredential]$GlobalAdminAccount)
+    [void]Create([System.Management.Automation.PSCredential]$GlobalAdminAccount, [String]$ApplicationId)
     {
         $uri = "https://graph.microsoft.com/v1.0/planner/tasks"
         $body = $this.ConvertToJSONTask()
         $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+            -ApplicationId $ApplicationId `
             -Uri $uri `
             -Method "POST" `
             -Body $body
@@ -258,38 +261,41 @@ class PlannerTaskObject
         $this.UpdateDetails($GlobalAdminAccount)
     }
 
-    [void]Update([System.Management.Automation.PSCredential]$GlobalAdminAccount)
+    [void]Update([System.Management.Automation.PSCredential]$GlobalAdminAccount, [String]$ApplicationId)
     {
         $uri = "https://graph.microsoft.com/beta/planner/tasks/$($this.TaskId)"
         $body = $this.ConvertToJSONTask()
         $Headers = @{}
         $Headers.Add("If-Match", $this.ETag)
         $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+            -ApplicationId $ApplicationId `
             -Uri $uri `
             -Method "PATCH" `
             -Body $body `
             -Headers $Headers
     }
 
-    [void]UpdateDetails([System.Management.Automation.PSCredential]$GlobalAdminAccount)
+    [void]UpdateDetails([System.Management.Automation.PSCredential]$GlobalAdminAccount, [String]$ApplicationId)
     {
         $uri = "https://graph.microsoft.com/v1.0/planner/tasks/$($this.TaskId)/details"
         $body = $this.ConvertToJSONTaskDetails()
 
         # Get ETag for the details
         $currentTaskDetails = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+            -ApplicationId $ApplicationId `
             -Uri $uri `
             -Method "GET"
         $Headers = @{}
         $Headers.Add("If-Match", $currentTaskDetails.'@odata.etag')
         $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+            -ApplicationId $ApplicationId `
             -Uri $uri `
             -Method "PATCH" `
             -Body $body `
             -Headers $Headers
     }
 
-    [void]Delete([System.Management.Automation.PSCredential]$GlobalAdminAccount, [string]$TaskId)
+    [void]Delete([System.Management.Automation.PSCredential]$GlobalAdminAccount, [string]$ApplicationId, [string]$TaskId)
     {
         $VerbosePreference = 'Continue'
         Write-Verbose -Message "Initiating the Deletion of Task {$TaskId}"
@@ -297,12 +303,14 @@ class PlannerTaskObject
 
         # Get ETag for the details
         $currentTaskDetails = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+            -ApplicationId $ApplicationId `
             -Uri $uri `
             -Method "GET"
         $Headers = @{}
         $Headers.Add("If-Match", $currentTaskDetails.'@odata.etag')
         Write-Verbose -Message "Retrieved Task's ETag {$($currentTaskDetails.'@odata.etag')}"
         $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+            -ApplicationId $ApplicationId `
             -Uri $uri `
             -Method "DELETE" `
             -Headers $Headers

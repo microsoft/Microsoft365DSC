@@ -99,14 +99,14 @@ function Get-TargetResource
         return $nullReturn
     }
 
-    $PlannerModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "../../Modules/GraphHelpers/PlannerTask.psm1"
-    $usingScriptBody = "using module $PlannerModulePath"
+    $ModulePath = Join-Path -Path $PSScriptRoot `
+        -ChildPath "../../Modules/GraphHelpers/PlannerTaskObject.psm1"
+    $usingScriptBody = "using module $ModulePath"
     $usingScript = [ScriptBlock]::Create($usingScriptBody)
     . $usingScript
     $task = [PlannerTaskObject]::new()
     Write-Verbose -Message "Populating task {$taskId} from the Get method"
-    $task.PopulateById($GlobalAdminAccount, $TaskId)
+    $task.PopulateById($GlobalAdminAccount, $ApplicationId, $TaskId)
 
     if ($null -eq $task)
     {
@@ -278,9 +278,9 @@ function Set-TargetResource
 
     $currentValues = Get-TargetResource @PSBoundParameters
 
-    $PlannerModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "../../Modules/GraphHelpers/PlannerTask.psm1"
-    $usingScriptBody = "using module $PlannerModulePath"
+    $ModulePath = Join-Path -Path $PSScriptRoot `
+        -ChildPath "../../Modules/GraphHelpers/PlannerTaskObject.psm1"
+    $usingScriptBody = "using module $ModulePath"
     $usingScript = [ScriptBlock]::Create($usingScriptBody)
     . $usingScript
     $task = [PlannerTaskObject]::new()
