@@ -79,10 +79,11 @@ function Invoke-TestHarness
         $testResultSettings.Add('CodeCoverage', $testCoverageFiles)
     }
 
+    $filesToExecute = @()
     foreach ($testToRun in $testsToRun)
     {
-        $results += Invoke-Pester -Path $testToRun -PassThru @testResultSettings
+        $filesToExecute += $testToRun
     }
-
+    $results = Invoke-Pester -Path $filesToExecute -PassThru @testResultSettings
     return $results
 }

@@ -86,7 +86,8 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+                        -InboundParameters $PSBoundParameters
 
     $AADApp = Get-AzureADApplication -Filter "DisplayName eq '$($DisplayName)'"
     if($AADApp.Count -gt 1)
