@@ -20,7 +20,23 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
 
     )
 
@@ -32,8 +48,7 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     try
     {
@@ -45,10 +60,14 @@ function Get-TargetResource
     }
 
     $result = @{
-        CdnType            = $CdnType
-        Enable             = $cdnEnabled.Value
-        Ensure             = $Ensure
-        GlobalAdminAccount = $GlobalAdminAccount
+        CdnType             = $CdnType
+        Enable              = $cdnEnabled.Value
+        Ensure              = $Ensure
+        GlobalAdminAccount  = $GlobalAdminAccount
+        ApplicationId       = $ApplicationId
+        TenantId            = $TenantId
+        CertificatePassword = $CertificatePassword
+        CertificatePath     = $CertificatePath
     }
     return $result
 
@@ -75,7 +94,23 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
 
     )
 
@@ -91,7 +126,11 @@ function Set-TargetResource
     $currentParameters = $PSBoundParameters
     $currentParameters.Remove("Ensure")
     $currentParameters.Remove("GlobalAdminAccount")
-        #No add only a set
+    $CurrentParameters.Remove("ApplicationId")
+    $CurrentParameters.Remove("TenantId")
+    $CurrentParameters.Remove("CertificatePath")
+    $CurrentParameters.Remove("CertificatePassword")
+    #No add only a set
     Set-PnPTenantCdnEnabled @currentParameters
 
 }
@@ -118,7 +157,23 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
 
     )
 
@@ -126,10 +181,15 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     Write-Verbose -Message "Starting the test to compare"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: `n $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove("ApplicationId")| Out-Null
+    $ValuesToCheck.Remove("TenantId")| Out-Null
+    $ValuesToCheck.Remove("CertificatePath")| Out-Null
+    $ValuesToCheck.Remove("CertificatePassword")| Out-Null
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -149,7 +209,23 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     $InformationPreference = 'Continue'
     #region Telemetry
@@ -159,18 +235,32 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+
 
     $content = ''
     $cdnTypes = "Public", "Private"
 
     foreach ($cType in $cdnTypes)
     {
-        $Params = @{
-            GlobalAdminAccount = $GlobalAdminAccount
-            CdnType            = $cType
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $params = @{
+                GlobalAdminAccount = $GlobalAdminAccount
+                CdnType            = $cType
+            }
         }
+        else
+        {
+            $params = @{
+                CdnType             = $cType
+                ApplicationId       = $ApplicationId
+                TenantId            = $TenantId
+                CertificatePassword = $CertificatePassword
+                CertificatePath     = $CertificatePath
+            }
+        }
+
         $result = Get-TargetResource @Params
         if ($result.Enable -eq $True)
         {

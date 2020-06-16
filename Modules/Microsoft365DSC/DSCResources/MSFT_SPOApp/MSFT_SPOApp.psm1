@@ -25,9 +25,25 @@ function Get-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration for app $Identity"
@@ -39,17 +55,21 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = @{
-        Identity  = ""
-        Path      = $null
-        Publish   = $Publish
-        Overwrite = $Overwrite
-        Ensure    = "Absent"
+        Identity            = ""
+        Path                = $null
+        Publish             = $Publish
+        Overwrite           = $Overwrite
+        Ensure              = "Absent"
+        ApplicationId       = $ApplicationId
+        TenantId            = $TenantId
+        CertificatePassword = $CertificatePassword
+        CertificatePath     = $CertificatePath
     }
 
     try
     {
-        Test-MSCloudLogin -Platform PnP `
-            -CloudCredential $GlobalAdminAccount
+
+        $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
         $app = Get-PnPApp -Identity $Identity -ErrorAction SilentlyContinue
         if ($null -eq $app)
         {
@@ -58,11 +78,15 @@ function Get-TargetResource
         }
 
         return @{
-            Identity  = $app.Title
-            Path      = $Path
-            Publish   = $app.Deployed
-            Overwrite = $Overwrite
-            Ensure    = "Present"
+            Identity            = $app.Title
+            Path                = $Path
+            Publish             = $app.Deployed
+            Overwrite           = $Overwrite
+            Ensure              = "Present"
+            ApplicationId       = $ApplicationId
+            TenantId            = $TenantId
+            CertificatePassword = $CertificatePassword
+            CertificatePath     = $CertificatePath
         }
     }
     catch
@@ -98,9 +122,25 @@ function Set-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration for app $Identity"
@@ -111,8 +151,8 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -Platform PnP `
-        -CloudCredential $GlobalAdminAccount
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $currentApp = Get-TargetResource @PSBoundParameters
 
@@ -159,9 +199,25 @@ function Test-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing configuration for app $Identity"
@@ -188,9 +244,27 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
+
+
     )
     $InformationPreference = 'Continue'
 
@@ -201,14 +275,14 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
 
-    Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
-        -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
+        -ConnectionUrl $tenantAppCatalogUrl
+
 
     if (-not [string]::IsNullOrEmpty($tenantAppCatalogUrl))
     {
@@ -232,26 +306,46 @@ function Export-TargetResource
             }
             if ($null -ne $app)
             {
-                $params = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    Identity           = $identity
-                    Path               = ("`$PSScriptRoot\" + $file.Name)
+                if ($ConnectionMode -eq 'Credential')
+                {
+                    $params = @{
+                        GlobalAdminAccount = $GlobalAdminAccount
+                        Identity           = $identity
+                        Path               = ("`$PSScriptRoot\" + $file.Name)
+                    }
+                }
+                else
+                {
+                    $params = @{
+                        Identity            = $identity
+                        Path                = ("`$PSScriptRoot\" + $file.Name)
+                        ApplicationId       = $ApplicationId
+                        TenantId            = $TenantId
+                        CertificatePassword = $CertificatePassword
+                        CertificatePath     = $CertificatePath
+                    }
                 }
                 $result = Get-TargetResource @params
-                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                if ($ConnectionMode -eq 'Credential')
+                {
+                    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                }
                 $content += "        SPOApp " + (New-GUID).ToString() + "`r`n"
                 $content += "        {`r`n"
                 $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
                 $convertedContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                if ($ConnectionMode -eq 'Credential')
+                {
+                    $convertedContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                }
                 $content += $convertedContent
                 $content += "        }`r`n"
             }
             $i++
         }
 
-        Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
-            -CloudCredential $GlobalAdminAccount `
-            -Platform PnP
+        $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
+            -ConnectionUrl $tenantAppCatalogUrl
         foreach ($file in $filesToDownload)
         {
             $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name

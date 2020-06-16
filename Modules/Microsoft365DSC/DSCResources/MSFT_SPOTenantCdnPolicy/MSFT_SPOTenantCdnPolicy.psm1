@@ -17,9 +17,25 @@ function Get-TargetResource
         [System.String[]]
         $IncludeFileExtensions,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration for SPOTenantCdnPolicy {$CDNType}"
@@ -30,8 +46,7 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     try
     {
@@ -42,6 +57,10 @@ function Get-TargetResource
             ExcludeRestrictedSiteClassifications = $Policies["ExcludeRestrictedSiteClassifications"].Split(',')
             IncludeFileExtensions                = $Policies["IncludeFileExtensions"].Split(',')
             GlobalAdminAccount                   = $GlobalAdminAccount
+            ApplicationId                        = $ApplicationId
+            TenantId                             = $TenantId
+            CertificatePassword                  = $CertificatePassword
+            CertificatePath                      = $CertificatePath
         }
     }
     catch
@@ -68,9 +87,25 @@ function Set-TargetResource
         [System.String[]]
         $IncludeFileExtensions,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration for SPOTenantCDNPolicy {$CDNType}"
@@ -81,8 +116,6 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
 
     $curPolicies = Get-TargetResource @PSBoundParameters
 
@@ -133,9 +166,25 @@ function Test-TargetResource
         [System.String[]]
         $IncludeFileExtensions,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing configuration for SPO Storage Entity for $Key"
@@ -165,7 +214,23 @@ function Export-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     $InformationPreference = 'Continue'
     #region Telemetry
@@ -174,38 +239,87 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
-    $params = @{
-        CDNType            = 'Public'
-        GlobalAdminAccount = $GlobalAdminAccount
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $params = @{
+            GlobalAdminAccount = $GlobalAdminAccount
+            CDNType            = 'Public'
+        }
     }
+    else
+    {
+        $params = @{
+            CdnType             = 'Public'
+            ApplicationId       = $ApplicationId
+            TenantId            = $TenantId
+            CertificatePassword = $CertificatePassword
+            CertificatePath     = $CertificatePath
+        }
+    }
+
     $result = Get-TargetResource @params
     $content = ""
     if ($null -ne $result)
     {
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        }
+
         $content += "        SPOTenantCDNPolicy " + (New-Guid).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        }
+        else
+        {
+            $content += $currentDSCBlock
+        }
         $content += "        }`r`n"
     }
 
 
-    $params = @{
-        CDNType            = 'Private'
-        GlobalAdminAccount = $GlobalAdminAccount
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $params = @{
+            GlobalAdminAccount = $GlobalAdminAccount
+            CDNType            = 'Private'
+        }
     }
+    else
+    {
+        $params = @{
+            CdnType             = 'Private'
+            ApplicationId       = $ApplicationId
+            TenantId            = $TenantId
+            CertificatePassword = $CertificatePassword
+            CertificatePath     = $CertificatePath
+        }
+    }
+
     $result = Get-TargetResource @params
     if ($null -ne $result)
     {
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        }
+
         $content += "        SPOTenantCDNPolicy " + (New-Guid).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        }
+        else
+        {
+            $content += $currentDSCBlock
+        }
         $content += "        }`r`n"
     }
     return $content

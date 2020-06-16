@@ -18,20 +18,42 @@ function Get-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
+
     )
 
     Write-Verbose -Message "Getting configuration for hub site collection $Url"
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $nullReturn = @{
-        IsSingleInstance   = $IsSingleInstance
-        Ensure             = "Absent"
-        GlobalAdminAccount = $GlobalAdminAccount
+        IsSingleInstance    = $IsSingleInstance
+        Ensure              = "Absent"
+        GlobalAdminAccount  = $GlobalAdminAccount
+        ApplicationId       = $ApplicationId
+        TenantId            = $TenantId
+        CertificatePassword = $CertificatePassword
+        CertificatePath     = $CertificatePath
+
     }
 
     try
@@ -46,10 +68,15 @@ function Get-TargetResource
         else
         {
             $result = @{
-                IsSingleInstance   = $IsSingleInstance
-                Url                = $homeSiteUrl
-                Ensure             = "Present"
-                GlobalAdminAccount = $GlobalAdminAccount
+                IsSingleInstance    = $IsSingleInstance
+                Url                 = $homeSiteUrl
+                Ensure              = "Present"
+                GlobalAdminAccount  = $GlobalAdminAccount
+                ApplicationId       = $ApplicationId
+                TenantId            = $TenantId
+                CertificatePassword = $CertificatePassword
+                CertificatePath     = $CertificatePath
+
             }
             return $result
         }
@@ -80,15 +107,30 @@ function Set-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration for home site '$Url'"
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $currentValues = Get-TargetResource @PSBoundParameters
 
@@ -137,9 +179,25 @@ function Test-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing configuration for home site collection"
@@ -171,23 +229,66 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
-    $params = @{
-        IsSingleInstance   = "Yes"
-        GlobalAdminAccount = $GlobalAdminAccount
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $params = @{
+            GlobalAdminAccount = $GlobalAdminAccount
+            IsSingleInstance   = "Yes"
+        }
+    }
+    else
+    {
+        $params = @{
+            IsSingleInstance    = "Yes"
+            ApplicationId       = $ApplicationId
+            TenantId            = $TenantId
+            CertificatePassword = $CertificatePassword
+            CertificatePath     = $CertificatePath
+        }
     }
 
+
     $result = Get-TargetResource @params
-    $result.GlobalAdminAccount = "`$Credsglobaladmin"
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    }
+
 
     $content = "        SPOHomeSite " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    }
+    else
+    {
+        $content += $currentDSCBlock
+    }
     $content += "        }`r`n"
     return $content
 }

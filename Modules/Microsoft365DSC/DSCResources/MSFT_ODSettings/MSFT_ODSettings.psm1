@@ -65,9 +65,25 @@ function Get-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration of OneDrive Settings"
@@ -78,8 +94,7 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $nullReturn = @{
         IsSingleInstance                          = "Yes"
@@ -96,6 +111,10 @@ function Get-TargetResource
         NotifyOwnersWhenInvitationsAccepted       = $null
         NotificationsInOneDriveForBusinessEnabled = $null
         Ensure                                    = "Absent"
+        ApplicationId                             = $null
+        TenantId                                  = $null
+        CertificatePassword                       = $null
+        CertificatePath                           = $null
     }
 
     try
@@ -170,6 +189,10 @@ function Get-TargetResource
             NotifyOwnersWhenInvitationsAccepted       = $tenant.NotifyOwnersWhenInvitationsAccepted
             NotificationsInOneDriveForBusinessEnabled = $tenant.NotificationsInOneDriveForBusinessEnabled
             Ensure                                    = "Present"
+            ApplicationId                             = $ApplicationId
+            TenantId                                  = $TenantId
+            CertificatePassword                       = $CertificatePassword
+            CertificatePath                           = $CertificatePath
         }
     }
     catch
@@ -246,9 +269,25 @@ function Set-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration of OneDrive Settings"
@@ -259,9 +298,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
-
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
     ## Configure OneDrive settings
     ## Parameters below are remove for the Set-SPOTenant cmdlet
     ## they are used in the Set-SPOTenantSyncClientRestriction cmdlet
@@ -297,6 +334,11 @@ function Set-TargetResource
     {
         $CurrentParameters.Remove("IsSingleInstance")
     }
+
+    $CurrentParameters.Remove("ApplicationId")| Out-Null
+    $CurrentParameters.Remove("TenantId")| Out-Null
+    $CurrentParameters.Remove("CertificatePath")| Out-Null
+    $CurrentParameters.Remove("CertificatePassword")| Out-Null
 
     Write-Verbose -Message "Configuring OneDrive settings."
     Set-PnPTenant @CurrentParameters
@@ -404,9 +446,25 @@ function Test-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing configuration of OneDrive Settings"
@@ -444,9 +502,25 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     $InformationPReference = 'Continue'
 
@@ -456,24 +530,49 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP `
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
         -ErrorAction SilentlyContinue
-    $Params = @{
-        IsSingleInstance   = 'Yes'
-        GlobalAdminAccount = $GlobalAdminAccount
+
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $params = @{
+            GlobalAdminAccount = $GlobalAdminAccount
+            IsSingleInstance   = 'Yes'
+        }
     }
+    else
+    {
+        $params = @{
+            IsSingleInstance   = 'Yes'
+            ApplicationId       = $ApplicationId
+            TenantId            = $TenantId
+            CertificatePassword = $CertificatePassword
+            CertificatePath     = $CertificatePath
+        }
+    }
+
     $result = Get-TargetResource @Params
 
     if ([System.String]::IsNullOrEmpty($result.GrooveBlockOption))
     {
         $result.Remove("GrooveBlockOption") | Out-Null
     }
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    }
+
     $content = "        ODSettings " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    }
+    else
+    {
+        $content += $currentDSCBlock
+    }
     $content += "        }`r`n"
     return $content
 }

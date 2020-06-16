@@ -23,7 +23,23 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration for SPO Theme $Name"
@@ -34,8 +50,7 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $nullReturn = @{
         Name               = $Name
@@ -43,6 +58,11 @@ function Get-TargetResource
         Palette            = $null
         Ensure             = "Absent"
         GlobalAdminAccount = $GlobalAdminAccount
+        ApplicationId       = $ApplicationId
+        TenantId            = $TenantId
+        CertificatePassword = $CertificatePassword
+        CertificatePath     = $CertificatePath
+
     }
 
     Write-Verbose -Message "Getting theme $Name"
@@ -60,6 +80,11 @@ function Get-TargetResource
         Palette            = $convertedPalette
         GlobalAdminAccount = $GlobalAdminAccount
         Ensure             = "Present"
+        ApplicationId       = $ApplicationId
+        TenantId            = $TenantId
+        CertificatePassword = $CertificatePassword
+        CertificatePath     = $CertificatePath
+
     }
 }
 
@@ -87,7 +112,23 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration for SPO Theme $Name"
@@ -98,8 +139,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $CurrentPalette = Get-TargetResource @PSBoundParameters
     if ($Ensure -eq "Present")
@@ -173,7 +213,23 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing configuration for SPO Theme $Name"
@@ -185,6 +241,10 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove("GlobalAdminAccount") | Out-Null
     $ValuesToCheck.Remove("Palette") | Out-Null
+    $ValuesToCheck.Remove("ApplicationId")| Out-Null
+    $ValuesToCheck.Remove("TenantId")| Out-Null
+    $ValuesToCheck.Remove("CertificatePath")| Out-Null
+    $ValuesToCheck.Remove("CertificatePassword")| Out-Null
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -207,9 +267,25 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     $InformationPreference = 'Continue'
@@ -220,26 +296,47 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $themes = Get-PnPTenantTheme
     $content = ""
     $i = 1
     foreach ($theme in $themes)
     {
-        $params = @{
-            Name               = $theme.Name
-            GlobalAdminAccount = $GlobalAdminAccount
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $params = @{
+                GlobalAdminAccount = $GlobalAdminAccount
+                Name               = $theme.Name
+            }
         }
+        else
+        {
+            $params = @{
+                Name               = $theme.Name
+                ApplicationId       = $ApplicationId
+                TenantId            = $TenantId
+                CertificatePassword = $CertificatePassword
+                CertificatePath     = $CertificatePath
+            }
+        }
+
+
         $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        }
         $result.Palette = ConvertTo-SPOThemePalettePropertyString -Palette $result.Palette
         $content += "        SPOTheme " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Palette"
-        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        }
+
         $content += $currentDSCBlock
         $content += "        }`r`n"
         $i++

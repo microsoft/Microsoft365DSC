@@ -988,6 +988,54 @@ function New-M365DSCConnection
                 return 'ServicePrincipal'
             }
         }
+        {$_ -eq 'PNP'}
+        {
+            # Case both authentication methods are attempted
+            if ($null -ne $InboundParameters.GlobalAdminAccount -and `
+                (-not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -or `
+                -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -or `
+                -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePassword)))
+            {
+                Write-Verbose -Message 'Both Authentication methods are attempted'
+                throw "You can't specify both the GlobalAdminAccount and one of {ApplicationID, TenantId, CertificatePassword}"
+            }
+            # Case no authentication method is specified
+            elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
+                [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+                [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+                [System.String]::IsNullOrEmpty($InboundParameters.CertificatePassword))
+            {
+                Write-Verbose -Message "No Authentication method was provided"
+                throw "You must specify either the GlobalAdminAccount or ApplicationId, TenantId and CertificateThumbprint parameters."
+            }
+            # Case only GlobalAdminAccount is specified
+            elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
+                [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+                [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+                [System.String]::IsNullOrEmpty($InboundParameters.CertificatePassword))
+            {
+                Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
+                Test-MSCloudLogin -Platform $Platform `
+                    -CloudCredential $InboundParameters.GlobalAdminAccount
+                return 'Credential'
+            }
+            # Case only the ServicePrincipal parameters are specified
+            elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
+                -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+                -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+                -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePassword))
+            {
+                Write-Verbose -Message "GlobalAdminAccount wasn't specified. Connecting via User Principal and certpassword"
+                Test-MSCloudLogin -Platform $Platform `
+                    -ApplicationId $InboundParameters.ApplicationId `
+                    -TenantId $InboundParameters.TenantId `
+                    -CertificatePath $InboundParameters.CertificatePath `
+                    -CertificatePassword $InboundParameters.CertificatePassword.Password `
+                    -ConnectionUrl $InboundParameters.ConnectionUrl
+
+                return 'ServicePrincipal'
+            }
+        }
     }
     throw 'Unexpected error getting the Authentication Method'
 }

@@ -22,9 +22,25 @@ function Get-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesignRights for $SiteDesignTitle"
@@ -35,15 +51,19 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $nullReturn = @{
-        SiteDesignTitle    = $SiteDesignTitle
-        UserPrincipals     = $UserPrincipals
-        Rights             = $Rights
-        Ensure             = "Absent"
-        GlobalAdminAccount = $GlobalAdminAccount
+        SiteDesignTitle     = $SiteDesignTitle
+        UserPrincipals      = $UserPrincipals
+        Rights              = $Rights
+        Ensure              = "Absent"
+        GlobalAdminAccount  = $GlobalAdminAccount
+        ApplicationId       = $ApplicationId
+        TenantId            = $TenantId
+        CertificatePassword = $CertificatePassword
+        CertificatePath     = $CertificatePath
     }
 
     Write-Verbose -Message "Getting Site Design Rights for $SiteDesignTitle"
@@ -74,11 +94,15 @@ function Get-TargetResource
 
     Write-Verbose -Message "Site Design Rights User Principals = $($curUserPrincipals)"
     return @{
-        SiteDesignTitle    = $SiteDesignTitle
-        UserPrincipals     = $curUserPrincipals
-        Rights             = $Rights
-        Ensure             = "Present"
-        GlobalAdminAccount = $GlobalAdminAccount
+        SiteDesignTitle     = $SiteDesignTitle
+        UserPrincipals      = $curUserPrincipals
+        Rights              = $Rights
+        Ensure              = "Present"
+        GlobalAdminAccount  = $GlobalAdminAccount
+        ApplicationId       = $ApplicationId
+        TenantId            = $TenantId
+        CertificatePassword = $CertificatePassword
+        CertificatePath     = $CertificatePath
     }
 }
 
@@ -105,9 +129,25 @@ function Set-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration for SPO SiteDesignRights for $SiteDesignTitle"
@@ -118,8 +158,8 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $cursiteDesign = Get-PnPSiteDesign -Identity $SiteDesignTitle
     if ($null -eq $cursiteDesign)
@@ -202,9 +242,25 @@ function Test-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing configuration for SPO SiteDesignRights for $SiteDesignTitle"
@@ -232,9 +288,25 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     $InformationPreference = 'Continue'
     #region Telemetry
@@ -244,13 +316,17 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $organization = ""
     if ($GlobalAdminAccount.UserName.Contains("@"))
     {
         $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+    }
+    else
+    {
+        $organization = $TenantId
     }
 
     [array]$siteDesigns = Get-PnPSiteDesign
@@ -260,20 +336,47 @@ function Export-TargetResource
     foreach ($siteDesign in $siteDesigns)
     {
         Write-Information "    [$i/$($siteDesigns.Count)] $($siteDesign.Title)"
-        $params = @{
-            SiteDesignTitle    = $siteDesign.Title
-            Rights             = "View"
-            GlobalAdminAccount = $GlobalAdminAccount
+
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $params = @{
+                GlobalAdminAccount = $GlobalAdminAccount
+                SiteDesignTitle    = $siteDesign.Title
+                Rights             = "View"
+            }
+        }
+        else
+        {
+            $params = @{
+                SiteDesignTitle     = $siteDesign.Title
+                Rights              = "View"
+                ApplicationId       = $ApplicationId
+                TenantId            = $TenantId
+                CertificatePassword = $CertificatePassword
+                CertificatePath     = $CertificatePath
+            }
         }
         $result = Get-TargetResource @params
         $content = ""
         if ($result.Ensure -eq "Present")
         {
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            if ($ConnectionMode -eq 'Credential')
+            {
+                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            }
+
             $content += "        SPOSiteDesignRights " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+
+            if ($ConnectionMode -eq 'Credential')
+            {
+                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            }
+            else
+            {
+                $partialContent = $currentDSCBlock
+            }
             if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
             {
                 $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
@@ -282,19 +385,43 @@ function Export-TargetResource
             $content += "        }`r`n"
         }
 
-        $params = @{
-            SiteDesignTitle    = $siteDesign.Title
-            Rights             = "None"
-            GlobalAdminAccount = $GlobalAdminAccount
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $params = @{
+                GlobalAdminAccount = $GlobalAdminAccount
+                SiteDesignTitle    = $siteDesign.Title
+                Rights             = "View"
+            }
+        }
+        else
+        {
+            $params = @{
+                SiteDesignTitle     = $siteDesign.Title
+                Rights              = "View"
+                ApplicationId       = $ApplicationId
+                TenantId            = $TenantId
+                CertificatePassword = $CertificatePassword
+                CertificatePath     = $CertificatePath
+            }
         }
         $result = Get-TargetResource @params
         if ($result.Ensure -eq "Present")
         {
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            if ($ConnectionMode -eq 'Credential')
+            {
+                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            }
             $content += "        SPOSiteDesignRights " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            if ($ConnectionMode -eq 'Credential')
+            {
+                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            }
+            else
+            {
+                $content += $currentDSCBlock
+            }
             $content += "        }`r`n"
         }
         $i++
