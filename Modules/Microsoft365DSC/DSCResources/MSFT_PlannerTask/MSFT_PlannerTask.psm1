@@ -99,11 +99,19 @@ function Get-TargetResource
         return $nullReturn
     }
 
-    $ModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "../../Modules/GraphHelpers/PlannerTaskObject.psm1"
-    $usingScriptBody = "using module $ModulePath"
-    $usingScript = [ScriptBlock]::Create($usingScriptBody)
-    . $usingScript
+
+    try
+    {
+        [PlannerTaskObject].GetType() | Out-Null
+    }
+    catch
+    {
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "../../Modules/GraphHelpers/PlannerTaskObject.psm1"
+        $usingScriptBody = "using module $ModulePath"
+        $usingScript = [ScriptBlock]::Create($usingScriptBody)
+        . $usingScript
+    }
     $task = [PlannerTaskObject]::new()
     Write-Verbose -Message "Populating task {$taskId} from the Get method"
     $task.PopulateById($GlobalAdminAccount, $ApplicationId, $TaskId)
@@ -278,17 +286,24 @@ function Set-TargetResource
 
     $currentValues = Get-TargetResource @PSBoundParameters
 
-    $ModulePath = Join-Path -Path $PSScriptRoot `
-        -ChildPath "../../Modules/GraphHelpers/PlannerTaskObject.psm1"
-    $usingScriptBody = "using module $ModulePath"
-    $usingScript = [ScriptBlock]::Create($usingScriptBody)
-    . $usingScript
+    try
+    {
+        [PlannerTaskObject].GetType() | Out-Null
+    }
+    catch
+    {
+        $ModulePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "../../Modules/GraphHelpers/PlannerTaskObject.psm1"
+        $usingScriptBody = "using module $ModulePath"
+        $usingScript = [ScriptBlock]::Create($usingScriptBody)
+        . $usingScript
+    }
     $task = [PlannerTaskObject]::new()
 
     if (-not [System.String]::IsNullOrEmpty($TaskId))
     {
         Write-Verbose -Message "Populating Task {$TaskId} from the Set method"
-        $task.PopulateById($GlobalAdminAccount, $TaskId)
+        $task.PopulateById($GlobalAdminAccount, $ApplicationId, $TaskId)
     }
 
     #region BucketId
@@ -373,20 +388,20 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Planner Task {$Title} doesn't already exist. Creating it."
-        $task.Create($GlobalAdminAccount)
+        $task.Create($GlobalAdminAccount, $ApplicationId)
     }
     elseif ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Planner Task {$Title} already exists, but is not in the `
             Desired State. Updating it."
-        $task.Update($GlobalAdminAccount)
+        $task.Update($GlobalAdminAccount, $ApplicationId)
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Planner Task {$Title} exists, but is should not. `
             Removing it."
-        $task.Delete($GlobalAdminAccount, $TaskId)
+        $task.Delete($GlobalAdminAccount, $ApplicationId, $TaskId)
     }
 }
 
@@ -466,15 +481,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $ApplicationId
     )
 
     Write-Verbose -Message "Testing configuration of Planner Task {$Title}"
@@ -498,7 +505,7 @@ function Test-TargetResource
     {
         $ValuesToCheck.Remove("Checklist") | Out-Null
         if (-not (Test-M365DSCPlannerTaskCheckListValues -CurrentValues $CurrentValues `
-            -DesiredValues $PSBoundParameters))
+            -DesiredValues $ValuesToCheck))
         {
             return $false
         }
