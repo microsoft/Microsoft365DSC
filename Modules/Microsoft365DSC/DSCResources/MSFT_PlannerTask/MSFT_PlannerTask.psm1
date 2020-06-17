@@ -99,7 +99,6 @@ function Get-TargetResource
         return $nullReturn
     }
 
-
     try
     {
         [PlannerTaskObject].GetType() | Out-Null
@@ -108,7 +107,7 @@ function Get-TargetResource
     {
         $ModulePath = Join-Path -Path $PSScriptRoot `
             -ChildPath "../../Modules/GraphHelpers/PlannerTaskObject.psm1"
-        $usingScriptBody = "using module $ModulePath"
+        $usingScriptBody = "using module '$ModulePath'"
         $usingScript = [ScriptBlock]::Create($usingScriptBody)
         . $usingScript
     }
@@ -122,23 +121,6 @@ function Get-TargetResource
     }
     else
     {
-        $BucketValue = $null
-        if ($null -ne $task.BucketId)
-        {
-            # If the current task has a bucket id but the bucket property was not passed,
-            # Simply return the Id of the bucket associated with the Task.
-            $associatedBucket = Get-MGPlannerPlanBucket -PlannerPlanId $PlanId `
-                    -ErrorAction 'SilentlyContinue' | Where-Object -FilterScript {$_.Id -eq $Bucket -or $_.Name -eq $Bucket}
-            if ([System.String]::IsNullOrEmpty($Bucket) -or $null -eq $associatedBucket)
-            {
-                $BucketValue = $task.BucketId
-            }
-            else
-            {
-                $BucketValue = $Bucket
-            }
-        }
-
         $NotesValue = $task.Notes
 
         #region Task Assignment
@@ -180,7 +162,7 @@ function Get-TargetResource
             Categories            = $categoryValues
             Attachments           = $task.Attachments
             Checklist             = $task.Checklist
-            Bucket                = $BucketValue
+            Bucket                = $task.BucketId
             Priority              = $task.Priority
             ConversationThreadId  = $task.ConversationThreadId
             PercentComplete       = $task.PercentComplete
@@ -294,7 +276,7 @@ function Set-TargetResource
     {
         $ModulePath = Join-Path -Path $PSScriptRoot `
             -ChildPath "../../Modules/GraphHelpers/PlannerTaskObject.psm1"
-        $usingScriptBody = "using module $ModulePath"
+        $usingScriptBody = "using module '$ModulePath'"
         $usingScript = [ScriptBlock]::Create($usingScriptBody)
         . $usingScript
     }
@@ -306,15 +288,7 @@ function Set-TargetResource
         $task.PopulateById($GlobalAdminAccount, $ApplicationId, $TaskId)
     }
 
-    #region BucketId
-    if (-not [System.String]::IsNullOrEmpty($Bucket))
-    {
-        $associatedBucket = Get-MGPlannerPlanBucket -PlannerPlanId $PlanId `
-                    -ErrorAction 'SilentlyContinue' | Where-Object -FilterScript {$_.Id -eq $Bucket -or $_.Name -eq $Bucket}
-        $task.BucketId = $associatedBucket.Id
-    }
-    #endregion
-
+    $task.BucketI              = $Bucket
     $task.Title                = $Title
     $task.PlanId               = $PlanId
     $task.StartDateTime        = $StartDateTime
@@ -548,7 +522,6 @@ function Export-TargetResource
 
     [array]$groups = Get-AzureADGroup -All:$true
 
-    $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
     $i = 1
     $content = ''
     foreach ($group in $groups)
@@ -556,15 +529,18 @@ function Export-TargetResource
         Write-Information "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
         try
         {
-            [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.ObjectId -ErrorAction 'SilentlyContinue'
+            [Array]$plans = Get-M365DSCPlannerPlansFromGroup -GroupId $group.ObjectId `
+                                -GlobalAdminAccount $GlobalAdminAccount `
+                                -ApplicationId $ApplicationId
 
             $j = 1
             foreach ($plan in $plans)
             {
                 Write-Information "        [$j/$($plans.Length)] $($plan.Title)"
 
-                $filterClause = "planId eq '$($plan.Id)'"
-                [Array]$tasks = Get-MGPlannerTask -Filter $filterClause
+                [Array]$tasks = Get-M365DSCPlannerTasksFromPlan -PlanId $plan.Id `
+                                    -GlobalAdminAccount $GlobalAdminAccount `
+                                    -ApplicationId $ApplicationId
                 $k = 1
                 foreach ($task in $tasks)
                 {
@@ -639,8 +615,10 @@ function Export-TargetResource
         }
         catch
         {
+            $original = $VerbosePreference
             $VerbosePreference = 'Continue'
             Write-Verbose -Message $_
+            $VerbosePreference = $original
         }
     }
     return $content
@@ -729,6 +707,72 @@ function Convert-M365DSCPlannerTaskChecklistToCIMArray
         $result += $stringContent
     }
     return $result
+}
+
+function Get-M365DSCPlannerPlansFromGroup
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable[]])]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $GroupId,
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ApplicationId
+    )
+    $results = @()
+    $uri = "https://graph.microsoft.com/v1.0/groups/$GroupId/planner/plans"
+    $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+        -ApplicationId $ApplicationId `
+        -Uri $uri `
+        -Method Get
+    foreach ($plan in $taskResponse.value)
+    {
+        $results += @{
+            Id    = $plan.id
+            Title = $plan.title
+        }
+    }
+    return $results
+}
+
+function Get-M365DSCPlannerTasksFromPlan
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable[]])]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $PlanId,
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ApplicationId
+    )
+    $results = @()
+    $uri = "https://graph.microsoft.com/v1.0/planner/plans/$PlanId/tasks"
+    $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $GlobalAdminAccount `
+        -ApplicationId $ApplicationId `
+        -Uri $uri `
+        -Method Get
+    foreach ($task in $taskResponse.value)
+    {
+        $results += @{
+            Title = $task.title
+            Id    = $task.id
+        }
+    }
+    return $results
 }
 
 Export-ModuleMember -Function *-TargetResource

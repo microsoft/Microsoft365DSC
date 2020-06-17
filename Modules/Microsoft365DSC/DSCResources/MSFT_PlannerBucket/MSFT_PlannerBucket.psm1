@@ -130,21 +130,6 @@ function Set-TargetResource
 
     Connect-Graph -Scopes "Group.ReadWrite.All" | Out-Null
 
-    # If the BucketID is null, assume we are creating a new one no matter what;
-    if ($null -eq $BucketId)
-    {
-        $results = @{
-            Name                  = $Name
-            PlanId                = $PlanId
-            BucketId              = $BucketId
-            Ensure                = "Absent"
-            ApplicationId         = "ApplicationId"
-            TenantId              = "TenantId"
-            CertificateThumbprint = $CertificateThumbprint
-        }
-        return $results
-    }
-
     $SetParams = $PSBoundParameters
     $currentValues = Get-TargetResource @PSBoundParameters
     $SetParams.Remove("ApplicationId") | Out-Null
@@ -161,13 +146,11 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Planner Bucket {$Bucket} already exists, but is not in the " + `
             "Desired State. Updating it."
-        $currentBucket = Get-MgPlannerPlanBucket -PlannerPlanId $PlanId | Where-Object -FilterScript {$_.Id -eq $BucketId}
         Update-MGPlannerPlan @SetParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Planner Bucket {$Name} exists, but is should not. " + `
-            "Removing it."
+        Write-Verbose -Message "This resource doesn't allow for removal of Planner Bucket."
         # TODO - Implement when available in the MSGraph PowerShell SDK
     }
 }

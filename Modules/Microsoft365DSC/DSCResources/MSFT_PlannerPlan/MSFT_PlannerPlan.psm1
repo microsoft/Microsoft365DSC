@@ -196,9 +196,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Planner Plan {$Title} exists, but is should not. " + `
-            "Removing it."
-        # TODO - Implement when available in the MSGraph PowerShell SDK
+        Write-Verbose -Message "This resource doesn't allow for removal of Planner plans."
     }
 }
 
