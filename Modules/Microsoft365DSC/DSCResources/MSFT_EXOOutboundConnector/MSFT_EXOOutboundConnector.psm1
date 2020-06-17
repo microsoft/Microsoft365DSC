@@ -98,12 +98,18 @@ function Get-TargetResource
     }
     else
     {
+        $ConnectorSourceValue = $OutBoundConnector.ConnectorSource
+        if ($ConnectorSourceValue -eq 'AdminUI')
+        {
+            $ConnectorSourceValue = 'Default'
+        }
+
         $result = @{
             Identity                      = $Identity
             AllAcceptedDomains            = $OutBoundConnector.AllAcceptedDomains
             CloudServicesMailEnabled      = $OutBoundConnector.CloudServicesMailEnabled
             Comment                       = $OutBoundConnector.Comment
-            ConnectorSource               = $OutBoundConnector.ConnectorSource
+            ConnectorSource               = $ConnectorSource
             ConnectorType                 = $OutBoundConnector.ConnectorType
             Enabled                       = $OutBoundConnector.Enabled
             IsTransportRuleScoped         = $OutBoundConnector.IsTransportRuleScoped

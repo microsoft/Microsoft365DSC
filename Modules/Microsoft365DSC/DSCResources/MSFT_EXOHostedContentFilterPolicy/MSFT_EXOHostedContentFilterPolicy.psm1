@@ -33,7 +33,7 @@ function Get-TargetResource
         $BlockedSenders = @(),
 
         [Parameter()]
-        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine')]
+        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $BulkSpamAction = 'MoveToJmf',
 
@@ -348,7 +348,7 @@ function Set-TargetResource
         $BlockedSenders = @(),
 
         [Parameter()]
-        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine')]
+        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $BulkSpamAction = 'MoveToJmf',
 
@@ -625,7 +625,7 @@ function Test-TargetResource
         $BlockedSenders = @(),
 
         [Parameter()]
-        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine')]
+        [ValidateSet('MoveToJmf', 'AddXHeader', 'ModifySubject', 'Redirect', 'Delete', 'Quarantine', 'NoAction')]
         [System.String]
         $BulkSpamAction = 'MoveToJmf',
 
