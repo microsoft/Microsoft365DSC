@@ -33,6 +33,7 @@ jobs:
     - name: Run Test Harness
       shell : powershell
       run: |
+        Install-Module Pester -Force
         [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
         Import-Module './Tests/TestHarness.psm1' -Force;
         $results = Invoke-TestHarness -IgnoreCodeCoverage; 
