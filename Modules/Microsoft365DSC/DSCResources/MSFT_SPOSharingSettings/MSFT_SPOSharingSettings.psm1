@@ -305,7 +305,7 @@ function Set-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter())]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
 
@@ -337,9 +337,10 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("GlobalAdminAccount")
-    $CurrentParameters.Remove("Verbose")
-    $CurrentParameters.Remove("IsSingleInstance")
+    $CurrentParameters.Remove("GlobalAdminAccount")| Out-Null
+    $CurrentParameters.Remove("Ensure")| Out-Null
+    $CurrentParameters.Remove("Verbose")| Out-Null
+    $CurrentParameters.Remove("IsSingleInstance")| Out-Null
     $CurrentParameters.Remove("ApplicationId") | Out-Null
     $CurrentParameters.Remove("TenantId") | Out-Null
     $CurrentParameters.Remove("CertificatePath") | Out-Null

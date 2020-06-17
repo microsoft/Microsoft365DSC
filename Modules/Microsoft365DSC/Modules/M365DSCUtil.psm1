@@ -936,6 +936,10 @@ function New-M365DSCConnection
         [System.String]
         $Platform,
 
+        [Parameter()]
+        [System.String]
+        $ConnectionUrl,
+
         [Parameter(Mandatory=$true)]
         [System.Collections.Hashtable]
         $InboundParameters
@@ -1031,7 +1035,7 @@ function New-M365DSCConnection
                     -TenantId $InboundParameters.TenantId `
                     -CertificatePath $InboundParameters.CertificatePath `
                     -CertificatePassword $InboundParameters.CertificatePassword.Password `
-                    -ConnectionUrl $InboundParameters.ConnectionUrl
+                    -ConnectionUrl $ConnectionUrl
 
                 return 'ServicePrincipal'
             }

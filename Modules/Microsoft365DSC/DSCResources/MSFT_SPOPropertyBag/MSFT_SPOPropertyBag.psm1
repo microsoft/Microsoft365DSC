@@ -52,14 +52,14 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Connecting to PnP from the Get method"
-        $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters -ConnectionUrl $url
+        $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters -connectionUrl $url
         Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
         $property = Get-PnpPropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
         Write-Verbose -Message "Properties obtained correctly"
     }
     catch
     {
-        Write-Verbose "GlobalAdminAccount specified does not have admin access to site {$Url}"
+        Write-Verbose "GlobalAdminAccount or service principal specified does not have admin access to site {$Url}"
     }
 
     if ($null -eq $property)
@@ -144,8 +144,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
-        -InboundParameters $PSBoundParameters -ConnectionUrl $url
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters -connectionUrl $Url
 
     $currentProperty = Get-TargetResource @PSBoundParameters
 
@@ -324,8 +323,7 @@ function Export-TargetResource
                         $siteUrl = $site.Url
                         try
                         {
-                            $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
-                                -ConnectionUrl $url
+                            $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
                         }
                         catch
                         {
