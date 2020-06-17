@@ -138,7 +138,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     #region Telemetry
@@ -161,6 +165,7 @@ function Get-TargetResource
         TenantId            = $TenantId
         CertificatePassword = $CertificatePassword
         CertificatePath     = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 
     try
@@ -246,6 +251,7 @@ function Get-TargetResource
             TenantId                                    = $TenantId
             CertificatePassword                         = $CertificatePassword
             CertificatePath                             = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
     catch
@@ -394,7 +400,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration for site collection $Url"
@@ -412,6 +422,12 @@ function Set-TargetResource
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("Ensure") | Out-Null
     $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
+    $CurrentParameters.Remove("ApplicationId") | Out-Null
+    $CurrentParameters.Remove("TenantId") | Out-Null
+    $CurrentParameters.Remove("CertificatePath") | Out-Null
+    $CurrentParameters.Remove("CertificatePassword") | Out-Null
+    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
+
     $context = Get-PnPContext
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
@@ -714,7 +730,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration for site collection $Url"
@@ -728,6 +748,7 @@ function Test-TargetResource
     $CurrentValues.Remove("TenantId") | Out-Null
     $CurrentValues.Remove("CertificatePath") | Out-Null
     $CurrentValues.Remove("CertificatePassword") | Out-Null
+    $CurrentValues.Remove("CertificateThumbprint") | Out-Null
 
     $keysToCheck = $CurrentValues.Keys
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
@@ -764,7 +785,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $InformationPreference = 'Continue'
     #region Telemetry
@@ -830,6 +855,7 @@ function Export-TargetResource
                 TenantId            = $TenantId
                 CertificatePassword = $CertificatePassword
                 CertificatePath     = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
             }
         }
 

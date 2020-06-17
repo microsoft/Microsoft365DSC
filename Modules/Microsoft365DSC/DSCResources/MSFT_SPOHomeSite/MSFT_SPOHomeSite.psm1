@@ -36,8 +36,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
 
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration for hub site collection $Url"
@@ -46,14 +49,14 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $nullReturn = @{
-        IsSingleInstance    = $IsSingleInstance
-        Ensure              = "Absent"
-        GlobalAdminAccount  = $GlobalAdminAccount
-        ApplicationId       = $ApplicationId
-        TenantId            = $TenantId
-        CertificatePassword = $CertificatePassword
-        CertificatePath     = $CertificatePath
-
+        IsSingleInstance      = $IsSingleInstance
+        Ensure                = "Absent"
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 
     try
@@ -68,14 +71,15 @@ function Get-TargetResource
         else
         {
             $result = @{
-                IsSingleInstance    = $IsSingleInstance
-                Url                 = $homeSiteUrl
-                Ensure              = "Present"
-                GlobalAdminAccount  = $GlobalAdminAccount
-                ApplicationId       = $ApplicationId
-                TenantId            = $TenantId
-                CertificatePassword = $CertificatePassword
-                CertificatePath     = $CertificatePath
+                IsSingleInstance      = $IsSingleInstance
+                Url                   = $homeSiteUrl
+                Ensure                = "Present"
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
 
             }
             return $result
@@ -125,7 +129,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration for home site '$Url'"
@@ -197,7 +205,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration for home site collection"
@@ -247,7 +259,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
@@ -262,11 +278,12 @@ function Export-TargetResource
     else
     {
         $params = @{
-            IsSingleInstance    = "Yes"
-            ApplicationId       = $ApplicationId
-            TenantId            = $TenantId
-            CertificatePassword = $CertificatePassword
-            CertificatePath     = $CertificatePath
+            IsSingleInstance      = "Yes"
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 

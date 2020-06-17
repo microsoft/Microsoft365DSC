@@ -40,7 +40,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of SPO Org Assets Library"
@@ -87,6 +91,7 @@ function Get-TargetResource
         $currentValues.TenantId = $TenantId
         $currentValues.CertificatePassword = $CertificatePassword
         $currentValues.CertificatePath = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
         return $currentValues
     }
     else
@@ -113,15 +118,16 @@ function Get-TargetResource
                 }
 
                 $result = @{
-                    LibraryUrl          = $orgLibraryUrl
-                    ThumbnailUrl        = $orgthumbnailUrl
-                    CdnType             = $cdn
-                    Ensure              = "Present"
-                    GlobalAdminAccount  = $GlobalAdminAccount
-                    ApplicationId       = $ApplicationId
-                    TenantId            = $TenantId
-                    CertificatePassword = $CertificatePassword
-                    CertificatePath     = $CertificatePath
+                    LibraryUrl            = $orgLibraryUrl
+                    ThumbnailUrl          = $orgthumbnailUrl
+                    CdnType               = $cdn
+                    Ensure                = "Present"
+                    GlobalAdminAccount    = $GlobalAdminAccount
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
                 return $result
@@ -174,7 +180,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of SharePoint Org Site Assets"
@@ -193,6 +203,7 @@ function Set-TargetResource
     $currentParameters.Remove("TenantId") | Out-Null
     $currentParameters.Remove("CertificatePath") | Out-Null
     $currentParameters.Remove("CertificatePassword") | Out-Null
+    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
     $cdn = $null
     if ($CdnType -eq 'Public')
@@ -279,7 +290,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration of SharePoint Org Site Assets"
@@ -294,6 +309,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove("TenantId") | Out-Null
     $ValuesToCheck.Remove("CertificatePath") | Out-Null
     $ValuesToCheck.Remove("CertificatePassword") | Out-Null
+    $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -329,8 +345,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
 
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $InformationPreference = 'Continue'
     #region Telemetry
@@ -347,7 +366,7 @@ function Export-TargetResource
     {
         $tenantName = Get-M365TenantName -GlobalAdminAccount $GlobalAdminAccount
     }
-    else
+    else 
     {
         $tenantName = $TenantId.Split(".")[0]
     }

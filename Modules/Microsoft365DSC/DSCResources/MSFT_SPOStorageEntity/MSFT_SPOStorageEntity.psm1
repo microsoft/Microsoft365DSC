@@ -52,7 +52,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration for SPO Storage Entity for $Key"
@@ -79,6 +83,7 @@ function Get-TargetResource
         TenantId            = $TenantId
         CertificatePassword = $CertificatePassword
         CertificatePath     = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 
     Write-Verbose -Message "Getting storage entity $Key"
@@ -115,6 +120,7 @@ function Get-TargetResource
         TenantId            = $TenantId
         CertificatePassword = $CertificatePassword
         CertificatePath     = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 }
 
@@ -171,7 +177,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration for SPO Storage Entity for $Key"
@@ -196,6 +206,7 @@ function Set-TargetResource
     $CurrentParameters.Remove("TenantId") | Out-Null
     $CurrentParameters.Remove("CertificatePath") | Out-Null
     $CurrentParameters.Remove("CertificatePassword") | Out-Null
+    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
     $CurrentParameters.Add("Scope", $EntityScope)
 
     if (($Ensure -eq "Absent" -and $curStorageEntry.Ensure -eq "Present"))
@@ -275,7 +286,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration for SPO Storage Entity for $Key"
@@ -325,7 +340,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $InformationPreference = 'Continue'
 
@@ -387,6 +406,7 @@ function Export-TargetResource
                 TenantId            = $TenantId
                 CertificatePassword = $CertificatePassword
                 CertificatePath     = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
             }
         }
 

@@ -39,7 +39,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration for SPO Theme $Name"
@@ -53,15 +57,16 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $nullReturn = @{
-        Name               = $Name
-        IsInverted         = $null
-        Palette            = $null
-        Ensure             = "Absent"
-        GlobalAdminAccount = $GlobalAdminAccount
-        ApplicationId       = $ApplicationId
-        TenantId            = $TenantId
-        CertificatePassword = $CertificatePassword
-        CertificatePath     = $CertificatePath
+        Name                  = $Name
+        IsInverted            = $null
+        Palette               = $null
+        Ensure                = "Absent"
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
 
     }
 
@@ -75,15 +80,16 @@ function Get-TargetResource
     $convertedPalette = Convert-ExistingThemePaletteToHashTable -Palette ([System.Collections.Hashtable]$theme.Palette)
 
     return @{
-        Name               = $theme.Name
-        IsInverted         = $theme.IsInverted
-        Palette            = $convertedPalette
-        GlobalAdminAccount = $GlobalAdminAccount
-        Ensure             = "Present"
-        ApplicationId       = $ApplicationId
-        TenantId            = $TenantId
-        CertificatePassword = $CertificatePassword
-        CertificatePath     = $CertificatePath
+        Name                  = $theme.Name
+        IsInverted            = $theme.IsInverted
+        Palette               = $convertedPalette
+        GlobalAdminAccount    = $GlobalAdminAccount
+        Ensure                = "Present"
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
 
     }
 }
@@ -128,7 +134,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration for SPO Theme $Name"
@@ -229,7 +239,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration for SPO Theme $Name"
@@ -241,10 +255,11 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove("GlobalAdminAccount") | Out-Null
     $ValuesToCheck.Remove("Palette") | Out-Null
-    $ValuesToCheck.Remove("ApplicationId")| Out-Null
-    $ValuesToCheck.Remove("TenantId")| Out-Null
-    $ValuesToCheck.Remove("CertificatePath")| Out-Null
-    $ValuesToCheck.Remove("CertificatePassword")| Out-Null
+    $ValuesToCheck.Remove("ApplicationId") | Out-Null
+    $ValuesToCheck.Remove("TenantId") | Out-Null
+    $ValuesToCheck.Remove("CertificatePath") | Out-Null
+    $ValuesToCheck.Remove("CertificatePassword") | Out-Null
+    $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -285,7 +300,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     $InformationPreference = 'Continue'
@@ -313,11 +332,12 @@ function Export-TargetResource
         else
         {
             $params = @{
-                Name               = $theme.Name
-                ApplicationId       = $ApplicationId
-                TenantId            = $TenantId
-                CertificatePassword = $CertificatePassword
-                CertificatePath     = $CertificatePath
+                Name                  = $theme.Name
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
             }
         }
 

@@ -36,8 +36,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
 
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of SPO Cdn enabled"
@@ -60,14 +63,15 @@ function Get-TargetResource
     }
 
     $result = @{
-        CdnType             = $CdnType
-        Enable              = $cdnEnabled.Value
-        Ensure              = $Ensure
-        GlobalAdminAccount  = $GlobalAdminAccount
-        ApplicationId       = $ApplicationId
-        TenantId            = $TenantId
-        CertificatePassword = $CertificatePassword
-        CertificatePath     = $CertificatePath
+        CdnType               = $CdnType
+        Enable                = $cdnEnabled.Value
+        Ensure                = $Ensure
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
     return $result
 
@@ -130,6 +134,7 @@ function Set-TargetResource
     $CurrentParameters.Remove("TenantId")
     $CurrentParameters.Remove("CertificatePath")
     $CurrentParameters.Remove("CertificatePassword")
+    $CurrentParameters.Remove("CertificateThumbprint")
     #No add only a set
     Set-PnPTenantCdnEnabled @currentParameters
 
@@ -173,8 +178,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
 
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration of SPO Cdn enabled"
@@ -186,10 +194,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
-    $ValuesToCheck.Remove("ApplicationId")| Out-Null
-    $ValuesToCheck.Remove("TenantId")| Out-Null
-    $ValuesToCheck.Remove("CertificatePath")| Out-Null
-    $ValuesToCheck.Remove("CertificatePassword")| Out-Null
+    $ValuesToCheck.Remove("ApplicationId") | Out-Null
+    $ValuesToCheck.Remove("TenantId") | Out-Null
+    $ValuesToCheck.Remove("CertificatePath") | Out-Null
+    $ValuesToCheck.Remove("CertificatePassword") | Out-Null
+    $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -225,7 +234,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $InformationPreference = 'Continue'
     #region Telemetry
@@ -253,11 +266,12 @@ function Export-TargetResource
         else
         {
             $params = @{
-                CdnType             = $cType
-                ApplicationId       = $ApplicationId
-                TenantId            = $TenantId
-                CertificatePassword = $CertificatePassword
-                CertificatePath     = $CertificatePath
+                CdnType               = $cType
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
             }
         }
 

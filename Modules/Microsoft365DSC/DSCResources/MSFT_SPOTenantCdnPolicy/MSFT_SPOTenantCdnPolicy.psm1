@@ -35,7 +35,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration for SPOTenantCdnPolicy {$CDNType}"
@@ -61,6 +65,7 @@ function Get-TargetResource
             TenantId                             = $TenantId
             CertificatePassword                  = $CertificatePassword
             CertificatePath                      = $CertificatePath
+            CertificateThumbprint                = $CertificateThumbprint
         }
     }
     catch
@@ -105,7 +110,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration for SPOTenantCDNPolicy {$CDNType}"
@@ -184,7 +193,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration for SPO Storage Entity for $Key"
@@ -230,7 +243,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $InformationPreference = 'Continue'
     #region Telemetry
@@ -251,11 +268,12 @@ function Export-TargetResource
     else
     {
         $params = @{
-            CdnType             = 'Public'
-            ApplicationId       = $ApplicationId
-            TenantId            = $TenantId
-            CertificatePassword = $CertificatePassword
-            CertificatePath     = $CertificatePath
+            CdnType               = 'Public'
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 
@@ -293,11 +311,12 @@ function Export-TargetResource
     else
     {
         $params = @{
-            CdnType             = 'Private'
-            ApplicationId       = $ApplicationId
-            TenantId            = $TenantId
-            CertificatePassword = $CertificatePassword
-            CertificatePath     = $CertificatePath
+            CdnType               = 'Private'
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 

@@ -1035,6 +1035,7 @@ function New-M365DSCConnection
                     -TenantId $InboundParameters.TenantId `
                     -CertificatePath $InboundParameters.CertificatePath `
                     -CertificatePassword $InboundParameters.CertificatePassword.Password `
+                    -CertificateThumbprint $InboundParameters.CertificateThumbprint `
                     -ConnectionUrl $ConnectionUrl
 
                 return 'ServicePrincipal'

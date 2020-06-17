@@ -76,7 +76,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of SharePoint Online Access Control Settings"
@@ -107,6 +111,7 @@ function Get-TargetResource
         TenantId                     = $null
         CertificatePassword          = $null
         CertificatePath              = $null
+        CertificateThumbprint        = $null
     }
 
     try
@@ -131,6 +136,7 @@ function Get-TargetResource
             TenantId                     = $TenantId
             CertificatePassword          = $CertificatePassword
             CertificatePath              = $CertificatePath
+            CertificateThumbprint        = $CertificateThumbprint
         }
     }
     catch
@@ -220,7 +226,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of SharePoint Online Access Control Settings"
@@ -241,6 +251,7 @@ function Set-TargetResource
     $CurrentParameters.Remove("TenantId") | Out-Null
     $CurrentParameters.Remove("CertificatePath") | Out-Null
     $CurrentParameters.Remove("CertificatePassword") | Out-Null
+    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
     if ($IPAddressAllowList -eq "")
     {
@@ -329,7 +340,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration of SharePoint Online Access Control Settings"
@@ -385,7 +400,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
 
     )
     #region Telemetry
@@ -407,11 +426,12 @@ function Export-TargetResource
     else
     {
         $params = @{
-            IsSingleInstance    = 'Yes'
-            ApplicationId       = $ApplicationId
-            TenantId            = $TenantId
-            CertificatePassword = $CertificatePassword
-            CertificatePath     = $CertificatePath
+            IsSingleInstance      = 'Yes'
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 

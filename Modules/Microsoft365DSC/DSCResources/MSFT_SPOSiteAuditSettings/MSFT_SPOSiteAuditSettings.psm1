@@ -30,8 +30,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
 
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting SPOSiteAuditSettings for {$Url}"
@@ -43,13 +46,14 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = @{
-        Url                = $Url
-        AuditFlags         = 'None'
-        GlobalAdminAccount = $GlobalAdminAccount
-        ApplicationId       = $ApplicationId
-        TenantId            = $TenantId
-        CertificatePassword = $CertificatePassword
-        CertificatePath     = $CertificatePath
+        Url                   = $Url
+        AuditFlags            = 'None'
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 
     try
@@ -64,13 +68,14 @@ function Get-TargetResource
             $auditFlag = 'None'
         }
         return @{
-            Url                 = $Url
-            AuditFlags          = $auditFlag
-            GlobalAdminAccount  = $GlobalAdminAccount
-            ApplicationId       = $ApplicationId
-            TenantId            = $TenantId
-            CertificatePassword = $CertificatePassword
-            CertificatePath     = $CertificatePath
+            Url                   = $Url
+            AuditFlags            = $auditFlag
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
 
         }
     }
@@ -115,8 +120,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
 
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting Audit settings for {$Url}"
@@ -174,8 +182,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
 
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing audit settings for {$Url}"
@@ -218,8 +229,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
 
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     $InformationPreference = 'Continue'
@@ -267,12 +281,13 @@ function Export-TargetResource
             else
             {
                 $params = @{
-                    Url                 = $site.Url
-                    AuditFlags          = 'None'
-                    ApplicationId       = $ApplicationId
-                    TenantId            = $TenantId
-                    CertificatePassword = $CertificatePassword
-                    CertificatePath     = $CertificatePath
+                    Url                   = $site.Url
+                    AuditFlags            = 'None'
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                    CertificateThumbprint = $CertificateThumbprint
                 }
             }
 

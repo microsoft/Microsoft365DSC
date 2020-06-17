@@ -40,7 +40,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesignRights for $SiteDesignTitle"
@@ -55,15 +59,16 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $nullReturn = @{
-        SiteDesignTitle     = $SiteDesignTitle
-        UserPrincipals      = $UserPrincipals
-        Rights              = $Rights
-        Ensure              = "Absent"
-        GlobalAdminAccount  = $GlobalAdminAccount
-        ApplicationId       = $ApplicationId
-        TenantId            = $TenantId
-        CertificatePassword = $CertificatePassword
-        CertificatePath     = $CertificatePath
+        SiteDesignTitle       = $SiteDesignTitle
+        UserPrincipals        = $UserPrincipals
+        Rights                = $Rights
+        Ensure                = "Absent"
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 
     Write-Verbose -Message "Getting Site Design Rights for $SiteDesignTitle"
@@ -94,15 +99,16 @@ function Get-TargetResource
 
     Write-Verbose -Message "Site Design Rights User Principals = $($curUserPrincipals)"
     return @{
-        SiteDesignTitle     = $SiteDesignTitle
-        UserPrincipals      = $curUserPrincipals
-        Rights              = $Rights
-        Ensure              = "Present"
-        GlobalAdminAccount  = $GlobalAdminAccount
-        ApplicationId       = $ApplicationId
-        TenantId            = $TenantId
-        CertificatePassword = $CertificatePassword
-        CertificatePath     = $CertificatePath
+        SiteDesignTitle       = $SiteDesignTitle
+        UserPrincipals        = $curUserPrincipals
+        Rights                = $Rights
+        Ensure                = "Present"
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 }
 
@@ -147,7 +153,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration for SPO SiteDesignRights for $SiteDesignTitle"
@@ -260,7 +270,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration for SPO SiteDesignRights for $SiteDesignTitle"
@@ -306,7 +320,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $InformationPreference = 'Continue'
     #region Telemetry
@@ -348,12 +366,13 @@ function Export-TargetResource
         else
         {
             $params = @{
-                SiteDesignTitle     = $siteDesign.Title
-                Rights              = "View"
-                ApplicationId       = $ApplicationId
-                TenantId            = $TenantId
-                CertificatePassword = $CertificatePassword
-                CertificatePath     = $CertificatePath
+                SiteDesignTitle       = $siteDesign.Title
+                Rights                = "View"
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
             }
         }
         $result = Get-TargetResource @params
@@ -396,12 +415,13 @@ function Export-TargetResource
         else
         {
             $params = @{
-                SiteDesignTitle     = $siteDesign.Title
-                Rights              = "View"
-                ApplicationId       = $ApplicationId
-                TenantId            = $TenantId
-                CertificatePassword = $CertificatePassword
-                CertificatePath     = $CertificatePath
+                SiteDesignTitle       = $siteDesign.Title
+                Rights                = "View"
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
             }
         }
         $result = Get-TargetResource @params

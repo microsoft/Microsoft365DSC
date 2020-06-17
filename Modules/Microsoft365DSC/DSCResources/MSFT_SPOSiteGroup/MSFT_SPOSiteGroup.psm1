@@ -42,7 +42,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting SPOSiteGroups for {$Url}"
@@ -54,16 +58,17 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = @{
-        Url                 = $Url
-        Identity            = $null
-        Owner               = $null
-        PermissionLevels    = $null
-        GlobalAdminAccount  = $GlobalAdminAccount
-        Ensure              = "Absent"
-        ApplicationId       = $ApplicationId
-        TenantId            = $TenantId
-        CertificatePassword = $CertificatePassword
-        CertificatePath     = $CertificatePath
+        Url                   = $Url
+        Identity              = $null
+        Owner                 = $null
+        PermissionLevels      = $null
+        GlobalAdminAccount    = $GlobalAdminAccount
+        Ensure                = "Absent"
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 
 
@@ -117,16 +122,17 @@ function Get-TargetResource
         $permissions += $entry.ToString()
     }
     return @{
-        Url                 = $Url
-        Identity            = $siteGroup.Title
-        Owner               = $siteGroup.Owner.LoginName
-        PermissionLevels    = [array]$permissions
-        GlobalAdminAccount  = $GlobalAdminAccount
-        Ensure              = "Present"
-        ApplicationId       = $ApplicationId
-        TenantId            = $TenantId
-        CertificatePassword = $CertificatePassword
-        CertificatePath     = $CertificatePath
+        Url                   = $Url
+        Identity              = $siteGroup.Title
+        Owner                 = $siteGroup.Owner.LoginName
+        PermissionLevels      = [array]$permissions
+        GlobalAdminAccount    = $GlobalAdminAccount
+        Ensure                = "Present"
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 }
 
@@ -173,7 +179,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting SPOSiteGroups for {$Url}"
@@ -331,7 +341,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing SPOSiteGroups for {$Url}"
@@ -346,7 +360,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove("TenantId") | Out-Null
     $ValuesToCheck.Remove("CertificatePath") | Out-Null
     $ValuesToCheck.Remove("CertificatePassword") | Out-Null
-
+    $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -382,7 +396,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -462,12 +480,13 @@ function Export-TargetResource
             else
             {
                 $params = @{
-                    Url                 = $site.Url
-                    Identity            = $siteGroup.Title
-                    ApplicationId       = $ApplicationId
-                    TenantId            = $TenantId
-                    CertificatePassword = $CertificatePassword
-                    CertificatePath     = $CertificatePath
+                    Url                   = $site.Url
+                    Identity              = $siteGroup.Title
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                    CertificateThumbprint = $CertificateThumbprint
                 }
             }
             try

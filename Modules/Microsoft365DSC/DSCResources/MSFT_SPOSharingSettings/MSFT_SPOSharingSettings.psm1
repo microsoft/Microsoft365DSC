@@ -118,7 +118,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration for SPO Sharing settings"
@@ -157,6 +161,7 @@ function Get-TargetResource
         TenantId                                   = $null
         CertificatePassword                        = $null
         CertificatePath                            = $null
+        CertificateThumbprint                      = $null
 
     }
 
@@ -191,7 +196,7 @@ function Get-TargetResource
             TenantId                                   = $TenantId
             CertificatePassword                        = $CertificatePassword
             CertificatePath                            = $CertificatePath
-
+            CertificateThumbprint                      = $CertificateThumbprint
         }
     }
     catch
@@ -323,7 +328,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration for SPO Sharing settings"
@@ -337,14 +346,15 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("GlobalAdminAccount")| Out-Null
-    $CurrentParameters.Remove("Ensure")| Out-Null
-    $CurrentParameters.Remove("Verbose")| Out-Null
-    $CurrentParameters.Remove("IsSingleInstance")| Out-Null
+    $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
+    $CurrentParameters.Remove("Ensure") | Out-Null
+    $CurrentParameters.Remove("Verbose") | Out-Null
+    $CurrentParameters.Remove("IsSingleInstance") | Out-Null
     $CurrentParameters.Remove("ApplicationId") | Out-Null
     $CurrentParameters.Remove("TenantId") | Out-Null
     $CurrentParameters.Remove("CertificatePath") | Out-Null
     $CurrentParameters.Remove("CertificatePassword") | Out-Null
+    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
     if ($null -eq $SignInAccelerationDomain)
     {
@@ -504,7 +514,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration for SPO Sharing settings"
@@ -568,7 +582,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -590,11 +608,12 @@ function Export-TargetResource
     else
     {
         $params = @{
-            IsSingleInstance   = "Yes"
-            ApplicationId       = $ApplicationId
-            TenantId            = $TenantId
-            CertificatePassword = $CertificatePassword
-            CertificatePath     = $CertificatePath
+            IsSingleInstance      = "Yes"
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 

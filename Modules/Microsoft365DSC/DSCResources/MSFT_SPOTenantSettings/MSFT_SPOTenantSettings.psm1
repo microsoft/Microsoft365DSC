@@ -100,7 +100,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration for SPO Tenant"
@@ -138,6 +142,7 @@ function Get-TargetResource
         TenantId                                      = $null
         CertificatePassword                           = $null
         CertificatePath                               = $null
+        CertificateThumbprint                         = $null
     }
 
     try
@@ -177,6 +182,7 @@ function Get-TargetResource
             TenantId                                      = $TenantId
             CertificatePassword                           = $CertificatePassword
             CertificatePath                               = $CertificatePath
+            CertificateThumbprint                         = $CertificateThumbprint
         }
     }
     catch
@@ -290,7 +296,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration for SPO Tenant"
@@ -312,7 +322,7 @@ function Set-TargetResource
     $CurrentParameters.Remove("TenantId") | Out-Null
     $CurrentParameters.Remove("CertificatePath") | Out-Null
     $CurrentParameters.Remove("CertificatePassword") | Out-Null
-
+    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
     if ($PublicCdnEnabled -eq $false)
     {
@@ -424,7 +434,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration for SPO Tenant"
@@ -484,7 +498,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -505,11 +523,12 @@ function Export-TargetResource
     else
     {
         $params = @{
-            IsSingleInstance    = 'Yes'
-            ApplicationId       = $ApplicationId
-            TenantId            = $TenantId
-            CertificatePassword = $CertificatePassword
-            CertificatePath     = $CertificatePath
+            IsSingleInstance      = 'Yes'
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 

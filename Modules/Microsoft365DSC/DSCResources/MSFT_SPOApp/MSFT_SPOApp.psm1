@@ -43,7 +43,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration for app $Identity"
@@ -64,6 +68,7 @@ function Get-TargetResource
         TenantId            = $TenantId
         CertificatePassword = $CertificatePassword
         CertificatePath     = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 
     try
@@ -87,6 +92,7 @@ function Get-TargetResource
             TenantId            = $TenantId
             CertificatePassword = $CertificatePassword
             CertificatePath     = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
     catch
@@ -140,7 +146,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration for app $Identity"
@@ -217,7 +227,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration for app $Identity"
@@ -262,9 +276,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
 
-
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $InformationPreference = 'Continue'
 
@@ -323,6 +339,7 @@ function Export-TargetResource
                         TenantId            = $TenantId
                         CertificatePassword = $CertificatePassword
                         CertificatePath     = $CertificatePath
+                        CertificateThumbprint = $CertificateThumbprint
                     }
                 }
                 $result = Get-TargetResource @params

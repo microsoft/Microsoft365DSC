@@ -60,7 +60,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesign for $Title"
@@ -74,20 +78,21 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $nullReturn = @{
-        Title               = $Title
-        SiteScriptNames     = $SiteScriptNames
-        WebTemplate         = $WebTemplate
-        IsDefault           = $IsDefault
-        Description         = $Description
-        PreviewImageAltText = $PreviewImageAltText
-        PreviewImageUrl     = $PreviewImageUrl
-        Version             = $Version
-        Ensure              = "Absent"
-        GlobalAdminAccount  = $GlobalAdminAccount
-        ApplicationId       = $ApplicationId
-        TenantId            = $TenantId
-        CertificatePassword = $CertificatePassword
-        CertificatePath     = $CertificatePath
+        Title                 = $Title
+        SiteScriptNames       = $SiteScriptNames
+        WebTemplate           = $WebTemplate
+        IsDefault             = $IsDefault
+        Description           = $Description
+        PreviewImageAltText   = $PreviewImageAltText
+        PreviewImageUrl       = $PreviewImageUrl
+        Version               = $Version
+        Ensure                = "Absent"
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 
     Write-Verbose -Message "Getting Site Design for $Title"
@@ -136,6 +141,7 @@ function Get-TargetResource
         TenantId            = $TenantId
         CertificatePassword = $CertificatePassword
         CertificatePath     = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 }
 
@@ -200,7 +206,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration for SPO SiteDesign for $Title"
@@ -231,6 +241,7 @@ function Set-TargetResource
     $CurrentParameters.Remove("TenantId") | Out-Null
     $CurrentParameters.Remove("CertificatePath") | Out-Null
     $CurrentParameters.Remove("CertificatePassword") | Out-Null
+    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
     $CurrentParameters.Add("SiteScriptIds", $scriptIds)
 
     if ($curSiteDesign.Ensure -eq "Absent" -and "Present" -eq $Ensure )
@@ -321,7 +332,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration for SPO SiteDesign for $Title"
@@ -337,6 +352,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove("TenantId") | Out-Null
     $ValuesToCheck.Remove("CertificatePath") | Out-Null
     $ValuesToCheck.Remove("CertificatePassword") | Out-Null
+    $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -372,7 +388,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $InformationPreference = 'Continue'
     #region Telemetry
@@ -407,6 +427,7 @@ function Export-TargetResource
                 TenantId            = $TenantId
                 CertificatePassword = $CertificatePassword
                 CertificatePath     = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
             }
         }
 

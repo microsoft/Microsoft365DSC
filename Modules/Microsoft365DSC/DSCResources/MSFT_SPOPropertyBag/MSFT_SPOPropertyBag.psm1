@@ -39,7 +39,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of SPOPropertyBag for $Key"
@@ -71,21 +75,23 @@ function Get-TargetResource
         $result.TenantId = $TenantId
         $result.CertificatePassword = $CertificatePassword
         $result.CertificatePath = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
         return $result
     }
     else
     {
         Write-Verbose "Found existing SPOPropertyBag Key $Key at {$Url}"
         $result = @{
-            Ensure              = 'Present'
-            Url                 = $Url
-            Key                 = $property.Key
-            Value               = $property.Value
-            GlobalAdminAccount  = $GlobalAdminAccount
-            ApplicationId       = $ApplicationId
-            TenantId            = $TenantId
-            CertificatePassword = $CertificatePassword
-            CertificatePath     = $CertificatePath
+            Ensure                = 'Present'
+            Url                   = $Url
+            Key                   = $property.Key
+            Value                 = $property.Value
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -133,7 +139,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of SPOPropertyBag property for $Key at {$Url}"
@@ -203,8 +213,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
 
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration of SPOPropertyBag for $Key at {$Url}"
@@ -218,7 +231,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove("TenantId") | Out-Null
     $ValuesToCheck.Remove("CertificatePath") | Out-Null
     $ValuesToCheck.Remove("CertificatePassword") | Out-Null
-
+    $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -258,7 +271,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $InformationPreference = "Continue"
     #region Telemetry
@@ -301,7 +318,27 @@ function Export-TargetResource
 
                 [Parameter(Mandatory = $true)]
                 [System.Management.Automation.PSCredential]
-                $GlobalAdminAccount
+                $GlobalAdminAccount,
+
+                [Parameter()]
+                [System.String]
+                $ApplicationId,
+
+                [Parameter()]
+                [System.String]
+                $TenantId,
+
+                [Parameter()]
+                [System.String]
+                $CertificatePath,
+
+                [Parameter()]
+                [System.Management.Automation.PSCredential]
+                $CertificatePassword,
+
+                [Parameter()]
+                [System.String]
+                $CertificateThumbprint
             )
             $WarningPreference = 'SilentlyContinue'
 
@@ -348,13 +385,14 @@ function Export-TargetResource
                                 else
                                 {
                                     $getValues = @{
-                                        Url                 = $siteUrl
-                                        Key                 = $property.Key
-                                        Value               = '*'
-                                        ApplicationId       = $ApplicationId
-                                        TenantId            = $TenantId
-                                        CertificatePassword = $CertificatePassword
-                                        CertificatePath     = $CertificatePath
+                                        Url                   = $siteUrl
+                                        Key                   = $property.Key
+                                        Value                 = '*'
+                                        ApplicationId         = $ApplicationId
+                                        TenantId              = $TenantId
+                                        CertificatePassword   = $CertificatePassword
+                                        CertificatePath       = $CertificatePath
+                                        CertificateThumbprint = $CertificateThumbprint
                                     }
                                 }
 
