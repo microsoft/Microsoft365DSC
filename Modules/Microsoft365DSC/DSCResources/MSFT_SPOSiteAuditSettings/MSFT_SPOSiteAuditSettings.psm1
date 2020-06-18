@@ -301,7 +301,7 @@ function Export-TargetResource
             {
                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
             }
-
+            $result = Remove-NullEntriesFromHashTable -Hash $result
             $content += "        SPOSiteAuditSettings " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

@@ -156,15 +156,15 @@ function Get-TargetResource
 
 
     $nullReturn = @{
-        Url                 = $Url
-        Title               = $Title
-        Template            = $Template
-        Ensure              = "Absent"
-        GlobalAdminAccount  = $GlobalAdminAccount
-        ApplicationId       = $ApplicationId
-        TenantId            = $TenantId
-        CertificatePassword = $CertificatePassword
-        CertificatePath     = $CertificatePath
+        Url                   = $Url
+        Title                 = $Title
+        Template              = $Template
+        Ensure                = "Absent"
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
         CertificateThumbprint = $CertificateThumbprint
     }
 
@@ -251,7 +251,7 @@ function Get-TargetResource
             TenantId                                    = $TenantId
             CertificatePassword                         = $CertificatePassword
             CertificatePath                             = $CertificatePath
-            CertificateThumbprint = $CertificateThumbprint
+            CertificateThumbprint                       = $CertificateThumbprint
         }
     }
     catch
@@ -846,15 +846,15 @@ function Export-TargetResource
         else
         {
             $params = @{
-                Url                 = $site.Url
-                Template            = $site.Template
-                Owner               = $GlobalAdminAccount.UserName # Passing in bogus value to bypass null owner error
-                Title               = $siteTitle
-                TimeZoneId          = $site.TimeZoneID
-                ApplicationId       = $ApplicationId
-                TenantId            = $TenantId
-                CertificatePassword = $CertificatePassword
-                CertificatePath     = $CertificatePath
+                Url                   = $site.Url
+                Template              = $site.Template
+                Owner                 = $GlobalAdminAccount.UserName # Passing in bogus value to bypass null owner error
+                Title                 = $siteTitle
+                TimeZoneId            = $site.TimeZoneID
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
             }
         }
@@ -871,15 +871,6 @@ function Export-TargetResource
             $content += "        SPOSite " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            }
-            else
-            {
-                $partialContent = $currentDSCBlock
-            }
-
             if ($ConnectionMode -eq 'Credential')
             {
                 $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"

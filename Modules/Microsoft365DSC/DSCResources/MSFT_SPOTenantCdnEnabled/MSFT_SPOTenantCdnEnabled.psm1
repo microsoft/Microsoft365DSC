@@ -278,11 +278,21 @@ function Export-TargetResource
         $result = Get-TargetResource @Params
         if ($result.Enable -eq $True)
         {
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            if ($ConnectionMode -eq 'Credential')
+            {
+                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            }
+            $result = Remove-NullEntriesFromHashTable -Hash $result
             $content += "        SPOTenantCdnEnabled " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+
+            if ($ConnectionMode -eq 'Credential')
+            {
+                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            }else {
+                $content += $currentDSCBlock
+            }
             $content += "        }`r`n"
         }
     }

@@ -293,7 +293,7 @@ function Export-TargetResource
     {
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     }
-
+    $result = Remove-NullEntriesFromHashTable -Hash $result
 
     $content = "        SPOHomeSite " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"

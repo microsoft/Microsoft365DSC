@@ -360,7 +360,7 @@ function Export-TargetResource
                         $siteUrl = $site.Url
                         try
                         {
-                            $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+                            $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters -ConnectionUrl $siteUrl
                         }
                         catch
                         {
@@ -407,18 +407,18 @@ function Export-TargetResource
                                     {
                                         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
                                     }
-
+                                    $result = Remove-NullEntriesFromHashTable -Hash $result
                                     $content += "        SPOPropertyBag " + (New-GUID).ToString() + "`r`n"
                                     $content += "        {`r`n"
                                     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
                                     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
                                     if ($ConnectionMode -eq 'Credential')
                                     {
-                                        $content = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                                        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
                                     }
                                     else
                                     {
-                                        $content = $currentDSCBlock
+                                        $content += $currentDSCBlock
                                     }
                                     $content += "        }`r`n"
                                 }

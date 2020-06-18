@@ -366,7 +366,7 @@ function Export-TargetResource
     {
         $tenantName = Get-M365TenantName -GlobalAdminAccount $GlobalAdminAccount
     }
-    else 
+    else
     {
         $tenantName = $TenantId.Split(".")[0]
     }
@@ -399,6 +399,7 @@ function Export-TargetResource
             {
                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
             }
+            $result = Remove-NullEntriesFromHashTable -Hash $result
             $content += "        SPOOrgAssetsLibrary " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

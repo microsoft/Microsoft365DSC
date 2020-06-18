@@ -71,18 +71,18 @@ function Get-TargetResource
         -ConnectionUrl $SiteUrl
 
     $nullReturn = @{
-        Key                 = $Key
-        Value               = $Value
-        EntityScope         = $EntityScope
-        Description         = $Description
-        Comment             = $Comment
-        Ensure              = "Absent"
-        SiteUrl             = $SiteUrl
-        GlobalAdminAccount  = $GlobalAdminAccount
-        ApplicationId       = $ApplicationId
-        TenantId            = $TenantId
-        CertificatePassword = $CertificatePassword
-        CertificatePath     = $CertificatePath
+        Key                   = $Key
+        Value                 = $Value
+        EntityScope           = $EntityScope
+        Description           = $Description
+        Comment               = $Comment
+        Ensure                = "Absent"
+        SiteUrl               = $SiteUrl
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
         CertificateThumbprint = $CertificateThumbprint
     }
 
@@ -108,18 +108,18 @@ function Get-TargetResource
     Write-Verbose -Message "Found storage entity $($Entity.Key)"
 
     return @{
-        Key                 = $Entity.Key
-        Value               = $Entity.Value
-        EntityScope         = $EntityScope
-        Description         = $Entity.Description
-        Comment             = $Entity.Comment
-        Ensure              = "Present"
-        SiteUrl             = $SiteUrl
-        GlobalAdminAccount  = $GlobalAdminAccount
-        ApplicationId       = $ApplicationId
-        TenantId            = $TenantId
-        CertificatePassword = $CertificatePassword
-        CertificatePath     = $CertificatePath
+        Key                   = $Entity.Key
+        Value                 = $Entity.Value
+        EntityScope           = $EntityScope
+        Description           = $Entity.Description
+        Comment               = $Entity.Comment
+        Ensure                = "Present"
+        SiteUrl               = $SiteUrl
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
         CertificateThumbprint = $CertificateThumbprint
     }
 }
@@ -385,7 +385,7 @@ function Export-TargetResource
     }
     else
     {
-        $centralAdminUrl =  "https://$principal-admin.sharepoint.com"
+        $centralAdminUrl = "https://$principal-admin.sharepoint.com"
     }
     foreach ($storageEntity in $storageEntities)
     {
@@ -400,12 +400,12 @@ function Export-TargetResource
         else
         {
             $params = @{
-                Key                = $storageEntity.Key
-                SiteUrl            = $centralAdminUrl
-                ApplicationId       = $ApplicationId
-                TenantId            = $TenantId
-                CertificatePassword = $CertificatePassword
-                CertificatePath     = $CertificatePath
+                Key                   = $storageEntity.Key
+                SiteUrl               = $centralAdminUrl
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
             }
         }
@@ -418,18 +418,14 @@ function Export-TargetResource
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         }
 
+        $result = Remove-NullEntriesFromHashTable -Hash $result
         $content += "        SPOStorageEntity " + (New-Guid).ToString() + "`r`n"
         $content += "        {`r`n"
         $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         if ($ConnectionMode -eq 'Credential')
         {
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
         }
-        else
-        {
-            $partialContent = $currentDSCBlock
-        }
-
         if ($partialContent.ToLower().Contains("https://" + $principal.ToLower()))
         {
             # If we are already looking at the Admin Center URL, don't replace the full path;

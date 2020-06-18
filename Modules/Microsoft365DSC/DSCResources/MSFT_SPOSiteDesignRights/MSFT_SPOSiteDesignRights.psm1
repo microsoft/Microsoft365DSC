@@ -376,14 +376,13 @@ function Export-TargetResource
             }
         }
         $result = Get-TargetResource @params
-        $content = ""
         if ($result.Ensure -eq "Present")
         {
             if ($ConnectionMode -eq 'Credential')
             {
                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
             }
-
+            $result = Remove-NullEntriesFromHashTable -Hash $result
             $content += "        SPOSiteDesignRights " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
@@ -409,14 +408,14 @@ function Export-TargetResource
             $params = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 SiteDesignTitle    = $siteDesign.Title
-                Rights             = "View"
+                Rights             = "None"
             }
         }
         else
         {
             $params = @{
                 SiteDesignTitle       = $siteDesign.Title
-                Rights                = "View"
+                Rights                = "None"
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificatePassword   = $CertificatePassword

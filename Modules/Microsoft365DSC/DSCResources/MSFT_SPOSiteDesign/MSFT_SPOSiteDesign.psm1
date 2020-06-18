@@ -127,20 +127,20 @@ function Get-TargetResource
     }
 
     return @{
-        Title               = $siteDesign.Title
-        SiteScriptNames     = $scriptTitles
-        WebTemplate         = $webtemp
-        IsDefault           = $siteDesign.IsDefault
-        Description         = $siteDesign.Description
-        PreviewImageAltText = $siteDesign.PreviewImageAltText
-        PreviewImageUrl     = $siteDesign.PreviewImageUrl
-        Version             = $siteDesign.Version
-        Ensure              = "Present"
-        GlobalAdminAccount  = $GlobalAdminAccount
-        ApplicationId       = $ApplicationId
-        TenantId            = $TenantId
-        CertificatePassword = $CertificatePassword
-        CertificatePath     = $CertificatePath
+        Title                 = $siteDesign.Title
+        SiteScriptNames       = $scriptTitles
+        WebTemplate           = $webtemp
+        IsDefault             = $siteDesign.IsDefault
+        Description           = $siteDesign.Description
+        PreviewImageAltText   = $siteDesign.PreviewImageAltText
+        PreviewImageUrl       = $siteDesign.PreviewImageUrl
+        Version               = $siteDesign.Version
+        Ensure                = "Present"
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
         CertificateThumbprint = $CertificateThumbprint
     }
 }
@@ -422,21 +422,21 @@ function Export-TargetResource
         else
         {
             $params = @{
-                Title               = $design.Title
-                ApplicationId       = $ApplicationId
-                TenantId            = $TenantId
-                CertificatePassword = $CertificatePassword
-                CertificatePath     = $CertificatePath
+                Title                 = $design.Title
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
             }
         }
-
 
         $result = Get-TargetResource @params
         if ($ConnectionMode -eq 'Credential')
         {
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         }
+        $result = Remove-NullEntriesFromHashTable -Hash $result
         $content += "        SPOSiteDesign " + (New-GUID).ToString() + "`r`n"
         $content += "        {`r`n"
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
