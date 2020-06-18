@@ -288,7 +288,7 @@ function Set-TargetResource
         $task.PopulateById($GlobalAdminAccount, $ApplicationId, $TaskId)
     }
 
-    $task.BucketI              = $Bucket
+    $task.BucketId             = $Bucket
     $task.Title                = $Title
     $task.PlanId               = $PlanId
     $task.StartDateTime        = $StartDateTime
