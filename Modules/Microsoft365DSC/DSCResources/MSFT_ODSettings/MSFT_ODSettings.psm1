@@ -83,7 +83,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of OneDrive Settings"
@@ -115,6 +119,7 @@ function Get-TargetResource
         TenantId                                  = $null
         CertificatePassword                       = $null
         CertificatePath                           = $null
+        CertificateThumbprint                     = $null
     }
 
     try
@@ -193,6 +198,7 @@ function Get-TargetResource
             TenantId                                  = $TenantId
             CertificatePassword                       = $CertificatePassword
             CertificatePath                           = $CertificatePath
+            CertificateThumbprint                     = $CertificateThumbprint
         }
     }
     catch
@@ -287,7 +293,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of OneDrive Settings"
@@ -335,10 +345,11 @@ function Set-TargetResource
         $CurrentParameters.Remove("IsSingleInstance")
     }
 
-    $CurrentParameters.Remove("ApplicationId")| Out-Null
-    $CurrentParameters.Remove("TenantId")| Out-Null
-    $CurrentParameters.Remove("CertificatePath")| Out-Null
-    $CurrentParameters.Remove("CertificatePassword")| Out-Null
+    $CurrentParameters.Remove("ApplicationId") | Out-Null
+    $CurrentParameters.Remove("TenantId") | Out-Null
+    $CurrentParameters.Remove("CertificatePath") | Out-Null
+    $CurrentParameters.Remove("CertificatePassword") | Out-Null
+    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
     Write-Verbose -Message "Configuring OneDrive settings."
     Set-PnPTenant @CurrentParameters
@@ -464,7 +475,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration of OneDrive Settings"
@@ -520,7 +535,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $InformationPReference = 'Continue'
 
@@ -543,11 +562,12 @@ function Export-TargetResource
     else
     {
         $params = @{
-            IsSingleInstance   = 'Yes'
-            ApplicationId       = $ApplicationId
-            TenantId            = $TenantId
-            CertificatePassword = $CertificatePassword
-            CertificatePath     = $CertificatePath
+            IsSingleInstance      = 'Yes'
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 
@@ -562,7 +582,7 @@ function Export-TargetResource
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     }
     $result = Remove-NullEntriesFromHashTable -Hash $result
-    
+
     $content = "        ODSettings " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot

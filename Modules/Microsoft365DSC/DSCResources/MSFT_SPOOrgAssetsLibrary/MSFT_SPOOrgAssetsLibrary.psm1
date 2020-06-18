@@ -386,11 +386,12 @@ function Export-TargetResource
             else
             {
                 $params = @{
-                    LibraryUrl          = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
-                    ApplicationId       = $ApplicationId
-                    TenantId            = $TenantId
-                    CertificatePassword = $CertificatePassword
-                    CertificatePath     = $CertificatePath
+                    LibraryUrl            = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                    CertificateThumbprint = $CertificateThumbprint
                 }
             }
 

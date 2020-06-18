@@ -59,15 +59,15 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = @{
-        Identity            = ""
-        Path                = $null
-        Publish             = $Publish
-        Overwrite           = $Overwrite
-        Ensure              = "Absent"
-        ApplicationId       = $ApplicationId
-        TenantId            = $TenantId
-        CertificatePassword = $CertificatePassword
-        CertificatePath     = $CertificatePath
+        Identity              = ""
+        Path                  = $null
+        Publish               = $Publish
+        Overwrite             = $Overwrite
+        Ensure                = "Absent"
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
         CertificateThumbprint = $CertificateThumbprint
     }
 
@@ -83,15 +83,15 @@ function Get-TargetResource
         }
 
         return @{
-            Identity            = $app.Title
-            Path                = $Path
-            Publish             = $app.Deployed
-            Overwrite           = $Overwrite
-            Ensure              = "Present"
-            ApplicationId       = $ApplicationId
-            TenantId            = $TenantId
-            CertificatePassword = $CertificatePassword
-            CertificatePath     = $CertificatePath
+            Identity              = $app.Title
+            Path                  = $Path
+            Publish               = $app.Deployed
+            Overwrite             = $Overwrite
+            Ensure                = "Present"
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
         }
     }
@@ -302,7 +302,15 @@ function Export-TargetResource
 
     if (-not [string]::IsNullOrEmpty($tenantAppCatalogUrl))
     {
-        $filesToDownload = Get-AllSPOPackages -GlobalAdminAccount $GlobalAdminAccount
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $filesToDownload = Get-AllSPOPackages -GlobalAdminAccount $GlobalAdminAccount
+        }
+        else
+        {
+            $filesToDownload = Get-AllSPOPackages -ApplicationId $ApplicationId -CertificateThumbprint $CertificateThumbprint `
+                -CertificatePassword $CertificatePassword -TenantId $TenantId -CertificatePath $CertificatePath
+        }
         $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
         $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
 
@@ -333,12 +341,12 @@ function Export-TargetResource
                 else
                 {
                     $params = @{
-                        Identity            = $identity
-                        Path                = ("`$PSScriptRoot\" + $file.Name)
-                        ApplicationId       = $ApplicationId
-                        TenantId            = $TenantId
-                        CertificatePassword = $CertificatePassword
-                        CertificatePath     = $CertificatePath
+                        Identity              = $identity
+                        Path                  = ("`$PSScriptRoot\" + $file.Name)
+                        ApplicationId         = $ApplicationId
+                        TenantId              = $TenantId
+                        CertificatePassword   = $CertificatePassword
+                        CertificatePath       = $CertificatePath
                         CertificateThumbprint = $CertificateThumbprint
                     }
                 }

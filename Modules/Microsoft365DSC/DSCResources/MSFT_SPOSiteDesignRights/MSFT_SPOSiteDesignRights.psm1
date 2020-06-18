@@ -338,7 +338,7 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $organization = ""
-    if ($GlobalAdminAccount.UserName.Contains("@"))
+    if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
     {
         $organization = $GlobalAdminAccount.UserName.Split("@")[1]
     }

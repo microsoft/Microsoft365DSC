@@ -363,7 +363,7 @@ function Export-TargetResource
     $content = ''
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    if ($GlobalAdminAccount.UserName.Contains("@"))
+    if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
     {
         $organization = $GlobalAdminAccount.UserName.Split("@")[1]
 

@@ -1027,7 +1027,8 @@ function New-M365DSCConnection
             elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
                 -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
                 -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePassword))
+                (-not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePassword)  -or `
+                -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint)))
             {
                 Write-Verbose -Message "GlobalAdminAccount wasn't specified. Connecting via User Principal and certpassword"
                 Test-MSCloudLogin -Platform $Platform `
@@ -1326,19 +1327,37 @@ function Get-AllSPOPackages
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable[]])]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
 
-    Test-MSCloudLogin -ConnectionUrl $tenantAppCatalogUrl `
-        -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters -ConnectionUrl $tenantAppCatalogUrl
+
 
     $filesToDownload = @()
 

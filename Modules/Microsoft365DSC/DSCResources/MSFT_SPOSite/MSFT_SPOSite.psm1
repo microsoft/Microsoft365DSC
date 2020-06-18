@@ -809,7 +809,7 @@ function Export-TargetResource
     $i = 1
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    if ($GlobalAdminAccount.UserName.Contains("@"))
+    if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
     {
         $organization = $GlobalAdminAccount.UserName.Split("@")[1]
 
@@ -848,7 +848,7 @@ function Export-TargetResource
             $params = @{
                 Url                   = $site.Url
                 Template              = $site.Template
-                Owner                 = $GlobalAdminAccount.UserName # Passing in bogus value to bypass null owner error
+                Owner                 = $ApplicationId # Passing in bogus value to bypass null owner error
                 Title                 = $siteTitle
                 TimeZoneId            = $site.TimeZoneID
                 ApplicationId         = $ApplicationId

@@ -250,7 +250,7 @@ function Export-TargetResource
     $i = 1
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    if ($GlobalAdminAccount.UserName.Contains("@"))
+    if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
     {
         $organization = $GlobalAdminAccount.UserName.Split("@")[1]
 
@@ -308,6 +308,9 @@ function Export-TargetResource
             if ($ConnectionMode -eq 'Credential')
             {
                 $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            }
+            else {
+                $partialContent = $currentDSCBlock
             }
             if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
             {
