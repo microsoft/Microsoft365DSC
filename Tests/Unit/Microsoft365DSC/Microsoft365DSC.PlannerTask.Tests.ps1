@@ -270,49 +270,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "Task is need to be part of a Bucket by Name and is in Desired State" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    PlanId                = "1234567890"
-                    TaskId                = "12345"
-                    Title                 = "Contoso Task"
-                    Bucket                = "TestBucket"
-                    Priority              = 5
-                    PercentComplete       = 75
-                    StartDateTime         = "2020-06-09"
-                    Ensure                = "Present"
-                    ApplicationId         = "1234567890"
-                    GlobalAdminAccount    = $GlobalAdminAccount
-                }
-
-                Mock -CommandName Get-MgPlannerTask -MockWith {
-                    return @{
-                        PlanId                = "1234567890"
-                        Title                 = "Contoso Task"
-                        BucketId              = "Bucket12345"
-                        Id                    = "12345"
-                        Priority              = 5
-                        PercentComplete       = 75
-                        StartDateTime         = "2020-06-09"
-                    }
-                }
-
-                Mock -CommandName Get-MgPlannerPlanBucket -MockWith {
-                    return @{
-                        Id                    = "Bucket12345"
-                        Name                  = "TestBucket"
-                    }
-                }
-            }
-
-            It "Should return 'TestBucket' as the Bucket Value" {
-                (Get-TargetResource @testParams).Bucket | Should -Be 'TestBucket'
-            }
-
-            It "Should return True from the Test method" {
-                Test-TargetResource @testParams | Should -Be $True
-            }
-        }
 
         Context -Name "Task is need to be part of a Bucket by Name and is NOT" -Fixture {
             BeforeAll {
