@@ -69,7 +69,7 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Identity.ConditionalAccess"
-            RequiredVersion = "0.5.1"
+            RequiredVersion = "0.7.0"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
