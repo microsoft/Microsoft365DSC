@@ -310,7 +310,7 @@ function Set-TargetResource
         MailboxMoveEnabled    = $MailboxMoveEnabled
         MailTipsAccessEnabled = $MailTipsAccessEnabled
         MailTipsAccessLevel   = $MailTipsAccessLevel
-        MailTipsAccessScope   = $MailTipsAccessScope
+        #MailTipsAccessScope   = $MailTipsAccessScope
         Name                  = $Name
         OrganizationContact   = $OrganizationContact
         PhotosEnabled         = $PhotosEnabled
@@ -332,7 +332,7 @@ function Set-TargetResource
         MailboxMoveEnabled    = $MailboxMoveEnabled
         MailTipsAccessEnabled = $MailTipsAccessEnabled
         MailTipsAccessLevel   = $MailTipsAccessLevel
-        MailTipsAccessScope   = $MailTipsAccessScope
+        #MailTipsAccessScope   = $MailTipsAccessScope
         Identity              = $Name
         OrganizationContact   = $OrganizationContact
         PhotosEnabled         = $PhotosEnabled
@@ -345,11 +345,15 @@ function Set-TargetResource
 
    if ($FreeBusyAccessScope)
         {
- 		$NewOrganizationRelationshipParams.Add("FreeBusyAccessScope", $FreeBusyAccessScope)
-	    	$SetOrganizationRelationshipParams.Add("FreeBusyAccessScope", $FreeBusyAccessScope)
+			$NewOrganizationRelationshipParams.Add("FreeBusyAccessScope", $FreeBusyAccessScope)
+			$SetOrganizationRelationshipParams.Add("FreeBusyAccessScope", $FreeBusyAccessScope)
         }
 
-
+   if ($MailTipsAccessScope)
+        {
+			$NewOrganizationRelationshipParams.Add("MailTipsAccessScope", $MailTipsAccessScope)
+			$SetOrganizationRelationshipParams.Add("MailTipsAccessScope", $MailTipsAccessScope)
+		}
 
     # CASE: Organization Relationship doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentOrgRelationshipConfig.Ensure -eq "Absent")
