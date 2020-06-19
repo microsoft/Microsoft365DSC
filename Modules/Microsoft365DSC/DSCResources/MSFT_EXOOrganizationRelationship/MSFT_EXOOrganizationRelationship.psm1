@@ -306,7 +306,7 @@ function Set-TargetResource
         Enabled               = $Enabled
         FreeBusyAccessEnabled = $FreeBusyAccessEnabled
         FreeBusyAccessLevel   = $FreeBusyAccessLevel
-        FreeBusyAccessScope   = $FreeBusyAccessScope
+        #FreeBusyAccessScope   = $FreeBusyAccessScope
         MailboxMoveEnabled    = $MailboxMoveEnabled
         MailTipsAccessEnabled = $MailTipsAccessEnabled
         MailTipsAccessLevel   = $MailTipsAccessLevel
@@ -328,7 +328,7 @@ function Set-TargetResource
         Enabled               = $Enabled
         FreeBusyAccessEnabled = $FreeBusyAccessEnabled
         FreeBusyAccessLevel   = $FreeBusyAccessLevel
-        FreeBusyAccessScope   = $FreeBusyAccessScope
+        #FreeBusyAccessScope   = $FreeBusyAccessScope
         MailboxMoveEnabled    = $MailboxMoveEnabled
         MailTipsAccessEnabled = $MailTipsAccessEnabled
         MailTipsAccessLevel   = $MailTipsAccessLevel
@@ -342,6 +342,14 @@ function Set-TargetResource
         TargetSharingEpr      = $TargetSharingEpr
         Confirm               = $false
     }
+
+   if ($FreeBusyAccessScope)
+        {
+ 		$NewOrganizationRelationshipParams.Add("FreeBusyAccessScope", $FreeBusyAccessScope)
+	    	$SetOrganizationRelationshipParams.Add("FreeBusyAccessScope", $FreeBusyAccessScope)
+        }
+
+
 
     # CASE: Organization Relationship doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentOrgRelationshipConfig.Ensure -eq "Absent")
