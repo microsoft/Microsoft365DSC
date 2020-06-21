@@ -359,10 +359,13 @@ function Export-TargetResource
                 $content += "        SPOApp " + (New-GUID).ToString() + "`r`n"
                 $content += "        {`r`n"
                 $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                $convertedContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+
                 if ($ConnectionMode -eq 'Credential')
                 {
                     $convertedContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                }
+                else{
+                    $convertedContent = $currentDSCBlock
                 }
                 $content += $convertedContent
                 $content += "        }`r`n"

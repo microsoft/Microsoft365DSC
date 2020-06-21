@@ -1020,7 +1020,8 @@ function New-M365DSCConnection
             {
                 Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
                 Test-MSCloudLogin -Platform $Platform `
-                    -CloudCredential $InboundParameters.GlobalAdminAccount
+                    -CloudCredential $InboundParameters.GlobalAdminAccount `
+                    -ConnectionUrl $ConnectionUrl
                 return 'Credential'
             }
             # Case only the ServicePrincipal parameters are specified
