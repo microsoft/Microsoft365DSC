@@ -2,11 +2,21 @@
 
 ## UNRELEASED
 
+* PlannerBucket
+  * Initial Release;
+* PlannerPlan
+  * Initial Release;
+* PlannerTask
+  * Initial Release;
 * Metadata
   * Updated ExchangeOnline module version to 1.0.1;
+  * Updated Microsoft.Graph module version to 0.7.0;
+  * Updated Microsoft.Graph.Identity.ConditionalAccess
+    module version to 0.7.0;
   * Updated Microsoft.PowerApps.Administration.PowerShell
     module version to 2.0.65;
   * Updated ReverseDSC module version to 2.0.0.4;
+  * Updated all Unit Tests to Pester 5;
 
 ## 1.20.0603.1
 

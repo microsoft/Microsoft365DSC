@@ -44,7 +44,7 @@ Configuration Master
         {
             DisplayName                   = "App1"
             AvailableToOtherTenants       = $false
-            GroupMembershipClaims         = "0"
+            GroupMembershipClaims         = $null
             Homepage                      = "https://app.contoso.com"
             IdentifierUris                = "https://app.contoso.com"
             KnownClientApplications       = ""

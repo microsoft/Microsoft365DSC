@@ -5,7 +5,8 @@ $Global:SessionSecurityCompliance = $null
 
 #region Extraction Modes
 $Global:DefaultComponents = @("SPOApp","SPOSiteDesign")
-$Global:FullComponents = @("AADMSGroup", "EXOMailboxSettings","EXOManagementRole","O365Group","O365User","PPPowerAppsEnvironment", `
+$Global:FullComponents = @("AADMSGroup", "EXOMailboxSettings","EXOManagementRole","O365Group","O365User", `
+    "PlannerPlan", "PlannerBucket", "PlannerTask","PPPowerAppsEnvironment", `
     "SPOSiteAuditSettings","SPOSiteGroup","SPOSite","SPOUserProfileProperty","SPOPropertyBag","TeamsTeam","TeamsChannel", `
      "TeamsUser")
 #endregion
@@ -794,7 +795,7 @@ function Export-M365DSCConfiguration
         $ComponentsToExtract,
 
         [Parameter()]
-        [ValidateSet('AAD', 'SPO', 'EXO', 'SC', 'OD', 'O365', 'PP', 'TEAMS')]
+        [ValidateSet('AAD', 'SPO', 'EXO', 'SC', 'OD', 'O365', 'PLANNER', 'PP', 'TEAMS')]
         [System.String[]]
         $Workloads,
 
@@ -826,6 +827,10 @@ function Export-M365DSCConfiguration
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificateFile,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -932,7 +937,7 @@ function New-M365DSCConnection
         [Parameter(Mandatory=$true)]
         [ValidateSet("Azure", "AzureAD", "ExchangeOnline", `
             "SecurityComplianceCenter", "PnP", "PowerPlatforms", `
-            "MicrosoftTeams", "SkypeForBusiness")]
+            "MicrosoftTeams", "SkypeForBusiness", "MicrosoftGraph")]
         [System.String]
         $Platform,
 
@@ -943,16 +948,15 @@ function New-M365DSCConnection
 
     switch ($Platform)
     {
-        {$_ -eq 'AzureAD' -or $_ -eq 'MicrosoftTeams'}
+        {$_ -eq 'AzureAD' -or $_ -eq 'MicrosoftTeams' -or $_ -eq 'MicrosoftGraph'}
         {
             # Case both authentication methods are attempted
             if ($null -ne $InboundParameters.GlobalAdminAccount -and `
-                (-not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -or `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -or `
+                (-not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -or `
                 -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint)))
             {
                 Write-Verbose -Message 'Both Authentication methods are attempted'
-                throw "You can't specify both the GlobalAdminAccount and one of {ApplicationID, TenantId, CertificateThumbprint}"
+                throw "You can't specify both the GlobalAdminAccount and one of {TenantId, CertificateThumbprint}"
             }
             # Case no authentication method is specified
             elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
@@ -985,6 +989,16 @@ function New-M365DSCConnection
                     -ApplicationId $InboundParameters.ApplicationId `
                     -TenantId $InboundParameters.TenantId `
                     -CertificateThumbprint $InboundParameters.CertificateThumbprint
+                return 'ServicePrincipal'
+            }
+            # Case only the ApplicationID and Credentials parameters are specified
+            elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
+                -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
+            {
+                Write-Verbose -Message "GlobalAdminAccount and ApplicationId were specified. Connecting via Delegated Service Principal"
+                Test-MSCloudLogin -Platform $Platform `
+                    -ApplicationId $InboundParameters.ApplicationId `
+                    -CloudCredential $InboundParameters.GlobalAdminAccount
                 return 'ServicePrincipal'
             }
         }
