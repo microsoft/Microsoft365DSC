@@ -175,7 +175,7 @@ function Show-M365DSCGUI
         $pnlPP = New-Object System.Windows.Forms.Panel
         $pnlPP.Top = 88 + $topBannerHeight
         $pnlPP.Left = $thirdColumnLeft
-        $pnlPP.Height = 350
+        $pnlPP.Height = 100
         $pnlPP.Width = 300
         $pnlPP.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
         $pnlPP.AutoScroll = $true
@@ -190,17 +190,44 @@ function Show-M365DSCGUI
         $pnlMain.Controls.Add($chckAllPP)
         #endregion
 
+        #region Planner
+        $imgPlanner = New-Object System.Windows.Forms.PictureBox
+        $imagePath = $PSScriptRoot + "\..\Dependencies\Images\Planner.png"
+        $imgPlanner.ImageLocation = $imagePath
+        $imgPlanner.Left = $thirdColumnLeft
+        $imgPlanner.Top = $pnlPP.Height + 180
+        $imgPlanner.AutoSize = $true
+        $pnlMain.Controls.Add($imgPlanner)
+
+        $pnlPlanner = New-Object System.Windows.Forms.Panel
+        $pnlPlanner.Top = $pnlPP.Height + 275
+        $pnlPlanner.Left = $thirdColumnLeft
+        $pnlPlanner.Height = 132
+        $pnlPlanner.Width = 300
+        $pnlPlanner.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+        $pnlPlanner.AutoScroll = $true
+        $pnlPlannerNextControlPosition = -20
+
+        $chckAllPlanner = New-Object System.Windows.Forms.CheckBox
+        $chckAllPlanner.Left = $thirdColumnLeft + 280
+        $chckAllPlanner.Top = $topBannerHeight + $PnlPP.Height + $imgPP.Height + 100
+        $chckAllPlanner.Checked = $true
+        $chckAllPlanner.AutoSize = $true
+        $chckAllPlanner.Add_CheckedChanged( { SectionChanged -Control $chckAllPlanner -Panel $pnlPlanner })
+        $pnlMain.Controls.Add($chckAllPlanner)
+        #endregion
+
         #region Office365
         $imgO365 = New-Object System.Windows.Forms.PictureBox
         $imagePath = $PSScriptRoot + "\..\Dependencies\Images\Office365.jpg"
         $imgO365.ImageLocation = $imagePath
         $imgO365.Left = $thirdColumnLeft
-        $imgO365.Top = $pnlPP.Height + 180
+        $imgO365.Top = $pnlPP.Height + $pnlPlanner.Height + 293
         $imgO365.AutoSize = $true
         $pnlMain.Controls.Add($imgO365)
 
         $pnlO365 = New-Object System.Windows.Forms.Panel
-        $pnlO365.Top = $pnlPP.Height + 275
+        $pnlO365.Top = $imgO365.Top + 100
         $pnlO365.Left = $thirdColumnLeft
         $pnlO365.Height = 350
         $pnlO365.Width = 300
@@ -315,6 +342,12 @@ function Show-M365DSCGUI
                 $pnlPPNextControlPosition += 20
                 $currentControlTop = $pnlPPNextControlPosition
             }
+            elseif ($resourceName.StartsWith("Planner"))
+            {
+                $panel = $pnlPlanner
+                $pnlPlannerNextControlPosition += 20
+                $currentControlTop = $pnlPlannerNextControlPosition
+            }
             elseif ($resourceName.StartsWith("OD"))
             {
                 $panel = $pnlOD
@@ -360,6 +393,7 @@ function Show-M365DSCGUI
         $pnlMain.Controls.Add($pnlExo)
         $pnlMain.Controls.Add($pnlOD)
         $pnlMain.Controls.Add($pnlPP)
+        $pnlMain.Controls.Add($pnlPlanner)
         $pnlMain.Controls.Add($pnlSPO)
         $pnlMain.Controls.Add($pnlSC)
         $pnlMain.Controls.Add($pnlTeams)
@@ -376,7 +410,7 @@ function Show-M365DSCGUI
         $lblExtraction.Font= [System.Drawing.Font]::new($lblExtraction.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
         $lblExtraction.Top = 5
         $lblExtraction.Autosize = $true
-        $lblExtraction.Left = 245
+        $lblExtraction.Left = 15
         $panelMenu.Controls.Add($lblExtraction)
 
         $imgLite = New-Object System.Windows.Forms.PictureBox
@@ -385,7 +419,7 @@ function Show-M365DSCGUI
         $imgLite.BackColor = [System.Drawing.Color]::Transparent
         $imgLite.ImageLocation = $PSScriptRoot + "\..\Dependencies\Images\lite.png"
         $imgLite.Top = 5
-        $imgLite.Left = 345
+        $imgLite.Left = 115
         $panelMenu.Controls.Add($imgLite)
 
         $radLite = New-Object System.Windows.Forms.RadioButton
@@ -393,7 +427,7 @@ function Show-M365DSCGUI
         $radLite.Name = "radExtractionMode"
         $radLite.AutoSize = $true
         $radLite.Top = 5
-        $radLite.Left = 360
+        $radLite.Left = 130
         $radLite.Add_Click( {
             SelectComponentsForMode -PanelMain $pnlMain -Mode 1 -ControlsToSkip ($Global:DefaultComponents + $Global:FullComponents);
         })
@@ -405,7 +439,7 @@ function Show-M365DSCGUI
         $imgLite2.BackColor = [System.Drawing.Color]::Transparent
         $imgLite2.ImageLocation = $PSScriptRoot + "\..\Dependencies\Images\lite.png"
         $imgLite2.Top = 25
-        $imgLite2.Left = 330
+        $imgLite2.Left = 100
         $panelMenu.Controls.Add($imgLite2)
 
         $imgDefault = New-Object System.Windows.Forms.PictureBox
@@ -414,7 +448,7 @@ function Show-M365DSCGUI
         $imgDefault.BackColor = [System.Drawing.Color]::Transparent
         $imgDefault.ImageLocation = $PSScriptRoot + "\..\Dependencies\Images\default.png"
         $imgDefault.Top = 25
-        $imgDefault.Left = 345
+        $imgDefault.Left = 115
         $panelMenu.Controls.Add($imgDefault)
 
         $radDefault = New-Object System.Windows.Forms.RadioButton
@@ -423,7 +457,7 @@ function Show-M365DSCGUI
         $radDefault.Name = "radExtractionMode"
         $radDefault.AutoSize = $true
         $radDefault.Top = 25
-        $radDefault.Left = 360
+        $radDefault.Left = 130
         $radDefault.Add_Click( { SelectComponentsForMode -PanelMain $pnlMain -Mode 2 -ControlsToSkip $Global:FullComponents; })
         $panelMenu.Controls.Add($radDefault)
 
@@ -433,7 +467,7 @@ function Show-M365DSCGUI
         $imgLite3.BackColor = [System.Drawing.Color]::Transparent
         $imgLite3.ImageLocation = $PSScriptRoot + "\..\Dependencies\Images\lite.png"
         $imgLite3.Top = 45
-        $imgLite3.Left = 315
+        $imgLite3.Left = 85
         $panelMenu.Controls.Add($imgLite3)
 
         $imgDefault2 = New-Object System.Windows.Forms.PictureBox
@@ -442,7 +476,7 @@ function Show-M365DSCGUI
         $imgDefault2.BackColor = [System.Drawing.Color]::Transparent
         $imgDefault2.ImageLocation = $PSScriptRoot + "\..\Dependencies\Images\default.png"
         $imgDefault2.Top = 45
-        $imgDefault2.Left = 330
+        $imgDefault2.Left = 100
         $panelMenu.Controls.Add($imgDefault2)
 
         $imgFull = New-Object System.Windows.Forms.PictureBox
@@ -451,7 +485,7 @@ function Show-M365DSCGUI
         $imgFull.BackColor = [System.Drawing.Color]::Transparent
         $imgFull.ImageLocation = $PSScriptRoot + "\..\Dependencies\Images\full.png"
         $imgFull.Top = 45
-        $imgFull.Left = 345
+        $imgFull.Left = 115
         $panelMenu.Controls.Add($imgFull)
 
         $radFull = New-Object System.Windows.Forms.RadioButton
@@ -459,7 +493,7 @@ function Show-M365DSCGUI
         $radFull.Name = "radExtractionMode"
         $radFull.AutoSize = $true
         $radFull.Top = 45
-        $radFull.Left = 360
+        $radFull.Left = 130
         $radFull.Add_Click( { SelectComponentsForMode -PanelMain $pnlMain -Mode 3 -ControlsToSkip @() })
         $panelMenu.Controls.Add($radFull)
 
@@ -467,12 +501,78 @@ function Show-M365DSCGUI
         $btnClear.Width = 150
         $btnClear.Top = 5
         $btnClear.Height = 60
-        $btnClear.Left = 700
+        $btnClear.Left = 195
         $btnClear.BackColor = [System.Drawing.Color]::IndianRed
         $btnClear.ForeColor = [System.Drawing.Color]::White
         $btnClear.Text = "Unselect All"
         $btnClear.Add_Click( { SelectComponentsForMode -PanelMain $pnlMain -Mode 0 -ControlsToSkip @()})
         $panelMenu.Controls.Add($btnClear);
+
+        #region ServicePrincipal Info
+        $lblApplicationId = New-Object System.Windows.Forms.Label
+        $lblApplicationId.Text = "Application Id:"
+        $lblApplicationId.Top = 10
+        $lblApplicationId.Left = 350
+        $lblApplicationId.Width = 80
+        $lblApplicationId.TextAlign = [System.Drawing.ContentAlignment]::TopRight
+        $lblApplicationId.Font = [System.Drawing.Font]::new($lblApplicationId.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
+        $panelMenu.Controls.Add($lblApplicationId)
+
+        $txtApplicationId = New-Object System.Windows.Forms.Textbox
+        $txtApplicationId.Top = 5
+        $txtApplicationId.Left = 440
+        $txtApplicationId.Width = 150
+        $txtApplicationId.Font = [System.Drawing.Font]::new($txtApplicationId.Font.Name, 10)
+        $panelMenu.Controls.Add($txtApplicationId)
+
+        $lblTenantId = New-Object System.Windows.Forms.Label
+        $lblTenantId.Text = "Tenant Id:"
+        $lblTenantId.Top = 35
+        $lblTenantId.Left = 350
+        $lblTenantId.Width = 80
+        $lblTenantId.TextAlign = [System.Drawing.ContentAlignment]::TopRight
+        $lblTenantId.Font = [System.Drawing.Font]::new($lblTenantId.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
+        $panelMenu.Controls.Add($lblTenantId)
+
+        $txtTenantId = New-Object System.Windows.Forms.Textbox
+        $txtTenantId.Top = 35
+        $txtTenantId.Left = 440
+        $txtTenantId.Width = 150
+        $txtTenantId.Font = [System.Drawing.Font]::new($txtTenantId.Font.Name, 10)
+        $panelMenu.Controls.Add($txtTenantId)
+
+        $lblCertThumb = New-Object System.Windows.Forms.Label
+        $lblCertThumb.Text = "Certificate Thumbprint:"
+        $lblCertThumb.Top = 10
+        $lblCertThumb.Left = 625
+        $lblCertThumb.Width = 120
+        $lblCertThumb.TextAlign = [System.Drawing.ContentAlignment]::TopRight
+        $lblCertThumb.Font = [System.Drawing.Font]::new($lblCertThumb.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
+        $panelMenu.Controls.Add($lblCertThumb)
+
+        $txtCertThumb = New-Object System.Windows.Forms.Textbox
+        $txtCertThumb.Top = 5
+        $txtCertThumb.Left = 750
+        $txtCertThumb.Width = 150
+        $txtCertThumb.Font = [System.Drawing.Font]::new($txtCertThumb.Font.Name, 10)
+        $panelMenu.Controls.Add($txtCertThumb)
+
+        $lblCertPath = New-Object System.Windows.Forms.Label
+        $lblCertPath.Text = "Certificate Path:"
+        $lblCertPath.Top = 35
+        $lblCertPath.Left = 625
+        $lblCertPath.Width = 120
+        $lblCertPath.TextAlign = [System.Drawing.ContentAlignment]::TopRight
+        $lblCertPath.Font = [System.Drawing.Font]::new($lblCertPath.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
+        $panelMenu.Controls.Add($lblCertPath)
+
+        $txtCertFile = New-Object System.Windows.Forms.Textbox
+        $txtCertFile.Top = 35
+        $txtCertFile.Left = 750
+        $txtCertFile.Width = 150
+        $txtCertFile.Font = [System.Drawing.Font]::new($txtCertFile.Font.Name, 10)
+        $panelMenu.Controls.Add($txtCertFile)
+        #endregion
 
         $lblFarmAccount = New-Object System.Windows.Forms.Label
         $lblFarmAccount.Text = "Tenant Admin:"
@@ -541,6 +641,10 @@ function Show-M365DSCGUI
                     {
                         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force))
                         Start-M365DSCConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                            -ApplicationId $txtApplicationId.Text `
+                            -TenantId $txtTenantId.Text `
+                            -CertificateThumbprint $txtCertThumb.Text `
+                            -CertificatePath $txtCertFile.Text `
                             -ComponentsToExtract $SelectedComponents `
                             -Path $Path
                     }

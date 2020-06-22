@@ -65,11 +65,19 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Authentication"
-            RequiredVersion = "0.5.1"
+            RequiredVersion = "0.7.0"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.Groups.Planner"
+            RequiredVersion = "0.7.0"
         },
         @{
             ModuleName      = "Microsoft.Graph.Identity.ConditionalAccess"
-            RequiredVersion = "0.5.1"
+            RequiredVersion = "0.7.0"
+        },
+        @{
+            ModuleName      = "Microsoft.Graph.Planner"
+            RequiredVersion = "0.7.0"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
@@ -89,7 +97,7 @@
         },
         @{
             ModuleName      = "SharePointPnPPowerShellOnline"
-            RequiredVersion = "3.22.2006.0"
+            RequiredVersion = "3.22.2006.1"
         }
     )
 
