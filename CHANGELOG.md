@@ -8,6 +8,12 @@
 * EXOOutboundConnector
   * Fixed an issue where the ConnectorSource value returned
     was empty. Now defaulting to Default.
+* PlannerBucket
+  * Initial Release;
+* PlannerPlan
+  * Initial Release;
+* PlannerTask
+  * Initial Release;
 * Metadata
   * Updated ExchangeOnline module version to 1.0.1;
   * Updated Microsoft.Graph module version to 0.7.0;

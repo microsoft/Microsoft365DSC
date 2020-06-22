@@ -63,7 +63,11 @@ function Start-M365DSCConfigurationExtract
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePsth
     )
 
     $InformationPreference = "Continue"
@@ -204,6 +208,11 @@ function Start-M365DSCConfigurationExtract
                 'OD'
                 {
                     $currentWorkload = 'OD';
+                    break
+                }
+                'PL'
+                {
+                    $currentWorkload = 'PLANNER';
                     break
                 }
                 'PP'
