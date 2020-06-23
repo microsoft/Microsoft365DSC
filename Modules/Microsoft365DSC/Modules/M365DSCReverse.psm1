@@ -67,7 +67,7 @@ function Start-M365DSCConfigurationExtract
 
         [Parameter()]
         [System.String]
-        $CertificatePsth
+        $CertificatePath
     )
 
     $InformationPreference = "Continue"
@@ -78,8 +78,8 @@ function Start-M365DSCConfigurationExtract
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
     $ConnectionMode = $null
     if (-not [String]::IsNullOrEmpty($ApplicationId) -and `
-        -not [String]::IsNullOrEmpty($TenantId) -and `
-        -not [String]::IsNullOrEmpty($CertificateThumbprint))
+            -not [String]::IsNullOrEmpty($TenantId) -and `
+            -not [String]::IsNullOrEmpty($CertificateThumbprint))
     {
         $ConnectionMode = 'ServicePrincipal'
         $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
@@ -121,6 +121,17 @@ function Start-M365DSCConfigurationExtract
         $DSCContent += "    `$GlobalAdminAccount`r`n"
         $DSCContent += ")`r`n`r`n"
     }
+    else
+    {
+        if ($null -ne $CertificatePassword)
+        {
+            $DSCContent += "param (`r`n"
+            $DSCContent += "    [parameter()]`r`n"
+            $DSCContent += "    [System.Management.Automation.PSCredential]`r`n"
+            $DSCContent += "    `$CertificateCreds`r`n"
+            $DSCContent += ")`r`n`r`n"
+        }
+    }
 
     if (-not [System.String]::IsNullOrEmpty($FileName))
     {
@@ -156,11 +167,38 @@ function Start-M365DSCConfigurationExtract
     }
     else
     {
+        if ($null -ne $CertificatePassword)
+        {
+            $DSCContent += "    param (`r`n"
+            $DSCContent += "        [parameter()]`r`n"
+            $DSCContent += "        [System.Management.Automation.PSCredential]`r`n"
+            $DSCContent += "        `$CertificateCreds`r`n"
+            $DSCContent += "    )`r`n`r`n"
+            $DSCContent += "    if (`$null -eq `$CertificateCreds)`r`n"
+            $DSCContent += "    {`r`n"
+            $DSCContent += "        <# Credentials #>`r`n"
+            $DSCContent += "    }`r`n"
+            $DSCContent += "    else`r`n"
+            $DSCContent += "    {`r`n"
+            $DSCContent += "        `$CredsCert = `$CertificateCreds`r`n"
+            $DSCContent += "    }`r`n`r`n"
+        }
+
         $DSCContent += "    `$OrganizationName = `$ConfigurationData.NonNodeData.OrganizationName`r`n"
+        $DSCContent += "    `$ApplicationId = `$ConfigurationData.NonNodeData.ApplicationId`r`n"
+        $DSCContent += "    `$CertificateThumbprint = `$ConfigurationData.NonNodeData.CertificateThumbprint`r`n"
         Add-ConfigurationDataEntry -Node "NonNodeData" `
             -Key "OrganizationName" `
             -Value $organization `
             -Description "Tenant's default verified domain name"
+        Add-ConfigurationDataEntry -Node "NonNodeData" `
+            -Key "ApplicationId" `
+            -Value $ApplicationId `
+            -Description "ApplicationId for service principal"
+        Add-ConfigurationDataEntry -Node "NonNodeData" `
+            -Key "CertificateThumbprint" `
+            -Value $CertificateThumbprint `
+            -Description "Certificate thumbprint for service principal"
     }
     $DSCContent += "    Import-DscResource -ModuleName Microsoft365DSC`r`n`r`n"
     $DSCContent += "    Node localhost`r`n"
@@ -242,7 +280,7 @@ function Start-M365DSCConfigurationExtract
                 }
             }
             if (($null -ne $ComponentsToExtract -and
-                ($ComponentsToExtract -contains $resourceName -or $ComponentsToExtract -contains ("chck" + $resourceName))) -or
+                    ($ComponentsToExtract -contains $resourceName -or $ComponentsToExtract -contains ("chck" + $resourceName))) -or
                 $AllComponents -or ($null -ne $Workloads -and $Workloads -contains $currentWorkload) -or `
                 ($null -eq $ComponentsToExtract -and $null -eq $Workloads))
             {
@@ -254,18 +292,19 @@ function Start-M365DSCConfigurationExtract
                     $MaxProcessesExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("MaxProcesses")
                     $AppSecretExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("ApplicationSecret")
                     $CertThumbprintExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificateThumbprint")
+                    $CertificatePathExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificatePath")
                     $TenantIdExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("TenantId")
                     $AppIdExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("ApplicationId")
                     $GlobalAdminExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("GlobalAdminAccount")
 
                     $parameters = @{}
-                    if ($GlobalAdminExists-and -not [System.String]::IsNullOrEmpty($GlobalAdminAccount))
+                    if ($GlobalAdminExists -and -not [System.String]::IsNullOrEmpty($GlobalAdminAccount))
                     {
                         $parameters.Add("GlobalAdminAccount", $GlobalAdminAccount)
                     }
-                    if ($MaxProcessesExists -and -not [System.String]::IsNullOrEmpty($MaxProcessesExists))
+                    if ($MaxProcessesExists -and -not [System.String]::IsNullOrEmpty($MaxProcesses))
                     {
-                        $parameters.Add("MaxProcesses", $MaxProcessesExists)
+                        $parameters.Add("MaxProcesses", $MaxProcesses)
                     }
                     if ($AppSecretExists -and -not [System.String]::IsNullOrEmpty($ApplicationSecret))
                     {
@@ -274,6 +313,10 @@ function Start-M365DSCConfigurationExtract
                     if ($CertThumbprintExists -and -not [System.String]::IsNullOrEmpty($CertificateThumbprint))
                     {
                         $parameters.Add("CertificateThumbprint", $CertificateThumbprint)
+                    }
+                    if ($CertificatePathExists -and -not [System.String]::IsNullOrEmpty($CertificatePath))
+                    {
+                        $parameters.Add("CertificatePath", $CertificatePath)
                     }
                     if ($TenantIdExists -and -not [System.String]::IsNullOrEmpty($TenantId))
                     {
@@ -378,7 +421,15 @@ function Start-M365DSCConfigurationExtract
             $ComponentsToExtract.Contains("chckSPOApp")) -or
         $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains('SPO')))
     {
-        $filesToDownload = Get-AllSPOPackages -GlobalAdminAccount $GlobalAdminAccount
+        if ($ConnectionMode -eq 'credential')
+        {
+            $filesToDownload = Get-AllSPOPackages -GlobalAdminAccount $GlobalAdminAccount
+        }
+        else
+        {
+            $filesToDownload = Get-AllSPOPackages -ApplicationId $ApplicationId -CertificateThumbprint $CertificateThumbprint `
+                -CertificatePassword $CertificatePassword -TenantId $TenantId -CertificatePath $CertificatePath
+        }
         if ($filesToDownload.Count -gt 0)
         {
             foreach ($fileToCopy in $filesToDownload)

@@ -316,6 +316,11 @@ function Export-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    if ($null -ne $TenantId)
+    {
+        $organization = $TenantId
+        $principal = $TenantId.Split(".")[0]
+    }
 
     $themes = Get-PnPTenantTheme
     $content = ""
@@ -357,8 +362,12 @@ function Export-TargetResource
         {
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         }
-
-        $content += $currentDSCBlock
+        else
+        {
+            $content += $currentDSCBlock
+            $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
+                -principal $principal -CertificateThumbprint $CertificateThumbprint
+        }
         $content += "        }`r`n"
         $i++
     }

@@ -309,8 +309,11 @@ function Export-TargetResource
             {
                 $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             }
-            else {
+            else
+            {
                 $partialContent = $currentDSCBlock
+                $partialContent = Format-M365ServicePrincipalData -configContent $partialContent -applicationid $ApplicationId `
+                -principal $principal -CertificateThumbprint $CertificateThumbprint
             }
             if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
             {
@@ -328,6 +331,7 @@ function Export-TargetResource
             {
                 $partialContent = $partialContent -ireplace [regex]::Escape($principal + "-my.sharepoint.com"), "`$(`$OrganizationName.Split('.')[0])-my.sharepoint.com"
             }
+
             $content += $partialContent
             $content += "        }`r`n"
         }

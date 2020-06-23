@@ -345,6 +345,7 @@ function Export-TargetResource
     else
     {
         $organization = $TenantId
+        $principal = $TenantId.Split(".")[0]
     }
 
     [array]$siteDesigns = Get-PnPSiteDesign
@@ -394,10 +395,8 @@ function Export-TargetResource
             else
             {
                 $partialContent = $currentDSCBlock
-            }
-            if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+                $partialContent = Format-M365ServicePrincipalData -configContent $partialContent -applicationid $ApplicationId `
+                    -principal $principal -CertificateThumbprint $CertificateThumbprint
             }
             $content += $partialContent
             $content += "        }`r`n"
@@ -440,6 +439,10 @@ function Export-TargetResource
             else
             {
                 $content += $currentDSCBlock
+            }
+            if ($content.ToLower().Contains('onmicrosoft.com'))
+            {
+                $content = $content -ireplace [regex]::Escape($principal), "`$(`$OrganizationName.Split('.')[0])"
             }
             $content += "        }`r`n"
         }

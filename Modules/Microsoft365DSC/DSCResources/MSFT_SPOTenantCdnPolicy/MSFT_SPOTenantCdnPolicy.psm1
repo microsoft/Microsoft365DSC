@@ -225,7 +225,7 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
 
@@ -257,6 +257,11 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    if ($null -ne $TenantId)
+    {
+        $organization = $TenantId
+        $principal = $TenantId.Split(".")[0]
+    }
 
     if ($ConnectionMode -eq 'Credential')
     {
@@ -338,6 +343,8 @@ function Export-TargetResource
         else
         {
             $content += $currentDSCBlock
+            $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
+                    -principal $principal -CertificateThumbprint $CertificateThumbprint
         }
         $content += "        }`r`n"
     }

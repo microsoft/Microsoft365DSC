@@ -513,6 +513,13 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
+    if ($null -ne $TenantId)
+    {
+        $organization = $TenantId
+        $principal = $TenantId.Split(".")[0]
+    }
+
+
     if ($ConnectionMode -eq 'Credential')
     {
         $params = @{
@@ -556,7 +563,10 @@ function Export-TargetResource
     else
     {
         $content += $currentDSCBlock
+        $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
+                    -principal $principal -CertificateThumbprint $CertificateThumbprint
     }
+
     $content += "        }`r`n"
     return $content
 }

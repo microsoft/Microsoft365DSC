@@ -350,6 +350,13 @@ function Export-TargetResource
                         CertificateThumbprint = $CertificateThumbprint
                     }
                 }
+
+                if ($null -ne $TenantId)
+                {
+                    $organization = $TenantId
+                    $principal = $TenantId.Split(".")[0]
+                }
+
                 $result = Get-TargetResource @params
                 if ($ConnectionMode -eq 'Credential')
                 {
@@ -364,8 +371,11 @@ function Export-TargetResource
                 {
                     $convertedContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
                 }
-                else{
+                else
+                {
                     $convertedContent = $currentDSCBlock
+                    $convertedContent = Format-M365ServicePrincipalData -configContent $convertedContent -applicationid $ApplicationId `
+                    -principal $principal -CertificateThumbprint $CertificateThumbprint
                 }
                 $content += $convertedContent
                 $content += "        }`r`n"

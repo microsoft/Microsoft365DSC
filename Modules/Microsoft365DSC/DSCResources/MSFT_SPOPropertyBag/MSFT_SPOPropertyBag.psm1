@@ -316,7 +316,7 @@ function Export-TargetResource
                 [System.String]
                 $ScriptRoot,
 
-                [Parameter(Mandatory = $true)]
+                [Parameter()]
                 [System.Management.Automation.PSCredential]
                 $GlobalAdminAccount,
 
@@ -399,6 +399,11 @@ function Export-TargetResource
                                 $CurrentModulePath = $params.ScriptRoot + "\MSFT_SPOPropertyBag.psm1"
                                 Import-Module $CurrentModulePath -Force | Out-Null
                                 Import-Module ($params.ScriptRoot + "\..\..\Modules\M365DSCTelemetryEngine.psm1") -Force | Out-Null
+                                if ($null -ne $TenantId)
+                                {
+                                    $organization = $TenantId
+                                    $principal = $TenantId.Split(".")[0]
+                                }
                                 $result = Get-TargetResource @getValues
                                 $result.Value = [System.String]$result.Value
                                 if (-not [System.String]::IsNullOrEmpty($result.Value))
@@ -411,7 +416,7 @@ function Export-TargetResource
                                     $content += "        SPOPropertyBag " + (New-GUID).ToString() + "`r`n"
                                     $content += "        {`r`n"
                                     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
-                                    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+                                   # $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
                                     if ($ConnectionMode -eq 'Credential')
                                     {
                                         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
@@ -419,7 +424,10 @@ function Export-TargetResource
                                     else
                                     {
                                         $content += $currentDSCBlock
+                                        $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
+                                            -principal $principal -CertificateThumbprint $CertificateThumbprint
                                     }
+
                                     $content += "        }`r`n"
                                 }
                             }
@@ -433,7 +441,7 @@ function Export-TargetResource
                 return $content
             }
             return $returnValue
-        } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount) | Out-Null
+        } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount,$ApplicationId,$TenantId,$CertificatePath,$CertificatePassword,$CertificateThumbprint) | Out-Null
         $i++
     }
 

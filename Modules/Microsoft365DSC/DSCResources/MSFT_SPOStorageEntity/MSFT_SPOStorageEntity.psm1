@@ -426,6 +426,11 @@ function Export-TargetResource
         {
             $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
         }
+        else
+        {
+            $partialContent = Format-M365ServicePrincipalData -configContent $partialContent -applicationid $ApplicationId `
+                -principal $principal -CertificateThumbprint $CertificateThumbprint
+        }
         if ($partialContent.ToLower().Contains("https://" + $principal.ToLower()))
         {
             # If we are already looking at the Admin Center URL, don't replace the full path;
@@ -437,10 +442,6 @@ function Export-TargetResource
             {
                 $partialContent = $partialContent -ireplace [regex]::Escape("https://" + $principal.ToLower()), "`$(`$OrganizationName.Split('.')[0])-admin.sharepoint.com"
             }
-        }
-        if ($partialContent.ToLower().Contains($principal.ToLower()))
-        {
-            $partialContent = $partialContent -ireplace [regex]::Escape($principal), "`$(`$OrganizationName.Split('.')[0])"
         }
         $content += $partialContent
         $content += "        }`r`n"

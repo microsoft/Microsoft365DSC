@@ -510,6 +510,8 @@ function Export-TargetResource
                     else
                     {
                         $partialContent = $currentDSCBlock
+                        $partialContent = Format-M365ServicePrincipalData -configContent $partialContent -applicationid $ApplicationId `
+                            -principal $principal -CertificateThumbprint $CertificateThumbprint
                     }
                     if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
                     {

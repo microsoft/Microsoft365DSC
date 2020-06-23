@@ -249,7 +249,11 @@ function Export-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
-
+    if ($null -ne $TenantId)
+    {
+        $organization = $TenantId
+        $principal = $TenantId.Split(".")[0]
+    }
 
     $content = ''
     $cdnTypes = "Public", "Private"
@@ -292,6 +296,8 @@ function Export-TargetResource
                 $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             }else {
                 $content += $currentDSCBlock
+                $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
+                    -principal $principal -CertificateThumbprint $CertificateThumbprint
             }
             $content += "        }`r`n"
         }
