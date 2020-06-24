@@ -383,6 +383,13 @@ function Export-TargetResource
             {
                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
             }
+            else
+            {
+                if ($null -ne $CertificatePassword)
+                {
+                    $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
+                }
+            }
             $result = Remove-NullEntriesFromHashTable -Hash $result
             $content += "        SPOSiteDesignRights " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
@@ -394,7 +401,14 @@ function Export-TargetResource
             }
             else
             {
-                $partialContent = $currentDSCBlock
+                if ($null -ne $CertificatePassword)
+                {
+                    $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CertificatePassword"
+                }
+                else
+                {
+                    $partialContent += $currentDSCBlock
+                }
                 $partialContent = Format-M365ServicePrincipalData -configContent $partialContent -applicationid $ApplicationId `
                     -principal $principal -CertificateThumbprint $CertificateThumbprint
             }
@@ -429,6 +443,13 @@ function Export-TargetResource
             {
                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
             }
+            else
+            {
+                if ($null -ne $CertificatePassword)
+                {
+                    $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
+                }
+            }
             $content += "        SPOSiteDesignRights " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
@@ -438,7 +459,16 @@ function Export-TargetResource
             }
             else
             {
-                $content += $currentDSCBlock
+                if ($null -ne $CertificatePassword)
+                {
+                    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CertificatePassword"
+                }
+                else
+                {
+                    $content += $currentDSCBlock
+                }
+                $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
+                    -principal $principal -CertificateThumbprint $CertificateThumbprint
             }
             if ($content.ToLower().Contains('onmicrosoft.com'))
             {

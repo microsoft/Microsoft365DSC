@@ -17,6 +17,8 @@
     module version to 2.0.65;
   * Updated ReverseDSC module version to 2.0.0.4;
   * Updated all Unit Tests to Pester 5;
+* Added support for service principal for SPO & OneDrive resources with exception of SPO Search
+  resources
 
 ## 1.20.0603.1
 

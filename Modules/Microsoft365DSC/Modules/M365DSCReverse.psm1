@@ -67,7 +67,11 @@ function Start-M365DSCConfigurationExtract
 
         [Parameter()]
         [System.String]
-        $CertificatePath
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     $InformationPreference = "Continue"
@@ -86,7 +90,12 @@ function Start-M365DSCConfigurationExtract
             -TenantId $TenantId `
             -CertificateThumbprint $CertificateThumbprint
     }
-    else
+    elseif (-not [String]::IsNullOrEmpty($CertificatePath))
+    {
+        $ConnectionMode = 'ServicePrincipal'
+        $organization = $TenantId
+    }
+    elseif (-not [String]::IsNullOrEmpty($GlobalAdminAccount))
     {
         $ConnectionMode = 'Credential'
         if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
@@ -123,12 +132,12 @@ function Start-M365DSCConfigurationExtract
     }
     else
     {
-        if ($null -ne $CertificatePassword)
+        if (-not [System.String]::IsNullOrEmpty($CertificatePassword))
         {
             $DSCContent += "param (`r`n"
             $DSCContent += "    [parameter()]`r`n"
             $DSCContent += "    [System.Management.Automation.PSCredential]`r`n"
-            $DSCContent += "    `$CertificateCreds`r`n"
+            $DSCContent += "    `$CertificatePassword`r`n"
             $DSCContent += ")`r`n`r`n"
         }
     }
@@ -167,26 +176,26 @@ function Start-M365DSCConfigurationExtract
     }
     else
     {
-        if ($null -ne $CertificatePassword)
+        if (-not [System.String]::IsNullOrEmpty($CertificatePassword))
         {
             $DSCContent += "    param (`r`n"
             $DSCContent += "        [parameter()]`r`n"
             $DSCContent += "        [System.Management.Automation.PSCredential]`r`n"
-            $DSCContent += "        `$CertificateCreds`r`n"
+            $DSCContent += "        `$CertificatePassword`r`n"
             $DSCContent += "    )`r`n`r`n"
-            $DSCContent += "    if (`$null -eq `$CertificateCreds)`r`n"
+            $DSCContent += "    if (`$null -eq `$CertificatePassword)`r`n"
             $DSCContent += "    {`r`n"
             $DSCContent += "        <# Credentials #>`r`n"
             $DSCContent += "    }`r`n"
             $DSCContent += "    else`r`n"
             $DSCContent += "    {`r`n"
-            $DSCContent += "        `$CredsCert = `$CertificateCreds`r`n"
+            $DSCContent += "        `$CredsCertificatePassword = `$CertificatePassword`r`n"
             $DSCContent += "    }`r`n`r`n"
         }
 
         $DSCContent += "    `$OrganizationName = `$ConfigurationData.NonNodeData.OrganizationName`r`n"
         $DSCContent += "    `$ApplicationId = `$ConfigurationData.NonNodeData.ApplicationId`r`n"
-        $DSCContent += "    `$CertificateThumbprint = `$ConfigurationData.NonNodeData.CertificateThumbprint`r`n"
+
         Add-ConfigurationDataEntry -Node "NonNodeData" `
             -Key "OrganizationName" `
             -Value $organization `
@@ -195,10 +204,23 @@ function Start-M365DSCConfigurationExtract
             -Key "ApplicationId" `
             -Value $ApplicationId `
             -Description "ApplicationId for service principal"
-        Add-ConfigurationDataEntry -Node "NonNodeData" `
-            -Key "CertificateThumbprint" `
-            -Value $CertificateThumbprint `
-            -Description "Certificate thumbprint for service principal"
+
+        if (-not [System.String]::IsNullOrEmpty($CertificatePath))
+        {
+            $DSCContent += "    `$CertificatePath = `$ConfigurationData.NonNodeData.CertificatePath`r`n"
+            Add-ConfigurationDataEntry -Node "NonNodeData" `
+                -Key "CertificatePath" `
+                -Value $CertificatePath `
+                -Description "Certificate path for service principal"
+        }
+        if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint))
+        {
+            $DSCContent += "    `$CertificateThumbprint = `$ConfigurationData.NonNodeData.CertificateThumbprint`r`n"
+            Add-ConfigurationDataEntry -Node "NonNodeData" `
+                -Key "CertificateThumbprint" `
+                -Value $CertificateThumbprint `
+                -Description "Certificate thumbprint for service principal"
+        }
     }
     $DSCContent += "    Import-DscResource -ModuleName Microsoft365DSC`r`n`r`n"
     $DSCContent += "    Node localhost`r`n"
@@ -213,6 +235,10 @@ function Start-M365DSCConfigurationExtract
     {
         # Add the GlobalAdminAccount to the Credentials List
         Save-Credentials -UserName "globaladmin"
+    }
+    else
+    {
+        Save-Credentials -UserName "certificatepassword"
     }
 
     $ResourcesPath = Join-Path -Path $PSScriptRoot `
@@ -296,6 +322,7 @@ function Start-M365DSCConfigurationExtract
                     $TenantIdExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("TenantId")
                     $AppIdExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("ApplicationId")
                     $GlobalAdminExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("GlobalAdminAccount")
+                    $CertificatePasswordExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificatePassword")
 
                     $parameters = @{}
                     if ($GlobalAdminExists -and -not [System.String]::IsNullOrEmpty($GlobalAdminAccount))
@@ -325,6 +352,10 @@ function Start-M365DSCConfigurationExtract
                     if ($AppIdExists -and -not [System.String]::IsNullOrEmpty($ApplicationId))
                     {
                         $parameters.Add("ApplicationId", $ApplicationId)
+                    }
+                    if ($CertificatePasswordExists -and -not [System.String]::IsNullOrEmpty($CertificatePassword))
+                    {
+                        $parameters.Add("CertificatePassword", $CertificatePassword)
                     }
 
                     $exportString = ""
@@ -376,7 +407,20 @@ function Start-M365DSCConfigurationExtract
     }
     else
     {
-        $DSCContent += "$ConfigurationName -ConfigurationData .\ConfigurationData.psd1"
+        if (-not [System.String]::IsNullOrEmpty($CertificatePassword))
+        {
+            $certCreds =$Global:CredsRepo[0]
+            $credsContent = ""
+            $credsContent += "        " + (Resolve-Credentials $certCreds) + " = Get-Credential -Message `"Certificate Password`""
+            $credsContent += "`r`n"
+            $startPosition = $DSCContent.IndexOf("<# Credentials #>") + 19
+            $DSCContent = $DSCContent.Insert($startPosition, $credsContent)
+            $DSCContent += "$ConfigurationName -ConfigurationData .\ConfigurationData.psd1 -CertificatePassword `$CertificatePassword"
+        }
+        else
+        {
+            $DSCContent += "$ConfigurationName -ConfigurationData .\ConfigurationData.psd1"
+        }
     }
 
     $shouldOpenOutputDirectory = !$Quiet

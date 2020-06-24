@@ -834,7 +834,15 @@ function Export-M365DSCConfiguration
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath
     )
     $InformationPreference = 'SilentlyContinue'
     $WarningPreference = 'SilentlyContinue'
@@ -874,6 +882,8 @@ function Export-M365DSCConfiguration
                 -TenantId $TenantId `
                 -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
+                -CertificatePath $CertificatePath `
+                -CertificatePassword $CertificatePassword `
                 -GenerateInfo $GenerateInfo `
                 -Quiet
         }
@@ -888,6 +898,8 @@ function Export-M365DSCConfiguration
                 -TenantId $TenantId `
                 -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
+                -CertificatePath $CertificatePath `
+                -CertificatePassword $CertificatePassword `
                 -GenerateInfo $GenerateInfo `
                 -Quiet
         }
@@ -902,6 +914,8 @@ function Export-M365DSCConfiguration
                 -TenantId $TenantId `
                 -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
+                -CertificatePath $CertificatePath `
+                -CertificatePassword $CertificatePassword `
                 -GenerateInfo $GenerateInfo `
                 -Quiet
         }
@@ -1619,7 +1633,7 @@ function Format-M365ServicePrincipalData
     {
         $configContent = $configContent -ireplace [regex]::Escape($ApplicationId), "`$(`$ApplicationId)"
     }
-    if ($configContent.ToLower().Contains($CertificateThumbprint.ToLower()))
+    if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint) -and $configContent.ToLower().Contains($CertificateThumbprint.ToLower()))
     {
         $configContent = $configContent -ireplace [regex]::Escape($CertificateThumbprint), "`$(`$CertificateThumbprint)"
     }

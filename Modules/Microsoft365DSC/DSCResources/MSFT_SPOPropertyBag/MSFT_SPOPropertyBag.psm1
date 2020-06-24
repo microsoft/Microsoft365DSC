@@ -412,18 +412,32 @@ function Export-TargetResource
                                     {
                                         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
                                     }
+                                    else
+                                    {
+                                        if ($null -ne $CertificatePassword)
+                                        {
+                                            $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
+                                        }
+                                    }
                                     $result = Remove-NullEntriesFromHashTable -Hash $result
                                     $content += "        SPOPropertyBag " + (New-GUID).ToString() + "`r`n"
                                     $content += "        {`r`n"
                                     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
-                                   # $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+                                    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
                                     if ($ConnectionMode -eq 'Credential')
                                     {
                                         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
                                     }
                                     else
                                     {
-                                        $content += $currentDSCBlock
+                                        if ($null -ne $CertificatePassword)
+                                        {
+                                            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CertificatePassword"
+                                        }
+                                        else
+                                        {
+                                            $content += $currentDSCBlock
+                                        }
                                         $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
                                             -principal $principal -CertificateThumbprint $CertificateThumbprint
                                     }
@@ -441,7 +455,7 @@ function Export-TargetResource
                 return $content
             }
             return $returnValue
-        } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount,$ApplicationId,$TenantId,$CertificatePath,$CertificatePassword,$CertificateThumbprint) | Out-Null
+        } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $CertificateThumbprint, $CertificatePassword, $CertificatePath) | Out-Null
         $i++
     }
 
@@ -480,7 +494,7 @@ function Export-TargetResource
     Write-Progress -Activity "SPOPropertyBag Extraction" -PercentComplete 100 -Status "Completed" -Completed
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    if ($GlobalAdminAccount.UserName.Contains("@"))
+    if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
     {
         $organization = $GlobalAdminAccount.UserName.Split("@")[1]
 

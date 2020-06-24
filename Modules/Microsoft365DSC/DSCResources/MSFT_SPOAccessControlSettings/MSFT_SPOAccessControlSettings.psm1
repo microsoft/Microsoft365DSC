@@ -446,6 +446,13 @@ function Export-TargetResource
     {
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
     }
+    else
+    {
+        if ($null -ne $CertificatePassword)
+        {
+            $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
+        }
+    }
     $result = Remove-NullEntriesFromHashTable -Hash $result
     $content = "        SPOAccessControlSettings " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
@@ -456,9 +463,16 @@ function Export-TargetResource
     }
     else
     {
-        $content += $currentDSCBlock
+        if ($null -ne $CertificatePassword)
+        {
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CertificatePassword"
+        }
+        else
+        {
+            $content += $currentDSCBlock
+        }
         $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
-                    -principal $principal -CertificateThumbprint $CertificateThumbprint
+            -principal $principal -CertificateThumbprint $CertificateThumbprint
     }
 
     $content += "        }`r`n"
