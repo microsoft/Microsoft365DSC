@@ -91,7 +91,7 @@ function Get-TargetResource
         $currentValues.TenantId = $TenantId
         $currentValues.CertificatePassword = $CertificatePassword
         $currentValues.CertificatePath = $CertificatePath
-        CertificateThumbprint = $CertificateThumbprint
+        $currentValues.CertificateThumbprint = $CertificateThumbprint
         return $currentValues
     }
     else

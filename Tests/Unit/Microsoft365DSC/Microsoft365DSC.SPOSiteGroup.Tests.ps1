@@ -2,14 +2,14 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath "..\..\Unit" `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath "\Stubs\Generic.psm1" `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
@@ -33,15 +33,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "SiteGroup does not exist " -Fixture {
             BeforeAll {
                 $testParams = @{
-                    URL                 = "https://contoso.sharepoint.com/sites/TestSite"
-                    Identity            = "TestSiteGroup"
-                    Owner               = "admin@Office365DSC.onmicrosoft.com"
-                    PermissionLevels    = @("Edit", "Read")
-                    Ensure              = "Present"
-                    GlobalAdminAccount  = $GlobalAdminAccount
+                    URL                = "https://contoso.sharepoint.com/sites/TestSite"
+                    Identity           = "TestSiteGroup"
+                    Owner              = "admin@Office365DSC.onmicrosoft.com"
+                    PermissionLevels   = @("Edit", "Read")
+                    Ensure             = "Present"
+                    GlobalAdminAccount = $GlobalAdminAccount
                 }
 
-                Mock -CommandName Get-PnPTenantSite -MockWith{
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
+                }
+
+                Mock -CommandName Get-PnPTenantSite -MockWith {
                     return $null
                 }
 
@@ -82,12 +86,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "SiteGroup exists but is not in the desired state (PermissionLevel missing)" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    URL                 = "https://contoso.sharepoint.com/sites/TestSite"
-                    Identity            = "TestSiteGroup"
-                    Owner               = "admin@Office365DSC.onmicrosoft.com"
-                    PermissionLevels    = @("Edit", "Read")
-                    Ensure              = "Present"
-                    GlobalAdminAccount  = $GlobalAdminAccount
+                    URL                = "https://contoso.sharepoint.com/sites/TestSite"
+                    Identity           = "TestSiteGroup"
+                    Owner              = "admin@Office365DSC.onmicrosoft.com"
+                    PermissionLevels   = @("Edit", "Read")
+                    Ensure             = "Present"
+                    GlobalAdminAccount = $GlobalAdminAccount
+                }
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
                 }
 
                 Mock -CommandName Get-PnPTenantSite -MockWith {
@@ -98,9 +106,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-PnPGroup -MockWith {
                     return @{
-                        URL              = "https://contoso.sharepoint.com/sites/TestSite"
-                        Title            = "TestSiteGroup"
-                        Owner            = @{
+                        URL   = "https://contoso.sharepoint.com/sites/TestSite"
+                        Title = "TestSiteGroup"
+                        Owner = @{
                             LoginName = "admin@Office365DSC.onmicrosoft.com"
                         }
                     }
@@ -138,31 +146,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "SiteGroup exists and is in the desired state " -Fixture {
             BeforeAll {
                 $testParams = @{
-                    URL                 = "https://contoso.sharepoint.com/sites/TestSite"
-                    Identity            = "TestSiteGroup"
-                    Owner               = "admin@Office365DSC.onmicrosoft.com"
-                    PermissionLevels    = @("Edit", "Read")
-                    Ensure              = "Present"
-                    GlobalAdminAccount  = $GlobalAdminAccount
+                    URL                = "https://contoso.sharepoint.com/sites/TestSite"
+                    Identity           = "TestSiteGroup"
+                    Owner              = "admin@Office365DSC.onmicrosoft.com"
+                    PermissionLevels   = @("Edit", "Read")
+                    Ensure             = "Present"
+                    GlobalAdminAccount = $GlobalAdminAccount
+                }
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
                 }
 
                 Mock -CommandName Get-PnPGroup -MockWith {
                     return @{
-                        URL                 = "https://contoso.sharepoint.com/sites/TestSite"
-                        Title               = "TestSiteGroup"
-                        Owner               = @{
-                            LoginName      = "admin@Office365DSC.onmicrosoft.com"
+                        URL   = "https://contoso.sharepoint.com/sites/TestSite"
+                        Title = "TestSiteGroup"
+                        Owner = @{
+                            LoginName = "admin@Office365DSC.onmicrosoft.com"
                         }
                     }
                 }
 
                 Mock -CommandName Get-PnPGroupPermissions -MockWith {
                     return @(@{
-                        Name = 'Edit'
-                    },
-                    @{
-                        Name = 'Read'
-                    }
+                            Name = 'Edit'
+                        },
+                        @{
+                            Name = 'Read'
+                        }
                     )
                 }
 
@@ -194,40 +206,44 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "SiteGroup exists but should not exist" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    URL                 = "https://contoso.sharepoint.com/sites/TestSite"
-                    Identity            = "TestSiteGroup"
-                    Owner               = "admin@Office365DSC.onmicrosoft.com"
-                    PermissionLevels    = @("Edit", "Read")
-                    Ensure              = "Absent"
-                    GlobalAdminAccount  = $GlobalAdminAccount
+                    URL                = "https://contoso.sharepoint.com/sites/TestSite"
+                    Identity           = "TestSiteGroup"
+                    Owner              = "admin@Office365DSC.onmicrosoft.com"
+                    PermissionLevels   = @("Edit", "Read")
+                    Ensure             = "Absent"
+                    GlobalAdminAccount = $GlobalAdminAccount
+                }
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
                 }
 
                 Mock -CommandName Get-PnPGroup -MockWith {
                     return @{
-                        URL              = "https://contoso.sharepoint.com/sites/TestSite"
-                        Title            = "TestSiteGroup"
-                        OwnerLogin       = "admin@Office365DSC.onmicrosoft.com"
-                        Roles            = @("Edit", "Read")
+                        URL        = "https://contoso.sharepoint.com/sites/TestSite"
+                        Title      = "TestSiteGroup"
+                        OwnerLogin = "admin@Office365DSC.onmicrosoft.com"
+                        Roles      = @("Edit", "Read")
                     }
                 }
 
                 Mock -CommandName Get-PnPGroupPermissions -MockWith {
                     return @(@{
-                        Name = 'Edit'
-                    },
-                    @{
-                        Name = 'Read'
-                    }
+                            Name = 'Edit'
+                        },
+                        @{
+                            Name = 'Read'
+                        }
                     )
                 }
 
-                Mock -CommandName Set-PnPGroup -MockWith{
+                Mock -CommandName Set-PnPGroup -MockWith {
                 }
 
-                Mock -CommandName New-PnPGroup -MockWith{
+                Mock -CommandName New-PnPGroup -MockWith {
                 }
 
-                Mock -CommandName Remove-PnPGroup -MockWith{
+                Mock -CommandName Remove-PnPGroup -MockWith {
                 }
             }
 
@@ -253,6 +269,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GlobalAdminAccount = $GlobalAdminAccount
                 }
 
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
+                }
+
                 Mock -CommandName Get-PnPTenantSite -MockWith {
                     return @{
                         Url = "https://contoso.sharepoint.com"
@@ -261,10 +281,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-PnPGroup -MockWith {
                     return @{
-                        URL                 = "https://contoso.sharepoint.com/sites/TestSite"
-                        Title               = "TestSiteGroup"
-                        OwnerLogin          = "admin@Office365DSC.onmicrosoft.com"
-                        Roles               = @("Edit", "Read")
+                        URL        = "https://contoso.sharepoint.com/sites/TestSite"
+                        Title      = "TestSiteGroup"
+                        OwnerLogin = "admin@Office365DSC.onmicrosoft.com"
+                        Roles      = @("Edit", "Read")
                     }
                 }
             }

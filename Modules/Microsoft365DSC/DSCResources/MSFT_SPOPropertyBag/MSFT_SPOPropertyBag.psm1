@@ -75,7 +75,7 @@ function Get-TargetResource
         $result.TenantId = $TenantId
         $result.CertificatePassword = $CertificatePassword
         $result.CertificatePath = $CertificatePath
-        CertificateThumbprint = $CertificateThumbprint
+        $result.CertificateThumbprint = $CertificateThumbprint
         return $result
     }
     else
