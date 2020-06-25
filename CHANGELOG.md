@@ -19,6 +19,8 @@
   * Updated all Unit Tests to Pester 5;
 * Added support for service principal for SPO & OneDrive resources with exception of SPO Search
   resources
+    * SPOHubSite and SPOUserProfileProperty only support service principal with AppId, TenantId and
+      CertificateThumbprint option since AzureAD doesnt support certifcate path
 
 ## 1.20.0603.1
 
