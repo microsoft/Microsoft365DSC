@@ -16,7 +16,7 @@ function Get-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
 
@@ -108,7 +108,7 @@ function Set-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
 
@@ -172,7 +172,7 @@ function Test-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
 
@@ -349,8 +349,14 @@ function Export-TargetResource
                             }
                             else
                             {
-                                $currentDSCBlock = Format-M365ServicePrincipalData -configContent $currentDSCBlock -applicationid $ApplicationId `
-                                    -principal $principal -CertificateThumbprint $CertificateThumbprint
+                                if ($currentDSCBlock.ToLower().Contains($ApplicationId.ToLower()))
+                                {
+                                    $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape($ApplicationId), "`$(`$ApplicationId)"
+                                }
+                                if ($currentDSCBlock.ToLower().Contains($CertificateThumbprint.ToLower()))
+                                {
+                                    $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape($CertificateThumbprint), "`$(`$CertificateThumbprint)"
+                                }
                             }
                             $content += $currentDSCBlock
                             $content += "        }`r`n"
