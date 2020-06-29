@@ -67,7 +67,7 @@ function Start-M365DSCConfigurationExtract
 
         [Parameter()]
         [System.String]
-        $CertificatePsth
+        $CertificatePath
     )
     $M365DSCExportStartTime = [System.DateTime]::Now
     $InformationPreference = "Continue"

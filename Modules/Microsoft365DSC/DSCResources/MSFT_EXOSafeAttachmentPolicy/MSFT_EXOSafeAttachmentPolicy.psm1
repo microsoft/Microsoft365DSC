@@ -281,7 +281,8 @@ function Export-TargetResource
     }
     else
     {
-        Write-Information "The current tenant doesn't have access to Safe Attachment Policy APIs."
+        Write-Host "`r`n" -NoNewLine
+        Write-Host "    $($Global:M365DSCEmojiYellowCircle) The current tenant doesn't have access to Safe Attachment Policy APIs."
     }
     return $content
 }
