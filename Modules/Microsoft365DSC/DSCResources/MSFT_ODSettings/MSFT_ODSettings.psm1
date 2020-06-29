@@ -571,6 +571,12 @@ function Export-TargetResource
         }
     }
 
+    if ($null -ne $TenantId)
+    {
+        $organization = $TenantId
+        $principal = $TenantId.Split(".")[0]
+    }
+
     $result = Get-TargetResource @Params
 
     if ([System.String]::IsNullOrEmpty($result.GrooveBlockOption))
