@@ -69,7 +69,7 @@ function Start-M365DSCConfigurationExtract
         [System.String]
         $CertificatePsth
     )
-
+    $M365DSCExportStartTime = [System.DateTime]::Now
     $InformationPreference = "Continue"
     $VerbosePreference = "SilentlyContinue"
     $WarningPreference = "SilentlyContinue"
@@ -182,6 +182,7 @@ function Start-M365DSCConfigurationExtract
         -Resolve
     $AllResources = Get-ChildItem $ResourcesPath -Recurse | Where-Object { $_.Name -like 'MSFT_*.psm1' }
 
+    $i = 1
     foreach ($ResourceModule in $AllResources)
     {
         try
@@ -250,7 +251,7 @@ function Start-M365DSCConfigurationExtract
 
                 if ($ComponentsToSkip -notcontains $resourceName)
                 {
-                    Write-Information "Extracting [$resourceName]..."
+                    Write-Host "[$i/$($ComponentsToExtract.Length)] Extracting [$resourceName]..." -NoNewline
                     $MaxProcessesExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("MaxProcesses")
                     $AppSecretExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("ApplicationSecret")
                     $CertThumbprintExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificateThumbprint")
@@ -291,6 +292,7 @@ function Start-M365DSCConfigurationExtract
                         $exportString += "        # https://github.com/microsoft/Microsoft365DSC/wiki/$resourceName`r`n"
                     }
                     $exportString += Export-TargetResource @parameters
+                    $i++
                 }
                 $DSCContent += $exportString
                 $exportString = $null
@@ -335,6 +337,15 @@ function Start-M365DSCConfigurationExtract
     {
         $DSCContent += "$ConfigurationName -ConfigurationData .\ConfigurationData.psd1"
     }
+
+    #region Benchmarks
+    $M365DSCExportEndTime = [System.DateTime]::Now
+    $timeTaken = New-Timespan -Start ($M365DSCExportStartTime.ToString()) `
+        -End ($M365DSCExportEndTime.ToString())
+    Write-Host "$($Global:M365DSCEmojiHourglass) Export took {" -NoNewLine
+    Write-Host "$($timeTaken.TotalSeconds) seconds" -NoNewLine -ForegroundColor Cyan
+    Write-Host "}"
+    #endregion
 
     $shouldOpenOutputDirectory = !$Quiet
     #region Prompt the user for a location to save the extract and generate the files

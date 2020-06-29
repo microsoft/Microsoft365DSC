@@ -183,6 +183,7 @@ function Export-TargetResource
     }
     $result = Get-TargetResource @params
     $content = ""
+    Write-Host "`r`n    [1/2] Public" -NoNewline
     if ($null -ne $result)
     {
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
@@ -192,12 +193,12 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
     }
-
-
+    Write-Host $Global:M365DSCEmojiGreenCheckmark
     $params = @{
         CDNType            = 'Private'
         GlobalAdminAccount = $GlobalAdminAccount
     }
+    Write-Host "    [2/2] Private" -NoNewline
     $result = Get-TargetResource @params
     if ($null -ne $result)
     {
@@ -208,6 +209,7 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
     }
+    Write-Host $Global:M365DSCEmojiGreenCheckmark
     return $content
 }
 

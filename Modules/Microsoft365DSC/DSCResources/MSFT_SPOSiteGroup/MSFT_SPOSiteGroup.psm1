@@ -342,7 +342,11 @@ function Export-TargetResource
     $content = ""
     foreach ($site in $sites)
     {
-        Write-Information "    [$i/$($sites.Length)] SPOSite groups for {$($site.Url)}"
+        if ($i -eq 1)
+        {
+                Write-Host "`r`n" -NoNewline
+        }
+        Write-Host "    [$i/$($sites.Length)] SPOSite groups for {$($site.Url)}"
         try
         {
             Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
@@ -362,8 +366,10 @@ function Export-TargetResource
                 Write-Verbose -Message "Could not retrieve sitegroups for site $($site.Url)"
             }
         }
+        $j = 1
         foreach ($siteGroup in $siteGroups)
         {
+            Write-Host "        [$j/$($siteGroups.Length)] $($siteGroup.Title)" -NoNewline
             try
             {
                 $sitePerm = Get-PnPGroupPermissions -Identity $siteGroup.Title -ErrorAction Stop
@@ -411,8 +417,10 @@ function Export-TargetResource
             }
             catch
             {
-                Write-Verbose "There was an issue retrieving the SiteGroups for $($Url)"
+                Write-Verbose -Message "There was an issue retrieving the SiteGroups for $($Url)"
             }
+            $j++
+            Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
 
         $i++

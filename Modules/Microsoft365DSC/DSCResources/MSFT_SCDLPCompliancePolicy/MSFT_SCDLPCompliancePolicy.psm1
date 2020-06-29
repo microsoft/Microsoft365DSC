@@ -510,7 +510,11 @@ function Export-TargetResource
     $content = ''
     foreach ($policy in $policies)
     {
-        Write-Information "    [$i/$($policies.Count)] $($policy.Name)"
+        if ($i -eq 1)
+        {
+            Write-Host "`r`n" -NoNewline
+        }
+        Write-Host "    [$i/$($policies.Count)] $($policy.Name)" -NoNewline
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             Name               = $policy.Name
@@ -528,6 +532,7 @@ function Export-TargetResource
         $content += $partialContent
         $content += "        }`r`n"
         $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckmark
     }
     return $content
 }

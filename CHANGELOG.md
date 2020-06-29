@@ -22,6 +22,8 @@
   * Updated Microsoft.PowerApps.Administration.PowerShell
     module version to 2.0.65;
   * Updated ReverseDSC module version to 2.0.0.4;
+  * Updated SharePointPnPPowerShellOnline module to
+    version 3.22.2006.2;
   * Updated all Unit Tests to Pester 5;
 
 ## 1.20.0603.1

@@ -165,8 +165,14 @@ function Export-TargetResource
     $content = ''
     $cdnTypes = "Public", "Private"
 
+    $i = 1
     foreach ($cType in $cdnTypes)
     {
+        if ($i -eq 1)
+        {
+                Write-Host "`r`n" -NoNewline
+        }
+        Write-Host "    [$i/2] $cType" -NoNewline
         $Params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             CdnType            = $cType
@@ -181,6 +187,8 @@ function Export-TargetResource
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $content += "        }`r`n"
         }
+        $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckmark
     }
 
     return $content

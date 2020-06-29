@@ -526,7 +526,7 @@ function Export-TargetResource
     $content = ''
     foreach ($group in $groups)
     {
-        Write-Information "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
+        Write-Host "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
         try
         {
             [Array]$plans = Get-M365DSCPlannerPlansFromGroup -GroupId $group.ObjectId `
@@ -536,7 +536,7 @@ function Export-TargetResource
             $j = 1
             foreach ($plan in $plans)
             {
-                Write-Information "        [$j/$($plans.Length)] $($plan.Title)"
+                Write-Host "        [$j/$($plans.Length)] $($plan.Title)"
 
                 [Array]$tasks = Get-M365DSCPlannerTasksFromPlan -PlanId $plan.Id `
                                     -GlobalAdminAccount $GlobalAdminAccount `
@@ -544,7 +544,7 @@ function Export-TargetResource
                 $k = 1
                 foreach ($task in $tasks)
                 {
-                    Write-Information "            [$k/$($tasks.Length)] $($task.Title)"
+                    Write-Host "            [$k/$($tasks.Length)] $($task.Title)" -NoNewline
                     $params = @{
                         TaskId                = $task.Id
                         PlanId                = $plan.Id
@@ -608,18 +608,16 @@ function Export-TargetResource
                     $content += $currentDSCBlock
                     $content += "        }`r`n"
                     $k++
+                    Write-Host "$($Global:M365DSCEmojiGreenCheckmark)"
                 }
                 $j++
             }
-            $i++
         }
         catch
         {
-            $original = $VerbosePreference
-            $VerbosePreference = 'Continue'
             Write-Verbose -Message $_
-            $VerbosePreference = $original
         }
+        $i++
     }
     return $content
 }

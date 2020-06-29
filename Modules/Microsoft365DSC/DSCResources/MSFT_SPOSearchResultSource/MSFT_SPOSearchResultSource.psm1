@@ -445,7 +445,11 @@ function Export-TargetResource
     foreach ($source in $sources)
     {
         $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
-        Write-Information "    [$i/$($sourcesLength)] $($source.Name)"
+        if ($i -eq 1)
+        {
+                Write-Host "`r`n" -NoNewline
+        }
+        Write-Host "    [$i/$($sourcesLength)] $($source.Name)" -NoNewLine
 
         $params = @{
             Name               = $source.Name
@@ -464,6 +468,7 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckmark
     }
     return $content
 }

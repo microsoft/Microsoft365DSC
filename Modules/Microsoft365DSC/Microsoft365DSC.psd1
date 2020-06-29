@@ -97,7 +97,7 @@
         },
         @{
             ModuleName      = "SharePointPnPPowerShellOnline"
-            RequiredVersion = "3.22.2006.1"
+            RequiredVersion = "3.22.2006.2"
         }
     )
 
@@ -123,6 +123,7 @@
         'modules\M365DSCTelemetryEngine.psm1',
         'modules\M365DSCStubsUtility.psm1',
         'modules\M365DSCReport.psm1'
+        'modules\EncodingHelpers\M365DSCEmojis.psm1'
     )
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.

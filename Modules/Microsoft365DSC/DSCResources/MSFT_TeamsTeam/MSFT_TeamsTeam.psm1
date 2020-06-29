@@ -655,7 +655,11 @@ function Export-TargetResource
     $content = ""
     foreach ($team in $teams)
     {
-        Write-Information "    [$i/$($teams.Length)] $($team.DisplayName)"
+        if ($i -eq 1)
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
+        Write-Host "    [$i/$($teams.Length)] $($team.DisplayName)" -NoNewLine
         $params = @{
             DisplayName           = $team.DisplayName
             GlobalAdminAccount    = $GlobalAdminAccount
@@ -693,6 +697,7 @@ function Export-TargetResource
         }
         $content += $partialContent
         $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckmark
     }
 
     return $content

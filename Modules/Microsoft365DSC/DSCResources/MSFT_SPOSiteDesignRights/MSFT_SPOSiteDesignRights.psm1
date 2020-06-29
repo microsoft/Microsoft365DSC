@@ -259,7 +259,11 @@ function Export-TargetResource
     $i = 1
     foreach ($siteDesign in $siteDesigns)
     {
-        Write-Information "    [$i/$($siteDesigns.Count)] $($siteDesign.Title)"
+        if ($i -eq 1)
+        {
+                Write-Host "`r`n" -NoNewline
+        }
+        Write-Host "    [$i/$($siteDesigns.Count)] $($siteDesign.Title)" -NoNewLine
         $params = @{
             SiteDesignTitle    = $siteDesign.Title
             Rights             = "View"
@@ -297,6 +301,7 @@ function Export-TargetResource
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $content += "        }`r`n"
         }
+        Write-Host $Global:M365DSCEmojiGreenCheckmark
         $i++
     }
 

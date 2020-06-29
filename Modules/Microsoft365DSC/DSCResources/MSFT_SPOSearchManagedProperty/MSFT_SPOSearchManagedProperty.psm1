@@ -759,7 +759,11 @@ function Export-TargetResource
     }
     foreach ($property in $properties)
     {
-        Write-Information "    [$i/$($propertiesLength)] $($property.Value.Name)"
+        if ($i -eq 1)
+        {
+                Write-Host "`r`n" -NoNewline
+        }
+        Write-Host "    [$i/$($propertiesLength)] $($property.Value.Name)" -NoNewline
         $params = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 Name               = $property.Value.Name
@@ -773,6 +777,7 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckmark
     }
     return $content
 }

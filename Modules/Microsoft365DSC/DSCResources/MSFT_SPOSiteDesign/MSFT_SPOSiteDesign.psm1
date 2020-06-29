@@ -313,7 +313,11 @@ function Export-TargetResource
 
     foreach ($design in $designs)
     {
-        Write-Information "    [$i/$($designs.Length)] $($design.Title)"
+        if ($i -eq 1)
+        {
+                Write-Host "`r`n" -NoNewline
+        }
+        Write-Host "    [$i/$($designs.Length)] $($design.Title)" -NoNewline
         $params = @{
             Title              = $design.Title
             GlobalAdminAccount = $GlobalAdminAccount
@@ -326,6 +330,7 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckmark
     }
     return $content
 }

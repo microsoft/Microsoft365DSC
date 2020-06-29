@@ -289,8 +289,11 @@ function Export-TargetResource
             Key                = $storageEntity.Key
             SiteUrl            = $centralAdminUrl
         }
-
-        Write-Information "    [$i/$($storageEntities.Length)] $($storageEntity.Key)"
+        if ($i -eq 1)
+        {
+                Write-Host "`r`n" -NoNewline
+        }
+        Write-Host "    [$i/$($storageEntities.Length)] $($storageEntity.Key)" -NoNewline
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $content += "        SPOStorageEntity " + (New-Guid).ToString() + "`r`n"
@@ -316,6 +319,7 @@ function Export-TargetResource
         $content += $partialContent
         $content += "        }`r`n"
         $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckmark
     }
     return $content
 }
