@@ -76,9 +76,9 @@ function Get-TargetResource
         SiteDesignId          = $null
         Ensure                = "Absent"
         GlobalAdminAccount    = $GlobalAdminAccount
-        ApplicationId         = $null
-        TenantId              = $null
-        CertificateThumbprint = $null
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificateThumbprint = $CertificateThumbprint
     }
 
     try

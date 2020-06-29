@@ -115,11 +115,11 @@ function Get-TargetResource
         NotifyOwnersWhenInvitationsAccepted       = $null
         NotificationsInOneDriveForBusinessEnabled = $null
         Ensure                                    = "Absent"
-        ApplicationId                             = $null
-        TenantId                                  = $null
-        CertificatePassword                       = $null
-        CertificatePath                           = $null
-        CertificateThumbprint                     = $null
+        ApplicationId                             = $ApplicationId
+        TenantId                                  = $TenantId
+        CertificatePassword                       = $CertificatePassword
+        CertificatePath                           = $CertificatePath
+        CertificateThumbprint                     = $CertificateThumbprint
     }
 
     try

@@ -107,11 +107,11 @@ function Get-TargetResource
         EmailAttestationRequired     = $null
         EmailAttestationReAuthDays   = $null
         GlobalAdminAccount           = $null
-        ApplicationId                = $null
-        TenantId                     = $null
-        CertificatePassword          = $null
-        CertificatePath              = $null
-        CertificateThumbprint        = $null
+        ApplicationId                = $ApplicationId
+        TenantId                     = $TenantId
+        CertificatePassword          = $CertificatePassword
+        CertificatePath              = $CertificatePath
+        CertificateThumbprint        = $CertificateThumbprint
     }
 
     try
