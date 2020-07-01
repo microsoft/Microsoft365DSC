@@ -9,6 +9,10 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter()]
+        [System.String]
+        $ObjectId,
+
+        [Parameter()]
         [System.Boolean]
         $AvailableToOtherTenants,
 
@@ -89,10 +93,27 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
                         -InboundParameters $PSBoundParameters
 
-    $AADApp = Get-AzureADApplication -Filter "DisplayName eq '$($DisplayName)'"
-    if($AADApp.Count -gt 1)
+    if ($PSBoundParameters.ContainsKey("ObjectId"))
     {
-        Write-Error -Message "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant. Aborting."
+        Write-Verbose "Azure AD App Object ID has been specified."
+        try 
+        {
+            $AADApp = Get-AzureADApplication -ObjectID $ObjectId
+        }
+        catch 
+        {
+            Write-Error -Message "Azure AD App with ObjectID: $($ObjectID) could not be retrieved"
+        }
+    }
+    else
+    {
+        Write-Verbose "Azure AD App Object ID was not specified."
+        ## Can retreive multiple AAD Applications since displayname is not unique
+        $AADApp = Get-AzureADApplication -Filter "DisplayName eq '$($DisplayName)'"
+        if($AADApp.Count -gt 1)
+        {
+            Write-Error -Message "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant. Aborting."
+        }
     }
     if($null -eq $AADApp)
     {
@@ -136,6 +157,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $ObjectId,
 
         [Parameter()]
         [System.Boolean]
@@ -252,7 +277,8 @@ function Set-TargetResource
     # App should exist and will be configured to desired state
     if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Present')
     {
-        Set-AzureADApplication -ObjectID $currentAADApp.ObjectID @currentParameters
+        #$currentParameters.Add("ObjectID", $currentAADApp.ObjectID)
+        Set-AzureADApplication @currentParameters
     }
     # App exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADApp.Ensure -eq 'Present')
@@ -270,6 +296,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $ObjectId,
 
         [Parameter()]
         [System.Boolean]
@@ -403,6 +433,7 @@ function Export-TargetResource
             $params = @{
                 GlobalAdminAccount            = $GlobalAdminAccount
                 DisplayName                   = $AADApp.DisplayName
+                ObjectID                      = $AADApp.ObjectID
             }
         }
         else
@@ -412,6 +443,7 @@ function Export-TargetResource
                 TenantId                      = $TenantId
                 CertificateThumbprint         = $CertificateThumbprint
                 DisplayName                   = $AADApp.DisplayName
+                ObjectID                      = $AADApp.ObjectID
             }
         }
         $result = Get-TargetResource @params
