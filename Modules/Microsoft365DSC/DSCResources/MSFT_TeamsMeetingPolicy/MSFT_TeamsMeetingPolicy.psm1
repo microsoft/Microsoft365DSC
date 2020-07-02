@@ -399,6 +399,10 @@ function Export-TargetResource
     $content = ''
     foreach ($policy in $policies)
     {
+        if ($i -eq 1)
+        {
+            Write-Host "`r`n" -NoNewline
+        }
         Write-Host "    [$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
         $params = @{
             Identity           = $policy.Identity
