@@ -95,24 +95,24 @@ function Get-TargetResource
 
     if ($PSBoundParameters.ContainsKey("ObjectId"))
     {
-        Write-Verbose "Azure AD App Object ID has been specified."
+        Write-Verbose -Message "Azure AD App Object ID has been specified."
         try 
         {
             $AADApp = Get-AzureADApplication -ObjectID $ObjectId
         }
         catch 
         {
-            Write-Error -Message "Azure AD App with ObjectID: $($ObjectID) could not be retrieved"
+            Throw "Azure AD App with ObjectID: $($ObjectID) could not be retrieved"
         }
     }
     else
     {
-        Write-Verbose "Azure AD App Object ID was not specified."
+        Write-Verbose -Message "Azure AD App Object ID was not specified."
         ## Can retreive multiple AAD Applications since displayname is not unique
         $AADApp = Get-AzureADApplication -Filter "DisplayName eq '$($DisplayName)'"
         if($AADApp.Count -gt 1)
         {
-            Write-Error -Message "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant. Aborting."
+            Throw "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant. Aborting."
         }
     }
     if($null -eq $AADApp)
@@ -277,7 +277,6 @@ function Set-TargetResource
     # App should exist and will be configured to desired state
     if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Present')
     {
-        #$currentParameters.Add("ObjectID", $currentAADApp.ObjectID)
         Set-AzureADApplication @currentParameters
     }
     # App exists but should not

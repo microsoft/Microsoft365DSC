@@ -1,8 +1,8 @@
 [ClassVersion("1.0.0.0"), FriendlyName("AADApplication")]
 class MSFT_AADApplication : OMI_BaseResource
 {
-    [Key, Description("DisplayName of the App")] string DisplayName;
-    [Write, Description("Specifies an ObjectID for the group.")] String ObjectId;
+    [Key, Description("DisplayName of the app")] string DisplayName;
+    [Write, Description("ObjectID of the app.")] String ObjectId;
     [Write, Description("Indicates whether this application is available in other tenants.")] Boolean AvailableToOtherTenants;
     [Write, Description("A bitmask that configures the groups claim issued in a user or OAuth 2.0 access token that the application expects. The bitmask values are: 0: None, 1: Security groups and Azure AD roles, 2: Reserved, and 4: Reserved. Setting the bitmask to 7 will get all of the security groups, distribution groups, and Azure AD directory roles that the signed-in user is a member of.")] String GroupMembershipClaims;
     [Write, Description("The URL to the application's homepage.")] String Homepage;
