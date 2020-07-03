@@ -1515,3 +1515,20 @@ function Set-M365DSCAgentCertificateConfiguration
     Remove-Item -Path "./M365AgentConfig" -Recurse -Confirm:$false
     return $thumbprint
 }
+
+
+function Remove-EmptySplatProperty
+{
+    [cmdletBinding()]
+    param(
+        [parameter(Mandatory)][System.Collections.IDictionary] $Splat
+    )
+    foreach ($Key in [string[]]$Splat.Keys)
+    {
+        #if ($null -eq $Splat[$Key] -or $Splat[$Key] -eq '') {
+        if ([string]::IsNullOrEmpty($Splat[$Key]))
+        {
+            $Splat.Remove($Key)
+        }
+    }
+}
