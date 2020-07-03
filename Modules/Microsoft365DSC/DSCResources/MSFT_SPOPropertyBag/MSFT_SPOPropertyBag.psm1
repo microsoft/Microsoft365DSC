@@ -40,17 +40,31 @@ function Get-TargetResource
             -ConnectionUrl $Url `
             -Platform PnP | Out-Null
         Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
-        [array]$property = Get-PnpPropertyBag -Key $Key
+        [array]$property = Get-PnpPropertyBag -Key $Key -ErrorAction 'Stop'
 
         Write-Verbose -Message "Properties obtained correctly"
     }
     catch
     {
-        "{$Url} Not Found --> `r`nContext: $(Get-PnpConnection | Out-String)`r`n$($Key)`r`nError --> $_`r`n`r`n" | Out-File C:\DSC\Error.txt -Append
-        New-M365DSCLogEntry -Error $_ -Message "Couldn't get Property Bag for {$Url}" -Source $MyInvocation.MyCommand.ModuleName
-        Write-Verbose "GlobalAdminAccount specified does not have admin access to site {$Url}"
+        if ($_.Exception -like "*Unable to cast object of type*")
+        {
+            [array]$property = Get-PnpPropertyBag | Where-Object -FilterScript {$_.Key -ceq $Key}
+        }
+        elseif ($_.Exception -like "*The underlying connection was closed*")
+        {
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+                -ConnectionUrl $Url `
+                -Platform PnP | Out-Null
+            Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
+            [array]$property = Get-PnpPropertyBag -Key $Key -ErrorAction 'SilentlyContinue'
+        }
+        else
+        {
+            New-M365DSCLogEntry -Error $_ -Message "Couldn't get Property Bag for {$Url}" -Source $MyInvocation.MyCommand.ModuleName
+            Write-Verbose "GlobalAdminAccount specified does not have admin access to site {$Url}"
+        }
     }
-    if ($property.Length -gt 1 -or $property.Length -eq 0)
+    if ($property.Length -ne 1)
     {
         [array]$property = Get-PnpPropertyBag | Where-Object -FilterScript {$_.Key -ceq $Key}
     }
@@ -281,8 +295,10 @@ function Export-TargetResource
                                 Import-Module $CurrentModulePath -Force | Out-Null
                                 Import-Module ($params.ScriptRoot + "\..\..\Modules\M365DSCTelemetryEngine.psm1") -Force | Out-Null
                                 $result = Get-TargetResource @getValues
+
                                 $result.Value = [System.String]$result.Value
-                                if (-not [System.String]::IsNullOrEmpty($result.Value))
+                                if (-not [System.String]::IsNullOrEmpty($result.Value) -and `
+                                    $result.Ensure -eq 'Present')
                                 {
                                     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
                                     $content += "        SPOPropertyBag " + (New-GUID).ToString() + "`r`n"
