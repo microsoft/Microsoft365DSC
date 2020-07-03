@@ -1517,21 +1517,39 @@ function Set-M365DSCAgentCertificateConfiguration
 }
 
 
-function Remove-EmptySplatProperty
-{
-    [cmdletBinding()]
+function Remove-EmptyValue {
+    [alias('Remove-EmptyValues')]
+    [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][System.Collections.IDictionary] $Splat,
-        [string[]] $ExcludeParameter
+        [alias('Splat', 'IDictionary')][Parameter(Mandatory)][System.Collections.IDictionary] $Hashtable,
+        [string[]] $ExcludeParameter,
+        [switch] $Recursive,
+        [int] $Rerun
     )
-    foreach ($Key in [string[]]$Splat.Keys)
-    {
-        if ($Key -notin $ExcludeParameter)
-        {
-            if ([string]::IsNullOrEmpty($Splat[$Key]))
-            {
-                $Splat.Remove($Key)
+    foreach ($Key in [string[]] $Hashtable.Keys) {
+        if ($Key -notin $ExcludeParameter) {
+            if ($Recursive) {
+                if ($Hashtable[$Key] -is [System.Collections.IDictionary]) {
+                    if ($Hashtable[$Key].Count -eq 0) {
+                        $Hashtable.Remove($Key)
+                    } else {
+                        Remove-EmptyValue -Hashtable $Hashtable[$Key] -Recursive:$Recursive
+                    }
+                } else {
+                    if ([string]::IsNullOrEmpty($Hashtable[$Key])) {
+                        $Hashtable.Remove($Key)
+                    }
+                }
+            } else {
+                if ([string]::IsNullOrEmpty($Hashtable[$Key])) {
+                    $Hashtable.Remove($Key)
+                }
             }
+        }
+    }
+    if ($Rerun) {
+        for ($i = 0; $i -lt $Rerun; $i++) {
+            Remove-EmptyValue -Hashtable $Hashtable -Recursive:$Recursive
         }
     }
 }
