@@ -1521,14 +1521,17 @@ function Remove-EmptySplatProperty
 {
     [cmdletBinding()]
     param(
-        [parameter(Mandatory)][System.Collections.IDictionary] $Splat
+        [Parameter(Mandatory)][System.Collections.IDictionary] $Splat,
+        [string[]] $ExcludeParameter
     )
     foreach ($Key in [string[]]$Splat.Keys)
     {
-        #if ($null -eq $Splat[$Key] -or $Splat[$Key] -eq '') {
-        if ([string]::IsNullOrEmpty($Splat[$Key]))
+        if ($Key -notin $ExcludeParameter)
         {
-            $Splat.Remove($Key)
+            if ([string]::IsNullOrEmpty($Splat[$Key]))
+            {
+                $Splat.Remove($Key)
+            }
         }
     }
 }
