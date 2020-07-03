@@ -938,6 +938,8 @@ function Set-TargetResource
         WebPartsFrameOptionsType                             = $WebPartsFrameOptionsType
         Confirm                                              = $false
     }
+    # Removes empty properties from Splat to prevent function throwing errors if parameter is null or empty
+    Remove-EmptySplatProperty -Splat $SetOwaMailboxPolicyParams
 
     # CASE: OWA Mailbox Policy doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentOwaMailboxPolicyConfig.Ensure -eq "Absent")
