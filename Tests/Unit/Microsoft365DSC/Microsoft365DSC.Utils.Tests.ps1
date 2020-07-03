@@ -5,9 +5,11 @@
             [cmdletBinding()]
             param(
                 [ValidateNotNull()]$Test,
-                [string] $Test1
+                [string] $Test1,
+                [int] $Test5,
+                [int] $Test6
             )
-            Write-Verbose "Value for Test is $Test, Value for Test1 is $Test1"
+            Write-Verbose "Value for Test is $Test, Value for Test1 is $Test1, test5 $Test5, test6 $Test6"
         }
 
         $Splat = @{
@@ -15,6 +17,8 @@
             Test1 = 'Existing Entry'
             Test2 = $null
             Test3 = ''
+            Test5 = 0
+            Test6 = 6
         }
 
         Remove-EmptySplatProperty -Splat $Splat
@@ -26,15 +30,19 @@
             [cmdletBinding()]
             param(
                 [ValidateNotNull()]$Test,
-                [string] $Test1
+                [string] $Test1,
+                [int] $Test5,
+                [int] $Test6
             )
-            Write-Verbose "Value for Test is $Test, Value for Test1 is $Test1"
+            Write-Verbose "Value for Test is $Test, Value for Test1 is $Test1, test5 $Test5, test6 $Test6"
         }
         $SplatDictionary = [ordered] @{
             Test  = $NotExistingParameter
             Test1 = 'Existing Entry'
             Test2 = $null
             Test3 = ''
+            Test5 = 0
+            Test6 = 6
         }
         Remove-EmptySplatProperty -Splat $SplatDictionary
         { Test-FunctionOrderedDictionary @SplatDictionary } | Should -Not -Throw
