@@ -70,7 +70,6 @@ function Get-TargetResource
     }
     if ($property.Length -eq 0)
     {
-        "`r`nContext: $(Get-PnpConnection | Out-String)`r`nCouldn't find $Key on {$Url}" | Out-File C:\DSC\NotFound.txt -Append
         Write-Verbose -Message "SPOPropertyBag $Key does not exist at {$Url}."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'
