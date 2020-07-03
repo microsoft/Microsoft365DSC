@@ -898,7 +898,6 @@ function Set-TargetResource
         LocalEventsEnabled                                   = $LocalEventsEnabled
         LogonAndErrorLanguage                                = $LogonAndErrorLanguage
         NotesEnabled                                         = $NotesEnabled
-        NpsMailboxPolicy                                     = $NpsMailboxPolicy
         OrganizationEnabled                                  = $OrganizationEnabled
         OnSendAddinsEnabled                                  = $OnSendAddinsEnabled
         OutboundCharset                                      = $OutboundCharset
