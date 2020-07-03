@@ -321,7 +321,7 @@ function Set-TargetResource
         Confirm               = $false
     }
     # Removes empty properties from Splat to prevent function throwing errors if parameter is null or empty
-    Remove-EmptySplatProperty -Splat $NewOrganizationRelationshipParams
+    Remove-EmptyValue -Splat $NewOrganizationRelationshipParams
 
     $SetOrganizationRelationshipParams = @{
         ArchiveAccessEnabled  = $ArchiveAccessEnabled
@@ -345,7 +345,7 @@ function Set-TargetResource
         Confirm               = $false
     }
     # Removes empty properties from Splat to prevent function throwing errors if parameter is null or empty
-    Remove-EmptySplatProperty -Splat $SetOrganizationRelationshipParams
+    Remove-EmptyValue -Splat $SetOrganizationRelationshipParams
 
     # CASE: Organization Relationship doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentOrgRelationshipConfig.Ensure -eq "Absent")
