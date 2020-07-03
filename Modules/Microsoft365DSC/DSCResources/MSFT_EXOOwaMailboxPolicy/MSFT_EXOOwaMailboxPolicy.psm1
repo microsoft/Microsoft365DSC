@@ -162,7 +162,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $NpsMailboxPolicy,
+        $NpsSurveysEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -382,7 +382,7 @@ function Get-TargetResource
             LocalEventsEnabled                                   = $LocalEventsEnabled
             LogonAndErrorLanguage                                = $LogonAndErrorLanguage
             NotesEnabled                                         = $NotesEnabled
-            NpsMailboxPolicy                                     = $NpsMailboxPolicy
+            NpsSurveysEnabled                                    = $NpsSurveysEnabled
             OrganizationEnabled                                  = $OrganizationEnabled
             OnSendAddinsEnabled                                  = $OnSendAddinsEnabled
             OutboundCharset                                      = $OutboundCharset
@@ -467,7 +467,7 @@ function Get-TargetResource
             LocalEventsEnabled                                   = $OwaMailboxPolicy.LocalEventsEnabled
             LogonAndErrorLanguage                                = $OwaMailboxPolicy.LogonAndErrorLanguage
             NotesEnabled                                         = $OwaMailboxPolicy.NotesEnabled
-            NpsMailboxPolicy                                     = $OwaMailboxPolicy.NpsMailboxPolicy
+            NpsSurveysEnabled                                    = $OwaMailboxPolicy.NpsSurveysEnabled
             OrganizationEnabled                                  = $OwaMailboxPolicy.OrganizationEnabled
             OnSendAddinsEnabled                                  = $OwaMailboxPolicy.OnSendAddinsEnabled
             OutboundCharset                                      = $OwaMailboxPolicy.OutboundCharset
@@ -677,7 +677,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $NpsMailboxPolicy,
+        $NpsSurveysEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -898,6 +898,7 @@ function Set-TargetResource
         LocalEventsEnabled                                   = $LocalEventsEnabled
         LogonAndErrorLanguage                                = $LogonAndErrorLanguage
         NotesEnabled                                         = $NotesEnabled
+        NpsSurveysEnabled                                    = $NpsSurveysEnabled
         OrganizationEnabled                                  = $OrganizationEnabled
         OnSendAddinsEnabled                                  = $OnSendAddinsEnabled
         OutboundCharset                                      = $OutboundCharset
@@ -1130,7 +1131,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $NpsMailboxPolicy,
+        $NpsSurveysEnabled,
 
         [Parameter()]
         [System.Boolean]
