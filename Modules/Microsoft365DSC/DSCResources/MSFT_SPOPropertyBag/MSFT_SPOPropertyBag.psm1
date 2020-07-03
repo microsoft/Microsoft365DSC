@@ -40,16 +40,23 @@ function Get-TargetResource
             -ConnectionUrl $Url `
             -Platform PnP | Out-Null
         Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
-        $property = Get-PnpPropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
+        [array]$property = Get-PnpPropertyBag -Key $Key
+
         Write-Verbose -Message "Properties obtained correctly"
     }
     catch
     {
+        "{$Url} Not Found --> `r`nContext: $(Get-PnpConnection | Out-String)`r`n$($Key)`r`nError --> $_`r`n`r`n" | Out-File C:\DSC\Error.txt -Append
+        New-M365DSCLogEntry -Error $_ -Message "Couldn't get Property Bag for {$Url}" -Source $MyInvocation.MyCommand.ModuleName
         Write-Verbose "GlobalAdminAccount specified does not have admin access to site {$Url}"
     }
-
-    if ($null -eq $property)
+    if ($property.Length -gt 1 -or $property.Length -eq 0)
     {
+        [array]$property = Get-PnpPropertyBag | Where-Object -FilterScript {$_.Key -ceq $Key}
+    }
+    if ($property.Length -eq 0)
+    {
+        "`r`nContext: $(Get-PnpConnection | Out-String)`r`nCouldn't find $Key on {$Url}" | Out-File C:\DSC\NotFound.txt -Append
         Write-Verbose -Message "SPOPropertyBag $Key does not exist at {$Url}."
         $result = $PSBoundParameters
         $result.Ensure = 'Absent'

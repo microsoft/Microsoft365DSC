@@ -263,9 +263,9 @@ function Start-M365DSCConfigurationExtract
                     {
                         $parameters.Add("GlobalAdminAccount", $GlobalAdminAccount)
                     }
-                    if ($MaxProcessesExists -and -not [System.String]::IsNullOrEmpty($MaxProcessesExists))
+                    if ($MaxProcessesExists -and -not [System.String]::IsNullOrEmpty($MaxProcesses))
                     {
-                        $parameters.Add("MaxProcesses", $MaxProcessesExists)
+                        $parameters.Add("MaxProcesses", $MaxProcesses)
                     }
                     if ($AppSecretExists -and -not [System.String]::IsNullOrEmpty($ApplicationSecret))
                     {
