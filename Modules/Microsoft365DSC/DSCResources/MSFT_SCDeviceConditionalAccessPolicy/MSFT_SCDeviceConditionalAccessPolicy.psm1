@@ -197,18 +197,14 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter `
         -ErrorAction SilentlyContinue
-    $policies = Get-DeviceConditionalAccessPolicy | Where-Object -FilterScript { $_.Mode -ne 'PendingDeletion' }
+    [array]$policies = Get-DeviceConditionalAccessPolicy | Where-Object -FilterScript { $_.Mode -ne 'PendingDeletion' }
 
-    $totalPolicies = $policies.Length
-    if ($null -eq $totalPolicies)
-    {
-        $totalPolicies = 1
-    }
     $i = 1
     $content = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        Write-Information "    [$i/$($totalPolicies)] $($policy.Name)"
+        Write-Host "    [$i/$($policies.Length)] $($policy.Name)" -NoNewLine
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             Name               = $policy.Name
@@ -220,6 +216,7 @@ function Export-TargetResource
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $content

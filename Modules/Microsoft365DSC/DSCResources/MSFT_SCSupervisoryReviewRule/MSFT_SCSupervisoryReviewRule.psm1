@@ -212,7 +212,7 @@ function Export-TargetResource
         -Platform SecurityComplianceCenter `
         -ErrorAction SilentlyContinue
 
-    $rules = Get-SupervisoryReviewRule
+    [array]$rules = Get-SupervisoryReviewRule
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
     if ($GlobalAdminAccount.UserName.Contains("@"))
@@ -224,17 +224,12 @@ function Export-TargetResource
             $principal = $organization.Split(".")[0]
         }
     }
-
-    $totalRules = $rules.Length
-    if ($null -eq $totalRules)
-    {
-        $totalRules = 1
-    }
     $i = 1
     $content = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($rule in $rules)
     {
-        Write-Information "    [$i/$totalRules] $($rule.Name)"
+        Write-Host "    [$i/$($rules.Length)] $($rule.Name)" -NoNewLine
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             Name               = $rule.Name
@@ -253,6 +248,7 @@ function Export-TargetResource
         }
         $content += $partialContent
         $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $content

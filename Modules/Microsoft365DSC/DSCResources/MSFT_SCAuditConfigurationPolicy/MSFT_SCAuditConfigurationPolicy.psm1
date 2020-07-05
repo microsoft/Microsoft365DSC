@@ -191,12 +191,13 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform SecurityComplianceCenter
 
-    $policies = Get-AuditConfigurationPolicy
+    [array]$policies = Get-AuditConfigurationPolicy
     $content = ""
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        Write-Information "    [$i/$($policies.Count)] {$($policy.Workload)}"
+        Write-Host "    [$i/$($policies.Length)] $($policy.Workload)" -NoNewLine
 
         $params = @{
             Workload           = $policy.Workload
@@ -209,7 +210,7 @@ function Export-TargetResource
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
-
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
 

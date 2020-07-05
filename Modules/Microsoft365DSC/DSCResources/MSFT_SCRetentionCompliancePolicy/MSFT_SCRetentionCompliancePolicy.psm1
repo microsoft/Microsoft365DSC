@@ -699,6 +699,7 @@ function Export-TargetResource
     $i = 1
     $content = ''
     $organization = ""
+    Write-Host "`r`n" -NoNewLine
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
     if ($GlobalAdminAccount.UserName.Contains("@"))
     {
@@ -711,7 +712,7 @@ function Export-TargetResource
     }
     foreach ($policy in $policies)
     {
-        Write-Information "    [$i/$($policies.Length)] $($policy.Name)"
+        Write-Host "    [$i/$($policies.Length)] $($policy.Name)" -NoNewLine
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             Name               = $policy.Name
@@ -729,6 +730,7 @@ function Export-TargetResource
         }
         $content += $partialContent
         $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $content

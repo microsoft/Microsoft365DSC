@@ -296,28 +296,20 @@ function Export-TargetResource
             $principal = $organization.Split(".")[0]
         }
     }
-    $policies = Get-RetentionCompliancePolicy
+    [array]$policies = Get-RetentionCompliancePolicy
 
     $j = 1
     $content = ''
-    $policiesLength = $policies.Length
-    if ($null -eq $policiesLength)
-    {
-        $policiesLength = 1
-    }
+    Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        $rules = Get-RetentionComplianceRule -Policy $policy.Name
-        Write-Information "    Policy [$j/$($policiesLength)] $($policy.Name)"
+        [array]$rules = Get-RetentionComplianceRule -Policy $policy.Name
+        Write-Host "    Policy [$j/$($policiesLength)] $($policy.Name)"
         $i = 1
-        $rulesLength = $rules.Length
-        if ($null -eq $rulesLength)
-        {
-            $rulesLength = 1
-        }
+
         foreach ($rule in $rules)
         {
-            Write-Information "        [$i/$($rulesLength)] $($rule.Name)"
+            Write-Host "        [$i/$($rules.Length)] $($rule.Name)" -NoNewLine
             $params = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 Name               = $rule.Name
@@ -342,6 +334,7 @@ function Export-TargetResource
             }
             $content += $partialContent
             $content += "        }`r`n"
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
         $j++

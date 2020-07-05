@@ -578,9 +578,10 @@ function Export-TargetResource
     $content = ''
     $partialContent = ""
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($user in $users)
     {
-        Write-Information "    [$i/$($users.Length)] $($user.UserPrincipalName)"
+        Write-Host "    [$i/$($users.Length)] $($user.UserPrincipalName)" -NoNewLine
         $userUPN = $user.UserPrincipalName
         if (-not [System.String]::IsNullOrEmpty($userUPN))
         {
@@ -615,6 +616,7 @@ function Export-TargetResource
                 $content += "        }`r`n"
             }
         }
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $content

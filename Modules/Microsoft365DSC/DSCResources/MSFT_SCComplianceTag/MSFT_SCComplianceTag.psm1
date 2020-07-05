@@ -381,9 +381,10 @@ function Export-TargetResource
     }
     $i = 1
     $content = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($tag in $tags)
     {
-        Write-Information "    [$i/$($totalTags)] $($tag.Name)"
+        Write-Host "    [$i/$($totalTags)] $($tag.Name)" -NoNewLine
         $Params = @{
             Name               = $tag.Name
             GlobalAdminAccount = $GlobalAdminAccount
@@ -405,6 +406,7 @@ function Export-TargetResource
         }
         $content += $partialContent
         $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $content

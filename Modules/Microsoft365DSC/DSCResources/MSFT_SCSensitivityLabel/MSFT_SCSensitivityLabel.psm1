@@ -387,9 +387,10 @@ function Export-TargetResource
 
         $content = ""
         $i = 1
+        Write-Host "`r`n" -NoNewLine
         foreach ($label in $labels)
         {
-            Write-Information "    [$i/$($labels.Count)] $($label.Name)"
+            Write-Host "    [$i/$($labels.Count)] $($label.Name)" -NoNewLine
             $params = @{
                 Name               = $label.Name
                 GlobalAdminAccount = $GlobalAdminAccount
@@ -420,6 +421,7 @@ function Export-TargetResource
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $content += $currentDSCBlock
             $content += "        }`r`n"
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
     }

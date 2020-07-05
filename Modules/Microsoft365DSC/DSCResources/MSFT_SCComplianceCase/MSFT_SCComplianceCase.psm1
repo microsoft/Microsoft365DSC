@@ -224,9 +224,10 @@ function Export-TargetResource
 
     $dscContent = ""
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($Case in $Cases)
     {
-        Write-Information "    eDiscovery: [$i/$($Cases.Count)] $($Case.Name)"
+        Write-Host "    eDiscovery: [$i/$($Cases.Count)] $($Case.Name)" -NoNewLine
         $params = @{
             Name               = $Case.Name
             GlobalAdminAccount = $GlobalAdminAccount
@@ -239,6 +240,7 @@ function Export-TargetResource
         $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $partialContent += "        }`r`n"
         $dscContent += $partialContent
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
 
@@ -247,7 +249,7 @@ function Export-TargetResource
     $i = 1
     foreach ($Case in $Cases)
     {
-        Write-Information "    GDPR: [$i/$($Cases.Count)] $($Case.Name)"
+        Write-Host "    GDPR: [$i/$($Cases.Count)] $($Case.Name)" -NoNewLine
         $params = @{
             Name               = $Case.Name
             GlobalAdminAccount = $GlobalAdminAccount
@@ -260,6 +262,7 @@ function Export-TargetResource
         $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $partialContent += "        }`r`n"
         $dscContent += $partialContent
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

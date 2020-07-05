@@ -323,15 +323,16 @@ function Export-TargetResource
 
     $dscContent = ""
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($case in $cases)
     {
-        Write-Information "    [$i/$($Cases.Count)] Scanning Policies in Case {$($case.Name)}"
+        Write-Host "    [$i/$($Cases.Count)] Scanning Policies in Case {$($case.Name)}"
         [array]$policies = Get-CaseHoldPolicy -Case $case.Name
 
         $j = 1
         foreach ($policy in $policies)
         {
-            Write-Information "        [$j/$($policies.Count)] $($policy.Name)"
+            Write-Host "        [$j/$($policies.Count)] $($policy.Name)" -NoNewLine
             $params = @{
                 Name               = $policy.Name
                 Case               = $case.Name
@@ -349,6 +350,7 @@ function Export-TargetResource
             }
             $partialContent += "        }`r`n"
             $dscContent += $partialContent
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $j++
         }
         $i++

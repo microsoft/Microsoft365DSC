@@ -508,12 +508,9 @@ function Export-TargetResource
 
     $i = 1
     $content = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        if ($i -eq 1)
-        {
-            Write-Host "`r`n" -NoNewline
-        }
         Write-Host "    [$i/$($policies.Count)] $($policy.Name)" -NoNewline
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount

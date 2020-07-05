@@ -206,10 +206,11 @@ function Export-TargetResource
 
     $i = 1
     $content = ""
+    Write-Host "`r`n" -NoNewLine
     foreach ($Property in $Properties)
     {
         $parent = Get-FilePlanPropertyCategory | Where-Object -FilterScript { $_.Guid -like "*$($property.ParentId)*" }
-        Write-Information "    [$i/$($Properties.Length)] $($Property.Name)"
+        Write-Host "    [$i/$($Properties.Length)] $($Property.Name)" -NoNewLine
         $params = @{
             Name               = $Property.DisplayName
             Category           = $parent.DisplayName
@@ -222,6 +223,7 @@ function Export-TargetResource
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $content

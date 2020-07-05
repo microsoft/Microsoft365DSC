@@ -377,13 +377,13 @@ function Export-TargetResource
 
     if ($actions.Count -gt 0)
     {
-        Write-Information -MessageData "    Tenant Wide Actions:"
+        Write-Host "`r`n    Tenant Wide Actions:"
     }
     $i = 1
     $content = ""
     foreach ($action in $actions)
     {
-        Write-Information "        [$i/$($actions.Length)] $($action.Name)"
+        Write-Host "        [$i/$($actions.Length)] $($action.Name)" -NoNewLine
         $params = @{
             Action             = $action.Action
             SearchName         = $action.SearchName
@@ -404,6 +404,7 @@ function Export-TargetResource
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
 
@@ -412,14 +413,14 @@ function Export-TargetResource
     $j = 1
     foreach ($case in $cases)
     {
-        Write-Information "    Case [$j/$($cases.Count)] $($Case.Name)"
+        Write-Host "    Case [$j/$($cases.Count)] $($Case.Name)"
 
         $actions = Get-ComplianceSearchAction -Case $Case.Name
 
         $i = 1
         foreach ($action in $actions)
         {
-            Write-Information "        [$i/$($actions.Length)] $($action.Name)"
+            Write-Host "        [$i/$($actions.Length)] $($action.Name)" -NoNewLine
             $params = @{
                 Action             = $action.Action
                 SearchName         = $action.SearchName
@@ -440,6 +441,7 @@ function Export-TargetResource
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $content += "        }`r`n"
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
         $j++

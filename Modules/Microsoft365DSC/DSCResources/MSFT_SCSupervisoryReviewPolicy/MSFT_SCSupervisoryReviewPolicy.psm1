@@ -197,7 +197,7 @@ function Export-TargetResource
         -Platform SecurityComplianceCenter `
         -ErrorAction SilentlyContinue
 
-    $policies = Get-SupervisoryReviewPolicyV2
+    [array]$policies = Get-SupervisoryReviewPolicyV2
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
     if ($GlobalAdminAccount.UserName.Contains("@"))
@@ -210,16 +210,12 @@ function Export-TargetResource
         }
     }
 
-    $totalPolicies = $policies.Length
-    if ($null -eq $totalPolicies)
-    {
-        $totalPolicies = 1
-    }
     $i = 1
     $content = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        Write-Information "    [$i/$($totalPolicies)] $($policy.Name)"
+        Write-Host "    [$i/$($policies.Length)] $($policy.Name)" -NoNewLine
         $params = @{
             Name               = $policy.Name
             Reviewers          = "ReverseDSC"
@@ -238,6 +234,7 @@ function Export-TargetResource
         }
         $content += $partialContent
         $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $content

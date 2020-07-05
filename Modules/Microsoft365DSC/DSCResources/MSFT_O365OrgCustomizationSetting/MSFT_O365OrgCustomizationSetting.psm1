@@ -155,6 +155,7 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
     }
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
     return $content
 }
 

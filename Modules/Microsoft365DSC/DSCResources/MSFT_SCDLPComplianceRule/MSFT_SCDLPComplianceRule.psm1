@@ -490,7 +490,7 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $rules = Get-DLPComplianceRule | Where-Object { $_.Mode -ne 'PendingDeletion' }
+    [array]$rules = Get-DLPComplianceRule | Where-Object { $_.Mode -ne 'PendingDeletion' }
 
     $organization = ""
     if ($GlobalAdminAccount.UserName.Contains("@"))
@@ -500,9 +500,10 @@ function Export-TargetResource
 
     $i = 1
     $DSCContent = ""
+    Write-Host "`r`n" -NoNewLine
     foreach ($rule in $rules)
     {
-        Write-Information "    [$i/$($rules.Length)] $($rule.Name)"
+        Write-Host "    [$i/$($rules.Length)] $($rule.Name)" -NoNewLine
         $result = Get-TargetResource -Name $rule.Name -Policy $rule.ParentPolicyName -GlobalAdminAccount $GlobalAdminAccount
 
         $IsCIMArray = $false
@@ -524,6 +525,7 @@ function Export-TargetResource
         }
         $partialContent += "        }`r`n"
         $DSCContent += $partialContent
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
 

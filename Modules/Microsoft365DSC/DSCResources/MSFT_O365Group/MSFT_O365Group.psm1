@@ -385,6 +385,7 @@ function Export-TargetResource
 
     $i = 1
     $organization = ""
+    Write-Host "`r`n" -NoNewLine
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
     if ($GlobalAdminAccount.UserName.Contains("@"))
     {
@@ -403,7 +404,7 @@ function Export-TargetResource
             ManagedBy          = "DummyUser"
             MailNickName       = $group.MailNickName
         }
-        Write-Information "    [$i/$($groups.Length)] $($group.DisplayName)"
+        Write-Host "    [$i/$($groups.Length)] $($group.DisplayName)" -NoNewLine
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = "`$Credsglobaladmin"
         $content += "        O365Group " + (New-GUID).ToString() + "`r`n"
@@ -420,6 +421,7 @@ function Export-TargetResource
         }
         $content += $partialContent
         $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $content

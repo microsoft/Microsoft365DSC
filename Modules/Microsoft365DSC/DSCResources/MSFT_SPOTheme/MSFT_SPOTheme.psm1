@@ -223,11 +223,13 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PnP
 
-    $themes = Get-PnPTenantTheme
+    [array]$themes = Get-PnPTenantTheme
     $content = ""
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($theme in $themes)
     {
+        Write-Host "    [$i/$($themes.Length)] $($theme.Name)" -NoNewLine
         $params = @{
             Name               = $theme.Name
             GlobalAdminAccount = $GlobalAdminAccount
@@ -242,6 +244,7 @@ function Export-TargetResource
         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += $currentDSCBlock
         $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $content

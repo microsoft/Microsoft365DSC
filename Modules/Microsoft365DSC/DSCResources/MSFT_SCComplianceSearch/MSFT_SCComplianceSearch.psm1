@@ -349,13 +349,13 @@ function Export-TargetResource
         -Platform SecurityComplianceCenter
     $searches = Get-ComplianceSearch
 
-    Write-Information "    * Searches not assigned to an eDiscovery Case"
+    Write-Host "    `r`n* Searches not assigned to an eDiscovery Case"
     $i = 1
     $DSCContent = ""
     $partialContent = ""
     foreach ($search in $searches)
     {
-        Write-Information "        - [$i/$($searches.Name.Count)] $($search.Name)"
+        Write-Host "        [$i/$($searches.Name.Count)] $($search.Name)" -NoNewLine
         $params = @{
             Name               = $search.Name
             GlobalAdminAccount = $GlobalAdminAccount
@@ -368,6 +368,7 @@ function Export-TargetResource
         $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $partialContent += "        }`r`n"
         $DSCContent += $partialContent
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
 
@@ -378,7 +379,7 @@ function Export-TargetResource
     {
         $searches = Get-ComplianceSearch -Case $case.Name
 
-        Write-Information "    * [$j/$($cases.Length)] Searches assigned to case $($case.Name)"
+        Write-Host "    * [$j/$($cases.Length)] Searches assigned to case $($case.Name)"
         $i = 1
         $partialContent = ""
         foreach ($search in $searches)
@@ -388,7 +389,7 @@ function Export-TargetResource
                 Case               = $case.Name
                 GlobalAdminAccount = $GlobalAdminAccount
             }
-            Write-Information "        - [$i/$($searches.Name.Count)] $($search.Name)"
+            Write-Host "        [$i/$($searches.Name.Count)] $($search.Name)" -NoNewLine
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
             $DSCContent += "        SCComplianceSearch " + (New-GUID).ToString() + "`r`n"
@@ -397,6 +398,7 @@ function Export-TargetResource
             $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $partialContent += "        }`r`n"
             $DSCContent += $partialContent
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
         $j++

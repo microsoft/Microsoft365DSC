@@ -212,10 +212,10 @@ function Export-TargetResource
     [array]$environments = Get-AdminPowerAppEnvironment
     $content = ''
     $i = 1
-
+    Write-Host "`r`n" -NoNewLine
     foreach ($environment in $environments)
     {
-        Write-Information "    [$i/$($environments.Count)] $($environment.DisplayName)"
+        Write-Host "    [$i/$($environments.Count)] $($environment.DisplayName)" -NoNewLine
         if ($environment.EnvironmentType -ne 'Default')
         {
             $params = @{
@@ -232,6 +232,7 @@ function Export-TargetResource
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $content += "        }`r`n"
         }
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $content
