@@ -227,6 +227,7 @@ function Export-TargetResource
     $partial = Convert-DSCStringParamToVariable -DSCBlock $partial -ParameterName "SdnApiToken"
     $content += $partial
     $content += "        }`r`n"
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
     return $content
 }
 

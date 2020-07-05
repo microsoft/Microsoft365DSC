@@ -171,9 +171,10 @@ function Export-TargetResource
     [array]$policies = Get-CsTeamsUpgradePolicy
     $i = 1
     $content = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        Write-Information "    [$i/$($policies.Count)] $($policy.Identity.Replace('Tag:', ''))"
+        Write-Host "    [$i/$($policies.Count)] $($policy.Identity.Replace('Tag:', ''))" -NoNewLine
         $params = @{
             Identity           = $policy.Identity.Replace("Tag:", "")
             GlobalAdminAccount = $GlobalAdminAccount
@@ -191,6 +192,7 @@ function Export-TargetResource
         $content += $partialContent
         $content += "        }`r`n"
         $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

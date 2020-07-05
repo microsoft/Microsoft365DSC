@@ -242,13 +242,14 @@ function Export-TargetResource
 
     $i = 1
     $content = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
         $params = @{
             Identity           = $policy.Identity
             GlobalAdminAccount = $GlobalAdminAccount
         }
-        Write-Information "    [$i/$($policies.Length)] $($policy.Identity)"
+        Write-Host "    [$i/$($policies.Length)] $($policy.Identity)" -NoNewLine
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $content += "        TeamsMeetingBroadcastPolicy " + (New-GUID).ToString() + "`r`n"
@@ -258,6 +259,7 @@ function Export-TargetResource
         $content += $partial
         $content += "        }`r`n"
         $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

@@ -308,9 +308,10 @@ function Export-TargetResource
 
     $content = ''
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($plan in $tenantDialPlans)
     {
-        Write-Information -MessageData "    [$i/$($tenantDialPlans.Count)] $($plan.Identity)"
+        Write-Host "    [$i/$($tenantDialPlans.Count)] $($plan.Identity)" -NoNewLine
         $params = @{
             Identity            = $plan.Identity
             GlobalAdminAccount  = $GlobalAdminAccount
@@ -329,6 +330,7 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

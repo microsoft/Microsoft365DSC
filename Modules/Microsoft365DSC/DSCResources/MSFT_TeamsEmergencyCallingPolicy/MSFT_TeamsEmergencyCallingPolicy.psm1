@@ -258,9 +258,10 @@ function Export-TargetResource
     $i = 1
     [array]$policies = Get-CsTeamsEmergencyCallingPolicy
     $content = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        Write-Information "    [$i/$($policies.Count)] $($policy.Identity)"
+        Write-Host "    [$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
         $params = @{
             Identity           = $policy.Identity
             GlobalAdminAccount = $GlobalAdminAccount
@@ -278,6 +279,7 @@ function Export-TargetResource
         $content += $partialContent
         $content += "        }`r`n"
         $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

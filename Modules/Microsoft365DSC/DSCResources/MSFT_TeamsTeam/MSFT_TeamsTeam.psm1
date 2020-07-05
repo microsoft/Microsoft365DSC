@@ -653,12 +653,9 @@ function Export-TargetResource
     $teams = Get-Team
     $i = 1
     $content = ""
+    Write-Host "`r`n" -NoNewLine
     foreach ($team in $teams)
     {
-        if ($i -eq 1)
-        {
-            Write-Host "`r`n" -NoNewLine
-        }
         Write-Host "    [$i/$($teams.Length)] $($team.DisplayName)" -NoNewLine
         $params = @{
             DisplayName           = $team.DisplayName

@@ -317,14 +317,15 @@ function Export-TargetResource
     $teams = Get-Team
     $j = 1
     $content = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($team in $Teams)
     {
         $channels = Get-TeamChannel -GroupId $team.GroupId
         $i = 1
-        Write-Information "    > [$j/$($Teams.Length)] Team {$($team.DisplayName)}"
+        Write-Host "    [$j/$($Teams.Length)] Team {$($team.DisplayName)}"
         foreach ($channel in $channels)
         {
-            Write-Information "        - [$i/$($channels.Length)] $($channel.DisplayName)"
+            Write-Host "        [$i/$($channels.Length)] $($channel.DisplayName)" -NoNewLine
 
             if ($ConnectionMode -eq 'Credential')
             {
@@ -362,6 +363,7 @@ function Export-TargetResource
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $content += "        }`r`n"
             $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
         $j++
     }

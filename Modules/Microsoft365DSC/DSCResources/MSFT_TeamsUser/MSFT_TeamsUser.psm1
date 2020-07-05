@@ -444,7 +444,7 @@ function Export-TargetResource
         $i++
     }
 
-    Write-Information "    Broke extraction process down into {$MaxProcesses} jobs of {$($instances[0].Length)} item(s) each"
+    Write-Host "    `r`nBroke extraction process down into {$MaxProcesses} jobs of {$($instances[0].Length)} item(s) each" -NoNewLine
     $totalJobs = $MaxProcesses
     $jobsCompleted = 0
     $status = "Running..."
@@ -478,6 +478,7 @@ function Export-TargetResource
         Start-Sleep -Seconds 1
     } while ($count -ne 0)
     Write-Progress -Activity "TeamsUser Extraction" -PercentComplete 100 -Status "Completed" -Completed
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
     return $result
 }
 
