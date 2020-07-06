@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* MISC
+  * Added visual indicators for the Export feature;
 * EXOMalwareFilterPolicy
   * Fixed an issue where the value for the for the Action
     returned by the Get included 'Text' and should not have;
@@ -21,6 +23,8 @@
     module version to 0.7.0;
   * Updated Microsoft.PowerApps.Administration.PowerShell
     module version to 2.0.65;
+  * Updated MSCloudLoginAssistant module to version
+    version 1.0.26;
   * Updated ReverseDSC module version to 2.0.0.4;
   * Updated SharePointPnPPowerShellOnline module to
     version 3.22.2006.2;
