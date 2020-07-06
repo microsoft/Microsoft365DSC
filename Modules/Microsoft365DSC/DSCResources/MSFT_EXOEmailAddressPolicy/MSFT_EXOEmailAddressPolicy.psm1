@@ -276,10 +276,11 @@ function Export-TargetResource
     [array]$AllEmailAddressPolicies = Get-EmailAddressPolicy
 
     $dscContent = ""
+    Write-Host "`r`n" -NoNewLine
     $i = 1
     foreach ($EmailAddressPolicy in $AllEmailAddressPolicies)
     {
-        Write-Information "    [$i/$($AllEmailAddressPolicies.Count)] $($EmailAddressPolicy.Name)"
+        Write-Host "    [$i/$($AllEmailAddressPolicies.Count)] $($EmailAddressPolicy.Name)" -NoNewLine
 
         $Params = @{
             Name               = $EmailAddressPolicy.Name
@@ -299,7 +300,12 @@ function Export-TargetResource
         $content += $partialContent
         $content += "        }`r`n"
         $dscContent += $content
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
+    }
+    if ($AllEmailAddressPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

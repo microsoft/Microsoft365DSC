@@ -187,8 +187,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -198,13 +196,14 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-    $mailboxes = Get-Mailbox -ResultSize 'Unlimited'
+    [array]$mailboxes = Get-Mailbox -ResultSize 'Unlimited'
 
     $i = 1
+    Write-Host "`r`n"-NoNewLine
     $content = ''
     foreach ($mailbox in $mailboxes)
     {
-        Write-Information "    [$i/$($mailboxes.Length)] $($mailbox.Name)"
+        Write-Host "    [$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewLine
         $mailboxName = $mailbox.Name
         if (![System.String]::IsNullOrEmpty($mailboxName))
         {
@@ -225,7 +224,12 @@ function Export-TargetResource
                 $content += "        }`r`n"
             }
         }
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
+    }
+    if ($mailboxes.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

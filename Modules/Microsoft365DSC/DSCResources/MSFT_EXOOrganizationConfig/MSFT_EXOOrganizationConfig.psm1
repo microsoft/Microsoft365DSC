@@ -984,7 +984,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPReference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -1004,6 +1003,7 @@ function Export-TargetResource
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
     $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
     $content += "        }`r`n"
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
     return $content
 }
 

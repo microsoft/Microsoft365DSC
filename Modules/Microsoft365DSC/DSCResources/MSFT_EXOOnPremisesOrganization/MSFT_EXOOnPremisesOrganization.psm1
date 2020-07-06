@@ -285,7 +285,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -298,10 +297,11 @@ function Export-TargetResource
     [array]$AllOnPremisesOrganizations = Get-OnPremisesOrganization
 
     $dscContent = ""
+    Write-Host "`r`n" -NoNewLine
     $i = 1
     foreach ($OnPremisesOrganization in $AllOnPremisesOrganizations)
     {
-        Write-Information "    [$i/$($AllOnPremisesOrganizations.Count)] $($OnPremisesOrganization.Identity)"
+        Write-Host "    [$i/$($AllOnPremisesOrganizations.Count)] $($OnPremisesOrganization.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $OnPremisesOrganization.Identity
@@ -315,7 +315,12 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $dscContent += $content
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
+    }
+    if ($AllOnPremisesOrganizations.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

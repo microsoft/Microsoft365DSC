@@ -393,11 +393,11 @@ function Export-TargetResource
     $content = ''
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
     $i = 1
-
+    Write-Host "`r`n" -NoNewLine
     $AADApplications = Get-AzureADApplication
     foreach($AADApp in $AADApplications)
     {
-        Write-Information -MessageData "    [$i/$($AADApplications.Count)] $($AADApp.DisplayName)"
+        Write-Host "    [$i/$($AADApplications.Count)] $($AADApp.DisplayName)" -NoNewLine
         if ($ConnectionMode -eq 'Credential')
         {
             $params = @{
@@ -441,6 +441,7 @@ function Export-TargetResource
                 $content += $currentDSCBlock
             }
             $content += "        }`r`n"
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
     }

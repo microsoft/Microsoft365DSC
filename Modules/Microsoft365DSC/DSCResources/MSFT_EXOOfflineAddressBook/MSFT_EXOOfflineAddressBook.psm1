@@ -245,7 +245,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -263,10 +262,11 @@ function Export-TargetResource
     [array]$AllOfflineAddressBooks = Get-OfflineAddressBook
 
     $dscContent = ""
+    Write-Host "`r`n" -NoNewLine
     $i = 1
     foreach ($OfflineAddressBook in $AllOfflineAddressBooks)
     {
-        Write-Information "    [$i/$($AllOfflineAddressBooks.Count)] $($OfflineAddressBook.Name)"
+        Write-Host "    [$i/$($AllOfflineAddressBooks.Count)] $($OfflineAddressBook.Name)" -NoNewLine
 
         $Params = @{
             Name               = $OfflineAddressBook.Name
@@ -280,7 +280,12 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $dscContent += $content
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
+    }
+    if ($AllOfflineAddressBooks.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

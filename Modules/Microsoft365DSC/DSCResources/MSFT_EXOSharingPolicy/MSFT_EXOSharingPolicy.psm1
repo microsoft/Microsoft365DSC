@@ -226,7 +226,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -239,10 +238,11 @@ function Export-TargetResource
     [array]$AllSharingPolicies = Get-SharingPolicy
 
     $dscContent = ""
+    Write-Host "`r`n" -NoNewLine
     $i = 1
     foreach ($SharingPolicy in $AllSharingPolicies)
     {
-        Write-Information "    [$i/$($AllSharingPolicies.Count)] $($SharingPolicy.Name)"
+        Write-Host "    [$i/$($AllSharingPolicies.Length)] $($SharingPolicy.Name)" -NoNewLine
 
         $Params = @{
             Name               = $SharingPolicy.Name
@@ -256,7 +256,12 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $dscContent += $content
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
+    }
+    if ($AllSharingPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

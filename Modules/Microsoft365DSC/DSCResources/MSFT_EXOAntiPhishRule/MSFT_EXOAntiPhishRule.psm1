@@ -349,7 +349,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = "Continue"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -362,10 +361,11 @@ function Export-TargetResource
 
     $AntiPhishRules = Get-AntiphishRule
     $content = ""
+    Write-Host "`r`n" -NoNewLine
     $i = 1
     foreach ($Rule in $AntiPhishRules)
     {
-        Write-Information "    [$i/$($AntiPhishRules.Length)] $($Rule.Identity)"
+        Write-Host "    [$i/$($AntiPhishRules.Length)] $($Rule.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $Rule.Identity
@@ -380,6 +380,10 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $i++
+    }
+    if ($AntiPhishRules.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

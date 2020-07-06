@@ -359,18 +359,17 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-
-    $InformationPreference = "Continue"
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline `
         -ErrorAction SilentlyContinue
 
     [array]$OutboundConnectors = Get-OutboundConnector
     $content = ""
+    Write-Host "`r`n" -NoNewLine
     $i = 1
     foreach ($OutboundConnector in $OutboundConnectors)
     {
-        Write-Information "    [$i/$($OutboundConnectors.length)] $($OutboundConnector.Identity)"
+        Write-Host "    [$i/$($OutboundConnectors.Length)] $($OutboundConnector.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $OutboundConnector.Identity
@@ -384,7 +383,12 @@ function Export-TargetResource
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
+    }
+    if ($OutBoundConnectors.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

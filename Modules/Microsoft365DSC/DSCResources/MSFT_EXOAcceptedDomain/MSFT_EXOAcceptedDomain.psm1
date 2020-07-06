@@ -253,9 +253,10 @@ function Export-TargetResource
 
     $dscContent = ""
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($domain in $AllAcceptedDomains)
     {
-        Write-Information "    [$i/$($AllAcceptedDomains.Count)] $($domain.Identity)"
+        Write-Host "    [$i/$($AllAcceptedDomains.Count)] $($domain.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $domain.Identity
@@ -276,6 +277,7 @@ function Export-TargetResource
         $content += $partialContent
         $content += "        }`r`n"
         $dscContent += $content
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

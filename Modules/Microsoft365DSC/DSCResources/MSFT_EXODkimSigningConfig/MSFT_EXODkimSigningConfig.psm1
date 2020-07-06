@@ -263,9 +263,10 @@ function Export-TargetResource
 
     if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-DkimSigningConfig)
     {
-        $DkimSigningConfigs = Get-DkimSigningConfig
+        [array]$DkimSigningConfigs = Get-DkimSigningConfig
 
         $i = 1
+        Write-Host "`r`n" -NoNewLine
         $content = ""
         $organization = ""
         $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
@@ -280,7 +281,7 @@ function Export-TargetResource
         }
         foreach ($DkimSigningConfig in $DkimSigningConfigs)
         {
-            Write-Verbose -Message "    [$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)}"
+            Write-Host "    [$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)" -NoNewLine
             $params = @{
                 Identity           = $DkimSigningConfig.Identity
                 GlobalAdminAccount = $GlobalAdminAccount
@@ -300,7 +301,12 @@ function Export-TargetResource
             }
             $content += Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName 'GlobalAdminAccount'
             $content += "        }`r`n"
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
+        }
+        if ($DkimSigningConfigs.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
     }
     return $content

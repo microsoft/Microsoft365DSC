@@ -243,8 +243,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -261,18 +259,14 @@ function Export-TargetResource
     {
         $organization = $GlobalAdminAccount.UserName.Split("@")[1]
     }
-    $mailboxes = Get-Mailbox
+    [array]$mailboxes = Get-Mailbox
     $mailboxes = $mailboxes | Where-Object -FilterScript { $_.RecipientTypeDetails -eq "SharedMailbox" }
     $content = ''
     $i = 1
-    $total = $mailboxes.Length
-    if ($null -eq $total -and $null -ne $mailboxes)
-    {
-        $total = 1
-    }
+    Write-Host "`r`n" -NoNewLine
     foreach ($mailbox in $mailboxes)
     {
-        Write-Information "    [$i/$total] $($mailbox.Name)"
+        Write-Host "    [$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewLine
         $mailboxName = $mailbox.Name
         if ($mailboxName)
         {
@@ -294,7 +288,12 @@ function Export-TargetResource
             $content += $partialContent
             $content += "        }`r`n"
         }
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
+    }
+    if ($mailboxes.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

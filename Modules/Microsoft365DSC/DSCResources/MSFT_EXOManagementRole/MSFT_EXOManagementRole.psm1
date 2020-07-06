@@ -217,10 +217,11 @@ function Export-TargetResource
     [array]$AllManagementRoles = Get-ManagementRole
 
     $dscContent = ""
+    Write-Host "`r`n" -NoNewLine
     $i = 1
     foreach ($ManagementRole in $AllManagementRoles)
     {
-        Write-Information "    [$i/$($AllManagementRoles.Count)] $($ManagementRole.Name)"
+        Write-Host "    [$i/$($AllManagementRoles.Count)] $($ManagementRole.Name)" -NoNewLine
 
         $Params = @{
             Name               = $ManagementRole.Name
@@ -234,7 +235,12 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $dscContent += $content
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
+    }
+    if ($AllManagementRoles.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

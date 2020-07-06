@@ -218,14 +218,17 @@ function Export-TargetResource
         -Platform ExchangeOnline `
         -ErrorAction SilentlyContinue
 
-    $HostedOutboundSpamFilterPolicies = Get-HostedOutboundSpamFilterPolicy
+    [array]$HostedOutboundSpamFilterPolicies = Get-HostedOutboundSpamFilterPolicy
     $content = ''
+    Write-Host "`r`n" -NoNewLine
+    $i = 1
     foreach ($HostedOutboundSpamFilterPolicy in $HostedOutboundSpamFilterPolicies)
     {
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             Identity           = $HostedOutboundSpamFilterPolicy.Identity
         }
+        Write-Host "    [$i/$($HostedOutboundSpamFilterPolicies.Length)] $($HostedOutboundSpamFilterPolicy.Identity)" -NoNewLine
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $content += "        EXOHostedOutboundSpamFilterPolicy " + (New-GUID).ToString() + "`r`n"
@@ -233,6 +236,12 @@ function Export-TargetResource
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
         $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        $i++
+    }
+    if ($HostedOutboundSpamFilterPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

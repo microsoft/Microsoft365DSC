@@ -364,7 +364,7 @@ function Export-TargetResource
         $content += $currentDSCBlock
     }
     $content += "        }`r`n"
-
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
     return $content
 }
 

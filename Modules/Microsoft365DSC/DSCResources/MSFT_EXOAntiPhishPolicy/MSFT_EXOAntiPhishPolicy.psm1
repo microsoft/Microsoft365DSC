@@ -467,17 +467,13 @@ function Export-TargetResource
         -Platform ExchangeOnline `
         -ErrorAction SilentlyContinue
 
-    $AntiPhishPolicies = Get-AntiPhishPolicy
+    [array]$AntiPhishPolicies = Get-AntiPhishPolicy
     $content = ""
     $i = 1
-    $PolicyCount = $AntiPhishPolicies.Length
-    if ($null -eq $PolicyCount)
-    {
-        $PolicyCount = 1
-    }
+    Write-Host "`r`n" -NoNewLine
     foreach ($Policy in $AntiPhishPolicies)
     {
-        Write-Information "    [$i/$PolicyCount] $($Policy.Identity)"
+        Write-Host "    [$i/$($AntiphishPolicies.Length)] $($Policy.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $Policy.Identity
@@ -490,7 +486,12 @@ function Export-TargetResource
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
+    }
+    if ($AntiphishPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

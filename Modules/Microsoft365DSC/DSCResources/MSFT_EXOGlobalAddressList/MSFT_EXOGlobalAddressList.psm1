@@ -540,10 +540,11 @@ function Export-TargetResource
     [array]$AllGlobalAddressLists = Get-GlobalAddressList
 
     $dscContent = ""
+    Write-Host "`r`n" -NoNewLine
     $i = 1
     foreach ($GlobalAddressList in $AllGlobalAddressLists)
     {
-        Write-Information "    [$i/$($AllGlobalAddressLists.Count)] $($GlobalAddressList.Name)"
+        Write-Host "    [$i/$($AllGlobalAddressLists.Count)] $($GlobalAddressList.Name)" -NoNewLine
 
         $Params = @{
             Name               = $GlobalAddressList.Name
@@ -557,7 +558,12 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $dscContent += $content
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
+    }
+    if ($AllGlobalAddressLists.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

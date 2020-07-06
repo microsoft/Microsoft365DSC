@@ -1016,10 +1016,11 @@ function Export-TargetResource
     [array]$AllMobileDeviceMailboxPolicies = Get-MobileDeviceMailboxPolicy
 
     $dscContent = ""
+    Write-Host "`r`n" -NoNewLine
     $i = 1
     foreach ($MobileDeviceMailboxPolicy in $AllMobileDeviceMailboxPolicies)
     {
-        Write-Information "    [$i/$($AllMobileDeviceMailboxPolicies.Count)] $($MobileDeviceMailboxPolicy.Name)"
+        Write-Host "    [$i/$($AllMobileDeviceMailboxPolicies.Length)] $($MobileDeviceMailboxPolicy.Name)" -NoNewLine
 
         $Params = @{
             Name               = $MobileDeviceMailboxPolicy.Name
@@ -1033,7 +1034,12 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $dscContent += $content
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
+    }
+    if ($AllMobileDeviceMailboxPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

@@ -1321,7 +1321,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -1334,10 +1333,11 @@ function Export-TargetResource
     [array]$AllOwaMailboxPolicies = Get-OwaMailboxPolicy
 
     $dscContent = ""
+    Write-Host "`r`n" -NoNewLine
     $i = 1
     foreach ($OwaMailboxPolicy in $AllOwaMailboxPolicies)
     {
-        Write-Information "    [$i/$($AllOwaMailboxPolicies.Count)] $($OwaMailboxPolicy.Name)"
+        Write-Host "    [$i/$($AllOwaMailboxPolicies.Length)] $($OwaMailboxPolicy.Name)" -NoNewLine
 
         $Params = @{
             Name               = $OwaMailboxPolicy.Name
@@ -1351,7 +1351,12 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $dscContent += $content
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
+    }
+    if ($AllOwaMailboxPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

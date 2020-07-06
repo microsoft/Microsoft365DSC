@@ -292,7 +292,7 @@ function Export-TargetResource
         }
         $content += "        }`r`n"
     }
-
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
     return $content
 }
 

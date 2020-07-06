@@ -198,7 +198,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -215,9 +214,10 @@ function Export-TargetResource
         [array]$AllPolicyTips = Get-PolicyTipConfig
 
         $i = 1
+        Write-Host "`r`n" -NoNewLine
         foreach ($PolicyTipConfig in $AllPolicyTips)
         {
-            Write-Information "    [$i/$($AllPolicyTips.Count)] $($PolicyTipConfig.Name)"
+            Write-Host "    [$i/$($AllPolicyTips.Length)] $($PolicyTipConfig.Name)" -NoNewLine
 
             $Params = @{
                 Name               = $PolicyTipConfig.Name
@@ -231,7 +231,12 @@ function Export-TargetResource
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $content += "        }`r`n"
             $dscContent += $content
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
+        }
+        if ($AllPolicyTips.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
     }
     return $dscContent

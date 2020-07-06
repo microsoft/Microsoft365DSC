@@ -867,15 +867,17 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
 
-    $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
+    [array]$HostedContentFilterPolicies = Get-HostedContentFilterPolicy
     $content = ''
-
+    Write-Host "`r`n" -NoNewLine
+    $i = 1
     foreach ($HostedContentFilterPolicy in $HostedContentFilterPolicies)
     {
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             Identity           = $HostedContentFilterPolicy.Identity
         }
+        Write-Host "    [$i/$($HostedContentFilterPolicies.Length)] $($HostedContentFilterPolicy.Identity)" -NoNewLine
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
 
@@ -889,6 +891,12 @@ function Export-TargetResource
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        $i++
+    }
+    if ($HostedContentFilterPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

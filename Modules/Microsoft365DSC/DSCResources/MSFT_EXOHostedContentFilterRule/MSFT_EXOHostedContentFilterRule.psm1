@@ -336,9 +336,10 @@ function Export-TargetResource
     $content = ''
 
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($HostedContentFilterRule in $HostedContentFilterRules)
     {
-        Write-Information -MessageData "    [$i/$($HostedContentFilterRules.Count)] $($HostedContentFilterRule.Identity)"
+        Write-Host "    [$i/$($HostedContentFilterRules.Count)] $($HostedContentFilterRule.Identity)" -NoNewLine
         $params = @{
             GlobalAdminAccount        = $GlobalAdminAccount
             Identity                  = $HostedContentFilterRule.Identity
@@ -351,7 +352,12 @@ function Export-TargetResource
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
+    }
+    if ($HostedContentFilterRules.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

@@ -252,9 +252,10 @@ function Export-TargetResource
 
     $dscContent = ""
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($AddressBookPolicy in $AllAddressBookPolicies)
     {
-        Write-Information "    [$i/$($AllAddressBookPolicies.Count)] $($AddressBookPolicy.Name)"
+        Write-Host "    [$i/$($AllAddressBookPolicies.Count)] $($AddressBookPolicy.Name)" -NoNewLine
 
         $Params = @{
             Name               = $AddressBookPolicy.Name
@@ -268,6 +269,7 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $dscContent += $content
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

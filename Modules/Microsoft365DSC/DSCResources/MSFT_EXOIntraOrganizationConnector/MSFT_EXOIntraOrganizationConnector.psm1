@@ -193,10 +193,18 @@ function Export-TargetResource
 
     [array]$IntraOrganizationConnectors = Get-IntraOrganizationConnector
     $content = ""
+
+    if ($IntraOrganizationConnectors.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($IntraOrganizationConnector in $IntraOrganizationConnectors)
     {
-        Write-Information "    [$i/$($IntraOrganizationConnectors.length)] $($IntraOrganizationConnector.Identity)"
+        Write-Host "    [$i/$($IntraOrganizationConnectors.length)] $($IntraOrganizationConnector.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $IntraOrganizationConnector.Identity
@@ -210,6 +218,7 @@ function Export-TargetResource
         $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $content

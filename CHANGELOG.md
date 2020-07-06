@@ -24,7 +24,7 @@
   * Updated Microsoft.PowerApps.Administration.PowerShell
     module version to 2.0.65;
   * Updated MSCloudLoginAssistant module to version
-    version 1.0.26;
+    version 1.0.27;
   * Updated ReverseDSC module version to 2.0.0.4;
   * Updated SharePointPnPPowerShellOnline module to
     version 3.22.2006.2;

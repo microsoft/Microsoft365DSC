@@ -247,10 +247,11 @@ function Export-TargetResource
     [array]$AllRoleAssignmentPolicies = Get-RoleAssignmentPolicy
 
     $dscContent = ""
+    Write-Host "`r`n" -NoNewLine
     $i = 1
     foreach ($RoleAssignmentPolicy in $AllRoleAssignmentPolicies)
     {
-        Write-Information "    [$i/$($AllRoleAssignmentPolicies.Count)] $($RoleAssignmentPolicy.Name)"
+        Write-Host "    [$i/$($AllRoleAssignmentPolicies.Length)] $($RoleAssignmentPolicy.Name)" -NoNewLine
 
         $Params = @{
             Name               = $RoleAssignmentPolicy.Name
@@ -264,7 +265,12 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $dscContent += $content
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
+    }
+    if ($AllRoleAssignmentPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

@@ -488,7 +488,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -501,10 +500,11 @@ function Export-TargetResource
     [array]$AllRemoteDomains = Get-RemoteDomain
 
     $dscContent = ""
+    Write-Host "`r`n" -NoNewLine
     $i = 1
     foreach ($domain in $AllRemoteDomains)
     {
-        Write-Information "    [$i/$($AllRemoteDomains.Count)] $($domain.Identity)"
+        Write-Host "    [$i/$($AllRemoteDomains.Length)] $($domain.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $domain.Identity
@@ -518,7 +518,12 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $dscContent += $content
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
+    }
+    if ($AllRemoteDomains.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

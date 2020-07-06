@@ -281,10 +281,11 @@ function Export-TargetResource
     }
 
     $dscContent = ""
+    Write-Host "`r`n" -NoNewLine
     $i = 1
     foreach ($ApplicationAccessPolicy in $AllApplicationAccessPolicies)
     {
-        Write-Information "    [$i/$($AllApplicationAccessPolicies.Count)] $($ApplicationAccessPolicy.Identity)"
+        Write-Host "    [$i/$($AllApplicationAccessPolicies.Count)] $($ApplicationAccessPolicy.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $ApplicationAccessPolicy.Identity
@@ -298,7 +299,12 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $dscContent += $content
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
+    }
+    if ($AllApplicationAccessPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

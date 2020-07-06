@@ -241,9 +241,10 @@ function Export-TargetResource
 
     $dscContent = ""
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($ActiveSyncDeviceAccessRule in $AllActiveSyncDeviceAccessRules)
     {
-        Write-Information "    [$i/$($AllActiveSyncDeviceAccessRules.Count)] $($ActiveSyncDeviceAccessRule.Identity)"
+        Write-Host "    [$i/$($AllActiveSyncDeviceAccessRules.Count)] $($ActiveSyncDeviceAccessRule.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $ActiveSyncDeviceAccessRule.Identity
@@ -257,6 +258,7 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $dscContent += $content
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

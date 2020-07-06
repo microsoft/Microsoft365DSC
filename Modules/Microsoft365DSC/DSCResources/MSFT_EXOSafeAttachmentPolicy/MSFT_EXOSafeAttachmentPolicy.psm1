@@ -245,7 +245,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -261,10 +260,11 @@ function Export-TargetResource
     if (Confirm-ImportedCmdletIsAvailable -CmdletName 'Get-SafeAttachmentPolicy')
     {
         $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
+        Write-Host "`r`n" -NoNewLine
         $i = 1
         foreach ($SafeAttachmentPolicy in $SafeAttachmentPolicies)
         {
-            Write-Information "    [$i/$($SafeAttachmentPolicies.Length)] $($SafeAttachmentPolicy.Identity)"
+            Write-Host "    [$i/$($SafeAttachmentPolicies.Length)] $($SafeAttachmentPolicy.Identity)" -NoNewLine
             $params = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 Identity           = $SafeAttachmentPolicy.Identity
@@ -276,7 +276,12 @@ function Export-TargetResource
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
             $content += "        }`r`n"
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
+        }
+        if ($SafeAttachmentPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
     }
     else

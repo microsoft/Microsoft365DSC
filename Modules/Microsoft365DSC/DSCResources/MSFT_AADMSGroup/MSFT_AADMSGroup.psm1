@@ -353,12 +353,13 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
 
-    [array] $groups = Get-AzureADMSGroup
+    [array] $groups = Get-AzureADMSGroup -All:$true
     $i = 1
     $content = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($group in $groups)
     {
-        Write-Information -MessageData "    [$i/$($groups.Count)] $($group.DisplayName)"
+        Write-Host "    [$i/$($groups.Count)] $($group.DisplayName)" -NoNewLine
         if ($ConnectionMode -eq 'Credential')
         {
             $params = @{
@@ -410,6 +411,7 @@ function Export-TargetResource
             $content += $currentDSCBlock
         }
         $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $content

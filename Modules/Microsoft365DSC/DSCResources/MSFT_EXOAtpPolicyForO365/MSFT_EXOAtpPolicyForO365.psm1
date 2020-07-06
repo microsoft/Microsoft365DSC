@@ -258,8 +258,10 @@ function Export-TargetResource
     }
     if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-AtpPolicyForO365)
     {
-        $ATPPolicies = Get-AtpPolicyForO365
+        [array]$ATPPolicies = Get-AtpPolicyForO365
         $content = ""
+        Write-Host "`r`n" -NoNewLine
+        $i = 1
         foreach ($atpPolicy in $ATPPolicies)
         {
             $params = @{
@@ -267,6 +269,7 @@ function Export-TargetResource
                 Identity           = $atpPolicy.Identity
                 GlobalAdminAccount = $GlobalAdminAccount
             }
+            Write-Host "    [$i/$($ATPPolicies.Length)] $($atpPolicy.Identiy)" -NoNewLine
             $result = Get-TargetResource @params
             if ($result.Ensure -eq "Present")
             {
@@ -283,6 +286,12 @@ function Export-TargetResource
                 $content += $currentDSCBlock
                 $content += "        }`r`n"
             }
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
+        }
+        if ($ATPPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
     }
     return $content

@@ -306,8 +306,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -322,10 +320,11 @@ function Export-TargetResource
     if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeLinksRule)
     {
         [array]$SafeLinksRules = Get-SafeLinksRule
+        Write-Host "`r`n" -NoNewLine
         $i = 1
         foreach ($SafeLinksRule in $SafeLinksRules)
         {
-            Write-Information "    [$i/$($SafeLinksRules.Length)] $($SafeLinksRule.Identity)"
+            Write-Host "    [$i/$($SafeLinksRules.Length)] $($SafeLinksRule.Identity)" -NoNewLine
             $params = @{
                 Identity           = $SafeLinksRule.Identity
                 SafeLinksPolicy    = $SafeLinksRule.SafeLinksPolicy
@@ -338,12 +337,17 @@ function Export-TargetResource
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $content += "        }`r`n"
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
+        }
+        if ($SafeLinksRules.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
     }
     else
     {
-        Write-Information "The current tenant is not registered to allow for Safe Links Rules."
+        Write-Host "$($Global:M365DSCYellowCircle) The current tenant is not registered to allow for Safe Links Rules."
     }
     return $content
 }
