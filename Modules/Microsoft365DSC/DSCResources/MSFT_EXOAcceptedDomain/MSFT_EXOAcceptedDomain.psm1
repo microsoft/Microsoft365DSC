@@ -29,9 +29,21 @@ function Get-TargetResource
         [System.Boolean]
         $OutboundOnly = $false,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of Accepted Domain for $Identity"
@@ -139,9 +151,21 @@ function Set-TargetResource
         [System.Boolean]
         $OutboundOnly = $false,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of Accepted Domain for $Identity"
@@ -198,9 +222,21 @@ function Test-TargetResource
         [System.Boolean]
         $OutboundOnly = $false,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration of Accepted Domain for $Identity"
@@ -229,9 +265,21 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $InformationPreference = 'Continue'
     #region Telemetry
@@ -240,13 +288,19 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     $organization = ""
-    if ($GlobalAdminAccount.UserName.Contains("@"))
+    if ($ConnectionMode -eq 'ServicePrincipal')
     {
-        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
+            -TenantId $TenantId `
+            -CertificateThumbprint $CertificateThumbprint
+    }
+    else
+    {
+        $organization = $GlobalAdminAccount.UserName.Split('@')[1]
     }
 
     [array]$AllAcceptedDomains = Get-AcceptedDomain

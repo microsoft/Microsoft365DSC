@@ -924,7 +924,10 @@ function Get-M365DSCTenantDomain
         $CertificateThumbprint
     )
 
-    Test-MSCloudLogin -Platform AzureAD -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
+    Test-MSCloudLogin -Platform AzureAD `
+        -ApplicationId $ApplicationId `
+        -TenantId $TenantId `
+        -CertificateThumbprint $CertificateThumbprint
 
     $tenantDetails = Get-AzureADTenantDetail
     $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -Filterscript {$_._Default}
@@ -948,7 +951,8 @@ function New-M365DSCConnection
 
     switch ($Platform)
     {
-        {$_ -eq 'AzureAD' -or $_ -eq 'MicrosoftTeams' -or $_ -eq 'MicrosoftGraph'}
+        {$_ -eq 'AzureAD' -or $_ -eq 'MicrosoftTeams' -or $_ -eq 'MicrosoftGraph' -or `
+         $_ -eq 'ExchangeOnline'}
         {
             # Case both authentication methods are attempted
             if ($null -ne $InboundParameters.GlobalAdminAccount -and `
