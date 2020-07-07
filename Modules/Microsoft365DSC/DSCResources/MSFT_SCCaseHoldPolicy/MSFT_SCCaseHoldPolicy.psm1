@@ -326,13 +326,13 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewLine
     foreach ($case in $cases)
     {
-        Write-Host "    [$i/$($Cases.Count)] Scanning Policies in Case {$($case.Name)}"
+        Write-Host "    |---[$i/$($Cases.Count)] Scanning Policies in Case {$($case.Name)}"
         [array]$policies = Get-CaseHoldPolicy -Case $case.Name
 
         $j = 1
         foreach ($policy in $policies)
         {
-            Write-Host "        [$j/$($policies.Count)] $($policy.Name)" -NoNewLine
+            Write-Host "        |---[$j/$($policies.Count)] $($policy.Name)" -NoNewLine
             $params = @{
                 Name               = $policy.Name
                 Case               = $case.Name

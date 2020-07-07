@@ -303,8 +303,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -322,10 +320,10 @@ function Export-TargetResource
     {
         $channels = Get-TeamChannel -GroupId $team.GroupId
         $i = 1
-        Write-Host "    [$j/$($Teams.Length)] Team {$($team.DisplayName)}"
+        Write-Host "    |---[$j/$($Teams.Length)] Team {$($team.DisplayName)}"
         foreach ($channel in $channels)
         {
-            Write-Host "        [$i/$($channels.Length)] $($channel.DisplayName)" -NoNewLine
+            Write-Host "        |---[$i/$($channels.Length)] $($channel.DisplayName)" -NoNewLine
 
             if ($ConnectionMode -eq 'Credential')
             {

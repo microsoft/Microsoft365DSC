@@ -374,11 +374,18 @@ function Export-TargetResource
         [array]$ClientAccessRules = Get-ClientAccessRule
 
         $content = ""
-        Write-Host "`r`n" -NoNewLine
+        if ($ClientAccessRules.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
         $i = 1
         foreach ($ClientAccessRule in $ClientAccessRules)
         {
-            Write-Host "    [$i/$($ClientAccessRules.Length)] $($ClientAccessRule.Identity)" -NoNewLine
+            Write-Host "    |---[$i/$($ClientAccessRules.Length)] $($ClientAccessRule.Identity)" -NoNewLine
             $params = @{
                 Identity           = $ClientAccessRule.Identity
                 Action             = $ClientAccessRule.Action
@@ -393,10 +400,6 @@ function Export-TargetResource
             $content += "        }`r`n"
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
-        }
-        if ($ClientAccessRules.Length -eq 0)
-        {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
     }
     return $content

@@ -763,7 +763,7 @@ function Export-TargetResource
         {
                 Write-Host "`r`n" -NoNewline
         }
-        Write-Host "    [$i/$($propertiesLength)] $($property.Value.Name)" -NoNewline
+        Write-Host "    |---[$i/$($propertiesLength)] $($property.Value.Name)" -NoNewline
         $params = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 Name               = $property.Value.Name

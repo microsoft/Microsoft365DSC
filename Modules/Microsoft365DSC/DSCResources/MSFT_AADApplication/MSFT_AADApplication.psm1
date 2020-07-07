@@ -397,7 +397,7 @@ function Export-TargetResource
     $AADApplications = Get-AzureADApplication
     foreach($AADApp in $AADApplications)
     {
-        Write-Host "    [$i/$($AADApplications.Count)] $($AADApp.DisplayName)" -NoNewLine
+        Write-Host "    |---[$i/$($AADApplications.Count)] $($AADApp.DisplayName)" -NoNewLine
         if ($ConnectionMode -eq 'Credential')
         {
             $params = @{

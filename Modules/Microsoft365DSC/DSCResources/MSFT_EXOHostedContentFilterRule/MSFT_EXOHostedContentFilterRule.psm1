@@ -336,10 +336,17 @@ function Export-TargetResource
     $content = ''
 
     $i = 1
-    Write-Host "`r`n" -NoNewLine
+    if ($HostedContentFilterRules.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     foreach ($HostedContentFilterRule in $HostedContentFilterRules)
     {
-        Write-Host "    [$i/$($HostedContentFilterRules.Count)] $($HostedContentFilterRule.Identity)" -NoNewLine
+        Write-Host "    |---[$i/$($HostedContentFilterRules.Count)] $($HostedContentFilterRule.Identity)" -NoNewLine
         $params = @{
             GlobalAdminAccount        = $GlobalAdminAccount
             Identity                  = $HostedContentFilterRule.Identity
@@ -354,10 +361,6 @@ function Export-TargetResource
         $content += "        }`r`n"
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($HostedContentFilterRules.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

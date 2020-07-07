@@ -204,7 +204,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -217,11 +216,19 @@ function Export-TargetResource
     [array]$AllManagementRoles = Get-ManagementRole
 
     $dscContent = ""
-    Write-Host "`r`n" -NoNewLine
+
+    if ($AllManagementRoles.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($ManagementRole in $AllManagementRoles)
     {
-        Write-Host "    [$i/$($AllManagementRoles.Count)] $($ManagementRole.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($AllManagementRoles.Count)] $($ManagementRole.Name)" -NoNewLine
 
         $Params = @{
             Name               = $ManagementRole.Name
@@ -237,10 +244,6 @@ function Export-TargetResource
         $dscContent += $content
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($AllManagementRoles.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

@@ -367,7 +367,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -404,7 +403,7 @@ function Export-TargetResource
             ManagedBy          = "DummyUser"
             MailNickName       = $group.MailNickName
         }
-        Write-Host "    [$i/$($groups.Length)] $($group.DisplayName)" -NoNewLine
+        Write-Host "    |---[$i/$($groups.Length)] $($group.DisplayName)" -NoNewLine
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = "`$Credsglobaladmin"
         $content += "        O365Group " + (New-GUID).ToString() + "`r`n"

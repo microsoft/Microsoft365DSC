@@ -361,11 +361,18 @@ function Export-TargetResource
 
     $AntiPhishRules = Get-AntiphishRule
     $content = ""
-    Write-Host "`r`n" -NoNewLine
+    if ($AntiPhishRules.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($Rule in $AntiPhishRules)
     {
-        Write-Host "    [$i/$($AntiPhishRules.Length)] $($Rule.Identity)" -NoNewLine
+        Write-Host "    |---[$i/$($AntiPhishRules.Length)] $($Rule.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $Rule.Identity
@@ -381,10 +388,6 @@ function Export-TargetResource
         $content += "        }`r`n"
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($AntiPhishRules.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

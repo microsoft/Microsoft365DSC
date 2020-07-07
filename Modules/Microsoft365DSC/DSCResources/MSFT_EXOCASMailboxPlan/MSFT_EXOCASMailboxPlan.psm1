@@ -217,17 +217,23 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $InformationPreference = 'Continue'
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform ExchangeOnline
     [array]$CASMailboxPlans = Get-CASMailboxPlan
 
     $content = ""
-    Write-Host "`r`n" -NoNewLine
+    if ($CASMailboxPlans.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($CASMailboxPlan in $CASMailboxPlans)
     {
-        Write-Host "    [$i/$($CASMailboxPlans.Count)] $($CASMailboxPlan.Identity.Split('-')[0])" -NoNewLine
+        Write-Host "    |---[$i/$($CASMailboxPlans.Count)] $($CASMailboxPlan.Identity.Split('-')[0])" -NoNewLine
         $params = @{
             Identity           = $CASMailboxPlan.Identity
             GlobalAdminAccount = $GlobalAdminAccount
@@ -242,10 +248,6 @@ function Export-TargetResource
         $content += "        }`r`n"
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($CASMailboxPlans.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

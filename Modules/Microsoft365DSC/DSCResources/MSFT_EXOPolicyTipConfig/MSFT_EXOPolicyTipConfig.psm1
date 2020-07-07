@@ -214,10 +214,17 @@ function Export-TargetResource
         [array]$AllPolicyTips = Get-PolicyTipConfig
 
         $i = 1
-        Write-Host "`r`n" -NoNewLine
+        if ($AllPolicyTips.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
         foreach ($PolicyTipConfig in $AllPolicyTips)
         {
-            Write-Host "    [$i/$($AllPolicyTips.Length)] $($PolicyTipConfig.Name)" -NoNewLine
+            Write-Host "    |---[$i/$($AllPolicyTips.Length)] $($PolicyTipConfig.Name)" -NoNewLine
 
             $Params = @{
                 Name               = $PolicyTipConfig.Name
@@ -233,10 +240,6 @@ function Export-TargetResource
             $dscContent += $content
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
-        }
-        if ($AllPolicyTips.Length -eq 0)
-        {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
     }
     return $dscContent

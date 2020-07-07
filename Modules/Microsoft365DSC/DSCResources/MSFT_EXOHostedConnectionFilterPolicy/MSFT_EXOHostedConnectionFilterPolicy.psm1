@@ -297,7 +297,7 @@ function Export-TargetResource
             GlobalAdminAccount = $GlobalAdminAccount
             Identity           = $HostedConnectionFilterPolicy.Identity
         }
-        Write-Host "    [$i/$($HostedConnectionFilterPolicies.Length)] $($HostedConnectionFilterPolicy.Identity)" -NoNewLine
+        Write-Host "    |---[$i/$($HostedConnectionFilterPolicies.Length)] $($HostedConnectionFilterPolicy.Identity)" -NoNewLine
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $content += "        EXOHostedConnectionFilterPolicy " + (New-GUID).ToString() + "`r`n"

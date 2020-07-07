@@ -192,7 +192,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -224,7 +223,7 @@ function Export-TargetResource
             {
                     Write-Host "`r`n" -NoNewline
             }
-            Write-Host "    [$i/$($filesToDownload.Length)] $($file.Name)" -NoNewline
+            Write-Host "    |---[$i/$($filesToDownload.Length)] $($file.Name)" -NoNewline
 
             $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
             $app = Get-PnpApp -Identity $identity -ErrorAction SilentlyContinue

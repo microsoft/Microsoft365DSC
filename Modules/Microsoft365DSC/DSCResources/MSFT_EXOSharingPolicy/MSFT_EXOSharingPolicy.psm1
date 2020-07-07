@@ -238,11 +238,19 @@ function Export-TargetResource
     [array]$AllSharingPolicies = Get-SharingPolicy
 
     $dscContent = ""
-    Write-Host "`r`n" -NoNewLine
+
+    if ($AllSharingPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($SharingPolicy in $AllSharingPolicies)
     {
-        Write-Host "    [$i/$($AllSharingPolicies.Length)] $($SharingPolicy.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($AllSharingPolicies.Length)] $($SharingPolicy.Name)" -NoNewLine
 
         $Params = @{
             Name               = $SharingPolicy.Name
@@ -258,10 +266,6 @@ function Export-TargetResource
         $dscContent += $content
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($AllSharingPolicies.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

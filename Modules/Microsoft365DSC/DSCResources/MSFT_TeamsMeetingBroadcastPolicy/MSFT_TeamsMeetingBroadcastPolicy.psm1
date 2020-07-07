@@ -226,8 +226,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -249,7 +247,7 @@ function Export-TargetResource
             Identity           = $policy.Identity
             GlobalAdminAccount = $GlobalAdminAccount
         }
-        Write-Host "    [$i/$($policies.Length)] $($policy.Identity)" -NoNewLine
+        Write-Host "    |---[$i/$($policies.Length)] $($policy.Identity)" -NoNewLine
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $content += "        TeamsMeetingBroadcastPolicy " + (New-GUID).ToString() + "`r`n"

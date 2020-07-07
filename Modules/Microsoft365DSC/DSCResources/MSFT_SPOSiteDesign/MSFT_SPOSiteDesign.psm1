@@ -295,7 +295,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -317,7 +316,7 @@ function Export-TargetResource
         {
                 Write-Host "`r`n" -NoNewline
         }
-        Write-Host "    [$i/$($designs.Length)] $($design.Title)" -NoNewline
+        Write-Host "    |---[$i/$($designs.Length)] $($design.Title)" -NoNewline
         $params = @{
             Title              = $design.Title
             GlobalAdminAccount = $GlobalAdminAccount

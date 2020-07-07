@@ -238,7 +238,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -252,10 +251,17 @@ function Export-TargetResource
 
     $dscContent = ""
     $i = 1
-    Write-Host "`r`n" -NoNewLine
+    if ($AllAddressBookPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     foreach ($AddressBookPolicy in $AllAddressBookPolicies)
     {
-        Write-Host "    [$i/$($AllAddressBookPolicies.Count)] $($AddressBookPolicy.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($AllAddressBookPolicies.Count)] $($AddressBookPolicy.Name)" -NoNewLine
 
         $Params = @{
             Name               = $AddressBookPolicy.Name

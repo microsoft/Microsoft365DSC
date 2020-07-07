@@ -508,8 +508,6 @@ function Export-TargetResource
         [System.String]
         $ApplicationId
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -526,7 +524,7 @@ function Export-TargetResource
     $content = ''
     foreach ($group in $groups)
     {
-        Write-Host "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
+        Write-Host "    |---[$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
         try
         {
             [Array]$plans = Get-M365DSCPlannerPlansFromGroup -GroupId $group.ObjectId `
@@ -536,7 +534,7 @@ function Export-TargetResource
             $j = 1
             foreach ($plan in $plans)
             {
-                Write-Host "        [$j/$($plans.Length)] $($plan.Title)"
+                Write-Host "        |---[$j/$($plans.Length)] $($plan.Title)"
 
                 [Array]$tasks = Get-M365DSCPlannerTasksFromPlan -PlanId $plan.Id `
                                     -GlobalAdminAccount $GlobalAdminAccount `

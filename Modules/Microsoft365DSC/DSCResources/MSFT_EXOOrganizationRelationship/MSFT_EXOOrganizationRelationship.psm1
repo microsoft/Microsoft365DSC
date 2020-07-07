@@ -498,11 +498,19 @@ function Export-TargetResource
     [array]$AllOrgRelationships = Get-OrganizationRelationship
 
     $dscContent = ""
-    Write-Host "`r`n" -NoNewLine
+
+    if ($AllOrganizationRelationships.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($relationship in $AllOrgRelationships)
     {
-        Write-Host "    [$i/$($AllOrgRelationships.Length)] $($relationship.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($AllOrgRelationships.Length)] $($relationship.Name)" -NoNewLine
 
         $Params = @{
             Name               = $relationship.Name
@@ -518,10 +526,6 @@ function Export-TargetResource
         $dscContent += $content
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($AllOrganizationRelationships.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

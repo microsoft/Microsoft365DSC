@@ -264,7 +264,7 @@ function Export-TargetResource
         $i = 1
         foreach ($SafeAttachmentPolicy in $SafeAttachmentPolicies)
         {
-            Write-Host "    [$i/$($SafeAttachmentPolicies.Length)] $($SafeAttachmentPolicy.Identity)" -NoNewLine
+            Write-Host "    |---[$i/$($SafeAttachmentPolicies.Length)] $($SafeAttachmentPolicy.Identity)" -NoNewLine
             $params = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 Identity           = $SafeAttachmentPolicy.Identity
@@ -286,8 +286,7 @@ function Export-TargetResource
     }
     else
     {
-        Write-Host "`r`n" -NoNewLine
-        Write-Host "    $($Global:M365DSCEmojiYellowCircle) The current tenant doesn't have access to Safe Attachment Policy APIs."
+        Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant doesn't have access to Safe Attachment Policy APIs."
     }
     return $content
 }

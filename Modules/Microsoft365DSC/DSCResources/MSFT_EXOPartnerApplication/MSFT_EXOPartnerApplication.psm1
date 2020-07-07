@@ -270,11 +270,18 @@ function Export-TargetResource
     [array]$AllPartnerApplications = Get-PartnerApplication
 
     $dscContent = ""
-    Write-Host "`r`n" -NoNewLine
+    if ($AllPartnerApplications.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($PartnerApplication in $AllPartnerApplications)
     {
-        Write-Host "    [$i/$($AllPartnerApplications.Length)] $($PartnerApplication.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($AllPartnerApplications.Length)] $($PartnerApplication.Name)" -NoNewLine
 
         $Params = @{
             Name               = $PartnerApplication.Name
@@ -290,10 +297,6 @@ function Export-TargetResource
         $dscContent += $content
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($AllPartnerApplications.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

@@ -257,7 +257,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -276,11 +275,18 @@ function Export-TargetResource
     [array]$AllEmailAddressPolicies = Get-EmailAddressPolicy
 
     $dscContent = ""
-    Write-Host "`r`n" -NoNewLine
+    if ($AllEmailAddressPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($EmailAddressPolicy in $AllEmailAddressPolicies)
     {
-        Write-Host "    [$i/$($AllEmailAddressPolicies.Count)] $($EmailAddressPolicy.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($AllEmailAddressPolicies.Count)] $($EmailAddressPolicy.Name)" -NoNewLine
 
         $Params = @{
             Name               = $EmailAddressPolicy.Name
@@ -302,10 +308,6 @@ function Export-TargetResource
         $dscContent += $content
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($AllEmailAddressPolicies.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

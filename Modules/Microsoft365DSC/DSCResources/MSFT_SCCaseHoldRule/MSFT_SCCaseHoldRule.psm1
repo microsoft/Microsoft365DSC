@@ -231,7 +231,7 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewLine
     foreach ($Rule in $Rules)
     {
-        Write-Host "    [$i/$($Rules.Count)] $($Rule.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($Rules.Count)] $($Rule.Name)" -NoNewLine
         try
         {
             $policy = Get-CaseHoldPolicy -Identity $Rule.Policy -ErrorAction Stop

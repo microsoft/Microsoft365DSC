@@ -631,8 +631,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -656,7 +654,7 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewLine
     foreach ($team in $teams)
     {
-        Write-Host "    [$i/$($teams.Length)] $($team.DisplayName)" -NoNewLine
+        Write-Host "    |---[$i/$($teams.Length)] $($team.DisplayName)" -NoNewLine
         $params = @{
             DisplayName           = $team.DisplayName
             GlobalAdminAccount    = $GlobalAdminAccount

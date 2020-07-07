@@ -470,10 +470,18 @@ function Export-TargetResource
     [array]$AntiPhishPolicies = Get-AntiPhishPolicy
     $content = ""
     $i = 1
-    Write-Host "`r`n" -NoNewLine
+
+    if ($AntiphishPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     foreach ($Policy in $AntiPhishPolicies)
     {
-        Write-Host "    [$i/$($AntiphishPolicies.Length)] $($Policy.Identity)" -NoNewLine
+        Write-Host "    |---[$i/$($AntiphishPolicies.Length)] $($Policy.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $Policy.Identity
@@ -488,10 +496,6 @@ function Export-TargetResource
         $content += "        }`r`n"
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($AntiphishPolicies.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

@@ -158,7 +158,6 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $InformationPreference = 'Continue'
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                       -Platform SkypeForBusiness
 
@@ -174,7 +173,7 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        Write-Host "    [$i/$($policies.Count)] $($policy.Identity.Replace('Tag:', ''))" -NoNewLine
+        Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity.Replace('Tag:', ''))" -NoNewLine
         $params = @{
             Identity           = $policy.Identity.Replace("Tag:", "")
             GlobalAdminAccount = $GlobalAdminAccount

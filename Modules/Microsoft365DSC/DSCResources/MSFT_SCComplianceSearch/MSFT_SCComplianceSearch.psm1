@@ -355,7 +355,7 @@ function Export-TargetResource
     $partialContent = ""
     foreach ($search in $searches)
     {
-        Write-Host "        [$i/$($searches.Name.Count)] $($search.Name)" -NoNewLine
+        Write-Host "        |---[$i/$($searches.Name.Count)] $($search.Name)" -NoNewLine
         $params = @{
             Name               = $search.Name
             GlobalAdminAccount = $GlobalAdminAccount
@@ -389,7 +389,7 @@ function Export-TargetResource
                 Case               = $case.Name
                 GlobalAdminAccount = $GlobalAdminAccount
             }
-            Write-Host "        [$i/$($searches.Name.Count)] $($search.Name)" -NoNewLine
+            Write-Host "        |---[$i/$($searches.Name.Count)] $($search.Name)" -NoNewLine
             $result = Get-TargetResource @params
             $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
             $DSCContent += "        SCComplianceSearch " + (New-GUID).ToString() + "`r`n"

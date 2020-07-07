@@ -365,11 +365,19 @@ function Export-TargetResource
 
     [array]$OutboundConnectors = Get-OutboundConnector
     $content = ""
-    Write-Host "`r`n" -NoNewLine
+
+    if ($OutBoundConnectors.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($OutboundConnector in $OutboundConnectors)
     {
-        Write-Host "    [$i/$($OutboundConnectors.Length)] $($OutboundConnector.Identity)" -NoNewLine
+        Write-Host "    |---[$i/$($OutboundConnectors.Length)] $($OutboundConnector.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $OutboundConnector.Identity
@@ -385,10 +393,6 @@ function Export-TargetResource
         $content += "        }`r`n"
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($OutBoundConnectors.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

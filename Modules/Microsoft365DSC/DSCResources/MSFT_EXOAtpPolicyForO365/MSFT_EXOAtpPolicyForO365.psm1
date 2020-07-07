@@ -260,7 +260,15 @@ function Export-TargetResource
     {
         [array]$ATPPolicies = Get-AtpPolicyForO365
         $content = ""
-        Write-Host "`r`n" -NoNewLine
+
+        if ($ATPPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
         $i = 1
         foreach ($atpPolicy in $ATPPolicies)
         {
@@ -269,7 +277,7 @@ function Export-TargetResource
                 Identity           = $atpPolicy.Identity
                 GlobalAdminAccount = $GlobalAdminAccount
             }
-            Write-Host "    [$i/$($ATPPolicies.Length)] $($atpPolicy.Identiy)" -NoNewLine
+            Write-Host "    |---[$i/$($ATPPolicies.Length)] $($atpPolicy.Identiy)" -NoNewLine
             $result = Get-TargetResource @params
             if ($result.Ensure -eq "Present")
             {
@@ -289,10 +297,10 @@ function Export-TargetResource
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
-        if ($ATPPolicies.Length -eq 0)
-        {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
-        }
+    }
+    else
+    {
+        Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for ATP Policies"
     }
     return $content
 }

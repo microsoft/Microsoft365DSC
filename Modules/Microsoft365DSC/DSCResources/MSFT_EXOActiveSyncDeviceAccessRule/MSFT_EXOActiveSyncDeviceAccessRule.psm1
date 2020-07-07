@@ -227,7 +227,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -241,10 +240,17 @@ function Export-TargetResource
 
     $dscContent = ""
     $i = 1
-    Write-Host "`r`n" -NoNewLine
+    if ($AllActiveSyncDeviceAccessRules.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     foreach ($ActiveSyncDeviceAccessRule in $AllActiveSyncDeviceAccessRules)
     {
-        Write-Host "    [$i/$($AllActiveSyncDeviceAccessRules.Count)] $($ActiveSyncDeviceAccessRule.Identity)" -NoNewLine
+        Write-Host "    |---[$i/$($AllActiveSyncDeviceAccessRules.Count)] $($ActiveSyncDeviceAccessRule.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $ActiveSyncDeviceAccessRule.Identity

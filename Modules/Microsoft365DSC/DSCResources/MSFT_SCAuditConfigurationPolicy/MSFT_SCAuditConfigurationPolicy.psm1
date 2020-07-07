@@ -197,7 +197,7 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        Write-Host "    [$i/$($policies.Length)] $($policy.Workload)" -NoNewLine
+        Write-Host "    |---[$i/$($policies.Length)] $($policy.Workload)" -NoNewLine
 
         $params = @{
             Workload           = $policy.Workload

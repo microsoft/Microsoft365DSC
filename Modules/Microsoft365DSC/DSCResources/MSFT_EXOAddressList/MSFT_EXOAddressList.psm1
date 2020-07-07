@@ -532,8 +532,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -545,16 +543,24 @@ function Export-TargetResource
         -Platform ExchangeOnline
     if ($null -eq (Get-Command 'Get-AddressList' -ErrorAction SilentlyContinue))
     {
+        Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Address Lists"
         return ""
     }
     $dscContent = ""
-    Write-Host "`r`n" -NoNewLine
-    $i = 1
     [array]$addressLists = Get-Addresslist
+    if ($addressLists.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
+    $i = 1
 
     foreach ($addressList in $addressLists)
     {
-        Write-Host "    [$i/$($addressLists.Count)] $($addressList.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($addressLists.Count)] $($addressList.Name)" -NoNewLine
         $params = @{
             Name               = $addressList.Name
             GlobalAdminAccount = $GlobalAdminAccount
@@ -569,10 +575,6 @@ function Export-TargetResource
         $dscContent += $content
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i ++
-    }
-    if ($addressesLists.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

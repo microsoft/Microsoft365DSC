@@ -57,8 +57,6 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-
-    $InformationPreference = 'Continue'
     Write-Verbose -Message "Setting configuration of SafeLinksRule for $Identity"
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -332,7 +330,7 @@ function Export-TargetResource
         $i = 1
         foreach ($SafeLinksRule in $SafeLinksRules)
         {
-            Write-Host "    [$i/$($SafeLinksRules.Length)] $($SafeLinksRule.Identity)" -NoNewLine
+            Write-Host "    |---[$i/$($SafeLinksRules.Length)] $($SafeLinksRule.Identity)" -NoNewLine
             $params = @{
                 Identity           = $SafeLinksRule.Identity
                 SafeLinksPolicy    = $SafeLinksRule.SafeLinksPolicy
@@ -351,7 +349,7 @@ function Export-TargetResource
     }
     else
     {
-        Write-Host "`r`n$($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Safe Links Rules."
+        Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Safe Links Rules."
     }
     return $content
 }

@@ -382,8 +382,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -400,7 +398,7 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        Write-Host "    [$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
+        Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
         $params = @{
             Identity           = $policy.Identity
             GlobalAdminAccount = $GlobalAdminAccount

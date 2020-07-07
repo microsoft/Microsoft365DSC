@@ -318,7 +318,6 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $InformationPreference = 'Continue'
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
                       -Platform PnP `
                       -ErrorAction SilentlyContinue
@@ -346,7 +345,7 @@ function Export-TargetResource
         {
                 Write-Host "`r`n" -NoNewline
         }
-        Write-Host "    [$i/$($sites.Length)] SPOSite groups for {$($site.Url)}"
+        Write-Host "    |---[$i/$($sites.Length)] SPOSite groups for {$($site.Url)}"
         try
         {
             Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
@@ -369,7 +368,7 @@ function Export-TargetResource
         $j = 1
         foreach ($siteGroup in $siteGroups)
         {
-            Write-Host "        [$j/$($siteGroups.Length)] $($siteGroup.Title)" -NoNewline
+            Write-Host "        |---[$j/$($siteGroups.Length)] $($siteGroup.Title)" -NoNewline
             try
             {
                 $sitePerm = Get-PnPGroupPermissions -Identity $siteGroup.Title -ErrorAction Stop

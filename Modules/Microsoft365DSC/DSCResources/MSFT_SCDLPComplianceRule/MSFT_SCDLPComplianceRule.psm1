@@ -503,7 +503,7 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewLine
     foreach ($rule in $rules)
     {
-        Write-Host "    [$i/$($rules.Length)] $($rule.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($rules.Length)] $($rule.Name)" -NoNewLine
         $result = Get-TargetResource -Name $rule.Name -Policy $rule.ParentPolicyName -GlobalAdminAccount $GlobalAdminAccount
 
         $IsCIMArray = $false

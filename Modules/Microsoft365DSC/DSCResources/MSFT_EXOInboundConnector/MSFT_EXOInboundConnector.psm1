@@ -345,7 +345,7 @@ function Export-TargetResource
     $i = 1
     foreach ($InboundConnector in $InboundConnectors)
     {
-        Write-Host "    [$i/$($InboundConnectors.Length)] $($InboundConnector.Identity)" -NoNewLine
+        Write-Host "    |---[$i/$($InboundConnectors.Length)] $($InboundConnector.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $InboundConnector.Identity

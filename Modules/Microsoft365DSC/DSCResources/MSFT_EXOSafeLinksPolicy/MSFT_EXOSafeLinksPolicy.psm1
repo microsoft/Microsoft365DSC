@@ -284,7 +284,7 @@ function Export-TargetResource
         $i = 1
         foreach ($SafeLinksPolicy in $SafeLinksPolicies)
         {
-            Write-Host "    [$i/$($SafeLinksPolicies.Length)] $($SafeLinksPolicy.Name)" -NoNewLine
+            Write-Host "    |---[$i/$($SafeLinksPolicies.Length)] $($SafeLinksPolicy.Name)" -NoNewLine
             $params = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 Identity           = $SafeLinksPolicy.Identity
@@ -306,7 +306,7 @@ function Export-TargetResource
     }
     else
     {
-        Write-Host "$($Global:M365DSCYellowCircle)The current tenant is not registered to allow for Safe Attachment Rules."
+        Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle)The current tenant is not registered to allow for Safe Attachment Rules."
     }
     return $content
 }

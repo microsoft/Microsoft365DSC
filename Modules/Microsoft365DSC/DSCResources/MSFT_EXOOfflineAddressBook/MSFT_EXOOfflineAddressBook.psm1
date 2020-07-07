@@ -262,11 +262,19 @@ function Export-TargetResource
     [array]$AllOfflineAddressBooks = Get-OfflineAddressBook
 
     $dscContent = ""
-    Write-Host "`r`n" -NoNewLine
+
+    if ($AllOfflineAddressBooks.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($OfflineAddressBook in $AllOfflineAddressBooks)
     {
-        Write-Host "    [$i/$($AllOfflineAddressBooks.Count)] $($OfflineAddressBook.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($AllOfflineAddressBooks.Count)] $($OfflineAddressBook.Name)" -NoNewLine
 
         $Params = @{
             Name               = $OfflineAddressBook.Name
@@ -282,10 +290,6 @@ function Export-TargetResource
         $dscContent += $content
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($AllOfflineAddressBooks.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

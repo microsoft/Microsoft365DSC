@@ -383,7 +383,7 @@ function Export-TargetResource
     $content = ""
     foreach ($action in $actions)
     {
-        Write-Host "        [$i/$($actions.Length)] $($action.Name)" -NoNewLine
+        Write-Host "        |---[$i/$($actions.Length)] $($action.Name)" -NoNewLine
         $params = @{
             Action             = $action.Action
             SearchName         = $action.SearchName
@@ -420,7 +420,7 @@ function Export-TargetResource
         $i = 1
         foreach ($action in $actions)
         {
-            Write-Host "        [$i/$($actions.Length)] $($action.Name)" -NoNewLine
+            Write-Host "        |---[$i/$($actions.Length)] $($action.Name)" -NoNewLine
             $params = @{
                 Action             = $action.Action
                 SearchName         = $action.SearchName

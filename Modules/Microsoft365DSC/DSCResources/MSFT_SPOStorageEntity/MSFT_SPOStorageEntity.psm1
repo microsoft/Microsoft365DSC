@@ -253,8 +253,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -293,7 +291,7 @@ function Export-TargetResource
         {
                 Write-Host "`r`n" -NoNewline
         }
-        Write-Host "    [$i/$($storageEntities.Length)] $($storageEntity.Key)" -NoNewline
+        Write-Host "    |---[$i/$($storageEntities.Length)] $($storageEntity.Key)" -NoNewline
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $content += "        SPOStorageEntity " + (New-Guid).ToString() + "`r`n"

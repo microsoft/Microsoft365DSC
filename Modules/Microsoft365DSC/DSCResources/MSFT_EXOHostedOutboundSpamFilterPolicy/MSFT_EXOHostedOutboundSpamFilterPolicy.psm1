@@ -220,7 +220,15 @@ function Export-TargetResource
 
     [array]$HostedOutboundSpamFilterPolicies = Get-HostedOutboundSpamFilterPolicy
     $content = ''
-    Write-Host "`r`n" -NoNewLine
+
+    if ($HostedOutboundSpamFilterPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($HostedOutboundSpamFilterPolicy in $HostedOutboundSpamFilterPolicies)
     {
@@ -228,7 +236,7 @@ function Export-TargetResource
             GlobalAdminAccount = $GlobalAdminAccount
             Identity           = $HostedOutboundSpamFilterPolicy.Identity
         }
-        Write-Host "    [$i/$($HostedOutboundSpamFilterPolicies.Length)] $($HostedOutboundSpamFilterPolicy.Identity)" -NoNewLine
+        Write-Host "    |---[$i/$($HostedOutboundSpamFilterPolicies.Length)] $($HostedOutboundSpamFilterPolicy.Identity)" -NoNewLine
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $content += "        EXOHostedOutboundSpamFilterPolicy " + (New-GUID).ToString() + "`r`n"
@@ -238,10 +246,6 @@ function Export-TargetResource
         $content += "        }`r`n"
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($HostedOutboundSpamFilterPolicies.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

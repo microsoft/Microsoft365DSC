@@ -263,10 +263,17 @@ function Export-TargetResource
     $mailboxes = $mailboxes | Where-Object -FilterScript { $_.RecipientTypeDetails -eq "SharedMailbox" }
     $content = ''
     $i = 1
-    Write-Host "`r`n" -NoNewLine
+    if ($mailboxes.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     foreach ($mailbox in $mailboxes)
     {
-        Write-Host "    [$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewLine
         $mailboxName = $mailbox.Name
         if ($mailboxName)
         {
@@ -290,10 +297,6 @@ function Export-TargetResource
         }
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($mailboxes.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

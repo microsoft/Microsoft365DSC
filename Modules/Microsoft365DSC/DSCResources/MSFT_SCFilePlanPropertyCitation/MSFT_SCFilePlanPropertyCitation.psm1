@@ -209,7 +209,7 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewLine
     foreach ($Property in $Properties)
     {
-        Write-Host "    [$i/$($Properties.Length)] $($Property.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewLine
         $params = @{
             Name               = $Property.Name
             GlobalAdminAccount = $GlobalAdminAccount

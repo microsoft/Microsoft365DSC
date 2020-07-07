@@ -229,7 +229,7 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewLine
     foreach ($rule in $rules)
     {
-        Write-Host "    [$i/$($rules.Length)] $($rule.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($rules.Length)] $($rule.Name)" -NoNewLine
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             Name               = $rule.Name

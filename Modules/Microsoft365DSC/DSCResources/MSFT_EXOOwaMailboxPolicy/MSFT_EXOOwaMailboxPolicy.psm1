@@ -1333,11 +1333,19 @@ function Export-TargetResource
     [array]$AllOwaMailboxPolicies = Get-OwaMailboxPolicy
 
     $dscContent = ""
-    Write-Host "`r`n" -NoNewLine
+
+    if ($AllOwaMailboxPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($OwaMailboxPolicy in $AllOwaMailboxPolicies)
     {
-        Write-Host "    [$i/$($AllOwaMailboxPolicies.Length)] $($OwaMailboxPolicy.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($AllOwaMailboxPolicies.Length)] $($OwaMailboxPolicy.Name)" -NoNewLine
 
         $Params = @{
             Name               = $OwaMailboxPolicy.Name
@@ -1353,10 +1361,6 @@ function Export-TargetResource
         $dscContent += $content
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($AllOwaMailboxPolicies.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

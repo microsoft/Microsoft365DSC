@@ -343,7 +343,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -359,7 +358,7 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewLine
     foreach ($group in $groups)
     {
-        Write-Host "    [$i/$($groups.Count)] $($group.DisplayName)" -NoNewLine
+        Write-Host "    |---[$i/$($groups.Count)] $($group.DisplayName)" -NoNewLine
         if ($ConnectionMode -eq 'Credential')
         {
             $params = @{

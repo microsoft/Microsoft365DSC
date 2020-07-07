@@ -199,11 +199,19 @@ function Export-TargetResource
     [array]$mailboxes = Get-Mailbox -ResultSize 'Unlimited'
 
     $i = 1
-    Write-Host "`r`n"-NoNewLine
+
+    if ($mailboxes.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n"-NoNewLine
+    }
     $content = ''
     foreach ($mailbox in $mailboxes)
     {
-        Write-Host "    [$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewLine
         $mailboxName = $mailbox.Name
         if (![System.String]::IsNullOrEmpty($mailboxName))
         {
@@ -226,10 +234,6 @@ function Export-TargetResource
         }
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($mailboxes.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

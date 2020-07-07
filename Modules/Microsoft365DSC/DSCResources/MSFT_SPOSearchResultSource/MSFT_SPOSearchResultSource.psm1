@@ -449,7 +449,7 @@ function Export-TargetResource
         {
                 Write-Host "`r`n" -NoNewline
         }
-        Write-Host "    [$i/$($sourcesLength)] $($source.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($sourcesLength)] $($source.Name)" -NoNewLine
 
         $params = @{
             Name               = $source.Name

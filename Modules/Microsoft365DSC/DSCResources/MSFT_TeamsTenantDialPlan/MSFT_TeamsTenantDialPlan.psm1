@@ -311,7 +311,7 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewLine
     foreach ($plan in $tenantDialPlans)
     {
-        Write-Host "    [$i/$($tenantDialPlans.Count)] $($plan.Identity)" -NoNewLine
+        Write-Host "    |---[$i/$($tenantDialPlans.Count)] $($plan.Identity)" -NoNewLine
         $params = @{
             Identity            = $plan.Identity
             GlobalAdminAccount  = $GlobalAdminAccount

@@ -215,7 +215,7 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        Write-Host "    [$i/$($policies.Length)] $($policy.Name)" -NoNewLine
+        Write-Host "    |---[$i/$($policies.Length)] $($policy.Name)" -NoNewLine
         $params = @{
             Name               = $policy.Name
             Reviewers          = "ReverseDSC"

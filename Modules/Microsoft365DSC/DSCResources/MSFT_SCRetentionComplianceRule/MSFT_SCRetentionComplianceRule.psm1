@@ -272,7 +272,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -309,7 +308,7 @@ function Export-TargetResource
 
         foreach ($rule in $rules)
         {
-            Write-Host "        [$i/$($rules.Length)] $($rule.Name)" -NoNewLine
+            Write-Host "        |---[$i/$($rules.Length)] $($rule.Name)" -NoNewLine
             $params = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 Name               = $rule.Name

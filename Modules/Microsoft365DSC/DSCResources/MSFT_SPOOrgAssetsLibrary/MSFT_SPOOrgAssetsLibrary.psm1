@@ -174,7 +174,7 @@ function Set-TargetResource
     {
         ## No set so remove / add
         Remove-PNPOrgAssetsLibrary -libraryUrl $currentOrgSiteAsset.LibraryUrl
-        ### add slight delay fails if you immediately try to add 
+        ### add slight delay fails if you immediately try to add
         Start-Sleep -Seconds 30
         Add-PnPOrgAssetsLibrary @currentParameters
     }
@@ -248,7 +248,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)

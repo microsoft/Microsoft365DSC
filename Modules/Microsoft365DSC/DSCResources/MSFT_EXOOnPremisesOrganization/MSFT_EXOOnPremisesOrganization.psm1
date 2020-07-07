@@ -297,11 +297,19 @@ function Export-TargetResource
     [array]$AllOnPremisesOrganizations = Get-OnPremisesOrganization
 
     $dscContent = ""
-    Write-Host "`r`n" -NoNewLine
+
+    if ($AllOnPremisesOrganizations.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($OnPremisesOrganization in $AllOnPremisesOrganizations)
     {
-        Write-Host "    [$i/$($AllOnPremisesOrganizations.Count)] $($OnPremisesOrganization.Identity)" -NoNewLine
+        Write-Host "    |---[$i/$($AllOnPremisesOrganizations.Count)] $($OnPremisesOrganization.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $OnPremisesOrganization.Identity
@@ -317,10 +325,6 @@ function Export-TargetResource
         $dscContent += $content
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($AllOnPremisesOrganizations.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

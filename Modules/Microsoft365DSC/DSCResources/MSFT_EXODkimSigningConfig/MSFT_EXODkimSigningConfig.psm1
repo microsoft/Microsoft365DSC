@@ -266,7 +266,15 @@ function Export-TargetResource
         [array]$DkimSigningConfigs = Get-DkimSigningConfig
 
         $i = 1
-        Write-Host "`r`n" -NoNewLine
+
+        if ($DkimSigningConfigs.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
         $content = ""
         $organization = ""
         $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
@@ -281,7 +289,7 @@ function Export-TargetResource
         }
         foreach ($DkimSigningConfig in $DkimSigningConfigs)
         {
-            Write-Host "    [$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)" -NoNewLine
+            Write-Host "    |---[$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)" -NoNewLine
             $params = @{
                 Identity           = $DkimSigningConfig.Identity
                 GlobalAdminAccount = $GlobalAdminAccount
@@ -303,10 +311,6 @@ function Export-TargetResource
             $content += "        }`r`n"
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
-        }
-        if ($DkimSigningConfigs.Length -eq 0)
-        {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
     }
     return $content

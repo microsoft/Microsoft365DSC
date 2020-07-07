@@ -869,7 +869,15 @@ function Export-TargetResource
 
     [array]$HostedContentFilterPolicies = Get-HostedContentFilterPolicy
     $content = ''
-    Write-Host "`r`n" -NoNewLine
+
+    if ($HostedContentFilterPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($HostedContentFilterPolicy in $HostedContentFilterPolicies)
     {
@@ -877,7 +885,7 @@ function Export-TargetResource
             GlobalAdminAccount = $GlobalAdminAccount
             Identity           = $HostedContentFilterPolicy.Identity
         }
-        Write-Host "    [$i/$($HostedContentFilterPolicies.Length)] $($HostedContentFilterPolicy.Identity)" -NoNewLine
+        Write-Host "    |---[$i/$($HostedContentFilterPolicies.Length)] $($HostedContentFilterPolicy.Identity)" -NoNewLine
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
 
@@ -893,10 +901,6 @@ function Export-TargetResource
         $content += "        }`r`n"
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($HostedContentFilterPolicies.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

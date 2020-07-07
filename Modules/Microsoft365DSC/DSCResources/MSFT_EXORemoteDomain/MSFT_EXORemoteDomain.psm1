@@ -500,11 +500,19 @@ function Export-TargetResource
     [array]$AllRemoteDomains = Get-RemoteDomain
 
     $dscContent = ""
-    Write-Host "`r`n" -NoNewLine
+
+    if ($AllRemoteDomains.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($domain in $AllRemoteDomains)
     {
-        Write-Host "    [$i/$($AllRemoteDomains.Length)] $($domain.Identity)" -NoNewLine
+        Write-Host "    |---[$i/$($AllRemoteDomains.Length)] $($domain.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $domain.Identity
@@ -520,10 +528,6 @@ function Export-TargetResource
         $dscContent += $content
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($AllRemoteDomains.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

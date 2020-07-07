@@ -233,7 +233,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -253,10 +252,17 @@ function Export-TargetResource
 
     $dscContent = ""
     $i = 1
-    Write-Host "`r`n" -NoNewLine
+    if ($AllAcceptedDomains.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     foreach ($domain in $AllAcceptedDomains)
     {
-        Write-Host "    [$i/$($AllAcceptedDomains.Count)] $($domain.Identity)" -NoNewLine
+        Write-Host "    |---[$i/$($AllAcceptedDomains.Count)] $($domain.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $domain.Identity

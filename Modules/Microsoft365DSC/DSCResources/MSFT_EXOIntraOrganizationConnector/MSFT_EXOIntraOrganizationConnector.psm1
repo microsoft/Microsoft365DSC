@@ -204,7 +204,7 @@ function Export-TargetResource
     $i = 1
     foreach ($IntraOrganizationConnector in $IntraOrganizationConnectors)
     {
-        Write-Host "    [$i/$($IntraOrganizationConnectors.length)] $($IntraOrganizationConnector.Identity)" -NoNewLine
+        Write-Host "    |---[$i/$($IntraOrganizationConnectors.length)] $($IntraOrganizationConnector.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $IntraOrganizationConnector.Identity

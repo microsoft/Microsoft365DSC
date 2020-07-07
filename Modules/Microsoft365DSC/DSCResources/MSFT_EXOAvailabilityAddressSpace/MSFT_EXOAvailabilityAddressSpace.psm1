@@ -274,11 +274,18 @@ function Export-TargetResource
     }
 
     $content = ""
-    Write-Host "`r`n" -NoNewLine
+    if ($AvailabilityAddressSpaces.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($AvailabilityAddressSpace in $AvailabilityAddressSpaces)
     {
-        Write-Host "    [$i/$($AvailabilityAddressSpaces.length)] $($AvailabilityAddressSpace.Identity)" -NoNewLine
+        Write-Host "    |---[$i/$($AvailabilityAddressSpaces.length)] $($AvailabilityAddressSpace.Identity)" -NoNewLine
 
         $Params = @{
             Identity           = $AvailabilityAddressSpace.Identity
@@ -294,10 +301,6 @@ function Export-TargetResource
         $content += "        }`r`n"
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($AvailabilityAddressSpaces.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }
