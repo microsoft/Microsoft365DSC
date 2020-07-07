@@ -540,7 +540,14 @@ function Export-TargetResource
     [array]$AllGlobalAddressLists = Get-GlobalAddressList
 
     $dscContent = ""
-    Write-Host "`r`n" -NoNewLine
+    if ($AllGlobalAddressLists.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($GlobalAddressList in $AllGlobalAddressLists)
     {
@@ -560,10 +567,6 @@ function Export-TargetResource
         $dscContent += $content
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($AllGlobalAddressLists.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

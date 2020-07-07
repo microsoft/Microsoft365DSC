@@ -320,7 +320,15 @@ function Export-TargetResource
     if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeLinksRule)
     {
         [array]$SafeLinksRules = Get-SafeLinksRule
-        Write-Host "`r`n" -NoNewLine
+
+        if ($SafeLinksRules.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
         $i = 1
         foreach ($SafeLinksRule in $SafeLinksRules)
         {
@@ -340,14 +348,10 @@ function Export-TargetResource
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
-        if ($SafeLinksRules.Length -eq 0)
-        {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
-        }
     }
     else
     {
-        Write-Host "$($Global:M365DSCYellowCircle) The current tenant is not registered to allow for Safe Links Rules."
+        Write-Host "`r`n$($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Safe Links Rules."
     }
     return $content
 }

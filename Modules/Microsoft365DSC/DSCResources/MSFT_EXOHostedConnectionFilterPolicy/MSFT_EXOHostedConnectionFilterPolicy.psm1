@@ -281,7 +281,15 @@ function Export-TargetResource
 
     [array]$HostedConnectionFilterPolicies = Get-HostedConnectionFilterPolicy
     $content = ''
-    Write-Host "`r`n" -NoNewLine
+
+    if ($HostedConnectionFilterPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($HostedConnectionFilterPolicy in $HostedConnectionFilterPolicies)
     {
@@ -289,7 +297,7 @@ function Export-TargetResource
             GlobalAdminAccount = $GlobalAdminAccount
             Identity           = $HostedConnectionFilterPolicy.Identity
         }
-        Write-Host "    [$i/$($HostedConnectionFilterPolicies.Length)] $($HostedConnectionPolicy.Identity)" -NoNewLine
+        Write-Host "    [$i/$($HostedConnectionFilterPolicies.Length)] $($HostedConnectionFilterPolicy.Identity)" -NoNewLine
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $content += "        EXOHostedConnectionFilterPolicy " + (New-GUID).ToString() + "`r`n"
@@ -299,10 +307,6 @@ function Export-TargetResource
         $content += "        }`r`n"
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
-    }
-    if ($HostedConnectionFilterPolicies.Length -eq 0)
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }
