@@ -77,7 +77,7 @@ class MSFT_EXOOwaMailboxPolicy : OMI_BaseResource
 
     [Write, Description("The NotesEnabled parameter specifies whether the Notes folder is available in Outlook on the web.")] Boolean NotesEnabled;
 
-    [Write, Description("The NPSMailboxPolicy parameter specifies whether to enable or disable the Net Promoter Score (NPS) survey in Outlook on the web. The survey allows uses to rate Outlook on the web on a scale of 1 to 5, and to provide feedback and suggested improvements in free text.")] Boolean NpsMailboxPolicy;
+    [Write, Description("The NpsSurveysEnabled parameter specifies whether to enable or disable the Net Promoter Score (NPS) survey in Outlook on the web. The survey allows uses to rate Outlook on the web on a scale of 1 to 5, and to provide feedback and suggested improvements in free text.")] Boolean NpsSurveysEnabled;
 
     [Write, Description("When the OrganizationEnabled parameter is set to $false, the Automatic Reply option doesn't include external and internal options, the address book doesn't show the organization hierarchy, and the Resources tab in Calendar forms is disabled.")] Boolean OrganizationEnabled;
 

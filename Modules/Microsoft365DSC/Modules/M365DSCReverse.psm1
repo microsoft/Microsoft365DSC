@@ -249,6 +249,55 @@ function Start-M365DSCConfigurationExtract
                 ($null -eq $ComponentsToExtract -and $null -eq $Workloads))
             {
                 $ResourcesToExport += $ResourceModule
+
+                Import-Module $ResourceModule.FullName | Out-Null
+
+                if ($ComponentsToSkip -notcontains $resourceName)
+                {
+                    Write-Information "Extracting [$resourceName]..."
+                    $MaxProcessesExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("MaxProcesses")
+                    $AppSecretExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("ApplicationSecret")
+                    $CertThumbprintExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificateThumbprint")
+                    $TenantIdExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("TenantId")
+                    $AppIdExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("ApplicationId")
+                    $GlobalAdminExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("GlobalAdminAccount")
+
+                    $parameters = @{}
+                    if ($GlobalAdminExists-and -not [System.String]::IsNullOrEmpty($GlobalAdminAccount))
+                    {
+                        $parameters.Add("GlobalAdminAccount", $GlobalAdminAccount)
+                    }
+                    if ($MaxProcessesExists -and -not [System.String]::IsNullOrEmpty($MaxProcesses))
+                    {
+                        $parameters.Add("MaxProcesses", $MaxProcesses)
+                    }
+                    if ($AppSecretExists -and -not [System.String]::IsNullOrEmpty($ApplicationSecret))
+                    {
+                        $parameters.Add("AppplicationSecret", $ApplicationSecret)
+                    }
+                    if ($CertThumbprintExists -and -not [System.String]::IsNullOrEmpty($CertificateThumbprint))
+                    {
+                        $parameters.Add("CertificateThumbprint", $CertificateThumbprint)
+                    }
+                    if ($TenantIdExists -and -not [System.String]::IsNullOrEmpty($TenantId))
+                    {
+                        $parameters.Add("TenantId", $TenantId)
+                    }
+                    if ($AppIdExists -and -not [System.String]::IsNullOrEmpty($ApplicationId))
+                    {
+                        $parameters.Add("ApplicationId", $ApplicationId)
+                    }
+
+                    $exportString = ""
+                    if ($GenerateInfo)
+                    {
+                        $exportString += "`r`n        # For information on how to use this resource, please refer to:`r`n"
+                        $exportString += "        # https://github.com/microsoft/Microsoft365DSC/wiki/$resourceName`r`n"
+                    }
+                    $exportString += Export-TargetResource @parameters
+                }
+                $DSCContent += $exportString
+                $exportString = $null
             }
         }
         catch
