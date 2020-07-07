@@ -40,15 +40,35 @@ function Get-TargetResource
             -ConnectionUrl $Url `
             -Platform PnP | Out-Null
         Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
-        $property = Get-PnpPropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
+        [array]$property = Get-PnpPropertyBag -Key $Key -ErrorAction 'Stop'
+
         Write-Verbose -Message "Properties obtained correctly"
     }
     catch
     {
-        Write-Verbose "GlobalAdminAccount specified does not have admin access to site {$Url}"
+        if ($_.Exception -like "*Unable to cast object of type*")
+        {
+            [array]$property = Get-PnpPropertyBag | Where-Object -FilterScript {$_.Key -ceq $Key}
+        }
+        elseif ($_.Exception -like "*The underlying connection was closed*")
+        {
+            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
+                -ConnectionUrl $Url `
+                -Platform PnP | Out-Null
+            Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
+            [array]$property = Get-PnpPropertyBag -Key $Key -ErrorAction 'SilentlyContinue'
+        }
+        else
+        {
+            New-M365DSCLogEntry -Error $_ -Message "Couldn't get Property Bag for {$Url}" -Source $MyInvocation.MyCommand.ModuleName
+            Write-Verbose "GlobalAdminAccount specified does not have admin access to site {$Url}"
+        }
     }
-
-    if ($null -eq $property)
+    if ($property.Length -ne 1)
+    {
+        [array]$property = Get-PnpPropertyBag | Where-Object -FilterScript {$_.Key -ceq $Key}
+    }
+    if ($property.Length -eq 0)
     {
         Write-Verbose -Message "SPOPropertyBag $Key does not exist at {$Url}."
         $result = $PSBoundParameters
@@ -274,8 +294,10 @@ function Export-TargetResource
                                 Import-Module $CurrentModulePath -Force | Out-Null
                                 Import-Module ($params.ScriptRoot + "\..\..\Modules\M365DSCTelemetryEngine.psm1") -Force | Out-Null
                                 $result = Get-TargetResource @getValues
+
                                 $result.Value = [System.String]$result.Value
-                                if (-not [System.String]::IsNullOrEmpty($result.Value))
+                                if (-not [System.String]::IsNullOrEmpty($result.Value) -and `
+                                    $result.Ensure -eq 'Present')
                                 {
                                     $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
                                     $content += "        SPOPropertyBag " + (New-GUID).ToString() + "`r`n"
