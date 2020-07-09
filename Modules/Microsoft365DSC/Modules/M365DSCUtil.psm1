@@ -933,7 +933,7 @@ function Get-M365DSCTenantDomain
         [System.String]
         $TenantId,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
@@ -1652,7 +1652,7 @@ function Format-M365ServicePrincipalData
         $configContent = $configContent -ireplace [regex]::Escape($CertificateThumbprint), "`$(`$CertificateThumbprint)"
     }
     return $configContent
-
+}
 function Remove-EmptyValue {
     [alias('Remove-EmptyValues')]
     [CmdletBinding()]

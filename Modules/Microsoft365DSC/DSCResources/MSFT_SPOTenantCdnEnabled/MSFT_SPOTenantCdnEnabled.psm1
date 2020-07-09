@@ -251,8 +251,8 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
     if ($null -ne $TenantId)
     {
-        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
-        -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId `
+        -CertificateThumbprint $CertificateThumbprint -CertificatePath $CertificatePath
         $principal = $organization.Split(".")[0]
     }
 

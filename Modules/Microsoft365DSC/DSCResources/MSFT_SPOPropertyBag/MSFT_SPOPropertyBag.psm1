@@ -408,8 +408,8 @@ function Export-TargetResource
                                 Import-Module ($params.ScriptRoot + "\..\..\Modules\M365DSCTelemetryEngine.psm1") -Force | Out-Null
                                 if ($null -ne $TenantId)
                                 {
-                                    $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
-                                    -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+                                    $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId `
+                                    -CertificateThumbprint $CertificateThumbprint -CertificatePath $CertificatePath
                                     $principal = $organization.Split(".")[0]
                                 }
                                 $result = Get-TargetResource @getValues
