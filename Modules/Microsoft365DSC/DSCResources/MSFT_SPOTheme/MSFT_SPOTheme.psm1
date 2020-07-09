@@ -318,8 +318,9 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
     if ($null -ne $TenantId)
     {
-        $organization = $TenantId
-        $principal = $TenantId.Split(".")[0]
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+        -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $principal = $organization.Split(".")[0]
     }
 
     $themes = Get-PnPTenantTheme
@@ -327,26 +328,16 @@ function Export-TargetResource
     $i = 1
     foreach ($theme in $themes)
     {
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $params = @{
-                GlobalAdminAccount = $GlobalAdminAccount
-                Name               = $theme.Name
-            }
-        }
-        else
-        {
-            $params = @{
-                Name                  = $theme.Name
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
-                CertificateThumbprint = $CertificateThumbprint
-            }
-        }
 
-
+        $params = @{
+            Name                  = $theme.Name
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+            GlobalAdminAccount    = $GlobalAdminAccount
+        }
         $result = Get-TargetResource @params
         if ($ConnectionMode -eq 'Credential')
         {

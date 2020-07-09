@@ -261,8 +261,10 @@ function Export-TargetResource
     }
     else
     {
-        $organization = $TenantId
-        $principal = $TenantId.Split(".")[0]
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+        -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $principal = $organization.Split(".")[0]
+
     }
     $content = ""
     foreach ($site in $sites)
@@ -270,25 +272,16 @@ function Export-TargetResource
         try
         {
             Write-Information "    [$i/$($sites.Length)] Audit Settings for {$($site.Url)}"
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $params = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    Url                = $site.Url
-                    AuditFlags         = 'None'
-                }
-            }
-            else
-            {
-                $params = @{
-                    Url                   = $site.Url
-                    AuditFlags            = 'None'
-                    ApplicationId         = $ApplicationId
-                    TenantId              = $TenantId
-                    CertificatePassword   = $CertificatePassword
-                    CertificatePath       = $CertificatePath
-                    CertificateThumbprint = $CertificateThumbprint
-                }
+
+            $params = @{
+                Url                   = $site.Url
+                AuditFlags            = 'None'
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
+                GlobalAdminAccount    = $GlobalAdminAccount
             }
 
             $result = Get-TargetResource @params

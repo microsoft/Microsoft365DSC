@@ -416,29 +416,22 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
-    if ($ConnectionMode -eq 'Credential')
-    {
-        $params = @{
-            GlobalAdminAccount = $GlobalAdminAccount
-            IsSingleInstance   = 'Yes'
-        }
+    $params = @{
+        IsSingleInstance      = 'Yes'
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
+        GlobalAdminAccount    = $GlobalAdminAccount
     }
-    else
-    {
-        $params = @{
-            IsSingleInstance      = 'Yes'
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
-            CertificateThumbprint = $CertificateThumbprint
-        }
-    }
+
 
     if ($null -ne $TenantId)
     {
-        $organization = $TenantId
-        $principal = $TenantId.Split(".")[0]
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+            ` -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $principal = $organization.Split(".")[0]
     }
 
     $result = Get-TargetResource @params

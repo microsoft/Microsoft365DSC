@@ -313,7 +313,7 @@ function Set-TargetResource
     ## Parameters below are remove for the Set-SPOTenant cmdlet
     ## they are used in the Set-SPOTenantSyncClientRestriction cmdlet
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("GlobalAdminAccount")
+    $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
 
     if ($CurrentParameters.ContainsKey("Ensure"))
     {
@@ -552,23 +552,14 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
         -ErrorAction SilentlyContinue
 
-    if ($ConnectionMode -eq 'Credential')
-    {
-        $params = @{
-            GlobalAdminAccount = $GlobalAdminAccount
-            IsSingleInstance   = 'Yes'
-        }
-    }
-    else
-    {
-        $params = @{
-            IsSingleInstance      = 'Yes'
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
-            CertificateThumbprint = $CertificateThumbprint
-        }
+    $params = @{
+        IsSingleInstance      = 'Yes'
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
+        GlobalAdminAccount    = $GlobalAdminAccount
     }
 
     if ($null -ne $TenantId)

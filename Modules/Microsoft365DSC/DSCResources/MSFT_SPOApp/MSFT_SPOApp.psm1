@@ -330,31 +330,22 @@ function Export-TargetResource
             }
             if ($null -ne $app)
             {
-                if ($ConnectionMode -eq 'Credential')
-                {
-                    $params = @{
-                        GlobalAdminAccount = $GlobalAdminAccount
-                        Identity           = $identity
-                        Path               = ("`$PSScriptRoot\" + $file.Name)
-                    }
-                }
-                else
-                {
-                    $params = @{
-                        Identity              = $identity
-                        Path                  = ("`$PSScriptRoot\" + $file.Name)
-                        ApplicationId         = $ApplicationId
-                        TenantId              = $TenantId
-                        CertificatePassword   = $CertificatePassword
-                        CertificatePath       = $CertificatePath
-                        CertificateThumbprint = $CertificateThumbprint
-                    }
+                $params = @{
+                    Identity              = $identity
+                    Path                  = ("`$PSScriptRoot\" + $file.Name)
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                    CertificateThumbprint = $CertificateThumbprint
+                    GlobalAdminAccount    = $GlobalAdminAccount
                 }
 
                 if ($null -ne $TenantId)
                 {
-                    $organization = $TenantId
-                    $principal = $TenantId.Split(".")[0]
+                    $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+                        ` -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+                    $principal = $organization.Split(".")[0]
                 }
 
                 $result = Get-TargetResource @params

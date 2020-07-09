@@ -368,7 +368,9 @@ function Export-TargetResource
     }
     else
     {
-        $tenantName = $TenantId.Split(".")[0]
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+        ` -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $tenantName = $organization.Split(".")[0]
     }
     $content = ''
 
@@ -376,29 +378,21 @@ function Export-TargetResource
     {
         foreach ($orgAssetLib in $orgAssets.OrgAssetsLibraries)
         {
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $params = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    LibraryUrl         = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
-                }
-            }
-            else
-            {
-                $params = @{
-                    LibraryUrl            = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
-                    ApplicationId         = $ApplicationId
-                    TenantId              = $TenantId
-                    CertificatePassword   = $CertificatePassword
-                    CertificatePath       = $CertificatePath
-                    CertificateThumbprint = $CertificateThumbprint
-                }
-            }
 
+            $params = @{
+                LibraryUrl            = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
+                GlobalAdminAccount    = $GlobalAdminAccount
+            }
             if ($null -ne $TenantId)
             {
-                $organization = $TenantId
-                $principal = $TenantId.Split(".")[0]
+                $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+                    ` -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+                $principal = $organization.Split(".")[0]
             }
 
             $result = Get-TargetResource @Params

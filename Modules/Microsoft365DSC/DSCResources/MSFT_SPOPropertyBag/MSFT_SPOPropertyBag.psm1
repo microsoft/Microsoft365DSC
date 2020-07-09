@@ -372,28 +372,16 @@ function Export-TargetResource
                             $properties = Get-PnPPropertyBag
                             foreach ($property in $properties)
                             {
-
-                                if ($ConnectionMode -eq 'Credential')
-                                {
-                                    $getValues = @{
-                                        GlobalAdminAccount = $GlobalAdminAccount
-                                        Url                = $siteUrl
-                                        Key                = $property.Key
-                                        Value              = '*'
-                                    }
-                                }
-                                else
-                                {
-                                    $getValues = @{
-                                        Url                   = $siteUrl
-                                        Key                   = $property.Key
-                                        Value                 = '*'
-                                        ApplicationId         = $ApplicationId
-                                        TenantId              = $TenantId
-                                        CertificatePassword   = $CertificatePassword
-                                        CertificatePath       = $CertificatePath
-                                        CertificateThumbprint = $CertificateThumbprint
-                                    }
+                                $getValues = @{
+                                    Url                   = $siteUrl
+                                    Key                   = $property.Key
+                                    Value                 = '*'
+                                    ApplicationId         = $ApplicationId
+                                    TenantId              = $TenantId
+                                    CertificatePassword   = $CertificatePassword
+                                    CertificatePath       = $CertificatePath
+                                    CertificateThumbprint = $CertificateThumbprint
+                                    GlobalAdminAccount    = $GlobalAdminAccount
                                 }
 
                                 $CurrentModulePath = $params.ScriptRoot + "\MSFT_SPOPropertyBag.psm1"
@@ -401,8 +389,9 @@ function Export-TargetResource
                                 Import-Module ($params.ScriptRoot + "\..\..\Modules\M365DSCTelemetryEngine.psm1") -Force | Out-Null
                                 if ($null -ne $TenantId)
                                 {
-                                    $organization = $TenantId
-                                    $principal = $TenantId.Split(".")[0]
+                                    $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+                                    -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+                                    $principal = $organization.Split(".")[0]
                                 }
                                 $result = Get-TargetResource @getValues
                                 $result.Value = [System.String]$result.Value
@@ -505,8 +494,9 @@ function Export-TargetResource
     }
     else
     {
-        $principal = $TenantId.Split(".")[0]
-        $organization = $TenantId
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+        -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $principal = $organization.Split(".")[0]
     }
 
     if ($result.ToLower().Contains($organization.ToLower()) -or `

@@ -515,28 +515,19 @@ function Export-TargetResource
 
     if ($null -ne $TenantId)
     {
-        $organization = $TenantId
-        $principal = $TenantId.Split(".")[0]
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+        -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $principal = $organization.Split(".")[0]
     }
 
-
-    if ($ConnectionMode -eq 'Credential')
-    {
-        $params = @{
-            GlobalAdminAccount = $GlobalAdminAccount
-            IsSingleInstance   = 'Yes'
-        }
-    }
-    else
-    {
-        $params = @{
-            IsSingleInstance      = 'Yes'
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
-            CertificateThumbprint = $CertificateThumbprint
-        }
+    $params = @{
+        IsSingleInstance      = 'Yes'
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
+        GlobalAdminAccount    = $GlobalAdminAccount
     }
 
     $result = Get-TargetResource @params

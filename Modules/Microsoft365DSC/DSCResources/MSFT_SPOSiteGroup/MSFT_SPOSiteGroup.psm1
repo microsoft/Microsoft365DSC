@@ -432,8 +432,9 @@ function Export-TargetResource
     }
     else
     {
-        $principal = $TenantId.Split(".")[0]
-        $organization = $TenantId
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+        -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $principal = $organization.Split(".")[0]
     }
     $content = ""
     foreach ($site in $sites)
@@ -469,25 +470,15 @@ function Export-TargetResource
                 Write-Warning -Message "The specified account does not have access to the permissions list for {$($siteGroup.Title)}"
                 break
             }
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $params = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    Url                = $site.Url
-                    Identity           = $siteGroup.Title
-                }
-            }
-            else
-            {
-                $params = @{
-                    Url                   = $site.Url
-                    Identity              = $siteGroup.Title
-                    ApplicationId         = $ApplicationId
-                    TenantId              = $TenantId
-                    CertificatePassword   = $CertificatePassword
-                    CertificatePath       = $CertificatePath
-                    CertificateThumbprint = $CertificateThumbprint
-                }
+            $params = @{
+                Url                   = $site.Url
+                Identity              = $siteGroup.Title
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
+                GlobalAdminAccount    = $GlobalAdminAccount
             }
             try
             {

@@ -307,21 +307,12 @@ function Export-TargetResource
                 {
                     foreach ($user in $instance)
                     {
-                        if ($ConnectionMode -eq 'Credential')
-                        {
-                            $getValues = @{
-                                GlobalAdminAccount = $GlobalAdminAccount
-                                UserName           = $user.UserPrincipalName
-                            }
-                        }
-                        else
-                        {
-                            $getValues = @{
-                                UserName           = $user.UserPrincipalName
-                                ApplicationId         = $ApplicationId
-                                TenantId              = $TenantId
-                                CertificateThumbprint = $CertificateThumbprint
-                            }
+                        $getValues = @{
+                            UserName              = $user.UserPrincipalName
+                            ApplicationId         = $ApplicationId
+                            TenantId              = $TenantId
+                            CertificateThumbprint = $CertificateThumbprint
+                            GlobalAdminAccount    = $GlobalAdminAccount
                         }
                         $CurrentModulePath = $params.ScriptRoot + "\MSFT_SPOUserProfileProperty.psm1"
                         Import-Module $CurrentModulePath -Force | Out-Null
@@ -418,8 +409,9 @@ function Export-TargetResource
     }
     else
     {
-        $principal = $TenantId.Split(".")[0]
-        $organization = $TenantId
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+        -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $principal = $organization.Split(".")[0]
     }
     if ($result.ToLower().Contains($organization.ToLower()) -or `
             $result.ToLower().Contains($principal.ToLower()))

@@ -935,14 +935,28 @@ function Get-M365DSCTenantDomain
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath
     )
 
-    Test-MSCloudLogin -Platform AzureAD -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
-
-    $tenantDetails = Get-AzureADTenantDetail
-    $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -Filterscript { $_.Initial }
-    return $defaultDomain.Name
+    if ($null -eq $CertificatePath)
+    {
+        Test-MSCloudLogin -Platform AzureAD -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
+        $tenantDetails = Get-AzureADTenantDetail
+        $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -Filterscript { $_.Initial }
+        return $defaultDomain.Name
+    }
+    if ($TenantId.Contains("onmicrosoft"))
+    {
+        return $TenantId
+    }
+    else
+    {
+        throw "TenantID must be in format contoso.onmicrosoft.com"
+    }
 
 }
 

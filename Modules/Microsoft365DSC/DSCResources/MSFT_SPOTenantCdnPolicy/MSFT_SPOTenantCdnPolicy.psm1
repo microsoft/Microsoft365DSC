@@ -259,27 +259,19 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
     if ($null -ne $TenantId)
     {
-        $organization = $TenantId
-        $principal = $TenantId.Split(".")[0]
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+        -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $principal = $organization.Split(".")[0]
     }
 
-    if ($ConnectionMode -eq 'Credential')
-    {
-        $params = @{
-            GlobalAdminAccount = $GlobalAdminAccount
-            CDNType            = 'Public'
-        }
-    }
-    else
-    {
-        $params = @{
-            CdnType               = 'Public'
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
-            CertificateThumbprint = $CertificateThumbprint
-        }
+    $params = @{
+        CdnType               = 'Public'
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
+        GlobalAdminAccount    = $GlobalAdminAccount
     }
 
     $result = Get-TargetResource @params
@@ -322,26 +314,15 @@ function Export-TargetResource
         $content += "        }`r`n"
     }
 
-
-    if ($ConnectionMode -eq 'Credential')
-    {
-        $params = @{
-            GlobalAdminAccount = $GlobalAdminAccount
-            CDNType            = 'Private'
-        }
+    $params = @{
+        CdnType               = 'Private'
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
+        GlobalAdminAccount    = $GlobalAdminAccount
     }
-    else
-    {
-        $params = @{
-            CdnType               = 'Private'
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
-            CertificateThumbprint = $CertificateThumbprint
-        }
-    }
-
     $result = Get-TargetResource @params
     if ($null -ne $result)
     {

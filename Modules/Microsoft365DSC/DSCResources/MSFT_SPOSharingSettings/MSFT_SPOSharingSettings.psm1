@@ -358,35 +358,35 @@ function Set-TargetResource
 
     if ($null -eq $SignInAccelerationDomain)
     {
-        $CurrentParameters.Remove("SignInAccelerationDomain")
-        $CurrentParameters.Remove("EnableGuestSignInAcceleration")#removing EnableGuestSignInAcceleration since it can only be configured with a configured SignINAccerlation domain
+        $CurrentParameters.Remove("SignInAccelerationDomain") | Out-Null
+        $CurrentParameters.Remove("EnableGuestSignInAcceleration") | Out-Null #removing EnableGuestSignInAcceleration since it can only be configured with a configured SignINAccerlation domain
     }
     if ($SharingCapability -ne "ExternalUserAndGuestSharing")
     {
         Write-Verbose -Message "The sharing capabilities for the tenant are not configured to be ExternalUserAndGuestSharing for that the RequireAnonymousLinksExpireInDays property cannot be configured"
-        $CurrentParameters.Remove("RequireAnonymousLinksExpireInDays")
+        $CurrentParameters.Remove("RequireAnonymousLinksExpireInDays") | Out-Null
     }
     if ($RequireAcceptingAccountMatchInvitedAccount -eq $false)
     {
         Write-Verbose -Message "RequireAcceptingAccountMatchInvitedAccount is set to be false. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
-        $CurrentParameters.Remove("SharingAllowedDomainList")
-        $CurrentParameters.Remove("SharingBlockedDomainList")
+        $CurrentParameters.Remove("SharingAllowedDomainList") | Out-Null
+        $CurrentParameters.Remove("SharingBlockedDomainList") | Out-Null
     }
     if ($SharingDomainRestrictionMode -eq "None")
     {
         Write-Verbose -Message "SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
-        $CurrentParameters.Remove("SharingAllowedDomainList")
-        $CurrentParameters.Remove("SharingBlockedDomainList")
+        $CurrentParameters.Remove("SharingAllowedDomainList") | Out-Null
+        $CurrentParameters.Remove("SharingBlockedDomainList") | Out-Null
     }
     elseif ($SharingDomainRestrictionMode -eq "AllowList")
     {
         Write-Verbose -Message "SharingDomainRestrictionMode is set to AllowList. For that SharingBlockedDomainList cannot be configured"
-        $CurrentParameters.Remove("SharingBlockedDomainList")
+        $CurrentParameters.Remove("SharingBlockedDomainList") | Out-Null
     }
     elseif ($SharingDomainRestrictionMode -eq "BlockList")
     {
         Write-Verbose -Message "SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured"
-        $CurrentParameters.Remove("SharingAllowedDomainList")
+        $CurrentParameters.Remove("SharingAllowedDomainList") | Out-Null
     }
     foreach ($value in $CurrentParameters.GetEnumerator())
     {
@@ -597,30 +597,21 @@ function Export-TargetResource
 
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
-
-    if ($ConnectionMode -eq 'Credential')
-    {
-        $params = @{
-            GlobalAdminAccount = $GlobalAdminAccount
-            IsSingleInstance   = "Yes"
-        }
-    }
-    else
-    {
-        $params = @{
-            IsSingleInstance      = "Yes"
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
-            CertificateThumbprint = $CertificateThumbprint
-        }
+    $params = @{
+        IsSingleInstance      = "Yes"
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
+        GlobalAdminAccount    = $GlobalAdminAccount
     }
 
     if ($null -ne $TenantId)
     {
-        $organization = $TenantId
-        $principal = $TenantId.Split(".")[0]
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+            ` -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $principal = $organization.Split(".")[0]
     }
 
     $result = Get-TargetResource @params

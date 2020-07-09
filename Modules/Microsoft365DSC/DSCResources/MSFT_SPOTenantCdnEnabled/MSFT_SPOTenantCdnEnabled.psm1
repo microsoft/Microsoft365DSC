@@ -128,13 +128,13 @@ function Set-TargetResource
 
     $currentOrgSiteAsset = Get-TargetResource @PSBoundParameters
     $currentParameters = $PSBoundParameters
-    $currentParameters.Remove("Ensure")
-    $currentParameters.Remove("GlobalAdminAccount")
-    $CurrentParameters.Remove("ApplicationId")
-    $CurrentParameters.Remove("TenantId")
-    $CurrentParameters.Remove("CertificatePath")
-    $CurrentParameters.Remove("CertificatePassword")
-    $CurrentParameters.Remove("CertificateThumbprint")
+    $currentParameters.Remove("Ensure") | Out-Null
+    $currentParameters.Remove("GlobalAdminAccount") | Out-Null
+    $CurrentParameters.Remove("ApplicationId") | Out-Null
+    $CurrentParameters.Remove("TenantId") | Out-Null
+    $CurrentParameters.Remove("CertificatePath") | Out-Null
+    $CurrentParameters.Remove("CertificatePassword") | Out-Null
+    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
     #No add only a set
     Set-PnPTenantCdnEnabled @currentParameters
 
@@ -251,8 +251,9 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
     if ($null -ne $TenantId)
     {
-        $organization = $TenantId
-        $principal = $TenantId.Split(".")[0]
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+        -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $principal = $organization.Split(".")[0]
     }
 
     $content = ''

@@ -820,8 +820,9 @@ function Export-TargetResource
     }
     else
     {
-        $organization = $TenantId
-        $principal = $TenantId.Split(".")[0]
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+        -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $principal = $organization.Split(".")[0]
     }
     foreach ($site in $sites)
     {
@@ -832,31 +833,19 @@ function Export-TargetResource
         {
             $siteTitle = $site.Title
         }
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $params = @{
-                GlobalAdminAccount = $GlobalAdminAccount
-                Url                = $site.Url
-                Template           = $site.Template
-                Owner              = $GlobalAdminAccount.UserName # Passing in bogus value to bypass null owner error
-                Title              = $siteTitle
-                TimeZoneId         = $site.TimeZoneID
-            }
-        }
-        else
-        {
-            $params = @{
-                Url                   = $site.Url
-                Template              = $site.Template
-                Owner                 = $ApplicationId # Passing in bogus value to bypass null owner error
-                Title                 = $siteTitle
-                TimeZoneId            = $site.TimeZoneID
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
-                CertificateThumbprint = $CertificateThumbprint
-            }
+
+        $params = @{
+            Url                   = $site.Url
+            Template              = $site.Template
+            Owner                 = $ApplicationId # Passing in bogus value to bypass null owner error
+            Title                 = $siteTitle
+            TimeZoneId            = $site.TimeZoneID
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+            GlobalAdminAccount    = $GlobalAdminAccount
         }
 
         try

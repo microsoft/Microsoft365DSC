@@ -412,29 +412,20 @@ function Export-TargetResource
     foreach ($design in $designs)
     {
         Write-Information "    [$i/$($designs.Length)] $($design.Title)"
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $params = @{
-                GlobalAdminAccount = $GlobalAdminAccount
-                Title              = $design.Title
-            }
+        $params = @{
+            Title                 = $design.Title
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+            GlobalAdminAccount    = $GlobalAdminAccount
         }
-        else
-        {
-            $params = @{
-                Title                 = $design.Title
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
-                CertificateThumbprint = $CertificateThumbprint
-            }
-        }
-
         if ($null -ne $TenantId)
         {
-            $organization = $TenantId
-            $principal = $TenantId.Split(".")[0]
+            $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+                ` -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+            $principal = $organization.Split(".")[0]
         }
 
         $result = Get-TargetResource @params

@@ -374,8 +374,9 @@ function Export-TargetResource
     }
     else
     {
-        $principal = $TenantId.Split(".")[0]
-        $organization = $TenantId
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+        -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $principal = $organization.Split(".")[0]
     }
 
     # Obtain central administration url from a User Principal Name

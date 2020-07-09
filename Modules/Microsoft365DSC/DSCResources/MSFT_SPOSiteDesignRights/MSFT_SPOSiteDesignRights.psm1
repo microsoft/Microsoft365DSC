@@ -344,8 +344,9 @@ function Export-TargetResource
     }
     else
     {
-        $organization = $TenantId
-        $principal = $TenantId.Split(".")[0]
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+        -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $principal = $organization.Split(".")[0]
     }
 
     [array]$siteDesigns = Get-PnPSiteDesign
@@ -356,25 +357,15 @@ function Export-TargetResource
     {
         Write-Information "    [$i/$($siteDesigns.Count)] $($siteDesign.Title)"
 
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $params = @{
-                GlobalAdminAccount = $GlobalAdminAccount
-                SiteDesignTitle    = $siteDesign.Title
-                Rights             = "View"
-            }
-        }
-        else
-        {
-            $params = @{
-                SiteDesignTitle       = $siteDesign.Title
-                Rights                = "View"
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
-                CertificateThumbprint = $CertificateThumbprint
-            }
+        $params = @{
+            SiteDesignTitle       = $siteDesign.Title
+            Rights                = "View"
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+            GlobalAdminAccount    = $GlobalAdminAccount
         }
         $result = Get-TargetResource @params
         if ($result.Ensure -eq "Present")
@@ -416,25 +407,15 @@ function Export-TargetResource
             $content += "        }`r`n"
         }
 
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $params = @{
-                GlobalAdminAccount = $GlobalAdminAccount
-                SiteDesignTitle    = $siteDesign.Title
-                Rights             = "None"
-            }
-        }
-        else
-        {
-            $params = @{
-                SiteDesignTitle       = $siteDesign.Title
-                Rights                = "None"
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
-                CertificateThumbprint = $CertificateThumbprint
-            }
+        $params = @{
+            SiteDesignTitle       = $siteDesign.Title
+            Rights                = "None"
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+            GlobalAdminAccount    = $GlobalAdminAccount
         }
         $result = Get-TargetResource @params
         if ($result.Ensure -eq "Present")

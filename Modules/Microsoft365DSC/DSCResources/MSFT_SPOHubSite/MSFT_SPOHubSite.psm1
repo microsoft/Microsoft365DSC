@@ -533,27 +533,20 @@ function Export-TargetResource
 
     if ($null -ne $TenantId)
     {
-        $organization = $TenantId
-        $principal = $TenantId.Split(".")[0]
+        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
+            ` -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $principal = $organization.Split(".")[0]
     }
     foreach ($hub in $hubSites)
     {
         Write-Information "    [$i/$($hubSites.Length)] $($hub.SiteUrl)"
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $params = @{
-                GlobalAdminAccount = $GlobalAdminAccount
-                Url                = $hub.SiteUrl
-            }
-        }
-        else
-        {
-            $params = @{
-                Url                   = $hub.SiteUrl
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-            }
+
+        $params = @{
+            Url                   = $hub.SiteUrl
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            GlobalAdminAccount    = $GlobalAdminAccount
         }
         $result = Get-TargetResource @params
         if ($ConnectionMode -eq 'Credential')
