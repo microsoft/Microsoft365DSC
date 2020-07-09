@@ -194,17 +194,17 @@ function Start-M365DSCConfigurationExtract
         }
 
         $DSCContent += "    `$OrganizationName = `$ConfigurationData.NonNodeData.OrganizationName`r`n"
-        Add-ConfigurationDataEntry -Node "Settings" `
+        Add-ConfigurationDataEntry -Node "NonNodeData" `
             -Key "OrganizationName" `
             -Value $organization `
             -Description "Tenant's default verified domain name"
-        Add-ConfigurationDataEntry -Node "Settings" `
+        Add-ConfigurationDataEntry -Node "NonNodeData" `
             -Key "ApplicationId" `
             -Value $ApplicationId `
             -Description "Azure AD Application Id for Authentication"
         if (-not [System.String]::IsNullOrEmpty($TenantId))
         {
-            Add-ConfigurationDataEntry -Node "Settings" `
+            Add-ConfigurationDataEntry -Node "NonNodeData" `
                 -Key "TenantId" `
                 -Value $TenantId `
                 -Description "The Id or Name of the tenant to authenticate against"
@@ -212,7 +212,7 @@ function Start-M365DSCConfigurationExtract
 
         if (-not [System.String]::IsNullOrEmpty($CertificatePath))
         {
-            Add-ConfigurationDataEntry -Node "Settings" `
+            Add-ConfigurationDataEntry -Node "NonNodeData" `
                 -Key "CertificatePath" `
                 -Value $CertificatePath `
                 -Description "Local path to the .pfx certificate to use for authentication"
@@ -220,7 +220,7 @@ function Start-M365DSCConfigurationExtract
 
         if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint))
         {
-            Add-ConfigurationDataEntry -Node "Settings" `
+            Add-ConfigurationDataEntry -Node "NonNodeData" `
                 -Key "CertificateThumbprint" `
                 -Value $CertificateThumbprint `
                 -Description "Thumbprint of the certificate to use for authentication"

@@ -438,7 +438,7 @@ function Export-TargetResource
     $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
     $sources = $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
 
-    $content = ''
+    $dscContent = ''
     $i = 1
     $sourcesLength = $sources.Length
     if ($null -eq $sourcesLength)
@@ -450,25 +450,22 @@ function Export-TargetResource
         $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
         Write-Information "    [$i/$($sourcesLength)] $($source.Name)"
 
-        $params = @{
+        $Params = @{
             Name               = $source.Name
             Protocol           = $mapping.Protocol
             GlobalAdminAccount = $GlobalAdminAccount
         }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        if ($null -eq $result.ShowPartialSearch)
-        {
-            $result.Remove("ShowPartialSearch")
-        }
-        $content += "        SPOSearchResultSource " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
         $i++
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

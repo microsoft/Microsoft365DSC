@@ -320,7 +320,7 @@ function Export-TargetResource
         $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
         $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
 
-        $content = ''
+        $dscContent = ''
         $i = 1
         foreach ($file in $filesToDownload)
         {
@@ -336,7 +336,7 @@ function Export-TargetResource
             }
             if ($null -ne $app)
             {
-                $params = @{
+                $Params = @{
                     Identity              = $identity
                     Path                  = ("`$PSScriptRoot\" + $file.Name)
                     ApplicationId         = $ApplicationId
@@ -347,48 +347,14 @@ function Export-TargetResource
                     GlobalAdminAccount    = $GlobalAdminAccount
                 }
 
-                $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
-                if ($organization.IndexOf(".") -gt 0)
-                {
-                    $principal = $organization.Split(".")[0]
-                }
-
-                $result = Get-TargetResource @params
-                if ($ConnectionMode -eq 'Credential')
-                {
-                    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                }
-                else
-                {
-                    if ($null -ne $CertificatePassword)
-                    {
-                        $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
-                    }
-                }
-                $result = Remove-NullEntriesFromHashTable -Hash $result
-                $content += "        SPOApp " + (New-GUID).ToString() + "`r`n"
-                $content += "        {`r`n"
-                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-
-                if ($ConnectionMode -eq 'Credential')
-                {
-                    $convertedContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-                }
-                else
-                {
-                    if ($null -ne $CertificatePassword)
-                    {
-                        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CertificatePassword"
-                    }
-                    else
-                    {
-                        $content += $currentDSCBlock
-                    }
-                    $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
-                        -principal $principal -CertificateThumbprint $CertificateThumbprint
-                }
-                $content += $convertedContent
-                $content += "        }`r`n"
+                $Results = Get-TargetResource @Params
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
+                $dscContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        -ConnectionMode $ConnectionMode `
+                        -ModulePath $PSScriptRoot `
+                        -Results $Results `
+                        -GlobalAdminAccount $GlobalAdminAccount
             }
             $i++
         }
@@ -408,7 +374,7 @@ function Export-TargetResource
     {
         Write-Information "    * App Catalog is not configured on tenant. Cannot extract information about SharePoint apps."
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

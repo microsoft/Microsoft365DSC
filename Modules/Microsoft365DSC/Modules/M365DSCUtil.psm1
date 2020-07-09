@@ -1818,13 +1818,13 @@ function Update-M365DSCExportAuthenticationResults
         }
         if (-not [System.String]::IsNullOrEmpty($ApplicationId))
         {
-            $Results.ApplicationId = "`$ConfigurationData.Settings.ApplicationId"
+            $Results.ApplicationId = "`$ConfigurationData.NonNodeData.ApplicationId"
         }
         else
         {
             try
             {
-                $results.Remove("ApplicationId")
+                $results.Remove("ApplicationId") | Out-Null
             }
             catch
             {
@@ -1833,13 +1833,13 @@ function Update-M365DSCExportAuthenticationResults
         }
         if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint))
         {
-            $Results.CertificateThumbprint = "`$ConfigurationData.Settings.CertificateThumbprint"
+            $Results.CertificateThumbprint = "`$ConfigurationData.NonNodeData.CertificateThumbprint"
         }
         else
         {
             try
             {
-                $results.Remove("CertificateThumbprint")
+                $results.Remove("CertificateThumbprint") | Out-Null
             }
             catch
             {
@@ -1848,13 +1848,13 @@ function Update-M365DSCExportAuthenticationResults
         }
         if (-not [System.String]::IsNullOrEmpty($CertificatePath))
         {
-            $Results.CertificatePath = "`$ConfigurationData.Settings.CertificatePath"
+            $Results.CertificatePath = "`$ConfigurationData.NonNodeData.CertificatePath"
         }
         else
         {
             try
             {
-                $results.Remove("CertificatePath")
+                $results.Remove("CertificatePath") | Out-Null
             }
             catch
             {
@@ -1863,17 +1863,35 @@ function Update-M365DSCExportAuthenticationResults
         }
         if (-not [System.String]::IsNullOrEmpty($TenantId))
         {
-            $Results.TenantId = "`$ConfigurationData.Settings.TenantId"
+            $Results.TenantId = "`$ConfigurationData.NonNodeData.TenantId"
         }
         else
         {
             try
             {
-                $results.Remove("TenantId")
+                $Results.Remove("TenantId") | Out-Null
             }
             catch
             {
                 Write-Verbose -Message "Error removing TenantId from Update-M365DSCExportAuthenticationResults"
+            }
+        }
+        if ($null -ne $CertificatePassword)
+        {
+            if ($null -ne $CertificatePassword)
+            {
+                $Results.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
+            }
+        }
+        else
+        {
+            try
+            {
+                $Results.Remove("CertificatePassword") | Out-Null
+            }
+            catch
+            {
+                Write-Verbose -Message "Error removing CertificatePassword from Update-M365DSCExportAuthenticationResults"
             }
         }
     }

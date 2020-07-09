@@ -807,15 +807,8 @@ function Export-TargetResource
 
     $sites = Get-PnPTenantSite | Where-Object -FilterScript { $_.Template -ne 'SRCHCEN#0' -and $_.Template -ne 'SPSMSITEHOST#0' }
 
-    $partialContent = ""
-    $content = ''
+    $dscContent = ''
     $i = 1
-    $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
-    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part TenantIdof M365DSC.onmicrosoft.com)
-    if ($organization.IndexOf(".") -gt 0)
-    {
-        $principal = $organization.Split(".")[0]
-    }
 
     foreach ($site in $sites)
     {
@@ -827,7 +820,7 @@ function Export-TargetResource
             $siteTitle = $site.Title
         }
 
-        $params = @{
+        $Params = @{
             Url                   = $site.Url
             Template              = $site.Template
             Owner                 = $ApplicationId # Passing in bogus value to bypass null owner error
@@ -843,54 +836,14 @@ function Export-TargetResource
 
         try
         {
-            $result = Get-TargetResource @params
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            }
-            else
-            {
-                if ($null -ne $CertificatePassword)
-                {
-                    $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
-                }
-            }
-            $result = Remove-NullEntriesFromHashTable -Hash $result
-
-            $content += "        SPOSite " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
-            }
-            else
-            {
-                if ($null -ne $CertificatePassword)
-                {
-                    $partialContent += Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "CertificatePassword"
-                }
-                $partialContent = Format-M365ServicePrincipalData -configContent $partialContent -applicationid $ApplicationId `
-                    -principal $principal -CertificateThumbprint $CertificateThumbprint
-            }
-            if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape($principal + ".sharepoint.com"), "`$(`$OrganizationName.Split('.')[0]).sharepoint.com"
-            }
-            if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
-            }
-            if ($partialContent.ToLower().Contains("@" + $principal.ToLower()))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$OrganizationName.Split('.')[0])"
-            }
-            if ($partialContent.ToLower().Contains($principal.ToLower() + "-my.sharepoint.com"))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape($principal + "-my.sharepoint.com"), "`$(`$OrganizationName.Split('.')[0])-my.sharepoint.com"
-            }
-            $content += $partialContent
-            $content += "        }`r`n"
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        -ConnectionMode $ConnectionMode `
+                        -ModulePath $PSScriptRoot `
+                        -Results $Results `
+                        -GlobalAdminAccount $GlobalAdminAccount
         }
         catch
         {
@@ -898,7 +851,7 @@ function Export-TargetResource
         }
         $i++
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

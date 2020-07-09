@@ -385,7 +385,7 @@ function Export-TargetResource
             $returnValue += Invoke-M365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
                 $VerbosePreference = 'SilentlyContinue'
                 $params = $args[0]
-                $content = ""
+                $dscContent = ""
                 foreach ($item in $params.instances)
                 {
                     foreach ($site in $item)
@@ -407,7 +407,7 @@ function Export-TargetResource
                             $properties = Get-PnPPropertyBag
                             foreach ($property in $properties)
                             {
-                                $getValues = @{
+                                $Params = @{
                                     Url                   = $siteUrl
                                     Key                   = $property.Key
                                     Value                 = '*'
@@ -419,55 +419,14 @@ function Export-TargetResource
                                     GlobalAdminAccount    = $GlobalAdminAccount
                                 }
 
-                                $CurrentModulePath = $params.ScriptRoot + "\MSFT_SPOPropertyBag.psm1"
-                                Import-Module $CurrentModulePath -Force | Out-Null
-                                Import-Module ($params.ScriptRoot + "\..\..\Modules\M365DSCTelemetryEngine.psm1") -Force | Out-Null
-                                $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
-                                if ($organization.IndexOf(".") -gt 0)
-                                {
-                                    $principal = $organization.Split(".")[0]
-                                }
-                                $result = Get-TargetResource @getValues
-
-                                $result.Value = [System.String]$result.Value
-                                if (-not [System.String]::IsNullOrEmpty($result.Value) -and `
-                                        $result.Ensure -eq 'Present')
-                                {
-                                    if ($ConnectionMode -eq 'Credential')
-                                    {
-                                        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                                    }
-                                    else
-                                    {
-                                        if ($null -ne $CertificatePassword)
-                                        {
-                                            $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
-                                        }
-                                    }
-                                    $result = Remove-NullEntriesFromHashTable -Hash $result
-                                    $content += "        SPOPropertyBag " + (New-GUID).ToString() + "`r`n"
-                                    $content += "        {`r`n"
-                                    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
-                                    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                                    if ($ConnectionMode -eq 'Credential')
-                                    {
-                                        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-                                    }
-                                    else
-                                    {
-                                        if ($null -ne $CertificatePassword)
-                                        {
-                                            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CertificatePassword"
-                                        }
-                                        else
-                                        {
-                                            $content += $currentDSCBlock
-                                        }
-                                        $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
-                                            -principal $principal -CertificateThumbprint $CertificateThumbprint
-                                    }
-
-                                    $content += "        }`r`n"
+                                $Results = Get-TargetResource @Params
+                                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                                        -Results $Results
+                                $dscContent += Get-M365DSCExportContentForResource -ResourceName "SPOPropertyBag" `
+                                        -ConnectionMode $ConnectionMode `
+                                        -ModulePath $PSScriptRoot `
+                                        -Results $Results `
+                                        -GlobalAdminAccount $GlobalAdminAccount
                                 }
                             }
                         }
@@ -477,7 +436,7 @@ function Export-TargetResource
                         }
                     }
                 }
-                return $content
+                return $dscContent
             }
             return $returnValue
         } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $CertificateThumbprint, $CertificatePassword, $CertificatePath) | Out-Null

@@ -24,5 +24,10 @@ class MSFT_EXORemoteDomain : OMI_BaseResource
     [Write, Description("The TrustedMailInboundEnabled parameter specifies whether messages from senders in the remote domain are treated as trusted messages.")] Boolean TrustedMailInboundEnabled;
     [Write, Description("The TrustedMailOutboundEnabled parameter specifies whether messages sent to recipients in the remote domain are treated as trusted messages.")] Boolean TrustedMailOutboundEnabled;
     [Write, Description("The UseSimpleDisplayName parameter specifies whether the sender's simple display name is used for the From email address in messages sent to recipients in the remote domain.")] Boolean UseSimpleDisplayName;
-    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
 };

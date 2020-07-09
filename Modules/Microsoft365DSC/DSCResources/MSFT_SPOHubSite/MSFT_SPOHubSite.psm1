@@ -526,53 +526,31 @@ function Export-TargetResource
     $hubSites = Get-PnPHubSite
 
     $i = 1
-    $content = ''
-    $organization = ""
-    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
-    if ($organization.IndexOf(".") -gt 0)
-    {
-        $principal = $organization.Split(".")[0]
-    }
+    $dscContent = ''
+    foreach ($hub in $hubSites)
     {
         Write-Information "    [$i/$($hubSites.Length)] $($hub.SiteUrl)"
 
-        $params = @{
+        $Params = @{
             Url                   = $hub.SiteUrl
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             GlobalAdminAccount    = $GlobalAdminAccount
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
         }
-        $result = Get-TargetResource @params
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        }
-        $result = Remove-NullEntriesFromHashTable -Hash $result
-        $content += "        SPOHubSite " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
-        }
-        else
-        {
-            $partialContent = Format-M365ServicePrincipalData -configContent $partialContent -applicationid $ApplicationId `
-                -principal $principal -CertificateThumbprint $CertificateThumbprint
-        }
-        if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
-                $partialContent.ToLower().Contains($principal.ToLower()))
-        {
-            $partialContent = $partialContent -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
-            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
-        }
-        $content += $partialContent
-        $content += "        }`r`n"
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
         $i++
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource
