@@ -25,9 +25,29 @@ function Get-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration for app $Identity"
@@ -40,17 +60,24 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = @{
-        Identity  = ""
-        Path      = $null
-        Publish   = $Publish
-        Overwrite = $Overwrite
-        Ensure    = "Absent"
+        Identity              = ""
+        Path                  = $null
+        Publish               = $Publish
+        Overwrite             = $Overwrite
+        Ensure                = "Absent"
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
+        GlobalAdminAccount    = $GlobalAdminAccount
     }
 
     try
     {
         $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
                 -InboundParameters $PSBoundParameters
+
         $app = Get-PnPApp -Identity $Identity -ErrorAction SilentlyContinue
         if ($null -eq $app)
         {
@@ -59,11 +86,17 @@ function Get-TargetResource
         }
 
         return @{
-            Identity  = $app.Title
-            Path      = $Path
-            Publish   = $app.Deployed
-            Overwrite = $Overwrite
-            Ensure    = "Present"
+            Identity              = $app.Title
+            Path                  = $Path
+            Publish               = $app.Deployed
+            Overwrite             = $Overwrite
+            Ensure                = "Present"
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+            GlobalAdminAccount    = $GlobalAdminAccount
         }
     }
     catch
@@ -99,9 +132,29 @@ function Set-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration for app $Identity"
@@ -161,9 +214,29 @@ function Test-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration for app $Identity"
@@ -190,9 +263,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $InformationPreference = 'Continue'
 
@@ -215,7 +308,15 @@ function Export-TargetResource
 
     if (-not [string]::IsNullOrEmpty($tenantAppCatalogUrl))
     {
-        $filesToDownload = Get-AllSPOPackages -GlobalAdminAccount $GlobalAdminAccount
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $filesToDownload = Get-AllSPOPackages -GlobalAdminAccount $GlobalAdminAccount
+        }
+        else
+        {
+            $filesToDownload = Get-AllSPOPackages -ApplicationId $ApplicationId -CertificateThumbprint $CertificateThumbprint `
+                -CertificatePassword $CertificatePassword -TenantId $TenantId -CertificatePath $CertificatePath
+        }
         $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace("https://", "")
         $tenantAppCatalogPath = $tenantAppCatalogPath.Replace($tenantAppCatalogPath.Split('/')[0], "")
 
@@ -236,16 +337,56 @@ function Export-TargetResource
             if ($null -ne $app)
             {
                 $params = @{
-                    GlobalAdminAccount = $GlobalAdminAccount
-                    Identity           = $identity
-                    Path               = ("`$PSScriptRoot\" + $file.Name)
+                    Identity              = $identity
+                    Path                  = ("`$PSScriptRoot\" + $file.Name)
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                    CertificateThumbprint = $CertificateThumbprint
+                    GlobalAdminAccount    = $GlobalAdminAccount
                 }
+
+                $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
+                if ($organization.IndexOf(".") -gt 0)
+                {
+                    $principal = $organization.Split(".")[0]
+                }
+
                 $result = Get-TargetResource @params
-                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                if ($ConnectionMode -eq 'Credential')
+                {
+                    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+                }
+                else
+                {
+                    if ($null -ne $CertificatePassword)
+                    {
+                        $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
+                    }
+                }
+                $result = Remove-NullEntriesFromHashTable -Hash $result
                 $content += "        SPOApp " + (New-GUID).ToString() + "`r`n"
                 $content += "        {`r`n"
                 $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                $convertedContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+
+                if ($ConnectionMode -eq 'Credential')
+                {
+                    $convertedContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+                }
+                else
+                {
+                    if ($null -ne $CertificatePassword)
+                    {
+                        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CertificatePassword"
+                    }
+                    else
+                    {
+                        $content += $currentDSCBlock
+                    }
+                    $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
+                        -principal $principal -CertificateThumbprint $CertificateThumbprint
+                }
                 $content += $convertedContent
                 $content += "        }`r`n"
             }
@@ -255,6 +396,7 @@ function Export-TargetResource
         $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
                 -InboundParameters $PSBoundParameters `
                 -Url $tenantAppCatalogUrl
+
         foreach ($file in $filesToDownload)
         {
             $appInstanceUrl = $tenantAppCatalogPath + "/AppCatalog/" + $file.Name

@@ -407,7 +407,7 @@ function Show-M365DSCGUI
 
         $lblExtraction = New-Object System.Windows.Forms.Label
         $lblExtraction.Text = "Extraction Modes:"
-        $lblExtraction.Font= [System.Drawing.Font]::new($lblExtraction.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
+        $lblExtraction.Font = [System.Drawing.Font]::new($lblExtraction.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
         $lblExtraction.Top = 5
         $lblExtraction.Autosize = $true
         $lblExtraction.Left = 15
@@ -429,8 +429,8 @@ function Show-M365DSCGUI
         $radLite.Top = 5
         $radLite.Left = 130
         $radLite.Add_Click( {
-            SelectComponentsForMode -PanelMain $pnlMain -Mode 1 -ControlsToSkip ($Global:DefaultComponents + $Global:FullComponents);
-        })
+                SelectComponentsForMode -PanelMain $pnlMain -Mode 1 -ControlsToSkip ($Global:DefaultComponents + $Global:FullComponents);
+            })
         $panelMenu.Controls.Add($radLite)
 
         $imgLite2 = New-Object System.Windows.Forms.PictureBox
@@ -505,7 +505,7 @@ function Show-M365DSCGUI
         $btnClear.BackColor = [System.Drawing.Color]::IndianRed
         $btnClear.ForeColor = [System.Drawing.Color]::White
         $btnClear.Text = "Unselect All"
-        $btnClear.Add_Click( { SelectComponentsForMode -PanelMain $pnlMain -Mode 0 -ControlsToSkip @()})
+        $btnClear.Add_Click( { SelectComponentsForMode -PanelMain $pnlMain -Mode 0 -ControlsToSkip @() })
         $panelMenu.Controls.Add($btnClear);
 
         #region ServicePrincipal Info
@@ -622,41 +622,37 @@ function Show-M365DSCGUI
         $btnExtract.ForeColor = [System.Drawing.Color]::White
         $btnExtract.Text = "Start Extraction"
         $btnExtract.Add_Click( {
-                if ($txtPassword.Text.Length -gt 0)
+                $form.Hide()
+                $SelectedComponents = @()
+                foreach ($panel in ($form.Controls[0].Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Panel" }))
                 {
-                    $form.Hide()
-                    $SelectedComponents = @()
-                    foreach ($panel in ($form.Controls[0].Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Panel" }))
+                    foreach ($checkbox in ($panel.Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Checkbox" }))
                     {
-                        foreach ($checkbox in ($panel.Controls | Where-Object -FilterScript { $_.GetType().Name -eq "Checkbox" }))
+                        if ($checkbox.Checked)
                         {
-                            if ($checkbox.Checked)
-                            {
-                                $SelectedComponents += $checkbox.Name.Replace("chck", "")
-                            }
+                            $SelectedComponents += $checkbox.Name.Replace("chck", "")
                         }
                     }
+                }
 
-                    try
+                try
+                {
+                    if ($txtPassword.Text.Length -gt 0)
                     {
                         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force))
-                        Start-M365DSCConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
-                            -ApplicationId $txtApplicationId.Text `
-                            -TenantId $txtTenantId.Text `
-                            -CertificateThumbprint $txtCertThumb.Text `
-                            -CertificatePath $txtCertFile.Text `
-                            -ComponentsToExtract $SelectedComponents `
-                            -Path $Path
                     }
-                    catch
-                    {
-                        $Message = "Could not initiate the ReverseDSC Extraction"
-                        New-M365DSCLogEntry -Error $_ -Message $Message_ -Source "[M365DSCReverseGUI]"
-                    }
+                    Start-M365DSCConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
+                        -ApplicationId $txtApplicationId.Text `
+                        -TenantId $txtTenantId.Text `
+                        -CertificateThumbprint $txtCertThumb.Text `
+                        -CertificatePath $txtCertFile.Text `
+                        -ComponentsToExtract $SelectedComponents `
+                        -Path $Path
                 }
-                else
+                catch
                 {
-                    [System.Windows.Forms.MessageBox]::Show("Please provide a password for the Tenant Admin Account")
+                    $Message = "Could not initiate the ReverseDSC Extraction"
+                    New-M365DSCLogEntry -Error $_ -Message $Message_ -Source "[M365DSCReverseGUI]"
                 }
             })
         $panelMenu.Controls.Add($btnExtract);
@@ -711,7 +707,7 @@ function SelectComponentsForMode
                 {
                     try
                     {
-                        if ($mode -ne 3 -and $ControlsToSkip.Contains($control.Name.Replace("chck","")) -or $mode -eq 0)
+                        if ($mode -ne 3 -and $ControlsToSkip.Contains($control.Name.Replace("chck", "")) -or $mode -eq 0)
                         {
                             $control.Checked = $false
                         }

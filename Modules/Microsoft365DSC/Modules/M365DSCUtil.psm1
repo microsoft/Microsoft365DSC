@@ -4,11 +4,11 @@ $Global:SessionSecurityCompliance = $null
 #endregion
 
 #region Extraction Modes
-$Global:DefaultComponents = @("SPOApp","SPOSiteDesign")
-$Global:FullComponents = @("AADMSGroup", "EXOMailboxSettings","EXOManagementRole","O365Group","O365User", `
-    "PlannerPlan", "PlannerBucket", "PlannerTask","PPPowerAppsEnvironment", `
-    "SPOSiteAuditSettings","SPOSiteGroup","SPOSite","SPOUserProfileProperty","SPOPropertyBag","TeamsTeam","TeamsChannel", `
-     "TeamsUser")
+$Global:DefaultComponents = @("SPOApp", "SPOSiteDesign")
+$Global:FullComponents = @("AADMSGroup", "EXOMailboxSettings", "EXOManagementRole", "O365Group", "O365User", `
+        "PlannerPlan", "PlannerBucket", "PlannerTask", "PPPowerAppsEnvironment", `
+        "SPOSiteAuditSettings", "SPOSiteGroup", "SPOSite", "SPOUserProfileProperty", "SPOPropertyBag", "TeamsTeam", "TeamsChannel", `
+        "TeamsUser")
 #endregion
 
 function Format-EXOParams
@@ -693,7 +693,7 @@ function Test-Microsoft365DSCParameterState
                                         $AllCurrentValuesAsArray += [PSCustomObject]$currentEntry
                                     }
                                     $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $AllCurrentValuesAsArray `
-                                    -DesiredValues $AllDesiredValuesAsArray
+                                        -DesiredValues $AllDesiredValuesAsArray
                                     if ($null -ne $arrayCompare)
                                     {
                                         foreach ($item in $arrayCompare)
@@ -834,7 +834,15 @@ function Export-M365DSCConfiguration
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath
     )
     $InformationPreference = 'SilentlyContinue'
     $WarningPreference = 'SilentlyContinue'
@@ -874,6 +882,8 @@ function Export-M365DSCConfiguration
                 -TenantId $TenantId `
                 -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
+                -CertificatePath $CertificatePath `
+                -CertificatePassword $CertificatePassword `
                 -GenerateInfo $GenerateInfo `
                 -Quiet
         }
@@ -888,6 +898,8 @@ function Export-M365DSCConfiguration
                 -TenantId $TenantId `
                 -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
+                -CertificatePath $CertificatePath `
+                -CertificatePassword $CertificatePassword `
                 -GenerateInfo $GenerateInfo `
                 -Quiet
         }
@@ -902,6 +914,8 @@ function Export-M365DSCConfiguration
                 -TenantId $TenantId `
                 -ApplicationSecret $ApplicationSecret `
                 -CertificateThumbprint $CertificateThumbprint `
+                -CertificatePath $CertificatePath `
+                -CertificatePassword $CertificatePassword `
                 -GenerateInfo $GenerateInfo `
                 -Quiet
         }
@@ -919,30 +933,80 @@ function Get-M365DSCTenantDomain
         [System.String]
         $TenantId,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
-                -InboundParameters $PSBoundParameters
+    if ($null -eq $CertificatePath)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+                    -InboundParameters $PSBoundParameters
+        $tenantDetails = Get-AzureADTenantDetail
+        $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -Filterscript { $_.Initial }
+        return $defaultDomain.Name
+    }
+    if ($TenantId.Contains("onmicrosoft"))
+    {
+        return $TenantId
+    }
+    else
+    {
+        throw "TenantID must be in format contoso.onmicrosoft.com"
+    }
 
-    $tenantDetails = Get-AzureADTenantDetail
-    $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -Filterscript {$_._Default}
-    return $defaultDomain.Name
+}
+
+function Get-M365DSCOrganization
+{
+    param(
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $TenantId
+
+    )
+    if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+        return $organization
+    }
+    if ($null -ne $TenantId)
+    {
+        if ($TenantId.contains("."))
+        {
+            $organization = $TenantId
+            return $organization
+        }else
+        {
+            Throw "Tenant ID must be name of tenant not a GUID. Ex contoso.onmicrosoft.com"
+        }
+
+    }
 }
 
 function New-M365DSCConnection
 {
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateSet("Azure", "AzureAD", "ExchangeOnline", `
-            "SecurityComplianceCenter", "PnP", "PowerPlatforms", `
-            "MicrosoftTeams", "SkypeForBusiness", "MicrosoftGraph")]
+                "SecurityComplianceCenter", "PnP", "PowerPlatforms", `
+                "MicrosoftTeams", "SkypeForBusiness", "MicrosoftGraph")]
         [System.String]
         $Platform,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter()]
+        [System.String]
+        $ConnectionUrl,
+
+        [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
         $InboundParameters,
 
@@ -977,8 +1041,21 @@ function New-M365DSCConnection
         Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
         if ([System.String]::IsNullOrEmpty($url))
         {
+            Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
             Test-MSCloudLogin -Platform $Platform `
-                    -CloudCredential $InboundParameters.GlobalAdminAccount
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -CertificateThumbprint $InboundParameters.CertificateThumbprint
+            return 'ServicePrincipal'
+        }
+        # Case only the ApplicationID and Credentials parameters are specified
+        elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
+            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
+        {
+             Write-Verbose -Message "GlobalAdminAccount and ApplicationId were specified. Connecting via Delegated Service Principal"
+            Test-MSCloudLogin -Platform $Platform `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -CloudCredential $InboundParameters.GlobalAdminAccount
         }
         else
         {
@@ -1286,8 +1363,8 @@ function Install-M365DSCDevBranch
     [CmdletBinding()]
     param()
     #region Download and Extract Dev branch's ZIP
-    $url         = "https://github.com/microsoft/Microsoft365DSC/archive/Dev.zip"
-    $output      = "$($env:Temp)\dev.zip"
+    $url = "https://github.com/microsoft/Microsoft365DSC/archive/Dev.zip"
+    $output = "$($env:Temp)\dev.zip"
     $extractPath = $env:Temp + "\O365Dev"
 
     Invoke-WebRequest -Uri $url -OutFile $output
@@ -1321,9 +1398,29 @@ function Get-AllSPOPackages
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable[]])]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
@@ -1346,7 +1443,7 @@ function Get-AllSPOPackages
 
         foreach ($file in $allFiles)
         {
-            $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title}
+            $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title }
         }
     }
     return $filesToDownload
@@ -1401,7 +1498,7 @@ function Assert-M365DSCTemplate
     #endregion
 
     if (([System.String]::IsNullOrEmpty($TemplatePath) -and [System.String]::IsNullOrEmpty($TemplateName)) -or
-    (-not [System.String]::IsNullOrEmpty($TemplatePath) -and -not [System.String]::IsNullOrEmpty($TemplateName)))
+        (-not [System.String]::IsNullOrEmpty($TemplatePath) -and -not [System.String]::IsNullOrEmpty($TemplateName)))
     {
         throw "You need to one of either TemplatePath or TemplateName"
     }
@@ -1423,7 +1520,7 @@ function Assert-M365DSCTemplate
         $tokens = $null
         $errors = $null
         $ast = [System.Management.Automation.Language.Parser]::ParseFile($TemplatePath, [ref] $tokens, [ref] $errors)
-        $configObject = $ast.FindAll( {$args[0] -is [System.Management.Automation.Language.ConfigurationDefinitionAST]}, $true)
+        $configObject = $ast.FindAll( { $args[0] -is [System.Management.Automation.Language.ConfigurationDefinitionAST] }, $true)
 
         $configurationName = $configObject.InstanceName.ToString()
         $configContent = $configObject.Extent.ToString()
@@ -1477,7 +1574,7 @@ function Test-M365DSCDependenciesForNewVersions
     $i = 1
     foreach ($dependency in $dependencies)
     {
-        Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i/$dependencies.Count * 100)
+        Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
         try
         {
             $moduleInGallery = Find-Module $dependency.ModuleName
@@ -1504,7 +1601,7 @@ function Set-M365DSCAgentCertificateConfiguration
     param()
 
     $existingCertificate = Get-ChildItem -Path Cert:\LocalMachine\My | `
-        Where-Object {$_.Subject -match "M365DSCEncryptionCert"}
+        Where-Object { $_.Subject -match "M365DSCEncryptionCert" }
     if ($null -eq $existingCertificate)
     {
         Write-Verbose -Message "No existing M365DSC certificate found. Creating one."
@@ -1518,7 +1615,7 @@ function Set-M365DSCAgentCertificateConfiguration
         Import-Certificate -FilePath $certificateFilePath `
             -CertStoreLocation 'Cert:\LocalMachine\My' -Confirm:$false | Out-Null
         $existingCertificate = Get-ChildItem -Path Cert:\LocalMachine\My | `
-            Where-Object {$_.Subject -match "M365DSCEncryptionCert"}
+            Where-Object { $_.Subject -match "M365DSCEncryptionCert" }
     }
     else
     {
@@ -1550,8 +1647,43 @@ function Set-M365DSCAgentCertificateConfiguration
     return $thumbprint
 }
 
+function Format-M365ServicePrincipalData
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter()]
+        [System.String]
+        $configContent,
 
-function Remove-EmptyValue {
+        [Parameter()]
+        [System.String]
+        $principal,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
+    )
+    if ($configContent.ToLower().Contains($principal.ToLower()))
+    {
+        $configContent = $configContent -ireplace [regex]::Escape($principal), "`$(`$OrganizationName.Split('.')[0])"
+    }
+    if ($configContent.ToLower().Contains($ApplicationId.ToLower()))
+    {
+        $configContent = $configContent -ireplace [regex]::Escape($ApplicationId), "`$(`$ApplicationId)"
+    }
+    if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint) -and $configContent.ToLower().Contains($CertificateThumbprint.ToLower()))
+    {
+        $configContent = $configContent -ireplace [regex]::Escape($CertificateThumbprint), "`$(`$CertificateThumbprint)"
+    }
+    return $configContent
+}
+function Remove-EmptyValue
+{
     [alias('Remove-EmptyValues')]
     [CmdletBinding()]
     param(
@@ -1560,29 +1692,44 @@ function Remove-EmptyValue {
         [switch] $Recursive,
         [int] $Rerun
     )
-    foreach ($Key in [string[]] $Hashtable.Keys) {
-        if ($Key -notin $ExcludeParameter) {
-            if ($Recursive) {
-                if ($Hashtable[$Key] -is [System.Collections.IDictionary]) {
-                    if ($Hashtable[$Key].Count -eq 0) {
+    foreach ($Key in [string[]] $Hashtable.Keys)
+    {
+        if ($Key -notin $ExcludeParameter)
+        {
+            if ($Recursive)
+            {
+                if ($Hashtable[$Key] -is [System.Collections.IDictionary])
+                {
+                    if ($Hashtable[$Key].Count -eq 0)
+                    {
                         $Hashtable.Remove($Key)
-                    } else {
+                    }
+                    else
+                    {
                         Remove-EmptyValue -Hashtable $Hashtable[$Key] -Recursive:$Recursive
                     }
-                } else {
-                    if ([string]::IsNullOrEmpty($Hashtable[$Key])) {
+                }
+                else
+                {
+                    if ([string]::IsNullOrEmpty($Hashtable[$Key]))
+                    {
                         $Hashtable.Remove($Key)
                     }
                 }
-            } else {
-                if ([string]::IsNullOrEmpty($Hashtable[$Key])) {
+            }
+            else
+            {
+                if ([string]::IsNullOrEmpty($Hashtable[$Key]))
+                {
                     $Hashtable.Remove($Key)
                 }
             }
         }
     }
-    if ($Rerun) {
-        for ($i = 0; $i -lt $Rerun; $i++) {
+    if ($Rerun)
+    {
+        for ($i = 0; $i -lt $Rerun; $i++)
+        {
             Remove-EmptyValue -Hashtable $Hashtable -Recursive:$Recursive
         }
     }

@@ -23,4 +23,3 @@ class MSFT_SPOSearchManagedProperty : OMI_BaseResource
     [Write, Description("Present ensures the Search Managed Property exists."), ValueMap{"Present"}, Values{"Present"}] string Ensure;
     [Required, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
 };
-
