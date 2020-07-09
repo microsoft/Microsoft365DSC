@@ -278,10 +278,9 @@ function Export-TargetResource
         GlobalAdminAccount    = $GlobalAdminAccount
     }
 
-    if ($null -ne $TenantId)
+    $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
+    if ($organization.IndexOf(".") -gt 0)
     {
-        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId `
-        -CertificateThumbprint $CertificateThumbprint -CertificatePath $CertificatePath
         $principal = $organization.Split(".")[0]
     }
 

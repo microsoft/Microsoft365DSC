@@ -960,6 +960,37 @@ function Get-M365DSCTenantDomain
 
 }
 
+function Get-M365DSCOrganization
+{
+    param(
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $TenantId
+
+    )
+    if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
+    {
+        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+        return $organization
+    }
+    if ($null -ne $TenantId)
+    {
+        if ($TenantId.contains("."))
+        {
+            $organization = $TenantId
+            return $organization
+        }else
+        {
+            Throw "Tenant ID must be name of tenant not a GUID. Ex contoso.onmicrosoft.com"
+        }
+
+    }
+}
+
 function New-M365DSCConnection
 {
     param(
@@ -1653,7 +1684,8 @@ function Format-M365ServicePrincipalData
     }
     return $configContent
 }
-function Remove-EmptyValue {
+function Remove-EmptyValue
+{
     [alias('Remove-EmptyValues')]
     [CmdletBinding()]
     param(
@@ -1662,29 +1694,44 @@ function Remove-EmptyValue {
         [switch] $Recursive,
         [int] $Rerun
     )
-    foreach ($Key in [string[]] $Hashtable.Keys) {
-        if ($Key -notin $ExcludeParameter) {
-            if ($Recursive) {
-                if ($Hashtable[$Key] -is [System.Collections.IDictionary]) {
-                    if ($Hashtable[$Key].Count -eq 0) {
+    foreach ($Key in [string[]] $Hashtable.Keys)
+    {
+        if ($Key -notin $ExcludeParameter)
+        {
+            if ($Recursive)
+            {
+                if ($Hashtable[$Key] -is [System.Collections.IDictionary])
+                {
+                    if ($Hashtable[$Key].Count -eq 0)
+                    {
                         $Hashtable.Remove($Key)
-                    } else {
+                    }
+                    else
+                    {
                         Remove-EmptyValue -Hashtable $Hashtable[$Key] -Recursive:$Recursive
                     }
-                } else {
-                    if ([string]::IsNullOrEmpty($Hashtable[$Key])) {
+                }
+                else
+                {
+                    if ([string]::IsNullOrEmpty($Hashtable[$Key]))
+                    {
                         $Hashtable.Remove($Key)
                     }
                 }
-            } else {
-                if ([string]::IsNullOrEmpty($Hashtable[$Key])) {
+            }
+            else
+            {
+                if ([string]::IsNullOrEmpty($Hashtable[$Key]))
+                {
                     $Hashtable.Remove($Key)
                 }
             }
         }
     }
-    if ($Rerun) {
-        for ($i = 0; $i -lt $Rerun; $i++) {
+    if ($Rerun)
+    {
+        for ($i = 0; $i -lt $Rerun; $i++)
+        {
             Remove-EmptyValue -Hashtable $Hashtable -Recursive:$Recursive
         }
     }

@@ -120,6 +120,7 @@ function Get-TargetResource
         CertificatePassword                       = $CertificatePassword
         CertificatePath                           = $CertificatePath
         CertificateThumbprint                     = $CertificateThumbprint
+        GlobalAdminAccount                        = $GlobalAdminAccount
     }
 
     try
@@ -199,6 +200,7 @@ function Get-TargetResource
             CertificatePassword                       = $CertificatePassword
             CertificatePath                           = $CertificatePath
             CertificateThumbprint                     = $CertificateThumbprint
+            GlobalAdminAccount                        = $GlobalAdminAccount
         }
     }
     catch
@@ -562,10 +564,10 @@ function Export-TargetResource
         GlobalAdminAccount    = $GlobalAdminAccount
     }
 
-    if ($null -ne $TenantId)
+    $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
+    if ($organization.IndexOf(".") -gt 0)
     {
-        $organization = $TenantId
-        $principal = $TenantId.Split(".")[0]
+        $principal = $organization.Split(".")[0]
     }
 
     $result = Get-TargetResource @Params

@@ -92,6 +92,7 @@ function Get-TargetResource
         $currentValues.CertificatePassword = $CertificatePassword
         $currentValues.CertificatePath = $CertificatePath
         $currentValues.CertificateThumbprint = $CertificateThumbprint
+        $currentValues.GlobalAdminAccount    = $GlobalAdminAccount
         return $currentValues
     }
     else
@@ -368,8 +369,7 @@ function Export-TargetResource
     }
     else
     {
-        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId `
-        -CertificateThumbprint $CertificateThumbprint -CertificatePath $CertificatePath
+        $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
         $tenantName = $organization.Split(".")[0]
     }
     $content = ''
@@ -388,10 +388,8 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 GlobalAdminAccount    = $GlobalAdminAccount
             }
-            if ($null -ne $TenantId)
-            {
-                $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
-                    ` -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+            $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
+            if ($organization.IndexOf(".") -gt 0)
                 $principal = $organization.Split(".")[0]
             }
 

@@ -337,15 +337,9 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
-    $organization = ""
-    if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
+    $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
+    if ($organization.IndexOf(".") -gt 0)
     {
-        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
-    }
-    else
-    {
-        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId `
-        -CertificateThumbprint $CertificateThumbprint -CertificatePath $CertificatePath
         $principal = $organization.Split(".")[0]
     }
 

@@ -67,7 +67,7 @@ function Get-TargetResource
         Write-Verbose "GlobalAdminAccount or service principal specified does not have admin access to site {$Url}"
         if ($_.Exception -like "*Unable to cast object of type*")
         {
-            [array]$property = Get-PnpPropertyBag | Where-Object -FilterScript {$_.Key -ceq $Key}
+            [array]$property = Get-PnpPropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
         }
         elseif ($_.Exception -like "*The underlying connection was closed*")
         {
@@ -83,7 +83,7 @@ function Get-TargetResource
     }
     if ($property.Length -ne 1)
     {
-        [array]$property = Get-PnpPropertyBag | Where-Object -FilterScript {$_.Key -ceq $Key}
+        [array]$property = Get-PnpPropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
     }
     if ($property.Length -eq 0)
     {
@@ -95,6 +95,7 @@ function Get-TargetResource
         $result.CertificatePassword = $CertificatePassword
         $result.CertificatePath = $CertificatePath
         $result.CertificateThumbprint = $CertificateThumbprint
+        $result.GlobalAdminAccount = $GlobalAdminAccount
         return $result
     }
     else
@@ -406,17 +407,16 @@ function Export-TargetResource
                                 $CurrentModulePath = $params.ScriptRoot + "\MSFT_SPOPropertyBag.psm1"
                                 Import-Module $CurrentModulePath -Force | Out-Null
                                 Import-Module ($params.ScriptRoot + "\..\..\Modules\M365DSCTelemetryEngine.psm1") -Force | Out-Null
-                                if ($null -ne $TenantId)
+                                $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
+                                if ($organization.IndexOf(".") -gt 0)
                                 {
-                                    $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId `
-                                    -CertificateThumbprint $CertificateThumbprint -CertificatePath $CertificatePath
                                     $principal = $organization.Split(".")[0]
                                 }
                                 $result = Get-TargetResource @getValues
 
                                 $result.Value = [System.String]$result.Value
                                 if (-not [System.String]::IsNullOrEmpty($result.Value) -and `
-                                    $result.Ensure -eq 'Present')
+                                        $result.Ensure -eq 'Present')
                                 {
                                     if ($ConnectionMode -eq 'Credential')
                                     {

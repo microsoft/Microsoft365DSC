@@ -807,23 +807,13 @@ function Export-TargetResource
     $partialContent = ""
     $content = ''
     $i = 1
-    $organization = ""
-    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    if ($null -ne $GlobalAdminAccount -and $GlobalAdminAccount.UserName.Contains("@"))
+    $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
+    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part TenantIdof M365DSC.onmicrosoft.com)
+    if ($organization.IndexOf(".") -gt 0)
     {
-        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
-
-        if ($organization.IndexOf(".") -gt 0)
-        {
-            $principal = $organization.Split(".")[0]
-        }
-    }
-    else
-    {
-        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId `
-            -CertificateThumbprint $CertificateThumbprint -CertificatePath $CertificatePath
         $principal = $organization.Split(".")[0]
     }
+
     foreach ($site in $sites)
     {
         $site = Get-PnPTenantSite -Url $site.Url
