@@ -59,6 +59,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure             = "Present"
                 }
 
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
+                }
+
                 Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
                     return @{ Value = "true" }
                 }
@@ -87,6 +91,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     CdnType            = "Public"
                     GlobalAdminAccount = $GlobalAdminAccount;
                     Ensure             = "Absent"
+                }
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
                 }
 
                 Mock -CommandName Get-PnPTenantCdnEnabled -MockWith {
@@ -128,6 +136,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure             = "Present"
                 }
 
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
+                }
+
                 Mock -CommandName Get-M365TenantName -MockWith {
                     return 'contoso'
                 }
@@ -167,6 +179,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure             = "Present"
                 }
 
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
+                }
+
                 Mock -CommandName Get-PNPOrgAssetsLibrary -MockWith {
                     return @{
                         OrgAssetsLibraries = @{
@@ -204,6 +220,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     GlobalAdminAccount = $GlobalAdminAccount
+                }
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return "Credential"
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {

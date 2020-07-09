@@ -34,9 +34,29 @@ function Get-TargetResource
         [System.String]
         $SiteUrl,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration for SPO Storage Entity for $Key"
@@ -47,19 +67,23 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -ConnectionUrl $SiteUrl `
-        -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
+        -ConnectionUrl $SiteUrl
 
     $nullReturn = @{
-        Key                = $Key
-        Value              = $Value
-        EntityScope        = $EntityScope
-        Description        = $Description
-        Comment            = $Comment
-        Ensure             = "Absent"
-        SiteUrl            = $SiteUrl
-        GlobalAdminAccount = $GlobalAdminAccount
+        Key                   = $Key
+        Value                 = $Value
+        EntityScope           = $EntityScope
+        Description           = $Description
+        Comment               = $Comment
+        Ensure                = "Absent"
+        SiteUrl               = $SiteUrl
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 
     Write-Verbose -Message "Getting storage entity $Key"
@@ -84,14 +108,19 @@ function Get-TargetResource
     Write-Verbose -Message "Found storage entity $($Entity.Key)"
 
     return @{
-        Key                = $Entity.Key
-        Value              = $Entity.Value
-        EntityScope        = $EntityScope
-        Description        = $Entity.Description
-        Comment            = $Entity.Comment
-        Ensure             = "Present"
-        SiteUrl            = $SiteUrl
-        GlobalAdminAccount = $GlobalAdminAccount
+        Key                   = $Entity.Key
+        Value                 = $Entity.Value
+        EntityScope           = $EntityScope
+        Description           = $Entity.Description
+        Comment               = $Entity.Comment
+        Ensure                = "Present"
+        SiteUrl               = $SiteUrl
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 }
 
@@ -130,9 +159,29 @@ function Set-TargetResource
         [System.String]
         $SiteUrl,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration for SPO Storage Entity for $Key"
@@ -143,17 +192,21 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -ConnectionUrl $SiteUrl `
-        -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
+        -ConnectionUrl $SiteUrl
 
     $curStorageEntry = Get-TargetResource @PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("SiteUrl")
-    $CurrentParameters.Remove("GlobalAdminAccount")
-    $CurrentParameters.Remove("Ensure")
-    $CurrentParameters.Remove("EntityScope")
+    $CurrentParameters.Remove("SiteUrl") | Out-Null
+    $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
+    $CurrentParameters.Remove("Ensure") | Out-Null
+    $CurrentParameters.Remove("EntityScope") | Out-Null
+    $CurrentParameters.Remove("ApplicationId") | Out-Null
+    $CurrentParameters.Remove("TenantId") | Out-Null
+    $CurrentParameters.Remove("CertificatePath") | Out-Null
+    $CurrentParameters.Remove("CertificatePassword") | Out-Null
+    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
     $CurrentParameters.Add("Scope", $EntityScope)
 
     if (($Ensure -eq "Absent" -and $curStorageEntry.Ensure -eq "Present"))
@@ -215,9 +268,29 @@ function Test-TargetResource
         [System.String]
         $SiteUrl,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration for SPO Storage Entity for $Key"
@@ -249,9 +322,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $InformationPreference = 'Continue'
 
@@ -262,8 +355,7 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $storageEntities = Get-PnPStorageEntity -ErrorAction SilentlyContinue
 
@@ -271,32 +363,75 @@ function Export-TargetResource
     $content = ''
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    if ($GlobalAdminAccount.UserName.Contains("@"))
+    $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
+    if ($organization.IndexOf(".") -gt 0)
     {
-        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
-
-        if ($organization.IndexOf(".") -gt 0)
-        {
-            $principal = $organization.Split(".")[0]
-        }
+        $principal = $organization.Split(".")[0]
     }
+
     # Obtain central administration url from a User Principal Name
-    $centralAdminUrl = Get-SPOAdministrationUrl -GlobalAdminAccount $GlobalAdminAccount
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $centralAdminUrl = Get-SPOAdministrationUrl -GlobalAdminAccount $GlobalAdminAccount
+    }
+    else
+    {
+        $centralAdminUrl = "https://$principal-admin.sharepoint.com"
+    }
     foreach ($storageEntity in $storageEntities)
     {
-        $params = @{
-            GlobalAdminAccount = $GlobalAdminAccount
-            Key                = $storageEntity.Key
-            SiteUrl            = $centralAdminUrl
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $params = @{
+                GlobalAdminAccount = $GlobalAdminAccount
+                Key                = $storageEntity.Key
+                SiteUrl            = $centralAdminUrl
+            }
         }
+        else
+        {
+            $params = @{
+                Key                   = $storageEntity.Key
+                SiteUrl               = $centralAdminUrl
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
+            }
+        }
+
 
         Write-Information "    [$i/$($storageEntities.Length)] $($storageEntity.Key)"
         $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        }
+        else
+        {
+            if ($null -ne $CertificatePassword)
+            {
+                $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
+            }
+        }
+        $result = Remove-NullEntriesFromHashTable -Hash $result
         $content += "        SPOStorageEntity " + (New-Guid).ToString() + "`r`n"
         $content += "        {`r`n"
         $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+        }
+        else
+        {
+            if ($null -ne $CertificatePassword)
+            {
+                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "CertificatePassword"
+            }
+            $partialContent = Format-M365ServicePrincipalData -configContent $partialContent -applicationid $ApplicationId `
+                -principal $principal -CertificateThumbprint $CertificateThumbprint
+        }
         if ($partialContent.ToLower().Contains("https://" + $principal.ToLower()))
         {
             # If we are already looking at the Admin Center URL, don't replace the full path;
@@ -308,10 +443,6 @@ function Export-TargetResource
             {
                 $partialContent = $partialContent -ireplace [regex]::Escape("https://" + $principal.ToLower()), "`$(`$OrganizationName.Split('.')[0])-admin.sharepoint.com"
             }
-        }
-        if ($partialContent.ToLower().Contains($principal.ToLower()))
-        {
-            $partialContent = $partialContent -ireplace [regex]::Escape($principal), "`$(`$OrganizationName.Split('.')[0])"
         }
         $content += $partialContent
         $content += "        }`r`n"
