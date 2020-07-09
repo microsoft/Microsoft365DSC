@@ -1652,4 +1652,40 @@ function Format-M365ServicePrincipalData
         $configContent = $configContent -ireplace [regex]::Escape($CertificateThumbprint), "`$(`$CertificateThumbprint)"
     }
     return $configContent
+
+function Remove-EmptyValue {
+    [alias('Remove-EmptyValues')]
+    [CmdletBinding()]
+    param(
+        [alias('Splat', 'IDictionary')][Parameter(Mandatory)][System.Collections.IDictionary] $Hashtable,
+        [string[]] $ExcludeParameter,
+        [switch] $Recursive,
+        [int] $Rerun
+    )
+    foreach ($Key in [string[]] $Hashtable.Keys) {
+        if ($Key -notin $ExcludeParameter) {
+            if ($Recursive) {
+                if ($Hashtable[$Key] -is [System.Collections.IDictionary]) {
+                    if ($Hashtable[$Key].Count -eq 0) {
+                        $Hashtable.Remove($Key)
+                    } else {
+                        Remove-EmptyValue -Hashtable $Hashtable[$Key] -Recursive:$Recursive
+                    }
+                } else {
+                    if ([string]::IsNullOrEmpty($Hashtable[$Key])) {
+                        $Hashtable.Remove($Key)
+                    }
+                }
+            } else {
+                if ([string]::IsNullOrEmpty($Hashtable[$Key])) {
+                    $Hashtable.Remove($Key)
+                }
+            }
+        }
+    }
+    if ($Rerun) {
+        for ($i = 0; $i -lt $Rerun; $i++) {
+            Remove-EmptyValue -Hashtable $Hashtable -Recursive:$Recursive
+        }
+    }
 }

@@ -99,7 +99,8 @@ function Get-TargetResource
     else
     {
         $ConnectorSourceValue = $OutBoundConnector.ConnectorSource
-        if ($ConnectorSourceValue -eq 'AdminUI')
+        if ($ConnectorSourceValue -eq 'AdminUI' -or `
+            [System.String]::IsNullOrEmpty($ConnectorSourceValue))
         {
             $ConnectorSourceValue = 'Default'
         }

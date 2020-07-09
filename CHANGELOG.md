@@ -2,6 +2,12 @@
 
 ## UNRELEASED
 
+* EXOMalwareFilterPolicy
+  * Fixed an issue where the value for the for the Action
+    returned by the Get included 'Text' and should not have;
+* EXOOutboundConnector
+  * Fixed an issue where the ConnectorSource value returned
+    was empty. Now defaulting to Default.
 * PlannerBucket
   * Initial Release;
 * PlannerPlan
