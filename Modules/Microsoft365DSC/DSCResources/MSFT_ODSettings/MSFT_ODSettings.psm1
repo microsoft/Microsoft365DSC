@@ -319,32 +319,32 @@ function Set-TargetResource
 
     if ($CurrentParameters.ContainsKey("Ensure"))
     {
-        $CurrentParameters.Remove("Ensure")
+        $CurrentParameters.Remove("Ensure") | Out-Null
     }
 
     if ($CurrentParameters.ContainsKey("BlockMacSync"))
     {
-        $CurrentParameters.Remove("BlockMacSync")
+        $CurrentParameters.Remove("BlockMacSync") | Out-Null
     }
     if ($CurrentParameters.ContainsKey("DomainGuids"))
     {
-        $CurrentParameters.Remove("DomainGuids")
+        $CurrentParameters.Remove("DomainGuids")| Out-Null
     }
     if ($CurrentParameters.ContainsKey("DisableReportProblemDialog"))
     {
-        $CurrentParameters.Remove("DisableReportProblemDialog")
+        $CurrentParameters.Remove("DisableReportProblemDialog") | Out-Null
     }
     if ($CurrentParameters.ContainsKey("ExcludedFileExtensions"))
     {
-        $CurrentParameters.Remove("ExcludedFileExtensions")
+        $CurrentParameters.Remove("ExcludedFileExtensions") | Out-Null
     }
     if ($CurrentParameters.ContainsKey("GrooveBlockOption"))
     {
-        $CurrentParameters.Remove("GrooveBlockOption")
+        $CurrentParameters.Remove("GrooveBlockOption") | Out-Null
     }
     if ($CurrentParameters.ContainsKey("IsSingleInstance"))
     {
-        $CurrentParameters.Remove("IsSingleInstance")
+        $CurrentParameters.Remove("IsSingleInstance") | Out-Null
     }
 
     $CurrentParameters.Remove("ApplicationId") | Out-Null
