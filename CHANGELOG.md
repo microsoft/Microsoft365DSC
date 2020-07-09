@@ -27,6 +27,8 @@
   resources
     * SPOHubSite and SPOUserProfileProperty only support service principal with AppId, TenantId and
       CertificateThumbprint option since AzureAD doesnt support certifcate path
+* O365User
+  * Fixed issue with PasswordNeverExpires having incorrect value
 
 ## 1.20.0603.1
 
