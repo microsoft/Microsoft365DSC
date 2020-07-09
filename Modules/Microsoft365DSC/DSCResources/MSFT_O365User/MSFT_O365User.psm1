@@ -143,14 +143,7 @@ function Get-TargetResource
             $currentLicenseAssignment += $sku.SkuPartNumber
         }
 
-        if ($user.PasswordPolicies -eq 'NONE')
-        {
-            $passwordNeverExpires = $true
-        }
-        else
-        {
-            $passwordNeverExpires = $false
-        }
+        $PasswordNeverExpires = ($user.PasswordPolicies -contains "DisablePasswordExpiration")
 
         $results = @{
             UserPrincipalName     = $UserPrincipalName
@@ -166,7 +159,7 @@ function Get-TargetResource
             Fax                   = $user.FacsimileTelephoneNumber
             MobilePhone           = $user.Mobile
             Office                = $user.PhysicalDeliveryOfficeName
-            PasswordNeverExpires  = $passwordNeverExpires
+            PasswordNeverExpires  = $PasswordNeverExpires
             PhoneNumber           = $user.TelephoneNumber
             PostalCode            = $user.PostalCode
             PreferredLanguage     = $user.PreferredLanguage
