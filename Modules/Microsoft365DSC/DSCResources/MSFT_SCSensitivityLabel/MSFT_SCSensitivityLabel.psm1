@@ -45,9 +45,29 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration of Sensitivity Label for $Name"
@@ -161,9 +181,29 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration of Sensitivity label for $Name"
@@ -319,9 +359,29 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing configuration of Sensitivity label for $Name"
@@ -368,9 +428,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     $InformationPreference = 'Continue'
     #region Telemetry
@@ -388,41 +468,47 @@ function Export-TargetResource
     {
         [array]$labels = Get-Label
 
-        $content = ""
+        $dscContent = ""
         $i = 1
         foreach ($label in $labels)
         {
             Write-Information "    [$i/$($labels.Count)] $($label.Name)"
-            $params = @{
-                Name               = $label.Name
-                GlobalAdminAccount = $GlobalAdminAccount
+            $Params = @{
+                Name                  = $label.Name
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
             }
-            $result = Get-TargetResource @params
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            $Results = Get-TargetResource @Params
 
-            if ($null -ne $result.AdvancedSettings)
+            if ($null -ne $Results.AdvancedSettings)
             {
-                $result.AdvancedSettings = ConvertTo-AdvancedSettingsString -AdvancedSettings $result.AdvancedSettings
+                $Results.AdvancedSettings = ConvertTo-AdvancedSettingsString -AdvancedSettings $result.AdvancedSettings
             }
 
-            if ($null -ne $result.LocaleSettings)
+            if ($null -ne $Results.LocaleSettings)
             {
-                $result.LocaleSettings = ConvertTo-LocaleSettingsString -LocaleSettings $result.LocaleSettings
+                $Results.LocaleSettings = ConvertTo-LocaleSettingsString -LocaleSettings $result.LocaleSettings
             }
-            $content += "        SCSensitivityLabel " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            if ($null -ne $result.AdvancedSettings)
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+            if ($null -ne $Results.AdvancedSettings)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AdvancedSettings"
             }
-            if ($null -ne $result.LocaleSettings)
+            if ($null -ne $Results.LocaleSettings)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "LocaleSettings"
             }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            $content += $currentDSCBlock
-            $content += "        }`r`n"
+            $dscContent += $currentDSCBlock
             $i++
         }
     }
@@ -430,7 +516,7 @@ function Export-TargetResource
     {
         Write-Warning "Get-Label is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
     }
-    return $content
+    return $dscContent
 }
 
 function Convert-JSONToLocaleSettings

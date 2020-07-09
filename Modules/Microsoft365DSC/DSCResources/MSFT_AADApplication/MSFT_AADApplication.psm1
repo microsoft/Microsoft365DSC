@@ -422,7 +422,7 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $content = ''
+    $dscContent = ''
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
     $i = 1
 
@@ -430,55 +430,30 @@ function Export-TargetResource
     foreach($AADApp in $AADApplications)
     {
         Write-Information -MessageData "    [$i/$($AADApplications.Count)] $($AADApp.DisplayName)"
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $params = @{
-                GlobalAdminAccount            = $GlobalAdminAccount
-                DisplayName                   = $AADApp.DisplayName
-                ObjectID                      = $AADApp.ObjectID
+        $Params = @{
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                DisplayName           = $AADApp.DisplayName
+                ObjectID              = $AADApp.ObjectID
             }
         }
-        else
-        {
-            $params = @{
-                ApplicationId                 = $ApplicationId
-                TenantId                      = $TenantId
-                CertificateThumbprint         = $CertificateThumbprint
-                DisplayName                   = $AADApp.DisplayName
-                ObjectID                      = $AADApp.ObjectID
-            }
-        }
-        $result = Get-TargetResource @params
+        $Results = Get-TargetResource @Params
 
-        if ($result.Ensure -eq 'Present')
+        if ($Results.Ensure -eq 'Present')
         {
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                $result.Remove("ApplicationId") | Out-Null
-                $result.Remove("TenantId") | Out-Null
-                $result.Remove("CertificateThumbprint") | Out-Null
-            }
-            else
-            {
-                $result.Remove("GlobalAdminAccount") | Out-Null
-            }
-            $content += "        AADApplication " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            }
-            else
-            {
-                $content += $currentDSCBlock
-            }
-            $content += "        }`r`n"
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
             $i++
         }
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

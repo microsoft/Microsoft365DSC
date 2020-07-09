@@ -53,9 +53,29 @@ function Get-TargetResource
         [System.String[]]
         $SentToMemberOf = @(),
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     $InformationPreference = 'Continue'
@@ -169,9 +189,29 @@ function Set-TargetResource
         [System.String[]]
         $SentToMemberOf = @(),
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration of SafeLinksRule for $Identity"
@@ -273,9 +313,29 @@ function Test-TargetResource
         [System.String[]]
         $SentToMemberOf = @(),
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing configuration of SafeLinksRule for $Identity"
@@ -304,9 +364,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     $InformationPreference = 'Continue'
 
@@ -321,7 +401,7 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $content = ''
+    $dscContent = ''
     if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeLinksRule)
     {
         [array]$SafeLinksRules = Get-SafeLinksRule
@@ -329,18 +409,24 @@ function Export-TargetResource
         foreach ($SafeLinksRule in $SafeLinksRules)
         {
             Write-Information "    [$i/$($SafeLinksRules.Length)] $($SafeLinksRule.Identity)"
-            $params = @{
-                Identity           = $SafeLinksRule.Identity
-                SafeLinksPolicy    = $SafeLinksRule.SafeLinksPolicy
-                GlobalAdminAccount = $GlobalAdminAccount
+            $Params = @{
+                Identity              = $SafeLinksRule.Identity
+                SafeLinksPolicy       = $SafeLinksRule.SafeLinksPolicy
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
             }
-            $result = Get-TargetResource @params
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        EXOSafeLinksRule " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            $content += "        }`r`n"
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
             $i++
         }
     }
@@ -348,7 +434,7 @@ function Export-TargetResource
     {
         Write-Information "The current tenant is not registered to allow for Safe Links Rules."
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

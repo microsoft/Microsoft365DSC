@@ -48,8 +48,8 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    T$ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
-    -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
 
     try
     {

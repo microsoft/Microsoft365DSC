@@ -38,9 +38,29 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration of AtpPolicyForO365 for $Identity"
@@ -131,9 +151,29 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration of AtpPolicyForO365 for $Identity"
@@ -201,9 +241,29 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing configuration of AtpPolicyForO365 for $Identity"
@@ -234,9 +294,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -251,33 +331,33 @@ function Export-TargetResource
     if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-AtpPolicyForO365)
     {
         $ATPPolicies = Get-AtpPolicyForO365
-        $content = ""
+        $dscContent = ""
         foreach ($atpPolicy in $ATPPolicies)
         {
-            $params = @{
-                IsSingleInstance   = 'Yes'
-                Identity           = $atpPolicy.Identity
-                GlobalAdminAccount = $GlobalAdminAccount
+            $Params = @{
+                IsSingleInstance      = 'Yes'
+                Identity              = $atpPolicy.Identity
+                GlobalAdminAccount    = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
             }
-            $result = Get-TargetResource @params
-            if ($result.Ensure -eq "Present")
+            $Results = Get-TargetResource @Params
+            if ($Results.Ensure -eq "Present")
             {
-                $organization = $GlobalAdminAccount.UserName.Split("@")[1]
-                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                $content += "        EXOAtpPolicyForO365 " + (New-GUID).ToString() + "`r`n"
-                $content += "        {`r`n"
-                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
-                if ($currentDSCBlock.ToLower().IndexOf($organization.ToLower()) -gt 0)
-                {
-                    $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape($organization), "`$OrganizationName"
-                }
-                $content += $currentDSCBlock
-                $content += "        }`r`n"
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
             }
         }
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

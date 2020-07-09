@@ -87,9 +87,29 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration of DLPCompliancePolicy for $Name"
@@ -275,9 +295,29 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration of DLPComplianceRule for $Name"
@@ -430,9 +470,29 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing configuration of DLPComplianceRule for $Name"
@@ -477,9 +537,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
@@ -495,42 +575,44 @@ function Export-TargetResource
     #endregion
     $rules = Get-DLPComplianceRule | Where-Object { $_.Mode -ne 'PendingDeletion' }
 
-    $organization = ""
-    if ($GlobalAdminAccount.UserName.Contains("@"))
-    {
-        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
-    }
-
     $i = 1
-    $DSCContent = ""
+    $dscContent = ""
     foreach ($rule in $rules)
     {
         Write-Information "    [$i/$($rules.Length)] $($rule.Name)"
-        $result = Get-TargetResource -Name $rule.Name -Policy $rule.ParentPolicyName -GlobalAdminAccount $GlobalAdminAccount
+        $Params = @{
+            Name                  = $rule.name
+            Policy                = $rule.ParentPolucyName
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+        }
+        $Results = Get-TargetResource @Params
 
         $IsCIMArray = $false
-        if ($result.ContentContainsSensitiveInformation.Length -gt 1)
+        if ($Results.ContentContainsSensitiveInformation.Length -gt 1)
         {
             $IsCIMArray = $true
         }
-        $result.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $result.ContentContainsSensitiveInformation
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $DSCContent += "        SCDLPComplianceRule " + (New-GUID).ToString() + "`r`n"
-        $DSCContent += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $Results.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $result.ContentContainsSensitiveInformation
+
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsCIMArray
 
-        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
-        {
-            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
-        }
-        $partialContent += "        }`r`n"
-        $DSCContent += $partialContent
+        $dscContent += $currentDSCBlock
         $i++
     }
 
-    return $DSCContent
+    return $dscContent
 }
 
 function ConvertTo-SCDLPSensitiveInformationString

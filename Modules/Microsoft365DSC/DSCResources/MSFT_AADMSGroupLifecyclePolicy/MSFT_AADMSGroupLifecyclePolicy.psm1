@@ -332,61 +332,34 @@ function Export-TargetResource
         return ""
     }
 
-    $content = ''
+    $dscContent = ''
 
     if ($ConnectionMode -eq 'Credential')
     {
-        $params = @{
+        $Params = @{
             GlobalAdminAccount          = $GlobalAdminAccount
             IsSingleInstance            = 'Yes'
             GroupLifetimeInDays         = 1
             ManagedGroupTypes           = 'All'
             AlternateNotificationEmails = 'empty@contoso.com'
-        }
-    }
-    else
-    {
-        $params = @{
             ApplicationId               = $ApplicationId
             TenantId                    = $TenantId
             CertificateThumbprint       = $CertificateThumbprint
-            IsSingleInstance            = 'Yes'
-            GroupLifetimeInDays         = 1
-            ManagedGroupTypes           = 'All'
-            AlternateNotificationEmails = 'empty@contoso.com'
         }
     }
-    $result = Get-TargetResource @params
-    if ($result.Ensure -eq 'Present')
+    $Results = Get-TargetResource @Params
+    if ($Results.Ensure -eq 'Present')
     {
-       if ($ConnectionMode -eq 'Credential')
-        {
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $result.Remove("ApplicationId") | Out-Null
-            $result.Remove("TenantId") | Out-Null
-            $result.Remove("CertificateThumbprint") | Out-Null
-        }
-        else
-        {
-            $result.Remove("GlobalAdminAccount") | Out-Null
-        }
-        $content += "        AADMSGroupLifecyclePolicy " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
-        }
-
-        if ($partialContent.ToLower().Contains("@" + $principal.ToLower()))
-        {
-            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$OrganizationName.Split('.')[0])"
-        }
-        $content += $partialContent
-        $content += "        }`r`n"
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
     }
 
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

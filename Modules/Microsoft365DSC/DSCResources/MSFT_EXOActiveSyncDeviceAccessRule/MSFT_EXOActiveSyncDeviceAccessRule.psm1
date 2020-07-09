@@ -137,7 +137,7 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount,
 
@@ -339,8 +339,13 @@ function Export-TargetResource
         Write-Information "    [$i/$($AllActiveSyncDeviceAccessRules.Count)] $($ActiveSyncDeviceAccessRule.Identity)"
 
         $Params = @{
-            Identity           = $ActiveSyncDeviceAccessRule.Identity
-            GlobalAdminAccount = $GlobalAdminAccount
+            Identity              = $ActiveSyncDeviceAccessRule.Identity
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
         }
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

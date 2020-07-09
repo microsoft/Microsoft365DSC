@@ -358,64 +358,32 @@ function Export-TargetResource
 
     [array] $groups = Get-AzureADMSGroup
     $i = 1
-    $content = ''
+    $dscContent = ''
     foreach ($group in $groups)
     {
         Write-Information -MessageData "    [$i/$($groups.Count)] $($group.DisplayName)"
         if ($ConnectionMode -eq 'Credential')
         {
-            $params = @{
-                GlobalAdminAccount = $GlobalAdminAccount
-                DisplayName        = $group.DisplayName
-                Id                 = $group.Id
-            }
-        }
-        else
-        {
-            $params = @{
+            $Params = @{
+                GlobalAdminAccount    = $GlobalAdminAccount
+                DisplayName           = $group.DisplayName
+                Id                    = $group.Id
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-                DisplayName           = $group.DisplayName
-                Id                    = $group.Id
             }
         }
-        $result = Get-TargetResource @params
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $result.Remove("ApplicationId") | Out-Null
-            $result.Remove("TenantId") | Out-Null
-            $result.Remove("CertificateThumbprint") | Out-Null
-        }
-        else
-        {
-            $result.Remove("GlobalAdminAccount") | Out-Null
-        }
-
-        if ($null -eq $result.MembershipRuleProcessingState)
-        {
-            $result.Remove('MembershipRuleProcessingState') | Out-Null
-        }
-        if ($null -eq $result.Visibility)
-        {
-            $result.Remove('Visibility') | Out-Null
-        }
-        $content += "        AADMSGroup " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        }
-        else
-        {
-            $content += $currentDSCBlock
-        }
-        $content += "        }`r`n"
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
         $i++
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource
