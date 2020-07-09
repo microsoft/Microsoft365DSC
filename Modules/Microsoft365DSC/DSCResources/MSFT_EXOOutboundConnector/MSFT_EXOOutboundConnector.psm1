@@ -83,8 +83,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of OutBoundConnector for $($Identity)"
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     $OutBoundConnectors = Get-OutBoundConnector
 
@@ -217,8 +217,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of OutBoundConnector for $($Identity)"
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     $OutBoundConnectors = Get-OutBoundConnector
     $OutBoundConnector = $OutBoundConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -361,9 +361,8 @@ function Export-TargetResource
     )
 
     $InformationPreference = "Continue"
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline `
-        -ErrorAction SilentlyContinue
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     [array]$OutboundConnectors = Get-OutboundConnector
     $content = ""

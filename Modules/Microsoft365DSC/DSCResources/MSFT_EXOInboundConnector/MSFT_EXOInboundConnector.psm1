@@ -74,8 +74,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of InboundConnector for $($Identity)"
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     $InboundConnectors = Get-InboundConnector
 
@@ -194,8 +194,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of InboundConnector for $($Identity)"
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     $InboundConnectors = Get-InboundConnector
     $InboundConnector = $InboundConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -327,9 +327,8 @@ function Export-TargetResource
     )
 
     $InformationPreference = "Continue"
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline `
-        -ErrorAction SilentlyContinue
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     [array]$InboundConnectors = Get-InboundConnector
     $content = ""

@@ -29,14 +29,15 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for PowerApps Environment {$DisplayName}"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -Cloud $GlobalAdminAccount `
-        -Platform PowerPlatforms
+    $ConnectionMode = New-M365DSCConnection -Platform 'PowerPlatforms' `
+        -InboundParameters $PSBoundParameters
 
     $nullReturn = @{
         DisplayName        = $DisplayName
@@ -102,14 +103,15 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for PowerApps Environment {$DisplayName}"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PowerPlatforms
+    $ConnectionMode = New-M365DSCConnection -Platform 'PowerPlatforms' `
+        -InboundParameters $PSBoundParameters
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $CurrentParameters = $PSBoundParameters
@@ -200,14 +202,15 @@ function Export-TargetResource
 
     $InformationPreference = 'Continue'
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PowerPlatforms
+    $ConnectionMode = New-M365DSCConnection -Platform 'PowerPlatforms' `
+        -InboundParameters $PSBoundParameters
 
     [array]$environments = Get-AdminPowerAppEnvironment
     $content = ''

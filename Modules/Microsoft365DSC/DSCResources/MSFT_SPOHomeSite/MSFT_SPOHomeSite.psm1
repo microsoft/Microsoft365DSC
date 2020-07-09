@@ -25,8 +25,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for hub site collection $Url"
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+        -InboundParameters $PSBoundParameters
 
     $nullReturn = @{
         IsSingleInstance   = $IsSingleInstance
@@ -87,8 +87,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for home site '$Url'"
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+        -InboundParameters $PSBoundParameters
 
     $currentValues = Get-TargetResource @PSBoundParameters
 

@@ -32,8 +32,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of IntraOrganizationConnector for $($Identity)"
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     $IntraOrganizationConnectors = Get-IntraOrganizationConnector
 
@@ -95,8 +95,8 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of IntraOrganizationConnector for $($Identity)"
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     $IntraOrganizationConnectors = Get-IntraOrganizationConnector
     $IntraOrganizationConnector = $IntraOrganizationConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
@@ -187,9 +187,8 @@ function Export-TargetResource
     )
 
     $InformationPreference = "Continue"
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline `
-        -ErrorAction SilentlyContinue
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     [array]$IntraOrganizationConnectors = Get-IntraOrganizationConnector
     $content = ""

@@ -67,7 +67,11 @@ function Start-M365DSCConfigurationExtract
 
         [Parameter()]
         [System.String]
-        $CertificatePath
+        $CertificatePath,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePassword
     )
 
     $InformationPreference = "Continue"
@@ -157,10 +161,45 @@ function Start-M365DSCConfigurationExtract
     else
     {
         $DSCContent += "    `$OrganizationName = `$ConfigurationData.NonNodeData.OrganizationName`r`n"
-        Add-ConfigurationDataEntry -Node "NonNodeData" `
+        Add-ConfigurationDataEntry -Node "Settings" `
             -Key "OrganizationName" `
             -Value $organization `
             -Description "Tenant's default verified domain name"
+        Add-ConfigurationDataEntry -Node "Settings" `
+            -Key "ApplicationId" `
+            -Value $ApplicationId `
+            -Description "Azure AD Application Id for Authentication"
+        if (-not [System.String]::IsNullOrEmpty($TenantId))
+        {
+            Add-ConfigurationDataEntry -Node "Settings" `
+                -Key "TenantId" `
+                -Value $TenantId `
+                -Description "The Id or Name of the tenant to authenticate against"
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($CertificatePath))
+        {
+            Add-ConfigurationDataEntry -Node "Settings" `
+                -Key "CertificatePath" `
+                -Value $CertificatePath `
+                -Description "Local path to the .pfx certificate to use for authentication"
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint))
+        {
+            Add-ConfigurationDataEntry -Node "Settings" `
+                -Key "CertificateThumbprint" `
+                -Value $CertificateThumbprint `
+                -Description "Thumbprint of the certificate to use for authentication"
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($CertificatePassword))
+        {
+            Add-ConfigurationDataEntry -Node "Settings" `
+                -Key "CertificatePassword" `
+                -Value $CertificatePassword `
+                -Description "Password of the certificate to use for authentication"
+        }
     }
     $DSCContent += "    Import-DscResource -ModuleName Microsoft365DSC`r`n`r`n"
     $DSCContent += "    Node localhost`r`n"

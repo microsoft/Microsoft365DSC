@@ -29,7 +29,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
 
         [Parameter()]
         [System.String]
@@ -54,8 +54,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting Active Sync Device Access Rule configuration for $Identity"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -72,12 +73,17 @@ function Get-TargetResource
         Write-Verbose -Message "Active Sync Device Access Rule $($Identity) does not exist."
 
         $nullReturn = @{
-            Identity           = $Identity
-            AccessLevel        = $AccessLevel
-            Characteristic     = $Characteristic
-            QueryString        = $QueryString
-            Ensure             = 'Absent'
-            GlobalAdminAccount = $GlobalAdminAccount
+            Identity              = $Identity
+            AccessLevel           = $AccessLevel
+            Characteristic        = $Characteristic
+            QueryString           = $QueryString
+            Ensure                = 'Absent'
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            $CertificatePath      = $CertificatePath
+            $CertificatePassword  = $CertificatePassword
         }
 
         return $nullReturn
@@ -85,12 +91,17 @@ function Get-TargetResource
     else
     {
         $result = @{
-            Identity           = $ActiveSyncDeviceAccessRule.Identity
-            AccessLevel        = $ActiveSyncDeviceAccessRule.AccessLevel
-            Characteristic     = $ActiveSyncDeviceAccessRule.Characteristic
-            QueryString        = $ActiveSyncDeviceAccessRule.QueryString
-            Ensure             = 'Present'
-            GlobalAdminAccount = $GlobalAdminAccount
+            Identity              = $ActiveSyncDeviceAccessRule.Identity
+            AccessLevel           = $ActiveSyncDeviceAccessRule.AccessLevel
+            Characteristic        = $ActiveSyncDeviceAccessRule.Characteristic
+            QueryString           = $ActiveSyncDeviceAccessRule.QueryString
+            Ensure                = 'Present'
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            $CertificatePath      = $CertificatePath
+            $CertificatePassword  = $CertificatePassword
         }
 
         Write-Verbose -Message "Found Active Sync Device Access Rule $($Identity)"
@@ -128,7 +139,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
 
         [Parameter()]
         [System.String]
@@ -156,8 +167,9 @@ function Set-TargetResource
     $currentActiveSyncDeviceAccessRuleConfig = Get-TargetResource @PSBoundParameters
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -234,7 +246,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
 
         [Parameter()]
         [System.String]
@@ -285,7 +297,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
 
         [Parameter()]
         [System.String]
@@ -309,8 +321,9 @@ function Export-TargetResource
     )
     $InformationPreference = 'Continue'
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -329,14 +342,14 @@ function Export-TargetResource
             Identity           = $ActiveSyncDeviceAccessRule.Identity
             GlobalAdminAccount = $GlobalAdminAccount
         }
-        $result = Get-TargetResource @Params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content = "        EXOActiveSyncDeviceAccessRule " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
-        $dscContent += $content
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
         $i++
     }
     return $dscContent

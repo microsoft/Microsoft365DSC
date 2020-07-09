@@ -28,17 +28,18 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of SPOPropertyBag for $Key"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
     try
     {
         Write-Verbose -Message "Connecting to PnP from the Get method"
-        Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-            -ConnectionUrl $Url `
-            -Platform PnP | Out-Null
+        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters `
+                -Url $Url
         Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
         [array]$property = Get-PnpPropertyBag -Key $Key -ErrorAction 'Stop'
 
@@ -52,9 +53,9 @@ function Get-TargetResource
         }
         elseif ($_.Exception -like "*The underlying connection was closed*")
         {
-            Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-                -ConnectionUrl $Url `
-                -Platform PnP | Out-Null
+            $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters `
+                -Url $Url
             Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
             [array]$property = Get-PnpPropertyBag -Key $Key -ErrorAction 'SilentlyContinue'
         }
@@ -120,15 +121,16 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of SPOPropertyBag property for $Key at {$Url}"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -ConnectionUrl $Url `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters `
+                -Url $Url
 
     $currentProperty = Get-TargetResource @PSBoundParameters
 
@@ -208,13 +210,14 @@ function Export-TargetResource
     )
     $InformationPreference = "Continue"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters
     $result = ""
 
     # Get all Site Collections in tenant;
@@ -269,9 +272,9 @@ function Export-TargetResource
                         $siteUrl = $site.Url
                         try
                         {
-                            Test-MSCloudLogin -CloudCredential $params.GlobalAdminAccount `
-                                -ConnectionUrl $siteUrl `
-                                -Platform PnP | Out-Null
+                            $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                                -InboundParameters $PSBoundParameters `
+                                -Url $siteUrl
                         }
                         catch
                         {

@@ -1557,3 +1557,210 @@ function Remove-EmptyValue {
         }
     }
 }
+
+function Format-M365ServicePrincipalData
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter()]
+        [System.String]
+        $configContent,
+
+        [Parameter()]
+        [System.String]
+        $principal,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
+    )
+    if ($configContent.ToLower().Contains($principal.ToLower()))
+    {
+        $configContent = $configContent -ireplace [regex]::Escape($principal), "`$(`$OrganizationName.Split('.')[0])"
+    }
+    if ($configContent.ToLower().Contains($ApplicationId.ToLower()))
+    {
+        $configContent = $configContent -ireplace [regex]::Escape($ApplicationId), "`$(`$ApplicationId)"
+    }
+    if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint) -and $configContent.ToLower().Contains($CertificateThumbprint.ToLower()))
+    {
+        $configContent = $configContent -ireplace [regex]::Escape($CertificateThumbprint), "`$(`$CertificateThumbprint)"
+    }
+    return $configContent
+}
+
+function Update-M365DSCExportAuthenticationResults
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet("Credential", "ServicePrincipal")]
+        $ConnectionMode,
+
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Results
+    )
+
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $Results.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    }
+    else
+    {
+        if (-not [System.String]::IsNullOrEmpty($ApplicationId))
+        {
+            $Results.ApplicationId = "`$ConfigurationData.Settings.ApplicationId"
+        }
+        else
+        {
+            try
+            {
+                $results.Remove("ApplicationId")
+            }
+            catch
+            {
+                Write-Verbose -Message "Error removing ApplicationId from Update-M365DSCExportAuthenticationResults"
+            }
+        }
+        if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint))
+        {
+            $Results.CertificateThumbprint = "`$ConfigurationData.Settings.CertificateThumbprint"
+        }
+        else
+        {
+            try
+            {
+                $results.Remove("CertificateThumbprint")
+            }
+            catch
+            {
+                Write-Verbose -Message "Error removing CertificateThumbprint from Update-M365DSCExportAuthenticationResults"
+            }
+        }
+        if (-not [System.String]::IsNullOrEmpty($CertificatePath))
+        {
+            $Results.CertificatePath = "`$ConfigurationData.Settings.CertificatePath"
+        }
+        else
+        {
+            try
+            {
+                $results.Remove("CertificatePath")
+            }
+            catch
+            {
+                Write-Verbose -Message "Error removing CertificatePath from Update-M365DSCExportAuthenticationResults"
+            }
+        }
+        if (-not [System.String]::IsNullOrEmpty($TenantId))
+        {
+            $Results.TenantId = "`$ConfigurationData.Settings.TenantId"
+        }
+        else
+        {
+            try
+            {
+                $results.Remove("TenantId")
+            }
+            catch
+            {
+                Write-Verbose -Message "Error removing TenantId from Update-M365DSCExportAuthenticationResults"
+            }
+        }
+    }
+    return $Results
+}
+
+function Get-M365DSCExportContentForResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ResourceName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet("Credential", "ServicePrincipal")]
+        $ConnectionMode,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ModulePath,
+
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Results,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+    $OrganizationName = ""
+    if ($ConnectionMode -eq 'ServicePrincipal')
+    {
+        $OrganizationName = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
+            -TenantId $TenantId `
+            -CertificateThumbprint $CertificateThumbprint
+    }
+    else
+    {
+        $OrganizationName = $GlobalAdminAccount.UserName.Split('@')[1]
+    }
+
+    $principal = $OrganizationName.Split('.')[0]
+    $content = "        $ResourceName " + (New-GUID).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+            -ParameterName "GlobalAdminAccount"
+    }
+    else
+    {
+        if (![System.String]::IsNullOrEmpty($Results.ApplicationId))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "ApplicationId"
+        }
+        if (![System.String]::IsNullOrEmpty($Results.TenantId))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "TenantId"
+        }
+        if (![System.String]::IsNullOrEmpty($Results.CertificatePath))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "CertificatePath"
+        }
+        if (![System.String]::IsNullOrEmpty($Results.CertificateThumbprint))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "CertificateThumbprint"
+        }
+        if (![System.String]::IsNullOrEmpty($Results.CertificatePassword))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "CertificatePassword"
+        }
+    }
+
+    if ($partialContent.ToLower().IndexOf($OrganizationName.ToLower()) -gt 0)
+    {
+        $partialContent = $partialContent -ireplace [regex]::Escape($OrganizationName), "`$OrganizationName"
+        $partialContent = $partialContent -ireplace [regex]::Escape("@" + $OrganizationName), "@`$OrganizationName"
+    }
+    $content += $partialContent
+    $content += "        }`r`n"
+    return $content
+}

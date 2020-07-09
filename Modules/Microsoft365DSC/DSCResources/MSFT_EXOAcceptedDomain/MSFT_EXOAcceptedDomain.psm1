@@ -54,11 +54,11 @@ function Get-TargetResource
         $CertificatePassword
 
     )
-$VerbosePreference = 'Continue'
     Write-Verbose -Message "Getting configuration of Accepted Domain for $Identity"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -103,12 +103,17 @@ $VerbosePreference = 'Continue'
         else
         {
             $result = @{
-                DomainType         = $DomainType
-                Ensure             = 'Absent'
-                GlobalAdminAccount = $GlobalAdminAccount
-                Identity           = $Identity
-                MatchSubDomains    = $MatchSubDomains
-                OutboundOnly       = $OutboundOnly
+                DomainType            = $DomainType
+                Ensure                = 'Absent'
+                GlobalAdminAccount    = $GlobalAdminAccount
+                Identity              = $Identity
+                MatchSubDomains       = $MatchSubDomains
+                OutboundOnly          = $OutboundOnly
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                $CertificatePath      = $CertificatePath
+                $CertificatePassword  = $CertificatePassword
             }
             # if AcceptedDomain does not exist for a verfied domain, return 'Absent' with submitted parameters to Test-TargetResource.
             return $result
@@ -117,12 +122,17 @@ $VerbosePreference = 'Continue'
     else
     {
         $result = @{
-            DomainType         = $AcceptedDomain.DomainType
-            Ensure             = 'Present'
-            GlobalAdminAccount = $GlobalAdminAccount
-            Identity           = $AcceptedDomain.Identity
-            MatchSubDomains    = $AcceptedDomain.MatchSubDomains
-            OutboundOnly       = $AcceptedDomain.OutboundOnly
+            DomainType            = $AcceptedDomain.DomainType
+            Ensure                = 'Present'
+            Identity              = $AcceptedDomain.Identity
+            MatchSubDomains       = $AcceptedDomain.MatchSubDomains
+            OutboundOnly          = $AcceptedDomain.OutboundOnly
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
         }
 
         Write-Verbose -Message "Found AcceptedDomain configuration for $($Identity)"
@@ -188,8 +198,9 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of Accepted Domain for $Identity"
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -313,28 +324,16 @@ function Export-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $CertificatePassword
-
     )
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
-
-    $organization = ""
-    if ($ConnectionMode -eq 'ServicePrincipal')
-    {
-        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
-            -TenantId $TenantId `
-            -CertificateThumbprint $CertificateThumbprint
-    }
-    else
-    {
-        $organization = $GlobalAdminAccount.UserName.Split('@')[1]
-    }
 
     [array]$AllAcceptedDomains = Get-AcceptedDomain
 
@@ -353,27 +352,14 @@ function Export-TargetResource
             CertificatePath       = $CertificatePath
             GlobalAdminAccount    = $GlobalAdminAccount
         }
-        $result = Get-TargetResource @Params
-        if ($ConnectionMode -eq 'UserPrincipal')
-        {
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        }
-
-        $content = "        EXOAcceptedDomain " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        if ($ConnectionMode -eq 'UserPrincipal')
-        {
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
-        }
-        if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
-        {
-            $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
-            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
-        }
-        $content += $partialContent
-        $content += "        }`r`n"
-        $dscContent += $content
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
         $i++
     }
     return $dscContent
