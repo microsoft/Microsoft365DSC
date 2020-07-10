@@ -55,9 +55,12 @@ function Get-TargetResource
 
     $nullReturn = @{
         IsSingleInstance                = $IsSingleInstance
-        Ensure                          = 'Present'
+        Ensure                          = 'Absent'
         GlobalAdminAccount              = $GlobalAdminAccount
         UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabled
+        ApplicationId                   = $ApplicationId
+        TenantId                        = $TenantId
+        CertificateThumbprint           = $CertificateThumbprint
     }
 
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
@@ -286,20 +289,28 @@ function Export-TargetResource
         $value = "Enabled"
     }
 
-    $params = @{
+    $dscContent = ""
+    $Params = @{
         IsSingleInstance                = 'Yes'
         UnifiedAuditLogIngestionEnabled = $value
         GlobalAdminAccount              = $GlobalAdminAccount
+        ApplicationId                   = $ApplicationId
+        TenantId                        = $TenantId
+        CertificateThumbprint           = $CertificateThumbprint
     }
-    $result = Get-TargetResource @params
+    $Results = Get-TargetResource @Params
 
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        O365AdminAuditLogConfig " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
-    $content += "        }`r`n"
-    return $content
+    if ($Results.Ensure -eq 'Present')
+    {
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
+    }
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -64,12 +64,15 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = @{
-        DisplayName        = $DisplayName
-        MailNickName       = $Name
-        Description        = $null
-        ManagedBy          = $null
-        GlobalAdminAccount = $null
-        Ensure             = "Absent"
+        DisplayName           = $DisplayName
+        MailNickName          = $Name
+        Description           = $null
+        ManagedBy             = $null
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificateThumbprint = $CertificateThumbprint
+        Ensure                = "Absent"
     }
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
@@ -106,7 +109,9 @@ function Get-TargetResource
 
             foreach ($member in $membersList)
             {
-                if (-not $ownersUPN.Contains($member.UserPrincipalName))
+                if ($null -ne $ownersUPN -and $ownersUPN.Length -ge 1 -and `
+                    -not [System.String]::IsNullOrEmpty($member.UserPrincipalName) -and `
+                    -not $ownersUPN.Contains($member.UserPrincipalName))
                 {
                     $newMemberList += $member.UserPrincipalName
                 }
@@ -120,19 +125,16 @@ function Get-TargetResource
         }
 
         $returnValue = @{
-            DisplayName        = $ADGroup.DisplayName
-            MailNickName       = $ADGroup.MailNickName
-            Members            = $newMemberList
-            ManagedBy          = $ownersUPN
-            Description        = $description
-            GlobalAdminAccount = $GlobalAdminAccount
-            Ensure             = "Present"
-        }
-
-        Write-Verbose -Message "Retrieved the following instance of the Group:"
-        foreach ($value in $returnValue.GetEnumerator())
-        {
-            Write-Verbose -Message "$($value.Key) = $($value.Value)"
+            DisplayName           = $ADGroup.DisplayName
+            MailNickName          = $ADGroup.MailNickName
+            Members               = $newMemberList
+            ManagedBy             = $ownersUPN
+            Description           = $description
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            Ensure                = "Present"
         }
         return $returnValue
     }
@@ -459,7 +461,7 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $content = ''
+    $dscContent = ''
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
         -InboundParameters $PSBoundParameters
     $groups = Get-AzureADGroup -All $true | Where-Object -FilterScript {
@@ -467,45 +469,29 @@ function Export-TargetResource
     }
 
     $i = 1
-    $organization = ""
-    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    if ($GlobalAdminAccount.UserName.Contains("@"))
-    {
-        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
-
-        if ($organization.IndexOf(".") -gt 0)
-        {
-            $principal = $organization.Split(".")[0]
-        }
-    }
     foreach ($group in $groups)
     {
-        $params = @{
-            GlobalAdminAccount = $GlobalAdminAccount
-            DisplayName        = $group.DisplayName
-            ManagedBy          = "DummyUser"
-            MailNickName       = $group.MailNickName
+        Write-Information "$($group.DisplayName) {$($group.ObjectId)}"
+        $Params = @{
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            DisplayName           = $group.DisplayName
+            ManagedBy             = "DummyUser"
+            MailNickName          = $group.MailNickName
         }
-        Write-Information "    [$i/$($groups.Length)] $($group.DisplayName)"
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = "`$Credsglobaladmin"
-        $content += "        O365Group " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
-        if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
-        {
-            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
-        }
-        if ($partialContent.ToLower().IndexOf($principal.ToLower()) -gt 0)
-        {
-            $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$(`$OrganizationName.Split('.')[0])"
-        }
-        $content += $partialContent
-        $content += "        }`r`n"
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
         $i++
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

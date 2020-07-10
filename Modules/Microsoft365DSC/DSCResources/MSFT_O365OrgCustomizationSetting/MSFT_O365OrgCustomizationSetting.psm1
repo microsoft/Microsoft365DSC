@@ -63,8 +63,12 @@ function Get-TargetResource
     if ($orgConfig.IsDehydrated -eq $false)
     {
         return @{
-            IsSingleInstance = "Yes"
-            Ensure           = "Present"
+            IsSingleInstance      = "Yes"
+            Ensure                = "Present"
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 
@@ -221,24 +225,29 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $exportParams = @{
-        IsSingleInstance   = 'Yes'
-        GlobalAdminAccount = $GlobalAdminAccount
+    $Params = @{
+        IsSingleInstance      = 'Yes'
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificateThumbprint = $CertificateThumbprint
     }
 
-    $result = Get-TargetResource @exportParams
-    $result.GlobalAdminAccount = "`$CredsGlobaladmin"
+    $Results = Get-TargetResource @Params
 
-    $content = ""
+
+    $dscContent = ""
     if ($result.Ensure -eq "Present")
     {
-        $content = "        O365OrgCustomizationSetting " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

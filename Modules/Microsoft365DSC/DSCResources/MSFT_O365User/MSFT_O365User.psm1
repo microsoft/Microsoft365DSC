@@ -649,20 +649,8 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
         -InboundParameters $PSBoundParameters
 
-    $organization = ""
-    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    if ($GlobalAdminAccount.UserName.Contains("@"))
-    {
-        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
-
-        if ($organization.IndexOf(".") -gt 0)
-        {
-            $principal = $organization.Split(".")[0]
-        }
-    }
     $users = Get-AzureADUser -All $true
-    $content = ''
-    $partialContent = ""
+    $dscContent = ""
     $i = 1
     foreach ($user in $users)
     {
@@ -670,40 +658,33 @@ function Export-TargetResource
         $userUPN = $user.UserPrincipalName
         if (-not [System.String]::IsNullOrEmpty($userUPN))
         {
-            $params = @{
+            $Params = @{
                 UserPrincipalName   = $userUPN
                 GlobalAdminAccount  = $GlobalAdminAccount
                 Password            = $GlobalAdminAccount
             }
 
-            $result = Get-TargetResource @params
-            $result = Remove-NullEntriesFromHashTable -Hash $result
-            if ($null -ne $result.UserPrincipalName)
+            $Results = Get-TargetResource @Params
+            if ($null -ne $Results.UserPrincipalName)
             {
-                $result.Password = Resolve-Credentials -UserName "globaladmin"
+                $Results.Password = Resolve-Credentials -UserName "globaladmin"
                 $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
                 $content += "        O365User " + (New-GUID).ToString() + "`r`n"
                 $content += "        {`r`n"
-                $partialContent = Get-DSCBlock -Params $result -ModulePath  $PSScriptRoot
-                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "Password"
-                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
-                if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
-                {
-                    $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
-                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
-                }
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+                $dscContent = Convert-DSCStringParamToVariable -DSCBlock $dscContent -ParameterName "Password"
 
-                if ($partialContent.ToLower().IndexOf($principal.ToLower()) -gt 0)
-                {
-                    $partialContent = $partialContent -ireplace [regex]::Escape($principal.ToLower()), "`$(`$OrganizationName.Split('.')[0])"
-                }
-                $content += $partialContent
-                $content += "        }`r`n"
             }
         }
         $i++
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource
