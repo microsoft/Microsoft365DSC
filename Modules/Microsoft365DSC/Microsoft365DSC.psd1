@@ -93,7 +93,7 @@
         },
         @{
             ModuleName      = "ReverseDSC"
-            RequiredVersion = "2.0.0.4"
+            RequiredVersion = "2.0.0.6"
         },
         @{
             ModuleName      = "SharePointPnPPowerShellOnline"

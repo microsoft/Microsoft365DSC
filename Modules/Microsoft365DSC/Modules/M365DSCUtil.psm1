@@ -1039,20 +1039,26 @@ function New-M365DSCConnection
         [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
     {
         Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
+        if ([System.String]::IsNullOrEmpty($Url))
+        {
+            Test-MSCloudLogin -Platform $Platform `
+                -CloudCredential $InboundParameters.GlobalAdminAccount
+        }
+        else
+        {
+            Test-MSCloudLogin -Platform $Platform `
+                -CloudCredential $InboundParameters.GlobalAdminAccount `
+                -ConnectionUrl $Url
+        }
+        return "Credential"
+    }
+    # Case only the ApplicationID and Credentials parameters are specified
+    elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
+        -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
+    {
+        Write-Verbose -Message "GlobalAdminAccount and ApplicationId were specified. Connecting via Delegated Service Principal"
         if ([System.String]::IsNullOrEmpty($url))
         {
-            Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
-            Test-MSCloudLogin -Platform $Platform `
-                -ApplicationId $InboundParameters.ApplicationId `
-                -TenantId $InboundParameters.TenantId `
-                -CertificateThumbprint $InboundParameters.CertificateThumbprint
-            return 'ServicePrincipal'
-        }
-        # Case only the ApplicationID and Credentials parameters are specified
-        elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
-            -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
-        {
-             Write-Verbose -Message "GlobalAdminAccount and ApplicationId were specified. Connecting via Delegated Service Principal"
             Test-MSCloudLogin -Platform $Platform `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -CloudCredential $InboundParameters.GlobalAdminAccount
@@ -1060,10 +1066,11 @@ function New-M365DSCConnection
         else
         {
             Test-MSCloudLogin -Platform $Platform `
-                    -CloudCredential $InboundParameters.GlobalAdminAccount `
-                    -ConnectionUrl $Url
+                -ApplicationId $InboundParameters.ApplicationId `
+                -CloudCredential $InboundParameters.GlobalAdminAccount `
+                -ConnectionUrl $Url
         }
-        return 'Credential'
+        return 'ServicePrincipal'
     }
     # Case only the ServicePrincipal parameters are specified
     elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
@@ -1085,26 +1092,6 @@ function New-M365DSCConnection
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -CertificateThumbprint $InboundParameters.CertificateThumbprint `
-                -ConnectionUrl $Url
-        }
-        return 'ServicePrincipal'
-    }
-    # Case only the ApplicationID and Credentials parameters are specified
-    elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
-        -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
-    {
-        Write-Verbose -Message "GlobalAdminAccount and ApplicationId were specified. Connecting via Delegated Service Principal"
-        if ([System.String]::IsNullOrEmpty($url))
-        {
-            Test-MSCloudLogin -Platform $Platform `
-                -ApplicationId $InboundParameters.ApplicationId `
-                -CloudCredential $InboundParameters.GlobalAdminAccount
-        }
-        else
-        {
-            Test-MSCloudLogin -Platform $Platform `
-                -ApplicationId $InboundParameters.ApplicationId `
-                -CloudCredential $InboundParameters.GlobalAdminAccount `
                 -ConnectionUrl $Url
         }
         return 'ServicePrincipal'

@@ -365,10 +365,10 @@ function Set-TargetResource
             $value += Get-SCDLPSensitiveInformation $item
         }
         $UpdateParams.ContentContainsSensitiveInformation = Get-SCDLPSensitiveInformation -SensitiveInformation $value
-        $UpdateParams.Remove("GlobalAdminAccount")
-        $UpdateParams.Remove("Ensure")
-        $UpdateParams.Remove("Name")
-        $UpdateParams.Remove("Policy")
+        $UpdateParams.Remove("GlobalAdminAccount") | Out-Null
+        $UpdateParams.Remove("Ensure") | Out-Null
+        $UpdateParams.Remove("Name") | Out-Null
+        $UpdateParams.Remove("Policy") | Out-Null
         $UpdateParams.Add("Identity", $Name)
 
         Write-Verbose "Updating Rule with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParams)"
@@ -582,7 +582,7 @@ function Export-TargetResource
         Write-Information "    [$i/$($rules.Length)] $($rule.Name)"
         $Params = @{
             Name                  = $rule.name
-            Policy                = $rule.ParentPolucyName
+            Policy                = $rule.ParentPolicyName
             GlobalAdminAccount    = $GlobalAdminAccount
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -597,7 +597,7 @@ function Export-TargetResource
         {
             $IsCIMArray = $true
         }
-        $Results.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $result.ContentContainsSensitiveInformation
+        $Results.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $Results.ContentContainsSensitiveInformation
 
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results

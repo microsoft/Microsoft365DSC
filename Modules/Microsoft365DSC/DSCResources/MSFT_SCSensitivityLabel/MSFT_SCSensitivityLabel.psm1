@@ -486,12 +486,12 @@ function Export-TargetResource
 
             if ($null -ne $Results.AdvancedSettings)
             {
-                $Results.AdvancedSettings = ConvertTo-AdvancedSettingsString -AdvancedSettings $result.AdvancedSettings
+                $Results.AdvancedSettings = ConvertTo-AdvancedSettingsString -AdvancedSettings $Results.AdvancedSettings
             }
 
             if ($null -ne $Results.LocaleSettings)
             {
-                $Results.LocaleSettings = ConvertTo-LocaleSettingsString -LocaleSettings $result.LocaleSettings
+                $Results.LocaleSettings = ConvertTo-LocaleSettingsString -LocaleSettings $Results.LocaleSettings
             }
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results

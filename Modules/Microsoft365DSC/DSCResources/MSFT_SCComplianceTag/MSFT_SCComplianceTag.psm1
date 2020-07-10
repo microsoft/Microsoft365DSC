@@ -471,6 +471,7 @@ function Export-TargetResource
             CertificatePath       = $CertificatePath
         }
         $Results = Get-TargetResource @Params
+        $Results.FilePlanProperty = Get-SCFilePlanPropertyAsString $Results.FilePlanProperty
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

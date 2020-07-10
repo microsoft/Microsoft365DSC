@@ -213,7 +213,28 @@ function Get-TargetResource
         $siteOwnerEmail = $site.OwnerEmail
         if ([System.String]::IsNullOrEmpty($siteOwnerEmail))
         {
-            $siteOwnerEmail = $GlobalAdminAccount.UserName
+            if ($null -ne $GlobalAdminAccount)
+            {
+                $siteOwnerEmail = $GlobalAdminAccount.UserName
+            }
+            else
+            {
+                try
+                {
+                    New-M365DSCConnection -Platform "AzureAD" `
+                        -InboundParameters $PSBoundParameters | Out-Null
+                    $app = Get-AzureADApplication -Filter "AppId eq '$ApplicationID'"
+                    $owner = (Get-AzureADApplicationOwner -ObjectId $app.ObjectId)
+                    $siteOwnerEmail = $owner.UserPrincipalName
+                }
+                catch
+                {
+                    New-M365DSCLogEntry -Error $_ `
+                        -Message "Could not obtain owner for SPOSite {$Url}" `
+                        -Source $MyInvocation.MyCommand.ModuleName
+                    Write-Verbose -Message "Could not obtain owner for SPOSite {$Url}"
+                }
+            }
         }
         return @{
             Url                                         = $Url
@@ -823,7 +844,7 @@ function Export-TargetResource
         $Params = @{
             Url                   = $site.Url
             Template              = $site.Template
-            Owner                 = $ApplicationId # Passing in bogus value to bypass null owner error
+            Owner                 = "admin@contoso.com" # Passing in bogus value to bypass null owner error
             Title                 = $siteTitle
             TimeZoneId            = $site.TimeZoneID
             ApplicationId         = $ApplicationId
@@ -837,6 +858,23 @@ function Export-TargetResource
         try
         {
             $Results = Get-TargetResource @Params
+
+            if ([System.String]::IsNullOrEmpty($Results.SharingDomainRestrictionMode))
+            {
+                $Results.Remove("SharingDomainRestrictionMode") | Out-Null
+            }
+            if ([System.String]::IsNullOrEmpty($Results.RestrictedToRegion))
+            {
+                $Results.Remove("RestrictedToRegion") | Out-Null
+            }
+            if ([System.String]::IsNullOrEmpty($Results.SharingAllowedDomainList))
+            {
+                $Results.Remove("SharingAllowedDomainList") | Out-Null
+            }
+            if ([System.String]::IsNullOrEmpty($Results.SharingBlockedDomainList))
+            {
+                $Results.Remove("SharingBlockedDomainList") | Out-Null
+            }
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                         -Results $Results
             $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `

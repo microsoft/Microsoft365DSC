@@ -88,9 +88,11 @@ function Get-TargetResource
     }
     try
     {
-
-        $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters -ConnectionUrl $Url
-        $siteGroup = Get-PnPGroup -Identity $Identity -ErrorAction Stop
+        $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+            -InboundParameters $PSBoundParameters `
+            -Url $Url
+        $siteGroup = Get-PnPGroup -Identity $Identity `
+            -ErrorAction Stop
     }
     catch
     {
@@ -107,7 +109,8 @@ function Get-TargetResource
 
     try
     {
-        $sitePermissions = Get-PnPGroupPermissions -Identity $Identity -ErrorAction Stop
+        $sitePermissions = Get-PnPGroupPermissions -Identity $Identity `
+            -ErrorAction Stop
     }
     catch
     {
@@ -422,17 +425,11 @@ function Export-TargetResource
     $sites = Get-PnPTenantSite
 
     $i = 1
-    $organization = ""
-    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
-    if ($organization.IndexOf(".") -gt 0)
-    {
-        $principal = $organization.Split(".")[0]
-    }
     $dscContent = ""
     foreach ($site in $sites)
     {
         Write-Information "    [$i/$($sites.Length)] SPOSite groups for {$($site.Url)}"
+        $siteGroups = $null
         try
         {
 
@@ -455,15 +452,6 @@ function Export-TargetResource
         }
         foreach ($siteGroup in $siteGroups)
         {
-            try
-            {
-                $sitePerm = Get-PnPGroupPermissions -Identity $siteGroup.Title -ErrorAction Stop
-            }
-            catch
-            {
-                Write-Warning -Message "The specified account does not have access to the permissions list for {$($siteGroup.Title)}"
-                break
-            }
             $Params = @{
                 Url                   = $site.Url
                 Identity              = $siteGroup.Title

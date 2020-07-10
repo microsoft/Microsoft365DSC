@@ -426,7 +426,7 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
     $i = 1
 
-    $AADApplications = Get-AzureADApplication
+    $AADApplications = Get-AzureADApplication -All:$true
     foreach($AADApp in $AADApplications)
     {
         Write-Information -MessageData "    [$i/$($AADApplications.Count)] $($AADApp.DisplayName)"
