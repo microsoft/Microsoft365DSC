@@ -23,10 +23,11 @@
     module version to 2.0.65;
   * Updated ReverseDSC module version to 2.0.0.4;
   * Updated all Unit Tests to Pester 5;
-* Added support for service principal for SPO & OneDrive resources with exception of SPO Search
-  resources
-    * SPOHubSite and SPOUserProfileProperty only support service principal with AppId, TenantId and
-      CertificateThumbprint option since AzureAD doesnt support certifcate path
+  * Added support for Service Principal for SPO & OneDrive,
+    Exchange Online and Office 365 resources;
+  * SPOHubSite and SPOUserProfileProperty only support service
+    principal with AppId, TenantId and CertificateThumbprint
+    option since AzureAD doesnt support certifcate path
 
 ## 1.20.0603.1
 

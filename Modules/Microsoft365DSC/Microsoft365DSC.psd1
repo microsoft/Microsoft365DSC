@@ -97,7 +97,7 @@
         },
         @{
             ModuleName      = "SharePointPnPPowerShellOnline"
-            RequiredVersion = "3.22.2006.1"
+            RequiredVersion = "3.22.2006.2"
         }
     )
 

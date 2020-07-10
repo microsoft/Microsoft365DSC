@@ -20,13 +20,33 @@ function Get-TargetResource
         $PermissionLevels,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting SPOSiteGroups for {$Url}"
@@ -39,17 +59,21 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = @{
-        Url                = $Url
-        Identity           = $null
-        Owner              = $null
-        PermissionLevels   = $null
-        GlobalAdminAccount = $GlobalAdminAccount
-        Ensure             = "Absent"
+        Url                   = $Url
+        Identity              = $null
+        Owner                 = $null
+        PermissionLevels      = $null
+        GlobalAdminAccount    = $GlobalAdminAccount
+        Ensure                = "Absent"
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters
 
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
     #checking if the site actually exists
     try
     {
@@ -64,9 +88,8 @@ function Get-TargetResource
     }
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters `
-                -Url $Url
+
+        $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters -ConnectionUrl $Url
         $siteGroup = Get-PnPGroup -Identity $Identity -ErrorAction Stop
     }
     catch
@@ -100,12 +123,17 @@ function Get-TargetResource
         $permissions += $entry.ToString()
     }
     return @{
-        Url                = $Url
-        Identity           = $siteGroup.Title
-        Owner              = $siteGroup.Owner.LoginName
-        PermissionLevels   = [array]$permissions
-        GlobalAdminAccount = $GlobalAdminAccount
-        Ensure             = "Present"
+        Url                   = $Url
+        Identity              = $siteGroup.Title
+        Owner                 = $siteGroup.Owner.LoginName
+        PermissionLevels      = [array]$permissions
+        GlobalAdminAccount    = $GlobalAdminAccount
+        Ensure                = "Present"
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 }
 
@@ -130,13 +158,33 @@ function Set-TargetResource
         $PermissionLevels,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting SPOSiteGroups for {$Url}"
@@ -147,13 +195,12 @@ function Set-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
+        -ErrorAction SilentlyContinue
 
     $currentValues = Get-TargetResource @PSBoundParameters
     $IsNew = $false
-    if ($Ensure -eq "Present"-and $currentValues.Ensure -eq "Absent")
+    if ($Ensure -eq "Present" -and $currentValues.Ensure -eq "Absent")
     {
         $SiteGroupSettings = @{
             Title = $Identity
@@ -180,7 +227,7 @@ function Set-TargetResource
             if ($entry.SideIndicator -eq "<=")
             {
                 Write-Verbose -Message "Permissionlevels to add: $($entry.InputObject)"
-                $PermissionLevelsToAdd +=$entry.InputObject
+                $PermissionLevelsToAdd += $entry.InputObject
             }
             else
             {
@@ -192,8 +239,8 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Need to remove Permissions $PermissionLevelsToRemove"
             $SiteGroupSettings = @{
-                Identity                 = $Identity
-                Owner                    = $Owner
+                Identity = $Identity
+                Owner    = $Owner
             }
             Set-PnPGroup @SiteGroupSettings
 
@@ -203,8 +250,8 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Need to add Permissions $PermissionLevelsToAdd"
             $SiteGroupSettings = @{
-                Identity                 = $Identity
-                Owner                    = $Owner
+                Identity = $Identity
+                Owner    = $Owner
             }
             Write-Verbose -Message "Setting PnP Group with Identity {$Identity} and Owner {$Owner}"
             Set-PnPGroup @SiteGroupSettings
@@ -214,7 +261,7 @@ function Set-TargetResource
         }
         elseif ($PermissionLevelsToAdd.Count -eq 0 -and $PermissionLevelsToRemove.Count -eq 0)
         {
-            if (($Identity -eq $currentValues.Identity)-and ($Owner -eq $currentlValues.Owner))
+            if (($Identity -eq $currentValues.Identity) -and ($Owner -eq $currentlValues.Owner))
             {
                 Write-Verbose -Message "All values are configured as desired"
             }
@@ -222,8 +269,8 @@ function Set-TargetResource
             {
                 Write-Verbose -Message "Updating Group"
                 $SiteGroupSettings = @{
-                    Identity                 = $Identity
-                    Owner                    = $Owner
+                    Identity = $Identity
+                    Owner    = $Owner
                 }
                 Set-PnPGroup @SiteGroupSettings
             }
@@ -232,8 +279,8 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Updating Group Permissions Add {$PermissionLevelsToAdd} Remove {$PermissionLevelsToRemove}"
             $SiteGroupSettings = @{
-                Identity                 = $Identity
-                Owner                    = $Owner
+                Identity = $Identity
+                Owner    = $Owner
             }
             Set-PnPGroup @SiteGroupSettings
 
@@ -274,13 +321,33 @@ function Test-TargetResource
         $PermissionLevels,
 
         [Parameter()]
-        [ValidateSet("Present","Absent")]
+        [ValidateSet("Present", "Absent")]
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing SPOSiteGroups for {$Url}"
@@ -291,6 +358,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove("ApplicationId") | Out-Null
+    $ValuesToCheck.Remove("TenantId") | Out-Null
+    $ValuesToCheck.Remove("CertificatePath") | Out-Null
+    $ValuesToCheck.Remove("CertificatePassword") | Out-Null
+    $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -308,9 +380,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -321,8 +413,9 @@ function Export-TargetResource
     #endregion
 
     $InformationPreference = 'Continue'
-    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                -InboundParameters $PSBoundParameters
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
+        -ErrorAction SilentlyContinue
 
     #Loop through all sites
     #for each site loop through all site groups and retrieve parameters
@@ -331,22 +424,19 @@ function Export-TargetResource
     $i = 1
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    if ($GlobalAdminAccount.UserName.Contains("@"))
+    $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
+    if ($organization.IndexOf(".") -gt 0)
     {
-        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
-
-        if ($organization.IndexOf(".") -gt 0)
-        {
-            $principal = $organization.Split(".")[0]
-        }
+        $principal = $organization.Split(".")[0]
     }
-    $content = ""
+    $dscContent = ""
     foreach ($site in $sites)
     {
         Write-Information "    [$i/$($sites.Length)] SPOSite groups for {$($site.Url)}"
         try
         {
-            $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+
+            $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
                 -InboundParameters $PSBoundParameters `
                 -Url $site.Url
             $siteGroups = Get-PnPGroup
@@ -354,7 +444,7 @@ function Export-TargetResource
         catch
         {
             $message = $Error[0].Exception.Message
-            if($null -ne $message)
+            if ($null -ne $message)
             {
                 Write-Warning -Message $message
             }
@@ -374,40 +464,28 @@ function Export-TargetResource
                 Write-Warning -Message "The specified account does not have access to the permissions list for {$($siteGroup.Title)}"
                 break
             }
-            $params = @{
-                Url                = $site.Url
-                Identity           = $siteGroup.Title
-                GlobalAdminAccount = $GlobalAdminAccount
+            $Params = @{
+                Url                   = $site.Url
+                Identity              = $siteGroup.Title
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
+                GlobalAdminAccount    = $GlobalAdminAccount
             }
             try
             {
-                $result = Get-TargetResource @params
-                if ($result.Ensure -eq 'Present')
+                $Results = Get-TargetResource @Params
+                if ($Results.Ensure -eq 'Present')
                 {
-                    $result = Remove-NullEntriesFromHashtable -Hash $result
-                    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                    $content += "        SPOSiteGroup " + (New-GUID).ToString() + "`r`n"
-                    $content += "        {`r`n"
-                    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                    $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-                    if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
-                    {
-                        $partialContent = $partialContent -ireplace [regex]::Escape($principal + ".sharepoint.com"), "`$(`$OrganizationName.Split('.')[0]).sharepoint.com"
-                    }
-                    if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
-                    {
-                        $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
-                    }
-                    if ($partialContent.ToLower().Contains("@" + $principal.ToLower()))
-                    {
-                        $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$OrganizationName.Split('.')[0])"
-                    }
-                    if ($partialContent.ToLower().Contains($principal.ToLower() + "-my.sharepoint.com"))
-                    {
-                        $partialContent = $partialContent -ireplace [regex]::Escape($principal + "-my.sharepoint.com"), "`$(`$OrganizationName.Split('.')[0])-my.sharepoint.com"
-                    }
-                    $content += $partialContent
-                    $content += "        }`r`n"
+                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
+                    $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        -ConnectionMode $ConnectionMode `
+                        -ModulePath $PSScriptRoot `
+                        -Results $Results `
+                        -GlobalAdminAccount $GlobalAdminAccount
                 }
             }
             catch
@@ -418,7 +496,7 @@ function Export-TargetResource
 
         $i++
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

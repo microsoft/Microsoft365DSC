@@ -383,62 +383,61 @@ function Export-TargetResource
             # the invokation wrapper that handles throttling;
             $returnValue = ""
             $returnValue += Invoke-M365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
-                $VerbosePreference = 'SilentlyContinue'
-                $params = $args[0]
-                $dscContent = ""
-                foreach ($item in $params.instances)
+            $VerbosePreference = 'SilentlyContinue'
+            $params = $args[0]
+            $dscContent = ""
+            foreach ($item in $params.instances)
+            {
+                foreach ($site in $item)
                 {
-                    foreach ($site in $item)
+                    $siteUrl = $site.Url
+                    try
                     {
-                        $siteUrl = $site.Url
-                        try
-                        {
-                            $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
-                                -InboundParameters $PSBoundParameters `
-                                -Url $siteUrl
-                        }
-                        catch
-                        {
-                            throw "M365DSC - Failed to connect to PnP {$siteUrl}: " + $_
-                        }
+                        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                            -InboundParameters $PSBoundParameters `
+                            -Url $siteUrl
+                    }
+                    catch
+                    {
+                        throw "M365DSC - Failed to connect to PnP {$siteUrl}: " + $_
+                    }
 
-                        try
+                    try
+                    {
+                        $properties = Get-PnPPropertyBag
+                        foreach ($property in $properties)
                         {
-                            $properties = Get-PnPPropertyBag
-                            foreach ($property in $properties)
-                            {
-                                $Params = @{
-                                    Url                   = $siteUrl
-                                    Key                   = $property.Key
-                                    Value                 = '*'
-                                    ApplicationId         = $ApplicationId
-                                    TenantId              = $TenantId
-                                    CertificatePassword   = $CertificatePassword
-                                    CertificatePath       = $CertificatePath
-                                    CertificateThumbprint = $CertificateThumbprint
-                                    GlobalAdminAccount    = $GlobalAdminAccount
-                                }
-
-                                $Results = Get-TargetResource @Params
-                                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                                        -Results $Results
-                                $dscContent += Get-M365DSCExportContentForResource -ResourceName "SPOPropertyBag" `
-                                        -ConnectionMode $ConnectionMode `
-                                        -ModulePath $PSScriptRoot `
-                                        -Results $Results `
-                                        -GlobalAdminAccount $GlobalAdminAccount
-                                }
+                            $Params = @{
+                                Url                   = $siteUrl
+                                Key                   = $property.Key
+                                Value                 = '*'
+                                ApplicationId         = $ApplicationId
+                                TenantId              = $TenantId
+                                CertificatePassword   = $CertificatePassword
+                                CertificatePath       = $CertificatePath
+                                CertificateThumbprint = $CertificateThumbprint
+                                GlobalAdminAccount    = $GlobalAdminAccount
                             }
-                        }
-                        catch
-                        {
-                            throw "M365DSC - Failed to Get-PnPPropertyBag {$siteUrl}: " + $_
+
+                            $Results = Get-TargetResource @Params
+                            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                                -Results $Results
+                            $dscContent += Get-M365DSCExportContentForResource -ResourceName "SPOPropertyBag" `
+                                -ConnectionMode $ConnectionMode `
+                                -ModulePath $PSScriptRoot `
+                                -Results $Results `
+                                -GlobalAdminAccount $GlobalAdminAccount
                         }
                     }
+                    catch
+                    {
+                        throw "M365DSC - Failed to Get-PnPPropertyBag {$siteUrl}: " + $_
+                    }
                 }
-                return $dscContent
             }
-            return $returnValue
+            return $dscContent
+        }
+        return $returnValue
         } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $CertificateThumbprint, $CertificatePassword, $CertificatePath) | Out-Null
         $i++
     }
@@ -489,8 +488,7 @@ function Export-TargetResource
     }
     else
     {
-        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
-        -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $organization = $TenantId
         $principal = $organization.Split(".")[0]
     }
 

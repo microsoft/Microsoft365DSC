@@ -602,7 +602,8 @@ function Export-TargetResource
     #endregion
 
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters
     $Params = @{
         IsSingleInstance      = "Yes"
         ApplicationId         = $ApplicationId

@@ -266,8 +266,15 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters
 
     $params = @{
         IsSingleInstance      = "Yes"
