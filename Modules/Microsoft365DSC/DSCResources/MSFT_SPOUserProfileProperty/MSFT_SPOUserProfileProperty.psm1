@@ -273,7 +273,7 @@ function Export-TargetResource
         $i++
     }
 
-    Write-Information "    Broke extraction process down into {$MaxProcesses} jobs of {$batchSize} item(s) each"
+    Write-Host "    Broke extraction process down into {$MaxProcesses} jobs of {$batchSize} item(s) each"
     $totalJobs = $MaxProcesses
     $jobsCompleted = 0
     $status = "Running..."
@@ -324,6 +324,7 @@ function Export-TargetResource
         $result = $result -ireplace [regex]::Escape('https://' + $principal + '.sharepoint.com/'), "https://`$(`$OrganizationName.Split('.')[0]).sharepoint.com/"
         $result = $result -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
     }
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
     return $result
 }
 

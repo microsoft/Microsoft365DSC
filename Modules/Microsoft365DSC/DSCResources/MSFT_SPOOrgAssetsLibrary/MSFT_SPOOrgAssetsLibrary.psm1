@@ -258,14 +258,16 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PnP
 
-    $orgAssets = Get-PnPOrgAssetsLibrary
+    [array]$orgAssets = Get-PnPOrgAssetsLibrary
     $tenantName = Get-M365TenantName -GlobalAdminAccount $GlobalAdminAccount
     $content = ''
-
+$i = 1
     if ($null -ne $orgAssets)
     {
+        Write-Host "`r`n" -NoNewLine
         foreach ($orgAssetLib in $orgAssets.OrgAssetsLibraries)
         {
+            Write-Host "    [$i/$($orgAssets.Length)] $LibraryUrl" -NoNewLine
             $Params = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 LibraryUrl         = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
@@ -277,7 +279,13 @@ function Export-TargetResource
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
             $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
             $content += "        }`r`n"
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
+    }
+    else
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

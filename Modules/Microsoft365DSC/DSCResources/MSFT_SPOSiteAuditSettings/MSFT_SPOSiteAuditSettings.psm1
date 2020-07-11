@@ -167,11 +167,12 @@ function Export-TargetResource
         }
     }
     $content = ""
+    Write-Host "`r`n" -NoNewLine
     foreach ($site in $sites)
     {
         try
         {
-            Write-Information "    [$i/$($sites.Length)] Audit Settings for {$($site.Url)}"
+            Write-Host "    [$i/$($sites.Length)] Audit Settings for {$($site.Url)}" -NoNewLine
             $params = @{
                 Url                = $site.Url
                 AuditFlags         = 'None'
@@ -206,6 +207,7 @@ function Export-TargetResource
             }
             $content += $partialContent
             $content += "        }`r`n"
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
         catch
         {

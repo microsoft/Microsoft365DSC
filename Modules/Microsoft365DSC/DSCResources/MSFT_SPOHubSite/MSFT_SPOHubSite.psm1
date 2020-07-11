@@ -479,9 +479,10 @@ function Export-TargetResource
             $principal = $organization.Split(".")[0]
         }
     }
+    Write-Host "`r`n" -NoNewLine
     foreach ($hub in $hubSites)
     {
-        Write-Information "    [$i/$($hubSites.Length)] $($hub.SiteUrl)"
+        Write-Host "    [$i/$($hubSites.Length)] $($hub.SiteUrl)" -NoNewLine
         $params = @{
             GlobalAdminAccount = $GlobalAdminAccount
             Url                = $hub.SiteUrl
@@ -501,6 +502,7 @@ function Export-TargetResource
         }
         $content += $partialContent
         $content += "        }`r`n"
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $content
