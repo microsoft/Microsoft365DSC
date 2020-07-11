@@ -22,9 +22,29 @@ function Get-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesignRights for $SiteDesignTitle"
@@ -35,15 +55,20 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $nullReturn = @{
-        SiteDesignTitle    = $SiteDesignTitle
-        UserPrincipals     = $UserPrincipals
-        Rights             = $Rights
-        Ensure             = "Absent"
-        GlobalAdminAccount = $GlobalAdminAccount
+        SiteDesignTitle       = $SiteDesignTitle
+        UserPrincipals        = $UserPrincipals
+        Rights                = $Rights
+        Ensure                = "Absent"
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 
     Write-Verbose -Message "Getting Site Design Rights for $SiteDesignTitle"
@@ -74,11 +99,16 @@ function Get-TargetResource
 
     Write-Verbose -Message "Site Design Rights User Principals = $($curUserPrincipals)"
     return @{
-        SiteDesignTitle    = $SiteDesignTitle
-        UserPrincipals     = $curUserPrincipals
-        Rights             = $Rights
-        Ensure             = "Present"
-        GlobalAdminAccount = $GlobalAdminAccount
+        SiteDesignTitle       = $SiteDesignTitle
+        UserPrincipals        = $curUserPrincipals
+        Rights                = $Rights
+        Ensure                = "Present"
+        GlobalAdminAccount    = $GlobalAdminAccount
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
     }
 }
 
@@ -105,9 +135,29 @@ function Set-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration for SPO SiteDesignRights for $SiteDesignTitle"
@@ -118,8 +168,8 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $cursiteDesign = Get-PnPSiteDesign -Identity $SiteDesignTitle
     if ($null -eq $cursiteDesign)
@@ -202,9 +252,29 @@ function Test-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration for SPO SiteDesignRights for $SiteDesignTitle"
@@ -232,9 +302,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -243,61 +333,122 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
 
-    $organization = ""
-    if ($GlobalAdminAccount.UserName.Contains("@"))
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+
+    $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
+    if ($organization.IndexOf(".") -gt 0)
     {
-        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+        $principal = $organization.Split(".")[0]
     }
 
     [array]$siteDesigns = Get-PnPSiteDesign
 
     $content = ""
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($siteDesign in $siteDesigns)
     {
-        if ($i -eq 1)
-        {
-                Write-Host "`r`n" -NoNewline
-        }
         Write-Host "    |---[$i/$($siteDesigns.Count)] $($siteDesign.Title)" -NoNewLine
+
         $params = @{
-            SiteDesignTitle    = $siteDesign.Title
-            Rights             = "View"
-            GlobalAdminAccount = $GlobalAdminAccount
+            SiteDesignTitle       = $siteDesign.Title
+            Rights                = "View"
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+            GlobalAdminAccount    = $GlobalAdminAccount
         }
         $result = Get-TargetResource @params
-        $content = ""
         if ($result.Ensure -eq "Present")
         {
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            if ($ConnectionMode -eq 'Credential')
+            {
+                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            }
+            else
+            {
+                if ($null -ne $CertificatePassword)
+                {
+                    $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
+                }
+            }
+            $result = Remove-NullEntriesFromHashTable -Hash $result
             $content += "        SPOSiteDesignRights " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
+
+            if ($ConnectionMode -eq 'Credential')
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            }
+            else
+            {
+                if ($null -ne $CertificatePassword)
+                {
+                    $partialContent += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CertificatePassword"
+                }
+                else
+                {
+                    $partialContent += $currentDSCBlock
+                }
+                $partialContent = Format-M365ServicePrincipalData -configContent $partialContent -applicationid $ApplicationId `
+                    -principal $principal -CertificateThumbprint $CertificateThumbprint
             }
             $content += $partialContent
             $content += "        }`r`n"
         }
 
         $params = @{
-            SiteDesignTitle    = $siteDesign.Title
-            Rights             = "None"
-            GlobalAdminAccount = $GlobalAdminAccount
+            SiteDesignTitle       = $siteDesign.Title
+            Rights                = "None"
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+            GlobalAdminAccount    = $GlobalAdminAccount
         }
         $result = Get-TargetResource @params
         if ($result.Ensure -eq "Present")
         {
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            if ($ConnectionMode -eq 'Credential')
+            {
+                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            }
+            else
+            {
+                if ($null -ne $CertificatePassword)
+                {
+                    $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
+                }
+            }
             $content += "        SPOSiteDesignRights " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            if ($ConnectionMode -eq 'Credential')
+            {
+                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            }
+            else
+            {
+                if ($null -ne $CertificatePassword)
+                {
+                    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CertificatePassword"
+                }
+                else
+                {
+                    $content += $currentDSCBlock
+                }
+                $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
+                    -principal $principal -CertificateThumbprint $CertificateThumbprint
+            }
+            if ($content.ToLower().Contains('onmicrosoft.com'))
+            {
+                $content = $content -ireplace [regex]::Escape($principal), "`$(`$OrganizationName.Split('.')[0])"
+            }
             $content += "        }`r`n"
         }
         Write-Host $Global:M365DSCEmojiGreenCheckmark

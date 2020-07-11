@@ -100,9 +100,29 @@ function Get-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration for SPO Sharing settings"
@@ -112,9 +132,7 @@ function Get-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $nullReturn = @{
         IsSingleInstance                           = 'Yes'
@@ -138,7 +156,13 @@ function Get-TargetResource
         NotifyOwnersWhenItemsReshared              = $null
         DefaultLinkPermission                      = $null
         RequireAcceptingAccountMatchInvitedAccount = $null
-        GlobalAdminAccount                         = $null
+        GlobalAdminAccount                         = $GlobalAdminAccount
+        ApplicationId                              = $ApplicationId
+        TenantId                                   = $TenantId
+        CertificatePassword                        = $CertificatePassword
+        CertificatePath                            = $CertificatePath
+        CertificateThumbprint                      = $CertificateThumbprint
+
     }
 
     try
@@ -168,6 +192,11 @@ function Get-TargetResource
             DefaultLinkPermission                      = $SPOSharingSettings.DefaultLinkPermission
             RequireAcceptingAccountMatchInvitedAccount = $SPOSharingSettings.RequireAcceptingAccountMatchInvitedAccount
             GlobalAdminAccount                         = $GlobalAdminAccount
+            ApplicationId                              = $ApplicationId
+            TenantId                                   = $TenantId
+            CertificatePassword                        = $CertificatePassword
+            CertificatePath                            = $CertificatePath
+            CertificateThumbprint                      = $CertificateThumbprint
         }
     }
     catch
@@ -281,9 +310,29 @@ function Set-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration for SPO Sharing settings"
@@ -294,45 +343,50 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("GlobalAdminAccount")
-    $CurrentParameters.Remove("Verbose")
-    $CurrentParameters.Remove("IsSingleInstance")
+    $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
+    $CurrentParameters.Remove("Ensure") | Out-Null
+    $CurrentParameters.Remove("Verbose") | Out-Null
+    $CurrentParameters.Remove("IsSingleInstance") | Out-Null
+    $CurrentParameters.Remove("ApplicationId") | Out-Null
+    $CurrentParameters.Remove("TenantId") | Out-Null
+    $CurrentParameters.Remove("CertificatePath") | Out-Null
+    $CurrentParameters.Remove("CertificatePassword") | Out-Null
+    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
     if ($null -eq $SignInAccelerationDomain)
     {
-        $CurrentParameters.Remove("SignInAccelerationDomain")
-        $CurrentParameters.Remove("EnableGuestSignInAcceleration")#removing EnableGuestSignInAcceleration since it can only be configured with a configured SignINAccerlation domain
+        $CurrentParameters.Remove("SignInAccelerationDomain") | Out-Null
+        $CurrentParameters.Remove("EnableGuestSignInAcceleration") | Out-Null #removing EnableGuestSignInAcceleration since it can only be configured with a configured SignINAccerlation domain
     }
     if ($SharingCapability -ne "ExternalUserAndGuestSharing")
     {
         Write-Verbose -Message "The sharing capabilities for the tenant are not configured to be ExternalUserAndGuestSharing for that the RequireAnonymousLinksExpireInDays property cannot be configured"
-        $CurrentParameters.Remove("RequireAnonymousLinksExpireInDays")
+        $CurrentParameters.Remove("RequireAnonymousLinksExpireInDays") | Out-Null
     }
     if ($RequireAcceptingAccountMatchInvitedAccount -eq $false)
     {
         Write-Verbose -Message "RequireAcceptingAccountMatchInvitedAccount is set to be false. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
-        $CurrentParameters.Remove("SharingAllowedDomainList")
-        $CurrentParameters.Remove("SharingBlockedDomainList")
+        $CurrentParameters.Remove("SharingAllowedDomainList") | Out-Null
+        $CurrentParameters.Remove("SharingBlockedDomainList") | Out-Null
     }
     if ($SharingDomainRestrictionMode -eq "None")
     {
         Write-Verbose -Message "SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured"
-        $CurrentParameters.Remove("SharingAllowedDomainList")
-        $CurrentParameters.Remove("SharingBlockedDomainList")
+        $CurrentParameters.Remove("SharingAllowedDomainList") | Out-Null
+        $CurrentParameters.Remove("SharingBlockedDomainList") | Out-Null
     }
     elseif ($SharingDomainRestrictionMode -eq "AllowList")
     {
         Write-Verbose -Message "SharingDomainRestrictionMode is set to AllowList. For that SharingBlockedDomainList cannot be configured"
-        $CurrentParameters.Remove("SharingBlockedDomainList")
+        $CurrentParameters.Remove("SharingBlockedDomainList") | Out-Null
     }
     elseif ($SharingDomainRestrictionMode -eq "BlockList")
     {
         Write-Verbose -Message "SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured"
-        $CurrentParameters.Remove("SharingAllowedDomainList")
+        $CurrentParameters.Remove("SharingAllowedDomainList") | Out-Null
     }
     foreach ($value in $CurrentParameters.GetEnumerator())
     {
@@ -442,9 +496,29 @@ function Test-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration for SPO Sharing settings"
@@ -490,9 +564,29 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -500,17 +594,63 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $PSBoundParameters.Add("IsSingleInstance", "Yes")
-    $result = Get-TargetResource @PSBoundParameters
+
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    $params = @{
+        IsSingleInstance      = "Yes"
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
+        GlobalAdminAccount    = $GlobalAdminAccount
+    }
+
+    $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
+    if ($organization.IndexOf(".") -gt 0)
+    {
+        $principal = $organization.Split(".")[0]
+    }
+
+    $result = Get-TargetResource @params
     if (-1 -eq $result.RequireAnonymousLinksExpireInDays)
     {
         $result.Remove("RequireAnonymousLinksExpireInDays")
     }
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+    }
+    else
+    {
+        if ($null -ne $CertificatePassword)
+        {
+            $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
+        }
+    }
+
+    $result = Remove-NullEntriesFromHashTable -Hash $result
     $content = "        SPOSharingSettings " + (New-GUID).ToString() + "`r`n"
     $content += "        {`r`n"
     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+    }
+    else
+    {
+        if ($null -ne $CertificatePassword)
+        {
+            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CertificatePassword"
+        }
+        else
+        {
+            $content += $currentDSCBlock
+        }
+        $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
+            -principal $principal -CertificateThumbprint $CertificateThumbprint
+    }
     $content += "        }`r`n"
     Write-Host $Global:M365DSCEmojiGreenCheckmark
     return $content

@@ -24,8 +24,27 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
 
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of SPO Org Assets Library"
@@ -36,8 +55,7 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
 
     try
     {
@@ -69,11 +87,24 @@ function Get-TargetResource
     {
         $currentValues = $PSBoundParameters
         $currentValues.Ensure = "Absent"
+        $currentValues.ApplicationId = $ApplicationId
+        $currentValues.TenantId = $TenantId
+        $currentValues.CertificatePassword = $CertificatePassword
+        $currentValues.CertificatePath = $CertificatePath
+        $currentValues.CertificateThumbprint = $CertificateThumbprint
+        $currentValues.GlobalAdminAccount    = $GlobalAdminAccount
         return $currentValues
     }
     else
     {
-        $tenantName = Get-M365TenantName -GlobalAdminAccount $GlobalAdminAccount
+        if ($ConnectionMode -eq 'Credential')
+        {
+            $tenantName = Get-M365TenantName -GlobalAdminAccount $GlobalAdminAccount
+        }
+        else
+        {
+            $tenantName = $TenantId.Split(".")[0]
+        }
 
         foreach ($orgAsset in $orgAssets.OrgAssetsLibraries)
         {
@@ -88,11 +119,16 @@ function Get-TargetResource
                 }
 
                 $result = @{
-                    LibraryUrl         = $orgLibraryUrl
-                    ThumbnailUrl       = $orgthumbnailUrl
-                    CdnType            = $cdn
-                    Ensure             = "Present"
-                    GlobalAdminAccount = $GlobalAdminAccount
+                    LibraryUrl            = $orgLibraryUrl
+                    ThumbnailUrl          = $orgthumbnailUrl
+                    CdnType               = $cdn
+                    Ensure                = "Present"
+                    GlobalAdminAccount    = $GlobalAdminAccount
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificatePassword   = $CertificatePassword
+                    CertificatePath       = $CertificatePath
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
                 return $result
@@ -129,8 +165,27 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
 
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of SharePoint Org Site Assets"
@@ -143,8 +198,13 @@ function Set-TargetResource
 
     $currentOrgSiteAsset = Get-TargetResource @PSBoundParameters
     $currentParameters = $PSBoundParameters
-    $currentParameters.Remove("Ensure")
-    $currentParameters.Remove("GlobalAdminAccount")
+    $currentParameters.Remove("Ensure") | Out-Null
+    $currentParameters.Remove("GlobalAdminAccount") | Out-Null
+    $currentParameters.Remove("ApplicationId") | Out-Null
+    $currentParameters.Remove("TenantId") | Out-Null
+    $currentParameters.Remove("CertificatePath") | Out-Null
+    $currentParameters.Remove("CertificatePassword") | Out-Null
+    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
     $cdn = $null
     if ($CdnType -eq 'Public')
@@ -215,8 +275,27 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
 
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration of SharePoint Org Site Assets"
@@ -227,6 +306,11 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove("ApplicationId") | Out-Null
+    $ValuesToCheck.Remove("TenantId") | Out-Null
+    $ValuesToCheck.Remove("CertificatePath") | Out-Null
+    $ValuesToCheck.Remove("CertificatePassword") | Out-Null
+    $ValuesToCheck.Remove("CertificateThumbprint") | Out-Null
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -246,7 +330,27 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -255,13 +359,22 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+
 
     [array]$orgAssets = Get-PnPOrgAssetsLibrary
-    $tenantName = Get-M365TenantName -GlobalAdminAccount $GlobalAdminAccount
+
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $tenantName = Get-M365TenantName -GlobalAdminAccount $GlobalAdminAccount
+    }
+    else
+    {
+        $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
+        $tenantName = $organization.Split(".")[0]
+    }
     $content = ''
-$i = 1
+    $i = 1
     if ($null -ne $orgAssets)
     {
         Write-Host "`r`n" -NoNewLine
@@ -271,13 +384,51 @@ $i = 1
             $Params = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 LibraryUrl         = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificateThumbprint = $CertificateThumbprint
             }
+            $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
+            if ($organization.IndexOf(".") -gt 0)
+                $principal = $organization.Split(".")[0]
+            }
+
             $result = Get-TargetResource @Params
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            if ($ConnectionMode -eq 'Credential')
+            {
+                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            }
+            else
+            {
+                if ($null -ne $CertificatePassword)
+                {
+                    $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
+                }
+            }
+
+            $result = Remove-NullEntriesFromHashTable -Hash $result
             $content += "        SPOOrgAssetsLibrary " + (New-GUID).ToString() + "`r`n"
             $content += "        {`r`n"
             $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            if ($ConnectionMode -eq 'Credential')
+            {
+                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+            }
+            else
+            {
+                if ($null -ne $CertificatePassword)
+                {
+                    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CertificatePassword"
+                }
+                else
+                {
+                    $content += $currentDSCBlock
+                }
+                $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
+                    -principal $principal -CertificateThumbprint $CertificateThumbprint
+            }
             $content += "        }`r`n"
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
