@@ -8,6 +8,8 @@
 * EXOOutboundConnector
   * Fixed an issue where the ConnectorSource value returned
     was empty. Now defaulting to Default.
+* O365User
+  * Fixed issue with PasswordNeverExpires having incorrect value
 * PlannerBucket
   * Initial Release;
 * PlannerPlan

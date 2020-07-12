@@ -165,14 +165,7 @@ function Get-TargetResource
             $currentLicenseAssignment += $sku.SkuPartNumber
         }
 
-        if ($user.PasswordPolicies -eq 'NONE')
-        {
-            $passwordNeverExpires = $true
-        }
-        else
-        {
-            $passwordNeverExpires = $false
-        }
+        $passwordNeverExpires = ($user.PasswordPolicies -contains "DisablePasswordExpiration")
 
         $results = @{
             UserPrincipalName     = $UserPrincipalName
