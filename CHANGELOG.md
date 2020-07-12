@@ -22,11 +22,11 @@
   * Updated Microsoft.Graph.Identity.ConditionalAccess
     module version to 0.7.0;
   * Updated Microsoft.PowerApps.Administration.PowerShell
-    module version to 2.0.65;
+    module version to 2.0.67;
   * Updated ReverseDSC module version to 2.0.0.4;
   * Updated all Unit Tests to Pester 5;
-  * Added support for Service Principal for SPO & OneDrive,
-    Exchange Online and Office 365 resources;
+  * Added support for Service Principal for PowerPlatforms,
+    SPO & OneDrive, Exchange Online and Office 365 resources;
 
 ## 1.20.0603.1
 
