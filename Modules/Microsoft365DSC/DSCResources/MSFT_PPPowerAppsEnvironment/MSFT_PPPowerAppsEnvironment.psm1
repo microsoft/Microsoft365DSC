@@ -36,15 +36,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration for PowerApps Environment {$DisplayName}"
@@ -130,15 +122,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration for PowerApps Environment {$DisplayName}"
@@ -220,15 +204,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration for PowerApps Environment {$DisplayName}"
@@ -269,15 +245,7 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint,
-
-        [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificateThumbprint
     )
 
     $InformationPreference = 'Continue'
@@ -309,8 +277,6 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
