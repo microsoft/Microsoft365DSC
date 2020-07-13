@@ -194,8 +194,6 @@ function Start-M365DSCConfigurationExtract
         }
 
         $DSCContent += "    `$OrganizationName = `$ConfigurationData.NonNodeData.OrganizationName`r`n"
-        $DSCContent += "    `$ApplicationId = `$ConfigurationData.NonNodeData.ApplicationId`r`n"
-
         Add-ConfigurationDataEntry -Node "NonNodeData" `
             -Key "OrganizationName" `
             -Value $organization `
@@ -203,23 +201,29 @@ function Start-M365DSCConfigurationExtract
         Add-ConfigurationDataEntry -Node "NonNodeData" `
             -Key "ApplicationId" `
             -Value $ApplicationId `
-            -Description "ApplicationId for service principal"
+            -Description "Azure AD Application Id for Authentication"
+        if (-not [System.String]::IsNullOrEmpty($TenantId))
+        {
+            Add-ConfigurationDataEntry -Node "NonNodeData" `
+                -Key "TenantId" `
+                -Value $TenantId `
+                -Description "The Id or Name of the tenant to authenticate against"
+        }
 
         if (-not [System.String]::IsNullOrEmpty($CertificatePath))
         {
-            $DSCContent += "    `$CertificatePath = `$ConfigurationData.NonNodeData.CertificatePath`r`n"
             Add-ConfigurationDataEntry -Node "NonNodeData" `
                 -Key "CertificatePath" `
                 -Value $CertificatePath `
-                -Description "Certificate path for service principal"
+                -Description "Local path to the .pfx certificate to use for authentication"
         }
+
         if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint))
         {
-            $DSCContent += "    `$CertificateThumbprint = `$ConfigurationData.NonNodeData.CertificateThumbprint`r`n"
             Add-ConfigurationDataEntry -Node "NonNodeData" `
                 -Key "CertificateThumbprint" `
                 -Value $CertificateThumbprint `
-                -Description "Certificate thumbprint for service principal"
+                -Description "Thumbprint of the certificate to use for authentication"
         }
     }
     $DSCContent += "    Import-DscResource -ModuleName Microsoft365DSC`r`n`r`n"

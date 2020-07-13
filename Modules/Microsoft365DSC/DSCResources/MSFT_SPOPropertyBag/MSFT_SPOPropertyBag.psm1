@@ -48,15 +48,20 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of SPOPropertyBag for $Key"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
     try
     {
         Write-Verbose -Message "Connecting to PnP from the Get method"
-        $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters -connectionUrl $url
+
+        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters `
+                -Url $Url
+
         Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
         [array]$property = Get-PnpPropertyBag -Key $Key -ErrorAction 'Stop'
 
@@ -71,7 +76,10 @@ function Get-TargetResource
         }
         elseif ($_.Exception -like "*The underlying connection was closed*")
         {
-            $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters -connectionUrl $url
+            $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters `
+                -Url $Url
+
             Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
             [array]$property = Get-PnpPropertyBag -Key $Key -ErrorAction 'SilentlyContinue'
         }
@@ -168,13 +176,16 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of SPOPropertyBag property for $Key at {$Url}"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters -connectionUrl $Url
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters `
+                -Url $Url
 
     $currentProperty = Get-TargetResource @PSBoundParameters
 
@@ -299,12 +310,14 @@ function Export-TargetResource
     )
     $InformationPreference = "Continue"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters
 
     $result = ""
 
@@ -370,101 +383,61 @@ function Export-TargetResource
             # the invokation wrapper that handles throttling;
             $returnValue = ""
             $returnValue += Invoke-M365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
-                $VerbosePreference = 'SilentlyContinue'
-                $params = $args[0]
-                $content = ""
-                foreach ($item in $params.instances)
+            $VerbosePreference = 'SilentlyContinue'
+            $params = $args[0]
+            $dscContent = ""
+            foreach ($item in $params.instances)
+            {
+                foreach ($site in $item)
                 {
-                    foreach ($site in $item)
+                    $siteUrl = $site.Url
+                    try
                     {
-                        $siteUrl = $site.Url
-                        try
+                        $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                            -InboundParameters $PSBoundParameters `
+                            -Url $siteUrl
+                    }
+                    catch
+                    {
+                        throw "M365DSC - Failed to connect to PnP {$siteUrl}: " + $_
+                    }
+
+                    try
+                    {
+                        $properties = Get-PnPPropertyBag
+                        foreach ($property in $properties)
                         {
-                            $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters -ConnectionUrl $siteUrl
-                        }
-                        catch
-                        {
-                            throw "M365DSC - Failed to connect to PnP {$siteUrl}: " + $_
-                        }
-
-                        try
-                        {
-                            $properties = Get-PnPPropertyBag
-                            foreach ($property in $properties)
-                            {
-                                $getValues = @{
-                                    Url                   = $siteUrl
-                                    Key                   = $property.Key
-                                    Value                 = '*'
-                                    ApplicationId         = $ApplicationId
-                                    TenantId              = $TenantId
-                                    CertificatePassword   = $CertificatePassword
-                                    CertificatePath       = $CertificatePath
-                                    CertificateThumbprint = $CertificateThumbprint
-                                    GlobalAdminAccount    = $GlobalAdminAccount
-                                }
-
-                                $CurrentModulePath = $params.ScriptRoot + "\MSFT_SPOPropertyBag.psm1"
-                                Import-Module $CurrentModulePath -Force | Out-Null
-                                Import-Module ($params.ScriptRoot + "\..\..\Modules\M365DSCTelemetryEngine.psm1") -Force | Out-Null
-                                $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
-                                if ($organization.IndexOf(".") -gt 0)
-                                {
-                                    $principal = $organization.Split(".")[0]
-                                }
-                                $result = Get-TargetResource @getValues
-
-                                $result.Value = [System.String]$result.Value
-                                if (-not [System.String]::IsNullOrEmpty($result.Value) -and `
-                                        $result.Ensure -eq 'Present')
-                                {
-                                    if ($ConnectionMode -eq 'Credential')
-                                    {
-                                        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                                    }
-                                    else
-                                    {
-                                        if ($null -ne $CertificatePassword)
-                                        {
-                                            $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
-                                        }
-                                    }
-                                    $result = Remove-NullEntriesFromHashTable -Hash $result
-                                    $content += "        SPOPropertyBag " + (New-GUID).ToString() + "`r`n"
-                                    $content += "        {`r`n"
-                                    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
-                                    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                                    if ($ConnectionMode -eq 'Credential')
-                                    {
-                                        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-                                    }
-                                    else
-                                    {
-                                        if ($null -ne $CertificatePassword)
-                                        {
-                                            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CertificatePassword"
-                                        }
-                                        else
-                                        {
-                                            $content += $currentDSCBlock
-                                        }
-                                        $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
-                                            -principal $principal -CertificateThumbprint $CertificateThumbprint
-                                    }
-
-                                    $content += "        }`r`n"
-                                }
+                            $Params = @{
+                                Url                   = $siteUrl
+                                Key                   = $property.Key
+                                Value                 = '*'
+                                ApplicationId         = $ApplicationId
+                                TenantId              = $TenantId
+                                CertificatePassword   = $CertificatePassword
+                                CertificatePath       = $CertificatePath
+                                CertificateThumbprint = $CertificateThumbprint
+                                GlobalAdminAccount    = $GlobalAdminAccount
                             }
-                        }
-                        catch
-                        {
-                            throw "M365DSC - Failed to Get-PnPPropertyBag {$siteUrl}: " + $_
+
+                            $Results = Get-TargetResource @Params
+                            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                                -Results $Results
+                            $dscContent += Get-M365DSCExportContentForResource -ResourceName "SPOPropertyBag" `
+                                -ConnectionMode $ConnectionMode `
+                                -ModulePath $PSScriptRoot `
+                                -Results $Results `
+                                -GlobalAdminAccount $GlobalAdminAccount
                         }
                     }
+                    catch
+                    {
+                        throw "M365DSC - Failed to Get-PnPPropertyBag {$siteUrl}: " + $_
+                    }
                 }
-                return $content
             }
-            return $returnValue
+            return $dscContent
+        }
+        return $returnValue
         } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $CertificateThumbprint, $CertificatePassword, $CertificatePath) | Out-Null
         $i++
     }
@@ -515,8 +488,7 @@ function Export-TargetResource
     }
     else
     {
-        $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId
-        -CertificateThumbprint $CertificateThumbprint -certificatepath $CertificatePath
+        $organization = $TenantId
         $principal = $organization.Split(".")[0]
     }
 

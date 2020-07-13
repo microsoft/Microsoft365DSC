@@ -944,7 +944,8 @@ function Get-M365DSCTenantDomain
 
     if ($null -eq $CertificatePath)
     {
-        Test-MSCloudLogin -Platform AzureAD -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
+        $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+                    -InboundParameters $PSBoundParameters
         $tenantDetails = Get-AzureADTenantDetail
         $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -Filterscript { $_.Initial }
         return $defaultDomain.Name
@@ -1007,118 +1008,98 @@ function New-M365DSCConnection
 
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
-        $InboundParameters
+        $InboundParameters,
+
+        [Parameter()]
+        [System.String]
+        $Url
     )
 
-    switch ($Platform)
+    # Case both authentication methods are attempted
+    if ($null -ne $InboundParameters.GlobalAdminAccount -and `
+        (-not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -or `
+        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint)))
     {
-        { $_ -eq 'AzureAD' -or $_ -eq 'MicrosoftTeams' -or $_ -eq 'MicrosoftGraph' }
-        {
-            # Case both authentication methods are attempted
-            if ($null -ne $InboundParameters.GlobalAdminAccount -and `
-                (-not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -or `
-                        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint)))
-            {
-                Write-Verbose -Message 'Both Authentication methods are attempted'
-                throw "You can't specify both the GlobalAdminAccount and one of {TenantId, CertificateThumbprint}"
-            }
-            # Case no authentication method is specified
-            elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
-                    [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
-                    [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-                    [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
-            {
-                Write-Verbose -Message "No Authentication method was provided"
-                throw "You must specify either the GlobalAdminAccount or ApplicationId, TenantId and CertificateThumbprint parameters."
-            }
-            # Case only GlobalAdminAccount is specified
-            elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
-                    [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
-                    [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-                    [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
-            {
-                Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
-                Test-MSCloudLogin -Platform $Platform `
-                    -CloudCredential $InboundParameters.GlobalAdminAccount
-                return 'Credential'
-            }
-            # Case only the ServicePrincipal parameters are specified
-            elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
-                    -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
-                    -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-                    -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
-            {
-                Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
-                Test-MSCloudLogin -Platform $Platform `
-                    -ApplicationId $InboundParameters.ApplicationId `
-                    -TenantId $InboundParameters.TenantId `
-                    -CertificateThumbprint $InboundParameters.CertificateThumbprint
-                return 'ServicePrincipal'
-            }
-            # Case only the ApplicationID and Credentials parameters are specified
-            elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
-                    -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
-            {
-                Write-Verbose -Message "GlobalAdminAccount and ApplicationId were specified. Connecting via Delegated Service Principal"
-                Test-MSCloudLogin -Platform $Platform `
-                    -ApplicationId $InboundParameters.ApplicationId `
-                    -CloudCredential $InboundParameters.GlobalAdminAccount
-                return 'ServicePrincipal'
-            }
-        }
-        { $_ -eq 'PNP' }
-        {
-            # Case both authentication methods are attempted
-            if ($null -ne $InboundParameters.GlobalAdminAccount -and `
-                (-not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -or `
-                        -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -or `
-                        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePassword)))
-            {
-                Write-Verbose -Message 'Both Authentication methods are attempted'
-                throw "You can't specify both the GlobalAdminAccount and one of {ApplicationID, TenantId, CertificatePassword}"
-            }
-            # Case no authentication method is specified
-            elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
-                    [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
-                    [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-                    [System.String]::IsNullOrEmpty($InboundParameters.CertificatePassword))
-            {
-                Write-Verbose -Message "No Authentication method was provided"
-                throw "You must specify either the GlobalAdminAccount or ApplicationId, TenantId and CertificateThumbprint parameters."
-            }
-            # Case only GlobalAdminAccount is specified
-            elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
-                    [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
-                    [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-                    [System.String]::IsNullOrEmpty($InboundParameters.CertificatePassword))
-            {
-                Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
-                Test-MSCloudLogin -Platform $Platform `
-                    -CloudCredential $InboundParameters.GlobalAdminAccount `
-                    -ConnectionUrl $ConnectionUrl
-                return 'Credential'
-            }
-            # Case only the ServicePrincipal parameters are specified
-            elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
-                    -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
-                    -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-                (-not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePassword) -or `
-                        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint)))
-            {
-                Write-Verbose -Message "GlobalAdminAccount wasn't specified. Connecting via User Principal and cert password"
-                Test-MSCloudLogin -Platform $Platform `
-                    -ApplicationId $InboundParameters.ApplicationId `
-                    -TenantId $InboundParameters.TenantId `
-                    -CertificatePath $InboundParameters.CertificatePath `
-                    -CertificatePassword $InboundParameters.CertificatePassword.Password `
-                    -CertificateThumbprint $InboundParameters.CertificateThumbprint `
-                    -ConnectionUrl $ConnectionUrl
-
-                return 'ServicePrincipal'
-            }
-        }
+        Write-Verbose -Message 'Both Authentication methods are attempted'
+        throw "You can't specify both the GlobalAdminAccount and one of {TenantId, CertificateThumbprint}"
     }
-    throw 'Unexpected error getting the Authentication Method'
+    # Case no authentication method is specified
+    elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
+        [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+        [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+        [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+    {
+        Write-Verbose -Message "No Authentication method was provided"
+        throw "You must specify either the GlobalAdminAccount or ApplicationId, TenantId and CertificateThumbprint parameters."
+    }
+    # Case only GlobalAdminAccount is specified
+    elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
+        [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+        [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+        [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+    {
+        Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
+        if ([System.String]::IsNullOrEmpty($Url))
+        {
+            Test-MSCloudLogin -Platform $Platform `
+                -CloudCredential $InboundParameters.GlobalAdminAccount
+        }
+        else
+        {
+            Test-MSCloudLogin -Platform $Platform `
+                -CloudCredential $InboundParameters.GlobalAdminAccount `
+                -ConnectionUrl $Url
+        }
+        return "Credential"
+    }
+    # Case only the ApplicationID and Credentials parameters are specified
+    elseif ($null -ne $InboundParameters.GlobalAdminAccount -and `
+        -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
+    {
+        Write-Verbose -Message "GlobalAdminAccount and ApplicationId were specified. Connecting via Delegated Service Principal"
+        if ([System.String]::IsNullOrEmpty($url))
+        {
+            Test-MSCloudLogin -Platform $Platform `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -CloudCredential $InboundParameters.GlobalAdminAccount
+        }
+        else
+        {
+            Test-MSCloudLogin -Platform $Platform `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -CloudCredential $InboundParameters.GlobalAdminAccount `
+                -ConnectionUrl $Url
+        }
+        return 'ServicePrincipal'
+    }
+    # Case only the ServicePrincipal parameters are specified
+    elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
+        -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+        -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+    {
+        Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
+        if ([System.String]::IsNullOrEmpty($url))
+        {
+            Test-MSCloudLogin -Platform $Platform `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -CertificateThumbprint $InboundParameters.CertificateThumbprint
+        }
+        else
+        {
+            Test-MSCloudLogin -Platform $Platform `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -CertificateThumbprint $InboundParameters.CertificateThumbprint `
+                -ConnectionUrl $Url
+        }
+        return 'ServicePrincipal'
+    }
+    else
+    {
+        throw 'Unexpected error getting the Authentication Method'
+    }
 }
 
 function Get-SPOAdministrationUrl
@@ -1143,7 +1124,8 @@ function Get-SPOAdministrationUrl
         $UseMFASwitch = @{ }
     }
     Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
-    Test-MSCloudLogin -Platform "AzureAD" -CloudCredential $GlobalAdminAccount | Out-Null
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+                -InboundParameters $PSBoundParameters
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
     $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
@@ -1182,7 +1164,8 @@ function Get-M365TenantName
         $UseMFASwitch = @{ }
     }
     Write-Verbose -Message "Connection to Azure AD is required to automatically determine SharePoint Online admin URL..."
-    Test-MSCloudLogin -Platform "AzureAD" -CloudCredential $GlobalAdminAccount | Out-Null
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+                -InboundParameters $PSBoundParameters
     Write-Verbose -Message "Getting SharePoint Online admin URL..."
     $defaultDomain = Get-AzureADDomain | Where-Object { ($_.Name -like "*.onmicrosoft.com" -or $_.Name -like "*.onmicrosoft.de") -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
@@ -1427,12 +1410,14 @@ function Get-AllSPOPackages
         $CertificateThumbprint
     )
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters
 
     $tenantAppCatalogUrl = Get-PnPTenantAppCatalogUrl
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters -ConnectionUrl $tenantAppCatalogUrl
-
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters `
+                -Url $tenantAppCatalogUrl
 
     $filesToDownload = @()
 
@@ -1735,4 +1720,253 @@ function Remove-EmptyValue
             Remove-EmptyValue -Hashtable $Hashtable -Recursive:$Recursive
         }
     }
+}
+
+function Format-M365ServicePrincipalData
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter()]
+        [System.String]
+        $configContent,
+
+        [Parameter()]
+        [System.String]
+        $principal,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
+    )
+    if ($configContent.ToLower().Contains($principal.ToLower()))
+    {
+        $configContent = $configContent -ireplace [regex]::Escape($principal), "`$(`$OrganizationName.Split('.')[0])"
+    }
+    if ($configContent.ToLower().Contains($ApplicationId.ToLower()))
+    {
+        $configContent = $configContent -ireplace [regex]::Escape($ApplicationId), "`$(`$ApplicationId)"
+    }
+    if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint) -and $configContent.ToLower().Contains($CertificateThumbprint.ToLower()))
+    {
+        $configContent = $configContent -ireplace [regex]::Escape($CertificateThumbprint), "`$(`$CertificateThumbprint)"
+    }
+    return $configContent
+}
+
+function Update-M365DSCExportAuthenticationResults
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet("Credential", "ServicePrincipal")]
+        $ConnectionMode,
+
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Results
+    )
+
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $Results.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        if ($Results.ContainsKey("ApplicationId"))
+        {
+            $Results.Remove("ApplicationId") | Out-Null
+        }
+        if ($Results.ContainsKey("TenantId"))
+        {
+            $Results.Remove("TenantId") | Out-Null
+        }
+        if ($Results.ContainsKey("CertificateThumbprint"))
+        {
+            $Results.Remove("CertificateThumbprint") | Out-Null
+        }
+        if ($Results.ContainsKey("CertificatePath"))
+        {
+            $Results.Remove("CertificatePath") | Out-Null
+        }
+        if ($Results.ContainsKey("CertificatePassword"))
+        {
+            $Results.Remove("CertificatePassword") | Out-Null
+        }
+    }
+    else
+    {
+        if ($Results.ContainsKey("GlobalAdminAccount"))
+        {
+            $Results.Remove("GlobalAdminAccount") | Out-Null
+        }
+        if (-not [System.String]::IsNullOrEmpty($ApplicationId))
+        {
+            $Results.ApplicationId = "`$ConfigurationData.NonNodeData.ApplicationId"
+        }
+        else
+        {
+            try
+            {
+                $results.Remove("ApplicationId") | Out-Null
+            }
+            catch
+            {
+                Write-Verbose -Message "Error removing ApplicationId from Update-M365DSCExportAuthenticationResults"
+            }
+        }
+        if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint))
+        {
+            $Results.CertificateThumbprint = "`$ConfigurationData.NonNodeData.CertificateThumbprint"
+        }
+        else
+        {
+            try
+            {
+                $results.Remove("CertificateThumbprint") | Out-Null
+            }
+            catch
+            {
+                Write-Verbose -Message "Error removing CertificateThumbprint from Update-M365DSCExportAuthenticationResults"
+            }
+        }
+        if (-not [System.String]::IsNullOrEmpty($CertificatePath))
+        {
+            $Results.CertificatePath = "`$ConfigurationData.NonNodeData.CertificatePath"
+        }
+        else
+        {
+            try
+            {
+                $results.Remove("CertificatePath") | Out-Null
+            }
+            catch
+            {
+                Write-Verbose -Message "Error removing CertificatePath from Update-M365DSCExportAuthenticationResults"
+            }
+        }
+        if (-not [System.String]::IsNullOrEmpty($TenantId))
+        {
+            $Results.TenantId = "`$ConfigurationData.NonNodeData.TenantId"
+        }
+        else
+        {
+            try
+            {
+                $Results.Remove("TenantId") | Out-Null
+            }
+            catch
+            {
+                Write-Verbose -Message "Error removing TenantId from Update-M365DSCExportAuthenticationResults"
+            }
+        }
+        if ($null -ne $CertificatePassword)
+        {
+            if ($null -ne $CertificatePassword)
+            {
+                $Results.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
+            }
+        }
+        else
+        {
+            try
+            {
+                $Results.Remove("CertificatePassword") | Out-Null
+            }
+            catch
+            {
+                Write-Verbose -Message "Error removing CertificatePassword from Update-M365DSCExportAuthenticationResults"
+            }
+        }
+    }
+    return $Results
+}
+
+function Get-M365DSCExportContentForResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ResourceName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet("Credential", "ServicePrincipal")]
+        $ConnectionMode,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ModulePath,
+
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Results,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $GlobalAdminAccount
+    )
+    $OrganizationName = ""
+    if ($ConnectionMode -eq 'ServicePrincipal')
+    {
+        $OrganizationName = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
+            -TenantId $TenantId `
+            -CertificateThumbprint $CertificateThumbprint
+    }
+    else
+    {
+        $OrganizationName = $GlobalAdminAccount.UserName.Split('@')[1]
+    }
+
+    $principal = $OrganizationName.Split('.')[0]
+    $content = "        $ResourceName " + (New-GUID).ToString() + "`r`n"
+    $content += "        {`r`n"
+    $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
+    if ($ConnectionMode -eq 'Credential')
+    {
+        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+            -ParameterName "GlobalAdminAccount"
+    }
+    else
+    {
+        if (![System.String]::IsNullOrEmpty($Results.ApplicationId))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "ApplicationId"
+        }
+        if (![System.String]::IsNullOrEmpty($Results.TenantId))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "TenantId"
+        }
+        if (![System.String]::IsNullOrEmpty($Results.CertificatePath))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "CertificatePath"
+        }
+        if (![System.String]::IsNullOrEmpty($Results.CertificateThumbprint))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "CertificateThumbprint"
+        }
+        if (![System.String]::IsNullOrEmpty($Results.CertificatePassword))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName "CertificatePassword"
+        }
+    }
+
+    if ($partialContent.ToLower().IndexOf($OrganizationName.ToLower()) -gt 0)
+    {
+        $partialContent = $partialContent -ireplace [regex]::Escape($OrganizationName), "`$OrganizationName"
+        $partialContent = $partialContent -ireplace [regex]::Escape("@" + $OrganizationName), "@`$OrganizationName"
+    }
+    $content += $partialContent
+    $content += "        }`r`n"
+    return $content
 }

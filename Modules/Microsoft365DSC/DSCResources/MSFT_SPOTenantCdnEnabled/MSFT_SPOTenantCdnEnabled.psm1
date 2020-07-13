@@ -45,8 +45,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of SPO Cdn enabled"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -116,12 +117,16 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
 
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of SPO Cdn enabled"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -242,84 +247,44 @@ function Export-TargetResource
     )
     $InformationPreference = 'Continue'
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
-    $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
-    if ($organization.IndexOf(".") -gt 0)
-    {
-        $principal = $organization.Split(".")[0]
-    }
-
-    $content = ''
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters
+    $dscContent = ''
     $cdnTypes = "Public", "Private"
 
     foreach ($cType in $cdnTypes)
     {
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $params = @{
-                GlobalAdminAccount = $GlobalAdminAccount
-                CdnType            = $cType
-            }
-        }
-        else
-        {
-            $params = @{
-                CdnType               = $cType
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
-                CertificateThumbprint = $CertificateThumbprint
-            }
+        $Params = @{
+            GlobalAdminAccount    = $GlobalAdminAccount
+            CdnType               = $cType
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
         }
 
-        $result = Get-TargetResource @Params
-        if ($result.Enable -eq $True)
+        $Results = Get-TargetResource @Params
+        if ($Results.Enable -eq $True)
         {
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            }
-            else
-            {
-                if ($null -ne $CertificatePassword)
-                {
-                    $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
-                }
-            }
-            $result = Remove-NullEntriesFromHashTable -Hash $result
-            $content += "        SPOTenantCdnEnabled " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            }
-            else
-            {
-                if ($null -ne $CertificatePassword)
-                {
-                    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CertificatePassword"
-                }
-                else
-                {
-                    $content += $currentDSCBlock
-                }
-                $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
-                    -principal $principal -CertificateThumbprint $CertificateThumbprint
-            }
-            $content += "        }`r`n"
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
         }
     }
 
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

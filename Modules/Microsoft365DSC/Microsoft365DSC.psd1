@@ -53,7 +53,7 @@
     RequiredModules   = @(
         @{
             ModuleName      = "AzureADPreview"
-            RequiredVersion = "2.0.2.102"
+            RequiredVersion = "2.0.2.105"
         },
         @{
             ModuleName      = "DSCParser"
@@ -61,7 +61,7 @@
         },
         @{
             ModuleName      = "ExchangeOnlineManagement"
-            RequiredVersion = "1.0.1"
+            RequiredVersion = "2.0.3"
         },
         @{
             ModuleName      = "Microsoft.Graph.Authentication"
@@ -81,23 +81,23 @@
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
-            RequiredVersion = "2.0.65"
+            RequiredVersion = "2.0.67"
         },
         @{
             ModuleName      = "MicrosoftTeams"
-            RequiredVersion = "1.0.6"
+            RequiredVersion = "1.1.4"
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.25"
+            RequiredVersion = "1.0.28"
         },
         @{
             ModuleName      = "ReverseDSC"
-            RequiredVersion = "2.0.0.4"
+            RequiredVersion = "2.0.0.6"
         },
         @{
             ModuleName      = "SharePointPnPPowerShellOnline"
-            RequiredVersion = "3.22.2006.1"
+            RequiredVersion = "3.23.2007.0"
         }
     )
 

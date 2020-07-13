@@ -146,14 +146,15 @@ function Get-TargetResource
     )
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
-
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters
 
     $nullReturn = @{
         Url                   = $Url
@@ -212,7 +213,28 @@ function Get-TargetResource
         $siteOwnerEmail = $site.OwnerEmail
         if ([System.String]::IsNullOrEmpty($siteOwnerEmail))
         {
-            $siteOwnerEmail = $GlobalAdminAccount.UserName
+            if ($null -ne $GlobalAdminAccount)
+            {
+                $siteOwnerEmail = $GlobalAdminAccount.UserName
+            }
+            else
+            {
+                try
+                {
+                    New-M365DSCConnection -Platform "AzureAD" `
+                        -InboundParameters $PSBoundParameters | Out-Null
+                    $app = Get-AzureADApplication -Filter "AppId eq '$ApplicationID'"
+                    $owner = (Get-AzureADApplicationOwner -ObjectId $app.ObjectId)
+                    $siteOwnerEmail = $owner.UserPrincipalName
+                }
+                catch
+                {
+                    New-M365DSCLogEntry -Error $_ `
+                        -Message "Could not obtain owner for SPOSite {$Url}" `
+                        -Source $MyInvocation.MyCommand.ModuleName
+                    Write-Verbose -Message "Could not obtain owner for SPOSite {$Url}"
+                }
+            }
         }
         return @{
             Url                                         = $Url
@@ -409,14 +431,15 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for site collection $Url"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
-
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $CurrentParameters = $PSBoundParameters
@@ -793,26 +816,20 @@ function Export-TargetResource
     )
     $InformationPreference = 'Continue'
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
-
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters
 
     $sites = Get-PnPTenantSite | Where-Object -FilterScript { $_.Template -ne 'SRCHCEN#0' -and $_.Template -ne 'SPSMSITEHOST#0' }
 
-    $partialContent = ""
-    $content = ''
+    $dscContent = ''
     $i = 1
-    $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
-    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part TenantIdof M365DSC.onmicrosoft.com)
-    if ($organization.IndexOf(".") -gt 0)
-    {
-        $principal = $organization.Split(".")[0]
-    }
 
     foreach ($site in $sites)
     {
@@ -824,10 +841,10 @@ function Export-TargetResource
             $siteTitle = $site.Title
         }
 
-        $params = @{
+        $Params = @{
             Url                   = $site.Url
             Template              = $site.Template
-            Owner                 = $ApplicationId # Passing in bogus value to bypass null owner error
+            Owner                 = "admin@contoso.com" # Passing in bogus value to bypass null owner error
             Title                 = $siteTitle
             TimeZoneId            = $site.TimeZoneID
             ApplicationId         = $ApplicationId
@@ -840,54 +857,31 @@ function Export-TargetResource
 
         try
         {
-            $result = Get-TargetResource @params
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            }
-            else
-            {
-                if ($null -ne $CertificatePassword)
-                {
-                    $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
-                }
-            }
-            $result = Remove-NullEntriesFromHashTable -Hash $result
+            $Results = Get-TargetResource @Params
 
-            $content += "        SPOSite " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            if ($ConnectionMode -eq 'Credential')
+            if ([System.String]::IsNullOrEmpty($Results.SharingDomainRestrictionMode))
             {
-                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+                $Results.Remove("SharingDomainRestrictionMode") | Out-Null
             }
-            else
+            if ([System.String]::IsNullOrEmpty($Results.RestrictedToRegion))
             {
-                if ($null -ne $CertificatePassword)
-                {
-                    $partialContent += Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "CertificatePassword"
-                }
-                $partialContent = Format-M365ServicePrincipalData -configContent $partialContent -applicationid $ApplicationId `
-                    -principal $principal -CertificateThumbprint $CertificateThumbprint
+                $Results.Remove("RestrictedToRegion") | Out-Null
             }
-            if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
+            if ([System.String]::IsNullOrEmpty($Results.SharingAllowedDomainList))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape($principal + ".sharepoint.com"), "`$(`$OrganizationName.Split('.')[0]).sharepoint.com"
+                $Results.Remove("SharingAllowedDomainList") | Out-Null
             }
-            if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
+            if ([System.String]::IsNullOrEmpty($Results.SharingBlockedDomainList))
             {
-                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
+                $Results.Remove("SharingBlockedDomainList") | Out-Null
             }
-            if ($partialContent.ToLower().Contains("@" + $principal.ToLower()))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$OrganizationName.Split('.')[0])"
-            }
-            if ($partialContent.ToLower().Contains($principal.ToLower() + "-my.sharepoint.com"))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape($principal + "-my.sharepoint.com"), "`$(`$OrganizationName.Split('.')[0])-my.sharepoint.com"
-            }
-            $content += $partialContent
-            $content += "        }`r`n"
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        -ConnectionMode $ConnectionMode `
+                        -ModulePath $PSScriptRoot `
+                        -Results $Results `
+                        -GlobalAdminAccount $GlobalAdminAccount
         }
         catch
         {
@@ -895,7 +889,7 @@ function Export-TargetResource
         }
         $i++
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

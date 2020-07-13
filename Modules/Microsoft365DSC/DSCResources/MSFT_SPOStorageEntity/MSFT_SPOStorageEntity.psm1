@@ -61,8 +61,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for SPO Storage Entity for $Key"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -186,8 +187,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for SPO Storage Entity for $Key"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -349,18 +351,20 @@ function Export-TargetResource
     $InformationPreference = 'Continue'
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters
 
     $storageEntities = Get-PnPStorageEntity -ErrorAction SilentlyContinue
 
     $i = 1
-    $content = ''
+    $dscContent = ''
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
     $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
@@ -380,75 +384,29 @@ function Export-TargetResource
     }
     foreach ($storageEntity in $storageEntities)
     {
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $params = @{
-                GlobalAdminAccount = $GlobalAdminAccount
-                Key                = $storageEntity.Key
-                SiteUrl            = $centralAdminUrl
-            }
+        $Params = @{
+            GlobalAdminAccount    = $GlobalAdminAccount
+            Key                   = $storageEntity.Key
+            SiteUrl               = $centralAdminUrl
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
         }
-        else
-        {
-            $params = @{
-                Key                   = $storageEntity.Key
-                SiteUrl               = $centralAdminUrl
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
-                CertificateThumbprint = $CertificateThumbprint
-            }
-        }
-
 
         Write-Information "    [$i/$($storageEntities.Length)] $($storageEntity.Key)"
-        $result = Get-TargetResource @params
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        }
-        else
-        {
-            if ($null -ne $CertificatePassword)
-            {
-                $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
-            }
-        }
-        $result = Remove-NullEntriesFromHashTable -Hash $result
-        $content += "        SPOStorageEntity " + (New-Guid).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
-        }
-        else
-        {
-            if ($null -ne $CertificatePassword)
-            {
-                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "CertificatePassword"
-            }
-            $partialContent = Format-M365ServicePrincipalData -configContent $partialContent -applicationid $ApplicationId `
-                -principal $principal -CertificateThumbprint $CertificateThumbprint
-        }
-        if ($partialContent.ToLower().Contains("https://" + $principal.ToLower()))
-        {
-            # If we are already looking at the Admin Center URL, don't replace the full path;
-            if ($partialContent.ToLower().Contains("https://" + $principal.ToLower() + "-admin.sharepoint.com"))
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape("https://" + $principal.ToLower() + "-admin.sharepoint.com"), "https://`$(`$OrganizationName.Split('.')[0])-admin.sharepoint.com"
-            }
-            else
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape("https://" + $principal.ToLower()), "`$(`$OrganizationName.Split('.')[0])-admin.sharepoint.com"
-            }
-        }
-        $content += $partialContent
-        $content += "        }`r`n"
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
         $i++
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

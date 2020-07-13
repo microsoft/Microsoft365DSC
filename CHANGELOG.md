@@ -8,6 +8,8 @@
 * EXOOutboundConnector
   * Fixed an issue where the ConnectorSource value returned
     was empty. Now defaulting to Default.
+* O365User
+  * Fixed issue with PasswordNeverExpires having incorrect value
 * PlannerBucket
   * Initial Release;
 * PlannerPlan
@@ -20,15 +22,12 @@
   * Updated Microsoft.Graph.Identity.ConditionalAccess
     module version to 0.7.0;
   * Updated Microsoft.PowerApps.Administration.PowerShell
-    module version to 2.0.65;
+    module version to 2.0.67;
+  * Updated SharePointPnPPowerShellOnline module to version 3.23.2007.0;
   * Updated ReverseDSC module version to 2.0.0.4;
   * Updated all Unit Tests to Pester 5;
-* Added support for service principal for SPO & OneDrive resources with exception of SPO Search
-  resources
-    * SPOHubSite and SPOUserProfileProperty only support service principal with AppId, TenantId and
-      CertificateThumbprint option since AzureAD doesnt support certifcate path
-* O365User
-  * Fixed issue with PasswordNeverExpires having incorrect value
+  * Added support for Service Principal for PowerPlatforms,
+    SPO & OneDrive, Exchange Online and Office 365 resources;
 
 ## 1.20.0603.1
 
