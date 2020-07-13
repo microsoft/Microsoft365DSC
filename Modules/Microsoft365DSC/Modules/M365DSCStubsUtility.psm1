@@ -75,13 +75,15 @@ function Get-M365StubFiles
         $CurrentModuleName = $Module.ModuleName
         if ($null -eq $CurrentModuleName)
         {
-            Test-MSCloudLogin -Platform $Module.Platform -CloudCredential $GlobalAdminAccount
+            $ConnectionMode = New-M365DSCConnection -Platform $Module.Platform `
+                -InboundParameters $PSBoundParameters
             $foundModule = Get-Module | Where-Object -FilterScript {$_.ExportedCommands.Values.Name -ccontains $Module.RandomCmdlet}
             $CurrentModuleName = $foundModule.Name
         }
         else
         {
-            Test-MSCloudLogin -Platform $Module.Platform -CloudCredential $GlobalAdminAccount
+            $ConnectionMode = New-M365DSCConnection -Platform $Module.Platform `
+                -InboundParameters $PSBoundParameters
         }
 
         $cmdlets = Get-Command -CmdType 'Cmdlet' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }

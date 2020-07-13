@@ -69,13 +69,15 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesign for $Title"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters
 
     $nullReturn = @{
         Title                 = $Title
@@ -215,13 +217,15 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration for SPO SiteDesign for $Title"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters
 
     $curSiteDesign = Get-TargetResource @PSBoundParameters
 
@@ -338,7 +342,13 @@ function Test-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add("Resource", $ResourceName)
+    $data.Add("Method", $MyInvocation.MyCommand)
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
     Write-Verbose -Message "Testing configuration for SPO SiteDesign for $Title"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -395,27 +405,26 @@ function Export-TargetResource
         $CertificateThumbprint
     )
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters
 
-    $content = ''
+    $dscContent = ''
     $i = 1
 
     [array]$designs = Get-PnPSiteDesign
-
+    Write-Host "`r`n" -NoNewline
     foreach ($design in $designs)
     {
-        if ($i -eq 1)
-        {
-                Write-Host "`r`n" -NoNewline
-        }
+
         Write-Host "    |---[$i/$($designs.Length)] $($design.Title)" -NoNewline
-        $params = @{
+        $Params = @{
             Title                 = $design.Title
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -424,50 +433,18 @@ function Export-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             GlobalAdminAccount    = $GlobalAdminAccount
         }
-        $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
-        if ($organization.IndexOf(".") -gt 0)
-        {
-            $principal = $organization.Split(".")[0]
-        }
-        $result = Get-TargetResource @params
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        }
-        else
-        {
-            if ($null -ne $CertificatePassword)
-            {
-                $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
-            }
-        }
-        $result = Remove-NullEntriesFromHashTable -Hash $result
-        $content += "        SPOSiteDesign " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        }
-        else
-        {
-            if ($null -ne $CertificatePassword)
-            {
-                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CertificatePassword"
-            }
-            else
-            {
-                $content += $currentDSCBlock
-            }
-            $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
-                -principal $principal -CertificateThumbprint $CertificateThumbprint
-        }
-
-        $content += "        }`r`n"
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
         $i++
         Write-Host $Global:M365DSCEmojiGreenCheckmark
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

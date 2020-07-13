@@ -1,5 +1,5 @@
 name: Unit Tests
-on: [pull_request]
+on: [push,pull_request]
 
 jobs:
   # This workflow contains a single job called "build"
@@ -20,7 +20,7 @@ jobs:
        $dependencies = $manifest.RequiredModules
        foreach ($dependency in $dependencies)
        {
-           Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -SkipPublisherCheck -AllowClobber -Scope AllUsers
+           Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowPreRelease -SkipPublisherCheck -AllowClobber -Scope AllUsers
            try
            {
                Import-Module $dependency.ModuleName -Force

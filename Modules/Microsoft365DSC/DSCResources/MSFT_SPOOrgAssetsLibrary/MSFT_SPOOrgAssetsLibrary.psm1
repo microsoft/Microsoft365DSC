@@ -49,13 +49,15 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of SPO Org Assets Library"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters
 
     try
     {
@@ -190,8 +192,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of SharePoint Org Site Assets"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -353,28 +356,20 @@ function Export-TargetResource
         $CertificateThumbprint
     )
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters
-
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters
 
     [array]$orgAssets = Get-PnPOrgAssetsLibrary
-
-    if ($ConnectionMode -eq 'Credential')
-    {
-        $tenantName = Get-M365TenantName -GlobalAdminAccount $GlobalAdminAccount
-    }
-    else
-    {
-        $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
-        $tenantName = $organization.Split(".")[0]
-    }
-    $content = ''
     $i = 1
+    $dscContent = ''
+
     if ($null -ne $orgAssets)
     {
         Write-Host "`r`n" -NoNewLine
@@ -384,61 +379,26 @@ function Export-TargetResource
             $Params = @{
                 GlobalAdminAccount = $GlobalAdminAccount
                 LibraryUrl         = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
+
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
             }
-            $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
-            if ($organization.IndexOf(".") -gt 0)
-                $principal = $organization.Split(".")[0]
-            }
-
-            $result = Get-TargetResource @Params
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            }
-            else
-            {
-                if ($null -ne $CertificatePassword)
-                {
-                    $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
-                }
-            }
-
-            $result = Remove-NullEntriesFromHashTable -Hash $result
-            $content += "        SPOOrgAssetsLibrary " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            }
-            else
-            {
-                if ($null -ne $CertificatePassword)
-                {
-                    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CertificatePassword"
-                }
-                else
-                {
-                    $content += $currentDSCBlock
-                }
-                $content = Format-M365ServicePrincipalData -configContent $content -applicationid $ApplicationId `
-                    -principal $principal -CertificateThumbprint $CertificateThumbprint
-            }
-            $content += "        }`r`n"
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
     }
-    else
-    {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
-    }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

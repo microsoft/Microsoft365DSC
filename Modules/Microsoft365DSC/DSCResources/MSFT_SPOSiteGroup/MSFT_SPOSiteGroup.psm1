@@ -51,8 +51,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting SPOSiteGroups for {$Url}"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -87,9 +88,11 @@ function Get-TargetResource
     }
     try
     {
-
-        $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters -ConnectionUrl $Url
-        $siteGroup = Get-PnPGroup -Identity $Identity -ErrorAction Stop
+        $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+            -InboundParameters $PSBoundParameters `
+            -Url $Url
+        $siteGroup = Get-PnPGroup -Identity $Identity `
+            -ErrorAction Stop
     }
     catch
     {
@@ -106,7 +109,8 @@ function Get-TargetResource
 
     try
     {
-        $sitePermissions = Get-PnPGroupPermissions -Identity $Identity -ErrorAction Stop
+        $sitePermissions = Get-PnPGroupPermissions -Identity $Identity `
+            -ErrorAction Stop
     }
     catch
     {
@@ -188,8 +192,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting SPOSiteGroups for {$Url}"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -403,8 +408,9 @@ function Export-TargetResource
         $CertificateThumbprint
     )
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -417,26 +423,18 @@ function Export-TargetResource
     $sites = Get-PnPTenantSite
 
     $i = 1
-    $organization = ""
-    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    $organization = Get-M365DSCOrganization -GlobalAdminAccount $GlobalAdminAccount -TenantId $Tenantid
-    if ($organization.IndexOf(".") -gt 0)
-    {
-        $principal = $organization.Split(".")[0]
-    }
-    $content = ""
+    $dscContent = ""
+    Write-Host "`r`n" -NoNewLine
     foreach ($site in $sites)
     {
-        if ($i -eq 1)
-        {
-                Write-Host "`r`n" -NoNewline
-        }
         Write-Host "    |---[$i/$($sites.Length)] SPOSite groups for {$($site.Url)}"
+        $siteGroups = $null
         try
         {
 
-            $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
-                -ConnectionUrl $site.Url
+            $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+                -InboundParameters $PSBoundParameters `
+                -Url $site.Url
             $siteGroups = Get-PnPGroup
         }
         catch
@@ -457,14 +455,14 @@ function Export-TargetResource
             Write-Host "        |---[$j/$($siteGroups.Length)] $($siteGroup.Title)" -NoNewline
             try
             {
-                $sitePerm = Get-PnPGroupPermissions -Identity $siteGroup.Title -ErrorAction Stop
+                [array]$sitePerm = Get-PnPGroupPermissions -Identity $siteGroup.Title -ErrorAction Stop
             }
             catch
             {
                 Write-Warning -Message "The specified account does not have access to the permissions list for {$($siteGroup.Title)}"
                 break
             }
-            $params = @{
+            $Params = @{
                 Url                   = $site.Url
                 Identity              = $siteGroup.Title
                 ApplicationId         = $ApplicationId
@@ -476,60 +474,16 @@ function Export-TargetResource
             }
             try
             {
-                $result = Get-TargetResource @params
-                if ($result.Ensure -eq 'Present')
+                $Results = Get-TargetResource @Params
+                if ($Results.Ensure -eq 'Present')
                 {
-                    $result = Remove-NullEntriesFromHashtable -Hash $result
-                    if ($ConnectionMode -eq 'Credential')
-                    {
-                        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                    }
-                    else
-                    {
-                        if ($null -ne $CertificatePassword)
-                        {
-                            $result.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
-                        }
-                    }
-                    $result = Remove-NullEntriesFromHashTable -Hash $result
-                    $content += "        SPOSiteGroup " + (New-GUID).ToString() + "`r`n"
-                    $content += "        {`r`n"
-                    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-                    if ($ConnectionMode -eq 'Credential')
-                    {
-                        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-                    }
-                    else
-                    {
-                        if ($null -ne $CertificatePassword)
-                        {
-                            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CertificatePassword"
-                        }
-                        else
-                        {
-                            $content += $currentDSCBlock
-                        }
-                        $partialContent = Format-M365ServicePrincipalData -configContent $partialContent -applicationid $ApplicationId `
-                            -principal $principal -CertificateThumbprint $CertificateThumbprint
-                    }
-                    if ($partialContent.ToLower().Contains($principal.ToLower() + ".sharepoint.com"))
-                    {
-                        $partialContent = $partialContent -ireplace [regex]::Escape($principal + ".sharepoint.com"), "`$(`$OrganizationName.Split('.')[0]).sharepoint.com"
-                    }
-                    if ($partialContent.ToLower().Contains("@" + $organization.ToLower()))
-                    {
-                        $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
-                    }
-                    if ($partialContent.ToLower().Contains("@" + $principal.ToLower()))
-                    {
-                        $partialContent = $partialContent -ireplace [regex]::Escape("@" + $principal), "@`$OrganizationName.Split('.')[0])"
-                    }
-                    if ($partialContent.ToLower().Contains($principal.ToLower() + "-my.sharepoint.com"))
-                    {
-                        $partialContent = $partialContent -ireplace [regex]::Escape($principal + "-my.sharepoint.com"), "`$(`$OrganizationName.Split('.')[0])-my.sharepoint.com"
-                    }
-                    $content += $partialContent
-                    $content += "        }`r`n"
+                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
+                    $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        -ConnectionMode $ConnectionMode `
+                        -ModulePath $PSScriptRoot `
+                        -Results $Results `
+                        -GlobalAdminAccount $GlobalAdminAccount
                 }
             }
             catch
@@ -542,7 +496,7 @@ function Export-TargetResource
 
         $i++
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -79,8 +79,9 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of Planner Task {$Title}"
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -126,7 +127,8 @@ function Get-TargetResource
         #region Task Assignment
         if ($task.Assignments.Length -gt 0)
         {
-            Test-MSCloudLogin -Platform AzureAD -CloudCredential $GlobalAdminAccount
+            $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+        -InboundParameters $PSBoundParameters
             $assignedValues = @()
             foreach ($assignee in $task.Assignments)
             {
@@ -258,8 +260,9 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of Planner Task {$Title}"
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -300,7 +303,8 @@ function Set-TargetResource
     #region Assignments
     if ($AssignedUsers.Length -gt 0)
     {
-        Test-MSCloudLogin -Platform AzureAD -CloudCredential $GlobalAdminAccount
+        $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+        -InboundParameters $PSBoundParameters
         $AssignmentsValue = @()
         foreach ($userName in $AssignedUsers)
         {
@@ -509,8 +513,9 @@ function Export-TargetResource
         $ApplicationId
     )
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion

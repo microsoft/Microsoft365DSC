@@ -36,8 +36,9 @@ function Get-TargetResource
     Write-Verbose -Message "Getting SPO Profile Properties for user {$UserName}"
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -128,8 +129,9 @@ function Set-TargetResource
     Write-Verbose -Message "Setting Profile Properties for user {$UserName}"
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -231,13 +233,15 @@ function Export-TargetResource
         $CertificateThumbprint
     )
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+        -InboundParameters $PSBoundParameters
     $result = ""
 
     # Get all instances;
@@ -299,12 +303,12 @@ function Export-TargetResource
             $returnValue = Invoke-M365DSCCommand -Arguments $PSBoundParameters -InvokationPath $ScriptRoot -ScriptBlock {
                 $WarningPreference = 'SilentlyContinue'
                 $params = $args[0]
-                $content = ""
+                $dscContent = ""
                 foreach ($instance in $params.Instances)
                 {
                     foreach ($user in $instance)
                     {
-                        $getValues = @{
+                        $Params = @{
                             UserName              = $user.UserPrincipalName
                             ApplicationId         = $ApplicationId
                             TenantId              = $TenantId
@@ -314,45 +318,26 @@ function Export-TargetResource
                         $CurrentModulePath = $params.ScriptRoot + "\MSFT_SPOUserProfileProperty.psm1"
                         Import-Module $CurrentModulePath -Force | Out-Null
 
-                        $result = Get-TargetResource @getValues
+                        $Results = Get-TargetResource @Params
 
                         if ($result.Ensure -eq "Present")
                         {
                             Import-Module ($params.ScriptRoot + "\..\..\Modules\M365DSCUtil.psm1") -Force | Out-Null
                             Import-Module ($params.ScriptRoot + "\..\..\Modules\M365DSCTelemetryEngine.psm1") -Force | Out-Null
 
-                            $result.Properties = ConvertTo-SPOUserProfilePropertyInstanceString -Properties $result.Properties
-                            if ($ConnectionMode -eq 'Credential')
-                            {
-                                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                            }
-                            $content += "        SPOUserProfileProperty " + (New-GUID).ToString() + "`r`n"
-                            $content += "        {`r`n"
-
-                            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $params.ScriptRoot
-                            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Properties" -IsCIMArray $true
-                            if ($ConnectionMode -eq 'Credential')
-                            {
-                                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-                            }
-                            else
-                            {
-                                if ($currentDSCBlock.ToLower().Contains($ApplicationId.ToLower()))
-                                {
-                                    $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape($ApplicationId), "`$(`$ApplicationId)"
-                                }
-                                if ($currentDSCBlock.ToLower().Contains($CertificateThumbprint.ToLower()))
-                                {
-                                    $currentDSCBlock = $currentDSCBlock -ireplace [regex]::Escape($CertificateThumbprint), "`$(`$CertificateThumbprint)"
-                                }
-                            }
-                            $content += $currentDSCBlock
-                            $content += "        }`r`n"
+                            $Results.Properties = ConvertTo-SPOUserProfilePropertyInstanceString -Properties $result.Properties
+                            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                                -Results $Results
+                            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                                -ConnectionMode $ConnectionMode `
+                                -ModulePath $PSScriptRoot `
+                                -Results $Results `
+                                -GlobalAdminAccount $GlobalAdminAccount
                         }
                     }
                 }
 
-                return $content
+                return $dscContent
             }
             return $returnValue
         } -ArgumentList @($batch, $PSScriptRoot, $GlobalAdminAccount, $ApplicationId, $TenantId, $CertificateThumbprint) | Out-Null
