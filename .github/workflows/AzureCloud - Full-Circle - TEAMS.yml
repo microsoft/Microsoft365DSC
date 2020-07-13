@@ -20,7 +20,8 @@ jobs:
        $dependencies = $manifest.RequiredModules
        foreach ($dependency in $dependencies)
        {
-           Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -SkipPublisherCheck -AllowClobber -Scope AllUsers
+           $moduleInfo = Find-Module $dependency.ModuleName | Where-Object -FilterScript {$_.Version -like "*$($dependency.RequiredVersion)*"}
+           Install-Module $dependency.ModuleName -RequiredVersion $moduleInfo.Version -Force -AllowPreRelease -SkipPublisherCheck -AllowClobber -Scope AllUsers
            try
            {
                Import-Module $dependency.ModuleName -Force
