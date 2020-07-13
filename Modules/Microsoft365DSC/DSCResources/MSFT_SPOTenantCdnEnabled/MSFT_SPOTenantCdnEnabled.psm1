@@ -117,6 +117,9 @@ function Set-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
 
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of SPO Cdn enabled"
