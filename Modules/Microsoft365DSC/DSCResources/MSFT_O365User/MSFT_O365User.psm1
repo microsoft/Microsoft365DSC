@@ -652,27 +652,28 @@ function Export-TargetResource
         if (-not [System.String]::IsNullOrEmpty($userUPN))
         {
             $Params = @{
-                UserPrincipalName   = $userUPN
-                GlobalAdminAccount  = $GlobalAdminAccount
-                Password            = $GlobalAdminAccount
+                UserPrincipalName     = $userUPN
+                GlobalAdminAccount    = $GlobalAdminAccount
+                Password              = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
             }
 
             $Results = Get-TargetResource @Params
             if ($null -ne $Results.UserPrincipalName)
             {
                 $Results.Password = Resolve-Credentials -UserName "globaladmin"
-                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                $content += "        O365User " + (New-GUID).ToString() + "`r`n"
-                $content += "        {`r`n"
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
+                        -Results $Results
                 $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -GlobalAdminAccount $GlobalAdminAccount
                 $dscContent = Convert-DSCStringParamToVariable -DSCBlock $dscContent -ParameterName "Password"
-
             }
         }
         Write-Host $Global:M365DSCEmojiGreenCheckMark

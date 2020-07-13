@@ -333,9 +333,7 @@ function Export-TargetResource
 
     $dscContent = ''
 
-    if ($ConnectionMode -eq 'Credential')
-    {
-        $Params = @{
+    $Params = @{
             GlobalAdminAccount          = $GlobalAdminAccount
             IsSingleInstance            = 'Yes'
             GroupLifetimeInDays         = 1
@@ -344,7 +342,6 @@ function Export-TargetResource
             ApplicationId               = $ApplicationId
             TenantId                    = $TenantId
             CertificateThumbprint       = $CertificateThumbprint
-        }
     }
     $Results = Get-TargetResource @Params
     if ($Results.Ensure -eq 'Present')

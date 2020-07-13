@@ -430,23 +430,13 @@ function Export-TargetResource
     foreach($AADApp in $AADApplications)
     {
         Write-Host "    |---[$i/$($AADApplications.Count)] $($AADApp.DisplayName)" -NoNewLine
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $Params = @{
+        $Params = @{
                 GlobalAdminAccount            = $GlobalAdminAccount
-                DisplayName                   = $AADApp.DisplayName
-                ObjectID                      = $AADApp.ObjectID
-            }
-        }
-        else
-        {
-            $Params = @{
                 ApplicationId                 = $ApplicationId
                 TenantId                      = $TenantId
                 CertificateThumbprint         = $CertificateThumbprint
                 DisplayName                   = $AADApp.DisplayName
                 ObjectID                      = $AADApp.ObjectID
-            }
         }
         $Results = Get-TargetResource @Params
 

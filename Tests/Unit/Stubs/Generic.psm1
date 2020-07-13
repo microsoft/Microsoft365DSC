@@ -85,24 +85,6 @@ function Remove-PSSession
     )
 }
 
-function Get-AzureADMSGroup
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.String]
-        $Id
-    )
-}
-
 function New-AzureADMSGroup
 {
     [CmdletBinding()]
@@ -224,7 +206,7 @@ function New-M365DSCConnection
 
         [Parameter()]
         [System.String]
-        $ConnectionUrl
+        $Url
     )
 }
 

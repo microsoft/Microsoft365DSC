@@ -249,15 +249,12 @@ function Export-TargetResource
 
     $dscContent = ''
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
-    if ($ConnectionMode -eq 'ServicePrincipal')
-    {
-        $Params = @{
-            ApplicationId          = $ApplicationId
-            TenantId               = $TenantId
-            CertificateThumbprint  = $CertificateThumbprint
-            IsSingleInstance       = 'Yes'
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
+    $Params = @{
+        ApplicationId          = $ApplicationId
+        TenantId               = $TenantId
+        CertificateThumbprint  = $CertificateThumbprint
+        IsSingleInstance       = 'Yes'
+        GlobalAdminAccount = $GlobalAdminAccount
     }
 
     $Results = Get-TargetResource @Params

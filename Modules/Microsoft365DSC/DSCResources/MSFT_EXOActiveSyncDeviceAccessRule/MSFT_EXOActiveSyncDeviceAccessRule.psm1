@@ -82,8 +82,8 @@ function Get-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
-            $CertificatePath      = $CertificatePath
-            $CertificatePassword  = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
         }
 
         return $nullReturn
@@ -100,8 +100,8 @@ function Get-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
-            $CertificatePath      = $CertificatePath
-            $CertificatePassword  = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
         }
 
         Write-Verbose -Message "Found Active Sync Device Access Rule $($Identity)"

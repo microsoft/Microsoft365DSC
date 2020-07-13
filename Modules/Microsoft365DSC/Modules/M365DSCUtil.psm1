@@ -975,7 +975,7 @@ function Get-M365DSCOrganization
         $organization = $GlobalAdminAccount.UserName.Split("@")[1]
         return $organization
     }
-    if ($null -ne $TenantId)
+    if (-not [System.String]::IsNullOrEmpty($TenantId))
     {
         if ($TenantId.contains("."))
         {
@@ -998,10 +998,6 @@ function New-M365DSCConnection
                 "MicrosoftTeams", "SkypeForBusiness", "MicrosoftGraph")]
         [System.String]
         $Platform,
-
-        [Parameter()]
-        [System.String]
-        $ConnectionUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]

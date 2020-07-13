@@ -362,16 +362,13 @@ function Export-TargetResource
     foreach ($group in $groups)
     {
         Write-Host "    |---[$i/$($groups.Count)] $($group.DisplayName)" -NoNewLine
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $Params = @{
+        $Params = @{
                 GlobalAdminAccount    = $GlobalAdminAccount
                 DisplayName           = $group.DisplayName
                 Id                    = $group.Id
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-            }
         }
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

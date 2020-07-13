@@ -112,8 +112,8 @@ function Get-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-                $CertificatePath      = $CertificatePath
-                $CertificatePassword  = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
             }
             # if AcceptedDomain does not exist for a verfied domain, return 'Absent' with submitted parameters to Test-TargetResource.
             return $result

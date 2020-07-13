@@ -69,7 +69,7 @@ function Get-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
-        -ConnectionUrl $SiteUrl
+        -Url $SiteUrl
 
     $nullReturn = @{
         Key                   = $Key
@@ -195,7 +195,7 @@ function Set-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
-        -ConnectionUrl $SiteUrl
+        -Url $SiteUrl
 
     $curStorageEntry = Get-TargetResource @PSBoundParameters
 

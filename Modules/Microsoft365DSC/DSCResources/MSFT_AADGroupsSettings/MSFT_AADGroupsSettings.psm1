@@ -325,15 +325,12 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
-    if ($ConnectionMode -eq 'ServicePrincipal')
-    {
-        $Params = @{
+    $Params = @{
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             IsSingleInstance      = 'Yes'
             GlobalAdminAccount    = $GlobalAdminAccount
-        }
     }
     $dscContent = ''
     $Results = Get-TargetResource @Params
