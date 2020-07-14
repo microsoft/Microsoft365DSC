@@ -316,12 +316,9 @@ function Export-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
-        -InboundParameters $PSBoundParameters
-    $organization = ""
-    if ($GlobalAdminAccount.UserName.Contains("@"))
-    {
-        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
-    }
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
+
     [array]$cases = Get-ComplianceCase
 
     $dscContent = ""

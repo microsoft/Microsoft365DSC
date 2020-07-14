@@ -322,7 +322,7 @@ function Start-M365DSCConfigurationExtract
 
                 if ($ComponentsToSkip -notcontains $resourceName)
                 {
-                    Write-Information "Extracting [$resourceName]..."
+                    Write-Host "Extracting [$resourceName]..." -NoNewLine
                     $MaxProcessesExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("MaxProcesses")
                     $AppSecretExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("ApplicationSecret")
                     $CertThumbprintExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificateThumbprint")

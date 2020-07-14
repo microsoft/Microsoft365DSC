@@ -492,7 +492,8 @@ function Export-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
     [array] $policies = Get-DLPCompliancePolicy | Where-Object -FilterScript { $_.Mode -ne 'PendingDeletion' }
 
     $i = 1

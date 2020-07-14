@@ -1005,7 +1005,11 @@ function New-M365DSCConnection
 
         [Parameter()]
         [System.String]
-        $Url
+        $Url,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipModuleReload = $false
     )
 
     # Case both authentication methods are attempted
@@ -1035,13 +1039,15 @@ function New-M365DSCConnection
         if ([System.String]::IsNullOrEmpty($Url))
         {
             Test-MSCloudLogin -Platform $Platform `
-                -CloudCredential $InboundParameters.GlobalAdminAccount
+                -CloudCredential $InboundParameters.GlobalAdminAccount `
+                -SkipModuleReload $SkipModuleReload
         }
         else
         {
             Test-MSCloudLogin -Platform $Platform `
                 -CloudCredential $InboundParameters.GlobalAdminAccount `
-                -ConnectionUrl $Url
+                -ConnectionUrl $Url `
+                -SkipModuleReload $SkipModuleReload
         }
         return "Credential"
     }
@@ -1054,14 +1060,16 @@ function New-M365DSCConnection
         {
             Test-MSCloudLogin -Platform $Platform `
                 -ApplicationId $InboundParameters.ApplicationId `
-                -CloudCredential $InboundParameters.GlobalAdminAccount
+                -CloudCredential $InboundParameters.GlobalAdminAccount `
+                -SkipModuleReload $SkipModuleReload
         }
         else
         {
             Test-MSCloudLogin -Platform $Platform `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -CloudCredential $InboundParameters.GlobalAdminAccount `
-                -ConnectionUrl $Url
+                -ConnectionUrl $Url `
+                -SkipModuleReload $SkipModuleReload
         }
         return 'ServicePrincipal'
     }
@@ -1077,7 +1085,8 @@ function New-M365DSCConnection
             Test-MSCloudLogin -Platform $Platform `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
-                -CertificateThumbprint $InboundParameters.CertificateThumbprint
+                -CertificateThumbprint $InboundParameters.CertificateThumbprint `
+                -SkipModuleReload $SkipModuleReload
         }
         else
         {
@@ -1085,7 +1094,8 @@ function New-M365DSCConnection
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -CertificateThumbprint $InboundParameters.CertificateThumbprint `
-                -ConnectionUrl $Url
+                -ConnectionUrl $Url `
+                -SkipModuleReload $SkipModuleReload
         }
         return 'ServicePrincipal'
     }

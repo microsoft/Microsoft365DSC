@@ -440,7 +440,8 @@ function Export-TargetResource
         $CertificatePassword
     )
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     [array]$OutboundConnectors = Get-OutboundConnector
     if ($OutBoundConnectors.Length -eq 0)
