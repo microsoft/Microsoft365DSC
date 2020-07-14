@@ -227,6 +227,7 @@ function Export-TargetResource
     [array]$rules = Get-SupervisoryReviewRule
     $i = 1
     $dscContent = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($rule in $rules)
     {
         Write-Host "    |---[$i/$($rules.Length)] $($rule.Name)" -NoNewLine

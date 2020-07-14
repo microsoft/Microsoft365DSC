@@ -40,7 +40,7 @@ function Show-M365DSCGUI
         $thirdColumnLeft = 680
         $fourthColumnLeft = 1020
         $fifthColumnLeft = 1360
-        $topBannerHeight = 70
+        $topBannerHeight = 110
         #endregion
 
         $form = New-Object System.Windows.Forms.Form
@@ -114,12 +114,12 @@ function Show-M365DSCGUI
         $imagePath = $PSScriptRoot + "\..\Dependencies\Images\SecurityAndCompliance.png"
         $imgSC.ImageLocation = $imagePath
         $imgSC.Left = $FirstColumnLeft
-        $imgSC.Top = $pnlEXO.Height + 180
+        $imgSC.Top = $pnlEXO.Height + 205
         $imgSC.AutoSize = $true
         $pnlMain.Controls.Add($imgSC)
 
         $pnlSC = New-Object System.Windows.Forms.Panel
-        $pnlSC.Top = $pnlEXO.Height + 275
+        $pnlSC.Top = $pnlEXO.Height + 300
         $pnlSC.Left = $FirstColumnLeft
         $pnlSC.Height = 350
         $pnlSC.Width = 300
@@ -141,12 +141,12 @@ function Show-M365DSCGUI
         $imagePath = $PSScriptRoot + "\..\Dependencies\Images\Teams.jpg"
         $imgTeams.ImageLocation = $imagePath
         $imgTeams.Left = $SecondColumnLeft
-        $imgTeams.Top = $pnlSPO.Height + 180
+        $imgTeams.Top = $pnlSPO.Height + 205
         $imgTeams.AutoSize = $true
         $pnlMain.Controls.Add($imgTeams)
 
         $pnlTeams = New-Object System.Windows.Forms.Panel
-        $pnlTeams.Top = $pnlSPO.Height + 275
+        $pnlTeams.Top = $pnlSPO.Height + 300
         $pnlTeams.Left = $secondColumnLeft
         $pnlTeams.Height = 350
         $pnlTeams.Width = 300
@@ -195,14 +195,14 @@ function Show-M365DSCGUI
         $imagePath = $PSScriptRoot + "\..\Dependencies\Images\Planner.png"
         $imgPlanner.ImageLocation = $imagePath
         $imgPlanner.Left = $thirdColumnLeft
-        $imgPlanner.Top = $pnlPP.Height + 180
+        $imgPlanner.Top = $pnlPP.Height + 205
         $imgPlanner.AutoSize = $true
         $pnlMain.Controls.Add($imgPlanner)
 
         $pnlPlanner = New-Object System.Windows.Forms.Panel
-        $pnlPlanner.Top = $pnlPP.Height + 275
+        $pnlPlanner.Top = $pnlPP.Height + 300
         $pnlPlanner.Left = $thirdColumnLeft
-        $pnlPlanner.Height = 132
+        $pnlPlanner.Height = 150
         $pnlPlanner.Width = 300
         $pnlPlanner.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
         $pnlPlanner.AutoScroll = $true
@@ -222,12 +222,12 @@ function Show-M365DSCGUI
         $imagePath = $PSScriptRoot + "\..\Dependencies\Images\Office365.jpg"
         $imgO365.ImageLocation = $imagePath
         $imgO365.Left = $thirdColumnLeft
-        $imgO365.Top = $pnlPP.Height + $pnlPlanner.Height + 293
+        $imgO365.Top = $pnlPP.Height + $pnlPlanner.Height + 300
         $imgO365.AutoSize = $true
         $pnlMain.Controls.Add($imgO365)
 
         $pnlO365 = New-Object System.Windows.Forms.Panel
-        $pnlO365.Top = $imgO365.Top + 100
+        $pnlO365.Top = $imgO365.Top + 98
         $pnlO365.Left = $thirdColumnLeft
         $pnlO365.Height = 350
         $pnlO365.Width = 300
@@ -277,12 +277,12 @@ function Show-M365DSCGUI
         $imagePath = $PSScriptRoot + "\..\Dependencies\Images\AzureAD.jpg"
         $imgAAD.ImageLocation = $imagePath
         $imgAAD.Left = $fourthColumnLeft
-        $imgAAD.Top = $pnlOD.Height + 180
+        $imgAAD.Top = $pnlOD.Height + 205
         $imgAAD.AutoSize = $true
         $pnlMain.Controls.Add($imgAAD)
 
         $pnlAAD = New-Object System.Windows.Forms.Panel
-        $pnlAAD.Top = $pnlOD.Height + 275
+        $pnlAAD.Top = $pnlOD.Height + 300
         $pnlAAD.Left = $fourthColumnLeft
         $pnlAAD.Height = 350
         $pnlAAD.Width = 300
@@ -613,6 +613,29 @@ function Show-M365DSCGUI
             })
         $panelMenu.Controls.Add($txtPassword)
 
+        $lblCertPassword = New-Object System.Windows.Forms.Label
+        $lblCertPassword.Text = "Certificate Password:"
+        $lblCertPassword.Top = 80
+        $lblCertPassword.Left = 940
+        $lblCertPassword.AutoSize = $true
+        $lblCertPassword.TextAlign = [System.Drawing.ContentAlignment]::TopRight
+        $lblCertPassword.Font = [System.Drawing.Font]::new($lblCertPassword.Font.Name, 8, [System.Drawing.FontStyle]::Bold)
+        $panelMenu.Controls.Add($lblCertPassword)
+
+        $txtCertPassword = New-Object System.Windows.Forms.Textbox
+        $txtCertPassword.Top = 75
+        $txtCertPassword.Left = 1060
+        $txtCertPassword.Width = 345
+        $txtCertPassword.PasswordChar = "*"
+        $txtCertPassword.Font = [System.Drawing.Font]::new($txtCertPassword.Font.Name, 10)
+        $txtCertPassword.Add_KeyDown( {
+                if ($_.KeyCode -eq [System.Windows.Forms.Keys]::Enter)
+                {
+                    $btnExtract.PerformClick()
+                }
+            })
+        $panelMenu.Controls.Add($txtCertPassword)
+
         $btnExtract = New-Object System.Windows.Forms.Button
         $btnExtract.Width = 178
         $btnExtract.Height = 70
@@ -641,11 +664,18 @@ function Show-M365DSCGUI
                     {
                         $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($txtTenantAdmin.Text, (ConvertTo-SecureString -String $txtPassword.Text -AsPlainText -Force))
                     }
+                    $CertPasswordcreds = $null
+                    if (-not [System.String]::IsNullOrEmpty($txtCertPassword.Text))
+                    {
+                        [securestring]$secStringPassword = ConvertTo-SecureString $txtCertPassword.Text -AsPlainText -Force
+                        [pscredential]$CertPasswordcreds = New-Object System.Management.Automation.PSCredential ("M365DSCExport", $secStringPassword)
+                    }
                     Start-M365DSCConfigurationExtract -GlobalAdminAccount $GlobalAdminAccount `
                         -ApplicationId $txtApplicationId.Text `
                         -TenantId $txtTenantId.Text `
                         -CertificateThumbprint $txtCertThumb.Text `
                         -CertificatePath $txtCertFile.Text `
+                        -CertificatePassword $CertPasswordcreds `
                         -ComponentsToExtract $SelectedComponents `
                         -Path $Path
                 }

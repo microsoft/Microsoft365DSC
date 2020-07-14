@@ -1811,7 +1811,7 @@ function Update-M365DSCExportAuthenticationResults
         {
             $Results.Remove("GlobalAdminAccount") | Out-Null
         }
-        if (-not [System.String]::IsNullOrEmpty($ApplicationId))
+        if (-not [System.String]::IsNullOrEmpty($Results.ApplicationId))
         {
             $Results.ApplicationId = "`$ConfigurationData.NonNodeData.ApplicationId"
         }
@@ -1819,14 +1819,14 @@ function Update-M365DSCExportAuthenticationResults
         {
             try
             {
-                $results.Remove("ApplicationId") | Out-Null
+                $Results.Remove("ApplicationId") | Out-Null
             }
             catch
             {
                 Write-Verbose -Message "Error removing ApplicationId from Update-M365DSCExportAuthenticationResults"
             }
         }
-        if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint))
+        if (-not [System.String]::IsNullOrEmpty($Results.CertificateThumbprint))
         {
             $Results.CertificateThumbprint = "`$ConfigurationData.NonNodeData.CertificateThumbprint"
         }
@@ -1834,14 +1834,14 @@ function Update-M365DSCExportAuthenticationResults
         {
             try
             {
-                $results.Remove("CertificateThumbprint") | Out-Null
+                $Results.Remove("CertificateThumbprint") | Out-Null
             }
             catch
             {
                 Write-Verbose -Message "Error removing CertificateThumbprint from Update-M365DSCExportAuthenticationResults"
             }
         }
-        if (-not [System.String]::IsNullOrEmpty($CertificatePath))
+        if (-not [System.String]::IsNullOrEmpty($Results.CertificatePath))
         {
             $Results.CertificatePath = "`$ConfigurationData.NonNodeData.CertificatePath"
         }
@@ -1849,14 +1849,14 @@ function Update-M365DSCExportAuthenticationResults
         {
             try
             {
-                $results.Remove("CertificatePath") | Out-Null
+                $Results.Remove("CertificatePath") | Out-Null
             }
             catch
             {
                 Write-Verbose -Message "Error removing CertificatePath from Update-M365DSCExportAuthenticationResults"
             }
         }
-        if (-not [System.String]::IsNullOrEmpty($TenantId))
+        if (-not [System.String]::IsNullOrEmpty($Results.TenantId))
         {
             $Results.TenantId = "`$ConfigurationData.NonNodeData.TenantId"
         }
@@ -1871,12 +1871,9 @@ function Update-M365DSCExportAuthenticationResults
                 Write-Verbose -Message "Error removing TenantId from Update-M365DSCExportAuthenticationResults"
             }
         }
-        if ($null -ne $CertificatePassword)
+        if ($null -ne $Results.CertificatePassword)
         {
-            if ($null -ne $CertificatePassword)
-            {
-                $Results.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
-            }
+            $Results.CertificatePassword = Resolve-Credentials -UserName "CertificatePassword"
         }
         else
         {
@@ -1922,9 +1919,7 @@ function Get-M365DSCExportContentForResource
     $OrganizationName = ""
     if ($ConnectionMode -eq 'ServicePrincipal')
     {
-        $OrganizationName = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
-            -TenantId $TenantId `
-            -CertificateThumbprint $CertificateThumbprint
+        $OrganizationName = $TenantId
     }
     else
     {
