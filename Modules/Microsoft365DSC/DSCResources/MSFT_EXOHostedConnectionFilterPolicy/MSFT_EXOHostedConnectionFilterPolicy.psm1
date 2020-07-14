@@ -361,7 +361,7 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters
 
     [array]$HostedConnectionFilterPolicies = Get-HostedConnectionFilterPolicy
-    $dscCOntent = ''
+    $dscContent = ''
 
     if ($HostedConnectionFilterPolicies.Length -eq 0)
     {

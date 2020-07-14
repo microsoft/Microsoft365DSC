@@ -28,21 +28,21 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    Write-Verbose -Message "Connecting to Security and Compliance Center"
     $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters
 
     $PolicyObject = $null
-    $WorkloadValue = $Workload
+    Write-Verbose -Message "Current Workload = {$Workload}"
+
     if ($Workload -eq 'OneDriveForBusiness')
     {
         $PolicyObject = Get-AuditConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq 'a415dcce-19a0-4153-b137-eb6fd67995b5' }
-        $WorkloadValue = 'OneDriveForBusiness'
     }
     else
     {
         $PolicyObject = Get-AuditConfigurationPolicy | Where-Object -FilterScript { $_.Workload -eq $Workload }
     }
-
 
     if ($null -eq $PolicyObject)
     {
@@ -53,10 +53,10 @@ function Get-TargetResource
     }
     else
     {
-        Write-Verbose "Found existing SCAuditConfigurationPolicy $Workload"
+        Write-Verbose -Message "Found existing SCAuditConfigurationPolicy $Workload"
         $result = @{
             Ensure             = 'Present'
-            Workload           = $WorkloadValue
+            Workload           = $Workload
             GlobalAdminAccount = $GlobalAdminAccount
         }
 
@@ -183,7 +183,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = "Continue"
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
