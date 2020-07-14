@@ -78,24 +78,31 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
         -InboundParameters $PSBoundParameters
 
-    $ADGroup = Get-AzureADGroup | Where-Object -FilterScript {$_.MailNickName -eq $MailNickName}
+    Write-Verbose -Message "Retrieving AzureADGroup by MailNickName {$MailNickName}"
+    [array]$ADGroup = Get-AzureADGroup -All:$true | Where-Object -FilterScript {$_.MailNickName -eq $MailNickName}
     if ($null -eq $ADGroup)
     {
-        $ADGroup = Get-AzureADGroup | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+        Write-Verbose -Message "Retrieving AzureADGroup by DisplayName {$DisplayName}"
+        [array]$ADGroup = Get-AzureADGroup -All:$true | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
         if ($null -eq $ADGroup)
         {
             Write-Verbose -Message "Office 365 Group {$DisplayName} was not found."
             return $nullReturn
+        }
+        elseif ($ADGroup.Length -gt 1)
+        {
+            $Message = "Multiple O365 groups were found with DisplayName {$DisplayName}. Please specify the MailNickName parameter to uniquely identify the group."
+            New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
         }
     }
     Write-Verbose -Message "Found Existing Instance of Group {$($ADGroup.DisplayName)}"
 
     try
     {
-        $membersList = Get-AzureADGroupMember -ObjectId $ADGroup.ObjectId
-        Write-Verbose -Message "Found Members for Group {$($ADGroup.DisplayName)}"
-        $owners = Get-AzureADGroupOwner -ObjectId $ADGroup.ObjectId
-        Write-Verbose -Message "Found Owners for Group {$($ADGroup.DisplayName)}"
+        $membersList = Get-AzureADGroupMember -ObjectId $ADGroup[0].ObjectId
+        Write-Verbose -Message "Found Members for Group {$($ADGroup[0].DisplayName)}"
+        $owners = Get-AzureADGroupOwner -ObjectId $ADGroup[0].ObjectId
+        Write-Verbose -Message "Found Owners for Group {$($ADGroup[0].DisplayName)}"
         $ownersUPN = @()
         if ($null -ne $owners)
         {
@@ -119,14 +126,14 @@ function Get-TargetResource
         }
 
         $description = ""
-        if ($null -ne $ADGroup.Description)
+        if ($null -ne $ADGroup[0].Description)
         {
-            $description = $ADGroup.Description.ToString()
+            $description = $ADGroup[0].Description.ToString()
         }
 
         $returnValue = @{
-            DisplayName           = $ADGroup.DisplayName
-            MailNickName          = $ADGroup.MailNickName
+            DisplayName           = $ADGroup[0].DisplayName
+            MailNickName          = $ADGroup[0].MailNickName
             Members               = $newMemberList
             ManagedBy             = $ownersUPN
             Description           = $description
