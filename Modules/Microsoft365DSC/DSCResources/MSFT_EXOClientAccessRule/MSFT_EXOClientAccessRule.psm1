@@ -255,8 +255,17 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
+    }
 
     $ClientAccessRules = Get-ClientAccessRule
 
@@ -448,12 +457,17 @@ function Export-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     $dscContent = ""
     if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-ClientAccessRule)
     {
         $i = 1
+        if ($ClientAccessRules.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
         foreach ($ClientAccessRule in $ClientAccessRules)
         {
             Write-Host "    |---[$i/$($ClientAccessRules.Length)] $($ClientAccessRule.Identity)" -NoNewLine
@@ -478,6 +492,10 @@ function Export-TargetResource
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
+    }
+    else
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $dscContent
 }

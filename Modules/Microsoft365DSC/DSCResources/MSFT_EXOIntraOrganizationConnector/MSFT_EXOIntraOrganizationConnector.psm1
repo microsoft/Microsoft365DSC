@@ -52,8 +52,17 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of IntraOrganizationConnector for $($Identity)"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
+    }
 
     $IntraOrganizationConnectors = Get-IntraOrganizationConnector
 
@@ -268,7 +277,8 @@ function Export-TargetResource
 
     $InformationPreference = "Continue"
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     [array]$IntraOrganizationConnectors = Get-IntraOrganizationConnector
     $dscContent = ""

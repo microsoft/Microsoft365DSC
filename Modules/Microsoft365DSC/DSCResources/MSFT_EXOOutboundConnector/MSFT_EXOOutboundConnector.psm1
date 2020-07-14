@@ -103,8 +103,17 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of OutBoundConnector for $($Identity)"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
+    }
 
     $OutBoundConnectors = Get-OutBoundConnector
 
@@ -440,7 +449,8 @@ function Export-TargetResource
         $CertificatePassword
     )
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     [array]$OutboundConnectors = Get-OutboundConnector
     if ($OutBoundConnectors.Length -eq 0)

@@ -23,7 +23,7 @@ function New-M365DSCLogEntry
     try
     {
         $VerbosePreference = 'Continue'
-        Write-Verbose -Message "Logging a new Error"
+        Write-Host "$($Global:M365DSCEmojiRedX) Logging a new Error"
 
         #region Telemetry
         $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()

@@ -75,8 +75,17 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
-        -InboundParameters $PSBoundParameters
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters
+    }
 
     if ($null -eq $Case)
     {
@@ -348,7 +357,8 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
     $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
     $searches = Get-ComplianceSearch
 
     Write-Host "    `r`n* Searches not assigned to an eDiscovery Case"
@@ -389,11 +399,6 @@ function Export-TargetResource
                 Name                  = $search.Name
                 Case                  = $case.Name
                 GlobalAdminAccount    = $GlobalAdminAccount
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
             }
             Write-Host "        |---[$i/$($searches.Name.Count)] $($search.Name)" -NoNewLine
             $Results = Get-TargetResource @Params

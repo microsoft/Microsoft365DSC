@@ -87,8 +87,17 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
+    }
 
     try
     {
@@ -412,7 +421,8 @@ function Export-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     [array] $HostedContentFilterRules = Get-HostedContentFilterRule
     $dscContent = ''

@@ -41,8 +41,17 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
-        -InboundParameters $PSBoundParameters
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters
+    }
 
     $RuleObjects = Get-SupervisoryReviewRule
     $RuleObject = $RuleObjects | Where-Object { $_.Name -eq $Name }
@@ -212,11 +221,13 @@ function Export-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     [array]$rules = Get-SupervisoryReviewRule
     $i = 1
     $dscContent = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($rule in $rules)
     {
         Write-Host "    |---[$i/$($rules.Length)] $($rule.Name)" -NoNewLine

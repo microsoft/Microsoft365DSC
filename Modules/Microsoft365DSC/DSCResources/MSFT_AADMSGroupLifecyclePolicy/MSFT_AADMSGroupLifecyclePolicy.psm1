@@ -328,6 +328,7 @@ function Export-TargetResource
     }
     catch
     {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         return ""
     }
 

@@ -62,8 +62,17 @@ function Get-TargetResource
         Ensure             = "Absent"
     }
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
+    }
 
     $mailboxes = Get-Mailbox
     $mailbox = $mailboxes | Where-Object -FilterScript {
@@ -335,7 +344,8 @@ function Export-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     [array]$mailboxes = Get-Mailbox
     $mailboxes = $mailboxes | Where-Object -FilterScript { $_.RecipientTypeDetails -eq "SharedMailbox" }

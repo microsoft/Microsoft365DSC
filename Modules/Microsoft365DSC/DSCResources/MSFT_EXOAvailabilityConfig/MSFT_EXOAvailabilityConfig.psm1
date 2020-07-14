@@ -40,8 +40,17 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Availability Config for $OrgWideAccount"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
+    }
 
     $AvailabilityConfigs = Get-AvailabilityConfig
 
@@ -236,7 +245,8 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     $AvailabilityConfig = Get-AvailabilityConfig
 

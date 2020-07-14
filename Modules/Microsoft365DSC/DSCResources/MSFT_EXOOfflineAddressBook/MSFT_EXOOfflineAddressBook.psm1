@@ -73,13 +73,22 @@ function Get-TargetResource
         Ensure               = 'Absent'
         GlobalAdminAccount   = $GlobalAdminAccount
     }
-
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
+    }
     if ($null -eq (Get-Command 'Get-OfflineAddressBook' -ErrorAction SilentlyContinue))
     {
         return $nullReturn
     }
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+
 
     $AllOfflineAddressBooks = Get-OfflineAddressBook
 
@@ -335,10 +344,12 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     if ($null -eq (Get-Command 'Get-OfflineAddressBook' -ErrorAction SilentlyContinue))
     {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         return $nullReturn
     }
 

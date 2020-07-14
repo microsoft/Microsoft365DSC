@@ -43,8 +43,17 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
-        -InboundParameters $PSBoundParameters
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters
+    }
 
     $Rules = Get-CaseHoldRule -Policy $Policy -ErrorAction 'SilentlyContinue'
     $Rule = $Rules | Where-Object { $_.Name -eq $Name }
@@ -216,8 +225,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-
-    $InformationPreference = "Continue"
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -226,7 +233,8 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
     $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
     [array]$Rules = Get-CaseHoldRule
 
     $dscContent = ""
