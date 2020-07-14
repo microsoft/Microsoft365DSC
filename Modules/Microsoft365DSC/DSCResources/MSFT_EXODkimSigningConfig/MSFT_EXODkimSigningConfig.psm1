@@ -346,13 +346,21 @@ function Export-TargetResource
 
     if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-DkimSigningConfig)
     {
-        $DkimSigningConfigs = Get-DkimSigningConfig
+        [array]$DkimSigningConfigs = Get-DkimSigningConfig
 
         $i = 1
+        if ($DkimSigningConfigs.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
         $dscContent = ""
         foreach ($DkimSigningConfig in $DkimSigningConfigs)
         {
-            Write-Verbose -Message "    [$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)}"
+            Write-Host "    |---[$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)" -NoNewLine
             $Params = @{
                 Identity              = $DkimSigningConfig.Identity
                 GlobalAdminAccount    = $GlobalAdminAccount
@@ -370,6 +378,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
     }

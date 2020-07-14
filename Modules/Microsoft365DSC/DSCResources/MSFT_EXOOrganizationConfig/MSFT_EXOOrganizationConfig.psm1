@@ -1066,7 +1066,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $InformationPReference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -1095,6 +1094,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
     return $dscContent
 }
 

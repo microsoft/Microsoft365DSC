@@ -308,8 +308,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -321,11 +319,13 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
         -InboundParameters $PSBoundParameters
 
-    $themes = Get-PnPTenantTheme
+    [array]$themes = Get-PnPTenantTheme
     $dscContent = ""
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($theme in $themes)
     {
+        Write-Host "    |---[$i/$($themes.Length)] $($theme.Name)" -NoNewLine
         $Params = @{
             Name                  = $theme.Name
             ApplicationId         = $ApplicationId
@@ -343,6 +343,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

@@ -340,7 +340,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -354,10 +353,18 @@ function Export-TargetResource
     [array]$AllPartnerApplications = Get-PartnerApplication
 
     $dscContent = ""
+    if ($AllPartnerApplications.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($PartnerApplication in $AllPartnerApplications)
     {
-        Write-Information "    [$i/$($AllPartnerApplications.Count)] $($PartnerApplication.Name)"
+        Write-Host "    |---[$i/$($AllPartnerApplications.Length)] $($PartnerApplication.Name)" -NoNewLine
 
         $Params = @{
             Name                  = $PartnerApplication.Name
@@ -376,6 +383,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

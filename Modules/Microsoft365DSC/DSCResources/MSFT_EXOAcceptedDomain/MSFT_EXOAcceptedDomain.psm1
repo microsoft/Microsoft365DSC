@@ -112,8 +112,8 @@ function Get-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-                $CertificatePath      = $CertificatePath
-                $CertificatePassword  = $CertificatePassword
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
             }
             # if AcceptedDomain does not exist for a verfied domain, return 'Absent' with submitted parameters to Test-TargetResource.
             return $result
@@ -339,9 +339,17 @@ function Export-TargetResource
 
     $dscContent = ""
     $i = 1
+    if ($AllAcceptedDomains.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     foreach ($domain in $AllAcceptedDomains)
     {
-        Write-Information "    [$i/$($AllAcceptedDomains.Count)] $($domain.Identity)"
+        Write-Host "    |---[$i/$($AllAcceptedDomains.Count)] $($domain.Identity)" -NoNewLine
 
         $Params = @{
             Identity              = $domain.Identity
@@ -360,6 +368,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

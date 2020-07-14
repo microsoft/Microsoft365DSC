@@ -247,8 +247,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -263,10 +261,10 @@ function Export-TargetResource
     [array]$environments = Get-AdminPowerAppEnvironment
     $dscContent = ''
     $i = 1
-
+    Write-Host "`r`n" -NoNewLine
     foreach ($environment in $environments)
     {
-        Write-Information "    [$i/$($environments.Count)] $($environment.DisplayName)"
+        Write-Host "    |---[$i/$($environments.Count)] $($environment.DisplayName)" -NoNewLine
         if ($environment.EnvironmentType -ne 'Default')
         {
             $Params = @{
@@ -287,6 +285,7 @@ function Export-TargetResource
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
         }
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

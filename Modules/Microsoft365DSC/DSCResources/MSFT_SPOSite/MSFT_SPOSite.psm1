@@ -814,7 +814,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -830,11 +829,11 @@ function Export-TargetResource
 
     $dscContent = ''
     $i = 1
-
+    Write-Host "`r`n" -NoNewLine
     foreach ($site in $sites)
     {
         $site = Get-PnPTenantSite -Url $site.Url
-        Write-Information "    [$i/$($sites.Length)] $($site.Url)"
+        Write-Host "    [$i/$($sites.Length)] $($site.Url)" -NoNewLine
         $siteTitle = "Null"
         if (-not [System.String]::IsNullOrEmpty($site.Title))
         {
@@ -882,10 +881,12 @@ function Export-TargetResource
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
                         -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+
         }
         catch
         {
-            Write-Information $_
+            Write-Host "$($Global:M365DSCEmojiYellowCircle) $_"
         }
         $i++
     }

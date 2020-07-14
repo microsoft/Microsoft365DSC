@@ -214,18 +214,12 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters
 
-    $rules = Get-SupervisoryReviewRule
-
-    $totalRules = $rules.Length
-    if ($null -eq $totalRules)
-    {
-        $totalRules = 1
-    }
+    [array]$rules = Get-SupervisoryReviewRule
     $i = 1
     $dscContent = ''
     foreach ($rule in $rules)
     {
-        Write-Information "    [$i/$totalRules] $($rule.Name)"
+        Write-Host "    |---[$i/$($rules.Length)] $($rule.Name)" -NoNewLine
         $Params = @{
             GlobalAdminAccount    = $GlobalAdminAccount
             Name                  = $rule.Name
@@ -239,6 +233,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

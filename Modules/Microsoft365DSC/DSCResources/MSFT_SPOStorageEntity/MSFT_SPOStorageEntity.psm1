@@ -69,7 +69,7 @@ function Get-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
-        -ConnectionUrl $SiteUrl
+        -Url $SiteUrl
 
     $nullReturn = @{
         Key                   = $Key
@@ -195,7 +195,7 @@ function Set-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
-        -ConnectionUrl $SiteUrl
+        -Url $SiteUrl
 
     $curStorageEntry = Get-TargetResource @PSBoundParameters
 
@@ -348,8 +348,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -382,6 +380,7 @@ function Export-TargetResource
     {
         $centralAdminUrl = "https://$principal-admin.sharepoint.com"
     }
+    Write-Host "`r`n" -NoNewline
     foreach ($storageEntity in $storageEntities)
     {
         $Params = @{
@@ -394,8 +393,7 @@ function Export-TargetResource
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
         }
-
-        Write-Information "    [$i/$($storageEntities.Length)] $($storageEntity.Key)"
+        Write-Host "    |---[$i/$($storageEntities.Length)] $($storageEntity.Key)" -NoNewline
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -405,6 +403,7 @@ function Export-TargetResource
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
         $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckmark
     }
     return $dscContent
 }

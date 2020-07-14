@@ -415,8 +415,6 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $InformationPreference = 'Continue'
-
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' -InboundParameters $PSBoundParameters `
         -ErrorAction SilentlyContinue
 
@@ -426,9 +424,10 @@ function Export-TargetResource
 
     $i = 1
     $dscContent = ""
+    Write-Host "`r`n" -NoNewLine
     foreach ($site in $sites)
     {
-        Write-Information "    [$i/$($sites.Length)] SPOSite groups for {$($site.Url)}"
+        Write-Host "    |---[$i/$($sites.Length)] SPOSite groups for {$($site.Url)}"
         $siteGroups = $null
         try
         {
@@ -450,8 +449,19 @@ function Export-TargetResource
                 Write-Verbose -Message "Could not retrieve sitegroups for site $($site.Url)"
             }
         }
+        $j = 1
         foreach ($siteGroup in $siteGroups)
         {
+            Write-Host "        |---[$j/$($siteGroups.Length)] $($siteGroup.Title)" -NoNewline
+            try
+            {
+                [array]$sitePerm = Get-PnPGroupPermissions -Identity $siteGroup.Title -ErrorAction Stop
+            }
+            catch
+            {
+                Write-Warning -Message "The specified account does not have access to the permissions list for {$($siteGroup.Title)}"
+                break
+            }
             $Params = @{
                 Url                   = $site.Url
                 Identity              = $siteGroup.Title
@@ -478,8 +488,10 @@ function Export-TargetResource
             }
             catch
             {
-                Write-Verbose "There was an issue retrieving the SiteGroups for $($Url)"
+                Write-Verbose -Message "There was an issue retrieving the SiteGroups for $($Url)"
             }
+            $j++
+            Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
 
         $i++

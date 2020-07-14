@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+* MISC
+  * Added visual indicators for the Export feature;
 * EXOMalwareFilterPolicy
   * Fixed an issue where the value for the for the Action
     returned by the Get included 'Text' and should not have;
@@ -22,9 +24,11 @@
   * Updated Microsoft.Graph.Identity.ConditionalAccess
     module version to 0.7.0;
   * Updated Microsoft.PowerApps.Administration.PowerShell
-    module version to 2.0.67;
+    module version to 2.0.70;
   * Updated SharePointPnPPowerShellOnline module to version 3.23.2007.0;
   * Updated ReverseDSC module version to 2.0.0.4;
+  * Updated SharePointPnPPowerShellOnline module to
+    version 3.22.2006.2;
   * Updated all Unit Tests to Pester 5;
   * Added support for Service Principal for PowerPlatforms,
     SPO & OneDrive, Exchange Online and Office 365 resources;

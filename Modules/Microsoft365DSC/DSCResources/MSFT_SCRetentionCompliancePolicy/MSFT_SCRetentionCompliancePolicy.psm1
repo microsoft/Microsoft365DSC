@@ -684,7 +684,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -699,10 +698,11 @@ function Export-TargetResource
     $policies = Get-RetentionCompliancePolicy
 
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     $dscContent = ''
     foreach ($policy in $policies)
     {
-        Write-Information "    [$i/$($policies.Length)] $($policy.Name)"
+        Write-Host "    |---[$i/$($policies.Length)] $($policy.Name)" -NoNewLine
         $Params = @{
             GlobalAdminAccount    = $GlobalAdminAccount
             Name                  = $policy.Name
@@ -715,6 +715,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

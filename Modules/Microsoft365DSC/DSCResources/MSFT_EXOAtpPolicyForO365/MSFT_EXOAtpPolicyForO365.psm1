@@ -330,8 +330,18 @@ function Export-TargetResource
 
     if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-AtpPolicyForO365)
     {
-        $ATPPolicies = Get-AtpPolicyForO365
+        [array]$ATPPolicies = Get-AtpPolicyForO365
         $dscContent = ""
+
+        if ($ATPPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
+        $i = 1
         foreach ($atpPolicy in $ATPPolicies)
         {
             $Params = @{
@@ -344,6 +354,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
             }
+            Write-Host "    |---[$i/$($ATPPolicies.Length)] $($atpPolicy.Identiy)" -NoNewLine
             $Results = Get-TargetResource @Params
             if ($Results.Ensure -eq "Present")
             {
@@ -355,7 +366,13 @@ function Export-TargetResource
                     -Results $Results `
                     -GlobalAdminAccount $GlobalAdminAccount
             }
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
+    }
+    else
+    {
+        Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for ATP Policies"
     }
     return $dscContent
 }

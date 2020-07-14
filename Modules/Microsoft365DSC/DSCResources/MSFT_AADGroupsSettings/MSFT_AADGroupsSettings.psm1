@@ -317,7 +317,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -326,15 +325,12 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
-    if ($ConnectionMode -eq 'ServicePrincipal')
-    {
-        $Params = @{
+    $Params = @{
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             IsSingleInstance      = 'Yes'
             GlobalAdminAccount    = $GlobalAdminAccount
-        }
     }
     $dscContent = ''
     $Results = Get-TargetResource @Params
@@ -345,7 +341,7 @@ function Export-TargetResource
         -ModulePath $PSScriptRoot `
         -Results $Results `
         -GlobalAdminAccount $GlobalAdminAccount
-
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
     return $dscContent
 }
 

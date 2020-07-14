@@ -251,7 +251,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -272,17 +271,18 @@ function Export-TargetResource
         GlobalAdminAccount    = $GlobalAdminAccount
     }
 
+    Write-Host "`r`n    [1/2] Public" -NoNewline
     $Results = Get-TargetResource @Params
     $dscContent = ""
     if ($null -ne $Results)
     {
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -GlobalAdminAccount $GlobalAdminAccount
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
     }
 
     $Params = @{
@@ -294,8 +294,9 @@ function Export-TargetResource
         CertificateThumbprint = $CertificateThumbprint
         GlobalAdminAccount    = $GlobalAdminAccount
     }
+    Write-Host "    |---[2/2] Private" -NoNewline
     $Results = Get-TargetResource @params
-    if ($null -ne $Results)
+    if ($null -ne $result)
     {
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -305,6 +306,7 @@ function Export-TargetResource
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
     }
+    Write-Host $Global:M365DSCEmojiGreenCheckmark
     return $dscContent
 }
 

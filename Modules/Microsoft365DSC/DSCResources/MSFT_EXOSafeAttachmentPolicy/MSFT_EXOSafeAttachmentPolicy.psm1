@@ -327,7 +327,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -343,11 +342,12 @@ function Export-TargetResource
     if (Confirm-ImportedCmdletIsAvailable -CmdletName 'Get-SafeAttachmentPolicy')
     {
         $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
+        Write-Host "`r`n" -NoNewLine
         $i = 1
         foreach ($SafeAttachmentPolicy in $SafeAttachmentPolicies)
         {
-            Write-Information "    [$i/$($SafeAttachmentPolicies.Length)] $($SafeAttachmentPolicy.Identity)"
-            $params = @{
+            Write-Host "    |---[$i/$($SafeAttachmentPolicies.Length)] $($SafeAttachmentPolicy.Identity)" -NoNewLine
+            $Params = @{
                 GlobalAdminAccount    = $GlobalAdminAccount
                 Identity              = $SafeAttachmentPolicy.Identity
                 ApplicationId         = $ApplicationId
@@ -364,12 +364,17 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
+        }
+        if ($SafeAttachmentPolicies.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
     }
     else
     {
-        Write-Information "The current tenant doesn't have access to Safe Attachment Policy APIs."
+        Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant doesn't have access to Safe Attachment Policy APIs."
     }
     return $dscContent
 }

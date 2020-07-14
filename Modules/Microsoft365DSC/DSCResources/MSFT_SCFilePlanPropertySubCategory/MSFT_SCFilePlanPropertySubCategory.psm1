@@ -209,10 +209,11 @@ function Export-TargetResource
 
     $i = 1
     $dscContent = ""
+    Write-Host "`r`n" -NoNewLine
     foreach ($Property in $Properties)
     {
         $parent = Get-FilePlanPropertyCategory | Where-Object -FilterScript { $_.Guid -like "*$($property.ParentId)*" }
-        Write-Information "    [$i/$($Properties.Length)] $($Property.Name)"
+        Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewLine
         $Params = @{
             Name                  = $Property.DisplayName
             Category              = $parent.DisplayName
@@ -226,6 +227,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

@@ -157,8 +157,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add('Resource', $MyInvocation.MyCommand.ModuleName)
@@ -172,9 +170,10 @@ function Export-TargetResource
     $i = 1
     [array]$usages = Get-CsOnlinePstnUsage | Select-Object -ExpandProperty Usage
     $content = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($usage in $usages)
     {
-        Write-Information "    [$i/$($usages.Count)] $usage"
+        Write-Host "    |---[$i/$($usages.Count)] $usage" -NoNewLine
         $params = @{
             Usage              = $usage
             Ensure             = 'Present'
@@ -188,6 +187,7 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalAdminAccount'
         $content += "        }`r`n"
         $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

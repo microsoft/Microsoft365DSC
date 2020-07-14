@@ -614,8 +614,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -628,15 +626,24 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters
     if ($null -eq (Get-Command 'Get-AddressList' -ErrorAction SilentlyContinue))
     {
+        Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Address Lists"
         return ""
     }
     $dscContent = ""
-    $i = 1
     [array]$addressLists = Get-Addresslist
+    if ($addressLists.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
+    $i = 1
 
     foreach ($addressList in $addressLists)
     {
-        Write-Information "    [$i/$($addressLists.Count)] $($addressList.Name)"
+        Write-Host "    |---[$i/$($addressLists.Count)] $($addressList.Name)" -NoNewLine
         $params = @{
             Name                  = $addressList.Name
             GlobalAdminAccount    = $GlobalAdminAccount
@@ -654,6 +661,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i ++
     }
     return $dscContent

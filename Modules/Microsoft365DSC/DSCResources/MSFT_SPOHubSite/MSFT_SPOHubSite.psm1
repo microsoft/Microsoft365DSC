@@ -542,8 +542,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -558,10 +556,12 @@ function Export-TargetResource
     $hubSites = Get-PnPHubSite
 
     $i = 1
+    Write-Host "`r`n" -NoNewLine
+
     $dscContent = ''
     foreach ($hub in $hubSites)
     {
-        Write-Information "    [$i/$($hubSites.Length)] $($hub.SiteUrl)"
+        Write-Host "    [$i/$($hubSites.Length)] $($hub.SiteUrl)" -NoNewLine
 
         $Params = @{
             Url                   = $hub.SiteUrl
@@ -572,6 +572,7 @@ function Export-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
         }
+
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -580,6 +581,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

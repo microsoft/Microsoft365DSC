@@ -230,8 +230,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -248,9 +246,10 @@ function Export-TargetResource
     $ConnectionMode = Connect-Graph -Scopes "Group.ReadWrite.All"
     $i = 1
     $content = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($group in $groups)
     {
-        Write-Information "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
+        Write-Host "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.ObjectID)}"
         try
         {
             [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.ObjectId -ErrorAction 'SilentlyContinue'
@@ -258,12 +257,12 @@ function Export-TargetResource
             $j = 1
             foreach ($plan in $plans)
             {
-                Write-Information "        [$j/$($plans.Length)] $($plan.Title)"
+                Write-Host "        [$j/$($plans.Length)] $($plan.Title)"
                 $buckets = Get-MGPlannerPlanBucket -PlannerPlanId $plan.Id
                 $k = 1
                 foreach ($bucket in $buckets)
                 {
-                    Write-Information "            [$k/$($buckets.Length)] $($bucket.Name)"
+                    Write-Host "            [$k/$($buckets.Length)] $($bucket.Name)" -NoNewLine
                     $params = @{
                         Name                  = $bucket.Name
                         PlanId                = $plan.Id
@@ -278,6 +277,7 @@ function Export-TargetResource
                     $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
                     $content += $currentDSCBlock
                     $content += "        }`r`n"
+                    Write-Host $Global:M365DSCEmojiGreenCheckMark
                     $k++
                 }
                 $j++

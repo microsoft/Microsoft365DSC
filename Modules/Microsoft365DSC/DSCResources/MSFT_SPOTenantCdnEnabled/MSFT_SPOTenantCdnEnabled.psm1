@@ -115,7 +115,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
 
         [Parameter()]
         [System.String]
@@ -245,7 +245,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -259,8 +258,12 @@ function Export-TargetResource
     $dscContent = ''
     $cdnTypes = "Public", "Private"
 
+    $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($cType in $cdnTypes)
     {
+        Write-Host "    |---[$i/2] $cType" -NoNewline
+
         $Params = @{
             GlobalAdminAccount    = $GlobalAdminAccount
             CdnType               = $cType
@@ -282,6 +285,8 @@ function Export-TargetResource
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
         }
+        $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckmark
     }
 
     return $dscContent

@@ -453,10 +453,10 @@ function Export-TargetResource
     $dscContent = ""
     if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-ClientAccessRule)
     {
-        $ClientAccessRules = Get-ClientAccessRule
-
+        $i = 1
         foreach ($ClientAccessRule in $ClientAccessRules)
         {
+            Write-Host "    |---[$i/$($ClientAccessRules.Length)] $($ClientAccessRule.Identity)" -NoNewLine
             $Params = @{
                 Identity              = $ClientAccessRule.Identity
                 Action                = $ClientAccessRule.Action
@@ -475,6 +475,8 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
     }
     return $dscContent

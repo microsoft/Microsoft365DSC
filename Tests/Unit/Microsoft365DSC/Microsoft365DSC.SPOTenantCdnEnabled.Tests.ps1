@@ -25,8 +25,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin@contoso.com", $secpasswd)
             $global:tenantName = $GlobalAdminAccount.UserName.Split('@')[1].Split('.')[0]
 
-            Mock -CommandName Test-MSCloudLogin -MockWith {
+            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
+                return @{}
+            }
 
+            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
+
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Get-PSSession -MockWith {

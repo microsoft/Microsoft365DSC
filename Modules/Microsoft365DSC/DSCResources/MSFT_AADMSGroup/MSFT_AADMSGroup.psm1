@@ -345,7 +345,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -356,22 +355,20 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
 
-    [array] $groups = Get-AzureADMSGroup
+    [array] $groups = Get-AzureADMSGroup -All:$true
     $i = 1
     $dscContent = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($group in $groups)
     {
-        Write-Information -MessageData "    [$i/$($groups.Count)] $($group.DisplayName)"
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $Params = @{
+        Write-Host "    |---[$i/$($groups.Count)] $($group.DisplayName)" -NoNewLine
+        $Params = @{
                 GlobalAdminAccount    = $GlobalAdminAccount
                 DisplayName           = $group.DisplayName
                 Id                    = $group.Id
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-            }
         }
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -381,6 +378,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

@@ -1085,7 +1085,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -1099,10 +1098,19 @@ function Export-TargetResource
     [array]$AllMobileDeviceMailboxPolicies = Get-MobileDeviceMailboxPolicy
 
     $dscContent = ""
+
+    if ($AllMobileDeviceMailboxPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($MobileDeviceMailboxPolicy in $AllMobileDeviceMailboxPolicies)
     {
-        Write-Information "    [$i/$($AllMobileDeviceMailboxPolicies.Count)] $($MobileDeviceMailboxPolicy.Name)"
+        Write-Host "    |---[$i/$($AllMobileDeviceMailboxPolicies.Length)] $($MobileDeviceMailboxPolicy.Name)" -NoNewLine
 
         $Params = @{
             Name                  = $MobileDeviceMailboxPolicy.Name
@@ -1121,6 +1129,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

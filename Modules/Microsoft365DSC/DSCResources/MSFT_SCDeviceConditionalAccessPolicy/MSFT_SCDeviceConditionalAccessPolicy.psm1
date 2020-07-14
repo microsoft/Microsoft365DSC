@@ -188,7 +188,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -199,18 +198,14 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters
-    $policies = Get-DeviceConditionalAccessPolicy | Where-Object -FilterScript { $_.Mode -ne 'PendingDeletion' }
+    [array]$policies = Get-DeviceConditionalAccessPolicy | Where-Object -FilterScript { $_.Mode -ne 'PendingDeletion' }
 
-    $totalPolicies = $policies.Length
-    if ($null -eq $totalPolicies)
-    {
-        $totalPolicies = 1
-    }
     $i = 1
     $dscContent = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        Write-Information "    [$i/$($totalPolicies)] $($policy.Name)"
+        Write-Host "    |---[$i/$($policies.Length)] $($policy.Name)" -NoNewLine
         $Params = @{
             GlobalAdminAccount    = $GlobalAdminAccount
             Name                  = $policy.Name
@@ -223,6 +218,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

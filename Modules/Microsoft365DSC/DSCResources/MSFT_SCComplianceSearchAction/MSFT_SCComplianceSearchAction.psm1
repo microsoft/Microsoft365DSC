@@ -380,17 +380,17 @@ function Export-TargetResource
 
     if ($actions.Count -gt 0)
     {
-        Write-Information -MessageData "    Tenant Wide Actions:"
+        Write-Host "`r`n    Tenant Wide Actions:"
     }
     $i = 1
     $dscContent = ""
     foreach ($action in $actions)
     {
-        Write-Information "        [$i/$($actions.Length)] $($action.Name)"
+        Write-Host "        |---[$i/$($actions.Length)] $($action.Name)" -NoNewLine
         $Params = @{
-            Action                = $action.Action
-            SearchName            = $action.SearchName
-            GlobalAdminAccount    = $GlobalAdminAccount
+            Action             = $action.Action
+            SearchName         = $action.SearchName
+            GlobalAdminAccount = $GlobalAdminAccount
         }
 
         $Scenario = Get-ResultProperty -ResultString $action.Results -PropertyName "Scenario"
@@ -399,7 +399,6 @@ function Export-TargetResource
         {
             $Params.Action = "Retention"
         }
-
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
             -Results $Results
@@ -408,6 +407,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
 
@@ -416,23 +416,19 @@ function Export-TargetResource
     $j = 1
     foreach ($case in $cases)
     {
-        Write-Information "    Case [$j/$($cases.Count)] $($Case.Name)"
+        Write-Host "    Case [$j/$($cases.Count)] $($Case.Name)"
 
         $actions = Get-ComplianceSearchAction -Case $Case.Name
 
         $i = 1
         foreach ($action in $actions)
         {
-            Write-Information "        [$i/$($actions.Length)] $($action.Name)"
+            Write-Host "        |---[$i/$($actions.Length)] $($action.Name)" -NoNewLine
+
             $Params = @{
                 Action                = $action.Action
                 SearchName            = $action.SearchName
                 GlobalAdminAccount    = $GlobalAdminAccount
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
             }
 
             $Scenario = Get-ResultProperty -ResultString $action.Results -PropertyName "Scenario"
@@ -441,7 +437,6 @@ function Export-TargetResource
             {
                 $Params.Action = "Retention"
             }
-
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -450,6 +445,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
         $j++

@@ -310,6 +310,7 @@ function Export-TargetResource
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
     }
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
     return $dscContent
 }
 

@@ -353,10 +353,18 @@ function Export-TargetResource
     }
 
     $dscContent = ""
+    if ($AvailabilityAddressSpaces.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($AvailabilityAddressSpace in $AvailabilityAddressSpaces)
     {
-        Write-Information "    [$i/$($AvailabilityAddressSpaces.length)] $($AvailabilityAddressSpace.Identity)"
+        Write-Host "    |---[$i/$($AvailabilityAddressSpaces.length)] $($AvailabilityAddressSpace.Identity)" -NoNewLine
 
         $Params = @{
             Identity              = $AvailabilityAddressSpace.Identity
@@ -367,7 +375,6 @@ function Export-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
         }
-
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
             -Results $Results
@@ -376,6 +383,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

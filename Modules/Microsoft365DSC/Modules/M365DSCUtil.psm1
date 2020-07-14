@@ -844,9 +844,6 @@ function Export-M365DSCConfiguration
         [System.String]
         $CertificatePath
     )
-    $InformationPreference = 'SilentlyContinue'
-    $WarningPreference = 'SilentlyContinue'
-
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Event", "Extraction")
@@ -978,7 +975,7 @@ function Get-M365DSCOrganization
         $organization = $GlobalAdminAccount.UserName.Split("@")[1]
         return $organization
     }
-    if ($null -ne $TenantId)
+    if (-not [System.String]::IsNullOrEmpty($TenantId))
     {
         if ($TenantId.contains("."))
         {
@@ -1001,10 +998,6 @@ function New-M365DSCConnection
                 "MicrosoftTeams", "SkypeForBusiness", "MicrosoftGraph")]
         [System.String]
         $Platform,
-
-        [Parameter()]
-        [System.String]
-        $ConnectionUrl,
 
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]

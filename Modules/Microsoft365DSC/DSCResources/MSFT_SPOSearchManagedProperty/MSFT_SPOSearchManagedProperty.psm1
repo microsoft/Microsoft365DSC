@@ -831,18 +831,14 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
                 -InboundParameters $PSBoundParameters
     $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
-    $properties = $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
+    [array]$properties = $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
 
     $dscContent = ""
     $i = 1
-    $propertiesLength = $properties.Length
-    if ($null -eq $propertiesLength)
-    {
-        $propertiesLength = 1
-    }
+    Write-Host "`r`n" -NoNewline
     foreach ($property in $properties)
     {
-        Write-Information "    [$i/$($propertiesLength)] $($property.Value.Name)"
+        Write-Host "    |---[$i/$($properties.Length)] $($property.Value.Name)" -NoNewline
         $Params = @{
                 GlobalAdminAccount    = $GlobalAdminAccount
                 Name                  = $property.Value.Name
@@ -862,6 +858,7 @@ function Export-TargetResource
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
         $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckmark
     }
     return $dscContent
 }

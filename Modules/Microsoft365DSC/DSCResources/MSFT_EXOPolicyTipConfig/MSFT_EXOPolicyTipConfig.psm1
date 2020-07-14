@@ -280,7 +280,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -298,9 +297,17 @@ function Export-TargetResource
         [array]$AllPolicyTips = Get-PolicyTipConfig
 
         $i = 1
+        if ($AllPolicyTips.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
         foreach ($PolicyTipConfig in $AllPolicyTips)
         {
-            Write-Information "    [$i/$($AllPolicyTips.Count)] $($PolicyTipConfig.Name)"
+            Write-Host "    |---[$i/$($AllPolicyTips.Length)] $($PolicyTipConfig.Name)" -NoNewLine
 
             $Params = @{
                 Name                  = $PolicyTipConfig.Name
@@ -312,13 +319,14 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -GlobalAdminAccount $GlobalAdminAccount
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
     }

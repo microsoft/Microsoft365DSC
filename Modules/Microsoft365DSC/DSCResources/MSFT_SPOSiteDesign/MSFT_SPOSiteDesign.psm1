@@ -404,7 +404,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -420,10 +419,11 @@ function Export-TargetResource
     $i = 1
 
     [array]$designs = Get-PnPSiteDesign
-
+    Write-Host "`r`n" -NoNewline
     foreach ($design in $designs)
     {
-        Write-Information "    [$i/$($designs.Length)] $($design.Title)"
+
+        Write-Host "    |---[$i/$($designs.Length)] $($design.Title)" -NoNewline
         $Params = @{
             Title                 = $design.Title
             ApplicationId         = $ApplicationId
@@ -442,6 +442,7 @@ function Export-TargetResource
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
         $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckmark
     }
     return $dscContent
 }

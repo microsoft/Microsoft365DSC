@@ -549,17 +549,21 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $AntiPhishPolicies = Get-AntiPhishPolicy
+    [array]$AntiPhishPolicies = Get-AntiPhishPolicy
     $dscContent = ""
     $i = 1
-    $PolicyCount = $AntiPhishPolicies.Length
-    if ($null -eq $PolicyCount)
+
+    if ($AntiphishPolicies.Length -eq 0)
     {
-        $PolicyCount = 1
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
     }
     foreach ($Policy in $AntiPhishPolicies)
     {
-        Write-Information "    [$i/$PolicyCount] $($Policy.Identity)"
+        Write-Host "    |---[$i/$($AntiphishPolicies.Length)] $($Policy.Identity)" -NoNewLine
 
         $Params = @{
             Identity              = $Policy.Identity
@@ -578,6 +582,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

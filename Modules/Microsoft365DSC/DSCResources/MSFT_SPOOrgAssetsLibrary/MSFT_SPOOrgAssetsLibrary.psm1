@@ -355,7 +355,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -367,23 +366,25 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
                 -InboundParameters $PSBoundParameters
 
-
-    $orgAssets = Get-PnPOrgAssetsLibrary
-
+    [array]$orgAssets = Get-PnPOrgAssetsLibrary
+    $i = 1
     $dscContent = ''
 
     if ($null -ne $orgAssets)
     {
+        Write-Host "`r`n" -NoNewLine
         foreach ($orgAssetLib in $orgAssets.OrgAssetsLibraries)
         {
+            Write-Host "    [$i/$($orgAssets.Length)] $LibraryUrl" -NoNewLine
             $Params = @{
-                LibraryUrl            = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
+                GlobalAdminAccount = $GlobalAdminAccount
+                LibraryUrl         = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
+
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
-                GlobalAdminAccount    = $GlobalAdminAccount
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -393,6 +394,8 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
     }
     return $dscContent

@@ -397,7 +397,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -414,9 +413,10 @@ function Export-TargetResource
     {
         [array]$SafeAttachmentRules = Get-SafeAttachmentRule
         $i = 1
+        Write-Host "`r`n" -NoNewLine
         foreach ($SafeAttachmentRule in $SafeAttachmentRules)
         {
-            Write-Information "    [$i/$($SafeAttachmentRules.Length)] $($SafeAttachmentRule.Identity)"
+            Write-Host "    |---[$i/$($SafeAttachmentRules.Length)] $($SafeAttachmentRule.Identity)" -NoNewLine
             $Params = @{
                 Identity              = $SafeAttachmentRule.Identity
                 SafeAttachmentPolicy  = $SafeAttachmentRule.SafeAttachmentPolicy
@@ -435,12 +435,17 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
+        }
+        if ($SafeAttachmentRules.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
     }
     else
     {
-        Write-Information "The current tenant doesn't have access to the Safe Attachment Rule API."
+        Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant doesn't have access to the Safe Attachment Rule API."
     }
     return $dscContent
 }

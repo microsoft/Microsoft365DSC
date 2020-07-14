@@ -276,7 +276,7 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
         -InboundParameters $PSBoundParameters
 
-    $params = @{
+    $Params = @{
         IsSingleInstance      = "Yes"
         ApplicationId         = $ApplicationId
         TenantId              = $TenantId
@@ -285,7 +285,6 @@ function Export-TargetResource
         CertificateThumbprint = $CertificateThumbprint
         GlobalAdminAccount    = $GlobalAdminAccount
     }
-
     $Results = Get-TargetResource @Params
     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
             -Results $Results
@@ -294,6 +293,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
     return $dscContent
 }
 

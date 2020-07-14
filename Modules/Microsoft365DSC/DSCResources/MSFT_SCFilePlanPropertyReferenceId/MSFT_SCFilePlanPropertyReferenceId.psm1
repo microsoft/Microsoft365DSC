@@ -183,9 +183,10 @@ function Export-TargetResource
 
     $i = 1
     $dscContent = ""
+    Write-Host "`r`n" -NoNewLine
     foreach ($Property in $Properties)
     {
-        Write-Information "    [$i/$($Properties.Length)] $($Property.Name)"
+        Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewLine
         $Params = @{
             Name                  = $Property.DisplayName
             GlobalAdminAccount    = $GlobalAdminAccount
@@ -198,6 +199,8 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

@@ -431,7 +431,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $InformationPreference = "Continue"
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -444,10 +443,18 @@ function Export-TargetResource
 
     $AntiPhishRules = Get-AntiphishRule
     $dscContent = ""
+    if ($AntiPhishRules.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($Rule in $AntiPhishRules)
     {
-        Write-Information "    [$i/$($AntiPhishRules.Length)] $($Rule.Identity)"
+        Write-Host "    |---[$i/$($AntiPhishRules.Length)] $($Rule.Identity)" -NoNewLine
 
         $Params = @{
             Identity              = $Rule.Identity
@@ -467,6 +474,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

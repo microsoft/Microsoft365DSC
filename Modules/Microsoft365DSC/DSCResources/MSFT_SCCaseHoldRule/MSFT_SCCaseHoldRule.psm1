@@ -231,9 +231,10 @@ function Export-TargetResource
 
     $dscContent = ""
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($Rule in $Rules)
     {
-        Write-Information "    [$i/$($Rules.Count)] $($Rule.Name)"
+        Write-Host "    |---[$i/$($Rules.Count)] $($Rule.Name)" -NoNewLine
         try
         {
             $policy = Get-CaseHoldPolicy -Identity $Rule.Policy -ErrorAction Stop
@@ -256,6 +257,7 @@ function Export-TargetResource
         {
             Write-Information "You are not authorized to access Case Hold Policy {$($Rule.Policy)}"
         }
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

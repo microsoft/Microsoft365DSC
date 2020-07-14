@@ -274,7 +274,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -287,28 +286,21 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters
 
-    $policies = Get-RetentionCompliancePolicy
+    [array]$policies = Get-RetentionCompliancePolicy
 
     $j = 1
     $dscContent = ''
-    $policiesLength = $policies.Length
-    if ($null -eq $policiesLength)
-    {
-        $policiesLength = 1
-    }
+    Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        $rules = Get-RetentionComplianceRule -Policy $policy.Name
-        Write-Information "    Policy [$j/$($policiesLength)] $($policy.Name)"
+        [array]$rules = Get-RetentionComplianceRule -Policy $policy.Name
+        Write-Host "    Policy [$j/$($policies.Length)] $($policy.Name)"
         $i = 1
-        $rulesLength = $rules.Length
-        if ($null -eq $rulesLength)
-        {
-            $rulesLength = 1
-        }
+
         foreach ($rule in $rules)
         {
-            Write-Information "        [$i/$($rulesLength)] $($rule.Name)"
+            Write-Host "        |---[$i/$($rules.Length)] $($rule.Name)" -NoNewLine
+
             $Params = @{
                 GlobalAdminAccount    = $GlobalAdminAccount
                 Name                  = $rule.Name
@@ -321,6 +313,17 @@ function Export-TargetResource
                 $Results.Remove("ExpirationDateOption") | Out-Null
             }
 
+            $content += "        SCRetentionComplianceRule " + (New-GUID).ToString() + "`r`n"
+            $content += "        {`r`n"
+            $partialContent = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
+            if ($partialContent.ToLower().Contains($organization.ToLower()) -or `
+                    $partialContent.ToLower().Contains($principal.ToLower()))
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$(`$OrganizationName)"
+            }
+            $content += $partialContent
+            $content += "        }`r`n"
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -328,6 +331,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
         $j++

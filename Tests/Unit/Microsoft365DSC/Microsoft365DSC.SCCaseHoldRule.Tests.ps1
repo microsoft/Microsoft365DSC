@@ -24,8 +24,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
             $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-            Mock -CommandName Test-MSCloudLogin -MockWith {
 
+            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
+                return @{}
+            }
+
+            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
+
+            }
+
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
 
             Mock -CommandName Import-PSSession -MockWith {
@@ -207,9 +216,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return $testRule1
                 }
 
-                $exported = Export-TargetResource @testParams
-                ([regex]::Matches($exported, " SCCaseHoldRule " )).Count | Should -Be 1
-                $exported.Contains("TestRule1") | Should -Be $true
+                Export-TargetResource @testParams
             }
 
             It "Should Reverse Engineer resource from the Export method when multiple" {
@@ -217,10 +224,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @($testRule1, $testRule2)
                 }
 
-                $exported = Export-TargetResource @testParams
-                ([regex]::Matches($exported, " SCCaseHoldRule " )).Count | Should -Be 2
-                $exported.Contains("TestRule1") | Should -Be $true
-                $exported.Contains("TestRule2") | Should -Be $true
+                Export-TargetResource @testParams
             }
         }
     }

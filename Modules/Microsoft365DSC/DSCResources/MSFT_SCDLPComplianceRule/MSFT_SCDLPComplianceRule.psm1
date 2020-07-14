@@ -493,13 +493,14 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $rules = Get-DLPComplianceRule | Where-Object { $_.Mode -ne 'PendingDeletion' }
+    [array]$rules = Get-DLPComplianceRule | Where-Object { $_.Mode -ne 'PendingDeletion' }
 
     $i = 1
     $dscContent = ""
+    Write-Host "`r`n" -NoNewLine
     foreach ($rule in $rules)
     {
-        Write-Information "    [$i/$($rules.Length)] $($rule.Name)"
+        Write-Host "    |---[$i/$($rules.Length)] $($rule.Name)" -NoNewLine
         $Params = @{
             Name                  = $rule.name
             Policy                = $rule.ParentPolicyName
@@ -524,6 +525,7 @@ function Export-TargetResource
         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsCIMArray
 
         $dscContent += $currentDSCBlock
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
 

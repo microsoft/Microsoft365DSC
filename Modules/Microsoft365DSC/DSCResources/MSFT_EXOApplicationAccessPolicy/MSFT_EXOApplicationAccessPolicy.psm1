@@ -338,7 +338,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -357,17 +356,25 @@ function Export-TargetResource
     {
         if ($_.Exception -like "*The operation couldn't be performed because object*")
         {
-            Write-Verbose "Could not obtain Application Access Policies for Tenant"
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Application Access Policies"
             return ""
         }
         throw $_
     }
 
     $dscContent = ""
+    if ($AllApplicationAccessPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($ApplicationAccessPolicy in $AllApplicationAccessPolicies)
     {
-        Write-Information "    [$i/$($AllApplicationAccessPolicies.Count)] $($ApplicationAccessPolicy.Identity)"
+        Write-Host "    |---[$i/$($AllApplicationAccessPolicies.Count)] $($ApplicationAccessPolicy.Identity)" -NoNewLine
 
         $Params = @{
             Identity              = $ApplicationAccessPolicy.Identity
@@ -386,6 +393,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

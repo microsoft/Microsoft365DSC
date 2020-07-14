@@ -626,6 +626,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+    Write-Host $Global:M365DSCEmojiGreenCheckmark
     return $dscContent
 }
 

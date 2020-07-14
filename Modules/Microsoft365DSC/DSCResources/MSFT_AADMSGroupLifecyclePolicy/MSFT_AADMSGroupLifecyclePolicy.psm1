@@ -293,7 +293,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -334,9 +333,7 @@ function Export-TargetResource
 
     $dscContent = ''
 
-    if ($ConnectionMode -eq 'Credential')
-    {
-        $Params = @{
+    $Params = @{
             GlobalAdminAccount          = $GlobalAdminAccount
             IsSingleInstance            = 'Yes'
             GroupLifetimeInDays         = 1
@@ -345,7 +342,6 @@ function Export-TargetResource
             ApplicationId               = $ApplicationId
             TenantId                    = $TenantId
             CertificateThumbprint       = $CertificateThumbprint
-        }
     }
     $Results = Get-TargetResource @Params
     if ($Results.Ensure -eq 'Present')
@@ -358,6 +354,7 @@ function Export-TargetResource
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
     }
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
 
     return $dscContent
 }

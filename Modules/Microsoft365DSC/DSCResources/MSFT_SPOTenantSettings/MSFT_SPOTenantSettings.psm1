@@ -536,7 +536,15 @@ function Export-TargetResource
     {
         $Results.Remove("MinCompatibilityLevel") | Out-Null
     }
-    return $dscContent
+    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+        -Results $Results
+    $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+        -ConnectionMode $ConnectionMode `
+        -ModulePath $PSScriptRoot `
+        -Results $Results `
+        -GlobalAdminAccount $GlobalAdminAccount
+    Write-Host $Global:M365DSCEmojiGreenCheckmark
+    return $content
 }
 
 Export-ModuleMember -Function *-TargetResource

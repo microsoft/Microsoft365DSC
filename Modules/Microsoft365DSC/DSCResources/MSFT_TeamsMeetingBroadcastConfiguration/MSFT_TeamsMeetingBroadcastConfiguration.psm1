@@ -204,8 +204,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -230,6 +228,7 @@ function Export-TargetResource
     $partial = Convert-DSCStringParamToVariable -DSCBlock $partial -ParameterName "SdnApiToken"
     $content += $partial
     $content += "        }`r`n"
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
     return $content
 }
 

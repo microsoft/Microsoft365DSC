@@ -340,7 +340,6 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
 
-    $InformationPreference = "Continue"
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -352,13 +351,13 @@ function Export-TargetResource
         -InboundParameters $PSBoundParameters
     $searches = Get-ComplianceSearch
 
-    Write-Information "    * Searches not assigned to an eDiscovery Case"
+    Write-Host "    `r`n* Searches not assigned to an eDiscovery Case"
     $i = 1
     $dscContent = ""
     $partialContent = ""
     foreach ($search in $searches)
     {
-        Write-Information "        - [$i/$($searches.Name.Count)] $($search.Name)"
+        Write-Host "        |---[$i/$($searches.Name.Count)] $($search.Name)" -NoNewLine
         $params = @{
             Name                  = $search.Name
             GlobalAdminAccount    = $GlobalAdminAccount
@@ -371,6 +370,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
 
@@ -381,7 +381,7 @@ function Export-TargetResource
     {
         $searches = Get-ComplianceSearch -Case $case.Name
 
-        Write-Information "    * [$j/$($cases.Length)] Searches assigned to case $($case.Name)"
+        Write-Host "    * [$j/$($cases.Length)] Searches assigned to case $($case.Name)"
         $i = 1
         foreach ($search in $searches)
         {
@@ -395,7 +395,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
             }
-            Write-Information "        - [$i/$($searches.Name.Count)] $($search.Name)"
+            Write-Host "        |---[$i/$($searches.Name.Count)] $($search.Name)" -NoNewLine
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -404,6 +404,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
         $j++

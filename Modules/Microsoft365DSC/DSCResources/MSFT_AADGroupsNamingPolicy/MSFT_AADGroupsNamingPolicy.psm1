@@ -209,7 +209,7 @@ function Test-TargetResource
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
+        -DesiredValues $ValuesToCheck `
         -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
@@ -239,7 +239,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -250,15 +249,12 @@ function Export-TargetResource
 
     $dscContent = ''
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
-    if ($ConnectionMode -eq 'ServicePrincipal')
-    {
-        $Params = @{
-            ApplicationId          = $ApplicationId
-            TenantId               = $TenantId
-            CertificateThumbprint  = $CertificateThumbprint
-            IsSingleInstance       = 'Yes'
-            GlobalAdminAccount = $GlobalAdminAccount
-        }
+    $Params = @{
+        ApplicationId          = $ApplicationId
+        TenantId               = $TenantId
+        CertificateThumbprint  = $CertificateThumbprint
+        IsSingleInstance       = 'Yes'
+        GlobalAdminAccount = $GlobalAdminAccount
     }
 
     $Results = Get-TargetResource @Params
@@ -273,7 +269,7 @@ function Export-TargetResource
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
     }
-
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
     return $dscContent
 }
 

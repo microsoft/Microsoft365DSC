@@ -227,14 +227,13 @@ function Export-TargetResource
 
     $dscContent = ""
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($Case in $Cases)
     {
-        Write-Information "    eDiscovery: [$i/$($Cases.Count)] $($Case.Name)"
+        Write-Host "    eDiscovery: [$i/$($Cases.Count)] $($Case.Name)" -NoNewLine
         $Params = @{
             Name                  = $Case.Name
             GlobalAdminAccount    = $GlobalAdminAccount
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
         }
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -244,6 +243,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
 
@@ -252,15 +252,10 @@ function Export-TargetResource
     $i = 1
     foreach ($Case in $Cases)
     {
-        Write-Information "    GDPR: [$i/$($Cases.Count)] $($Case.Name)"
+        Write-Host "    GDPR: [$i/$($Cases.Count)] $($Case.Name)" -NoNewLine
         $Params = @{
             Name                  = $Case.Name
             GlobalAdminAccount    = $GlobalAdminAccount
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePassword   = $CertificatePassword
-            CertificatePath       = $CertificatePath
         }
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -270,6 +265,8 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

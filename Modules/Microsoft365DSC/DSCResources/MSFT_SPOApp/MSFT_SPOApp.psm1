@@ -287,7 +287,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -324,7 +323,11 @@ function Export-TargetResource
         $i = 1
         foreach ($file in $filesToDownload)
         {
-            Write-Information "    [$i/$($filesToDownload.Length)] $($file.Name)"
+            if ($i -eq 1)
+            {
+                    Write-Host "`r`n" -NoNewline
+            }
+            Write-Host "    |---[$i/$($filesToDownload.Length)] $($file.Name)" -NoNewline
 
             $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")
             $app = Get-PnpApp -Identity $identity -ErrorAction SilentlyContinue
@@ -357,6 +360,7 @@ function Export-TargetResource
                         -GlobalAdminAccount $GlobalAdminAccount
             }
             $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckmark
         }
 
         $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `

@@ -951,9 +951,18 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
+    [array]$HostedContentFilterPolicies = Get-HostedContentFilterPolicy
     $dscContent = ''
 
+    if ($HostedContentFilterPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
+    $i = 1
     foreach ($HostedContentFilterPolicy in $HostedContentFilterPolicies)
     {
         $Params = @{
@@ -965,6 +974,7 @@ function Export-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
         }
+        Write-Host "    |---[$i/$($HostedContentFilterPolicies.Length)] $($HostedContentFilterPolicy.Identity)" -NoNewLine
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
             -Results $Results
@@ -973,6 +983,8 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        $i++
     }
     return $dscContent
 }

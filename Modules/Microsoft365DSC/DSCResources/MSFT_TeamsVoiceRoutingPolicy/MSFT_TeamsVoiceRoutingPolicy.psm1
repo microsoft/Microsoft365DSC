@@ -202,8 +202,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -218,9 +216,10 @@ function Export-TargetResource
     $i = 1
     [array]$policies = Get-CsOnlineVoiceRoutingPolicy
     $content = ''
+    Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        Write-Information "    [$i/$($policies.Count)] $($policy.Identity)"
+        Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewLine
         $params = @{
             Identity           = $policy.Identity
             Ensure             = 'Present'
@@ -234,6 +233,7 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

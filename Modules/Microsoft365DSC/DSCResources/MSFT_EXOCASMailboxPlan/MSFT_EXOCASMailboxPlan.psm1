@@ -300,16 +300,23 @@ function Export-TargetResource
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $InformationPreference = 'Continue'
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
     [array]$CASMailboxPlans = Get-CASMailboxPlan
 
+    if ($CASMailboxPlans.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $dscContent = ""
     $i = 1
     foreach ($CASMailboxPlan in $CASMailboxPlans)
     {
-        Write-Information -MessageData "    [$i/$($CASMailboxPlans.Count)] $($CASMailboxPlan.Identity.Split('-')[0])"
+        Write-Host "    |---[$i/$($CASMailboxPlans.Count)] $($CASMailboxPlan.Identity.Split('-')[0])" -NoNewLine
         $Params = @{
             Identity              = $CASMailboxPlan.Identity
             GlobalAdminAccount    = $GlobalAdminAccount
@@ -328,6 +335,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

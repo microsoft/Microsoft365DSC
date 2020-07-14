@@ -412,10 +412,19 @@ function Export-TargetResource
 
     [array]$InboundConnectors = Get-InboundConnector
     $dscContent = ""
+
+    if ($InboundConnectors.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($InboundConnector in $InboundConnectors)
     {
-        Write-Information "    [$i/$($InboundConnectors.length)] $($InboundConnector.Identity)"
+        Write-Host "    |---[$i/$($InboundConnectors.Length)] $($InboundConnector.Identity)" -NoNewLine
 
         $Params = @{
             Identity              = $InboundConnector.Identity
@@ -435,6 +444,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

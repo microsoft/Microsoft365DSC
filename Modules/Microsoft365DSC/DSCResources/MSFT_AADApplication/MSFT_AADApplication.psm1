@@ -425,19 +425,18 @@ function Export-TargetResource
     $dscContent = ''
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
     $i = 1
-
-    $AADApplications = Get-AzureADApplication -All:$true
+    Write-Host "`r`n" -NoNewLine
+    $AADApplications = Get-AzureADApplication
     foreach($AADApp in $AADApplications)
     {
-        Write-Information -MessageData "    [$i/$($AADApplications.Count)] $($AADApp.DisplayName)"
+        Write-Host "    |---[$i/$($AADApplications.Count)] $($AADApp.DisplayName)" -NoNewLine
         $Params = @{
-                GlobalAdminAccount    = $GlobalAdminAccount
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                DisplayName           = $AADApp.DisplayName
-                ObjectID              = $AADApp.ObjectID
-            }
+                GlobalAdminAccount            = $GlobalAdminAccount
+                ApplicationId                 = $ApplicationId
+                TenantId                      = $TenantId
+                CertificateThumbprint         = $CertificateThumbprint
+                DisplayName                   = $AADApp.DisplayName
+                ObjectID                      = $AADApp.ObjectID
         }
         $Results = Get-TargetResource @Params
 
@@ -450,6 +449,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
     }

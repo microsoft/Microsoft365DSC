@@ -82,8 +82,8 @@ function Get-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
-            $CertificatePath      = $CertificatePath
-            $CertificatePassword  = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
         }
 
         return $nullReturn
@@ -100,8 +100,8 @@ function Get-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
-            $CertificatePath      = $CertificatePath
-            $CertificatePassword  = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
         }
 
         Write-Verbose -Message "Found Active Sync Device Access Rule $($Identity)"
@@ -319,7 +319,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -334,9 +333,17 @@ function Export-TargetResource
 
     $dscContent = ""
     $i = 1
+    if ($AllActiveSyncDeviceAccessRules.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     foreach ($ActiveSyncDeviceAccessRule in $AllActiveSyncDeviceAccessRules)
     {
-        Write-Information "    [$i/$($AllActiveSyncDeviceAccessRules.Count)] $($ActiveSyncDeviceAccessRule.Identity)"
+        Write-Host "    |---[$i/$($AllActiveSyncDeviceAccessRules.Count)] $($ActiveSyncDeviceAccessRule.Identity)" -NoNewLine
 
         $Params = @{
             Identity              = $ActiveSyncDeviceAccessRule.Identity
@@ -355,6 +362,7 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $Results `
             -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

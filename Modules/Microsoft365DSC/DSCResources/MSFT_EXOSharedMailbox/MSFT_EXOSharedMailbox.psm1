@@ -326,8 +326,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -339,18 +337,21 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $mailboxes = Get-Mailbox
+    [array]$mailboxes = Get-Mailbox
     $mailboxes = $mailboxes | Where-Object -FilterScript { $_.RecipientTypeDetails -eq "SharedMailbox" }
     $dscContent = ''
     $i = 1
-    $total = $mailboxes.Length
-    if ($null -eq $total -and $null -ne $mailboxes)
+    if ($mailboxes.Length -eq 0)
     {
-        $total = 1
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
     }
     foreach ($mailbox in $mailboxes)
     {
-        Write-Information "    [$i/$total] $($mailbox.Name)"
+        Write-Host "    |---[$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewLine
         $mailboxName = $mailbox.Name
         if ($mailboxName)
         {
@@ -372,6 +373,7 @@ function Export-TargetResource
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
         }
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

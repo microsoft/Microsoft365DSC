@@ -77,8 +77,6 @@ function Get-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-
-    $InformationPreference = 'Continue'
     Write-Verbose -Message "Setting configuration of SafeLinksRule for $Identity"
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
@@ -388,8 +386,6 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $CertificatePassword
     )
-    $InformationPreference = 'Continue'
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -405,10 +401,19 @@ function Export-TargetResource
     if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-SafeLinksRule)
     {
         [array]$SafeLinksRules = Get-SafeLinksRule
+
+        if ($SafeLinksRules.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewLine
+        }
         $i = 1
         foreach ($SafeLinksRule in $SafeLinksRules)
         {
-            Write-Information "    [$i/$($SafeLinksRules.Length)] $($SafeLinksRule.Identity)"
+            Write-Host "    |---[$i/$($SafeLinksRules.Length)] $($SafeLinksRule.Identity)" -NoNewLine
             $Params = @{
                 Identity              = $SafeLinksRule.Identity
                 SafeLinksPolicy       = $SafeLinksRule.SafeLinksPolicy
@@ -427,12 +432,13 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
     }
     else
     {
-        Write-Information "The current tenant is not registered to allow for Safe Links Rules."
+        Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Safe Links Rules."
     }
     return $dscContent
 }
