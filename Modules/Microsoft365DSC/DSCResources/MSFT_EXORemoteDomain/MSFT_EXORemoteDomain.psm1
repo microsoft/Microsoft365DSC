@@ -131,8 +131,17 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Remote Domain for $Identity"
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
+    }
 
     $RemoteDomain = Get-RemoteDomain -Identity $Identity -ErrorAction SilentlyContinue
 

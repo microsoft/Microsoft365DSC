@@ -1012,6 +1012,11 @@ function New-M365DSCConnection
         $SkipModuleReload = $false
     )
 
+    if ($SkipModuleReload)
+    {
+        $Global:CurrentModeIsExport = $true
+    }
+
     # Case both authentication methods are attempted
     if ($null -ne $InboundParameters.GlobalAdminAccount -and `
         (-not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -or `
