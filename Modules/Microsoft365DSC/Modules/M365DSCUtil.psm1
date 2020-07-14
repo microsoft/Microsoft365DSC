@@ -1012,7 +1012,7 @@ function New-M365DSCConnection
         $SkipModuleReload = $false
     )
 
-    if ($SkipModuleReload)
+    if ($SkipModuleReload -eq $true)
     {
         $Global:CurrentModeIsExport = $true
     }
@@ -1049,14 +1049,14 @@ function New-M365DSCConnection
         {
             Test-MSCloudLogin -Platform $Platform `
                 -CloudCredential $InboundParameters.GlobalAdminAccount `
-                -SkipModuleReload $SkipModuleReload
+                -SkipModuleReload $Global:CurrentModeIsExport
         }
         else
         {
             Test-MSCloudLogin -Platform $Platform `
                 -CloudCredential $InboundParameters.GlobalAdminAccount `
                 -ConnectionUrl $Url `
-                -SkipModuleReload $SkipModuleReload
+                -SkipModuleReload $Global:CurrentModeIsExport
         }
         return "Credential"
     }
@@ -1070,7 +1070,7 @@ function New-M365DSCConnection
             Test-MSCloudLogin -Platform $Platform `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -CloudCredential $InboundParameters.GlobalAdminAccount `
-                -SkipModuleReload $SkipModuleReload
+                -SkipModuleReload $Global:CurrentModeIsExport
         }
         else
         {
@@ -1078,7 +1078,7 @@ function New-M365DSCConnection
                 -ApplicationId $InboundParameters.ApplicationId `
                 -CloudCredential $InboundParameters.GlobalAdminAccount `
                 -ConnectionUrl $Url `
-                -SkipModuleReload $SkipModuleReload
+                -SkipModuleReload $Global:CurrentModeIsExport
         }
         return 'ServicePrincipal'
     }
@@ -1095,7 +1095,7 @@ function New-M365DSCConnection
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -CertificateThumbprint $InboundParameters.CertificateThumbprint `
-                -SkipModuleReload $SkipModuleReload
+                -SkipModuleReload $Global:CurrentModeIsExport
         }
         else
         {
@@ -1104,7 +1104,7 @@ function New-M365DSCConnection
                 -TenantId $InboundParameters.TenantId `
                 -CertificateThumbprint $InboundParameters.CertificateThumbprint `
                 -ConnectionUrl $Url `
-                -SkipModuleReload $SkipModuleReload
+                -SkipModuleReload $Global:CurrentModeIsExport
         }
         return 'ServicePrincipal'
     }
