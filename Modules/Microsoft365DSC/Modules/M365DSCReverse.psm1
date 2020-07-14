@@ -78,6 +78,14 @@ function Start-M365DSCConfigurationExtract
     $VerbosePreference = "SilentlyContinue"
     $WarningPreference = "SilentlyContinue"
 
+    if ($null -eq $ComponentsToExtract -or $ComponentsToExtract.Length -eq 0)
+    {
+        $ComponentsToExtractSpecified = $false
+    }
+    else
+    {
+        $ComponentsToExtractSpecified = $true
+    }
     $organization = ""
     $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
     $ConnectionMode = $null
@@ -312,9 +320,10 @@ function Start-M365DSCConfigurationExtract
                 }
             }
             if (($null -ne $ComponentsToExtract -and
-                    ($ComponentsToExtract -contains $resourceName -or $ComponentsToExtract -contains ("chck" + $resourceName))) -or
+                ($ComponentsToExtract -contains $resourceName -or $ComponentsToExtract -contains ("chck" + $resourceName))) -or
                 $AllComponents -or ($null -ne $Workloads -and $Workloads -contains $currentWorkload) -or `
-                ($null -eq $ComponentsToExtract -and $null -eq $Workloads))
+                ($null -eq $ComponentsToExtract -and $null -eq $Workloads) -and `
+                ($ComponentsToExtractSpecified -or -not $ComponentsToSkip.Contains($resourceName)))
             {
                 $ResourcesToExport += $ResourceModule
             }
