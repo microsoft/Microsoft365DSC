@@ -14,6 +14,7 @@ jobs:
     - name: Install Dependencies
       shell : powershell
       run: |
+       $VerbosePreference = 'Continue'
        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
 
        $manifest = Import-PowerShellDataFile "./Modules/Microsoft365DSC/Microsoft365DSC.psd1"
@@ -21,10 +22,11 @@ jobs:
        foreach ($dependency in $dependencies)
        {
            $moduleInfo = Find-Module $dependency.ModuleName | Where-Object -FilterScript {$_.Version -like "*$($dependency.RequiredVersion)*"}
-           Install-Module $dependency.ModuleName -RequiredVersion $moduleInfo.Version -Force -AllowPreRelease -SkipPublisherCheck -AllowClobber -Scope AllUsers
+           Write-Verbose -Message "Installing Module {$($dependency.ModuleName)} Version {$($moduleInfo.Version)}"
+           Install-Module $dependency.ModuleName -RequiredVersion $moduleInfo.Version -Force -AllowPreRelease -SkipPublisherCheck -AllowClobber -Scope AllUsers -Verbose
            try
            {
-               Import-Module $dependency.ModuleName -Force
+               Import-Module $dependency.ModuleName -Force -Verbose
            }
            catch
            {
