@@ -1016,6 +1016,10 @@ function New-M365DSCConnection
     {
         $Global:CurrentModeIsExport = $true
     }
+    else
+    {
+        $Global:CurrentModeIsExport = $false
+    }
 
     # Case both authentication methods are attempted
     if ($null -ne $InboundParameters.GlobalAdminAccount -and `
