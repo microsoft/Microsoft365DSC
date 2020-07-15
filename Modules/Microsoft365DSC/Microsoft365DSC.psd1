@@ -11,7 +11,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion     = '1.20.0714'
+    ModuleVersion     = '1.20.0714.1'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -61,7 +61,7 @@
         },
         @{
             ModuleName      = "ExchangeOnlineManagement"
-            RequiredVersion = "2.0.3"
+            RequiredVersion = "2.0.1"
         },
         @{
             ModuleName      = "Microsoft.Graph.Authentication"
@@ -89,7 +89,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.30"
+            RequiredVersion = "1.0.31"
         },
         @{
             ModuleName      = "ReverseDSC"
@@ -155,8 +155,6 @@
     PrivateData       = @{
 
         PSData = @{
-            Prerelease = 'Preview'
-
             # Tags applied to this module. These help with module discovery in online galleries.
             Tags         = 'DesiredStateConfiguration', 'DSC', 'DSCResourceKit', 'DSCResource', 'Microsoft365'
 
