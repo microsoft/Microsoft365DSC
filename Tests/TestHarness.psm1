@@ -77,6 +77,7 @@ function Invoke-TestHarness
     if ($IgnoreCodeCoverage.IsPresent -eq $false)
     {
         $testResultSettings.Add('CodeCoverage', $testCoverageFiles)
+        $test
     }
 
     $filesToExecute = @()
@@ -84,6 +85,13 @@ function Invoke-TestHarness
     {
         $filesToExecute += $testToRun
     }
-    $results = Invoke-Pester -Path $filesToExecute -PassThru @testResultSettings
+    if ($IgnoreCodeCoverage.IsPresent -eq $false)
+    {
+        $results = Invoke-Pester -Path $filesToExecute -CodeCoverage $testCoverageFiles -CodeCoverageOutputFile  "CodeCov.xml" -PassThru @testResultSettings
+    }
+    else
+    {
+        $results = Invoke-Pester -Path $filesToExecute -PassThru @testResultSettings
+    }
     return $results
 }
