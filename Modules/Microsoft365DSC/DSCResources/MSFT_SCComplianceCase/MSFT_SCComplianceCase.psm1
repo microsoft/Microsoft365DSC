@@ -29,14 +29,24 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of SCComplianceCase for $Name"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters
+    }
 
     $Case = Get-ComplianceCase -Identity $Name -ErrorAction SilentlyContinue
 
@@ -98,14 +108,15 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of SCComplianceCase for $Name"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters
 
     $CurrentCase = Get-TargetResource @PSBoundParameters
 
@@ -211,34 +222,37 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
 
-    $InformationPreference = "Continue"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
     [array]$Cases = Get-ComplianceCase
 
     $dscContent = ""
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($Case in $Cases)
     {
-        Write-Information "    - eDiscovery: [$i/$($Cases.Count)] $($Case.Name)"
-        $params = @{
-            Name               = $Case.Name
-            GlobalAdminAccount = $GlobalAdminAccount
+        Write-Host "    eDiscovery: [$i/$($Cases.Count)] $($Case.Name)" -NoNewLine
+        $Params = @{
+            Name                  = $Case.Name
+            GlobalAdminAccount    = $GlobalAdminAccount
         }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $dscContent += "        SCComplianceCase " + (New-GUID).ToString() + "`r`n"
-        $dscContent += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $partialContent += "        }`r`n"
-        $dscContent += $partialContent
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
 
@@ -247,19 +261,21 @@ function Export-TargetResource
     $i = 1
     foreach ($Case in $Cases)
     {
-        Write-Information "    - GDPR: [$i/$($Cases.Count)] $($Case.Name)"
-        $params = @{
-            Name               = $Case.Name
-            GlobalAdminAccount = $GlobalAdminAccount
+        Write-Host "    GDPR: [$i/$($Cases.Count)] $($Case.Name)" -NoNewLine
+        $Params = @{
+            Name                  = $Case.Name
+            GlobalAdminAccount    = $GlobalAdminAccount
         }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $dscContent += "        SCComplianceCase " + (New-GUID).ToString() + "`r`n"
-        $dscContent += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $partialContent += "        }`r`n"
-        $dscContent += $partialContent
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
+
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

@@ -21,15 +21,36 @@ function Get-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration of Office 365 Shared Mailbox $DisplayName"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -41,8 +62,17 @@ function Get-TargetResource
         Ensure             = "Absent"
     }
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
+    }
 
     $mailboxes = Get-Mailbox
     $mailbox = $mailboxes | Where-Object -FilterScript {
@@ -103,15 +133,36 @@ function Set-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Shared Mailbox $DisplayName"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -129,8 +180,8 @@ function Set-TargetResource
     #endregion
 
     $CurrentParameters = $PSBoundParameters
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     # CASE: Mailbox doesn't exist but should;
     if ($Ensure -eq "Present" -and $currentMailbox.Ensure -eq "Absent")
@@ -202,15 +253,36 @@ function Test-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing configuration of Office 365 Shared Mailbox $DisplayName"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -239,64 +311,82 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
-    )
-    $InformationPreference = 'Continue'
+        $GlobalAdminAccount,
 
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
+    )
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline `
-        -ErrorAction SilentlyContinue
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
-    $organization = ""
-    if ($GlobalAdminAccount.UserName.Contains("@"))
-    {
-        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
-    }
-    $mailboxes = Get-Mailbox
+    [array]$mailboxes = Get-Mailbox
     $mailboxes = $mailboxes | Where-Object -FilterScript { $_.RecipientTypeDetails -eq "SharedMailbox" }
-    $content = ''
+    $dscContent = ''
     $i = 1
-    $total = $mailboxes.Length
-    if ($null -eq $total -and $null -ne $mailboxes)
+    if ($mailboxes.Length -eq 0)
     {
-        $total = 1
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
     }
     foreach ($mailbox in $mailboxes)
     {
-        Write-Information "    - [$i/$total] $($mailbox.Name)"
+        Write-Host "    |---[$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewLine
         $mailboxName = $mailbox.Name
         if ($mailboxName)
         {
             $params = @{
-                GlobalAdminAccount = $GlobalAdminAccount
-                DisplayName        = $mailboxName
+                GlobalAdminAccount    = $GlobalAdminAccount
+                DisplayName           = $mailboxName
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
             }
-            $result = Get-TargetResource @params
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $modulePath = $PSScriptRoot + "\MSFT_EXOSharedMailbox.psm1"
-            $content += "        EXOSharedMailbox " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $partialContent = Get-DSCBlock -Params $result -ModulePath $modulePath
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
-            if ($partialContent.ToLower().IndexOf("@" + $organization.ToLower()) -gt 0)
-            {
-                $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
-            }
-            $content += $partialContent
-            $content += "        }`r`n"
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
         }
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

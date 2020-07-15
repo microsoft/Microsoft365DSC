@@ -22,21 +22,33 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of AzureAD Groups Naming Policy"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform AzureAD
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
 
     $Policy = Get-AzureADDirectorySetting | Where-Object -FilterScript {$_.DisplayName -eq "Group.Unified"}
 
@@ -55,6 +67,9 @@ function Get-TargetResource
             CustomBlockedWordsList        = $Policy["CustomBlockedWordsList"].Split(',')
             Ensure                        = "Present"
             GlobalAdminAccount            = $GlobalAdminAccount
+            ApplicationId                 = $ApplicationId
+            TenantId                      = $TenantId
+            CertificateThumbprint         = $CertificateThumbprint
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -85,21 +100,31 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of Azure AD Groups Naming Policy"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform AzureAD
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
 
@@ -156,16 +181,27 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration of AzureAD Groups Naming Policy"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
@@ -173,7 +209,7 @@ function Test-TargetResource
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
+        -DesiredValues $ValuesToCheck `
         -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
@@ -187,32 +223,54 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $content = ''
-    $params = @{
+    $dscContent = ''
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+    $Params = @{
+        ApplicationId          = $ApplicationId
+        TenantId               = $TenantId
+        CertificateThumbprint  = $CertificateThumbprint
+        IsSingleInstance       = 'Yes'
         GlobalAdminAccount = $GlobalAdminAccount
-        IsSingleInstance   = 'Yes'
     }
-    $result = Get-TargetResource @params
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content += "        AADGroupsNamingPolicy " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
 
-    return $content
+    $Results = Get-TargetResource @Params
+
+    if ($Results.Ensure -eq 'Present')
+    {
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
+    }
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

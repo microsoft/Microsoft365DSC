@@ -1,16 +1,17 @@
 [CmdletBinding()]
 param(
-    [Parameter()]
-    [string]
-    $CmdletModule = (Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\Stubs\Microsoft365.psm1" `
-            -Resolve)
 )
-$GenericStubPath = (Join-Path -Path $PSScriptRoot `
-    -ChildPath "..\Stubs\Generic.psm1" `
+$M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
+                        -ChildPath "..\..\Unit" `
+                        -Resolve
+$CmdletModule = (Join-Path -Path $M365DSCTestFolder `
+            -ChildPath "\Stubs\Microsoft365.psm1" `
+            -Resolve)
+$GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
+    -ChildPath "\Stubs\Generic.psm1" `
     -Resolve)
-Import-Module -Name (Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\UnitTestHelper.psm1" `
+Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
+        -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
@@ -18,73 +19,66 @@ $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
+        BeforeAll {
+            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
+            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
+                return @{}
+            }
 
-        Mock -CommandName Close-SessionsAndReturnError -MockWith {
-
-        }
-
-        Mock -CommandName Test-MSCloudLogin -MockWith {
-
-        }
-
-        Mock -CommandName Get-PSSession -MockWith {
-
-        }
-
-        Mock -CommandName Remove-PSSession -MockWith {
-
-        }
-
-        Mock -CommandName New-AntiPhishRule -MockWith {
-            return @{
+            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
 
             }
-        }
 
-        Mock -CommandName Set-AntiPhishRule -MockWith {
-            return @{
-
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
-        }
 
-        Mock -CommandName Remove-AntiPhishRule -MockWith {
-            return @{
+            Mock -CommandName New-AntiPhishRule -MockWith {
+                return @{
 
+                }
             }
-        }
 
-        Mock -CommandName New-EXOAntiPhishRule -MockWith {
-            return @{
+            Mock -CommandName Set-AntiPhishRule -MockWith {
+                return @{
 
+                }
             }
-        }
 
-        Mock -CommandName Set-EXOAntiPhishRule -MockWith {
-            return @{
+            Mock -CommandName Remove-AntiPhishRule -MockWith {
+                return @{
 
+                }
             }
         }
 
         # Test contexts
         Context -Name "AntiPhishRule creation." -Fixture {
-            $testParams = @{
-                Ensure             = 'Present'
-                GlobalAdminAccount = $GlobalAdminAccount
-                Identity           = 'TestRule'
-                AntiPhishPolicy    = 'TestPolicy'
-            }
+            BeforeAll {
+                $testParams = @{
+                    Ensure             = 'Present'
+                    GlobalAdminAccount = $GlobalAdminAccount
+                    Identity           = 'TestRule'
+                    AntiPhishPolicy    = 'TestPolicy'
+                }
 
-            Mock -CommandName Get-AntiPhishRule -MockWith {
-                return @{
-                    Identity = 'SomeOtherPolicy'
+                Mock -CommandName Get-AntiPhishPolicy -MockWith {
+                    return @{
+                        Identity = 'TestPolicy'
+                    }
+                }
+
+                Mock -CommandName Get-AntiPhishRule -MockWith {
+                    return @{
+                        Identity = 'SomeOtherPolicy'
+                    }
                 }
             }
 
             It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should Be $false
+                Test-TargetResource @testParams | Should -Be $false
             }
 
             It "Should call the Set method" {
@@ -93,26 +87,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         Context -Name "AntiPhishRule update not required." -Fixture {
-            $testParams = @{
-                Ensure                    = 'Present'
-                Identity                  = 'TestRule'
-                GlobalAdminAccount        = $GlobalAdminAccount
-                AntiPhishPolicy           = 'TestPolicy'
-                Enabled                   = $true
-                Priority                  = 0
-                ExceptIfRecipientDomainIs = @('dev.contoso.com')
-                ExceptIfSentTo            = @('test@contoso.com')
-                ExceptIfSentToMemberOf    = @('Special Group')
-                RecipientDomainIs         = @('contoso.com')
-                SentTo                    = @('someone@contoso.com')
-                SentToMemberOf            = @('Some Group', 'Some Other Group')
-            }
-
-            Mock -CommandName Get-AntiPhishRule -MockWith {
-                return @{
+            BeforeAll {
+                $testParams = @{
                     Ensure                    = 'Present'
                     Identity                  = 'TestRule'
+                    GlobalAdminAccount        = $GlobalAdminAccount
                     AntiPhishPolicy           = 'TestPolicy'
+                    Enabled                   = $true
                     Priority                  = 0
                     ExceptIfRecipientDomainIs = @('dev.contoso.com')
                     ExceptIfSentTo            = @('test@contoso.com')
@@ -120,48 +101,77 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RecipientDomainIs         = @('contoso.com')
                     SentTo                    = @('someone@contoso.com')
                     SentToMemberOf            = @('Some Group', 'Some Other Group')
-                    State                     = 'Enabled'
+                }
+
+                Mock -CommandName Get-AntiPhishRule -MockWith {
+                    return @{
+                        Ensure                    = 'Present'
+                        Identity                  = 'TestRule'
+                        AntiPhishPolicy           = 'TestPolicy'
+                        Priority                  = 0
+                        ExceptIfRecipientDomainIs = @('dev.contoso.com')
+                        ExceptIfSentTo            = @('test@contoso.com')
+                        ExceptIfSentToMemberOf    = @('Special Group')
+                        RecipientDomainIs         = @('contoso.com')
+                        SentTo                    = @('someone@contoso.com')
+                        SentToMemberOf            = @('Some Group', 'Some Other Group')
+                        State                     = 'Enabled'
+                    }
+                }
+
+                Mock -CommandName Get-AntiPhishPolicy -MockWith {
+                    return @{
+                        Identity = 'TestPolicy'
+                    }
                 }
             }
 
             It 'Should return true from the Test method' {
-                Test-TargetResource @testParams | Should Be $true
+                Test-TargetResource @testParams | Should -Be $true
             }
         }
 
         Context -Name "AntiPhishRule update needed." -Fixture {
-            $testParams = @{
-                Ensure                    = 'Present'
-                Identity                  = 'TestRule'
-                GlobalAdminAccount        = $GlobalAdminAccount
-                AntiPhishPolicy           = 'TestPolicy'
-                Enabled                   = $true
-                Priority                  = 0
-                ExceptIfRecipientDomainIs = @('dev.contoso.com')
-                ExceptIfSentTo            = @('test@contoso.com')
-                ExceptIfSentToMemberOf    = @('Special Group')
-                RecipientDomainIs         = @('contoso.com')
-                SentTo                    = @('someone@contoso.com')
-                SentToMemberOf            = @('Some Group', 'Some Other Group')
-            }
-
-            Mock -CommandName Get-AntiPhishRule -MockWith {
-                return @{
+                BeforeAll {
+                $testParams = @{
+                    Ensure                    = 'Present'
                     Identity                  = 'TestRule'
+                    GlobalAdminAccount        = $GlobalAdminAccount
                     AntiPhishPolicy           = 'TestPolicy'
                     Enabled                   = $true
                     Priority                  = 0
-                    ExceptIfRecipientDomainIs = @('notdev.contoso.com')
-                    ExceptIfSentTo            = @('nottest@contoso.com')
-                    ExceptIfSentToMemberOf    = @('UnSpecial Group')
+                    ExceptIfRecipientDomainIs = @('dev.contoso.com')
+                    ExceptIfSentTo            = @('test@contoso.com')
+                    ExceptIfSentToMemberOf    = @('Special Group')
                     RecipientDomainIs         = @('contoso.com')
-                    SentTo                    = @('wrongperson@contoso.com', 'someone@contoso.com')
-                    SentToMemberOf            = @('Some Group', 'Some Other Group', 'DeletedGroup')
+                    SentTo                    = @('someone@contoso.com')
+                    SentToMemberOf            = @('Some Group', 'Some Other Group')
+                }
+
+                Mock -CommandName Get-AntiPhishRule -MockWith {
+                    return @{
+                        Identity                  = 'TestRule'
+                        AntiPhishPolicy           = 'TestPolicy'
+                        Enabled                   = $true
+                        Priority                  = 0
+                        ExceptIfRecipientDomainIs = @('notdev.contoso.com')
+                        ExceptIfSentTo            = @('nottest@contoso.com')
+                        ExceptIfSentToMemberOf    = @('UnSpecial Group')
+                        RecipientDomainIs         = @('contoso.com')
+                        SentTo                    = @('wrongperson@contoso.com', 'someone@contoso.com')
+                        SentToMemberOf            = @('Some Group', 'Some Other Group', 'DeletedGroup')
+                    }
+                }
+
+                Mock -CommandName Get-AntiPhishPolicy -MockWith {
+                    return @{
+                        Identity = 'TestPolicy'
+                    }
                 }
             }
 
             It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should Be $false
+                Test-TargetResource @testParams | Should -Be $false
             }
 
             It "Should call the Set method" {
@@ -170,21 +180,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         Context -Name "AntiPhishRule removal." -Fixture {
-            $testParams = @{
-                Ensure             = 'Absent'
-                GlobalAdminAccount = $GlobalAdminAccount
-                Identity           = 'TestRule'
-                AntiPhishPolicy    = 'TestPolicy'
-            }
+            BeforeAll {
+                $testParams = @{
+                    Ensure             = 'Absent'
+                    GlobalAdminAccount = $GlobalAdminAccount
+                    Identity           = 'TestRule'
+                    AntiPhishPolicy    = 'TestPolicy'
+                }
 
-            Mock -CommandName Get-AntiPhishRule -MockWith {
-                return @{
-                    Identity = 'TestRule'
+                Mock -CommandName Get-AntiPhishPolicy -MockWith {
+                    return @{
+                        Identity = 'TestPolicy'
+                    }
+                }
+
+                Mock -CommandName Get-AntiPhishRule -MockWith {
+                    return @{
+                        Identity = 'TestRule'
+                    }
                 }
             }
 
             It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should Be $false
+                Test-TargetResource @testParams | Should -Be $false
             }
 
             It "Should call the Set method" {
@@ -193,22 +211,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
-            $testParams = @{
-                GlobalAdminAccount = $GlobalAdminAccount
-            }
+            BeforeAll {
+                $testParams = @{
+                    GlobalAdminAccount = $GlobalAdminAccount
+                }
 
-            Mock -CommandName Get-AntiPhishRule -MockWith {
-                return @{
-                    Identity                  = 'TestRule'
-                    AntiPhishPolicy           = 'TestPolicy'
-                    Enabled                   = $true
-                    Priority                  = 0
-                    ExceptIfRecipientDomainIs = @('notdev.contoso.com')
-                    ExceptIfSentTo            = @('nottest@contoso.com')
-                    ExceptIfSentToMemberOf    = @('UnSpecial Group')
-                    RecipientDomainIs         = @('contoso.com')
-                    SentTo                    = @('wrongperson@contoso.com', 'someone@contoso.com')
-                    SentToMemberOf            = @('Some Group', 'Some Other Group', 'DeletedGroup')
+                Mock -CommandName Get-AntiPhishRule -MockWith {
+                    return @{
+                        Identity                  = 'TestRule'
+                        AntiPhishPolicy           = 'TestPolicy'
+                        Enabled                   = $true
+                        Priority                  = 0
+                        ExceptIfRecipientDomainIs = @('notdev.contoso.com')
+                        ExceptIfSentTo            = @('nottest@contoso.com')
+                        ExceptIfSentToMemberOf    = @('UnSpecial Group')
+                        RecipientDomainIs         = @('contoso.com')
+                        SentTo                    = @('wrongperson@contoso.com', 'someone@contoso.com')
+                        SentToMemberOf            = @('Some Group', 'Some Other Group', 'DeletedGroup')
+                    }
+                }
+
+                Mock -CommandName Get-AntiPhishPolicy -MockWith {
+                    return @{
+                        Identity = 'TestPolicy'
+                    }
                 }
             }
 

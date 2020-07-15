@@ -21,27 +21,38 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of SCAuditConfigurationPolicy for Workload {$Workload}"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+    Write-Verbose -Message "Connecting to Security and Compliance Center"
+
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters
+    }
 
     $PolicyObject = $null
-    $WorkloadValue = $Workload
+    Write-Verbose -Message "Current Workload = {$Workload}"
+
     if ($Workload -eq 'OneDriveForBusiness')
     {
         $PolicyObject = Get-AuditConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq 'a415dcce-19a0-4153-b137-eb6fd67995b5' }
-        $WorkloadValue = 'OneDriveForBusiness'
     }
     else
     {
         $PolicyObject = Get-AuditConfigurationPolicy | Where-Object -FilterScript { $_.Workload -eq $Workload }
     }
-
 
     if ($null -eq $PolicyObject)
     {
@@ -52,10 +63,10 @@ function Get-TargetResource
     }
     else
     {
-        Write-Verbose "Found existing SCAuditConfigurationPolicy $Workload"
+        Write-Verbose -Message "Found existing SCAuditConfigurationPolicy $Workload"
         $result = @{
             Ensure             = 'Present'
-            Workload           = $WorkloadValue
+            Workload           = $Workload
             GlobalAdminAccount = $GlobalAdminAccount
         }
 
@@ -87,14 +98,15 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of SCAuditConfigurationPolicy for $Workload"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters
 
     $CurrentPolicy = Get-TargetResource @PSBoundParameters
 
@@ -181,39 +193,42 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = "Continue"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
-    $policies = Get-AuditConfigurationPolicy
-    $content = ""
+    [array]$policies = Get-AuditConfigurationPolicy
+    $dscContent = ""
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($policy in $policies)
     {
-        Write-Information "    [$i/$($policies.Count)] {$($policy.Workload)}"
+        Write-Host "    |---[$i/$($policies.Length)] $($policy.Workload)" -NoNewLine
 
-        $params = @{
-            Workload           = $policy.Workload
-            GlobalAdminAccount = $GlobalAdminAccount
+        $Params = @{
+            Workload              = $policy.Workload
+            GlobalAdminAccount    = $GlobalAdminAccount
         }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        SCAuditConfigurationPolicy " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
-
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
 
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

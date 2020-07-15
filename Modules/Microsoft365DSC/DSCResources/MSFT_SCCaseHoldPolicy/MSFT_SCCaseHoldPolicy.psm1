@@ -44,14 +44,24 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of SCCaseHoldPolicy for $Name"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters
+    }
 
     $PolicyObject = Get-CaseHoldPolicy -Case $Case -Identity $Name -ErrorAction SilentlyContinue
 
@@ -127,14 +137,15 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of SCCaseHoldPolicy for $Name"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters
 
     $CurrentPolicy = Get-TargetResource @PSBoundParameters
 
@@ -306,40 +317,45 @@ function Export-TargetResource
     )
     $InformationPreference = "Continue"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+
+    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     [array]$cases = Get-ComplianceCase
 
     $dscContent = ""
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($case in $cases)
     {
-        Write-Information "    [$i/$($Cases.Count)] Scanning Policies in Case {$($case.Name)}"
+        Write-Host "    |---[$i/$($Cases.Count)] Scanning Policies in Case {$($case.Name)}"
         [array]$policies = Get-CaseHoldPolicy -Case $case.Name
 
         $j = 1
         foreach ($policy in $policies)
         {
-            Write-Information "        [$j/$($policies.Count)] $($policy.Name)"
-            $params = @{
-                Name               = $policy.Name
-                Case               = $case.Name
-                GlobalAdminAccount = $GlobalAdminAccount
+            Write-Host "        |---[$j/$($policies.Count)] $($policy.Name)" -NoNewLine
+            $Params = @{
+                Name                  = $policy.Name
+                Case                  = $case.Name
+                GlobalAdminAccount    = $GlobalAdminAccount
             }
-            $result = Get-TargetResource @params
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $dscContent += "        SCCaseHoldPolicy " + (New-GUID).ToString() + "`r`n"
-            $dscContent += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            $partialContent += "        }`r`n"
-            $dscContent += $partialContent
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $j++
         }
         $i++

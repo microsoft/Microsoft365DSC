@@ -30,21 +30,51 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting Application Access Policy configuration for $Identity"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
+    }
 
     $nullReturn = @{
         Identity           = $Identity
@@ -125,9 +155,29 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting Application Access Policy configuration for $Identity"
@@ -135,14 +185,15 @@ function Set-TargetResource
     $currentApplicationAccessPolicyConfig = Get-TargetResource @PSBoundParameters
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     $NewApplicationAccessPolicyParams = @{
         AccessRight        = $AccessRight
@@ -221,9 +272,29 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing Application Access Policy configuration for $Identity"
@@ -252,19 +323,40 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     try
     {
@@ -274,30 +366,44 @@ function Export-TargetResource
     {
         if ($_.Exception -like "*The operation couldn't be performed because object*")
         {
-            Write-Verbose "Could not obtain Application Access Policies for Tenant"
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for Application Access Policies"
             return ""
         }
         throw $_
     }
 
     $dscContent = ""
+    if ($AllApplicationAccessPolicies.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     $i = 1
     foreach ($ApplicationAccessPolicy in $AllApplicationAccessPolicies)
     {
-        Write-Information "    [$i/$($AllApplicationAccessPolicies.Count)] $($ApplicationAccessPolicy.Identity)"
+        Write-Host "    |---[$i/$($AllApplicationAccessPolicies.Count)] $($ApplicationAccessPolicy.Identity)" -NoNewLine
 
         $Params = @{
-            Identity           = $ApplicationAccessPolicy.Identity
-            GlobalAdminAccount = $GlobalAdminAccount
+            Identity              = $ApplicationAccessPolicy.Identity
+            GlobalAdminAccount    = $GlobalAdminAccount
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
         }
-        $result = Get-TargetResource @Params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content = "        EXOApplicationAccessPolicy " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
-        $dscContent += $content
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
     return $dscContent

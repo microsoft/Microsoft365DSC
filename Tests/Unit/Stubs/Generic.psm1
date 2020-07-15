@@ -1,13 +1,3 @@
-function Close-SessionsAndReturnError
-{
-    [CmdletBinding()]
-    param (
-        [Parameter()]
-        [String]
-        $ExceptionMessage
-    )
-
-}
 function Get-AzureADDirectorySetting
 {
     [CmdletBinding()]
@@ -95,6 +85,99 @@ function Remove-PSSession
     )
 }
 
+function New-AzureADMSGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $GroupTypes,
+
+        [Parameter()]
+        [System.String]
+        $MembershipRule,
+
+        [Parameter()]
+        [ValidateSet('On', 'Paused')]
+        [System.String]
+        $MembershipRuleProcessingState,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MailEnabled,
+
+        [Parameter()]
+        [System.String]
+        $MailNickname,
+
+        [Parameter()]
+        [ValidateSet('Public', 'Private', 'HiddenMembership')]
+        [System.String]
+        $Visibility
+    )
+}
+
+function Set-AzureADMSGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ID,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $GroupTypes,
+
+        [Parameter()]
+        [System.String]
+        $MembershipRule,
+
+        [Parameter()]
+        [ValidateSet('On', 'Paused')]
+        [System.String]
+        $MembershipRuleProcessingState,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $MailEnabled,
+
+        [Parameter()]
+        [System.String]
+        $MailNickname,
+
+        [Parameter()]
+        [ValidateSet('Public', 'Private', 'HiddenMembership')]
+        [System.String]
+        $Visibility
+    )
+}
+
+
 function Get-SPOAdministrationUrl
 {
     [CmdletBinding()]
@@ -103,6 +186,31 @@ function Get-SPOAdministrationUrl
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
+    )
+}
+
+function New-M365DSCConnection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("Azure", "AzureAD", "SharePointOnline", "ExchangeOnline", `
+                "SecurityComplianceCenter", "MSOnline", "PnP", "PowerPlatforms", `
+                "MicrosoftTeams", "SkypeForBusiness")]
+        [System.String]
+        $Platform,
+
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $InboundParameters,
+
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipModuleReload
     )
 }
 
@@ -125,6 +233,22 @@ function Test-MSCloudLogin
         [Alias("o365Credential")]
         [System.Management.Automation.PSCredential]
         $CloudCredential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
 
         [Parameter()]
         [Switch]
@@ -879,9 +1003,29 @@ function Get-AllSPOPackages
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable[]])]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 }
 
@@ -1554,5 +1698,171 @@ function New-AddressList
         [Parameter()]
         [System.Boolean]
         $Confirm
+    )
+}
+
+function Connect-Graph
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String[]]
+        $Scopes
+    )
+}
+
+function Get-MGGroupPlannerPlan
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $GroupId
+    )
+}
+
+function Update-MGPlannerPlan
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $PlannerPlanId
+    )
+}
+
+function Get-MGPlannerTask
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $PlannerTaskId
+    )
+}
+
+function New-MGPlannerTask
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $PlanId,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $StartDateTime,
+
+        [Parameter()]
+        [System.String]
+        $CompletedDateTime,
+
+        [Parameter()]
+        [ValidateRange(0, 100)]
+        [System.Uint32]
+        $PercentComplete,
+
+        [Parameter()]
+        [ValidateRange(0, 10)]
+        [System.UInt32]
+        $Priority
+    )
+}
+
+function Update-MGPlannerTask
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $PlanId,
+
+        [Parameter()]
+        [System.String]
+        $Title,
+
+        [Parameter()]
+        [System.String]
+        $TaskId,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $StartDateTime,
+
+        [Parameter()]
+        [System.String]
+        $CompletedDateTime,
+
+        [Parameter()]
+        [ValidateRange(0, 100)]
+        [System.Uint32]
+        $PercentComplete,
+
+        [Parameter()]
+        [ValidateRange(0, 10)]
+        [System.UInt32]
+        $Priority
+    )
+}
+
+function Get-MgPlannerPlanBucket
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $PlannerPlanId
+    )
+}
+
+function New-MgPlannerBucket
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $PlanId,
+
+        [Parameter()]
+        [System.String]
+        $Name
+    )
+}
+
+function Update-MgPlannerBucket
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $PlanId,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $BucketId
     )
 }

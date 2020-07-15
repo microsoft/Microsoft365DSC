@@ -1,16 +1,17 @@
 [CmdletBinding()]
 param(
-    [Parameter()]
-    [string]
-    $CmdletModule = (Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\Stubs\Microsoft365.psm1" `
-            -Resolve)
 )
-$GenericStubPath = (Join-Path -Path $PSScriptRoot `
-    -ChildPath "..\Stubs\Generic.psm1" `
+$M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
+                        -ChildPath "..\..\Unit" `
+                        -Resolve
+$CmdletModule = (Join-Path -Path $M365DSCTestFolder `
+            -ChildPath "\Stubs\Microsoft365.psm1" `
+            -Resolve)
+$GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
+    -ChildPath "\Stubs\Generic.psm1" `
     -Resolve)
-Import-Module -Name (Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\UnitTestHelper.psm1" `
+Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
+        -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
@@ -19,51 +20,63 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
-        $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+        BeforeAll {
+            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
+            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Test-MSCloudLogin -MockWith {
+            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
+                return @{}
+            }
 
-        }
-
-        Mock -CommandName Remove-FilePlanPropertyCitation -MockWith {
-            return @{
+            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
 
             }
-        }
 
-        Mock -CommandName New-FilePlanPropertyCitation -MockWith {
-            return @{
-
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
             }
-        }
 
-        Mock -CommandName Set-FilePlanPropertyCitation -MockWith {
-            return @{
+            Mock -CommandName Remove-FilePlanPropertyCitation -MockWith {
+                return @{
 
+                }
+            }
+
+            Mock -CommandName New-FilePlanPropertyCitation -MockWith {
+                return @{
+
+                }
+            }
+
+            Mock -CommandName Set-FilePlanPropertyCitation -MockWith {
+                return @{
+
+                }
             }
         }
 
         # Test contexts
         Context -Name "Citation doesn't already exist" -Fixture {
-            $testParams = @{
-                Name                 = "Demo Citation"
-                CitationURL          = "https://contoso.com/Citation"
-                CitationJurisdiction = "State"
-                GlobalAdminAccount   = $GlobalAdminAccount
-                Ensure               = "Present"
-            }
+            BeforeAll {
+                $testParams = @{
+                    Name                 = "Demo Citation"
+                    CitationURL          = "https://contoso.com/Citation"
+                    CitationJurisdiction = "State"
+                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Ensure               = "Present"
+                }
 
-            Mock -CommandName Get-FilePlanPropertyCitation -MockWith {
-                return $null
+                Mock -CommandName Get-FilePlanPropertyCitation -MockWith {
+                    return $null
+                }
             }
 
             It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should Be $false
+                Test-TargetResource @testParams | Should -Be $false
             }
 
             It 'Should return Absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should Be "Absent"
+                (Get-TargetResource @testParams).Ensure | Should -Be "Absent"
             }
 
             It "Should call the Set method" {
@@ -72,24 +85,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         Context -Name "Citation already exists, but need to update properties" -Fixture {
-            $testParams = @{
-                Name                 = "Demo Citation"
-                CitationURL          = "https://contoso.com/Citation"
-                CitationJurisdiction = "State"
-                GlobalAdminAccount   = $GlobalAdminAccount
-                Ensure               = "Present"
-            }
-
-            Mock -CommandName Get-FilePlanPropertyCitation -MockWith {
-                return @{
+            BeforeAll {
+                $testParams = @{
                     Name                 = "Demo Citation"
-                    CitationURL          = "https://contoso.com/Different"
+                    CitationURL          = "https://contoso.com/Citation"
                     CitationJurisdiction = "State"
+                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Ensure               = "Present"
+                }
+
+                Mock -CommandName Get-FilePlanPropertyCitation -MockWith {
+                    return @{
+                        Name                 = "Demo Citation"
+                        CitationURL          = "https://contoso.com/Different"
+                        CitationJurisdiction = "State"
+                    }
                 }
             }
 
             It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should Be $false
+                Test-TargetResource @testParams | Should -Be $false
             }
 
             It 'Should update from the Set method' {
@@ -97,29 +112,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
             }
         }
 
         Context -Name "Citation should not exist" -Fixture {
-            $testParams = @{
-                Name                 = "Demo Citation"
-                CitationURL          = "https://contoso.com/Citation"
-                CitationJurisdiction = "State"
-                GlobalAdminAccount   = $GlobalAdminAccount
-                Ensure               = "Present"
-            }
-
-            Mock -CommandName Get-FilePlanPropertyCitation -MockWith {
-                return @{
+            BeforeAll {
+                $testParams = @{
                     Name                 = "Demo Citation"
-                    CitationURL          = "https://contoso.com/Different"
+                    CitationURL          = "https://contoso.com/Citation"
                     CitationJurisdiction = "State"
+                    GlobalAdminAccount   = $GlobalAdminAccount
+                    Ensure               = "Present"
+                }
+
+                Mock -CommandName Get-FilePlanPropertyCitation -MockWith {
+                    return @{
+                        Name                 = "Demo Citation"
+                        CitationURL          = "https://contoso.com/Different"
+                        CitationJurisdiction = "State"
+                    }
                 }
             }
 
             It 'Should return False from the Test method' {
-                Test-TargetResource @testParams | Should Be $False
+                Test-TargetResource @testParams | Should -Be $False
             }
 
             It 'Should delete from the Set method' {
@@ -127,17 +144,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should Be "Present"
+                (Get-TargetResource @testParams).Ensure | Should -Be "Present"
             }
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
-            $testParams = @{
-                GlobalAdminAccount = $GlobalAdminAccount
-            }
+            BeforeAll {
+                $testParams = @{
+                    GlobalAdminAccount = $GlobalAdminAccount
+                }
 
-            It "Should Reverse Engineer resource from the Export method" {
-                Export-TargetResource @testParams
+                It "Should Reverse Engineer resource from the Export method" {
+                    Export-TargetResource @testParams
+                }
             }
         }
     }

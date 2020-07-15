@@ -53,24 +53,51 @@ function Get-TargetResource
         [System.String[]]
         $SentToMemberOf = @(),
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting configuration of HostedContentFilterRule for $Identity"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
-
-    Write-Verbose -Message "Global ExchangeOnlineSession status:"
-    Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+            -InboundParameters $PSBoundParameters
+    }
 
     try
     {
@@ -78,10 +105,10 @@ function Get-TargetResource
     }
     catch
     {
-        Close-SessionsAndReturnError -ExceptionMessage $_.Exception
         $Message = "Error calling {Get-HostedContentFilterRule}"
         New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
     }
+
     $HostedContentFilterRule = $HostedContentFilterRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
     if (-not $HostedContentFilterRule)
     {
@@ -178,52 +205,79 @@ function Set-TargetResource
         [System.String[]]
         $SentToMemberOf = @(),
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting configuration of HostedContentFilterRule for $Identity"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
-    Write-Verbose -Message "Global ExchangeOnlineSession status:"
-    Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
-
-    $HostedContentFilterRules = Get-HostedContentFilterRule
-    $HostedContentFilterRule = $HostedContentFilterRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
-
-    if (('Present' -eq $Ensure ) -and (-not $HostedContentFilterRule))
+    # Make sure that the associated Policy exists;
+    $AssociatedPolicy = Get-HostedContentFilterPolicy -Identity $HostedContentFilterPolicy -ErrorAction 'SilentlyContinue'
+    if ($null -eq $AssociatedPolicy)
     {
-        New-EXOHostedContentFilterRule -HostedContentFilterRuleParams $PSBoundParameters
+        throw "Error attempting to create EXOHostedContentFilterRule {$Identity}. The specified HostedContentFilterPolicy " + `
+            "{$HostedContentFilterPolicy} doesn't exist. Make sure you either create it first or specify a valid policy."
     }
 
-    if (('Present' -eq $Ensure ) -and ($HostedContentFilterRule))
+    $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
-        if ($PSBoundParameters.Enabled -and ('Disabled' -eq $HostedContentFilterRule.State))
+        $CreationParams = $PSBoundParameters
+        $CreationParams.Remove("Ensure") | Out-Null
+        $CreationParams.Remove("GlobalAdminAccount") | Out-Null
+        if ($Enabled -and ('Disabled' -eq $CurrentValues.State))
         {
             # New-HostedContentFilterRule has the Enabled parameter, Set-HostedContentFilterRule does not.
             # There doesn't appear to be any way to change the Enabled state of a rule once created.
-            Write-Verbose -Message "Removing HostedContentFilterRule $($Identity) in order to change Enabled state."
+            Write-Verbose -Message "Removing HostedContentFilterRule {$Identity} in order to change Enabled state."
             Remove-HostedContentFilterRule -Identity $Identity -Confirm:$false
-            New-EXOHostedContentFilterRule -HostedContentFilterRuleParams $PSBoundParameters
         }
-        else
-        {
-            Set-EXOHostedContentFilterRule -HostedContentFilterRuleParams $PSBoundParameters
-        }
+        Write-Verbose -Message "Creating new HostedContentFilterRule {$Identity}"
+        New-HostedContentFilterRule @CreationParams
     }
-
-    if (('Absent' -eq $Ensure ) -and ($HostedContentFilterRule))
+    elseif ($Ensure -eq 'Present' -and $CurrentValues -eq 'Present')
     {
-        Write-Verbose -Message "Removing HostedContentFilterRule $($Identity) "
+        $UpdateParams = $PSBoundParameters
+        $UpdateParams.Remove("Ensure") | Out-Null
+        $UpdateParams.Remove("GlobalAdminAccount") | Out-Null
+        Write-Verbose -Message "Updating HostedContentFilterRule {$Identity}"
+        Set-HostedContentFilterRule @UpdateParams
+    }
+    elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing existing HostedContentFilterRule {$Identity}."
         Remove-HostedContentFilterRule -Identity $Identity -Confirm:$false
     }
 }
@@ -283,9 +337,29 @@ function Test-TargetResource
         [System.String[]]
         $SentToMemberOf = @(),
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing configuration of HostedContentFilterRule for $Identity"
@@ -314,40 +388,79 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform ExchangeOnline `
-        -ErrorAction SilentlyContinue
+    $ConnectionMode = New-M365DSCConnection -Platform 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
-    $HostedContentFilterRules = Get-HostedContentFilterRule
-    $content = ''
+    [array] $HostedContentFilterRules = Get-HostedContentFilterRule
+    $dscContent = ''
 
+    $i = 1
+    if ($HostedContentFilterRules.Length -eq 0)
+    {
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+    }
+    else
+    {
+        Write-Host "`r`n" -NoNewLine
+    }
     foreach ($HostedContentFilterRule in $HostedContentFilterRules)
     {
-        $params = @{
+        Write-Host "    |---[$i/$($HostedContentFilterRules.Count)] $($HostedContentFilterRule.Identity)" -NoNewLine
+        $Params = @{
             GlobalAdminAccount        = $GlobalAdminAccount
             Identity                  = $HostedContentFilterRule.Identity
             HostedContentFilterPolicy = $HostedContentFilterRule.HostedContentFilterPolicy
+            ApplicationId             = $ApplicationId
+            TenantId                  = $TenantId
+            CertificateThumbprint     = $CertificateThumbprint
+            CertificatePassword       = $CertificatePassword
+            CertificatePath           = $CertificatePath
         }
-        $result = Get-TargetResource @params
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $content += "        EXOHostedContentFilterRule " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $content += "        }`r`n"
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        $i++
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

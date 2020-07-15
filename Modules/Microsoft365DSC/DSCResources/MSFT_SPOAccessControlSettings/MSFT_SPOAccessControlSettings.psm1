@@ -58,21 +58,43 @@ function Get-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Getting configuration of SharePoint Online Access Control Settings"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+        -InboundParameters $PSBoundParameters
+
     $nullReturn = @{
         IsSingleInstance             = 'Yes'
         DisplayStartASiteOption      = $null
@@ -86,7 +108,12 @@ function Get-TargetResource
         ExternalServicesEnabled      = $null
         EmailAttestationRequired     = $null
         EmailAttestationReAuthDays   = $null
-        GlobalAdminAccount           = $null
+        GlobalAdminAccount           = $GlobalAdminAccount
+        ApplicationId                = $ApplicationId
+        TenantId                     = $TenantId
+        CertificatePassword          = $CertificatePassword
+        CertificatePath              = $CertificatePath
+        CertificateThumbprint        = $CertificateThumbprint
     }
 
     try
@@ -107,6 +134,11 @@ function Get-TargetResource
             EmailAttestationRequired     = $SPOAccessControlSettings.EmailAttestationRequired
             EmailAttestationReAuthDays   = $SPOAccessControlSettings.EmailAttestationReAuthDays
             GlobalAdminAccount           = $GlobalAdminAccount
+            ApplicationId                = $ApplicationId
+            TenantId                     = $TenantId
+            CertificatePassword          = $CertificatePassword
+            CertificatePath              = $CertificatePath
+            CertificateThumbprint        = $CertificateThumbprint
         }
     }
     catch
@@ -178,25 +210,53 @@ function Set-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Setting configuration of SharePoint Online Access Control Settings"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform PnP
+    $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
+                -InboundParameters $PSBoundParameters
+
 
     $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove("GlobalAdminAccount")
-    $CurrentParameters.Remove("IsSingleInstance")
+    $CurrentParameters.Remove("Ensure") | Out-Null
+    $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
+    $CurrentParameters.Remove("IsSingleInstance") | Out-Null
+    $CurrentParameters.Remove("ApplicationId") | Out-Null
+    $CurrentParameters.Remove("TenantId") | Out-Null
+    $CurrentParameters.Remove("CertificatePath") | Out-Null
+    $CurrentParameters.Remove("CertificatePassword") | Out-Null
+    $CurrentParameters.Remove("CertificateThumbprint") | Out-Null
 
     if ($IPAddressAllowList -eq "")
     {
@@ -267,9 +327,29 @@ function Test-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Write-Verbose -Message "Testing configuration of SharePoint Online Access Control Settings"
@@ -307,29 +387,62 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
+
     )
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $params = @{
-        IsSingleInstance   = 'Yes'
-        GlobalAdminAccount = $GlobalAdminAccount
+    $ConnectionMode = New-M365DSCConnection -Platform 'PNP' `
+        -InboundParameters $PSBoundParameters
+
+    $Params = @{
+        IsSingleInstance      = 'Yes'
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificatePassword   = $CertificatePassword
+        CertificatePath       = $CertificatePath
+        CertificateThumbprint = $CertificateThumbprint
+        GlobalAdminAccount    = $GlobalAdminAccount
     }
-    $result = Get-TargetResource @params
-    $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-    $content = "        SPOAccessControlSettings " + (New-GUID).ToString() + "`r`n"
-    $content += "        {`r`n"
-    $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-    $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-    $content += "        }`r`n"
-    return $content
+
+    $Results = Get-TargetResource @Params
+    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+    $dscContent = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

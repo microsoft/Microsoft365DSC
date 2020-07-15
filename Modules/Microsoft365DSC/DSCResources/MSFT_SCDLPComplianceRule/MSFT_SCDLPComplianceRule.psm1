@@ -94,14 +94,24 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of DLPCompliancePolicy for $Name"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters
+    }
 
     $PolicyRule = Get-DlpComplianceRule -Identity $Name -ErrorAction SilentlyContinue
 
@@ -281,14 +291,15 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of DLPComplianceRule for $Name"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters
 
     $CurrentRule = Get-TargetResource @PSBoundParameters
 
@@ -323,10 +334,10 @@ function Set-TargetResource
             $value += Get-SCDLPSensitiveInformation $item
         }
         $UpdateParams.ContentContainsSensitiveInformation = Get-SCDLPSensitiveInformation -SensitiveInformation $value
-        $UpdateParams.Remove("GlobalAdminAccount")
-        $UpdateParams.Remove("Ensure")
-        $UpdateParams.Remove("Name")
-        $UpdateParams.Remove("Policy")
+        $UpdateParams.Remove("GlobalAdminAccount") | Out-Null
+        $UpdateParams.Remove("Ensure") | Out-Null
+        $UpdateParams.Remove("Name") | Out-Null
+        $UpdateParams.Remove("Policy") | Out-Null
         $UpdateParams.Add("Identity", $Name)
 
         Write-Verbose "Updating Rule with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParams)"
@@ -480,44 +491,54 @@ function Export-TargetResource
         $GlobalAdminAccount
     )
 
-    Test-MSCloudLogin -Platform SecurityComplianceCenter `
-        -CloudCredential $GlobalAdminAccount
+    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
-    $InformationPreference = "Continue"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $rules = Get-DLPComplianceRule | Where-Object { $_.Mode -ne 'PendingDeletion' }
+    [array]$rules = Get-DLPComplianceRule | Where-Object { $_.Mode -ne 'PendingDeletion' }
 
     $i = 1
-    $DSCContent = ""
+    $dscContent = ""
+    Write-Host "`r`n" -NoNewLine
     foreach ($rule in $rules)
     {
-        Write-Information "    - [$i/$($rules.Length)] $($rule.Name)"
-        $result = Get-TargetResource -Name $rule.Name -Policy $rule.ParentPolicyName -GlobalAdminAccount $GlobalAdminAccount
+        Write-Host "    |---[$i/$($rules.Length)] $($rule.Name)" -NoNewLine
+        $Params = @{
+            Name                  = $rule.name
+            Policy                = $rule.ParentPolicyName
+            GlobalAdminAccount    = $GlobalAdminAccount
+        }
+        $Results = Get-TargetResource @Params
 
         $IsCIMArray = $false
-        if ($result.ContentContainsSensitiveInformation.Length -gt 1)
+        if ($Results.ContentContainsSensitiveInformation.Length -gt 1)
         {
             $IsCIMArray = $true
         }
-        $result.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $result.ContentContainsSensitiveInformation
-        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-        $DSCContent += "        SCDLPComplianceRule " + (New-GUID).ToString() + "`r`n"
-        $DSCContent += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $Results.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $Results.ContentContainsSensitiveInformation
+
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ContentContainsSensitiveInformation" -IsCIMArray $IsCIMArray
 
-        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        $partialContent += "        }`r`n"
-        $DSCContent += $partialContent
+        $dscContent += $currentDSCBlock
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
 
-    return $DSCContent
+    return $dscContent
 }
 
 function ConvertTo-SCDLPSensitiveInformationString
