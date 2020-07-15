@@ -112,8 +112,8 @@ function Get-TargetResource
         $result = @{
             Ensure                = 'Present'
             Url                   = $Url
-            Key                   = $property.Key
-            Value                 = $property.Value
+            Key                   = $Key
+            Value                 = $property[0]
             GlobalAdminAccount    = $GlobalAdminAccount
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
