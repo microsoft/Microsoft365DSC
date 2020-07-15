@@ -74,12 +74,6 @@ function Invoke-TestHarness
 
     $testsToRun += @( $commonTestFiles.FullName )
 
-    if ($IgnoreCodeCoverage.IsPresent -eq $false)
-    {
-        $testResultSettings.Add('CodeCoverage', $testCoverageFiles)
-        $test
-    }
-
     $filesToExecute = @()
     foreach ($testToRun in $testsToRun)
     {

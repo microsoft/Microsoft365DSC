@@ -1082,15 +1082,15 @@ function New-M365DSCConnection
         }
         return 'ServicePrincipal'
     }
-    # Case only the ServicePrincipal parameters are specified
+    # Case only the ServicePrincipal with Thumbprint parameters are specified
     elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
         -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
         -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
         -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
     {
-        Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
         if ([System.String]::IsNullOrEmpty($url))
         {
+            Write-Verbose -Message "ApplicationId, TenantId and CertificateThumprint were specified. Connecting via Service Principal"
             Test-MSCloudLogin -Platform $Platform `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
@@ -1103,6 +1103,35 @@ function New-M365DSCConnection
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -CertificateThumbprint $InboundParameters.CertificateThumbprint `
+                -ConnectionUrl $Url `
+                -SkipModuleReload $Global:CurrentModeIsExport
+        }
+        return 'ServicePrincipal'
+    }
+    # Case only the ServicePrincipal with Thumbprint parameters are specified
+    elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
+        -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
+        -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
+        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificatePath) -and `
+        $null -ne $InboundParameters.CertificatePassword)
+    {
+        if ([System.String]::IsNullOrEmpty($url))
+        {
+            Write-Verbose -Message "ApplicationId, TenantId, CertificatePath & CertificatePassword were specified. Connecting via Service Principal"
+            Test-MSCloudLogin -Platform $Platform `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -CertificatePassword $InboundParameters.CertificatePassword.Password `
+                -CertificatePath $InboundParameters.CertificatePath `
+                -SkipModuleReload $Global:CurrentModeIsExport
+        }
+        else
+        {
+            Test-MSCloudLogin -Platform $Platform `
+                -ApplicationId $InboundParameters.ApplicationId `
+                -TenantId $InboundParameters.TenantId `
+                -CertificatePassword $InboundParameters.CertificatePassword `
+                -CertificatePath $InboundParameters.CertificatePath `
                 -ConnectionUrl $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
