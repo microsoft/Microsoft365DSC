@@ -1376,7 +1376,7 @@ function Install-M365DSCDevBranch
     $dependencies = $manifest.RequiredModules
     foreach ($dependency in $dependencies)
     {
-        Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force
+        Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber -AllowPrerelease
         Import-Module $dependency.ModuleName -Force
     }
     #endregion
