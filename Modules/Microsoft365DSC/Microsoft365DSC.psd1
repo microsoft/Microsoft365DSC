@@ -11,7 +11,7 @@
     # RootModule = ''
 
     # Version number of this module.
-    ModuleVersion     = '1.20.0714.1'
+    ModuleVersion     = '1.20.0714'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -89,7 +89,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.29"
+            RequiredVersion = "1.0.30"
         },
         @{
             ModuleName      = "ReverseDSC"
@@ -155,6 +155,7 @@
     PrivateData       = @{
 
         PSData = @{
+            Prerelease = 'Preview'
 
             # Tags applied to this module. These help with module discovery in online galleries.
             Tags         = 'DesiredStateConfiguration', 'DSC', 'DSCResourceKit', 'DSCResource', 'Microsoft365'
