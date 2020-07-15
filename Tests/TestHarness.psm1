@@ -39,6 +39,7 @@ function Invoke-TestHarness
         $testResultSettings.Add('OutputFile', $TestResultsFile)
     }
     Import-Module -Name "$repoDir\modules\Microsoft365DSC\Microsoft365DSC.psd1"
+    $testsToRun = @()
 
     # Run Unit Tests
     $versionsPath = Join-Path -Path $repoDir -ChildPath "\Tests\Unit\Stubs\"
@@ -47,15 +48,50 @@ function Invoke-TestHarness
         -ChildPath "\Tests\Unit\Stubs\Microsoft365.psm1"
     Import-Module $firstStub -WarningAction SilentlyContinue
 
+    $stubPath = Join-Path -Path $repoDir `
+            -ChildPath "\Tests\Unit\Stubs\Microsoft365.psm1"
+    <#$testsToRun += @(@{
+            'Path'       = (Join-Path -Path $repoDir -ChildPath "\Tests\Unit")
+            'Parameters' = @{
+                'CmdletModule' = $stubPath
+            }
+        })#>
+
     # DSC Common Tests
-    $TestFolderPath = (Join-Path -Path $repoDir -ChildPath "\Tests\Unit\Microsoft365DSC\")
+    $getChildItemParameters = @{
+        Path    = (Join-Path -Path $repoDir -ChildPath "\Tests\Unit")
+        Recurse = $true
+        Filter  = '*.Tests.ps1'
+    }
+
+    # Get all tests '*.Tests.ps1'.
+    $commonTestFiles = Get-ChildItem @getChildItemParameters
+
+    # Remove DscResource.Tests unit tests.
+    $commonTestFiles = $commonTestFiles | Where-Object -FilterScript {
+        $_.FullName -notmatch 'DSCResource.Tests\\Tests'
+    }
+
+    $testsToRun += @( $commonTestFiles.FullName )
+
     if ($IgnoreCodeCoverage.IsPresent -eq $false)
     {
-        $results = Invoke-Pester -Script $TestFolderPath -PassThru -CodeCoverage $testCoverageFiles -CodeCoverageOutputFile '.\TestOutput.xml' @$testResultSettings
+        $testResultSettings.Add('CodeCoverage', $testCoverageFiles)
+        $test
+    }
+
+    $filesToExecute = @()
+    foreach ($testToRun in $testsToRun)
+    {
+        $filesToExecute += $testToRun
+    }
+    if ($IgnoreCodeCoverage.IsPresent -eq $false)
+    {
+        $results = Invoke-Pester -Path $filesToExecute -CodeCoverage $testCoverageFiles -CodeCoverageOutputFile  "CodeCov.xml" -PassThru @testResultSettings
     }
     else
     {
-        $results = Invoke-Pester -Script $TestFolderPath -PassThru @$testResultSettings
+        $results = Invoke-Pester -Path $filesToExecute -PassThru @testResultSettings
     }
     return $results
 }
