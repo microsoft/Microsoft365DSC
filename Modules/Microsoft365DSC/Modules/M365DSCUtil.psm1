@@ -1086,15 +1086,18 @@ function New-M365DSCConnection
     elseif ($null -eq $InboundParameters.GlobalAdminAccount -and `
         -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
         -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+        ((-not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint) -or `
+        (-not [System.String]::IsNullOrEmpty($InboundParameters.$CertificatePath) -and `
+        $null -ne $InboundParameters.$CertificatePassword))))
     {
-        Write-Verbose -Message "GlobalAdminAccount was specified. Connecting via User Principal"
         if ([System.String]::IsNullOrEmpty($url))
         {
             Test-MSCloudLogin -Platform $Platform `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -CertificateThumbprint $InboundParameters.CertificateThumbprint `
+                -CertificatePassword $InboundParameters.CertificatePassword `
+                -CertificatePath $InboundParameters.CertificatePath `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
         else
@@ -1103,6 +1106,8 @@ function New-M365DSCConnection
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -CertificateThumbprint $InboundParameters.CertificateThumbprint `
+                -CertificatePassword $InboundParameters.CertificatePassword `
+                -CertificatePath $InboundParameters.CertificatePath `
                 -ConnectionUrl $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
         }
