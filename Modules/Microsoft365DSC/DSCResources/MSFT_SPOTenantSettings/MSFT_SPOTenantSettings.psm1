@@ -544,7 +544,7 @@ function Export-TargetResource
         -Results $Results `
         -GlobalAdminAccount $GlobalAdminAccount
     Write-Host $Global:M365DSCEmojiGreenCheckmark
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource
