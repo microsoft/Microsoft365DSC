@@ -343,6 +343,8 @@ function Start-M365DSCConfigurationExtract
         $TenantIdExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("TenantId")
         $AppIdExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("ApplicationId")
         $GlobalAdminExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("GlobalAdminAccount")
+        $CertPathExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificatePath")
+        $CertPasswordExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains("CertificatePassword")
 
         $parameters = @{}
         if ($GlobalAdminExists-and -not [System.String]::IsNullOrEmpty($GlobalAdminAccount))
@@ -368,6 +370,14 @@ function Start-M365DSCConfigurationExtract
         if ($AppIdExists -and -not [System.String]::IsNullOrEmpty($ApplicationId))
         {
             $parameters.Add("ApplicationId", $ApplicationId)
+        }
+        if ($CertPathExists -and -not [System.String]::IsNullOrEmpty($CertificatePath))
+        {
+            $parameters.Add("CertificatePath", $CertificatePath)
+        }
+        if ($CertPasswordExists -and $null -ne $CertificatePassword)
+        {
+            $parameters.Add("CertificatePassword", $CertificatePassword)
         }
         if ($ComponentsToSkip -notcontains $resourceName)
         {
