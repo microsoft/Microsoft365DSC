@@ -2,6 +2,8 @@
 
 ## UNRELEASED
 
+## 1.20.716.1
+
 * MISC
   * Added visual indicators for the Export feature;
 * EXOMalwareFilterPolicy
