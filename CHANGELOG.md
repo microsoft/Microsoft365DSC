@@ -2,8 +2,16 @@
 
 ## UNRELEASED
 
+* SPOAPP
+  * Added property Path as a key for the SPOApp resource to
+    prevent conflict where two solutions could have the same
+    name;
 * MISC
   * Renamed the event log to M365DSC to avoid journal conflicts;
+* Metadata
+  * Updated Microsoft.Graph.Authentication module version to 0.7.1;
+  * Updated Microsoft.PowerApps.Administration.PowerShell version to
+    2.0.72;
 
 ## 1.20.716.1
 
