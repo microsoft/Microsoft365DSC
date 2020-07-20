@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+* MISC
+  * Renamed the event log to M365DSC to avoid journal conflicts;
+
 ## 1.20.716.1
 
 * MISC
