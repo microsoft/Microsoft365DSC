@@ -165,7 +165,10 @@ function Get-TargetResource
             $currentLicenseAssignment += $sku.SkuPartNumber
         }
 
-        $passwordNeverExpires = ($user.PasswordPolicies -contains "DisablePasswordExpiration")
+        $userPasswordPolicyInfo = $user | Select-Object UserprincipalName,@{
+                N="PasswordNeverExpires";E={$_.PasswordPolicies -contains "DisablePasswordExpiration"}
+        }
+        $passwordNeverExpires = $userPasswordPolicyInfo.PasswordNeverExpires
 
         $results = @{
             UserPrincipalName     = $UserPrincipalName
