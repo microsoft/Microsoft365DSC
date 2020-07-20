@@ -44,14 +44,15 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration of Teams Tenant Dial Plan"
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SkypeForBusiness
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
 
     try
     {
@@ -138,8 +139,9 @@ function Set-TargetResource
     Write-Verbose -Message "Setting configuration of Teams Guest Calling"
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -296,21 +298,23 @@ function Export-TargetResource
     $InformationPreference ='Continue'
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SkypeForBusiness
+    $ConnectionMode = New-M365DSCConnection -Platform 'SkypeForBusiness' `
+        -InboundParameters $PSBoundParameters
     [array]$tenantDialPlans = Get-CsTenantDialPlan
 
     $content = ''
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($plan in $tenantDialPlans)
     {
-        Write-Information -MessageData "    [$i/$($tenantDialPlans.Count)] $($plan.Identity)"
+        Write-Host "    |---[$i/$($tenantDialPlans.Count)] $($plan.Identity)" -NoNewLine
         $params = @{
             Identity            = $plan.Identity
             GlobalAdminAccount  = $GlobalAdminAccount
@@ -329,6 +333,7 @@ function Export-TargetResource
         $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
         $content += "        }`r`n"
         $i++
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
     return $content
 }

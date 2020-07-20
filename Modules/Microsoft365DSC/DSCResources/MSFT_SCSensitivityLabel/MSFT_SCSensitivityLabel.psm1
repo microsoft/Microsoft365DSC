@@ -52,15 +52,24 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Sensitivity Label for $Name"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Calling Test-SecurityAndComplianceConnection function:"
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters
+    }
 
     try
     {
@@ -167,14 +176,15 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Sensitivity label for $Name"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform SecurityComplianceCenter
+    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters
 
     $label = Get-TargetResource @PSBoundParameters
 
@@ -370,56 +380,62 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -Platform 'SecurityComplianceCenter' `
-        -CloudCredential $GlobalAdminAccount
+    $ConnectionMode = New-M365DSCConnection -Platform 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     try
     {
         [array]$labels = Get-Label
 
-        $content = ""
+        $dscContent = ""
         $i = 1
+        Write-Host "`r`n" -NoNewLine
         foreach ($label in $labels)
         {
-            Write-Information "    [$i/$($labels.Count)] $($label.Name)"
-            $params = @{
-                Name               = $label.Name
-                GlobalAdminAccount = $GlobalAdminAccount
-            }
-            $result = Get-TargetResource @params
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+            Write-Host "    |---[$i/$($labels.Count)] $($label.Name)" -NoNewLine
 
-            if ($null -ne $result.AdvancedSettings)
+            $Params = @{
+                Name                  = $label.Name
+                GlobalAdminAccount    = $GlobalAdminAccount
+            }
+            $Results = Get-TargetResource @Params
+
+            if ($null -ne $Results.AdvancedSettings)
             {
-                $result.AdvancedSettings = ConvertTo-AdvancedSettingsString -AdvancedSettings $result.AdvancedSettings
+                $Results.AdvancedSettings = ConvertTo-AdvancedSettingsString -AdvancedSettings $Results.AdvancedSettings
             }
 
-            if ($null -ne $result.LocaleSettings)
+            if ($null -ne $Results.LocaleSettings)
             {
-                $result.LocaleSettings = ConvertTo-LocaleSettingsString -LocaleSettings $result.LocaleSettings
+                $Results.LocaleSettings = ConvertTo-LocaleSettingsString -LocaleSettings $Results.LocaleSettings
             }
-            $content += "        SCSensitivityLabel " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            if ($null -ne $result.AdvancedSettings)
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+            if ($null -ne $Results.AdvancedSettings)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AdvancedSettings"
             }
-            if ($null -ne $result.LocaleSettings)
+            if ($null -ne $Results.LocaleSettings)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "LocaleSettings"
             }
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            $content += $currentDSCBlock
-            $content += "        }`r`n"
+
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $dscContent += $currentDSCBlock
             $i++
         }
     }
@@ -427,7 +443,7 @@ function Export-TargetResource
     {
         Write-Warning "Get-Label is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
     }
-    return $content
+    return $dscContent
 }
 
 function Convert-JSONToLocaleSettings

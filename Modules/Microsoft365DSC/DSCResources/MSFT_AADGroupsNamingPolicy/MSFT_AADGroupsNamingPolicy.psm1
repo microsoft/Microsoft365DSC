@@ -41,8 +41,9 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of AzureAD Groups Naming Policy"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -118,8 +119,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Azure AD Groups Naming Policy"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -207,7 +209,7 @@ function Test-TargetResource
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
+        -DesiredValues $ValuesToCheck `
         -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
@@ -237,63 +239,38 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $content = ''
+    $dscContent = ''
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
-    if ($ConnectionMode -eq 'ServicePrincipal')
-    {
-        $params = @{
-            ApplicationId          = $ApplicationId
-            TenantId               = $TenantId
-            CertificateThumbprint  = $CertificateThumbprint
-            IsSingleInstance       = 'Yes'
-        }
-    }
-    else
-    {
-        $params = @{
-            GlobalAdminAccount = $GlobalAdminAccount
-            IsSingleInstance   = 'Yes'
-        }
+    $Params = @{
+        ApplicationId          = $ApplicationId
+        TenantId               = $TenantId
+        CertificateThumbprint  = $CertificateThumbprint
+        IsSingleInstance       = 'Yes'
+        GlobalAdminAccount = $GlobalAdminAccount
     }
 
-    $result = Get-TargetResource @params
+    $Results = Get-TargetResource @Params
 
-    if ($result.Ensure -eq 'Present')
+    if ($Results.Ensure -eq 'Present')
     {
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $result.Remove("ApplicationId") | Out-Null
-            $result.Remove("TenantId") | Out-Null
-            $result.Remove("CertificateThumbprint") | Out-Null
-        }
-        else
-        {
-            $result.Remove("GlobalAdminAccount") | Out-Null
-        }
-        $content += "        AADGroupsNamingPolicy " + (New-GUID).ToString() + "`r`n"
-        $content += "        {`r`n"
-        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-        }
-        else
-        {
-            $content += $currentDSCBlock
-        }
-        $content += "        }`r`n"
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -GlobalAdminAccount $GlobalAdminAccount
     }
-
-    return $content
+    Write-Host $Global:M365DSCEmojiGreenCheckMark
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

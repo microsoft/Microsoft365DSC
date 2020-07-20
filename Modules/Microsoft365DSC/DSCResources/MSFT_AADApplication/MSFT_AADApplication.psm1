@@ -9,6 +9,10 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter()]
+        [System.String]
+        $ObjectId,
+
+        [Parameter()]
         [System.Boolean]
         $AvailableToOtherTenants,
 
@@ -80,18 +84,37 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Azure AD Application"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+                        -InboundParameters $PSBoundParameters
 
-    $AADApp = Get-AzureADApplication -Filter "DisplayName eq '$($DisplayName)'"
-    if($AADApp.Count -gt 1)
+    if ($PSBoundParameters.ContainsKey("ObjectId"))
     {
-        Write-Error -Message "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant. Aborting."
+        Write-Verbose -Message "Azure AD App Object ID has been specified."
+        try
+        {
+            $AADApp = Get-AzureADApplication -ObjectID $ObjectId
+        }
+        catch
+        {
+            Throw "Azure AD App with ObjectID: $($ObjectID) could not be retrieved"
+        }
+    }
+    else
+    {
+        Write-Verbose -Message "Azure AD App Object ID was not specified."
+        ## Can retreive multiple AAD Applications since displayname is not unique
+        $AADApp = Get-AzureADApplication -Filter "DisplayName eq '$($DisplayName)'"
+        if($AADApp.Count -gt 1)
+        {
+            Throw "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant. Aborting."
+        }
     }
     if($null -eq $AADApp)
     {
@@ -135,6 +158,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $ObjectId,
 
         [Parameter()]
         [System.Boolean]
@@ -208,8 +235,9 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Azure AD Application"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
@@ -251,7 +279,7 @@ function Set-TargetResource
     # App should exist and will be configured to desired state
     if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Present')
     {
-        Set-AzureADApplication -ObjectID $currentAADApp.ObjectID @currentParameters
+        Set-AzureADApplication @currentParameters
     }
     # App exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADApp.Ensure -eq 'Present')
@@ -269,6 +297,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $ObjectId,
 
         [Parameter()]
         [System.Boolean]
@@ -383,67 +415,45 @@ function Export-TargetResource
     )
     $InformationPreference = 'Continue'
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $content = ''
+    $dscContent = ''
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
     $i = 1
-
+    Write-Host "`r`n" -NoNewLine
     $AADApplications = Get-AzureADApplication
     foreach($AADApp in $AADApplications)
     {
-        Write-Information -MessageData "    [$i/$($AADApplications.Count)] $($AADApp.DisplayName)"
-        if ($ConnectionMode -eq 'Credential')
-        {
-            $params = @{
+        Write-Host "    |---[$i/$($AADApplications.Count)] $($AADApp.DisplayName)" -NoNewLine
+        $Params = @{
                 GlobalAdminAccount            = $GlobalAdminAccount
-                DisplayName                   = $AADApp.DisplayName
-            }
-        }
-        else
-        {
-            $params = @{
                 ApplicationId                 = $ApplicationId
                 TenantId                      = $TenantId
                 CertificateThumbprint         = $CertificateThumbprint
                 DisplayName                   = $AADApp.DisplayName
-            }
+                ObjectID                      = $AADApp.ObjectID
         }
-        $result = Get-TargetResource @params
+        $Results = Get-TargetResource @Params
 
-        if ($result.Ensure -eq 'Present')
+        if ($Results.Ensure -eq 'Present')
         {
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                $result.Remove("ApplicationId") | Out-Null
-                $result.Remove("TenantId") | Out-Null
-                $result.Remove("CertificateThumbprint") | Out-Null
-            }
-            else
-            {
-                $result.Remove("GlobalAdminAccount") | Out-Null
-            }
-            $content += "        AADApplication " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            if ($ConnectionMode -eq 'Credential')
-            {
-                $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            }
-            else
-            {
-                $content += $currentDSCBlock
-            }
-            $content += "        }`r`n"
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource
