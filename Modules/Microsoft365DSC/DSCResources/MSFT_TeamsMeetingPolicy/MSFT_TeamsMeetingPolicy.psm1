@@ -39,6 +39,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowPSTNUsersToBypassLobby,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowCloudRecording,
 
         [Parameter()]
@@ -121,6 +125,7 @@ function Get-TargetResource
         AllowIPVideo                               = $policy.AllowIPVideo
         AllowAnonymousUsersToStartMeeting          = $policy.AllowAnonymousUsersToStartMeeting
         AllowPrivateMeetingScheduling              = $policy.AllowPrivateMeetingScheduling
+        AllowPSTNUsersToBypassLobby                = $policy.AllowPSTNUsersToBypassLobby
         AutoAdmittedUsers                          = $policy.AutoAdmittedUsers
         AllowCloudRecording                        = $policy.AllowCloudRecording
         AllowOutlookAddIn                          = $policy.AllowOutlookAddIn
@@ -174,6 +179,10 @@ function Set-TargetResource
         [System.String]
         [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany')]
         $AutoAdmittedUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPSTNUsersToBypassLobby,
 
         [Parameter()]
         [System.Boolean]
@@ -302,6 +311,10 @@ function Test-TargetResource
         [System.String]
         [ValidateSet('EveryoneInCompany', 'Everyone', 'EveryoneInSameAndFederatedCompany')]
         $AutoAdmittedUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPSTNUsersToBypassLobby,
 
         [Parameter()]
         [System.Boolean]
