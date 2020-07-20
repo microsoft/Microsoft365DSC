@@ -65,7 +65,7 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Authentication"
-            RequiredVersion = "0.7.0"
+            RequiredVersion = "0.7.1"
         },
         @{
             ModuleName      = "Microsoft.Graph.Groups.Planner"
