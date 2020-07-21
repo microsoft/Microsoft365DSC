@@ -80,7 +80,7 @@ function Add-M365DSCEvent
         $EventID = 1
     )
 
-    $LogName = 'Microsoft365DSC'
+    $LogName = 'M365DSC'
 
     if ([System.Diagnostics.EventLog]::SourceExists($Source))
     {
