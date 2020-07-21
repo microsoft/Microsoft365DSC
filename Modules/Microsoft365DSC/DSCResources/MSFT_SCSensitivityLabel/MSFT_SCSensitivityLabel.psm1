@@ -190,20 +190,6 @@ function Set-TargetResource
 
     if (('Present' -eq $Ensure) -and ('Absent' -eq $label.Ensure))
     {
-        if ($null -ne $label.Priority)
-        {
-            throw "SCSensitivityLabel can't set Priortity property on " + `
-                "new label {$Name} to $label.Priority." + `
-                "You will need to set priority property once label is created."
-        }
-
-        if ($null -ne $label.Disabled)
-        {
-            throw "SCSensitivityLabel can't set disabled property on " + `
-                "new label {$Name} to $label.Disabled." + `
-                "You will need to set disabled property once label is created."
-        }
-
         $CreationParams = $PSBoundParameters
 
         if ($PSBoundParameters.ContainsKey("AdvancedSettings"))
@@ -254,6 +240,7 @@ function Set-TargetResource
         $SetParams.Remove("GlobalAdminAccount")
         $SetParams.Remove("Ensure")
         $SetParams.Remove("Name")
+        $SetParams.Remove("Disabled")
 
         try
         {
@@ -342,6 +329,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('AdvancedSettings') | Out-Null
     $ValuesToCheck.Remove('LocaleSettings') | Out-Null
+    $ValuesToCheck.Remove('Disabled') | Out-Null
 
     if ($null -ne $AdvancedSettings)
     {
