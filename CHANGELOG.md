@@ -12,6 +12,7 @@
   * Updated Microsoft.Graph.Authentication module version to 0.7.1;
   * Updated Microsoft.PowerApps.Administration.PowerShell version to
     2.0.72;
+  * Updated SharePointPnPPowerShellOnline version to 3.23.2007.1;
 
 ## 1.20.716.1
 
