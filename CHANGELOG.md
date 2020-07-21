@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+* O365User
+  * Fixed an issue where the PasswordNeverExpires value returned
+    was incorrect;
 * SPOAPP
   * Added property Path as a key for the SPOApp resource to
     prevent conflict where two solutions could have the same
