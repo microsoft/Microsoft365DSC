@@ -2,6 +2,10 @@
 
 ## UNRELEASED
 
+* O365User
+  * Fixed an issue where the PasswordNeverExpires value returned
+    was incorrect;
+
 ## 1.20.716.1
 
 * MISC
