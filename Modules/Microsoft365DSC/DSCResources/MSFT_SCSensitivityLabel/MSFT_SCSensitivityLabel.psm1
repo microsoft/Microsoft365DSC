@@ -188,6 +188,12 @@ function Set-TargetResource
 
     $label = Get-TargetResource @PSBoundParameters
 
+    if ($PSBoundParameters.ContainsKey("Disabled"))
+    {
+        Write-Verbose -Message "The Disabled parameter is no longer available and will be depricated."
+    }
+
+
     if (('Present' -eq $Ensure) -and ('Absent' -eq $label.Ensure))
     {
         $CreationParams = $PSBoundParameters
@@ -214,6 +220,12 @@ function Set-TargetResource
         try
         {
             New-Label @CreationParams
+            ## Can't set priority until label created
+            if ($PSBoundParameters.ContainsKey("Priority"))
+            {
+                Start-Sleep 5
+                Set-label -Identity $Name -priority $Priority
+            }
         }
         catch
         {
@@ -392,8 +404,8 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($labels.Count)] $($label.Name)" -NoNewLine
 
             $Params = @{
-                Name                  = $label.Name
-                GlobalAdminAccount    = $GlobalAdminAccount
+                Name               = $label.Name
+                GlobalAdminAccount = $GlobalAdminAccount
             }
             $Results = Get-TargetResource @Params
 
@@ -409,10 +421,10 @@ function Export-TargetResource
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -GlobalAdminAccount $GlobalAdminAccount
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
             if ($null -ne $Results.AdvancedSettings)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AdvancedSettings"
