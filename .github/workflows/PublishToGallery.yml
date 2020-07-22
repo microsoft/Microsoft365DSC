@@ -1,12 +1,5 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Publish to PowerShell Gallery
-
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the Dev branch
-on:
-  push:
-    branches: Master
+on: [push]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
