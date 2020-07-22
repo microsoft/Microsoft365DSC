@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+* AADApplication
+  * Fix an issue where a new AzureAD Application was not created
+    if ObjectId was speficied;
 * O365User
   * Fixed an issue where the PasswordNeverExpires value returned
     was incorrect;
