@@ -188,22 +188,14 @@ function Set-TargetResource
 
     $label = Get-TargetResource @PSBoundParameters
 
+    if ($PSBoundParameters.ContainsKey("Disabled"))
+    {
+        Write-Verbose -Message "The Disabled parameter is no longer available and will be depricated."
+    }
+
+
     if (('Present' -eq $Ensure) -and ('Absent' -eq $label.Ensure))
     {
-        if ($null -ne $label.Priority)
-        {
-            throw "SCSensitivityLabel can't set Priortity property on " + `
-                "new label {$Name} to $label.Priority." + `
-                "You will need to set priority property once label is created."
-        }
-
-        if ($null -ne $label.Disabled)
-        {
-            throw "SCSensitivityLabel can't set disabled property on " + `
-                "new label {$Name} to $label.Disabled." + `
-                "You will need to set disabled property once label is created."
-        }
-
         $CreationParams = $PSBoundParameters
 
         if ($PSBoundParameters.ContainsKey("AdvancedSettings"))
@@ -228,6 +220,12 @@ function Set-TargetResource
         try
         {
             New-Label @CreationParams
+            ## Can't set priority until label created
+            if ($PSBoundParameters.ContainsKey("Priority"))
+            {
+                Start-Sleep 5
+                Set-label -Identity $Name -priority $Priority
+            }
         }
         catch
         {
@@ -254,6 +252,7 @@ function Set-TargetResource
         $SetParams.Remove("GlobalAdminAccount")
         $SetParams.Remove("Ensure")
         $SetParams.Remove("Name")
+        $SetParams.Remove("Disabled")
 
         try
         {
@@ -342,6 +341,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
     $ValuesToCheck.Remove('AdvancedSettings') | Out-Null
     $ValuesToCheck.Remove('LocaleSettings') | Out-Null
+    $ValuesToCheck.Remove('Disabled') | Out-Null
 
     if ($null -ne $AdvancedSettings)
     {
@@ -404,8 +404,8 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($labels.Count)] $($label.Name)" -NoNewLine
 
             $Params = @{
-                Name                  = $label.Name
-                GlobalAdminAccount    = $GlobalAdminAccount
+                Name               = $label.Name
+                GlobalAdminAccount = $GlobalAdminAccount
             }
             $Results = Get-TargetResource @Params
 
@@ -421,10 +421,10 @@ function Export-TargetResource
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -GlobalAdminAccount $GlobalAdminAccount
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -GlobalAdminAccount $GlobalAdminAccount
             if ($null -ne $Results.AdvancedSettings)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AdvancedSettings"
