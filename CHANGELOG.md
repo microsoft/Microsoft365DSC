@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-## UNRELEASED
+## 1.20.722.1
 
 * AADApplication
   * Fix an issue where a new AzureAD Application was not created
