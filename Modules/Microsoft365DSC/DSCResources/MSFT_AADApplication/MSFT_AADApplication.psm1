@@ -94,29 +94,27 @@ function Get-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
                         -InboundParameters $PSBoundParameters
 
-    if ($PSBoundParameters.ContainsKey("ObjectId"))
+    try
     {
-        Write-Verbose -Message "Azure AD App Object ID has been specified."
-        try
+        if ($null -ne $ObjectID)
         {
             $AADApp = Get-AzureADApplication -ObjectID $ObjectId
         }
-        catch
-        {
-            Throw "Azure AD App with ObjectID: $($ObjectID) could not be retrieved"
-        }
     }
-    else
+    catch
     {
-        Write-Verbose -Message "Azure AD App Object ID was not specified."
-        ## Can retreive multiple AAD Applications since displayname is not unique
-        $AADApp = Get-AzureADApplication -Filter "DisplayName eq '$($DisplayName)'"
-        if($AADApp.Count -gt 1)
-        {
-            Throw "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant. Aborting."
-        }
+        Write-Verbose -Message "Could not retrieve AzureAD Application by Object ID {$ObjectID}"
     }
-    if($null -eq $AADApp)
+
+    if ($null -eq $AADApp)
+    {
+        $AADApp = Get-AzureADApplication -Filter "DisplayName eq '$($DisplayName)'"
+    }
+    if($null -ne $AADApp -and $AADApp.Count -gt 1)
+    {
+        Throw "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant. Aborting."
+    }
+    elseif($null -eq $AADApp)
     {
         $currentValues = $PSBoundParameters
         $currentValues.Ensure = "Absent"
@@ -274,16 +272,21 @@ function Set-TargetResource
     # App should exist but it doesn't
     if ($Ensure -eq "Present" -and $currentAADApp.Ensure -eq "Absent")
     {
+        Write-Verbose -Message "Creating New AzureAD Application {$DisplayName}"
+        $currentParameters.Remove("ObjectId") | Out-Null
         New-AzureADApplication @currentParameters
     }
     # App should exist and will be configured to desired state
     if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Present')
     {
+        Write-Verbose -Message "Updating existing AzureAD Application {$DisplayName}"
+        $currentParameters.ObjectId = $currentAADApp.ObjectId
         Set-AzureADApplication @currentParameters
     }
     # App exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADApp.Ensure -eq 'Present')
     {
+        Write-Verbose -Message "Removing AzureAD Application {$DisplayName}"
         Remove-AzureADApplication -ObjectId $currentAADApp.ObjectID
     }
 }
