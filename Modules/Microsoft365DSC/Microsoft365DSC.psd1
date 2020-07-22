@@ -69,15 +69,15 @@
         },
         @{
             ModuleName      = "Microsoft.Graph.Groups.Planner"
-            RequiredVersion = "0.7.0"
+            RequiredVersion = "0.7.1"
         },
         @{
             ModuleName      = "Microsoft.Graph.Identity.ConditionalAccess"
-            RequiredVersion = "0.7.0"
+            RequiredVersion = "0.7.1"
         },
         @{
             ModuleName      = "Microsoft.Graph.Planner"
-            RequiredVersion = "0.7.0"
+            RequiredVersion = "0.7.1"
         },
         @{
             ModuleName      = "Microsoft.PowerApps.Administration.PowerShell"
