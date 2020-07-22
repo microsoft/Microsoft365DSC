@@ -17,7 +17,6 @@ official YouTube channel
 
 ### master
 
-[![Build status](https://ci.appveyor.com/api/projects/status/5a7f2ao7d1mnoqrb/branch/master?svg=true)](https://ci.appveyor.com/project/NikCharlebois/Microsoft365DSC/branch/master)
 [![codecov](https://codecov.io/gh/Microsoft/Microsoft365DSC/branch/master/graph/badge.svg)](https://codecov.io/gh/Microsoft/Microsoft365DSC)
 
 This is the branch containing the latest release -

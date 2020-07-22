@@ -6,7 +6,7 @@ name: Publish to PowerShell Gallery
 # events but only for the Dev branch
 on:
   push:
-    branches: [ Master ]
+    branches: Master
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
