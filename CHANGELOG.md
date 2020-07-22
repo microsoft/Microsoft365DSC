@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-## UNRELEASED
+## 1.20.722.1
 
 * O365User
   * Fixed an issue where the PasswordNeverExpires value returned
