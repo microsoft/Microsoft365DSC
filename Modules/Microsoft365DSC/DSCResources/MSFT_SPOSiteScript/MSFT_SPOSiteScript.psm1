@@ -96,7 +96,6 @@ function Get-TargetResource
     catch
     {
         Write-Verbose -Message "The specified Site Script, {$Title}, doesn't exist."
-        Write-Host("The specified Site Script, {$Title}, doesn't exist.")
         return $nullReturn
     }
 }
@@ -106,10 +105,6 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        #[Parameter(Mandatory = $true)]
-        #[System.String]
-        #$URL,
-        
         [Parameter(Mandatory = $true)]
         [System.String]
         $Title,
@@ -165,7 +160,7 @@ function Set-TargetResource
             Content         = $Content
             Description     = $Description
         }
-        Write-host($CreationParams.Values) -ForegroundColor Cyan
+        
         #
         # Adding the Site Script Again. 
         Write-Verbose -Message "Site Script, {$Title}, doesn't exist. Creating it."
@@ -341,29 +336,29 @@ function Export-TargetResource
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
         -Platform PnP
 
-        $content = ""
-        $i = 1
+    $content = ""
+    $i = 1
     
-        [array]$siteScripts = Get-PnPSiteScript
+    [array]$siteScripts = Get-PnPSiteScript
         
-        foreach ($script in $siteScripts)
-        {
-            Write-Information "    [$i/$($script.Length)] $($script.Title)"
-            $params = @{
-                Identity           = $script.Id
-                Title              = $script.Title
-                GlobalAdminAccount = $GlobalAdminAccount
-            }
-            
-            $result = Get-TargetResource @params
-            $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-            $content += "        SiteScript " + (New-GUID).ToString() + "`r`n"
-            $content += "        {`r`n"
-            $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
-            $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
-            $content += "        }`r`n"
-            $i++
+    foreach ($script in $siteScripts)
+    {
+        Write-Information "    [$i/$($siteScripts.Length)] $($script.Title)"
+        $params = @{
+            Identity           = $script.Id
+            Title              = $script.Title
+            GlobalAdminAccount = $GlobalAdminAccount
         }
+            
+        $result = Get-TargetResource @params
+        $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
+        $content += "        SiteScript " + (New-GUID).ToString() + "`r`n"
+        $content += "        {`r`n"
+        $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
+        $content += Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "GlobalAdminAccount"
+        $content += "        }`r`n"
+        $i++
+    }
     return $content
 }
 
