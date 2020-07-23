@@ -1,8 +1,10 @@
 name: Publish to PowerShell Gallery
+
 on: 
   push:
     branches:
       - master
+
 jobs:
   build:
     runs-on: windows-latest
