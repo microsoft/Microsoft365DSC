@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+## 1.20.723.1
+
+* MISC
+  * Update to the Telemetry engine to capture information about tenant;
+
 ## 1.20.722.1
 
 * AADApplication
