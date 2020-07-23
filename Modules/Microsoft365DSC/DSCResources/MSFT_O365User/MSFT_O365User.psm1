@@ -377,24 +377,32 @@ function Set-TargetResource
     }
     $CreationParams = Remove-NullEntriesFromHashtable -Hash $CreationParams
 
-    if ($null -ne $LicenseAssignment)
+    $licenses = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicenses
+
+    foreach ($licenseSkuPart in $LicenseAssignment)
     {
-        $licenses = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicenses
+        Write-Verbose -Message "Adding License {$licenseSkuPart} to the Queue"
+        $license = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicense
+        $license.SkuId = (Get-AzureADSubscribedSku | Where-Object -Property SkuPartNumber -Value $licenseSkuPart -EQ).SkuID
 
-        foreach ($licenseSkuPart in $LicenseAssignment)
+        # Set the Office license as the license we want to add in the $licenses object
+        $licenses.AddLicenses += $license
+    }
+
+    foreach ($currentLicense in $user.LicenseAssignment)
+    {
+        if (-not $LicenseAssignment.Contains($currentLicense))
         {
-            Write-Verbose -Message "Adding License {$licenseSkuPart} to the Queue"
-            $license = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicense
-            $license.SkuId = (Get-AzureADSubscribedSku | Where-Object -Property SkuPartNumber -Value $licenseSkuPart -EQ).SkuID
-
-            # Set the Office license as the license we want to add in the $licenses object
-            $licenses.AddLicenses = $license
+            Write-Verbose -Message "Removing {$currentLicense} from user {$UserPrincipalName}"
+            $license = (Get-AzureADSubscribedSku | Where-Object -Property SkuPartNumber -Value $currentLicense -EQ).SkuID
+            $licenses.RemoveLicenses += $license
         }
     }
 
     if ($user.UserPrincipalName)
     {
         Write-Verbose -Message "Updating License Assignment"
+
         try
         {
             Write-Verbose -Message "Assigning $($licenses.Count) licences to existing user"

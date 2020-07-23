@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+## UNRELEASED
+
+* O365User
+  * Fixed an issue where no licenses specified resulted in an error;
+
 ## 1.20.722.1
 
 * AADApplication
