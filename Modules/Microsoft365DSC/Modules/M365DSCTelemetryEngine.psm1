@@ -55,6 +55,20 @@ function Add-M365DSCTelemetryEvent
                 $Data.Add("ProjectName", $ProjectName)
             }
 
+            if ($null -ne $Data.Principal)
+            {
+                $principalValue = $Data.Principal.Split("@")[1]
+                $Data.Add("Tenant", $principalValue)
+            }
+            elseif ($null -ne $Data.TenantId)
+            {
+                $principalValue = $Data.TenantId
+                $Data.Add("Tenant", $principalValue)
+            }
+
+            $Data.Remove("TenandId") | Out-Null
+            $Data.Remove("Principal") | Out-Null
+
             $version = (Get-Module 'Microsoft365DSC').Version
             $Data.Add("M365DSCVersion", $version)
 
