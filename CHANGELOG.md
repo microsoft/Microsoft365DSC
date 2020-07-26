@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+## UNRELEASED
+
+* AADApplication
+  * Removed the ObjectId parameter from the list of parameters
+    checked in the Test-TargetResource;
+
 ## 1.20.723.1
 
 * MISC
