@@ -2,8 +2,16 @@
 
 ## UNRELEASED
 
+* AADApplication
+  * Removed the ObjectId parameter from the list of parameters
+    checked in the Test-TargetResource;
 * O365User
   * Fixed an issue where no licenses specified resulted in an error;
+
+## 1.20.723.1
+
+* MISC
+  * Update to the Telemetry engine to capture information about tenant;
 
 ## 1.20.722.1
 
