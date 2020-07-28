@@ -5,6 +5,9 @@
 * AADApplication
   * Removed the ObjectId parameter from the list of parameters
     checked in the Test-TargetResource;
+* AADMSGroup
+  * Added try catch around Get-AzureADMSGroup to not throw error when specifying
+    GroupId
 
 ## 1.20.723.1
 
