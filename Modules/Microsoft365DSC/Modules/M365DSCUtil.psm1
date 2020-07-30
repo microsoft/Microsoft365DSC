@@ -2006,3 +2006,35 @@ function Get-M365DSCExportContentForResource
     $content += "        }`r`n"
     return $content
 }
+
+function Test-M365DSCNewVersionAvailable
+{
+    [CmdletBinding()]
+    param()
+
+    try
+    {
+        if ($null -eq $Global:M365DSCNewVersionNotification)
+        {
+            # Get current module used
+            $currentVersion = Get-Module 'Microsoft365DSC'
+
+            # Get module in the Gallery
+            $GalleryVersion = Find-Module 'Microsoft365DSC'
+
+            if ([Version]($GalleryVersion.Version) -gt [Version]($currentVersion.Version))
+            {
+                $message = "A NEWER VERSION of MICROSOFT365DSC {v$($GalleryVersion.Version)} IS AVAILABLE IN THE POWERSHELL GALLERY. TO UPDATE, RUN:`r`nInstall-Module Microsoft365DSC -Force"
+                Write-Host $message `
+                    -ForegroundColor 'White' `
+                    -BackgroundColor 'DarkGray'
+                Write-Verbose -Message $message
+            }
+            $Global:M365DSCNewVersionNotification = 'AlreadyShown'
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+    }
+}

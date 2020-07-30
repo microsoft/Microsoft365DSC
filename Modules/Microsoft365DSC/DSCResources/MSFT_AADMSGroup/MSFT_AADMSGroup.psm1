@@ -81,61 +81,64 @@ function Get-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
 
-    try
+    if ($PSBoundParameters.ContainsKey("Id"))
     {
-        if ($PSBoundParameters.ContainsKey("Id"))
+        Write-Verbose -Message "GroupID was specified"
+        try
         {
-            Write-Verbose -Message "GroupID was specified"
             $Group = Get-AzureADMSGroup -id $Id
         }
-        else
+        catch
         {
-            Write-Verbose -Message "Id was NOT specified"
-            ## Can retreive multiple AAD Groups since displayname is not unique
             $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'"
             if ($Group.Length -gt 1)
             {
                 throw "Duplicate AzureAD Groups named $DisplayName exist in tenant"
             }
         }
-
-        if ($null -eq $Group)
+    }
+    else
+    {
+        Write-Verbose -Message "Id was NOT specified"
+        ## Can retreive multiple AAD Groups since displayname is not unique
+        $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'"
+        if ($Group.Length -gt 1)
         {
-            $currentValues = $PSBoundParameters
-            $currentValues.Ensure = "Absent"
-            return $currentValues
-        }
-        else
-        {
-            Write-Verbose -Message "Found existing AzureAD Group"
-
-            $result = @{
-                DisplayName                   = $Group.DisplayName
-                Id                            = $Group.Id
-                Description                   = $Group.Description
-                GroupTypes                    = [System.String[]]$Group.GroupTypes
-                MembershipRule                = $Group.MembershipRule
-                MembershipRuleProcessingState = $Group.MembershipRuleProcessingState
-                SecurityEnabled               = $Group.SecurityEnabled
-                MailEnabled                   = $Group.MailEnabled
-                MailNickname                  = $Group.MailNickname
-                Visibility                    = $Group.Visibility
-                Ensure                        = "Present"
-                GlobalAdminAccount            = $GlobalAdminAccount
-                ApplicationId                 = $ApplicationId
-                TenantId                      = $TenantId
-                CertificateThumbprint         = $CertificateThumbprint
-            }
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
+            throw "Duplicate AzureAD Groups named $DisplayName exist in tenant"
         }
     }
-    catch
+
+    if ($null -eq $Group)
     {
         $currentValues = $PSBoundParameters
         $currentValues.Ensure = "Absent"
         return $currentValues
     }
+    else
+    {
+        Write-Verbose -Message "Found existing AzureAD Group"
+
+        $result = @{
+            DisplayName                   = $Group.DisplayName
+            Id                            = $Group.Id
+            Description                   = $Group.Description
+            GroupTypes                    = [System.String[]]$Group.GroupTypes
+            MembershipRule                = $Group.MembershipRule
+            MembershipRuleProcessingState = $Group.MembershipRuleProcessingState
+            SecurityEnabled               = $Group.SecurityEnabled
+            MailEnabled                   = $Group.MailEnabled
+            MailNickname                  = $Group.MailNickname
+            Visibility                    = $Group.Visibility
+            Ensure                        = "Present"
+            GlobalAdminAccount            = $GlobalAdminAccount
+            ApplicationId                 = $ApplicationId
+            TenantId                      = $TenantId
+            CertificateThumbprint         = $CertificateThumbprint
+        }
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+        return $result
+    }
+
 }
 
 function Set-TargetResource

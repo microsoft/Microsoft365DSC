@@ -1,6 +1,15 @@
 # Change log for Microsoft365DSC
 
-## UNRELEASED
+## 1.20.730.2
+
+* AADMSGroup
+  * Fixed an issue where if GroupID was not passed, we could end up
+    with duplicate teams.
+* MISC
+  * If a newer version of the module is available in the PowerShell
+    Gallery, a notification will be displayed to the user;
+
+## 1.20.730.1
 
 * AADApplication
   * Removed the ObjectId parameter from the list of parameters
@@ -10,6 +19,8 @@
     always set to true due to an invalid cast;
 * O365User
   * Fixed an issue where no licenses specified resulted in an error;
+* Metadata
+  * Updated MSCloudLoginAssistant Module to version 1.0.32;
 
 ## 1.20.723.1
 
