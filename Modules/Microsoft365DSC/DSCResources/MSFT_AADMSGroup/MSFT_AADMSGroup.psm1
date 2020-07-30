@@ -81,51 +81,60 @@ function Get-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' -InboundParameters $PSBoundParameters
 
-    if ($PSBoundParameters.ContainsKey("Id"))
+    try
     {
-        Write-Verbose -Message "GroupID was specified"
-        $Group = Get-AzureADMSGroup -id $Id
-    }
-    else
-    {
-        Write-Verbose -Message "Id was NOT specified"
-        ## Can retreive multiple AAD Groups since displayname is not unique
-        $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'"
-        if ($Group.Length -gt 1)
+        if ($PSBoundParameters.ContainsKey("Id"))
         {
-            throw "Duplicate AzureAD Groups named $DisplayName exist in tenant"
+            Write-Verbose -Message "GroupID was specified"
+            $Group = Get-AzureADMSGroup -id $Id
+        }
+        else
+        {
+            Write-Verbose -Message "Id was NOT specified"
+            ## Can retreive multiple AAD Groups since displayname is not unique
+            $Group = Get-AzureADMSGroup -Filter "DisplayName eq '$DisplayName'"
+            if ($Group.Length -gt 1)
+            {
+                throw "Duplicate AzureAD Groups named $DisplayName exist in tenant"
+            }
+        }
+
+        if ($null -eq $Group)
+        {
+            $currentValues = $PSBoundParameters
+            $currentValues.Ensure = "Absent"
+            return $currentValues
+        }
+        else
+        {
+            Write-Verbose -Message "Found existing AzureAD Group"
+
+            $result = @{
+                DisplayName                   = $Group.DisplayName
+                Id                            = $Group.Id
+                Description                   = $Group.Description
+                GroupTypes                    = [System.String[]]$Group.GroupTypes
+                MembershipRule                = $Group.MembershipRule
+                MembershipRuleProcessingState = $Group.MembershipRuleProcessingState
+                SecurityEnabled               = $Group.SecurityEnabled
+                MailEnabled                   = $Group.MailEnabled
+                MailNickname                  = $Group.MailNickname
+                Visibility                    = $Group.Visibility
+                Ensure                        = "Present"
+                GlobalAdminAccount            = $GlobalAdminAccount
+                ApplicationId                 = $ApplicationId
+                TenantId                      = $TenantId
+                CertificateThumbprint         = $CertificateThumbprint
+            }
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
         }
     }
-
-    if ($null -eq $Group)
+    catch
     {
         $currentValues = $PSBoundParameters
         $currentValues.Ensure = "Absent"
         return $currentValues
-    }
-    else
-    {
-        Write-Verbose -Message "Found existing AzureAD Group"
-
-        $result = @{
-            DisplayName                   = $Group.DisplayName
-            Id                            = $Group.Id
-            Description                   = $Group.Description
-            GroupTypes                    = [System.String[]]$Group.GroupTypes
-            MembershipRule                = $Group.MembershipRule
-            MembershipRuleProcessingState = $Group.MembershipRuleProcessingState
-            SecurityEnabled               = $Group.SecurityEnabled
-            MailEnabled                   = $Group.MailEnabled
-            MailNickname                  = $Group.MailNickname
-            Visibility                    = $Group.Visibility
-            Ensure                        = "Present"
-            GlobalAdminAccount            = $GlobalAdminAccount
-            ApplicationId                 = $ApplicationId
-            TenantId                      = $TenantId
-            CertificateThumbprint         = $CertificateThumbprint
-        }
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-        return $result
     }
 }
 
@@ -225,16 +234,37 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentGroup.Ensure -eq 'Present')
     {
-        Set-AzureADMSGroup @currentParameters
+        try
+        {
+            Set-AzureADMSGroup @currentParameters
+        }
+        catch
+        {
+            New-M365DSCLogEntry -Error $_ -Message "Couldn't set group $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+        }
     }
     elseif ($Ensure -eq 'Present' -and $currentGroup.Ensure -eq 'Absent')
     {
         $currentParameters.Remove("Id")
-        New-AzureADMSGroup @currentParameters
+        try
+        {
+            New-AzureADMSGroup @currentParameters
+        }
+        catch
+        {
+            New-M365DSCLogEntry -Error $_ -Message "Couldn't create group $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+        }
     }
     elseif ($Ensure -eq 'Absent' -and $currentGroup.Ensure -eq 'Present')
     {
-        Remove-AzureADMSGroup -Id $currentGroup.ID
+        try
+        {
+            Remove-AzureADMSGroup -Id $currentGroup.ID
+        }
+        catch
+        {
+            New-M365DSCLogEntry -Error $_ -Message "Couldn't delete group $DisplayName" -Source $MyInvocation.MyCommand.ModuleName
+        }
     }
 }
 
@@ -316,6 +346,7 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
 
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -369,12 +400,12 @@ function Export-TargetResource
     {
         Write-Host "    |---[$i/$($groups.Count)] $($group.DisplayName)" -NoNewLine
         $Params = @{
-                GlobalAdminAccount    = $GlobalAdminAccount
-                DisplayName           = $group.DisplayName
-                Id                    = $group.Id
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
+            GlobalAdminAccount    = $GlobalAdminAccount
+            DisplayName           = $group.DisplayName
+            Id                    = $group.Id
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
