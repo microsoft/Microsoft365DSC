@@ -58,7 +58,7 @@ bits of the module from a machine that has internet connectivity,
 simply run the following PowerShell line:
 
 ```powershell
-Install-Module -Name Microsoft365DSC -Force
+Install-Module -Name Microsoft365DSC -Force -AllowClobber
 ```
 
 ## Telemetry Disclaimer

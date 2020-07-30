@@ -376,9 +376,9 @@ function Export-TargetResource
     $i = 1
     $dscContent = ''
 
+    Write-Host "`r`n" -NoNewLine
     if ($null -ne $orgAssets)
     {
-        Write-Host "`r`n" -NoNewLine
         foreach ($orgAssetLib in $orgAssets.OrgAssetsLibraries)
         {
             Write-Host "    [$i/$($orgAssets.Length)] $LibraryUrl" -NoNewLine
