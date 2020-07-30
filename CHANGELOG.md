@@ -1,7 +1,10 @@
 # Change log for Microsoft365DSC
 
-## UNRELEASED
+## 1.20.730.2
 
+* AADMSGroup
+  * Fixed an issue where if GroupID was not passed, we could end up
+    with duplicate teams.
 * MISC
   * If a newer version of the module is available in the PowerShell
     Gallery, a notification will be displayed to the user;
