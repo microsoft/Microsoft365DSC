@@ -2,6 +2,12 @@
 
 ## UNRELEASED
 
+* MISC
+  * If a newer version of the module is available in the PowerShell
+    Gallery, a notification will be displayed to the user;
+
+## 1.20.730.1
+
 * AADApplication
   * Removed the ObjectId parameter from the list of parameters
     checked in the Test-TargetResource;
@@ -10,6 +16,8 @@
     always set to true due to an invalid cast;
 * O365User
   * Fixed an issue where no licenses specified resulted in an error;
+* Metadata
+  * Updated MSCloudLoginAssistant Module to version 1.0.32;
 
 ## 1.20.723.1
 
