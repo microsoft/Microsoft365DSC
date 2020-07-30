@@ -522,22 +522,15 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Platform 'PnP' `
                 -InboundParameters $PSBoundParameters
     $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
-    $sources = $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
+    [array]$sources = $SearchConfig.SearchConfigurationSettings.SearchQueryConfigurationSettings.SearchQueryConfigurationSettings.Sources.Source
 
     $dscContent = ''
     $i = 1
     $sourcesLength = $sources.Length
-    if ($null -eq $sourcesLength)
-    {
-        $sourcesLength = 1
-    }
+    Write-Host "`r`n" -NoNewline
     foreach ($source in $sources)
     {
         $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
-        if ($i -eq 1)
-        {
-                Write-Host "`r`n" -NoNewline
-        }
         Write-Host "    |---[$i/$($sourcesLength)] $($source.Name)" -NoNewLine
 
         $Params = @{

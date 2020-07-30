@@ -91,12 +91,12 @@ function Get-TargetResource
         }
         $result = @{
             IsSingleInstance               = 'Yes'
-            EnableGroupCreation            = [Boolean]$Policy["EnableGroupCreation"]
-            AllowGuestsToBeGroupOwner      = [Boolean]$Policy["AllowGuestsToBeGroupOwner"]
-            AllowGuestsToAccessGroups      = [Boolean]$Policy["AllowGuestsToAccessGroups"]
+            EnableGroupCreation            = [Boolean]::Parse($Policy["EnableGroupCreation"])
+            AllowGuestsToBeGroupOwner      = [Boolean]::Parse($Policy["AllowGuestsToBeGroupOwner"])
+            AllowGuestsToAccessGroups      = [Boolean]::Parse($Policy["AllowGuestsToAccessGroups"])
             GuestUsageGuidelinesUrl        = $Policy["GuestUsageGuidelinesUrl"]
             GroupCreationAllowedGroupName  = $AllowedGroupName
-            AllowToAddGuests               = [Boolean]$Policy["AllowToAddGuests"]
+            AllowToAddGuests               = [Boolean]::Parse($Policy["AllowToAddGuests"])
             UsageGuidelinesUrl             = $Policy["UsageGuidelinesUrl"]
             Ensure                         = "Present"
             GlobalAdminAccount             = $GlobalAdminAccount

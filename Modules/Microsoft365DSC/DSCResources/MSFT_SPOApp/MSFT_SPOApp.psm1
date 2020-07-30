@@ -327,12 +327,9 @@ function Export-TargetResource
 
         $dscContent = ''
         $i = 1
+        Write-Host "`r`n" -NoNewline
         foreach ($file in $filesToDownload)
         {
-            if ($i -eq 1)
-            {
-                    Write-Host "`r`n" -NoNewline
-            }
             Write-Host "    |---[$i/$($filesToDownload.Length)] $($file.Name)" -NoNewline
 
             $identity = $file.Name.ToLower().Replace(".app", "").Replace(".sppkg", "")

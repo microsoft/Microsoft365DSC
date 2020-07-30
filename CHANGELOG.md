@@ -1,5 +1,16 @@
 # Change log for Microsoft365DSC
 
+## UNRELEASED
+
+* AADApplication
+  * Removed the ObjectId parameter from the list of parameters
+    checked in the Test-TargetResource;
+* AADGroupsSettings
+  * Fixed an issue where the values returned by Get-TargetResource were
+    always set to true due to an invalid cast;
+* O365User
+  * Fixed an issue where no licenses specified resulted in an error;
+
 ## 1.20.723.1
 
 * MISC
