@@ -356,7 +356,11 @@ function Set-TargetResource
     $PasswordPolicies = $null
     if ($PasswordNeverExpires)
     {
-        $PasswordPolicies = 'NONE'
+        $PasswordPolicies = 'DisablePasswordExpiration'
+    }
+    else
+    {
+        $PasswordPolicies = "None"
     }
     $CreationParams = @{
         City = $City
@@ -381,36 +385,48 @@ function Set-TargetResource
     }
     $CreationParams = Remove-NullEntriesFromHashtable -Hash $CreationParams
 
-    if ($null -ne $LicenseAssignment)
+    $licenses = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicenses
+
+    foreach ($licenseSkuPart in $LicenseAssignment)
     {
-        $licenses = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicenses
+        Write-Verbose -Message "Adding License {$licenseSkuPart} to the Queue"
+        $license = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicense
+        $license.SkuId = (Get-AzureADSubscribedSku | Where-Object -Property SkuPartNumber -Value $licenseSkuPart -EQ).SkuID
 
-        foreach ($licenseSkuPart in $LicenseAssignment)
+        # Set the Office license as the license we want to add in the $licenses object
+        $licenses.AddLicenses += $license
+    }
+
+    foreach ($currentLicense in $user.LicenseAssignment)
+    {
+        if (-not $LicenseAssignment.Contains($currentLicense))
         {
-            Write-Verbose -Message "Adding License {$licenseSkuPart} to the Queue"
-            $license = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicense
-            $license.SkuId = (Get-AzureADSubscribedSku | Where-Object -Property SkuPartNumber -Value $licenseSkuPart -EQ).SkuID
-
-            # Set the Office license as the license we want to add in the $licenses object
-            $licenses.AddLicenses = $license
+            Write-Verbose -Message "Removing {$currentLicense} from user {$UserPrincipalName}"
+            $license = (Get-AzureADSubscribedSku | Where-Object -Property SkuPartNumber -Value $currentLicense -EQ).SkuID
+            $licenses.RemoveLicenses += $license
         }
     }
 
     if ($user.UserPrincipalName)
     {
-        Write-Verbose -Message "Updating License Assignment"
-        try
+
+        if ($null -ne $licenses -and `
+            ($licenses.AddLicenses.Length -gt 0 -or $licenses.RemoveLicenses.Length -gt 0))
         {
-            Write-Verbose -Message "Assigning $($licenses.Count) licences to existing user"
-            Set-AzureADUserLicense -ObjectId $UserPrincipalName `
-                -AssignedLicenses $licenses `
-                -ErrorAction SilentlyContinue
-        }
-        catch
-        {
-            $Message = "License {$($LicenseAssignment)} doesn't exist in tenant."
-            Write-Verbose $Message
-            New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+            Write-Verbose -Message "Updating License Assignment {$($licenses[0] | Out-String)}"
+            try
+            {
+                Write-Verbose -Message "Assigning $($licenses.Count) licences to existing user"
+                Set-AzureADUserLicense -ObjectId $UserPrincipalName `
+                    -AssignedLicenses $licenses `
+                    -ErrorAction SilentlyContinue
+            }
+            catch
+            {
+                $Message = "License {$($LicenseAssignment)} doesn't exist in tenant."
+                Write-Verbose $Message
+                New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+            }
         }
 
         Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
