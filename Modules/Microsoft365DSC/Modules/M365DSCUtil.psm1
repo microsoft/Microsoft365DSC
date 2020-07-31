@@ -1739,7 +1739,7 @@ function Remove-EmptyValue
                 }
                 else
                 {
-                    if ($null -eq $Hashtable[$Key] -or $Hashtable[$Key] -eq '') {
+                    if ($null -eq $Hashtable[$Key] -or $Hashtable[$Key] -eq '')
                     {
                         $Hashtable.Remove($Key)
                     }
@@ -1747,7 +1747,7 @@ function Remove-EmptyValue
             }
             else
             {
-                if ($null -eq $Hashtable[$Key] -or $Hashtable[$Key] -eq '') {
+                if ($null -eq $Hashtable[$Key] -or $Hashtable[$Key] -eq '')
                 {
                     $Hashtable.Remove($Key)
                 }
