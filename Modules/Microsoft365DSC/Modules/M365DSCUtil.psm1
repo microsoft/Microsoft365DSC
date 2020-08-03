@@ -1739,7 +1739,7 @@ function Remove-EmptyValue
                 }
                 else
                 {
-                    if ($null -eq $Hashtable[$Key] -or $Hashtable[$Key] -eq '')
+                    if ($null -eq $Hashtable[$Key] -or $Hashtable[$Key] -eq '' -or ($Hashtable[$Key] -is [System.Collections.IList] -and $Hashtable[$Key].Count -eq 0)) 
                     {
                         $Hashtable.Remove($Key)
                     }
@@ -1747,7 +1747,7 @@ function Remove-EmptyValue
             }
             else
             {
-                if ($null -eq $Hashtable[$Key] -or $Hashtable[$Key] -eq '')
+                if ($null -eq $Hashtable[$Key] -or $Hashtable[$Key] -eq '' -or ($Hashtable[$Key] -is [System.Collections.IList] -and $Hashtable[$Key].Count -eq 0))
                 {
                     $Hashtable.Remove($Key)
                 }

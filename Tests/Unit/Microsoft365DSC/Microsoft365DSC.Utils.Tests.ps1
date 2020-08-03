@@ -96,4 +96,33 @@
         Remove-EmptyValue -Splat $SplatDictionary -Recursive
         $SplatDictionary.Keys | Should -not -Contain 'Test7'
     }
+    It 'From OrderedDictionary Recursive with ILIST check for Empty Arrays' {
+        $SplatDictionary = [ordered] @{
+            Test  = $NotExistingParameter
+            Test1 = 'Existing Entry'
+            Test2 = $null
+            Test3 = ''
+            Test5 = 0
+            Test6 = [System.Collections.Generic.List[PSCustomObject]]::new()
+            Test7 = @{}
+            Test8 = @()
+            Test9 = [System.Collections.Generic.List[PSCustomObject]]::new()
+            Test10 = @('Test')
+        }
+        $DummyObject = [PSCustomObject] @{
+            Test  = 1
+            Test1 = 2
+        }
+        $SplatDictionary.Test6.Add($DummyObject)
+
+        Remove-EmptyValue -Splat $SplatDictionary
+        $SplatDictionary.Keys | Should -Contain 'Test6'
+        $SplatDictionary.Keys | Should -Contain 'Test7'
+        $SplatDictionary.Keys | Should -not -Contain 'Test8'
+        $SplatDictionary.Keys | Should -not -Contain 'Test9'
+        $SplatDictionary.Keys | Should -Contain 'Test10'
+
+        Remove-EmptyValue -Splat $SplatDictionary -Recursive
+        $SplatDictionary.Keys | Should -not -Contain 'Test7'
+    }
 }
