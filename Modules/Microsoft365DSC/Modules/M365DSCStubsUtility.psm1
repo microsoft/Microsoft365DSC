@@ -36,7 +36,7 @@ function Get-M365StubFiles
             ModuleName   = 'AzureADPreview'
             RandomCmdlet = 'Get-AzureADDirectorySetting'
         },
-        @{
+        <#@{
             Platform     = 'ExchangeOnline'
             ModuleName   = $null
             RandomCmdlet = 'Add-AvailabilityAddressSpace'
@@ -44,12 +44,12 @@ function Get-M365StubFiles
         @{
             Platform   = 'MicrosoftTeams'
             ModuleName = 'Microsoft.TeamsCmdlets.PowerShell.Custom'
-        },
+        },#>
         @{
             Platform   = 'PnP'
             ModuleName = 'SharePointPnPPowerShellOnline'
-        },
-        @{
+        }#,
+        <#@{
             Platform   = 'PowerPlatforms'
             ModuleName = 'Microsoft.PowerApps.Administration.PowerShell'
         },
@@ -59,14 +59,10 @@ function Get-M365StubFiles
             RandomCmdlet = 'Add-ComplianceCaseMember'
         },
         @{
-            Platform   = 'SharePointOnline'
-            ModuleName = 'Microsoft.Online.SharePoint.PowerShell'
-        },
-        @{
             Platform     = 'SkypeForBusiness'
             ModuleName   = $null
             RandomCmdlet = 'Clear-CsOnlineTelephoneNumberReservation'
-        }
+        }#>
     )
 
     foreach ($Module in $Modules)
@@ -95,7 +91,14 @@ function Get-M365StubFiles
             Write-Progress -Activity "Generating Stubs" -Status $cmdlet.Name -PercentComplete (($i/$cmdlets.Length)*100)
             $signature = $null
             $metadata = New-Object -TypeName System.Management.Automation.CommandMetaData -ArgumentList $cmdlet
-            $definition = [System.Management.Automation.ProxyCommand]::Create($metadata)
+            try
+            {
+                $definition = [System.Management.Automation.ProxyCommand]::Create($metadata)
+            }
+            catch
+            {
+                $definition = (Get-Command $cmdlet.Name).Definition
+            }
             if ($metadata.DefaultParameterSetName -ne 'InvokeByDynamicParameters' -and `
                 $definition.IndexOf('$dynamicParams') -eq -1)
             {
