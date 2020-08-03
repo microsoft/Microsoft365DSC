@@ -78,7 +78,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ODBAccessRequests                         = "On"
                     BlockMacSync                              = $true
                     DisableReportProblemDialog                = $true
-                    DomainGuids                               = "123456g8-1c3v-1b3h-s2c4-12c4v6bb91vc"
+                    DomainGuids                               = (New-Guid).ToString()
                     ExcludedFileExtensions                    = @(".asmx")
                     GrooveBlockOption                         = "HardOptIn"
                     GlobalAdminAccount                        = $GlobalAdminAccount
