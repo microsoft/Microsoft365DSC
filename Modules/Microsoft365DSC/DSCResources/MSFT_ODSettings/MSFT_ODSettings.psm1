@@ -378,12 +378,12 @@ function Set-TargetResource
     if ($Options.ContainsKey("BlockMacSync") -and $Options.ContainsKey("DomainGuids"))
     {
         Write-Verbose -Message "Updating BlockMacSync"
-        Set-PnPTenantSyncClientRestriction -BlockMacSync:$Options.BlockMacSync -DomainGuids $Options.DomainGuids -Enable | Out-Null
+        Set-PnPTenantSyncClientRestriction -BlockMacSync:$Options.BlockMacSync -DomainGuids $Options.DomainGuids -Enable:$true | Out-Null
     }
     elseif ($Options.ContainsKey("DomainGuids") -and ($Options.ContainsKey("BlockMacSync") -eq $false))
     {
         Write-Verbose -Message "Updating DomainGuids"
-        Set-PnPTenantSyncClientRestriction -DomainGuids $Options.DomainGuids -Enable| Out-Null
+        Set-PnPTenantSyncClientRestriction -DomainGuids $Options.DomainGuids -Enable:$true| Out-Null
     }
 
     if ($Options.ContainsKey("ExcludedFileExtensions"))
@@ -400,7 +400,7 @@ function Set-TargetResource
     if ($Options.ContainsKey("DisableReportProblemDialog"))
     {
         Write-Verbose -Message "Updating DisableReportProblemDialog"
-        Set-PnPTenantSyncClientRestriction -DisableReportProblemDialog:$Options.DisableReportProblemDialog
+        Set-PnPTenantSyncClientRestriction -DisableReportProblemDialog:$Options.DisableReportProblemDialog | Out-Null
     }
 
     if ($Options.ContainsKey("GrooveBlockOption"))
