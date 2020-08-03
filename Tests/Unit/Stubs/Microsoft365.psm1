@@ -71512,7 +71512,7 @@ function Set-PnPTenantSyncClientRestriction
         $DomainGuids,
 
         [Parameter]
-        [System.Boolean]
+        [Switch]
         $Enable,
 
         [Parameter]
