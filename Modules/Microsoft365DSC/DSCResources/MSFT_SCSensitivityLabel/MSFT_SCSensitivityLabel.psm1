@@ -45,6 +45,158 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
+        [Parameter()]
+        [ValidateSet('Left', 'Center', 'Right')]
+        [System.String]
+        $ApplyContentMarkingFooterAlignment,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyContentMarkingFooterEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingFooterFontSize,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingFooterMargin,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterText,
+
+        [Parameter()]
+        [ValidateSet('Left', 'Center', 'Right')]
+        [System.String]
+        $ApplyContentMarkingHeaderAlignment,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyContentMarkingHeaderEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingHeaderFontSize,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingHeaderMargin,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderText,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyWaterMarkingEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyWaterMarkingFontSize,
+
+        [Parameter()]
+        [ValidateSet('Horizontal', 'Diagonal')]
+        [System.String]
+        $ApplyWaterMarkingLayout,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingText,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionAipTemplateScopes,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionContentExpiredOnDateInDaysOrNever,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionDoNotForward,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionEnabled,
+
+        [Parameter()]
+        [System.Int32]
+        $EncryptionOfflineAccessDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionPromptUser,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionProtectionType,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionRightsDefinitions,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionRightsUrl,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowAccessToGuestUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowEmailFromGuestUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowFullAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowLimitedAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionBlockAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionEnabled,
+
+        [Parameter()]
+        [ValidateSet('Public', 'Private')]
+        [System.String]
+        $SiteAndGroupProtectionPrivacy,
+
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
@@ -74,7 +226,7 @@ function Get-TargetResource
 
     try
     {
-        $label = Get-Label -Identity $Name -ErrorAction SilentlyContinue
+        $label = Get-Label -Identity $Name -ErrorAction SilentlyContinue -IncludeDetailedLabelActions $true
     }
     catch
     {
@@ -106,17 +258,54 @@ function Get-TargetResource
         }
         Write-Verbose "Found existing Sensitivity Label $($Name)"
         $result = @{
-            Name               = $label.Name
-            Comment            = $label.Comment
-            ParentId           = $parentLabelID
-            AdvancedSettings   = $advancedSettingsValue
-            DisplayName        = $label.DisplayName
-            LocaleSettings     = $localeSettingsValue
-            Priority           = $label.Priority
-            Tooltip            = $label.Tooltip
-            Disabled           = $label.Disabled
-            GlobalAdminAccount = $GlobalAdminAccount
-            Ensure             = 'Present'
+            Name                                           = $label.Name
+            Comment                                        = $label.Comment
+            ParentId                                       = $parentLabelID
+            AdvancedSettings                               = $advancedSettingsValue
+            DisplayName                                    = $label.DisplayName
+            LocaleSettings                                 = $localeSettingsValue
+            Priority                                       = $label.Priority
+            Tooltip                                        = $label.Tooltip
+            Disabled                                       = $label.Disabled
+            GlobalAdminAccount                             = $GlobalAdminAccount
+            Ensure                                         = 'Present'
+            ApplyContentMarkingFooterAlignment             = $label.ApplyContentMarkingFooterAlignment
+            ApplyContentMarkingFooterEnabled               = $label.ApplyContentMarkingFooterEnabled
+            ApplyContentMarkingFooterFontColor             = $label.ApplyContentMarkingFooterFontColor
+            ApplyContentMarkingFooterFontName              = $label.ApplyContentMarkingFooterFontName
+            ApplyContentMarkingFooterFontSize              = $label.ApplyContentMarkingFooterFontSize
+            ApplyContentMarkingFooterMargin                = $label.ApplyContentMarkingFooterMargin
+            ApplyContentMarkingFooterText                  = $label.ApplyContentMarkingFooterText
+            ApplyContentMarkingHeaderAlignment             = $label.ApplyContentMarkingHeaderAlignment
+            ApplyContentMarkingHeaderEnabled               = $label.ApplyContentMarkingHeaderEnabled
+            ApplyContentMarkingHeaderFontColor             = $label.ApplyContentMarkingHeaderFontColor
+            ApplyContentMarkingHeaderFontName              = $label.ApplyContentMarkingHeaderFontName
+            ApplyContentMarkingHeaderFontSize              = $label.ApplyContentMarkingHeaderFontSize
+            ApplyContentMarkingHeaderMargin                = $label.ApplyContentMarkingHeaderMargin
+            ApplyContentMarkingHeaderText                  = $label.ApplyContentMarkingHeaderText
+            ApplyWaterMarkingEnabled                       = $label.ApplyWaterMarkingEnabled
+            ApplyWaterMarkingFontColor                     = $label.ApplyWaterMarkingFontColor
+            ApplyWaterMarkingFontName                      = $label.ApplyWaterMarkingFontName
+            ApplyWaterMarkingFontSize                      = $label.ApplyWaterMarkingFontSize
+            ApplyWaterMarkingLayout                        = $label.ApplyWaterMarkingLayout
+            ApplyWaterMarkingText                          = $label.ApplyWaterMarkingText
+            EncryptionAipTemplateScopes                    = $label.EncryptionAipTemplateScopes
+            EncryptionContentExpiredOnDateInDaysOrNever    = $label.EncryptionContentExpiredOnDateInDaysOrNever
+            EncryptionDoNotForward                         = $label.EncryptionDoNotForward
+            EncryptionEnabled                              = $label.EncryptionEnabled
+            EncryptionOfflineAccessDays                    = $label.EncryptionOfflineAccessDays
+            EncryptionPromptUser                           = $label.EncryptionPromptUser
+            EncryptionProtectionType                       = $label.EncryptionProtectionType
+            EncryptionRightsDefinitions                    = $label.EncryptionRightsDefinitions
+            EncryptionRightsUrl                            = $label.EncryptionRightsUrl
+            EncryptionTemplateId                           = $label.EncryptionTemplateId
+            SiteAndGroupProtectionAllowAccessToGuestUsers  = $label.SiteAndGroupProtectionAllowAccessToGuestUsers
+            SiteAndGroupProtectionAllowEmailFromGuestUsers = $label.SiteAndGroupProtectionAllowEmailFromGuestUsers
+            SiteAndGroupProtectionAllowFullAccess          = $label.SiteAndGroupProtectionAllowFullAccess
+            SiteAndGroupProtectionAllowLimitedAccess       = $label.SiteAndGroupProtectionAllowLimitedAccess
+            SiteAndGroupProtectionBlockAccess              = $label.SiteAndGroupProtectionBlockAccess
+            SiteAndGroupProtectionEnabled                  = $label.SiteAndGroupProtectionEnabled
+            SiteAndGroupProtectionPrivacy                  = $label.SiteAndGroupProtectionPrivacy
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -169,6 +358,159 @@ function Set-TargetResource
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
+
+        [Parameter()]
+        [ValidateSet('Left', 'Center', 'Right')]
+        [System.String]
+        $ApplyContentMarkingFooterAlignment,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyContentMarkingFooterEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingFooterFontSize,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingFooterMargin,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterText,
+
+        [Parameter()]
+        [ValidateSet('Left', 'Center', 'Right')]
+        [System.String]
+        $ApplyContentMarkingHeaderAlignment,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyContentMarkingHeaderEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingHeaderFontSize,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingHeaderMargin,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderText,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyWaterMarkingEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyWaterMarkingFontSize,
+
+        [Parameter()]
+        [ValidateSet('Horizontal', 'Diagonal')]
+        [System.String]
+        $ApplyWaterMarkingLayout,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingText,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionAipTemplateScopes,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionContentExpiredOnDateInDaysOrNever,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionDoNotForward,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionEnabled,
+
+        [Parameter()]
+        [System.Int32]
+        $EncryptionOfflineAccessDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionPromptUser,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionProtectionType,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionRightsDefinitions,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionRightsUrl,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowAccessToGuestUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowEmailFromGuestUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowFullAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowLimitedAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionBlockAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionEnabled,
+
+        [Parameter()]
+        [ValidateSet('Public', 'Private')]
+        [System.String]
+        $SiteAndGroupProtectionPrivacy,
+
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -327,6 +669,159 @@ function Test-TargetResource
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
+
+        [Parameter()]
+        [ValidateSet('Left', 'Center', 'Right')]
+        [System.String]
+        $ApplyContentMarkingFooterAlignment,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyContentMarkingFooterEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingFooterFontSize,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingFooterMargin,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterText,
+
+        [Parameter()]
+        [ValidateSet('Left', 'Center', 'Right')]
+        [System.String]
+        $ApplyContentMarkingHeaderAlignment,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyContentMarkingHeaderEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingHeaderFontSize,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyContentMarkingHeaderMargin,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderText,
+
+        [Parameter()]
+        [System.Boolean]
+        $ApplyWaterMarkingEnabled,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingFontColor,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingFontName,
+
+        [Parameter()]
+        [System.Int32]
+        $ApplyWaterMarkingFontSize,
+
+        [Parameter()]
+        [ValidateSet('Horizontal', 'Diagonal')]
+        [System.String]
+        $ApplyWaterMarkingLayout,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingText,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionAipTemplateScopes,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionContentExpiredOnDateInDaysOrNever,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionDoNotForward,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionEnabled,
+
+        [Parameter()]
+        [System.Int32]
+        $EncryptionOfflineAccessDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $EncryptionPromptUser,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionProtectionType,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionRightsDefinitions,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionRightsUrl,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionTemplateId,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowAccessToGuestUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowEmailFromGuestUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowFullAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionAllowLimitedAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionBlockAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $SiteAndGroupProtectionEnabled,
+
+        [Parameter()]
+        [ValidateSet('Public', 'Private')]
+        [System.String]
+        $SiteAndGroupProtectionPrivacy,
+
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
