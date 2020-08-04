@@ -480,6 +480,10 @@ function Get-ResultProperty
     )
 
     $start = $ResultString.IndexOf($PropertyName) + $PropertyName.Length + 2
+    if ($start -lt 0 -or $start -gt $Result.Length)
+    {
+        $return $null
+    }
     $end = $ResultString.IndexOf(';', $start)
 
     $result = $null
