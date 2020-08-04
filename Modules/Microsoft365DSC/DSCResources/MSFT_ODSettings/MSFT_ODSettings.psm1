@@ -377,8 +377,8 @@ function Set-TargetResource
     Write-Verbose -Message ($Options | Out-String)
     if ($Options.ContainsKey("BlockMacSync") -and $Options.ContainsKey("DomainGuids"))
     {
-        Write-Verbose -Message "Updating BlockMacSync"
-        Set-PnPTenantSyncClientRestriction -BlockMacSync:$Options.BlockMacSync -DomainGuids $Options.DomainGuids -Enable:$true | Out-Null
+        Write-Verbose -Message "Updating BlockMacSync {$($Options.BlockMacSync)}"
+        Set-PnPTenantSyncClientRestriction -BlockMacSync $Options.BlockMacSync -DomainGuids $Options.DomainGuids -Enable:$true | Out-Null
     }
     elseif ($Options.ContainsKey("DomainGuids") -and ($Options.ContainsKey("BlockMacSync") -eq $false))
     {
@@ -395,7 +395,7 @@ function Set-TargetResource
             $BlockedFileTypes += $fileTypes + ';'
         }
 
-        Set-PnPTenantSyncClientRestriction -ExcludedFileExtensions $BlockedFileTypes| Out-Null
+        Set-PnPTenantSyncClientRestriction -ExcludedFileExtensions $BlockedFileTypes | Out-Null
     }
     if ($Options.ContainsKey("DisableReportProblemDialog"))
     {

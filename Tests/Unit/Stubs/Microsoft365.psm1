@@ -71499,27 +71499,16 @@ function Set-PnPTenantSyncClientRestriction
 {
     [CmdletBinding()]
     Param(
-        [Parameter]
         [System.Boolean]
         $BlockMacSync,
-
-        [Parameter]
         [System.Boolean]
         $DisableReportProblemDialog,
-
-        [Parameter]
         [System.string[]]
         $DomainGuids,
-
-        [Parameter]
-        [Switch]
+        [System.Boolean]
         $Enable,
-
-        [Parameter]
         [System.String[]]
         $ExcludedFileExtensions,
-
-        [Parameter]
         [System.String]
         $GrooveBlockOption
     )
