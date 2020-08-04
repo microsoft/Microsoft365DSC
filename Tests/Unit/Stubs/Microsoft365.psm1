@@ -71495,6 +71495,24 @@ Accepts a value of true (enabled) to hide the Download button or false (disabled
     ${DisabledWebPartIds})
 
 }
+function Set-PnPTenantSyncClientRestriction
+{
+    [CmdletBinding()]
+    Param(
+        [System.Boolean]
+        $BlockMacSync,
+        [System.Boolean]
+        $DisableReportProblemDialog,
+        [System.string[]]
+        $DomainGuids,
+        [System.Boolean]
+        $Enable,
+        [System.String[]]
+        $ExcludedFileExtensions,
+        [System.String]
+        $GrooveBlockOption
+    )
+}
 function Set-PnPTenantAppCatalogUrl
 {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]

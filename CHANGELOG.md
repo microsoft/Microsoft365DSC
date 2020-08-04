@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+## UNRELEASED
+
+* ODSettings
+  * Fixed an issue where the GrooveBlockOption setting was never
+    set properly;
+
 ## 1.20.730.2
 
 * AADMSGroup
