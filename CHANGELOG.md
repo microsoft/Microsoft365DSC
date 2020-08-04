@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+* SCSensitivityLabel
+  * Added new parameters
+
 * EXOMobileDeviceMailboxPolicy
   * Fixed an error where if no MinPasswordLength was specified
     the Set-TargetResource threw n error trying to create a new
