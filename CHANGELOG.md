@@ -1,5 +1,15 @@
 # Change log for Microsoft365DSC
 
+## UNRELEASED
+
+* EXOMobileDeviceMailboxPolicy
+  * Fixed an error where if no MinPasswordLength was specified
+    the Set-TargetResource threw n error trying to create a new
+    policy;
+* ODSettings
+  * Fixed an issue where the GrooveBlockOption setting was never
+    set properly;
+
 ## 1.20.730.2
 
 * AADMSGroup
