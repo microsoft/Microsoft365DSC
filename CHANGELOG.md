@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-## UNRELEASED
+## 1.20.805.1
 
 * EXOAvailabilityConfig
   * Fixed an issue with the Test-TargetResource where if a full
