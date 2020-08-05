@@ -1,5 +1,25 @@
 # Change log for Microsoft365DSC
 
+## 1.20.805.1
+
+* EXOAvailabilityConfig
+  * Fixed an issue with the Test-TargetResource where if a full
+    username (with '@') was specified for the OrgWideAccount, it
+    would always return false;
+* EXOMobileDeviceMailboxPolicy
+  * Fixed an error where if no MinPasswordLength was specified
+    the Set-TargetResource threw n error trying to create a new
+    policy;
+* EXOInboundConnector
+  * Fixed an issue where ResourceName was null during the export;
+* EXOOutboundConnector
+  * Fixed an issue where ResourceName was null during the export;
+* ODSettings
+  * Fixed an issue where the GrooveBlockOption setting was never
+    set properly;
+* SCSensitivityLabel
+  * Added new parameters
+
 ## 1.20.730.2
 
 * AADMSGroup

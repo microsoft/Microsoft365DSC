@@ -36,6 +36,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credential"
             }
+
+            Mock -CommandName Set-PnPTenantSyncClientRestriction -MockWith {
+            }
         }
 
         # Test contexts
@@ -78,7 +81,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ODBAccessRequests                         = "On"
                     BlockMacSync                              = $true
                     DisableReportProblemDialog                = $true
-                    DomainGuids                               = "12345-12345-12345-12345-12345"
+                    DomainGuids                               = (New-Guid).ToString()
                     ExcludedFileExtensions                    = @(".asmx")
                     GrooveBlockOption                         = "HardOptIn"
                     GlobalAdminAccount                        = $GlobalAdminAccount

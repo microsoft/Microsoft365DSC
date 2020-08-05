@@ -216,8 +216,15 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
 
+    $DesiredValues = $PSBoundParameters
+    if ($OrgWideAccount.Contains("@"))
+    {
+        $DesiredValues.OrgWideAccount = $OrgWideAccount.Split('@')[0]
+    }
+
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
-        -DesiredValues $PSBoundParameters `
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $DesiredValues `
         -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
@@ -299,4 +306,3 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
-
