@@ -2024,7 +2024,7 @@ function Test-M365DSCNewVersionAvailable
 
             if ([Version]($GalleryVersion.Version) -gt [Version]($currentVersion.Version))
             {
-                $message = "A NEWER VERSION of MICROSOFT365DSC {v$($GalleryVersion.Version)} IS AVAILABLE IN THE POWERSHELL GALLERY. TO UPDATE, RUN:`r`nInstall-Module Microsoft365DSC -Force"
+                $message = "A NEWER VERSION OF MICROSOFT365DSC {v$($GalleryVersion.Version)} IS AVAILABLE IN THE POWERSHELL GALLERY. TO UPDATE, RUN:`r`nInstall-Module Microsoft365DSC -Force -AllowClobber"
                 Write-Host $message `
                     -ForegroundColor 'White' `
                     -BackgroundColor 'DarkGray'
