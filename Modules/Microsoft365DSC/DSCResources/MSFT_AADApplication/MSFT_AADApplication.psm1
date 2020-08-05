@@ -421,7 +421,6 @@ function Export-TargetResource
         [System.String]
         $CertificateThumbprint
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
