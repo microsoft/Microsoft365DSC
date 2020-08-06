@@ -67,6 +67,9 @@
     2.0.72;
   * Updated SharePointPnPPowerShellOnline version to 3.23.2007.1;
 
+* SPOSiteScript;
+  * Initial Release;
+
 ## 1.20.716.1
 
 * MISC
