@@ -59,8 +59,7 @@ function Get-TargetResource
 
             $SiteScript = $null
             ##### Check to see if more than one site script is returned
-            # More than one was returned
-            if ($SiteScripts.Length -gt -1){ #.getType().IsArray){
+            if ($SiteScripts.Length -gt -1){ 
                 $SiteScript = Get-PnPSiteScript -Identity $SiteScripts[0].Id
             }
 
@@ -182,12 +181,10 @@ function Set-TargetResource
         try
         {
             # The Site Script exists and it shouldn't
-            # Since we don't have the Site Script Id, we need to find it
             [Array]$SiteScripts = Get-PnPSiteScript | Where-Object -FilterScript {$_.Title -eq $Title} -ErrorAction SilentlyContinue
 
             ##### Check to see if more than one site script is returned
-            # More than one was returned
-            if ($SiteScripts.Length -gt -1){ #.getType().IsArray){
+            if ($SiteScripts.Length -gt -1){
                 $SiteScript = Get-PnPSiteScript -Identity $SiteScripts[0].Id
             }
             ##### End of Check
@@ -209,15 +206,12 @@ function Set-TargetResource
         try
         {
             # The Site Script exists and it shouldn't
-            # Since we don't have the Site Script Id, we need to find it
             [Array]$SiteScripts = Get-PnPSiteScript | Where-Object -FilterScript {$_.Title -eq $Title} -ErrorAction SilentlyContinue
 
             ##### Check to see if more than one site script is returned
-            # More than one was returned
             if ($SiteScripts.Length -gt -1){
                 #
                 #the only way to get the $content is to query the site again, but this time with the ID and not the Title like above
-                #$SiteScript = Get-PnPSiteScript -Identity -$SiteScripts[0].Id
                 $UpdateParams = @{
                     Id          = $SiteScript[0].Id
                     Title       = $Title
@@ -225,23 +219,14 @@ function Set-TargetResource
                     Description = $Description
                 }
             }
-            # One was returned
-            #if ($SiteScripts.getType().Name = "TenantSiteScript"){
 
-                #$UpdateParams = @{
-                #    Id          = $SiteScripts.Id
-                #    Title       = $Title
-                #    Content     = $Content
-                #    Description = $Description
-                #}
-            #}
             ##### End of Check
             $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
             Set-PnPSiteScript @UpdateParams -ErrorAction Stop
         }
         catch
         {
-            #Write-Verbose -Message "Site Script, {$Title} already exists, updating its settings"
+            Write-Verbose -Message "Unable to update Site Script, {$Title}"
         }
     }
 }
