@@ -2,7 +2,7 @@
 
 ## UNRELEASED
 
-* SiteScript;
+* SPOSiteScript;
   * Initial Release;
 
 ## 1.20.716.1

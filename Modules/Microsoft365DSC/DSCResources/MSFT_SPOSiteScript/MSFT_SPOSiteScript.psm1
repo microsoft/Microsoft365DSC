@@ -4,10 +4,6 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        #[Parameter(Mandatory = $true)]
-        #[System.String]
-        #$URL,
-
         [Parameter(Mandatory)]
         [System.String]
         $Title,
@@ -56,34 +52,31 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message "Getting the SPO Site Script: $Title"
-        
+
         #
-        if($Identity -eq ""){
-            $SiteScripts = Get-PnPSiteScript | Where-Object -FilterScript {$_.Title -eq $Title}
-        
+        if ([System.String]::IsNullOrEmpty($Identity)){
+            [Array]$SiteScripts = Get-PnPSiteScript | Where-Object -FilterScript {$_.Title -eq $Title}
+
             $SiteScript = $null
             ##### Check to see if more than one site script is returned
             # More than one was returned
-            if ($SiteScripts.getType().IsArray){
-                #$SiteScript = Get-PnPSiteScript -Identity $SiteScripts[0].Id
+            if ($SiteScripts.Length -gt -1){ #.getType().IsArray){
                 $SiteScript = Get-PnPSiteScript -Identity $SiteScripts[0].Id
             }
-            # One was returned
-            if ($SiteScripts.getType().Name -eq "TenantSiteScript"){
-                #$SiteScript = Get-PnPSiteScript -Identity $SiteScripts.Id
-                $SiteScript = Get-PnPSiteScript -Identity $SiteScripts.Id
-            }
+
             # No script was returned
             if ($null -eq $SiteScripts)
             {
                 Write-Verbose -Message "No Site Script with the Title, {$Title}, was found."
                 return $nullReturn
             }
-        }else{
+        }
+        else
+        {
             $SiteScript = Get-PnPSiteScript -Identity $Identity
         }
         ##### End of Check
-        
+
         return @{
             Identity            = $SiteScript.Id
             Title               = $SiteScript.Title
@@ -142,7 +135,6 @@ function Set-TargetResource
 
     Test-MSCloudLogin -CloudCredential $GlobalAdminAccount -Platform PnP
 
-    #
     # region Telemetry
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $CurrentParameters = $PSBoundParameters
@@ -150,8 +142,7 @@ function Set-TargetResource
     $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
     $context = Get-PnPContext
     # end region
-    #
-    
+
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
         # Splatting
@@ -160,18 +151,17 @@ function Set-TargetResource
             Content         = $Content
             Description     = $Description
         }
-        
-        #
+
         # Adding the Site Script Again. 
         Write-Verbose -Message "Site Script, {$Title}, doesn't exist. Creating it."
-        $newSiteScript = Add-PnPSiteScript @CreationParams | Out-Null
+        $newSiteScript = Add-PnPSiteScript @CreationParams
 
         # let's make sure the Site Script gets added
         $siteScript = $null
         $circuitBreaker = 0
         do
         {
-            Write-Verbose -Message "Waiting for another 15 seconds for Site Script to be ready."
+            Write-Verbose -Message "Waiting for another 3 seconds for Site Script to be ready."
             Start-Sleep -Seconds 3
             try
             {
@@ -183,7 +173,7 @@ function Set-TargetResource
             }
             $circuitBreaker++
         } while ($null -eq $siteScript -and $circuitBreaker -lt 20)
-        #
+
         Write-Verbose -Message "Site Script, {$Title}, has been successfully created."
     }
     elseif ($Ensure -eq "Absent" -and $CurrentValues.Ensure -eq 'Present')
@@ -193,16 +183,12 @@ function Set-TargetResource
         {
             # The Site Script exists and it shouldn't
             # Since we don't have the Site Script Id, we need to find it
-            $SiteScripts = Get-PnPSiteScript | Where-Object -FilterScript {$_.Title -eq $Title} -ErrorAction SilentlyContinue
-            
+            [Array]$SiteScripts = Get-PnPSiteScript | Where-Object -FilterScript {$_.Title -eq $Title} -ErrorAction SilentlyContinue
+
             ##### Check to see if more than one site script is returned
             # More than one was returned
-            if ($SiteScripts.getType().IsArray){
-                Remove-PnPSiteScript -Identity $SiteScripts[0].Id
-            }
-            # One was returned
-            if ($SiteScripts.getType().Name = "TenantSiteScript"){
-                Remove-PnPSiteScript -Identity $SiteScripts.Id
+            if ($SiteScripts.Length -gt -1){ #.getType().IsArray){
+                $SiteScript = Get-PnPSiteScript -Identity $SiteScripts[0].Id
             }
             ##### End of Check
         }
@@ -219,16 +205,16 @@ function Set-TargetResource
     if ($Ensure -ne 'Absent')
     {
         Write-Verbose -Message "Site Script, {$Title} already exists, updating its settings"
-        #
+
         try
         {
             # The Site Script exists and it shouldn't
             # Since we don't have the Site Script Id, we need to find it
-            $SiteScripts = Get-PnPSiteScript | Where-Object -FilterScript {$_.Title -eq $Title} -ErrorAction SilentlyContinue
-            #            
+            [Array]$SiteScripts = Get-PnPSiteScript | Where-Object -FilterScript {$_.Title -eq $Title} -ErrorAction SilentlyContinue
+
             ##### Check to see if more than one site script is returned
             # More than one was returned
-            if ($SiteScripts.getType().IsArray){
+            if ($SiteScripts.Length -gt -1){
                 #
                 #the only way to get the $content is to query the site again, but this time with the ID and not the Title like above
                 #$SiteScript = Get-PnPSiteScript -Identity -$SiteScripts[0].Id
@@ -240,22 +226,23 @@ function Set-TargetResource
                 }
             }
             # One was returned
-            if ($SiteScripts.getType().Name = "TenantSiteScript"){
-                #
-                $UpdateParams = @{
-                    Id          = $SiteScripts.Id
-                    Title       = $Title
-                    Content     = $Content
-                    Description = $Description
-                }
-            }
+            #if ($SiteScripts.getType().Name = "TenantSiteScript"){
+
+                #$UpdateParams = @{
+                #    Id          = $SiteScripts.Id
+                #    Title       = $Title
+                #    Content     = $Content
+                #    Description = $Description
+                #}
+            #}
             ##### End of Check
             $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
             Set-PnPSiteScript @UpdateParams -ErrorAction Stop
         }
         catch
         {
-        }   
+            #Write-Verbose -Message "Site Script, {$Title} already exists, updating its settings"
+        }
     }
 }
 
@@ -265,10 +252,6 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        #[Parameter(Mandatory = $true)]
-        #[System.String]
-        #$URL,
-        
         [Parameter(Mandatory = $true)]
         [System.String]
         $Title,
@@ -301,7 +284,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $CurrentValues.Remove("GlobalAdminAccount") | Out-Null
+    $CurrentValues.Remove("GlobalAdminAccount")
     $keysToCheck = $CurrentValues.Keys
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -323,9 +306,9 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $GlobalAdminAccount
     )
-    #
+
     $InformationPreference = 'Continue'
-    
+
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
@@ -338,9 +321,9 @@ function Export-TargetResource
 
     $content = ""
     $i = 1
-    
+
     [array]$siteScripts = Get-PnPSiteScript
-        
+
     foreach ($script in $siteScripts)
     {
         Write-Information "    [$i/$($siteScripts.Length)] $($script.Title)"
@@ -349,7 +332,7 @@ function Export-TargetResource
             Title              = $script.Title
             GlobalAdminAccount = $GlobalAdminAccount
         }
-            
+
         $result = Get-TargetResource @params
         $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
         $content += "        SiteScript " + (New-GUID).ToString() + "`r`n"
@@ -363,5 +346,3 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
-
-
