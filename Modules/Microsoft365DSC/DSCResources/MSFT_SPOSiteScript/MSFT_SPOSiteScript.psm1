@@ -184,7 +184,7 @@ function Set-TargetResource
             [Array]$SiteScripts = Get-PnPSiteScript | Where-Object -FilterScript {$_.Title -eq $Title} -ErrorAction SilentlyContinue
 
             ##### Check to see if more than one site script is returned
-            if ($SiteScripts.Length -gt -1){
+            if ($SiteScripts.Length -gt 0){
                 $SiteScript = Get-PnPSiteScript -Identity $SiteScripts[0].Id
             }
             ##### End of Check
@@ -209,7 +209,7 @@ function Set-TargetResource
             [Array]$SiteScripts = Get-PnPSiteScript | Where-Object -FilterScript {$_.Title -eq $Title} -ErrorAction SilentlyContinue
 
             ##### Check to see if more than one site script is returned
-            if ($SiteScripts.Length -gt -1){
+            if ($SiteScripts.Length -gt 0){
                 #
                 #the only way to get the $content is to query the site again, but this time with the ID and not the Title like above
                 $UpdateParams = @{
