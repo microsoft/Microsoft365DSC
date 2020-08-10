@@ -1,0 +1,22 @@
+[ClassVersion("1.0.0")]
+class MSFT_SCLabelSetting
+{
+    [Write, Description("Advanced settings key.")] String Key;
+    [Write, Description("Advanced settings value.")] String Value[];
+};
+
+[ClassVersion("1.0.0.0"), FriendlyName("SCLabelPolicy")]
+class MSFT_SCLabelPolicy : OMI_BaseResource
+{
+    [Key, Description("The Name parameter specifies the unique name for the sensitivity label. The maximum length is 64 characters. If the value contains spaces, enclose the value in quotation marks.")] String Name;
+    [Write, Description("Specify if this rule should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("The Comment parameter specifies an optional comment.")] String Comment;
+    [Write, Description("The AdvancedSettings parameter enables client-specific features and capabilities on the sensitivity label. The settings that you configure with this parameter only affect apps that are designed for the setting."),EmbeddedInstance("MSFT_SCLabelSetting")] String AdvancedSettings[];
+    [Write, Description("The DisplayName parameter specifies the display name for the sensitivity label. The display name appears in the Microsoft Office and is used by Outlook users to select the appropriate sensitivity label before they send a message.")] String DisplayName;
+    [Write, Description("The ExchangeLocation parameter specifies the mailboxes to include in the policy.")] String ExchangeLocationLocation[];
+    [Write, Description("The ExchangeLocationException parameter specifies the mailboxes to exclude when you use the value All for the ExchangeLocation parameter.")] String ExchangeLocationException[];
+    [Write, Description("The ModernGroupLocation parameter specifies the Microsoft 365 Groups to include in the policy.")] String ModernGroupLocation[];
+    [Write, Description("The ModernGroupLocationException parameter specifies the Microsoft 365 Groups to exclude when you're using the value All for the ModernGroupLocation parameter.")] String ModernGroupLocationException[];
+    [Write, Description("The Labels parameter specifies the sensitivity labels that are associated with the policy. You can use any value that uniquely identifies the label.")] String Labels[];
+    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};
