@@ -194,8 +194,71 @@ function Set-TargetResource
         $CreationParams.Remove("ExchangeLocationException")
     }
 
+     # Exchange Location  is specified or already existing, we need to determine
+    # the delta.
+    if ($null -ne $CurrentPolicy.ExchangeLocationLocation -or `
+            $null -ne $ExchangeLocationLocation)
+    {
+        $ToBeRemoved = $CurrentPolicy.ExchangeLocationLocation | `
+            Where-Object { $ExchangeLocationLocation -NotContains $_ }
+        if ($null -ne $ToBeRemoved)
+        {
+            $CreationParams.Add("ExchangeLocationLocation", $ToBeRemoved)
+        }
 
-    if (('Present' -eq $Ensure) -and ('Absent' -eq $label.Ensure))
+        $ToBeAdded = $ExchangeLocationLocation | `
+            Where-Object { $CurrentPolicy.ExchangeLocationLocation -NotContains $_ }
+        if ($null -ne $ToBeAdded)
+        {
+            $CreationParams.Add("ExchangeLocationLocation", $ToBeAdded)
+        }
+        $CreationParams.Remove("ExchangeLocationLocation")
+    }
+
+    # Modern Group Location Exception is specified or already existing, we need to determine
+    # the delta.
+    if ($null -ne $CurrentPolicy.ModernGroupLocationException -or `
+            $null -ne $ModernGroupLocationException)
+    {
+        $ToBeRemoved = $CurrentPolicy.ModernGroupLocationException | `
+            Where-Object { $ModernGroupLocationException -NotContains $_ }
+        if ($null -ne $ToBeRemoved)
+        {
+            $CreationParams.Add("ModernGroupLocationException", $ToBeRemoved)
+        }
+
+        $ToBeAdded = $ModernGroupLocationException | `
+            Where-Object { $CurrentPolicy.ModernGroupLocationException -NotContains $_ }
+        if ($null -ne $ToBeAdded)
+        {
+            $CreationParams.Add("ModernGroupLocationException", $ToBeAdded)
+        }
+        $CreationParams.Remove("ModernGroupLocationException")
+    }
+
+     # Modern Group Exception is specified or already existing, we need to determine
+    # the delta.
+    if ($null -ne $CurrentPolicy.ModernGroupLocation -or `
+            $null -ne $ModernGroupLocation)
+    {
+        $ToBeRemoved = $CurrentPolicy.ModernGroupLocation | `
+            Where-Object { $ModernGroupLocation -NotContains $_ }
+        if ($null -ne $ToBeRemoved)
+        {
+            $CreationParams.Add("ModernGroupLocation", $ToBeRemoved)
+        }
+
+        $ToBeAdded = $ModernGroupLocation | `
+            Where-Object { $CurrentPolicy.ModernGroupLocation -NotContains $_ }
+        if ($null -ne $ToBeAdded)
+        {
+            $CreationParams.Add("ModernGroupLocation", $ToBeAdded)
+        }
+        $CreationParams.Remove("ModernGroupLocation")
+    }
+
+
+    if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
     {
         $CreationParams = $PSBoundParameters
 
@@ -205,35 +268,22 @@ function Set-TargetResource
             $CreationParams["AdvancedSettings"] = $advanced
         }
 
-        if ($PSBoundParameters.ContainsKey("LocaleSettings"))
-        {
-            $locale = Convert-CIMToLocaleSettings $LocaleSettings
-            $CreationParams["LocaleSettings"] = $locale
-        }
-
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
-        $CreationParams.Remove("Priority")
-        $CreationParams.Remove("Disabled")
 
-        Write-Verbose "Creating new Sensitivity label $Name calling the New-Label cmdlet."
+        Write-Verbose "Creating new Sensitivity label policy $Name."
 
         try
         {
-            New-Label @CreationParams
+            New-LabelPolicy @CreationParams
             ## Can't set priority until label created
-            if ($PSBoundParameters.ContainsKey("Priority"))
-            {
-                Start-Sleep 5
-                Set-label -Identity $Name -priority $Priority
-            }
         }
         catch
         {
-            Write-Warning "New-Label is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+            Write-Warning "New-LabelPolicy is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
         }
     }
-    elseif (('Present' -eq $Ensure) -and ('Present' -eq $label.Ensure))
+    elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
         $SetParams = $PSBoundParameters
 
@@ -243,40 +293,31 @@ function Set-TargetResource
             $SetParams["AdvancedSettings"] = $advanced
         }
 
-        if ($PSBoundParameters.ContainsKey("LocaleSettings"))
-        {
-            $locale = Convert-CIMToLocaleSettings $LocaleSettings
-            $SetParams["LocaleSettings"] = $locale
-        }
-
         #Remove unused parameters for Set-Label cmdlet
         $SetParams.Remove("GlobalAdminAccount")
         $SetParams.Remove("Ensure")
-        $SetParams.Remove("Name")
-        $SetParams.Remove("Disabled")
-
         try
         {
-            Set-Label @SetParams -Identity $Name
+            Set-LabelPolicy @SetParams -Identity $Name
         }
         catch
         {
-            Write-Warning "Set-Label is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+            Write-Warning "Set-LabelPolicy is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
         }
     }
-    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $label.Ensure))
+    elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
         # If the label exists and it shouldn't, simply remove it;Need to force deletoion
-        Write-Verbose -message "Deleting Sensitivity label $Name."
+        Write-Verbose -message "Deleting Sensitivity label policy $Name."
 
         try
         {
-            Remove-Label -Identity $Name -Confirm:$false
-            Remove-Label -Identity $Name -Confirm:$false -forcedeletion:$true
+            Remove-LabelPolicy -Identity $Name -Confirm:$false
+            Remove-LabelPolicy -Identity $Name -Confirm:$false -forcedeletion:$true
         }
         catch
         {
-            Write-Warning "Remove-Label is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
+            Write-Warning "Remove-LabelPolicy is not available in tenant $($GlobalAdminAccount.UserName.Split('@')[0])"
         }
     }
 }
