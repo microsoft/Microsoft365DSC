@@ -21,7 +21,7 @@ function Get-TargetResource
         $Labels,
 
         [Parameter()]
-        [Syste.String[]]
+        [System.String[]]
         $ExchangeLocationLocation,
 
         [Parameter()]
@@ -78,7 +78,7 @@ function Get-TargetResource
         throw $_
     }
 
-    if ($null -eq $label)
+    if ($null -eq $policy)
     {
         Write-Verbose -Message "Sensitivity label policy $($Name) does not exist."
         $result = $PSBoundParameters
@@ -89,7 +89,7 @@ function Get-TargetResource
     {
         if ($null -ne $policy.Settings)
         {
-            $advancedSettingsValue = Convert-StringToAdvancedSettings -AdvancedSettings $label.Settings
+            $advancedSettingsValue = Convert-StringToAdvancedSettings -AdvancedSettings $policy.Settings
         }
         Write-Verbose "Found existing Sensitivity Label policy $($Name)"
         $result = @{
@@ -128,11 +128,11 @@ function Set-TargetResource
         $AdvancedSettings,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $Labels,
 
         [Parameter()]
-        [Syste.String]
+        [System.String]
         $ExchangeLocationLocation,
 
         [Parameter()]
@@ -340,11 +340,11 @@ function Test-TargetResource
         $AdvancedSettings,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $Labels,
 
         [Parameter()]
-        [Syste.String]
+        [System.String]
         $ExchangeLocationLocation,
 
         [Parameter()]
@@ -617,45 +617,6 @@ function Test-AdvancedSettings
     }
 
     Write-Verbose -Message "Test AdvancedSettings  returns $foundSettings"
-    return $foundSettings
-}
-
-function Test-LocaleSettings
-{
-    [CmdletBinding()]
-    [OutputType([System.Boolean])]
-    param(
-        [Parameter (Mandatory = $true)]
-        $DesiredProperty,
-        [Parameter (Mandatory = $true)]
-        $CurrentProperty
-    )
-
-    $foundSettings = $true
-    foreach ($desiredSetting in $DesiredProperty)
-    {
-        $foundKey = $CurrentProperty | Where-Object { $_.LocaleKey -eq $desiredSetting.localeKey }
-        foreach ($setting in $desiredSetting.Settings)
-        {
-            if ($null -ne $foundKey)
-            {
-                $myLabel = $foundKey.Settings | Where-Object { $_.Key -eq $setting.Key -and $_.Value -eq $setting.Value }
-
-                if ($null -eq $myLabel)
-                {
-                    $foundSettings = $false
-                    break;
-                }
-            }
-            else
-            {
-                $foundSettings = $false
-                break;
-
-            }
-        }
-    }
-    Write-Verbose -Message "Test LocaleSettings returns $foundSettings"
     return $foundSettings
 }
 

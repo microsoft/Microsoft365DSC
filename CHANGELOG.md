@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+## Unreleased changes
+
+* New resource SCLabelPolicy
+* Update SPOSiteScript to support Azure AD
+
+
 ## 1.20.805.1
 
 * EXOAvailabilityConfig

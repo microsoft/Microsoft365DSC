@@ -14,4 +14,4 @@ To authenticate via Azure Active Directory, this resource required the following
   * SharePoint
     * Sites.FullControl.All
 
-NOTE: All permisions listed above require admin consent.
+NOTE: All permissions listed above require admin consent.
