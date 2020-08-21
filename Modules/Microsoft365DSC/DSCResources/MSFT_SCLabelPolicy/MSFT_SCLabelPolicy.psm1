@@ -208,6 +208,119 @@ function Set-TargetResource
         #Remove unused parameters for Set-Label cmdlet
         $SetParams.Remove("GlobalAdminAccount")
         $SetParams.Remove("Ensure")
+        $SetParams.Remove("Name")
+
+        # Exchange Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.ExchangeLocationLocation -or `
+                $null -ne $ExchangeLocationLocation)
+        {
+            $ToBeRemoved = $CurrentPolicy.ExchangeLocationLocation | `
+                Where-Object { $ExchangeLocationLocation -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                $SetParams.Add("RemoveExchangeLocation", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $ExchangeLocationLocation | `
+                Where-Object { $CurrentPolicy.ExchangeLocationLocation -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                $SetParams.Add("AddExchangeLocation", $ToBeAdded)
+            }
+
+            $SetParams.Remove("ExchangeLocation")
+        }
+
+        # Exchange Location Exceptions is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.ExchangeLocationException -or `
+                $null -ne $ExchangeLocationException)
+        {
+            $ToBeRemoved = $CurrentPolicy.ExchangeLocationException | `
+                Where-Object { $ExchangeLocationException -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                $SetParams.Add("RemoveExchangeLocationException", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $ExchangeLocationException | `
+                Where-Object { $CurrentPolicy.ExchangeLocationException -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                $SetParams.Add("AddExchangeLocationException", $ToBeAdded)
+            }
+
+            $SetParams.Remove("ExchangeLocationException")
+        }
+
+
+
+        # Modern Group Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.ModernGroupLocation -or `
+                $null -ne $ModernGroupLocation)
+        {
+            $ToBeRemoved = $CurrentPolicy.ModernGroupLocation | `
+                Where-Object { $ModernGroupLocation -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                $SetParams.Add("RemoveModernGroupLocation", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $ModernGroupLocation | `
+                Where-Object { $CurrentPolicy.ModernGroupLocation -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                $SetParams.Add("AddModernGroupLocation", $ToBeAdded)
+            }
+
+            $SetParams.Remove("ModernGroupLocation")
+        }
+
+        # Modern Group Location Exceptions is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.ModernGroupLocationException -or `
+                $null -ne $ModernGroupLocationException)
+        {
+            $ToBeRemoved = $CurrentPolicy.ModernGroupLocationException | `
+                Where-Object { $ModernGroupLocationException -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                $SetParams.Add("RemoveModernGroupLocationException", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $ModernGroupLocationException | `
+                Where-Object { $CurrentPolicy.ModernGroupLocationException -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                $SetParams.Add("AddModernGroupLocationException", $ToBeAdded)
+            }
+
+            $SetParams.Remove("ModernGroupLocationException")
+        }
+
+         # Labels is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.Labels -or `
+                $null -ne $Labels)
+        {
+            $ToBeRemoved = $CurrentPolicy.Labels | `
+                Where-Object { $Labels -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                $SetParams.Add("RemoveLabels", $ToBeRemoved)
+            }
+
+            $ToBeAdded = $Labels | `
+                Where-Object { $CurrentPolicy.Labels -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                $SetParams.Add("AddLabels", $ToBeAdded)
+            }
+
+            $SetParams.Remove("Labels")
+        }
         try
         {
             Set-LabelPolicy @SetParams -Identity $Name
