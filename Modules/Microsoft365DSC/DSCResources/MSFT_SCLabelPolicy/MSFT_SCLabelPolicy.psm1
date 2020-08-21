@@ -132,21 +132,20 @@ function Set-TargetResource
         $Labels,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExchangeLocationLocation,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExchangeLocationException,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ModernGroupLocation,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ModernGroupLocationException,
-
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -185,92 +184,6 @@ function Set-TargetResource
 
         $CreationParams.Remove("GlobalAdminAccount")
         $CreationParams.Remove("Ensure")
-
-        # Exchange Location Exception is specified or already existing, we need to determine
-        # the delta.
-        if ($null -ne $CurrentPolicy.ExchangeLocationException -or `
-                $null -ne $ExchangeLocationException)
-        {
-            $ToBeRemoved = $CurrentPolicy.ExchangeLocationException | `
-                Where-Object { $ExchangeLocationException -NotContains $_ }
-            if ($null -ne $ToBeRemoved)
-            {
-                $CreationParams.Add("RemoveExchangeLocationException", $ToBeRemoved)
-            }
-
-            $ToBeAdded = $ExchangeLocationException | `
-                Where-Object { $CurrentPolicy.ExchangeLocationException -NotContains $_ }
-            if ($null -ne $ToBeAdded)
-            {
-                $CreationParams.Add("AddExchangeLocationException", $ToBeAdded)
-            }
-            $CreationParams.Remove("ExchangeLocationException")
-        }
-
-        # Exchange Location  is specified or already existing, we need to determine
-        # the delta.
-        if ($null -ne $CurrentPolicy.ExchangeLocationLocation -or `
-                $null -ne $ExchangeLocationLocation)
-        {
-            $ToBeRemoved = $CurrentPolicy.ExchangeLocationLocation | `
-                Where-Object { $ExchangeLocationLocation -NotContains $_ }
-            if ($null -ne $ToBeRemoved)
-            {
-                $CreationParams.Add("ExchangeLocationLocation", $ToBeRemoved)
-            }
-
-            $ToBeAdded = $ExchangeLocationLocation | `
-                Where-Object { $CurrentPolicy.ExchangeLocationLocation -NotContains $_ }
-            if ($null -ne $ToBeAdded)
-            {
-                $CreationParams.Add("ExchangeLocationLocation", $ToBeAdded)
-            }
-            $CreationParams.Remove("ExchangeLocationLocation")
-        }
-
-        # Modern Group Location Exception is specified or already existing, we need to determine
-        # the delta.
-        if ($null -ne $CurrentPolicy.ModernGroupLocationException -or `
-                $null -ne $ModernGroupLocationException)
-        {
-            $ToBeRemoved = $CurrentPolicy.ModernGroupLocationException | `
-                Where-Object { $ModernGroupLocationException -NotContains $_ }
-            if ($null -ne $ToBeRemoved)
-            {
-                $CreationParams.Add("ModernGroupLocationException", $ToBeRemoved)
-            }
-
-            $ToBeAdded = $ModernGroupLocationException | `
-                Where-Object { $CurrentPolicy.ModernGroupLocationException -NotContains $_ }
-            if ($null -ne $ToBeAdded)
-            {
-                $CreationParams.Add("ModernGroupLocationException", $ToBeAdded)
-            }
-            $CreationParams.Remove("ModernGroupLocationException")
-        }
-
-        # Modern Group Exception is specified or already existing, we need to determine
-        # the delta.
-        if ($null -ne $CurrentPolicy.ModernGroupLocation -or `
-                $null -ne $ModernGroupLocation)
-        {
-            $ToBeRemoved = $CurrentPolicy.ModernGroupLocation | `
-                Where-Object { $ModernGroupLocation -NotContains $_ }
-            if ($null -ne $ToBeRemoved)
-            {
-                $CreationParams.Add("ModernGroupLocation", $ToBeRemoved)
-            }
-
-            $ToBeAdded = $ModernGroupLocation | `
-                Where-Object { $CurrentPolicy.ModernGroupLocation -NotContains $_ }
-            if ($null -ne $ToBeAdded)
-            {
-                $CreationParams.Add("ModernGroupLocation", $ToBeAdded)
-            }
-            $CreationParams.Remove("ModernGroupLocation")
-        }
-
-
         Write-Verbose "Creating new Sensitivity label policy $Name."
 
         try
@@ -292,91 +205,6 @@ function Set-TargetResource
             $advanced = Convert-CIMToAdvancedSettings  $AdvancedSettings
             $SetParams["AdvancedSettings"] = $advanced
         }
-
-        # Exchange Location Exception is specified or already existing, we need to determine
-        # the delta.
-        if ($null -ne $CurrentPolicy.ExchangeLocationException -or `
-                $null -ne $ExchangeLocationException)
-        {
-            $ToBeRemoved = $CurrentPolicy.ExchangeLocationException | `
-                Where-Object { $ExchangeLocationException -NotContains $_ }
-            if ($null -ne $ToBeRemoved)
-            {
-                $SetParams.Add("RemoveExchangeLocationException", $ToBeRemoved)
-            }
-
-            $ToBeAdded = $ExchangeLocationException | `
-                Where-Object { $CurrentPolicy.ExchangeLocationException -NotContains $_ }
-            if ($null -ne $ToBeAdded)
-            {
-                $SetParams.Add("AddExchangeLocationException", $ToBeAdded)
-            }
-            $SetParams.Remove("ExchangeLocationException")
-        }
-
-        # Exchange Location  is specified or already existing, we need to determine
-        # the delta.
-        if ($null -ne $CurrentPolicy.ExchangeLocationLocation -or `
-                $null -ne $ExchangeLocationLocation)
-        {
-            $ToBeRemoved = $CurrentPolicy.ExchangeLocationLocation | `
-                Where-Object { $ExchangeLocationLocation -NotContains $_ }
-            if ($null -ne $ToBeRemoved)
-            {
-                $SetParams.Add("ExchangeLocationLocation", $ToBeRemoved)
-            }
-
-            $ToBeAdded = $ExchangeLocationLocation | `
-                Where-Object { $CurrentPolicy.ExchangeLocationLocation -NotContains $_ }
-            if ($null -ne $ToBeAdded)
-            {
-                $SetParams.Add("ExchangeLocationLocation", $ToBeAdded)
-            }
-            $SetParams.Remove("ExchangeLocationLocation")
-        }
-
-        # Modern Group Location Exception is specified or already existing, we need to determine
-        # the delta.
-        if ($null -ne $CurrentPolicy.ModernGroupLocationException -or `
-                $null -ne $ModernGroupLocationException)
-        {
-            $ToBeRemoved = $CurrentPolicy.ModernGroupLocationException | `
-                Where-Object { $ModernGroupLocationException -NotContains $_ }
-            if ($null -ne $ToBeRemoved)
-            {
-                $SetParams.Add("ModernGroupLocationException", $ToBeRemoved)
-            }
-
-            $ToBeAdded = $ModernGroupLocationException | `
-                Where-Object { $CurrentPolicy.ModernGroupLocationException -NotContains $_ }
-            if ($null -ne $ToBeAdded)
-            {
-                $SetParams.Add("ModernGroupLocationException", $ToBeAdded)
-            }
-            $SetParams.Remove("ModernGroupLocationException")
-        }
-
-        # Modern Group Exception is specified or already existing, we need to determine
-        # the delta.
-        if ($null -ne $CurrentPolicy.ModernGroupLocation -or `
-                $null -ne $ModernGroupLocation)
-        {
-            $ToBeRemoved = $CurrentPolicy.ModernGroupLocation | `
-                Where-Object { $ModernGroupLocation -NotContains $_ }
-            if ($null -ne $ToBeRemoved)
-            {
-                $SetParams.Add("ModernGroupLocation", $ToBeRemoved)
-            }
-
-            $ToBeAdded = $ModernGroupLocation | `
-                Where-Object { $CurrentPolicy.ModernGroupLocation -NotContains $_ }
-            if ($null -ne $ToBeAdded)
-            {
-                $SetParams.Add("ModernGroupLocation", $ToBeAdded)
-            }
-            $SetParams.Remove("ModernGroupLocation")
-        }
-
         #Remove unused parameters for Set-Label cmdlet
         $SetParams.Remove("GlobalAdminAccount")
         $SetParams.Remove("Ensure")
@@ -428,19 +256,19 @@ function Test-TargetResource
         $Labels,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExchangeLocationLocation,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExchangeLocationException,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ModernGroupLocation,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ModernGroupLocationException,
 
 
