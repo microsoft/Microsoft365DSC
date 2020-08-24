@@ -1,8 +1,0 @@
-[ClassVersion("1.0.0.0"), FriendlyName("EXOPolicyTipConfig")]
-class MSFT_EXOPolicyTipConfig : OMI_BaseResource
-{
-    [Key, Description("The Name parameter specifies the custom Policy Tip you want to modify.")] String Name;
-    [Write, Description("The Value parameter specifies the text that's displayed by the Policy Tip.")] String Value;
-    [Write, Description("Specify if the Policy Tip Config should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
-    [Required, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
-};

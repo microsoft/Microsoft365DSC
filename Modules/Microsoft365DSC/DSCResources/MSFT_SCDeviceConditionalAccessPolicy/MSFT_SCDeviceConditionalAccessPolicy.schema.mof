@@ -1,0 +1,9 @@
+[ClassVersion("1.0.0.0"), FriendlyName("SCDeviceConditionalAccessPolicy")]
+class MSFT_SCDeviceConditionalAccessPolicy : OMI_BaseResource
+{
+    [Key, Description("The name of the Device Conditional Access Policy.")] String Name;
+    [Write, Description("Specify if this policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("The Comment parameter specifies an optional comment.")] String Comment;
+    [Write, Description("The Enabled parameter specifies whether the policy is enabled.")] Boolean Enabled;
+    [Required, Description("Credentials of Security and Compliance Center Admin"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+};

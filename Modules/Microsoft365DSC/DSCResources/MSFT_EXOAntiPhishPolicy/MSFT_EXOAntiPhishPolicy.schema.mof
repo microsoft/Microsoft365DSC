@@ -1,0 +1,33 @@
+[ClassVersion("1.0.0.0"), FriendlyName("EXOAntiPhishPolicy")]
+class MSFT_EXOAntiPhishPolicy : OMI_BaseResource
+{
+    [Key, Description("The Identity parameter specifies the name of the antiphishing policy that you want to modify.")] String Identity;
+    [Write, Description("Specify if this policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("The AdminDisplayName parameter specifies a description for the policy.")] String AdminDisplayName;
+    [Write, Description("The PhishThresholdLevel parameter specifies the tolerance level that's used by machine learning in the handling of phishing messages."), ValueMap{"1","2","3","4"}, Values{"1","2","3","4"}] String PhishThresholdLevel;
+    [Write, Description("The AuthenticationFailAction parameter specifies the action to take when the message fails composite authentication."), ValueMap{"MoveToJmf","Quarantine"}, Values{"MoveToJmf","Quarantine"}] String AuthenticationFailAction;
+    [Write, Description("The TargetedDomainProtectionAction parameter specifies the action to take on detected domain impersonation messages for the domains specified by the TargetedDomainsToProtect parameter."), ValueMap{"BccMessage","Delete","MoveToJmf","NoAction","Quarantine","Redirect"}, Values{"BccMessage","Delete","MoveToJmf","NoAction","Quarantine","Redirect"}] String TargetedDomainProtectionAction;
+    [Write, Description("The TargetedUserProtectionAction parameter specifies the action to take on detected user impersonation messages for the users specified by the TargetedUsersToProtect parameter."), ValueMap{"BccMessage","Delete","MoveToJmf","NoAction","Quarantine","Redirect"}, Values{"BccMessage","Delete","MoveToJmf","NoAction","Quarantine","Redirect"}] String TargetedUserProtectionAction;
+    [Write, Description("Specify if this policy should be enabled. Default is $true.")] Boolean Enabled;
+    [Write, Description("The EnableAntispoofEnforcement parameter specifies whether to enable or disable antispoofing protection for the policy.")] Boolean EnableAntispoofEnforcement;
+    [Write, Description("The EnableMailboxIntelligence parameter specifies whether to enable or disable mailbox intelligence (the first contact graph) in domain and user impersonation protection.")] Boolean EnableMailboxIntelligence;
+    [Write, Description("The EnableOrganizationDomainsProtection parameter specifies whether to enable domain impersonation protection for all registered domains in the Office 365 organization.")] Boolean EnableOrganizationDomainsProtection;
+    [Write, Description("The EnableSimilarDomainsSafetyTips parameter specifies whether to enable safety tips that are shown to recipients in messages for domain impersonation detections.")] Boolean EnableSimilarDomainsSafetyTips;
+    [Write, Description("The EnableSimilarUsersSafetyTips parameter specifies whether to enable safety tips that are shown to recipients in messages for user impersonation detections.")] Boolean EnableSimilarUsersSafetyTips;
+    [Write, Description("The EnableTargetedDomainsProtection parameter specifies whether to enable domain impersonation protection for a list of specified domains.")] Boolean EnableTargetedDomainsProtection;
+    [Write, Description("The EnableTargetedUserProtection parameter specifies whether to enable user impersonation protection for the users specified by the TargetedUsersToProtect parameter")] Boolean EnableTargetedUserProtection;
+    [Write, Description("The EnableUnusualCharactersSafetyTips parameter specifies whether to enable safety tips that are shown to recipients in messages for unusual characters in domain and user impersonation detections.")] Boolean EnableUnusualCharactersSafetyTips;
+    [Write, Description("Make this the default antiphishing policy")] Boolean MakeDefault;
+    [Write, Description("The ExcludedDomains parameter specifies trusted domains that are excluded from scanning by antiphishing protection. You can specify multiple domains separated by commas.")] String ExcludedDomains[];
+    [Write, Description("The ExcludedSenders parameter specifies a list of trusted sender email addresses that are excluded from scanning by antiphishing protection. You can specify multiple email addresses separated by commas.")] String ExcludedSenders[];
+    [Write, Description("The TargetedDomainActionRecipients parameter specifies the recipients to add to detected domain impersonation messages when the TargetedDomainProtectionAction parameter is set to the value Redirect or BccMessage. A valid value for this parameter is an email address. You can specify multiple email addresses separated by commas.")] String TargetedDomainActionRecipients[];
+    [Write, Description("The TargetedDomainsToProtect parameter specifies the domains that are included in domain impersonation protection when the EnableTargetedDomainsProtection parameter is set to $true.")] String TargetedDomainsToProtect[];
+    [Write, Description("The TargetedUserActionRecipients parameter specifies the replacement or additional recipients for detected user impersonation messages when the TargetedUserProtectionAction parameter is set to the value Redirect or BccMessage. A valid value for this parameter is an email address. You can specify multiple email addresses separated by commas.")] String TargetedUserActionRecipients[];
+    [Write, Description("The TargetedUsersToProtect parameter specifies the users that are included in user impersonation protection when the EnableTargetedUserProtection parameter is set to $true.")] String TargetedUsersToProtect[];
+    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+};

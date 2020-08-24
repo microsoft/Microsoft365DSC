@@ -1,0 +1,29 @@
+[ClassVersion("1.0.0.0"), FriendlyName("SPOTenantSettings")]
+class MSFT_SPOTenantSettings : OMI_BaseResource
+{
+    [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'"),ValueMap{"Yes"},Values{"Yes"}] String IsSingleInstance;
+    [Write, Description("Specifies the lower bound on the compatibility level for new sites.")] uint32 MinCompatibilityLevel;
+    [Write, Description("Specifies the upper bound on the compatibility level for new sites.")] uint32 MaxCompatibilityLevel;
+    [Write, Description("Removes the search capability from People Picker. Note, recently resolved names will still appear in the list until browser cache is cleared or expired.")] boolean SearchResolveExactEmailOrUPN;
+    [Write, Description("When set to true this will disable the ability to use Modern Authentication that leverages ADAL across the tenant.")] boolean OfficeClientADALDisabled;
+    [Write, Description("Setting this parameter prevents Office clients using non-modern authentication protocols from accessing SharePoint Online resources.")] boolean LegacyAuthProtocolsEnabled;
+    [Write, Description("Ensures that an external user can only accept an external sharing invitation with an account matching the invited email address.")] boolean RequireAcceptingAccountMatchInvitedAccount;
+    [Write, Description("Specifies the home realm discovery value to be sent to Azure Active Directory (AAD) during the user sign-in process.")] String SignInAccelerationDomain;
+    [Write, Description("Lets SharePoint issue a special cookie that will allow this feature to work even when Keep Me Signed In is not selected.")] boolean UsePersistentCookiesForExplorerView;
+    [Write, Description("Allow feedback via UserVoice.")] boolean UserVoiceForFeedbackEnabled;
+    [Write, Description("Configure PublicCDN")] boolean PublicCdnEnabled;
+    [Write, Description("Configure filetypes allowed for PublicCDN")] String PublicCdnAllowedFileTypes;
+    [Write, Description("When set to $true, users aren't able to share with security groups or SharePoint groups")] boolean UseFindPeopleInPeoplePicker;
+    [Write, Description("When set to $true, users aren't able to share with security groups or SharePoint groups")] boolean NotificationsInSharePointEnabled;
+    [Write, Description("")] boolean OwnerAnonymousNotification;
+    [Write, Description("")] boolean ApplyAppEnforcedRestrictionsToAdHocRecipients;
+    [Write, Description("")] boolean FilePickerExternalImageSearchEnabled;
+    [Write, Description("Defines if the default themes are visible or hidden")] boolean HideDefaultThemes;
+    [Write, Description("Only accepted value is 'Present'."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
+    [Write, Description("Username can be made up to anything but password will be used for certificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+};

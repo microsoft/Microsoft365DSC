@@ -1,0 +1,23 @@
+[ClassVersion("1.0.0.0"), FriendlyName("SPOAccessControlSettings")]
+class MSFT_SPOAccessControlSettings : OMI_BaseResource
+{
+    [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'"),ValueMap{"Yes"},Values{"Yes"}] String IsSingleInstance;
+    [Write, Description("Determines whether tenant users see the Start a Site menu option")] boolean DisplayStartASiteOption;
+    [Write, Description("Specifies URL of the form to load in the Start a Site dialog. The valid values are:<emptyString> (default) - Blank by default, this will also remove or clear any value that has been set.Full URL - Example: https://contoso.sharepoint.com/path/to/form")] string StartASiteFormUrl;
+    [Write, Description("Allows access from network locations that are defined by an administrator.")] boolean IPAddressEnforcement;
+    [Write, Description("Configures multiple IP addresses or IP address ranges (IPv4 or IPv6). Use commas to separate multiple IP addresses or IP address ranges.")] string IPAddressAllowList;
+    [Write, Description("Office webapps TokenLifeTime in minutes")] uint32 IPAddressWACTokenLifetime;
+    [Write, Description("When this feature is set to true, comments on site pages will be disabled")] boolean CommentsOnSitePagesDisabled;
+    [Write, Description("Disables or enables the Social Bar. It will give users the ability to like a page, see the number of views, likes, and comments on a page, and see the people who have liked a page.")] boolean SocialBarOnSitePagesDisabled;
+    [Write, Description("Prevents the Download button from being displayed on the Virus Found warning page.")] boolean DisallowInfectedFileDownload;
+    [Write, Description("Enables external services for a tenant. External services are defined as services that are not in the Office 365 datacenters.")] boolean ExternalServicesEnabled;
+    [Write, Description("Sets email attestation to required")] boolean EmailAttestationRequired;
+    [Write, Description("Sets email attestation re-auth days")] uint32 EmailAttestationReAuthDays;
+    [Write, Description("Only value accepted is 'Present'"), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the SharePoint Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
+    [Write, Description("Username can be made up to anything but password will be used for certificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+};

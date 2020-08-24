@@ -1,7 +1,0 @@
-[ClassVersion("1.0.0.0"), FriendlyName("O365OrgCustomizationSetting")]
-class MSFT_O365OrgCustomizationSetting : OMI_BaseResource
-{
-    [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'"), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
-    [Write, Description("Since there is only one setting availble, this must be set to 'Present'"), ValueMap{"Present"}, Values{"Present"}] String Ensure;
-    [Required, Description("Credentials of the Exchange Global Admin."), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
-};

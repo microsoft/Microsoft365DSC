@@ -1,0 +1,33 @@
+[ClassVersion("1.0.0.0"), FriendlyName("O365User")]
+class MSFT_O365User : OMI_BaseResource
+{
+    [Key, Description("The login name of the user")] String UserPrincipalName;
+    [Write, Description("The display name for the user")] String DisplayName;
+    [Write, Description("The first name of the user")] String FirstName;
+    [Write, Description("The last name of the user")] String LastName;
+    [Write, Description("The country code the user will be assigned to")] String UsageLocation;
+    [Write, Description("The account SKU Id for the license to be assigned to the user")] String LicenseAssignment[];
+    [Write, Description("The password for the account. The parameter is a PSCredential object, but only the Password component will be used"), EmbeddedInstance("MSFT_Credential")] String Password;
+    [Write, Description("The City name of the user")] String City;
+    [Write, Description("The Country name of the user")] String Country;
+    [Write, Description("The Department name of the user")] String Department;
+    [Write, Description("The Fax Number of the user")] String Fax;
+    [Write, Description("The Mobile Phone Number of the user")] String MobilePhone;
+    [Write, Description("The Office Name of the user")] String Office;
+    [Write, Description("Specifies whether the user password expires periodically. Default value is false")] Boolean PasswordNeverExpires;
+    [Write, Description("The Phone Number of the user")] String PhoneNumber;
+    [Write, Description("The Postal Code of the user")] String PostalCode;
+    [Write, Description("The Prefered location to store data of the user")] String PreferredDataLocation;
+    [Write, Description("The Prefered Language of the user")] String PreferredLanguage;
+    [Write, Description("Specifies the state or province where the user is located")] String State;
+    [Write, Description("Specifies the street address of the user")] String StreetAddress;
+    [Write, Description("Specifies the title of the user")] String Title;
+    [Write, Description("Specifies the title of the user"), ValueMap{"Guest", "Member", "Other", "Viral"}, Values{"Guest", "Member", "Other", "Viral"}] String UserType;
+    [Write, Description("Present ensures the user exists, absent ensures it is removed"), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+};

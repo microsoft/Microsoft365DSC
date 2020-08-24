@@ -1,0 +1,18 @@
+[ClassVersion("1.0.0.0"), FriendlyName("EXOAtpPolicyForO365")]
+class MSFT_EXOAtpPolicyForO365 : OMI_BaseResource
+{
+    [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'"), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
+    [Write, Description("The Identity parameter specifies the ATP policy that you want to modify. There's only one policy named Default.")] String Identity;
+    [Write, Description("Since there is only one policy, the default policy, this must be set to 'Present'"), ValueMap{"Present"}, Values{"Present"}] String Ensure;
+    [Write, Description("The AllowClickThrough parameter specifies whether to allow users to click through to the original blocked URL in Office 365 ProPlus. Default is $true.")] Boolean AllowClickThrough;
+    [Write, Description("The BlockUrls parameter specifies the URLs that are always blocked by Safe Links scanning. You can specify multiple values separated by commas.")] String BlockUrls[];
+    [Write, Description("The EnableATPForSPOTeamsODB parameter specifies whether ATP is enabled for SharePoint Online, OneDrive for Business and Microsoft Teams. Default is $false.")] Boolean EnableATPForSPOTeamsODB;
+    [Write, Description("The EnableSafeLinksForClients parameter specifies whether Safe Links is enabled for Office 365 ProPlus clients. Default is $false.")] Boolean EnableSafeLinksForClients;
+    [Write, Description("The TrackClicks parameter specifies whether to track user clicks related to blocked URLs. Default is $true.")] Boolean TrackClicks;
+    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+};
