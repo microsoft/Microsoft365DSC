@@ -1,5 +1,25 @@
 # Change log for Microsoft365DSC
 
+## UNRELEASED
+
+* ReverseDSC
+  * Fixed an issue where a newline was missing in the
+    credentials section when a certificate password was
+    specified;
+* Metadata
+  * Updated Microsoft.Graph.Authentication Module to version
+    0.9.1;
+  * Updated Microsoft.Graph.Groups.Planner Module to version
+    0.9.1;
+  * Updated Microsoft.Graph.Identity.ConditionalAccess Module
+    to version 0.9.1;
+  * Updated Microsoft.Graph.Planner Module to version
+    0.9.1;
+  * Updated Microsoft.PowerApps.Administration.PowerShell Module
+    to version 0.9.1;
+  * Updated SharePointPnPPowerShellOnline Module to version
+    3.24.2008.1;
+
 ## 1.20.805.1
 
 * EXOAvailabilityConfig
