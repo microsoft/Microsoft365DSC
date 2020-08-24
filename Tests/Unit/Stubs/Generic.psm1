@@ -455,8 +455,8 @@ function Set-MalwareFilterRule
         $Enabled,
 
         [Parameter()]
-        [System.String]
-        $ExceptIfRecipientDomainIs,
+        [System.String[]]
+        $ExceptIfRecipientDomainIs = @(),
 
         [Parameter()]
         [System.String[]]
@@ -475,8 +475,8 @@ function Set-MalwareFilterRule
         $Priority,
 
         [Parameter()]
-        [System.String]
-        $RecipientDomainIs,
+        [System.String[]]
+        $RecipientDomainIs = @(),
 
         [Parameter()]
         [System.String[]]
