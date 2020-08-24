@@ -1,6 +1,174 @@
 # Change log for Microsoft365DSC
 
-## UNRELEASED
+## 1.20.805.1
+
+* EXOAvailabilityConfig
+  * Fixed an issue with the Test-TargetResource where if a full
+    username (with '@') was specified for the OrgWideAccount, it
+    would always return false;
+* EXOMobileDeviceMailboxPolicy
+  * Fixed an error where if no MinPasswordLength was specified
+    the Set-TargetResource threw n error trying to create a new
+    policy;
+* EXOInboundConnector
+  * Fixed an issue where ResourceName was null during the export;
+* EXOOutboundConnector
+  * Fixed an issue where ResourceName was null during the export;
+* ODSettings
+  * Fixed an issue where the GrooveBlockOption setting was never
+    set properly;
+* SCSensitivityLabel
+  * Added new parameters
+
+## 1.20.730.2
+
+* AADMSGroup
+  * Fixed an issue where if GroupID was not passed, we could end up
+    with duplicate teams.
+* MISC
+  * If a newer version of the module is available in the PowerShell
+    Gallery, a notification will be displayed to the user;
+
+## 1.20.730.1
+
+* AADApplication
+  * Removed the ObjectId parameter from the list of parameters
+    checked in the Test-TargetResource;
+* AADGroupsSettings
+  * Fixed an issue where the values returned by Get-TargetResource were
+    always set to true due to an invalid cast;
+* O365User
+  * Fixed an issue where no licenses specified resulted in an error;
+* Metadata
+  * Updated MSCloudLoginAssistant Module to version 1.0.32;
+
+## 1.20.723.1
+
+* MISC
+  * Update to the Telemetry engine to capture information about tenant;
+
+## 1.20.722.1
+
+* AADApplication
+  * Fix an issue where a new AzureAD Application was not created
+    if ObjectId was speficied;
+* O365User
+  * Fixed an issue where the PasswordNeverExpires value returned
+    was incorrect;
+* SPOAPP
+  * Added property Path as a key for the SPOApp resource to
+    prevent conflict where two solutions could have the same
+    name;
+* MISC
+  * Renamed the event log to M365DSC to avoid journal conflicts;
+* Metadata
+  * Updated Microsoft.Graph.Authentication module version to 0.7.1;
+  * Updated Microsoft.PowerApps.Administration.PowerShell version to
+    2.0.72;
+  * Updated SharePointPnPPowerShellOnline version to 3.23.2007.1;
+
+* SPOSiteScript;
+  * Initial Release;
+
+## 1.20.716.1
+
+* MISC
+  * Added visual indicators for the Export feature;
+* EXOMalwareFilterPolicy
+  * Fixed an issue where the value for the for the Action
+    returned by the Get included 'Text' and should not have;
+* EXOOutboundConnector
+  * Fixed an issue where the ConnectorSource value returned
+    was empty. Now defaulting to Default.
+* O365User
+  * Fixed issue with PasswordNeverExpires having incorrect value
+* PlannerBucket
+  * Initial Release;
+* PlannerPlan
+  * Initial Release;
+* PlannerTask
+  * Initial Release;
+* Metadata
+  * Updated ExchangeOnline module version to 1.0.1;
+  * Updated Microsoft.Graph module version to 0.7.0;
+  * Updated Microsoft.Graph.Identity.ConditionalAccess
+    module version to 0.7.0;
+  * Updated Microsoft.PowerApps.Administration.PowerShell
+    module version to 2.0.70;
+  * Updated MSCloudLoginAssistant Module to version 1.0.30;
+  * Updated SharePointPnPPowerShellOnline module to version 3.23.2007.0;
+  * Updated ReverseDSC module version to 2.0.0.4;
+  * Updated SharePointPnPPowerShellOnline module to
+    version 3.22.2006.2;
+  * Updated all Unit Tests to Pester 5;
+  * Added support for Service Principal for PowerPlatforms,
+    SPO & OneDrive, Exchange Online and Office 365 resources;
+
+## 1.20.0603.1
+
+* Microsoft365Dsc
+  * Improved event log function
+* EXOEmailAddressPolicy
+  * Converted hardcoded tenant name into variables;
+* EXOHostedContentFilterPolicy
+  * Added 'NoAction' as a valid input for property BulkSpamAction;
+* EXOInboundConnector
+  * Fixed an issue where if the connector was created with a source
+    of 'AdminUI', we now convert it to 'Default' in the Get function;
+* EXOOutboundConnector
+  * Fixed an issue where if the connector was created with a source
+    of 'AdminUI', we now convert it to 'Default' in the Get function;
+* TeamsTenantDialPlan
+  * Fixed an issue extraction plans without any normalization rules;
+* Modules
+  * M365DSCUtil:
+    * Fixed an issue in Test-Microsoft365DSCParameterState where
+      the same array of object was always being compared;
+    * Issue 612 - Fixed an extra '}' in the event log output;
+
+* Metadata
+  * Updated AzureADPreview to 2.0.2.102;
+  * Updated MSCloudLoginAssistant to 1.0.23;
+  * Updated Microsoft.PowerApps.Administration.PowerShell
+    to 2.0.64;
+  * Updated ReverseDSC to 2.0.0.3;
+  * Updated SharePointPnPPowerShellOnline to 3.21.2005.2;
+* Misc
+  * Azure DevOPS Pipelines and AppVeyor Tests converted to GitHub
+    Actions;
+
+## 1.0.5.128
+
+* AADGroupsNamingPolicy
+  * Added support for AzureAD Application Authentication;
+* AADGroupsSettings
+  * Added support for AzureAD Application Authentication;
+  * Fixed issue where properties were returned as string instead
+    of boolean;
+* AADMSGroup
+  * Initial Release;
+* AADMSGroupLifecyclePolicy
+  * Added support for AzureAD Application Authentication;
+* TeamsChannel
+  * Added support for AzureAD Application Authentication;
+* TeamsTeam
+  * Added support for AzureAD Application Authentication;
+* TeamsTenantDialPlan
+  * Initial Release;
+* TeamsUser
+  * Added support for AzureAD Application Authentication;
+* Modules
+  * Added M365DSCAgent;
+  * Added M365DSCReport;
+* Metadata
+  * Updated Microsoft.PowerApps.Administration.PowerShell to 2.0.57;
+  * Updated MicrosoftTeams to 1.0.6;
+  * Updated MSCloudLoginAssistant to 1.0.14;
+  * Introduced dependency on the EXchangeOnlineManagement module;
+  * Introduced dependency on the Microsoft.Graph.Authentication module;
+  * Introduced dependency on the Microsoft.Graph.Identity.ConditionalAccess
+    module;
+  * Introduced dependency on the DSCParser module;
 
 ## 1.0.4.39
 
@@ -29,7 +197,7 @@
 * SCFilePlanPropertyReferenceId
   * Fix issue with the Remove scenario;
 * SCFilePlanPropertySubCategory
-  * Fix issue with the Remove scenario;
+  * Fix issue with the Remove scenario
 * SCRetentionCompliancePolicy
   * Fix issue with Teams Policy in the Get;
 * SPOPropertyBag

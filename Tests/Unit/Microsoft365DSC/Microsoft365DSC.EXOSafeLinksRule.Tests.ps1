@@ -1,16 +1,17 @@
 [CmdletBinding()]
 param(
-    [Parameter()]
-    [string]
-    $CmdletModule = (Join-Path -Path $PSScriptRoot `
-            -ChildPath "..\Stubs\Microsoft365.psm1" `
-            -Resolve)
 )
-$GenericStubPath = (Join-Path -Path $PSScriptRoot `
-    -ChildPath "..\Stubs\Generic.psm1" `
+$M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
+                        -ChildPath "..\..\Unit" `
+                        -Resolve
+$CmdletModule = (Join-Path -Path $M365DSCTestFolder `
+            -ChildPath "\Stubs\Microsoft365.psm1" `
+            -Resolve)
+$GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
+    -ChildPath "\Stubs\Generic.psm1" `
     -Resolve)
-Import-Module -Name (Join-Path -Path $PSScriptRoot `
-        -ChildPath "..\UnitTestHelper.psm1" `
+Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
+        -ChildPath "\UnitTestHelper.psm1" `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
@@ -19,75 +20,83 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
-        $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-        $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
+        BeforeAll {
+            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
+            $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ("tenantadmin", $secpasswd)
 
-        Mock -CommandName Close-SessionsAndReturnError -MockWith {
+            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
+                return @{}
+            }
 
-        }
-
-        Mock -CommandName Test-MSCloudLogin -MockWith {
-
-        }
-
-        Mock -CommandName Get-PSSession -MockWith {
-
-        }
-
-        Mock -CommandName Remove-PSSession -MockWith {
-
-        }
-
-        Mock -CommandName New-SafeLinksRule -MockWith {
-            return @{
+            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
 
             }
-        }
 
-        Mock -CommandName Set-SafeLinksRule -MockWith {
-            return @{
+            Mock -CommandName New-M365DSCConnection -MockWith {
+                return "Credential"
+            }
+
+            Mock -CommandName Get-PSSession -MockWith {
 
             }
-        }
 
-        Mock -CommandName Remove-SafeLinksRule -MockWith {
-            return @{
+            Mock -CommandName Remove-PSSession -MockWith {
 
             }
-        }
 
-        Mock -CommandName New-EXOSafeLinksRule -MockWith {
-            return @{
+            Mock -CommandName New-SafeLinksRule -MockWith {
+                return @{
 
+                }
             }
-        }
 
-        Mock -CommandName Set-EXOSafeLinksRule -MockWith {
-            return @{
+            Mock -CommandName Set-SafeLinksRule -MockWith {
+                return @{
 
+                }
+            }
+
+            Mock -CommandName Remove-SafeLinksRule -MockWith {
+                return @{
+
+                }
+            }
+
+            Mock -CommandName New-EXOSafeLinksRule -MockWith {
+                return @{
+
+                }
+            }
+
+            Mock -CommandName Set-EXOSafeLinksRule -MockWith {
+                return @{
+
+                }
             }
         }
 
         # Test contexts
         Context -Name "SafeLinksRule creation." -Fixture {
-            $testParams = @{
-                Ensure             = 'Present'
-                Identity           = 'TestRule'
-                GlobalAdminAccount = $GlobalAdminAccount
-                SafeLinksPolicy    = 'TestSafeLinksPolicy'
-                Enabled            = $true
-                Priority           = 0
-                RecipientDomainIs  = @('contoso.com')
-            }
+            BeforeAll {
+                $testParams = @{
+                    Ensure             = 'Present'
+                    Identity           = 'TestRule'
+                    GlobalAdminAccount = $GlobalAdminAccount
+                    SafeLinksPolicy    = 'TestSafeLinksPolicy'
+                    Enabled            = $true
+                    Priority           = 0
+                    RecipientDomainIs  = @('contoso.com')
+                }
 
-            Mock -CommandName Get-SafeLinksRule -MockWith {
-                return @{
-                    Identity = 'SomeOtherPolicy'
+                Mock -CommandName Get-SafeLinksRule -MockWith {
+                    return @{
+                        Identity = 'SomeOtherPolicy'
+                    }
                 }
             }
 
             It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should Be $false
+                Test-TargetResource @testParams | Should -Be $false
             }
 
             It "Should call the Set method" {
@@ -96,18 +105,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         Context -Name "SafeLinksRule update not required." -Fixture {
-            $testParams = @{
-                Ensure             = 'Present'
-                Identity           = 'TestRule'
-                GlobalAdminAccount = $GlobalAdminAccount
-                SafeLinksPolicy    = 'TestSafeLinksPolicy'
-                Enabled            = $true
-                Priority           = 0
-                RecipientDomainIs  = @('contoso.com')
-            }
-
-            Mock -CommandName Get-SafeLinksRule -MockWith {
-                return @{
+            BeforeAll {
+                $testParams = @{
                     Ensure             = 'Present'
                     Identity           = 'TestRule'
                     GlobalAdminAccount = $GlobalAdminAccount
@@ -115,40 +114,54 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Enabled            = $true
                     Priority           = 0
                     RecipientDomainIs  = @('contoso.com')
-                    State              = 'Enabled'
+                }
+
+                Mock -CommandName Get-SafeLinksRule -MockWith {
+                    return @{
+                        Ensure             = 'Present'
+                        Identity           = 'TestRule'
+                        GlobalAdminAccount = $GlobalAdminAccount
+                        SafeLinksPolicy    = 'TestSafeLinksPolicy'
+                        Enabled            = $true
+                        Priority           = 0
+                        RecipientDomainIs  = @('contoso.com')
+                        State              = 'Enabled'
+                    }
                 }
             }
 
             It 'Should return true from the Test method' {
-                Test-TargetResource @testParams | Should Be $true
+                Test-TargetResource @testParams | Should -Be $true
             }
         }
 
         Context -Name "SafeLinksRule update needed." -Fixture {
-            $testParams = @{
-                Ensure             = 'Present'
-                Identity           = 'TestRule'
-                GlobalAdminAccount = $GlobalAdminAccount
-                SafeLinksPolicy    = 'TestSafeLinksPolicy'
-                Enabled            = $true
-                Priority           = 0
-                RecipientDomainIs  = @('contoso.com')
-            }
-
-            Mock -CommandName Get-SafeLinksRule -MockWith {
-                return @{
+            BeforeAll {
+                $testParams = @{
                     Ensure             = 'Present'
                     Identity           = 'TestRule'
                     GlobalAdminAccount = $GlobalAdminAccount
                     SafeLinksPolicy    = 'TestSafeLinksPolicy'
-                    State              = 'Disabled'
+                    Enabled            = $true
                     Priority           = 0
-                    RecipientDomainIs  = @('fabrikam.com')
+                    RecipientDomainIs  = @('contoso.com')
+                }
+
+                Mock -CommandName Get-SafeLinksRule -MockWith {
+                    return @{
+                        Ensure             = 'Present'
+                        Identity           = 'TestRule'
+                        GlobalAdminAccount = $GlobalAdminAccount
+                        SafeLinksPolicy    = 'TestSafeLinksPolicy'
+                        State              = 'Disabled'
+                        Priority           = 0
+                        RecipientDomainIs  = @('fabrikam.com')
+                    }
                 }
             }
 
             It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should Be $false
+                Test-TargetResource @testParams | Should -Be $false
             }
 
             It "Should call the Set method" {
@@ -157,24 +170,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         Context -Name "SafeLinksRule removal." -Fixture {
-            $testParams = @{
-                Ensure             = 'Absent'
-                Identity           = 'TestRule'
-                GlobalAdminAccount = $GlobalAdminAccount
-                SafeLinksPolicy    = 'TestSafeLinksPolicy'
-                Enabled            = $true
-                Priority           = 0
-                RecipientDomainIs  = @('contoso.com')
-            }
+            BeforeAll {
+                $testParams = @{
+                    Ensure             = 'Absent'
+                    Identity           = 'TestRule'
+                    GlobalAdminAccount = $GlobalAdminAccount
+                    SafeLinksPolicy    = 'TestSafeLinksPolicy'
+                    Enabled            = $true
+                    Priority           = 0
+                    RecipientDomainIs  = @('contoso.com')
+                }
 
-            Mock -CommandName Get-SafeLinksRule -MockWith {
-                return @{
-                    Identity = 'TestRule'
+                Mock -CommandName Get-SafeLinksRule -MockWith {
+                    return @{
+                        Identity = 'TestRule'
+                    }
                 }
             }
 
             It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should Be $false
+                Test-TargetResource @testParams | Should -Be $false
             }
 
             It "Should call the Set method" {
@@ -183,13 +198,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         Context -Name "ReverseDSC Tests" -Fixture {
-            $testParams = @{
-                GlobalAdminAccount = $GlobalAdminAccount
-            }
+            BeforeAll {
+                $testParams = @{
+                    GlobalAdminAccount = $GlobalAdminAccount
+                }
 
-            Mock -CommandName Get-SafeLinksRule -MockWith {
-                return @{
-                    Identity = 'TestRule'
+                Mock -CommandName Get-SafeLinksRule -MockWith {
+                    return @{
+                        Identity = 'TestRule'
+                    }
                 }
             }
 

@@ -98,20 +98,44 @@ function Get-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
     Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
 
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -Platform AzureAD -CloudCredential $GlobalAdminAccount
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+        -InboundParameters $PSBoundParameters
 
     $nullReturn = @{
         UserPrincipalName  = $null
@@ -143,14 +167,10 @@ function Get-TargetResource
             $currentLicenseAssignment += $sku.SkuPartNumber
         }
 
-        if ($user.PasswordPolicies -eq 'NONE')
-        {
-            $passwordNeverExpires = $true
+        $userPasswordPolicyInfo = $user | Select-Object UserprincipalName,@{
+                N="PasswordNeverExpires";E={$_.PasswordPolicies -contains "DisablePasswordExpiration"}
         }
-        else
-        {
-            $passwordNeverExpires = $false
-        }
+        $passwordNeverExpires = $userPasswordPolicyInfo.PasswordNeverExpires
 
         $results = @{
             UserPrincipalName     = $UserPrincipalName
@@ -287,9 +307,29 @@ function Set-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     # PreferredDataLocation is no longer an accepted value;
@@ -300,20 +340,27 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Office 365 User $UserPrincipalName"
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -CloudCredential $GlobalAdminAccount `
-        -Platform AzureAD
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+        -InboundParameters $PSBoundParameters
 
     $user = Get-TargetResource @PSBoundParameters
     $PasswordPolicies = $null
     if ($PasswordNeverExpires)
     {
-        $PasswordPolicies = 'NONE'
+        $PasswordPolicies = 'DisablePasswordExpiration'
+    }
+    else
+    {
+        $PasswordPolicies = "None"
     }
     $CreationParams = @{
         City = $City
@@ -338,36 +385,48 @@ function Set-TargetResource
     }
     $CreationParams = Remove-NullEntriesFromHashtable -Hash $CreationParams
 
-    if ($null -ne $LicenseAssignment)
+    $licenses = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicenses
+
+    foreach ($licenseSkuPart in $LicenseAssignment)
     {
-        $licenses = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicenses
+        Write-Verbose -Message "Adding License {$licenseSkuPart} to the Queue"
+        $license = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicense
+        $license.SkuId = (Get-AzureADSubscribedSku | Where-Object -Property SkuPartNumber -Value $licenseSkuPart -EQ).SkuID
 
-        foreach ($licenseSkuPart in $LicenseAssignment)
+        # Set the Office license as the license we want to add in the $licenses object
+        $licenses.AddLicenses += $license
+    }
+
+    foreach ($currentLicense in $user.LicenseAssignment)
+    {
+        if (-not $LicenseAssignment.Contains($currentLicense))
         {
-            Write-Verbose -Message "Adding License {$licenseSkuPart} to the Queue"
-            $license = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicense
-            $license.SkuId = (Get-AzureADSubscribedSku | Where-Object -Property SkuPartNumber -Value $licenseSkuPart -EQ).SkuID
-
-            # Set the Office license as the license we want to add in the $licenses object
-            $licenses.AddLicenses = $license
+            Write-Verbose -Message "Removing {$currentLicense} from user {$UserPrincipalName}"
+            $license = (Get-AzureADSubscribedSku | Where-Object -Property SkuPartNumber -Value $currentLicense -EQ).SkuID
+            $licenses.RemoveLicenses += $license
         }
     }
 
     if ($user.UserPrincipalName)
     {
-        Write-Verbose -Message "Updating License Assignment"
-        try
+
+        if ($null -ne $licenses -and `
+            ($licenses.AddLicenses.Length -gt 0 -or $licenses.RemoveLicenses.Length -gt 0))
         {
-            Write-Verbose -Message "Assigning $($licenses.Count) licences to existing user"
-            Set-AzureADUserLicense -ObjectId $UserPrincipalName `
-                -AssignedLicenses $licenses `
-                -ErrorAction SilentlyContinue
-        }
-        catch
-        {
-            $Message = "License {$($LicenseAssignment)} doesn't exist in tenant."
-            Write-Verbose $Message
-            New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+            Write-Verbose -Message "Updating License Assignment {$($licenses[0] | Out-String)}"
+            try
+            {
+                Write-Verbose -Message "Assigning $($licenses.Count) licences to existing user"
+                Set-AzureADUserLicense -ObjectId $UserPrincipalName `
+                    -AssignedLicenses $licenses `
+                    -ErrorAction SilentlyContinue
+            }
+            catch
+            {
+                $Message = "License {$($LicenseAssignment)} doesn't exist in tenant."
+                Write-Verbose $Message
+                New-M365DSCLogEntry -Error $_ -Message $Message -Source $MyInvocation.MyCommand.ModuleName
+            }
         }
 
         Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
@@ -501,9 +560,29 @@ function Test-TargetResource
         [System.String]
         $Ensure = "Present",
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Testing configuration of Office 365 User $UserPrincipalName"
@@ -550,74 +629,82 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $GlobalAdminAccount
+        $GlobalAdminAccount,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
     )
-    $InformationPreference = 'Continue'
     #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace("MSFT_", "")
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add("Resource", $MyInvocation.MyCommand.ModuleName)
+    $data.Add("Resource", $ResourceName)
     $data.Add("Method", $MyInvocation.MyCommand)
+    $data.Add("Principal", $GlobalAdminAccount.UserName)
+    $data.Add("TenantId", $TenantId)
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Test-MSCloudLogin -Platform AzureAD -CloudCredential $GlobalAdminAccount
-    $organization = ""
-    $principal = "" # Principal represents the "NetBios" name of the tenant (e.g. the M365DSC part of M365DSC.onmicrosoft.com)
-    if ($GlobalAdminAccount.UserName.Contains("@"))
-    {
-        $organization = $GlobalAdminAccount.UserName.Split("@")[1]
+    $ConnectionMode = New-M365DSCConnection -Platform 'AzureAD' `
+        -InboundParameters $PSBoundParameters
 
-        if ($organization.IndexOf(".") -gt 0)
-        {
-            $principal = $organization.Split(".")[0]
-        }
-    }
     $users = Get-AzureADUser -All $true
-    $content = ''
-    $partialContent = ""
+    $dscContent = ""
     $i = 1
+    Write-Host "`r`n" -NoNewLine
     foreach ($user in $users)
     {
-        Write-Information "    - [$i/$($users.Length)] $($user.UserPrincipalName)"
+        Write-Host "    |---[$i/$($users.Length)] $($user.UserPrincipalName)" -NoNewLine
         $userUPN = $user.UserPrincipalName
         if (-not [System.String]::IsNullOrEmpty($userUPN))
         {
-            $params = @{
-                UserPrincipalName   = $userUPN
-                GlobalAdminAccount  = $GlobalAdminAccount
-                Password            = $GlobalAdminAccount
+            $Params = @{
+                UserPrincipalName     = $userUPN
+                GlobalAdminAccount    = $GlobalAdminAccount
+                Password              = $GlobalAdminAccount
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                CertificatePath       = $CertificatePath
             }
 
-            $result = Get-TargetResource @params
-            $result = Remove-NullEntriesFromHashTable -Hash $result
-            if ($null -ne $result.UserPrincipalName)
+            $Results = Get-TargetResource @Params
+            if ($null -ne $Results.UserPrincipalName)
             {
-                $result.Password = Resolve-Credentials -UserName "globaladmin"
-                $result.GlobalAdminAccount = Resolve-Credentials -UserName "globaladmin"
-                $content += "        O365User " + (New-GUID).ToString() + "`r`n"
-                $content += "        {`r`n"
-                $partialContent = Get-DSCBlock -Params $result -ModulePath  $PSScriptRoot
-                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "Password"
-                $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent -ParameterName "GlobalAdminAccount"
-                if ($partialContent.ToLower().IndexOf($organization.ToLower()) -gt 0)
-                {
-                    $partialContent = $partialContent -ireplace [regex]::Escape($organization), "`$OrganizationName"
-                    $partialContent = $partialContent -ireplace [regex]::Escape("@" + $organization), "@`$OrganizationName"
-                }
-
-                if ($partialContent.ToLower().IndexOf($principal.ToLower()) -gt 0)
-                {
-                    $partialContent = $partialContent -ireplace [regex]::Escape($principal.ToLower()), "`$(`$OrganizationName.Split('.')[0])"
-                }
-                $content += $partialContent
-                $content += "        }`r`n"
+                $Results.Password = Resolve-Credentials -UserName "globaladmin"
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
+                $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -GlobalAdminAccount $GlobalAdminAccount
+                $dscContent = Convert-DSCStringParamToVariable -DSCBlock $dscContent -ParameterName "Password"
             }
         }
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         $i++
     }
-    return $content
+    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

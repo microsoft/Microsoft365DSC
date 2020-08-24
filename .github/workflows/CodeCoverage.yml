@@ -1,0 +1,49 @@
+name: Code Coverage
+on: [push]
+
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+    - name: Install Dependencies
+      shell : powershell
+      run: |
+       $VerbosePreference = 'Continue'
+       [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+
+       $manifest = Import-PowerShellDataFile "./Modules/Microsoft365DSC/Microsoft365DSC.psd1"
+       $dependencies = $manifest.RequiredModules
+       foreach ($dependency in $dependencies)
+       {
+           Write-Verbose -Message "Installing Module {$($dependency.ModuleName)} Version {$($dependency.RequiredVersion)}"
+           Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -SkipPublisherCheck -AllowClobber -Scope AllUsers -Verbose
+           try
+           {
+               Import-Module $dependency.ModuleName -Force -Verbose
+           }
+           catch
+           {
+               Write-Verbose -Message $_
+           }
+       }
+    - name: Run Test Harness
+      shell : powershell
+      run: |
+        Install-Module Pester -Force
+        [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
+        Import-Module './Tests/TestHarness.psm1' -Force;
+        $results = Invoke-TestHarness;
+        if ($results.FailedCount -gt 0)
+        {
+            throw "{$($results.FailedCount)} Unit Test(s) Failed"
+        }
+    - uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./CodeCov.xml

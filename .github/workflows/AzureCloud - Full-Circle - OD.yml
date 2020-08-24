@@ -1,0 +1,52 @@
+name: AzureCloud - Full-Circle - OD
+on: [push]
+
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+    - name: Install Dependencies
+      shell : powershell
+      run: |
+       [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+
+       $manifest = Import-PowerShellDataFile "./Modules/Microsoft365DSC/Microsoft365DSC.psd1"
+       $dependencies = $manifest.RequiredModules
+       foreach ($dependency in $dependencies)
+       {
+           Write-Verbose -Message "Installing Module {$($dependency.ModuleName)} Version {$($dependency.RequiredVersion)}"
+           Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -SkipPublisherCheck -AllowClobber -Scope AllUsers -Verbose
+           try
+           {
+               Import-Module $dependency.ModuleName -Force
+           }
+           catch
+           {
+               Write-Verbose -Message $_
+           }
+       }
+    - name: Install Microsoft365DSC
+      shell : powershell
+      run: |
+        winrm quickconfig -force
+        $source = "./Modules/Microsoft365DSC/"
+        $destination = "C:\Program Files\WindowsPowerShell\Modules"
+        Copy-Item -Path $source -Recurse -Destination $destination -Container
+    - name: Run ReverseDSC
+      shell : powershell
+      env:
+        PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }}
+        PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }}
+      run: |
+       Set-ExecutionPolicy Unrestricted -Force
+       Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
+       $GlobalAdminPassword = ConvertTo-SecureString $env:PUBLIC_PASSWORD -AsPlainText -Force
+       $GlobalAdminAccount = New-Object System.Management.Automation.PSCredential ($env:PUBLIC_USERNAME, $GlobalAdminPassword)
+       Set-M365DSCTelemetryOption -Enabled $false
+       Export-M365DSCConfiguration -Quiet -GlobalAdminAccount $GlobalAdminAccount -Path "." -FileName 'ExtractedSPO.ps1' -Workload 'OD' -Verbose

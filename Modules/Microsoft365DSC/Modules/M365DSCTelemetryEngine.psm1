@@ -38,8 +38,13 @@ function Add-M365DSCTelemetryEvent
         $Metrics
     )
 
+    # Start by checking to see if a new Version of the tool is available in the
+    # PowerShell Gallery
+    Test-M365DSCNewVersionAvailable
+
     $TelemetryEnabled = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryEnabled', `
         [System.EnvironmentVariableTarget]::Machine)
+
     if ($null -eq $TelemetryEnabled -or $TelemetryEnabled -eq $true)
     {
         $TelemetryClient = Get-ApplicationInsightsTelemetryClient
@@ -53,6 +58,24 @@ function Add-M365DSCTelemetryEvent
             {
                 $Data.Add("ProjectName", $ProjectName)
             }
+
+            if ($null -ne $Data.Principal)
+            {
+                $principalValue = $Data.Principal.Split("@")[1]
+                $Data.Add("Tenant", $principalValue)
+            }
+            elseif ($null -ne $Data.TenantId)
+            {
+                $principalValue = $Data.TenantId
+                $Data.Add("Tenant", $principalValue)
+            }
+
+            $Data.Remove("TenandId") | Out-Null
+            $Data.Remove("Principal") | Out-Null
+
+            $version = (Get-Module 'Microsoft365DSC').Version
+            $Data.Add("M365DSCVersion", $version)
+
             $TelemetryClient.TrackEvent($Type, $Data, $Metrics)
             $TelemetryClient.Flush()
         }
@@ -107,7 +130,7 @@ function Get-M365DSCTelemetryOption
     try
     {
         return @{
-            Enabled = [System.Environment]::GetEnvironmentVariable('<365DSCTelemetryEnabled', `
+            Enabled = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryEnabled', `
                 [System.EnvironmentVariableTarget]::Machine)
             InstrumentationKey = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryInstrumentationKey', `
                 [System.EnvironmentVariableTarget]::Machine)

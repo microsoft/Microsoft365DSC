@@ -1,0 +1,24 @@
+[ClassVersion("1.0.0.0"), FriendlyName("AADApplication")]
+class MSFT_AADApplication : OMI_BaseResource
+{
+    [Key, Description("DisplayName of the app")] string DisplayName;
+    [Write, Description("ObjectID of the app.")] String ObjectId;
+    [Write, Description("Indicates whether this application is available in other tenants.")] Boolean AvailableToOtherTenants;
+    [Write, Description("A bitmask that configures the groups claim issued in a user or OAuth 2.0 access token that the application expects. The bitmask values are: 0: None, 1: Security groups and Azure AD roles, 2: Reserved, and 4: Reserved. Setting the bitmask to 7 will get all of the security groups, distribution groups, and Azure AD directory roles that the signed-in user is a member of.")] String GroupMembershipClaims;
+    [Write, Description("The URL to the application's homepage.")] String Homepage;
+    [Write, Description("User-defined URI(s) that uniquely identify a Web application within its Azure AD tenant, or within a verified custom domain.")] string IdentifierUris[];
+    [Write, Description("Client applications that are tied to this resource application.")] string KnownClientApplications[];
+    [Write, Description("The logout url for this application.")] string LogoutURL;
+    [Write, Description("Specifies whether this web application can request OAuth2.0 implicit flow tokens. The default is false.")] Boolean Oauth2AllowImplicitFlow;
+    [Write, Description("Specifies whether, as part of OAuth 2.0 token requests, Azure AD will allow path matching of the redirect URI against the application's replyUrls. The default is false.")] Boolean Oauth2AllowUrlPathMatching;
+    [Write, Description("Set this to true if an Oauth2 psot response is required.")] Boolean Oauth2RequirePostResponse;
+    [Write, Description("Specifies whether this application is a public client (such as an installed application running on a mobile device). Default is false.")] Boolean PublicClient;
+    [Write, Description("Specifies the URLs that user tokens are sent to for sign in, or the redirect URIs that OAuth 2.0 authorization codes and access tokens are sent to.")] String ReplyURLs[];
+    [Write, Description("The URL to the SAML metadata for the application.")] String SamlMetadataUrl;
+    [Write, Description("Specify if the Azure AD App should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the Azure AD Admin"), EmbeddedInstance("MSFT_Credential")] string GlobalAdminAccount;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+
+};

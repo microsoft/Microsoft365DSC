@@ -1,0 +1,66 @@
+name: AzureUSGovernment - Integration
+on: [push]
+
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+    - name: Install Dependencies
+      shell : powershell
+      run: |
+       [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+
+       $manifest = Import-PowerShellDataFile "./Modules/Microsoft365DSC/Microsoft365DSC.psd1"
+       $dependencies = $manifest.RequiredModules
+       foreach ($dependency in $dependencies)
+       {
+           Write-Verbose -Message "Installing Module {$($dependency.ModuleName)} Version {$($dependency.RequiredVersion)}"
+           Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -SkipPublisherCheck -AllowClobber -Scope AllUsers -Verbose
+           try
+           {
+               Import-Module $dependency.ModuleName -Force
+           }
+           catch
+           {
+               Write-Verbose -Message $_
+           }
+       }
+    - name: Install Microsoft365DSC
+      shell : powershell
+      run: |
+        winrm quickconfig -force
+        $source = "./Modules/Microsoft365DSC/"
+        $destination = "C:\Program Files\WindowsPowerShell\Modules"
+        Copy-Item -Path $source -Recurse -Destination $destination -Container
+    - name: Run Integration Tests
+      shell : powershell
+      env:
+        GCC_USERNAME: ${{ secrets.GCC_USERNAME }}
+        GCC_PASSWORD: ${{ secrets.GCC_PASSWORD }}
+        GCC_DOMAIN: ${{ secrets.GCC_DOMAIN }}
+      run: |
+       Set-ExecutionPolicy Unrestricted -Force
+       Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
+       Set-M365DSCTelemetryOption -Enabled $false
+       & ./Tests/Integration/M365DSCIntegration.Master.Tests.ps1 `
+       -GlobalAdminUser $env:GCC_USERNAME `
+       -GlobalAdminPassword $env:GCC_PASSWORD `
+       -Domain $env:GCC_DOMAIN `
+       -Environment 'GCC'
+    - name: Validate Configuration
+      shell: powershell
+      run: |
+       $config = Test-DSCConfiguration -Detailed -Verbose
+
+       if (!$config.InDesiredState)
+       {
+           Write-Host $config
+           Write-Host $config.ResourcesNotInDesiredState.InstanceName
+           throw "Could not validate that the Tenant is in the Desired State"
+       }
