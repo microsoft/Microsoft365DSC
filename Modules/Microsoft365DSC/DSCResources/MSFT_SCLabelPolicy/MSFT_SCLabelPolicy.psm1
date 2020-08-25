@@ -36,7 +36,6 @@ function Get-TargetResource
         [System.String[]]
         $ModernGroupLocationException,
 
-
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
@@ -401,10 +400,6 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('GlobalAdminAccount') | Out-Null
-    $ValuesToCheck.Remove('AdvancedSettings') | Out-Null
-
     if ($null -ne $AdvancedSettings)
     {
         $TestAdvancedSettings = Test-AdvancedSettings -DesiredProperty $AdvancedSettings -CurrentProperty $CurrentValues.AdvancedSettings
@@ -414,10 +409,50 @@ function Test-TargetResource
         }
     }
 
+    if ($null -ne $ModernGroupLocation)
+    {
+        $different = Test-Location -DesiredProperty $ModernGroupLocation -CurrentPropert $CurrentValues.ModernGroupLocation
+        if ($false -eq $different)
+        {
+            return $false
+        }
+    }
+
+    if ($null -ne $ModernGroupLocationException)
+    {
+        $different = Test-Location -DesiredProperty $ModernGroupLocationException -CurrentPropert $CurrentValues.ModernGroupLocationException
+        if ($false -eq $different)
+        {
+            return $false
+        }
+    }
+
+    if ($null -ne $ExchangeLocationLocation)
+    {
+        $different = Test-Location -DesiredProperty $ExchangeLocationLocation -CurrentPropert $CurrentValues.ExchangeLocationLocation
+        if ($false -eq $different)
+        {
+            return $false
+        }
+    }
+
+    if ($null -ne $ExchangeLocationException)
+    {
+        $different = Test-Location -DesiredProperty $ExchangeLocationException -CurrentPropert $CurrentValues.ExchangeLocationException
+        if ($false -eq $different)
+        {
+            return $false
+        }
+    }
+
+
     $TestResult = Test-Microsoft365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+        -ValuesToCheck @("Name", `
+        "Comment", `
+        "Labels", `
+        "Ensure")
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
     return $TestResult
@@ -455,7 +490,7 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewLine
         foreach ($policy in $policies)
         {
-            Write-Host "    |---[$i/$($labels.Count)] $($label.Name)" -NoNewLine
+            Write-Host "    |---[$i/$($policies.Count)] $($policy.Name)" -NoNewLine
 
             $Params = @{
                 Name               = $policy.Name
@@ -698,6 +733,33 @@ function ConvertTo-LocaleSettingsString
     }
     $StringContent += "            )"
     return $StringContent
+}
+
+function Test-Location
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [Parameter (Mandatory = $true)]
+        $DesiredProperty,
+
+        [Parameter (Mandatory = $true)]
+        $CurrentProperty
+    )
+    [System.Collections.ArrayList]$currentLocations = @()
+    foreach ($location in $CurrentProperty)
+    {
+        $currentLocations.Add($location.Name)
+    }
+    $diff = Compare-Object -ReferenceObject $currentLocations -DifferenceObject $DesiredProperty
+
+    if($null -eq $diff){
+        return $true
+    }
+    else {
+        return $false
+    }
+
 }
 
 Export-ModuleMember -Function *-TargetResource
