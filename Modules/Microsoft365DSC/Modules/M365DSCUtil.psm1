@@ -2038,3 +2038,46 @@ function Test-M365DSCNewVersionAvailable
         Write-Verbose -Message $_
     }
 }
+
+function Get-M365DSCComponentsForAuthenticationType
+{
+    [CmdletBinding()]
+    [OutputType([System.String[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('Application', 'Certificate', 'Credentials')]
+        $AuthenticationMethod
+    )
+
+    $modules = Get-ChildItem ".\..\DSCResources" -Recurse -Filter '*.psm1'
+    $Components = @()
+    foreach ($resource in $modules)
+    {
+        Import-Module $resource.FullName -Force
+        $parameters = (Get-command 'Set-TargetResource').Parameters.Keys
+
+        switch ($AuthenticationMethod)
+        {
+            'Application' {
+                if ($parameters.Contains("ApplicationId") -and -not $parameters.Contains('CertificateThumbprint'))
+                {
+                    $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+                }
+            }
+            'Certificate' {
+                if ($parameters.Contains('CertificateThumbprint'))
+                {
+                    $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+                }
+            }
+            'Credentials' {
+                if (-not $parameters.Contains("ApplicationId") -and -not $parameters.Contains('CertificateThumbprint'))
+                {
+                    $Components += $resource.Name.Replace("MSFT_", "").Replace(".psm1", "")
+                }
+            }
+        }
+    }
+    return $Components
+}
