@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+## UNRELEASED
+
+* MISC
+  * Added a new Assert-M365DSCBlueprint function to generate
+    discrepency report between export of tenant and a BluePrint;
+
 ## 1.20.805.1
 
 * EXOAvailabilityConfig
