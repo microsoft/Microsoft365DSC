@@ -314,7 +314,7 @@ function Export-TargetResource
                 $result = Get-TargetResource @params
                 $content += "        PlannerPlan " + (New-GUID).ToString() + "`r`n"
                 $content += "        {`r`n"
-                $currentDSCBlock = Get-DSCBlock -Params $result[1] -ModulePath $PSScriptRoot
+                $currentDSCBlock = Get-DSCBlock -Params $result -ModulePath $PSScriptRoot
                 $content += $currentDSCBlock
                 $content += "        }`r`n"
                 $j++

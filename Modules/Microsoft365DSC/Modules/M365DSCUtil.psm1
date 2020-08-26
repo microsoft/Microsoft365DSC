@@ -1622,6 +1622,29 @@ function Test-M365DSCDependenciesForNewVersions
     }
 }
 
+function Update-M365DSCDependencies
+{
+    [CmdletBinding()]
+    $InformationPreference = 'Continue'
+    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+    $manifest = Import-PowerShellDataFile "$currentPath/Microsoft365DSC.psd1"
+    $dependencies = $manifest.RequiredModules
+    $i = 1
+    foreach ($dependency in $dependencies)
+    {
+        Write-Progress -Activity "Scanning Dependencies" -PercentComplete ($i / $dependencies.Count * 100)
+        try
+        {
+            Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force
+        }
+        catch
+        {
+            Write-Information -MessageData "Could not update {$($dependency.ModuleName)}"
+        }
+        $i++
+    }
+}
+
 function Set-M365DSCAgentCertificateConfiguration
 {
     [CmdletBinding()]
