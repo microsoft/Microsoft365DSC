@@ -513,12 +513,21 @@ function New-M365DSCDeltaReport
     $Delta = Compare-M365DSCConfigurations -Source $Source -Destination $Destination -CaptureTelemetry $false
 
     $reportSB = [System.Text.StringBuilder]::new()
-    [void]$reportSB.AppendLine("<html><head><title>Microsoft365DSC - Delta Report</title></head><body>")
+    $ReportTitle = "Microsoft365DSC - Delta Report"
+    if ($IsBlueprintAssessment)
+    {
+        $ReportTitle = "Microsoft365DSC - Blueprint Assessment Report"
+        [void]$reportSB.AppendLine("<h1>Blueprint Assessment Report</h1>")
+    }
+    else
+    {
+        [void]$reportSB.AppendLine("<h1>Delta Report</h1>")
+        [void]$reportSB.AppendLine("<p><strong>Comparing </strong>$Source <strong>to</strong> $Destination</p>")
+    }
+    [void]$reportSB.AppendLine("<html><head><meta charset='utf-8'><title>$ReportTitle</title></head><body>")
     [void]$reportSB.AppendLine("<div style='width:100%;text-align:center;'>")
     [void]$reportSB.AppendLine("<img src='http://Microsoft365DSC.com/Images/Promo.png' alt='Microsoft365DSC Slogan' width='500' />")
     [void]$ReportSB.AppendLine("</div>")
-    [void]$reportSB.AppendLine("<h1>Delta Report</h1>")
-    [void]$reportSB.AppendLine("<p><strong>Comparing </strong>$Source <strong>to</strong> $Destination</p>")
 
     [array]$resourcesMissingInSource = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -eq 'Ensure' -and `
                                     $_.Properties.ValueInSource -eq 'Absent'}
@@ -603,12 +612,12 @@ function New-M365DSCDeltaReport
         {
             [void]$reportSB.AppendLine("<table width='100%' cellspacing='0' cellpadding='5'>")
             [void]$reportSB.AppendLine("<tr>")
-            [void]$reportSB.Append("<th style='width:25%;text-align:center;vertical-align:middle;border:1px solid black;' ")
+            [void]$reportSB.Append("<th style='width:25%;text-align:center;vertical-align:middle;border:1px solid black;;' ")
             [void]$reportSB.Append("rowspan='" + ($resource.Properties.Count + 2) + "'>")
             $iconPath = Get-IconPath -ResourceName $resource.ResourceName
             [void]$reportSB.AppendLine("<img src='$iconPath' />")
             [void]$reportSB.AppendLine("</th>");
-            [void]$reportSB.AppendLine("<th style='border:1px solid black;text-align:center;vertical-align:middle;' colspan='3'>")
+            [void]$reportSB.AppendLine("<th style='border:1px solid black;text-align:center;vertical-align:middle;background-color:#CCC' colspan='3'>")
             [void]$reportSB.AppendLine("<h3>$($resource.ResourceName) - $($resource.Key) = $($resource.KeyValue)</h3>")
             [void]$reportSB.AppendLine("</th></tr>")
             [void]$reportSB.AppendLine("<tr>")
@@ -620,38 +629,48 @@ function New-M365DSCDeltaReport
                 $SourceLabel = "Tenant's Current Value"
                 $DestinationLabel = "Blueprint's Value"
             }
-            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;' width='50%'><strong>Property</strong></td>")
-            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;' width='25%'><strong>$SourceLabel</strong></td>")
-            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;' width='25%'><strong>$DestinationLabel</strong></td>")
+            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;background-color:#EEE;' width='45%'><strong>Property</strong></td>")
+            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;background-color:#EEE;' width='15%'><strong>$SourceLabel</strong></td>")
+            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;background-color:#EEE;' width='15%'><strong>$DestinationLabel</strong></td>")
             [void]$reportSB.AppendLine("</tr>")
             foreach ($drift in $resource.Properties)
             {
                 if ($drift.ParameterName -notlike '_metadata_*')
                 {
                     $cellStyle = ''
-                    if ($null -ne $drift._Metadata_Level)
+                    $emoticon = ''
+                    if ($drift._Metadata_Level -eq 'L1')
                     {
-                        if ($drift._Metadata_Level -eq 'L1')
-                        {
-                            $cellStyle = "background-color:#F6CECE;"
-                        }
-                        elseif ($drift._Metadata_Level -eq 'L2')
-                        {
-                            $cellStyle = "background-color:#F7F8E0;"
-                        }
-                        [void]$reportSB.AppendLine("<tr><td colspan='3' style='border:1px solid black;background-color:#E0F8EC'>$($drift._Metadata_Info)</td></tr>")
+                        $cellStyle = "background-color:#F6CECE;"
+                        $emoticon = '&#x1F7E5;'
                     }
+                    elseif ($drift._Metadata_Level -eq 'L2')
+                    {
+                        $cellStyle = "background-color:#F7F8E0;"
+                        $emoticon = '&#x1F7E8;'
+                    }
+                    elseif ($drift._Metadata_Level -eq 'L3')
+                    {
+                        $cellStyle = "background-color:#FFFFFF;"
+                        $emoticon = '&#x1F7E6;'
+                    }
+
                     [void]$reportSB.AppendLine("<tr>")
-                    [void]$reportSB.AppendLine("<td style='border:1px solid black;text-align:right;'>")
+                    [void]$reportSB.AppendLine("<td style='border:1px solid black;text-align:right;' width='45%'>")
                     [void]$reportSB.AppendLine("$($drift.ParameterName)</td>")
-                    [void]$reportSB.AppendLine("<td style='border:1px solid black;$cellStyle'>")
+                    [void]$reportSB.AppendLine("<td style='border:1px solid black;$cellStyle' width='15%'>")
                     [void]$reportSB.AppendLine("$($drift.ValueInSource)</td>")
-                    [void]$reportSB.AppendLine("<td style='border:1px solid black;$cellStyle'>")
+                    [void]$reportSB.AppendLine("<td style='border:1px solid black;' width='15%'>")
                     [void]$reportSB.AppendLine("$($drift.ValueInDestination)</td>")
                     [void]$reportSB.AppendLine("</tr>")
+
+                    if ($null -ne $drift._Metadata_Level)
+                    {
+                        [void]$reportSB.AppendLine("<tr><td colspan='3' style='border:1px solid black;'>$emoticon $($drift._Metadata_Info)</td></tr>")
+                    }
                 }
             }
-            [void]$reportSB.AppendLine("</table>")
+            [void]$reportSB.AppendLine("</table><hr/>")
         }
     }
     [void]$reportSB.AppendLine("</body></html>")
