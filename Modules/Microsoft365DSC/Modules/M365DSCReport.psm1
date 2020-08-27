@@ -496,7 +496,11 @@ function New-M365DSCDeltaReport
 
         [Parameter()]
         [System.Boolean]
-        $DriftOnly = $false
+        $DriftOnly = $false,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsBlueprintAssessment = $false
     )
 
     #region Telemetry
@@ -608,9 +612,17 @@ function New-M365DSCDeltaReport
             [void]$reportSB.AppendLine("<h3>$($resource.ResourceName) - $($resource.Key) = $($resource.KeyValue)</h3>")
             [void]$reportSB.AppendLine("</th></tr>")
             [void]$reportSB.AppendLine("<tr>")
+
+            $SourceLabel = "Source Value"
+            $DestinationLabel = "Destination Value"
+            if ($IsBlueprintAssessment)
+            {
+                $SourceLabel = "Blueprint Value"
+                $DestinationLabel = "Tenant's Current Value"
+            }
             [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;'><strong>Property</strong></td>")
-            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;'><strong>Source Value</strong></td>")
-            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;'><strong>Destination Value</strong></td>")
+            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;'><strong>$SourceLabel</strong></td>")
+            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;'><strong>$DestinationLabel</strong></td>")
             [void]$reportSB.AppendLine("</tr>")
             foreach ($drift in $resource.Properties)
             {
@@ -621,20 +633,20 @@ function New-M365DSCDeltaReport
                     {
                         if ($drift._Metadata_Level -eq 'L1')
                         {
-                            $cellStyle = "background-color:red;"
+                            $cellStyle = "background-color:#F6CECE;"
                         }
                         elseif ($drift._Metadata_Level -eq 'L2')
                         {
-                            $cellStyle = "background-color:yellow;"
+                            $cellStyle = "background-color:#F7F8E0;"
                         }
                         [void]$reportSB.AppendLine("<tr><td colspan='3' style='border:1px solid black;background-color:#E0F8EC'>$($drift._Metadata_Info)</td></tr>")
                     }
                     [void]$reportSB.AppendLine("<tr>")
-                    [void]$reportSB.AppendLine("<td style='border:1px solid black;'>")
+                    [void]$reportSB.AppendLine("<td style='border:1px solid black;text-align:right;'>")
                     [void]$reportSB.AppendLine("$($drift.ParameterName)</td>")
                     [void]$reportSB.AppendLine("<td style='border:1px solid black;$cellStyle'>")
                     [void]$reportSB.AppendLine("$($drift.ValueInSource)</td>")
-                    [void]$reportSB.AppendLine("<td style='border:1px solid black;text-align:right;$cellStyle'>")
+                    [void]$reportSB.AppendLine("<td style='border:1px solid black;$cellStyle'>")
                     [void]$reportSB.AppendLine("$($drift.ValueInDestination)</td>")
                     [void]$reportSB.AppendLine("</tr>")
                 }

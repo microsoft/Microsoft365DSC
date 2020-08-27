@@ -1672,7 +1672,8 @@ function Assert-M365DSCBlueprint
         New-M365DSCDeltaReport -Source $ExportPath `
             -Destination $LocalBluePrintPath `
             -OutputPath $OutputReportPath `
-            -DriftOnly:$true
+            -DriftOnly:$true `
+            -IsBlueprintAssessment:$true
     }
     else
     {
