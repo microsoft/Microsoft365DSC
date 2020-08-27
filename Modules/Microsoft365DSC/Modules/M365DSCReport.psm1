@@ -308,14 +308,32 @@ function Compare-M365DSCConfigurations
                                 ValueInDestination = $destinationResource.$propertyName
                             })
                         }
+
+                        if ($destinationResource.Contains("_metadata_$($propertyName)"))
+                        {
+                            $Metadata = $destinationResource."_metadata_$($propertyName)"
+                            $Level = $Metadata.Split('|')[0].Replace("### ", "")
+                            $Information = $Metadata.Split('|')[1]
+                            $drift.Properties[0].Add("_Metadata_Level", $Level)
+                            $drift.Properties[0].Add("_Metadata_Info", $Information)
+                        }
                     }
                     else
                     {
-                        $drift.Properties += @{
+                        $newDrift += @{
                                 ParameterName      = $propertyName
                                 ValueInSource      = $sourceResource.$propertyName
                                 ValueInDestination = $destinationResource.$propertyName
                         }
+                        if ($destinationResource.Contains("_metadata_$($propertyName)"))
+                        {
+                            $Metadata = $destinationResource."_metadata_$($propertyName)"
+                            $Level = $Metadata.Split('|')[0].Replace("### ", "")
+                            $Information = $Metadata.Split('|')[1]
+                            $newDrift.Properties[0].Add("_Metadata_Level", $Level)
+                            $newDrift.Properties[0].Add("_Metadata_Info", $Information)
+                        }
+                        $drift.Properties += $newDrift
                     }
                 }
             }
