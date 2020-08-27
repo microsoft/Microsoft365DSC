@@ -320,7 +320,7 @@ function Compare-M365DSCConfigurations
                     }
                     else
                     {
-                        $newDrift += @{
+                        $newDrift = @{
                                 ParameterName      = $propertyName
                                 ValueInSource      = $sourceResource.$propertyName
                                 ValueInDestination = $destinationResource.$propertyName
@@ -610,12 +610,23 @@ function New-M365DSCDeltaReport
             [void]$reportSB.AppendLine("</tr>")
             foreach ($drift in $resource.Properties)
             {
+                if ($drift.Keys("_Metadata_Level"))
+                {
+                    if ($drift._MetadataLevel -eq 'L1')
+                    {
+                        $cellStyle = " style='background-color:red'"
+                    }
+                    elseif ($drift._MetadataLevel -eq 'L2')
+                    {
+                        $cellStyle = " style='background-color:yellow'"
+                    }
+                }
                 [void]$reportSB.AppendLine("<tr>")
-                [void]$reportSB.AppendLine("<td style='border:1px solid black;'>")
+                [void]$reportSB.AppendLine("<td style='border:1px solid black;'$cellStyle>")
                 [void]$reportSB.AppendLine("$($drift.ParameterName)</td>")
-                [void]$reportSB.AppendLine("<td style='border:1px solid black;'>")
+                [void]$reportSB.AppendLine("<td style='border:1px solid black;'$cellStyle>")
                 [void]$reportSB.AppendLine("$($drift.ValueInSource)</td>")
-                [void]$reportSB.AppendLine("<td style='border:1px solid black;'>")
+                [void]$reportSB.AppendLine("<td style='border:1px solid black;'$cellStyle>")
                 [void]$reportSB.AppendLine("$($drift.ValueInDestination)</td>")
                 [void]$reportSB.AppendLine("</tr>")
             }
