@@ -516,7 +516,7 @@ function New-M365DSCDeltaReport
                                     $_.Properties.ValueInSource -eq 'Absent'}
                                     [array]$resourcesMissingInDestination = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -eq 'Ensure' -and `
                                     $_.Properties.ValueInDestination -eq 'Absent'}
-    [array]$resourcesInDrift = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -ne 'Ensure'}
+    [array]$resourcesInDrift = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -ne 'Ensure' -and $_.Properties.ParameterName -notlike '_Metadata_*'}
 
     if ($resourcesMissingInSource.Count -eq 0 -and $resourcesMissingInDestination.Count -eq 0 -and `
         $resourcesInDrift.Count -eq 0)
