@@ -1603,7 +1603,11 @@ function Assert-M365DSCBlueprint
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $ReportPath
+        $OutputReportPath,
+
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $Credentials
     )
     $InformationPreference = 'SilentlyContinue'
     $WarningPreference = 'SilentlyContinue'
