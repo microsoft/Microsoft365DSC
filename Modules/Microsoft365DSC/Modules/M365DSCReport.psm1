@@ -330,8 +330,8 @@ function Compare-M365DSCConfigurations
                             $Metadata = $destinationResource."_metadata_$($propertyName)"
                             $Level = $Metadata.Split('|')[0].Replace("### ", "")
                             $Information = $Metadata.Split('|')[1]
-                            $newDrift.Properties[0].Add("_Metadata_Level", $Level)
-                            $newDrift.Properties[0].Add("_Metadata_Info", $Information)
+                            $newDrift.Add("_Metadata_Level", $Level)
+                            $newDrift.Add("_Metadata_Info", $Information)
                         }
                         $drift.Properties += $newDrift
                     }
@@ -492,7 +492,11 @@ function New-M365DSCDeltaReport
 
         [Parameter(Mandatory=$true)]
         [System.String]
-        $OutputPath
+        $OutputPath,
+
+        [Parameter()]
+        [System.Boolean]
+        $DriftOnly = $false
     )
 
     #region Telemetry
@@ -516,14 +520,14 @@ function New-M365DSCDeltaReport
                                     $_.Properties.ValueInSource -eq 'Absent'}
                                     [array]$resourcesMissingInDestination = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -eq 'Ensure' -and `
                                     $_.Properties.ValueInDestination -eq 'Absent'}
-    [array]$resourcesInDrift = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -ne 'Ensure' -and $_.Properties.ParameterName -notlike '_Metadata_*'}
+    [array]$resourcesInDrift = $Delta | Where-Object -FilterScript {$_.Properties.ParameterName -ne 'Ensure'}
 
     if ($resourcesMissingInSource.Count -eq 0 -and $resourcesMissingInDestination.Count -eq 0 -and `
         $resourcesInDrift.Count -eq 0)
     {
         [void]$reportSB.AppendLine("<p><strong>No discrepencies have been found!</strong></p>")
     }
-    else
+    elseif (-not $DriftOnly)
     {
         [void]$reportSB.AppendLine("<h2>Table of Contents</h2>")
         [void]$reportSB.AppendLine("<ul>")
@@ -545,7 +549,7 @@ function New-M365DSCDeltaReport
         [void]$reportSB.AppendLine("</ul>")
     }
 
-    if ($resourcesMissingInSource.Count -gt 0)
+    if ($resourcesMissingInSource.Count -gt 0 -and -not $DriftOnly)
     {
         [void]$reportSB.AppendLine("<br /><hr /><br />")
         [void]$reportSB.AppendLine("<a id='Source'></a><h2>Resources that are Missing in the Source</h2>")
@@ -566,7 +570,7 @@ function New-M365DSCDeltaReport
         }
     }
 
-    if ($resourcesMissingInDestination.Count -gt 0)
+    if ($resourcesMissingInDestination.Count -gt 0 -and -not $DriftOnly)
     {
         [void]$reportSB.AppendLine("<br /><hr /><br />")
         [void]$reportSB.AppendLine("<a id='Destination'></a><h2>Resources that are Missing in the Destination</h2>")
@@ -610,25 +614,30 @@ function New-M365DSCDeltaReport
             [void]$reportSB.AppendLine("</tr>")
             foreach ($drift in $resource.Properties)
             {
-                if ($drift.Keys("_Metadata_Level"))
+                if ($drift.ParameterName -notlike '_metadata_*')
                 {
-                    if ($drift._MetadataLevel -eq 'L1')
+                    $cellStyle = ''
+                    if ($null -ne $drift._Metadata_Level)
                     {
-                        $cellStyle = " style='background-color:red'"
+                        if ($drift._Metadata_Level -eq 'L1')
+                        {
+                            $cellStyle = "background-color:red;"
+                        }
+                        elseif ($drift._Metadata_Level -eq 'L2')
+                        {
+                            $cellStyle = "background-color:yellow;"
+                        }
+                        [void]$reportSB.AppendLine("<tr><td colspan='3' style='border:1px solid black;background-color:#E0F8EC'>$($drift._Metadata_Info)</td></tr>")
                     }
-                    elseif ($drift._MetadataLevel -eq 'L2')
-                    {
-                        $cellStyle = " style='background-color:yellow'"
-                    }
+                    [void]$reportSB.AppendLine("<tr>")
+                    [void]$reportSB.AppendLine("<td style='border:1px solid black;'>")
+                    [void]$reportSB.AppendLine("$($drift.ParameterName)</td>")
+                    [void]$reportSB.AppendLine("<td style='border:1px solid black;$cellStyle'>")
+                    [void]$reportSB.AppendLine("$($drift.ValueInSource)</td>")
+                    [void]$reportSB.AppendLine("<td style='border:1px solid black;text-align:right;$cellStyle'>")
+                    [void]$reportSB.AppendLine("$($drift.ValueInDestination)</td>")
+                    [void]$reportSB.AppendLine("</tr>")
                 }
-                [void]$reportSB.AppendLine("<tr>")
-                [void]$reportSB.AppendLine("<td style='border:1px solid black;'$cellStyle>")
-                [void]$reportSB.AppendLine("$($drift.ParameterName)</td>")
-                [void]$reportSB.AppendLine("<td style='border:1px solid black;'$cellStyle>")
-                [void]$reportSB.AppendLine("$($drift.ValueInSource)</td>")
-                [void]$reportSB.AppendLine("<td style='border:1px solid black;'$cellStyle>")
-                [void]$reportSB.AppendLine("$($drift.ValueInDestination)</td>")
-                [void]$reportSB.AppendLine("</tr>")
             }
             [void]$reportSB.AppendLine("</table>")
         }

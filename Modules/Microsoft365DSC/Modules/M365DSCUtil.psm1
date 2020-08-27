@@ -1671,7 +1671,8 @@ function Assert-M365DSCBlueprint
         $ExportPath = Join-Path -Path $env:Temp -ChildPath $TempExportName
         New-M365DSCDeltaReport -Source $ExportPath `
             -Destination $LocalBluePrintPath `
-            -OutputPath $OutputReportPath
+            -OutputPath $OutputReportPath `
+            -DriftOnly:$true
     }
     else
     {
