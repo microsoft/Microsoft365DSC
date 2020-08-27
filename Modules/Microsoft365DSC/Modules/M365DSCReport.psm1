@@ -617,12 +617,12 @@ function New-M365DSCDeltaReport
             $DestinationLabel = "Destination Value"
             if ($IsBlueprintAssessment)
             {
-                $SourceLabel = "Blueprint Value"
-                $DestinationLabel = "Tenant's Current Value"
+                $SourceLabel = "Tenant's Current Value"
+                $DestinationLabel = "Blueprint's Value"
             }
-            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;'><strong>Property</strong></td>")
-            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;'><strong>$SourceLabel</strong></td>")
-            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;'><strong>$DestinationLabel</strong></td>")
+            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;' width='50%'><strong>Property</strong></td>")
+            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;' width='25%'><strong>$SourceLabel</strong></td>")
+            [void]$reportSB.AppendLine("<td style='text-align:center;border:1px solid black;' width='25%'><strong>$DestinationLabel</strong></td>")
             [void]$reportSB.AppendLine("</tr>")
             foreach ($drift in $resource.Properties)
             {
