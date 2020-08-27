@@ -1619,16 +1619,25 @@ function Assert-M365DSCBlueprint
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $TempBluePrintName = (New-Guid).ToString() + ".M365"
+    $LocalBluePrintPath = Join-Path -Path $env:Temp -ChildPath $TempBluePrintName
     try
     {
         # Download the BluePrint locally in a temp location
-        $TempBluePrintName = (New-Guid).ToString() + ".M365"
-        $LocalBluePrintPath = Join-Path -Path $env:Temp -ChildPath $TempBluePrintName
         Invoke-WebRequest -Uri $BluePrintUrl -OutFile $LocalBluePrintPath
     }
     catch
     {
-        throw $_
+        # If the download failed, we assume the provided Url was a local path
+        # and we try copying the item instead.
+        try
+        {
+            Copy-Item -Path $BluePrintUrl -Destination $LocalBluePrintPath
+        }
+        catch
+        {
+            throw $_
+        }
     }
 
     if ((Test-Path -Path $LocalBluePrintPath))
