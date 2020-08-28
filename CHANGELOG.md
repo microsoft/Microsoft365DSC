@@ -5,6 +5,8 @@
 * MISC
   * Added a new Assert-M365DSCBlueprint function to generate
     discrepency report between export of tenant and a BluePrint;
+* Metadata
+  * Updated DSCParser Module to version 1.2.0.0;
 
 ## 1.20.805.1
 
