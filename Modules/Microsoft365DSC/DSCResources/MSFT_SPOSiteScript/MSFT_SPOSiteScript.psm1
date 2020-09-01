@@ -59,7 +59,7 @@ function Get-TargetResource
 
             $SiteScript = $null
             ##### Check to see if more than one site script is returned
-            if ($SiteScripts.Length -gt -1){ 
+            if ($SiteScripts.Length -gt -1){
                 $SiteScript = Get-PnPSiteScript -Identity $SiteScripts[0].Id
             }
 
@@ -139,7 +139,6 @@ function Set-TargetResource
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove("Ensure") | Out-Null
     $CurrentParameters.Remove("GlobalAdminAccount") | Out-Null
-    $context = Get-PnPContext
     # end region
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
@@ -151,7 +150,7 @@ function Set-TargetResource
             Description     = $Description
         }
 
-        # Adding the Site Script Again. 
+        # Adding the Site Script Again.
         Write-Verbose -Message "Site Script, {$Title}, doesn't exist. Creating it."
         $newSiteScript = Add-PnPSiteScript @CreationParams
 

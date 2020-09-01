@@ -182,7 +182,7 @@ function Set-TargetResource
     elseif ($Ensure -eq "Present")
     {
         Write-Verbose -Message "Adding app instance $Identity"
-        Add-PnPApp -Path $Path -Overwrite
+        Add-PnPApp -Path $Path -Overwrite:$true
     }
     elseif ($Ensure -eq "Absent" -and $currentApp.Ensure -eq "Present")
     {

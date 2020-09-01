@@ -32,6 +32,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             }
 
+            Mock -CommandName Add-PnPTenantTheme -MockWith {
+
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credential"
             }
