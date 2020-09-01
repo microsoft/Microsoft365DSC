@@ -64,7 +64,7 @@ function Get-M365StubFiles
             RandomCmdlet = 'Clear-CsOnlineTelephoneNumberReservation'
         }#>
     )
-
+    $Content = ''
     foreach ($Module in $Modules)
     {
         Write-Host "Generating Stubs for {$($Module.Platform)}..." -NoNewline
